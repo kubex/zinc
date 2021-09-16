@@ -3,13 +3,13 @@ import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Icon.scss';
 
-enum Library {
-    None = "",
-    Material = "material",
-    MaterialOutlined = "material-outlined",
-    MaterialRound = "material-round",
-    MaterialSharp = "material-sharp",
-    MaterialTwoTone = "material-two-tone"
+const Library = {
+    None: "",
+    Material: "material",
+    MaterialOutlined: "material-outlined",
+    MaterialRound: "material-round",
+    MaterialSharp: "material-sharp",
+    MaterialTwoTone: "material-two-tone"
 }
 
 @customElement('fusion-icon')

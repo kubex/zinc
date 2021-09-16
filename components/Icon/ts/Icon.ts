@@ -21,7 +21,7 @@ export class FusionIcon extends LitElement {
     src = ""
 
     @property({reflect: true})
-    size = 8
+    size = 24
 
     @property()
     library = Library.None

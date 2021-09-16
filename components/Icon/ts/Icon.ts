@@ -17,13 +17,13 @@ export class FusionIcon extends LitElement {
     static styles = unsafeCSS(styles);
 
 
-    @property()
+    @property({reflect: true})
     src = ""
 
     @property({reflect: true})
     size = 24
 
-    @property()
+    @property({reflect: true})
     library = Library.None
 
     connectedCallback() {
@@ -40,9 +40,12 @@ export class FusionIcon extends LitElement {
     attributeChangedCallback(name: string, _old: string | null, value: string | null) {
         super.attributeChangedCallback(name, _old, value);
         if (name == "size") {
-
             this.size = Number(value) - Number(value) % 8;
             this.style.setProperty('--icon-size', this.size + "px")
+        } else if (name == "src" && this.library == "" && value.includes('@')) {
+            const split = value.split('@')
+            this.library = split[1]
+            this.src = split[0]
         }
     }
 
@@ -62,7 +65,7 @@ export class FusionIcon extends LitElement {
 
         if (this.src != "") {
             return html`
-              <img src="${this.src}">`;
+              <img src="${this.src}" class="${this.library}">`;
         }
 
         return html`

@@ -31,7 +31,7 @@ class Icon implements ISafeHtmlProducer
   public function produceSafeHTML(): SafeHtml
   {
     return new SafeHtml(
-      sprintf('<fusion-icon src="%s" library="%s" size="%d"/>', $this->_src, $this->_library, $this->_size)
+      sprintf('<fusion-icon src="%s" library="%s" size="%d"></fusion-icon>', $this->_src, $this->_library, $this->_size)
     );
   }
 

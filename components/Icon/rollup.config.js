@@ -5,8 +5,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import AtImport from 'postcss-import';
 
-const container = {
-  input:   'ts/Icon.ts',
+const component = {
+  input:   'ts/Component.ts',
   output:  {
     dir:            'dist',
     format:         'iife',
@@ -29,4 +29,4 @@ const container = {
   ],
 };
 
-export default [container];
+export default [component];

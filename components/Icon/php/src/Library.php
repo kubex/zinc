@@ -13,4 +13,5 @@ class Library extends AbstractEnum
   public const MaterialRound = "material-round";
   public const MaterialSharp = "material-sharp";
   public const MaterialTwoTone = "material-two-tone";
+  public const Gravatar = "gravatar";
 }

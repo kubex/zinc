@@ -13,6 +13,7 @@ const (
 	LibraryMaterialRound    Library = "material.round"
 	LibraryMaterialSharp    Library = "material.sharp"
 	LibraryMaterialTwoTone  Library = "material.two-tone"
+	LibraryGravatar         Library = "gravatar"
 )
 
 type Size int

@@ -2,6 +2,7 @@ import {html, LitElement, render, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Icon.scss';
+import {md5} from './md5'
 
 const Library = {
     None: "",
@@ -9,13 +10,16 @@ const Library = {
     MaterialOutlined: "material-outlined",
     MaterialRound: "material-round",
     MaterialSharp: "material-sharp",
-    MaterialTwoTone: "material-two-tone"
+    MaterialTwoTone: "material-two-tone",
+    Gravatar: "gravatar",
+    Libravatar: "libravatar"
 }
 
 @customElement('fusion-icon')
 export class FusionIcon extends LitElement {
     static styles = unsafeCSS(styles);
 
+    gravatarOptions = ""
 
     @property({reflect: true})
     src = ""
@@ -26,6 +30,9 @@ export class FusionIcon extends LitElement {
     @property({reflect: true})
     library = Library.None
 
+    @property()
+    round = false
+
     connectedCallback() {
         super.connectedCallback();
 
@@ -35,6 +42,31 @@ export class FusionIcon extends LitElement {
             href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
             rel="stylesheet">`, document.head);
 
+        if (this.src.includes('@')) {
+            if (this.library == "") {
+                const split = this.src.split('@')
+                if (split[1].includes('.')) {
+                    this.library = Library.Gravatar
+                } else {
+                    this.library = split[1]
+                    this.src = split[0]
+                }
+            }
+
+            if (this.library == Library.Gravatar || this.library == Library.Libravatar) {
+                this.ravatarOptions()
+                this.src = md5(this.src)
+            }
+        }
+        this.ravatarOptions()
+    }
+
+    ravatarOptions() {
+        if ((this.library == Library.Gravatar || this.library == Library.Libravatar) && this.src.includes('#')) {
+            const split = this.src.split('#')
+            this.gravatarOptions = "&d=" + split[1]
+            this.src = split[0]
+        }
     }
 
     attributeChangedCallback(name: string, _old: string | null, value: string | null) {
@@ -42,10 +74,6 @@ export class FusionIcon extends LitElement {
         if (name == "size") {
             this.size = Number(value) - Number(value) % 8;
             this.style.setProperty('--icon-size', this.size + "px")
-        } else if (name == "src" && this.library == "" && value.includes('@')) {
-            const split = value.split('@')
-            this.library = split[1]
-            this.src = split[0]
         }
     }
 
@@ -61,11 +89,17 @@ export class FusionIcon extends LitElement {
                 return html`<i class="mi mi--sharp">${this.src}</i>`;
             case Library.MaterialTwoTone:
                 return html`<i class="mi mi--two-tone">${this.src}</i>`;
+            case Library.Gravatar:
+                return html`<img
+                  src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+            case Library.Libravatar:
+                return html`<img
+                  src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
         }
 
         if (this.src != "") {
             return html`
-              <img src="${this.src}" class="${this.library}">`;
+              <img src="${this.src}" class="${this.library}/">`;
         }
 
         return html`

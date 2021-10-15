@@ -1,5 +1,5 @@
 <?php
-namespace Kubex\Fusion\Components\Icon;
+namespace Kubex\Zinc\Components\Icon;
 
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;

@@ -3,8 +3,8 @@ import {customElement} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
 
-@customElement('fusion-blank')
-export class FusionIcon extends LitElement {
+@customElement('zn-blank')
+export class ZincIcon extends LitElement {
     static styles = unsafeCSS(styles);
 
     render() {

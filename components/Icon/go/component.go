@@ -52,5 +52,5 @@ func (i Instance) Size() Size         { return i.size }
 func (i *Instance) SetSize(size Size) { i.size = size }
 
 func (i Instance) Html() template.HTML {
-	return template.HTML(fmt.Sprintf(`<fusion-icon src="%s" library="%s" size="%d"></fusion-icon>`, i.src, i.library, i.size))
+	return template.HTML(fmt.Sprintf(`<zn-icon src="%s" library="%s" size="%d"></zn-icon>`, i.src, i.library, i.size))
 }

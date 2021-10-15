@@ -1,5 +1,5 @@
 <?php
-namespace Kubex\Fusion\Components\MaxWidth;
+namespace Kubex\Zinc\Components\MaxWidth;
 
 use Packaged\SafeHtml\ISafeHtmlProducer;
 use Packaged\SafeHtml\SafeHtml;
@@ -26,7 +26,7 @@ class MaxWidth implements ISafeHtmlProducer
   public function produceSafeHTML(): SafeHtml
   {
     return new SafeHtml(
-      sprintf('<fusion-max-width width="%d"></fusion-max-width>', $this->_size)
+      sprintf('<zn-max-width width="%d"></zn-max-width>', $this->_size)
     );
   }
 }

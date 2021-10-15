@@ -1,3 +1,3 @@
-module github.com/kubex/fusion/components/Icon/go/Icon
+module github.com/kubex/zinc/components/Icon/go/Icon
 
 go 1.17

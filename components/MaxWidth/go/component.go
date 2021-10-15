@@ -20,5 +20,5 @@ func (i Instance) Size() int32         { return i.size }
 func (i *Instance) SetSize(size int32) { i.size = size }
 
 func (i Instance) Html() template.HTML {
-	return template.HTML(fmt.Sprintf(`<fusion-max-width width="%d"></fusion-max-width>`, i.size))
+	return template.HTML(fmt.Sprintf(`<zn-max-width width="%d"></zn-max-width>`, i.size))
 }

@@ -10,7 +10,7 @@ const component = {
   output:  {
     dir:            'dist',
     format:         'iife',
-    entryFileNames: 'fusion-icon.js',
+    entryFileNames: 'zn-icon.js',
     sourcemap:      false,
   },
   plugins: [

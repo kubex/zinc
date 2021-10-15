@@ -10,7 +10,7 @@ const component = {
   output:  {
     dir:            'dist',
     format:         'iife',
-    entryFileNames: 'fusion-blank.js',
+    entryFileNames: 'zn-blank.js',
     sourcemap:      false,
   },
   plugins: [

@@ -10,7 +10,7 @@ const component = {
   output:  {
     dir:            'dist',
     format:         'iife',
-    entryFileNames: 'fusion-max-width.js',
+    entryFileNames: 'zn-max-width.js',
     sourcemap:      false,
   },
   plugins: [

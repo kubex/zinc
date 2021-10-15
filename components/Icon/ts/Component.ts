@@ -15,8 +15,8 @@ const Library = {
     Libravatar: "libravatar"
 }
 
-@customElement('fusion-icon')
-export class FusionIcon extends LitElement {
+@customElement('zn-icon')
+export class ZincIcon extends LitElement {
     static styles = unsafeCSS(styles);
 
     gravatarOptions = ""

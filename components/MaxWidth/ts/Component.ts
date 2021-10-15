@@ -3,8 +3,8 @@ import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
 
-@customElement('fusion-max-width')
-export class FusionIcon extends LitElement {
+@customElement('zn-max-width')
+export class ZincMaxWidth extends LitElement {
     static styles = unsafeCSS(styles);
 
     @property({reflect: true})

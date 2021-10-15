@@ -14,5 +14,5 @@ func New() Instance {
 }
 
 func (i Instance) Html() template.HTML {
-	return template.HTML(fmt.Sprintf(`<fusion-blank></fusion-blank>`))
+	return template.HTML(fmt.Sprintf(`<zn-blank></zn-blank>`))
 }

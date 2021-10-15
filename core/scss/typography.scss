@@ -1,0 +1,50 @@
+@import 'modularscale';
+
+$modularscale: (
+  base: 15px,
+  ratio: 1.125
+);
+
+body {
+  font-size: ms(0);
+}
+
+.xs {
+  font-size: ms(-1);
+}
+
+.s {
+  font-size: ms(0);
+}
+
+.m {
+  font-size: ms(1);
+}
+
+.l {
+  font-size: ms(2);
+}
+
+.xl {
+  font-size: ms(3);
+}
+
+.x2 {
+  font-size: ms(4);
+}
+
+.x3 {
+  font-size: ms(5);
+}
+
+@include breakpoint(tablet up) {
+  body {
+    font-size: 17px;
+  }
+}
+
+@include breakpoint(hd) {
+  body {
+    font-size: 19px;
+  }
+}

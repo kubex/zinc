@@ -1,0 +1,65 @@
+$mobile: 0px !default;
+$phablet: 512px !default;
+$tablet: 768px !default;
+$desktop: 1024px !default;
+$hd: 1285px !default;
+
+// Hard code this here just to prevent breaking of the mixins
+$breakpoints: (
+  'mobile': $mobile,
+  'phablet': $phablet,
+  'tablet': $tablet,
+  'desktop': $desktop,
+  'hd': $hd
+);
+
+@function nextKey($currentValue, $mapped-list) {
+  @return nth(map_keys($mapped-list), (index(map_keys($mapped-list), $currentValue)) + 1);
+}
+
+@mixin breakpoint($breakpointValue) {
+
+  // (up down or only)
+  $direction: if(length($breakpointValue) > 1, nth($breakpointValue, 2), up);
+  $breakpoint: nth($breakpointValue, 1);
+
+  $index: index(map-keys($breakpoints), $breakpoint);
+
+  @if $direction == 'only' {
+    @if $index == 1 {
+      @media screen and (max-width: map-get($breakpoints, nextKey($breakpoint, $breakpoints)) - 1) {
+        @content;
+      }
+    } @else if $index < length($breakpoints) {
+      @media screen and (min-width: map-get($breakpoints, $breakpoint)) and (max-width: map-get($breakpoints, nextKey($breakpoint, $breakpoints)) - 1) {
+        @content;
+      }
+    } @else if ($index == length($breakpoints)) {
+      @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+        @content;
+      }
+    }
+  } @else if ($direction == 'up') {
+    @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else if ($direction == 'down') {
+    @media screen and (max-width: map-get($breakpoints, nextKey($breakpoint, $breakpoints)) - 1) {
+      @content;
+    }
+  } @else {
+    @if $index == 1 {
+      @media screen and (max-width: map-get($breakpoints, nextKey($breakpoint, $breakpoints)) - 1) {
+        @content;
+      }
+    } @else if $index < length($breakpoints) {
+      @media screen and (min-width: map-get($breakpoints, $breakpoint)) and (max-width: map-get($breakpoints, nextKey($breakpoint, $breakpoints)) - 1) {
+        @content;
+      }
+    } @else if ($index == length($breakpoints)) {
+      @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+        @content;
+      }
+    }
+  }
+}

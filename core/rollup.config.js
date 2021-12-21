@@ -1,32 +1,28 @@
 import resolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
 import {terser} from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import AtImport from 'postcss-import';
 
-const component = {
-  input:   'ts/Component.ts',
+export default {
+  input:   'test/test.js',
   output:  {
-    dir:            'dist',
+    dir:            'test',
     format:         'iife',
-    entryFileNames: 'fusion-icon.js',
-    sourcemap:      false,
+    entryFileNames: 'test.compiled.js',
+    sourcemap:      false
   },
   plugins: [
     resolve({browser: true, preferBuiltins: false}),
-    typescript(),
     commonjs(),
     postcss(
       {
         plugins:   [AtImport()],
         inject:    false,
-        extract:   false,
+        extract:   true,
         minimize:  true,
-        sourceMap: false,
+        sourceMap: false
       }),
-    terser(),
-  ],
+    terser()
+  ]
 };
-
-export default [component];

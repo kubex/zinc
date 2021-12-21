@@ -1,34 +1,61 @@
+$spacing: (
+  'xs': 0.25rem,
+  's': 0.5rem,
+  'm': 1rem,
+  'l': 2rem,
+  'xl': 3rem,
+  'x2': 4rem,
+  'x3': 6rem
+);
+$sides: (top, bottom, left, right);
+$selectors: (margin, padding);
 
-.xs{
-  --spacing: 1px;
-}
-.s{
-  --spacing: 1px;
-}
-.m{
-  --spacing: 1px;
-}
-.l{
-  --spacing: 1px;
-}
-.xl{
-  --spacing: 1px;
-}
-.x2{
-  --spacing: 1px;
-}
-.x3{
-  --spacing: 1px;
-}
-
-@include breakpoint(tablet up) {
-  body {
-    font-size: 17px;
+// Padding/Margin sides
+@each $i, $space in $spacing {
+  @each $side in $sides {
+    @each $selector in $selectors {
+      .#{str_slice($selector, 0, 1)}#{str_slice($side, 0, 1)}-#{$i} {
+        #{$selector}-#{$side}: $space;
+      }
+    }
   }
 }
 
-@include breakpoint(hd) {
-  body {
-    font-size: 19px;
+// Padding/Margin X and Y
+@each $i, $space in $spacing {
+  @each $selector in $selectors {
+    .#{str_slice($selector, 0, 1)}x-#{$i} {
+      #{$selector}-top: $space;
+      #{$selector}-bottom: $space;
+    }
+
+    .#{str_slice($selector, 0, 1)}y-#{$i} {
+      #{$selector}-left: $space;
+      #{$selector}-right: $space;
+    }
   }
+}
+
+// Padding/Margin all around
+@each $i, $space in $spacing {
+  @each $selector in $selectors {
+    .#{str_slice($selector, 0, 1)}-#{$i} {
+      #{$selector}: $space;
+    }
+
+    .#{str_slice($selector, 0, 1)}-#{$i} {
+      #{$selector}: $space;
+    }
+  }
+}
+
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
 }

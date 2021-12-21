@@ -1,50 +1,191 @@
-@import 'modularscale';
+@use "sass:math";
+@use "sass:map";
+@use "breakpoints";
 
-$modularscale: (
-  base: 15px,
-  ratio: 1.125
+@function rem($px) {
+  @return math.div($px, 16) + 'rem';
+}
+
+@function em($px, $base) {
+  @return math.div($px, $base) + 'em';
+}
+
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map.get($map, $key);
+  }
+  @return #{$map};
+}
+
+$base-font-family: 'Open Sans', sans-serif;
+
+$small-font-size: 14;
+$base-font-size: 16;
+$large-font-size: 16;
+
+$small: (
+  base: (
+    "font-size": #{rem($small-font-size)},
+    "line-height": math.div(24, $small-font-size),
+  ),
+  p: (
+    "margin-top": #{em(16, $small-font-size)},
+    "margin-bottom": #{em(16, $small-font-size)},
+  ),
+  h1: (
+    "font-size": #{em(30, $small-font-size)},
+    "margin-top": 0,
+    "margin-bottom": #{em(24, 30)},
+    "line-height": math.div(36, 30)
+  ),
+  h2: (
+    "font-size": #{em(20, $small-font-size)},
+    "margin-top": #{em(32, 20)},
+    "margin-bottom": #{em(16, 20)},
+    "line-height": math.div(28, 20)
+  ),
+  h3: (
+    "font-size": #{em(18, $small-font-size)},
+    "margin-top": #{em(28, 18)},
+    "margin-bottom": #{em(8, 18)},
+    "line-height": math.div(28, 18)
+  ),
+  h4: (
+    "margin-top": #{em(18, 14)},
+    "margin-bottom": #{em(8, 14)},
+    "line-height": math.div(20, 14)
+  ),
 );
 
+$base: (
+  base: (
+    "font-size": #{rem($base-font-size)},
+    "line-height": math.div(28, $base-font-size),
+  ),
+  p: (
+    "margin-top": #{em(20, $base-font-size)},
+    "margin-bottom": #{em(20, $base-font-size)},
+  ),
+  h1: (
+    "font-size": #{em(36, $base-font-size)},
+    "margin-top": 0,
+    "margin-bottom": #{em(32, 36)},
+    "line-height": math.div(40, 36)
+  ),
+  h2: (
+    "font-size": #{em(24, $base-font-size)},
+    "margin-top": #{em(48, 24)},
+    "margin-bottom": #{em(24, 24)},
+    "line-height": math.div(32, 24)
+  ),
+  h3: (
+    "font-size": #{em(20, $base-font-size)},
+    "margin-top": #{em(32, 20)},
+    "margin-bottom": #{em(12, 20)},
+    "line-height": math.div(28, 20)
+  ),
+  h4: (
+    "margin-top": #{em(24, 16)},
+    "margin-bottom": #{em(8, 16)},
+    "line-height": math.div(24, 16)
+  ),
+);
+
+$large: (
+  base: (
+    "font-size": #{rem($large-font-size)},
+    "line-height": math.div(32, $large-font-size),
+  ),
+  p: (
+    "margin-top": #{em(24, $large-font-size)},
+    "margin-bottom": #{em(24, $large-font-size)},
+  ),
+  h1: (
+    "font-size": #{em(48, $large-font-size)},
+    "margin-top": 0,
+    "margin-bottom": #{em(40, 48)},
+    "line-height": math.div(48, 48)
+  ),
+  h2: (
+    "font-size": #{em(30, $large-font-size)},
+    "margin-top": #{em(56, 30)},
+    "margin-bottom": #{em(32, 30)},
+    "line-height": math.div(40, 30)
+  ),
+  h3: (
+    "font-size": #{em(24, $large-font-size)},
+    "margin-top": #{em(40, 24)},
+    "margin-bottom": #{em(16, 24)},
+    "line-height": math.div(36, 24)
+  ),
+  h4: (
+    "margin-top": #{em(32, 18)},
+    "margin-bottom": #{em(8, 18)},
+    "line-height": math.div(28, 18)
+  ),
+);
+
+@mixin font-sizes($map, $next-map: false) {
+  body {
+    font-size: map.get($map, 'base', "font-size");
+    line-height: map.get($map, 'base', "line-height");
+  }
+
+  p {
+    margin-top: map.get($map, 'p', "margin-top");
+    margin-bottom: map.get($map, 'p', "margin-bottom");
+  }
+
+  h1, .text--xxl {
+    font-size: map.get($map, 'h1', "font-size");
+    line-height: map.get($map, 'h1', "line-height");
+    margin-top: map.get($map, 'h1', "margin-top");
+    margin-bottom: map.get($map, 'h1', "margin-bottom");
+  }
+
+  h2, .text--xl {
+    font-size: map.get($map, 'h2', "font-size");
+    line-height: map.get($map, 'h2', "line-height");
+    margin-top: map.get($map, 'h2', "margin-top");
+    margin-bottom: map.get($map, 'h2', "margin-bottom");
+  }
+
+  h3, .text--lg {
+    font-size: map.get($map, 'h3', "font-size");
+    line-height: map.get($map, 'h3', "line-height");
+    margin-top: map.get($map, 'h3', "margin-top");
+    margin-bottom: map.get($map, 'h3', "margin-bottom");
+  }
+
+  h4, .text--md {
+    line-height: map.get($map, 'h4', "line-height");
+    margin-top: map.get($map, 'h4', "margin-top");
+    margin-bottom: map.get($map, 'h4', "margin-bottom");
+  }
+}
+
+// Base
 body {
-  font-size: ms(0);
+  font-family: $base-font-family;
 }
 
-.xs {
-  font-size: ms(-1);
-}
-
-.s {
-  font-size: ms(0);
-}
-
-.m {
-  font-size: ms(1);
-}
-
-.l {
-  font-size: ms(2);
-}
-
-.xl {
-  font-size: ms(3);
-}
-
-.x2 {
-  font-size: ms(4);
-}
-
-.x3 {
-  font-size: ms(5);
-}
-
-@include breakpoint(tablet up) {
-  body {
-    font-size: 17px;
+h2, h3, h4, .text--xl, .text--lg, .text--md {
+  & + * {
+    margin-top: 0;
   }
 }
 
-@include breakpoint(hd) {
-  body {
-    font-size: 19px;
-  }
+// Small
+@include breakpoints.breakpoint(mobile) {
+  @include font-sizes($small);
+}
+
+// Base
+@include breakpoints.breakpoint(tablet) {
+  @include font-sizes($base, $small);
+}
+
+// Large
+@include breakpoints.breakpoint(desktop) {
+  @include font-sizes($large, $base);
 }

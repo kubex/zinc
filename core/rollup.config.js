@@ -5,11 +5,11 @@ import postcss from 'rollup-plugin-postcss';
 import AtImport from 'postcss-import';
 
 export default {
-  input:   'test/test.js',
+  input:   'docs/resources/docs.js',
   output:  {
-    dir:            'test',
+    dir:            'docs/resources',
     format:         'iife',
-    entryFileNames: 'test.compiled.js',
+    entryFileNames: 'docs.compiled.js',
     sourcemap:      false
   },
   plugins: [

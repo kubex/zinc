@@ -24,12 +24,12 @@ $selectors: (margin, padding);
 // Padding/Margin X and Y
 @each $i, $space in $spacing {
   @each $selector in $selectors {
-    .#{str_slice($selector, 0, 1)}x-#{$i} {
+    .#{str_slice($selector, 0, 1)}y-#{$i} {
       #{$selector}-top: $space;
       #{$selector}-bottom: $space;
     }
 
-    .#{str_slice($selector, 0, 1)}y-#{$i} {
+    .#{str_slice($selector, 0, 1)}x-#{$i} {
       #{$selector}-left: $space;
       #{$selector}-right: $space;
     }

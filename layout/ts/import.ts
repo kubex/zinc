@@ -1,2 +1,2 @@
-import '../scss/layout.scss'
+import './layout'
 import '../components/Columns/ts/Component'

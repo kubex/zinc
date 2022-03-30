@@ -13,9 +13,9 @@ export class AppContainer extends LitElement {
     private flexFrame: boolean = false;
     @property({type: String, attribute: 'dark-mode', reflect: true})
     public darkMode: string = 'false';
-    @property({type: HTMLElement})
-    private container: HTMLElement = (() => {
-        const cnt = document.createElement('zn-layout');
+    @property({type: HTMLDivElement})
+    private container: HTMLDivElement = (() => {
+        const cnt = document.createElement('div');
         cnt.classList.add('font-sans');
         cnt.classList.add('text-default');
         return cnt;

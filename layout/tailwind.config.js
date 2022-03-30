@@ -10,6 +10,25 @@ module.exports = {
     "./components/**/scss/*.{scss,css}"
   ],
   darkMode: 'class',
+  safelist: [
+    {pattern: /^bg-/},
+    {pattern: /^text-/},
+    {pattern: /^font-/},
+    {pattern: /^flex-/},
+    {pattern: /^shrink-/},
+    {pattern: /^grow-/},
+    {pattern: /^grid/},
+    {pattern: /^col-/},
+    {pattern: /^row-/},
+    {pattern: /^gap-/},
+    {pattern: /^m.-/},
+    {pattern: /^p.-/},
+    {pattern: /^space-/},
+    {pattern: /^w-/},
+    {pattern: /^h-/},
+    {pattern: /^min-/},
+    {pattern: /^max-/},
+  ],
   theme:    {
     extend: {
       fontFamily: {

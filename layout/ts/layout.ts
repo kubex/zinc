@@ -9,6 +9,10 @@ export class ZincLayout extends LitElement {
         return [unsafeCSS(layoutStyles)];
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     render() {
         return html`
           <slot></slot>`;

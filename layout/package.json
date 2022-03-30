@@ -1,0 +1,39 @@
+{
+  "name": "@kubex/zn-layout",
+  "version": "0.0.1",
+  "repository": "git@github.com:kubex/zinc",
+  "author": "Brooke Bryan <brooke@bajb.net>",
+  "license": "MIT",
+  "main": "ts/Layout.ts",
+  "files": [
+    "scss/",
+    "ts/"
+  ],
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "autoprefixer": "^10.4.4",
+    "lit": "2.0.0-rc.4",
+    "postcss": "^8.4.12",
+    "postcss-import": "^14.1.0",
+    "postcss-scss": "^4.0.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.44.0",
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.32.10",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "tails": "npx tailwindcss -i scss/layout.scss -o dist/layout.css",
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  }
+}

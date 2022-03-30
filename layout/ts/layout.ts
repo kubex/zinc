@@ -18,3 +18,5 @@ export class ZincLayout extends LitElement {
           <slot></slot>`;
     }
 }
+
+export default layoutStyles;

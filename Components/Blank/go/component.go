@@ -5,7 +5,6 @@ import (
 	"html/template"
 )
 
-
 type Instance struct {
 }
 

@@ -1,4 +1,3 @@
 - Progress
 - Rating
 - Loading
-- 

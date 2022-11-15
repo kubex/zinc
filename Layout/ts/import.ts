@@ -1,2 +1,3 @@
 import './container'
-import '../components/Columns/ts/Component'
+import '../Components/Columns/ts/Component'
+import '../Components/Panel/ts/Component'

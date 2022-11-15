@@ -9,10 +9,17 @@ export class ZincPanel extends LitElement {
         return [unsafeCSS(styles)];
     }
 
+
     @property()
-    portion = "3"//of 12
+    colspan = "3"//of 12
+
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.classList.add("col-span-" + this.colspan);
+    }
 
     render() {
-        return html`<div class="panel panel--col-${this.portion}"><slot></slot></div>`
+        return html`<slot></slot>`
     }
 }

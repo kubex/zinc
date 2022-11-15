@@ -11,49 +11,54 @@ export class ZincColumns extends LitElement {
         return [unsafeCSS(layoutStyles), unsafeCSS(styles)];
     }
 
-    @property()
-    layout = "2,1"
+    @property({attribute: 'layout', type: String, reflect: true})
+    private layout: string = "2,2"
+
+    layoutClass = "";
 
     render() {
-        switch (this.layout) {
-            case "2,1":
+        let cols = this.layout.replace(/,/g, ' ').split(" ");
+        this.layoutClass = "col";
+        let span = 0;
+        let colCount = 0;
+        for (let i = 0; i < cols.length; i++) {
+            span += parseInt(cols[i]);
+            if (span <= 4) {
+                this.layoutClass += " col-" + (i + 1) + "-" + cols[i];
+                colCount++;
+            }
+        }
+        switch (colCount) {
+            case 1:
                 return html`
-                  <div
-                    class="grid grid-cols-1 gap-6 p-3 sm:p-6 lg:grid-flow-col-dense lg:grid-cols-3">
-                    <div class="lg:col-start-1 lg:col-span-2">
-                      <slot name="col1"></slot>
-                    </div>
-                    <div class="lg:col-start-3 lg:col-span-1">
-                      <slot name="col2"></slot>
-                    </div>
-                  </div>
+                <div class="${this.layoutClass}">
+                    <div><slot name="col1"></slot></div>
+                </div>
                 `;
-            case "1,2":
+            case 2:
                 return html`
-                  <div
-                    class="grid grid-cols-1 gap-6 p-3 sm:p-6 lg:grid-flow-col-dense lg:grid-cols-3">
-                    <div class="lg:col-start-1 lg:col-span-1">
-                      <slot name="col1"></slot>
-                    </div>
-                    <div class="lg:col-start-2 lg:col-span-2">
-                      <slot name="col2"></slot>
-                    </div>
-                  </div>
+                <div class="${this.layoutClass}">
+                    <div><slot name="col1"></slot></div>
+                    <div><slot name="col2"></slot></div>
+                </div>
                 `;
-            case "1,1,1":
+            case 3:
                 return html`
-                  <div
-                    class="grid grid-cols-1 gap-6 p-3 sm:p-6 lg:grid-flow-col-dense lg:grid-cols-3">
-                    <div class="lg:col-start-1 lg:col-span-1">
-                      <slot name="col1"></slot>
-                    </div>
-                    <div class="lg:col-start-2 lg:col-span-1">
-                      <slot name="col2"></slot>
-                    </div>
-                    <div class="lg:col-start-3 lg:col-span-1">
-                      <slot name="col3"></slot>
-                    </div>
-                  </div>`;
+                <div class="${this.layoutClass}">
+                    <div><slot name="col1"></slot></div>
+                    <div><slot name="col2"></slot></div>
+                    <div><slot name="col3"></slot></div>
+                </div>
+                `;
+            case 4:
+                return html`
+                <div class="${this.layoutClass}">
+                    <div><slot name="col1"></slot></div>
+                    <div><slot name="col2"></slot></div>
+                    <div><slot name="col3"></slot></div>
+                    <div><slot name="col4"></slot></div>
+                </div>
+                `;
         }
     }
 }

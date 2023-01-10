@@ -13,6 +13,7 @@ module.exports = {
   darkMode:    'class',
   theme:       {
     colors:   {
+      dark:      colors.zinc,
       border:    colors.slate,
       primary:   colors.violet,
       secondary: colors.orange,

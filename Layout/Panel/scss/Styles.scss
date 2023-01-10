@@ -1,11 +1,16 @@
-:host {
-  @apply block bg-white p-sm rounded border-border;
+@tailwind base;
 
+zn-panel {
+  @apply block bg-white p-sm rounded border border-border;
+  margin:15px 0;
+}
+
+:host {
   .header {
-    @apply flex items-center h-bar border-border border-b;
+    @apply flex items-center pb-sm border-b border-border;
 
     span {
-      @apply text-lg font-bold;
+      @apply text-lg font-semibold;
     }
 
     & > div.nav {
@@ -32,4 +37,12 @@
     }
   }
 
+  .body {
+    @apply py-sm;
+  }
+
+  .footer {
+    @apply text-sm text-txt-500;
+    @apply pt-sm border-border border-t;
+  }
 }

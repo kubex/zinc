@@ -53,6 +53,7 @@ module.exports = {
       sm: ['12px', '16px'],
       md: ['14px', '18px'],
       lg: ['16px', '22px'],
+      title: ['24px', '30px'],
     },
     extend:   {
       zIndex:     {
@@ -77,7 +78,7 @@ module.exports = {
         'panel':   '360px',
       },
       fontFamily: {
-        sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },
   },

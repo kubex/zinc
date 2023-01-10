@@ -20,11 +20,17 @@ export class ZincPanel extends LitElement {
                 <li>Payments</li>
               </ul>
             </div>
-            <slot name="actions">ACTIONS</slot>
+            <slot name="actions"><zn-icon src="brooke@bajb.net"></zn-icon></slot>
           </div>
           <div class="body">
-            <slot>BODY</slot>
+            <slot>
+              BODY<br/>
+              BODY<br/>
+              BODY<br/>
+              BODY<br/>
+              BODY<br/>
+            </slot>
           </div>
-          <div class="footer">FOOTER</div>`
+          <div class="footer">View full billing history</div>`
     }
 }

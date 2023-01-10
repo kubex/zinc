@@ -2,6 +2,13 @@
 
 zn-panel, :host {
   @apply block p-sm rounded border border-border bg-white;
+  @apply overflow-hidden grow;
+  @apply basis-panel min-w-panel max-w-screen-md;
+}
+
+:host[small], zn-panel[small] {
+  @apply min-w-spanel basis-spanel;
+  @apply bg-transparent border-0;
 }
 
 :host {
@@ -37,7 +44,7 @@ zn-panel, :host {
   }
 
   .body {
-    @apply py-sm;
+    @apply py-sm overflow-y-auto;
   }
 
   .footer {

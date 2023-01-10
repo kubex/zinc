@@ -1,5 +1,5 @@
 import {html, LitElement, unsafeCSS} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
 
@@ -8,6 +8,10 @@ export class ZincPanel extends LitElement {
     static get styles() {
         return [unsafeCSS(styles)];
     }
+
+    @property({attribute: 'small', type: Boolean, reflect: true})
+    private small: boolean = false;
+
 
     render() {
         return html`
@@ -20,7 +24,9 @@ export class ZincPanel extends LitElement {
                 <li>Payments</li>
               </ul>
             </div>
-            <slot name="actions"><zn-icon src="brooke@bajb.net"></zn-icon></slot>
+            <slot name="actions">
+              <zn-icon src="brooke@bajb.net"></zn-icon>
+            </slot>
           </div>
           <div class="body">
             <slot>

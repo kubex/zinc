@@ -13,12 +13,13 @@ module.exports = {
   darkMode:    'class',
   theme:       {
     colors:   {
-      dark:      colors.zinc,
-      border:    colors.slate["300"],
-      primary:   colors.violet,
-      secondary: colors.orange,
-      tertiary:  colors.green,
-      txt:       colors.slate,
+      transparent: 'transparent',
+      dark:        colors.zinc,
+      border:      colors.slate["300"],
+      primary:     colors.violet,
+      secondary:   colors.orange,
+      tertiary:    colors.green,
+      txt:         colors.slate,
 
       'white':   '#FFFFFF',
       'error':   '#FD003E',
@@ -49,10 +50,10 @@ module.exports = {
       '4k': '2560px',
     },
     fontSize: {
-      xs: ['10px', '14px'],
-      sm: ['12px', '16px'],
-      md: ['14px', '18px'],
-      lg: ['16px', '22px'],
+      xs:    ['10px', '14px'],
+      sm:    ['12px', '16px'],
+      md:    ['14px', '18px'],
+      lg:    ['16px', '22px'],
       title: ['24px', '30px'],
     },
     extend:   {

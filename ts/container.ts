@@ -4,6 +4,8 @@ import {customElement, property} from 'lit/decorators.js';
 import {PropertyValues} from "@lit/reactive-element";
 // @ts-ignore
 import styles from '../scss/container.scss';
+// @ts-ignore
+import layoutStyles from '../scss/layout.scss';
 
 @customElement('app-container')
 export class AppContainer extends LitElement {
@@ -15,14 +17,11 @@ export class AppContainer extends LitElement {
     public darkMode: string = 'false';
     @property({type: HTMLDivElement})
     private container: HTMLDivElement = (() => {
-        const cnt = document.createElement('div');
-        cnt.classList.add('font-sans');
-        cnt.classList.add('text-default');
-        return cnt;
+        return document.createElement('div');
     })();
 
     static get styles() {
-        return [unsafeCSS(styles)];
+        return [unsafeCSS(layoutStyles), unsafeCSS(styles)];
     }
 
     update(changedProperties: PropertyValues) {
@@ -77,7 +76,7 @@ export class AppContainer extends LitElement {
         }
 
         if (!this.flexFrame) {
-            this.container.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,500&display=swap">'
+            this.container.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
                 + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
                 + data;
         } else {

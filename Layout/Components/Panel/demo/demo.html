@@ -7,6 +7,17 @@
 <body>
 
 <zn-panel>Panel Content</zn-panel>
-<script src="../../dist/zn-layout.js" type="text/javascript"></script>
+<zn-panel title="Subscriptions">Panel Content</zn-panel>
+<zn-panel title="Billing"
+          navigation="[{title: 'Invoices', path: '/invoices', default:true},{title: 'Refunds', path: '/refunds'}]">Panel
+                                                                                                                   Content
+</zn-panel>
+<zn-panel title="Payment Methods">
+  <zn-icon slot="actions" src="settings" size="24" library="material"></zn-icon>
+  <zn-icon slot="actions" src="add" size="24" library="material"></zn-icon>
+  Panel Content
+</zn-panel>
+<script src="../../../dist/zn-layout.js" type="text/javascript"></script>
+<script src="../../../../Components/Icon/dist/zn-icon.js" type="text/javascript"></script>
 </body>
 </html>

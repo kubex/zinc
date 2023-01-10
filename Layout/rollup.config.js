@@ -7,6 +7,8 @@ import autoprefixer from "autoprefixer";
 import AtImport from 'postcss-import';
 import tailwindCss from 'tailwindcss';
 
+
+
 const layout = {
   input:   'ts/import.ts',
   output:  {
@@ -21,7 +23,7 @@ const layout = {
     commonjs(),
     postcss({
               inject:    false,
-              extract:   false,
+              extract:   true,
               minimize:  true,
               sourceMap: false,
               plugins:   [

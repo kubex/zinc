@@ -10,6 +10,21 @@ export class ZincPanel extends LitElement {
     }
 
     render() {
-        return html`<slot></slot>`
+        return html`
+          <div class="header">
+            HEADER
+            <div class="nav">
+              <ul>
+                <li class="active">Invoices</li>
+                <li>Refunds</li>
+                <li>Payments</li>
+              </ul>
+            </div>
+            <slot name="actions">ACTIONS</slot>
+          </div>
+          <div class="body">
+            <slot>BODY</slot>
+          </div>
+          <div class="footer">FOOTER</div>`
     }
 }

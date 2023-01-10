@@ -2,22 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-.text-muted {
-  @apply text-gray-500 dark:text-gray-400;
+html, body {
+  @apply w-full h-full max-h-full max-w-full overflow-hidden;
 }
 
-.text-impact {
-  @apply text-gray-900 dark:text-gray-100;
-}
+body {
+  @apply w-full flex flex-col pt-bar;
+  @apply bg-primary-50;
 
-.text-default {
-  @apply text-gray-800 dark:text-gray-200;
-}
+  header {
+    @apply bg-white shadow-md;
+    @apply absolute inset-x-0 top-0 h-bar z-header;
+    @apply flex items-center;
+  }
 
-.dark.text-default {
-  @apply text-gray-200;
-}
+  @apply flex flex-row;
 
-.bg-panel {
-  @apply bg-white dark:bg-gray-900;
+  nav, aside, main {
+    @apply h-full max-h-full max-w-full;
+  }
+
+  nav {
+    @apply bg-primary-700;
+    @apply w-sidenav max-w-bar lg:min-w-bar;
+    @apply z-sidenav absolute inset-y-0 left-0 hidden overflow-hidden;
+    @apply lg:flex lg:relative;
+
+    &.open {
+      @apply shadow-nav lg:shadow-none top-bar lg:top-0;
+      @apply flex;
+      @apply w-sidenav max-w-sidenav min-w-sidenav;
+    }
+  }
+
+  aside {
+    @apply hidden;
+
+    &.visible {
+      @apply max-w-bar md:w-bar md:min-w-bar;
+      @apply md:flex flex-col overflow-x-hidden;
+      @apply bg-primary-700;
+    }
+
+    &.open {
+      @apply z-header lg:z-sidenav flex;
+      @apply absolute top-bar right-0 bottom-0 md:relative md:inset-auto;
+      @apply w-panel max-w-full min-w-full md:min-w-panel md:max-w-50p lg:max-w-70p;
+    }
+  }
+
+  main {
+    @apply grow overflow-auto min-w-[30%];
+    @apply md:p-sm lg:p-md hd:p-lg;
+  }
 }

@@ -1,3 +1,32 @@
 :host {
-  @apply block bg-white p-4 border rounded border-border border-solid;
+  @apply block bg-white p-sm border rounded border-border-500 border-solid;
+}
+
+.header {
+  @apply flex items-center  ;
+  height: 48px;
+
+  & > div.nav {
+    @apply flex grow justify-center;
+
+    ul {
+      @apply flex m-0 p-0;
+      list-style-type: none;
+
+      li {
+        padding: 3px;
+        border-radius: 4px;
+        margin: 0 2px;
+
+        &.active {
+          background: mediumpurple;
+        }
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.1);
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }

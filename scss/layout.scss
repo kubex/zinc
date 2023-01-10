@@ -7,26 +7,25 @@ html, body {
 }
 
 body {
-  @apply w-full flex flex-col pt-bar;
+  @apply w-full flex flex-row pt-bar;
   @apply bg-primary-50;
 
-  header {
+  > header {
     @apply bg-white shadow-md;
     @apply absolute inset-x-0 top-0 h-bar z-header;
     @apply flex items-center;
   }
 
-  @apply flex flex-row;
 
-  nav, aside, main {
-    @apply h-full max-h-full max-w-full;
+  > nav, > aside, > main {
+    @apply h-full max-h-full;
   }
 
-  nav {
+  > nav {
     @apply bg-primary-700;
     @apply w-sidenav max-w-bar lg:min-w-bar;
     @apply z-sidenav absolute inset-y-0 left-0 hidden overflow-hidden;
-    @apply lg:flex lg:relative;
+    @apply flex-col lg:flex lg:relative;
 
     &.open {
       @apply shadow-nav lg:shadow-none top-bar lg:top-0;
@@ -35,7 +34,7 @@ body {
     }
   }
 
-  aside {
+  > aside {
     @apply hidden;
 
     &.visible {
@@ -51,8 +50,8 @@ body {
     }
   }
 
-  main {
-    @apply grow overflow-auto min-w-[30%];
+  > main {
+    @apply grow overflow-auto min-w-[30%] max-w-full;
     @apply md:p-sm lg:p-md hd:p-lg;
   }
 }

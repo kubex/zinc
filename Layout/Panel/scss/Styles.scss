@@ -1,32 +1,35 @@
 :host {
-  @apply block bg-white p-sm border rounded border-border-500 border-solid;
-}
+  @apply block bg-white p-sm rounded border-border;
 
-.header {
-  @apply flex items-center  ;
-  height: 48px;
+  .header {
+    @apply flex items-center h-bar border-border border-b;
 
-  & > div.nav {
-    @apply flex grow justify-center;
+    span {
+      @apply text-lg font-bold;
+    }
 
-    ul {
-      @apply flex m-0 p-0;
-      list-style-type: none;
+    & > div.nav {
+      @apply flex grow justify-center text-sm;
 
-      li {
-        padding: 3px;
-        border-radius: 4px;
-        margin: 0 2px;
 
-        &.active {
-          background: mediumpurple;
-        }
+      ul {
+        @apply flex m-0 p-0;
+        list-style-type: none;
 
-        &:hover {
-          background: rgba(0, 0, 0, 0.1);
-          cursor: pointer;
+        li {
+          @apply p-xs mx-px;
+          border-radius: 4px;
+
+          &.active {
+            @apply bg-primary-100 text-primary-800;
+          }
+
+          &:hover {
+            @apply bg-primary-50 cursor-pointer;
+          }
         }
       }
     }
   }
+
 }

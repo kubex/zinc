@@ -14,7 +14,7 @@ module.exports = {
   theme:       {
     colors:   {
       dark:      colors.zinc,
-      border:    colors.slate,
+      border:    colors.slate["300"],
       primary:   colors.violet,
       secondary: colors.orange,
       tertiary:  colors.green,
@@ -49,7 +49,10 @@ module.exports = {
       '4k': '2560px',
     },
     fontSize: {
-      sm: ['14px', '20px'],
+      xs: ['10px', '14px'],
+      sm: ['12px', '16px'],
+      md: ['14px', '18px'],
+      lg: ['16px', '22px'],
     },
     extend:   {
       zIndex:     {

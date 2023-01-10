@@ -12,7 +12,7 @@ export class ZincPanel extends LitElement {
     render() {
         return html`
           <div class="header">
-            HEADER
+            <span>Subscriptions</span>
             <div class="nav">
               <ul>
                 <li class="active">Invoices</li>

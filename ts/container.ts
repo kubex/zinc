@@ -77,7 +77,7 @@ export class AppContainer extends LitElement {
         }
 
         if (!this.flexFrame) {
-            this.container.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,500&display=swap">'
+            this.container.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:400,500&display=swap">'
                 + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
                 + data;
         } else {

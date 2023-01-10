@@ -20,8 +20,7 @@ const layout = {
     typescript(),
     commonjs(),
     postcss({
-              inject:    false,
-              extract:   true,
+              extract:   false,
               minimize:  true,
               sourceMap: false,
               plugins:   [

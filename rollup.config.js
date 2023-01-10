@@ -7,14 +7,12 @@ import autoprefixer from "autoprefixer";
 import AtImport from 'postcss-import';
 import tailwindCss from 'tailwindcss';
 
-
-
 const layout = {
   input:   'ts/import.ts',
   output:  {
     dir:            'dist',
     format:         'iife',
-    entryFileNames: 'zn-layout.js',
+    entryFileNames: 'zn.js',
     sourcemap:      false,
   },
   plugins: [

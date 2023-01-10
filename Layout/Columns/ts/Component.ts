@@ -2,13 +2,11 @@ import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
-// @ts-ignore
-import layoutStyles from '../../../scss/layout.scss';
 
 @customElement('zn-cols')
 export class ZincColumns extends LitElement {
     static get styles() {
-        return [unsafeCSS(layoutStyles), unsafeCSS(styles)];
+        return [unsafeCSS(styles)];
     }
 
     @property({attribute: 'layout', type: String, reflect: true})

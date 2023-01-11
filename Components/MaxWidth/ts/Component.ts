@@ -10,6 +10,10 @@ export class ZincMaxWidth extends LitElement {
     @property({reflect: true})
     width = 1024
 
+    createRenderRoot() {
+        return this;
+    }
+
     attributeChangedCallback(name: string, _old: string | null, value: string | null) {
         super.attributeChangedCallback(name, _old, value);
         if (Number(value) < 1) {

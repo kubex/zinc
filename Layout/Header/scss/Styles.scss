@@ -1,7 +1,7 @@
 @tailwind base;
 
 zn-header, :host {
-  @apply border-b border-border bg-white;
+  @apply border-b border-border bg-white overflow-hidden;
   @apply flex flex-wrap w-full h-fit px-sm md:px-lg;
 }
 
@@ -40,18 +40,22 @@ zn-header:not([navigation]), :host:not([navigation]) {
   }
 
   ul.header-nav {
-    @apply box-border flex basis-full gap-sm ;
+    @apply box-border flex basis-full gap-md md:gap-lg;
 
     li {
 
-      @apply text-navitem border-b-sm border-transparent font-semibold px-sm;
+      @apply text-navitem font-semibold relative;
 
-      &.active {
-        @apply border-secondary-500;
+      &::before {
+        @apply inset-x-1/2 absolute bottom-0 transition-all duration-200;
+        content: "";
       }
 
-      &:hover {
-        @apply cursor-pointer border-secondary-500;
+      &.active::before, &:hover::before {
+        @apply cursor-pointer;
+        @apply bg-secondary-500 h-xxs;
+        left: -6px;
+        right: -6px;
       }
     }
   }

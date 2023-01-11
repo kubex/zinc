@@ -56,7 +56,7 @@ module.exports = {
       md: ['14px', '18px'],
       lg: ['16px', '22px'],
 
-      navitem: ['14px', '30px'],
+      navitem: ['14px', '36px'],
       title:   ['24px', '40px'],
     },
     extend:   {

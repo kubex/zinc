@@ -10,8 +10,11 @@ zn-header, :host {
 }
 
 zn-header[max-width], :host[max-width] {
-  display: flex;
-  justify-content: center;
+  @apply flex justify-center
+}
+
+zn-header:not([navigation]), :host:not([navigation]) {
+  @apply pb-sm;
 }
 
 
@@ -20,7 +23,7 @@ zn-header[max-width], :host[max-width] {
   @apply gap-sm pt-sm;
 
   .width-container {
-    width: 100%;
+    @apply w-full;
     max-width: var(--max-width);
   }
 
@@ -29,7 +32,7 @@ zn-header[max-width], :host[max-width] {
   }
 
   h1:empty, slot:empty {
-    display: none;
+    @apply hidden;
   }
 
   slot {

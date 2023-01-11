@@ -1,0 +1,44 @@
+@tailwind base;
+
+zn-header, :host {
+  @apply border-b border-border bg-white;
+  @apply flex flex-wrap w-full h-fit px-sm md:px-lg;
+}
+
+:host[transparent], zn-header[transparent] {
+  @apply bg-transparent;
+}
+
+:host {
+
+  @apply gap-sm pt-sm;
+
+  h1 {
+    @apply text-title grow text-primary-800;
+  }
+
+  h1:empty, slot:empty {
+    display: none;
+  }
+
+  slot {
+    @apply flex items-center flex-wrap gap-xs;
+  }
+
+  > ul {
+    @apply box-border flex basis-full gap-sm ;
+
+    li {
+
+      @apply text-navitem border-b-sm border-transparent font-semibold px-sm;
+
+      &.active {
+        @apply border-secondary-500;
+      }
+
+      &:hover {
+        @apply cursor-pointer border-secondary-500;
+      }
+    }
+  }
+}

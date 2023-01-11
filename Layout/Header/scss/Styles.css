@@ -1,0 +1,36 @@
+@tailwind base;
+zn-header, :host {
+  @apply border-b border-border bg-white;
+  @apply flex flex-wrap w-full h-fit px-sm md:px-lg;
+}
+
+:host[transparent], zn-header[transparent] {
+  @apply bg-transparent;
+}
+
+:host {
+  @apply gap-sm pt-sm;
+}
+:host h1 {
+  @apply text-title grow text-primary-800;
+}
+:host h1:empty, :host slot:empty {
+  display: none;
+}
+:host slot {
+  @apply flex items-center flex-wrap gap-xs;
+}
+:host > ul {
+  @apply box-border flex basis-full gap-sm;
+}
+:host > ul li {
+  @apply text-navitem border-b-sm border-transparent font-semibold px-sm;
+}
+:host > ul li.active {
+  @apply border-secondary-500;
+}
+:host > ul li:hover {
+  @apply cursor-pointer border-secondary-500;
+}
+
+/*# sourceMappingURL=Styles.css.map */

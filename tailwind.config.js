@@ -29,13 +29,14 @@ module.exports = {
       'fuchsia': '#D32CE3',
     },
     spacing:  {
-      0:    '0px',
-      'px': '1px',
-      'xs': '5px',
-      'sm': '10px',
-      'md': '15px',
-      'lg': '20px',
-      'xl': '25px',
+      0:     '0px',
+      'px':  '1px',
+      'xxs': '3px',
+      'xs':  '5px',
+      'sm':  '10px',
+      'md':  '15px',
+      'lg':  '20px',
+      'xl':  '25px',
 
       'bar':     '50px',
       'sidenav': '240px',
@@ -50,21 +51,23 @@ module.exports = {
       '4k': '2560px',
     },
     fontSize: {
-      xs:    ['10px', '14px'],
-      sm:    ['12px', '16px'],
-      md:    ['14px', '18px'],
-      lg:    ['16px', '22px'],
-      title: ['24px', '30px'],
+      xs: ['10px', '14px'],
+      sm: ['12px', '16px'],
+      md: ['14px', '18px'],
+      lg: ['16px', '22px'],
+
+      navitem: ['14px', '30px'],
+      title:   ['24px', '40px'],
     },
     extend:   {
-      zIndex:     {
+      zIndex:      {
         'header':  300,
         'sidenav': 250,
       },
-      boxShadow:  {
+      boxShadow:   {
         'nav': '5px 0 40px #000000'
       },
-      maxWidth:   {
+      maxWidth:    {
         'bar':     '50px',
         'sidenav': '240px',
         'spanel':  '250px',
@@ -72,13 +75,21 @@ module.exports = {
         '50p':     '50%',
         '70p':     '70%',
       },
-      minWidth:   {
+      minWidth:    {
         'bar':     '50px',
         'sidenav': '240px',
         'spanel':  '250px',
         'panel':   '360px',
       },
-      fontFamily: {
+      borderWidth: {
+        DEFAULT: '1px',
+        '0':     '0',
+        'px':    '1px',
+        'xs':    '2px',
+        'sm':    '3px',
+        'md':    '4px',
+      },
+      fontFamily:  {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },

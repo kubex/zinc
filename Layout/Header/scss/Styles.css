@@ -8,8 +8,17 @@ zn-header, :host {
   @apply bg-transparent;
 }
 
+zn-header[max-width], :host[max-width] {
+  display: flex;
+  justify-content: center;
+}
+
 :host {
   @apply gap-sm pt-sm;
+}
+:host .width-container {
+  width: 100%;
+  max-width: var(--max-width);
 }
 :host h1 {
   @apply text-title grow text-primary-800;
@@ -20,16 +29,16 @@ zn-header, :host {
 :host slot {
   @apply flex items-center flex-wrap gap-xs;
 }
-:host > ul {
+:host ul.header-nav {
   @apply box-border flex basis-full gap-sm;
 }
-:host > ul li {
+:host ul.header-nav li {
   @apply text-navitem border-b-sm border-transparent font-semibold px-sm;
 }
-:host > ul li.active {
+:host ul.header-nav li.active {
   @apply border-secondary-500;
 }
-:host > ul li:hover {
+:host ul.header-nav li:hover {
   @apply cursor-pointer border-secondary-500;
 }
 

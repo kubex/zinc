@@ -8,7 +8,7 @@ export class ZincMaxWidth extends LitElement {
     static styles = unsafeCSS(styles);
 
     @property({reflect: true})
-    width = 1024
+    width
 
     attributeChangedCallback(name: string, _old: string | null, value: string | null) {
         super.attributeChangedCallback(name, _old, value);

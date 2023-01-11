@@ -23,28 +23,37 @@ export class ZincPanel extends LitElement {
 
     render() {
         let footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
-        let panel = html`
-          <div class="header">
-            <span>${this.caption}</span>
-            <div class="nav">
-              <ul>
-                ${this.navigation.map((item, index) =>
-                  html`
-                    <li><a href="${item.path}">${item.title}</a></li>`)}
-              </ul>
-            </div>
-            <slot name="actions"></slot>
-          </div>
+        let actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
+
+        let header;
+        if (actionItems || this.caption || this.navigation.length > 0) {
+            header = html`
+              <div class="header">
+                <span>${this.caption}</span>
+                <div class="nav">
+                  <ul>
+                    ${this.navigation.map((item, index) =>
+                      html`
+                        <li><a href="${item.path}">${item.title}</a></li>`)}
+                  </ul>
+                </div>
+                <slot name="actions"></slot>
+              </div>`
+        }
+
+        let footer;
+        if (footerItems) {
+            footer = html`
+              <div class="footer">
+                <slot name="footer"></slot>
+              </div>`
+        }
+
+        return html`
+          ${header}
           <div class="body">
             <slot></slot>
-          </div>`
-
-        if (footerItems) {
-            return html`${panel}
-            <div class="footer">
-              <slot name="footer"></slot>
-            </div>`
-        }
-        return panel
+          </div>
+          ${footer}`
     }
 }

@@ -15,7 +15,7 @@ export class ZincHeader extends LitElement {
     @property({attribute: 'caption', type: String, reflect: true})
     private caption: String = "";
 
-    @property({attribute: 'navigation', type: Array, reflect: true})
+    @property({attribute: 'navigation', type: Array})
     private navigation = [];
 
     @property({attribute: 'max-width', type: Number, reflect: true})

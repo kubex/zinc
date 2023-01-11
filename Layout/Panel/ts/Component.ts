@@ -9,6 +9,11 @@ export class ZincPanel extends LitElement {
         return [unsafeCSS(styles)];
     }
 
+
+    @property({attribute: 'caption', type: String, reflect: true})
+    private caption: String = "";
+
+
     @property({attribute: 'small', type: Boolean, reflect: true})
     private small: boolean = false;
 
@@ -20,7 +25,7 @@ export class ZincPanel extends LitElement {
         let footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
         let panel = html`
           <div class="header">
-            <span>Subscriptions</span>
+            <span>${this.caption}</span>
             <div class="nav">
               <ul>
                 ${this.navigation.map((item, index) =>

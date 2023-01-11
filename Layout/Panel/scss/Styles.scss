@@ -2,7 +2,7 @@
 
 zn-panel, :host {
   @apply block p-sm smp:rounded border-t border-b smp:border border-border bg-white;
-  @apply overflow-hidden grow;
+  @apply overflow-hidden grow flex flex-col;
   @apply basis-panel min-w-panel max-w-screen-md;
 }
 
@@ -10,6 +10,7 @@ zn-panel, :host {
   @apply min-w-spanel basis-spanel;
   @apply bg-transparent border-0;
 }
+
 
 :host {
   .header {
@@ -44,11 +45,11 @@ zn-panel, :host {
   }
 
   .body {
-    @apply py-sm overflow-y-auto;
+    @apply py-sm overflow-y-auto grow;
   }
 
   .footer {
-    @apply text-sm text-txt-500;
+    @apply text-sm text-txt-500 block;
     @apply pt-sm border-border border-t;
   }
 }

@@ -12,31 +12,34 @@ export class ZincPanel extends LitElement {
     @property({attribute: 'small', type: Boolean, reflect: true})
     private small: boolean = false;
 
+    @property({attribute: 'navigation', type: Array})
+    private navigation = [];
+
 
     render() {
-        return html`
+        let footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
+        let panel = html`
           <div class="header">
             <span>Subscriptions</span>
             <div class="nav">
               <ul>
-                <li class="active">Invoices</li>
-                <li>Refunds</li>
-                <li>Payments</li>
+                ${this.navigation.map((item, index) =>
+                  html`
+                    <li><a href="${item.path}">${item.title}</a></li>`)}
               </ul>
             </div>
-            <slot name="actions">
-              <zn-icon src="brooke@bajb.net"></zn-icon>
-            </slot>
+            <slot name="actions"></slot>
           </div>
           <div class="body">
-            <slot>
-              BODY<br/>
-              BODY<br/>
-              BODY<br/>
-              BODY<br/>
-              BODY<br/>
-            </slot>
-          </div>
-          <div class="footer">View full billing history</div>`
+            <slot></slot>
+          </div>`
+
+        if (footerItems) {
+            return html`${panel}
+            <div class="footer">
+              <slot name="footer"></slot>
+            </div>`
+        }
+        return panel
     }
 }

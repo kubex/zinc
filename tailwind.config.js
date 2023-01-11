@@ -44,11 +44,12 @@ module.exports = {
       'panel':   '360px',
     },
     screens:  {
-      'sm': '360px',
-      'md': '768px',
-      'lg': '1100px',
-      'hd': '1440px',
-      '4k': '2560px',
+      'sm':  '360px',
+      'smp': '480px',
+      'md':  '768px',
+      'lg':  '1100px',
+      'hd':  '1440px',
+      '4k':  '2560px',
     },
     fontSize: {
       xs: ['10px', '14px'],

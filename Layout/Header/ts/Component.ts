@@ -24,23 +24,20 @@ export class ZincHeader extends LitElement {
     render() {
 
         let header = html`
-          <h1>${this.caption}</h1>
-          <slot></slot>
-          <ul class="header-nav">
-            ${this.navigation.map((item, index) =>
-              html`
-                <li><a href="${item.path}">${item.title}</a></li>`)}
-          </ul>
+          <div class="width-container">
+            <h1>${this.caption}</h1>
+            <slot></slot>
+            <ul class="header-nav">
+              ${this.navigation.map((item, index) =>
+                html`
+                  <li><a href="${item.path}">${item.title}</a></li>`)}
+            </ul>
+          </div>
         `
-        if (this.maxWidth != undefined) {
-            header = html`
-              <div class="width-container">${header}</div>`
-
-            if (this.maxWidth > 0) {
-                return html`
-                  <style>:host {
-                    --max-width: ${this.maxWidth}px; </style>${header}`
-            }
+        if (this.maxWidth > 0) {
+            return html`
+              <style>:host {
+                --max-width: ${this.maxWidth}px; </style>${header}`
         }
 
         return header

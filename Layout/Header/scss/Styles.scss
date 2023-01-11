@@ -1,29 +1,23 @@
 @tailwind base;
 
 zn-header, :host {
-  @apply border-b border-border bg-white overflow-hidden;
-  @apply flex flex-wrap w-full h-fit px-sm md:px-lg;
+  @apply flex justify-center border-b border-border bg-white overflow-hidden;
 }
 
 :host[transparent], zn-header[transparent] {
   @apply bg-transparent;
 }
 
-zn-header[max-width], :host[max-width] {
-  @apply flex justify-center
-}
-
 zn-header:not([navigation]), :host:not([navigation]) {
   @apply pb-sm;
 }
-
 
 :host {
 
   @apply gap-sm pt-sm;
 
   .width-container {
-    @apply w-full;
+    @apply w-full flex flex-wrap w-full h-fit px-sm md:px-lg;
     max-width: var(--max-width);
   }
 
@@ -31,7 +25,7 @@ zn-header:not([navigation]), :host:not([navigation]) {
     @apply text-title grow text-primary-800;
   }
 
-  h1:empty, slot:empty {
+  h1:empty, &:empty {
     @apply hidden;
   }
 

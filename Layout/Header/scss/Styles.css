@@ -1,15 +1,10 @@
 @tailwind base;
 zn-header, :host {
-  @apply border-b border-border bg-white overflow-hidden;
-  @apply flex flex-wrap w-full h-fit px-sm md:px-lg;
+  @apply flex justify-center border-b border-border bg-white overflow-hidden;
 }
 
 :host[transparent], zn-header[transparent] {
   @apply bg-transparent;
-}
-
-zn-header[max-width], :host[max-width] {
-  @apply flex justify-center;
 }
 
 zn-header:not([navigation]), :host:not([navigation]) {
@@ -20,13 +15,13 @@ zn-header:not([navigation]), :host:not([navigation]) {
   @apply gap-sm pt-sm;
 }
 :host .width-container {
-  @apply w-full;
+  @apply w-full flex flex-wrap w-full h-fit px-sm md:px-lg;
   max-width: var(--max-width);
 }
 :host h1 {
   @apply text-title grow text-primary-800;
 }
-:host h1:empty, :host slot:empty {
+:host h1:empty, :host:empty {
   @apply hidden;
 }
 :host slot {

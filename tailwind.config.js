@@ -22,10 +22,13 @@ module.exports = {
       txt:         colors.slate,
 
       'white':   '#FFFFFF',
+      'black':   '#000000',
+
       'error':   '#FD003E',
       'info':    '#7DD3FC',
       'warning': '#FBBF24',
       'success': '#10B981',
+
       'fuchsia': '#D32CE3',
     },
     spacing:  {

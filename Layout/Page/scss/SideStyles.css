@@ -12,9 +12,11 @@
   @apply md:min-w-sidenav md:max-w-sidenav;
 }
 :host > div.expander {
-  @apply hidden smp:flex md:hidden inset-0 z-10;
-  @apply justify-center items-center w-bar cursor-pointer;
-  @apply border-l-px border-border;
+  @apply flex md:hidden inset-0 z-10 cursor-pointer;
+  @apply justify-center items-center;
+  @apply h-bar smp:h-full smp:w-bar;
+  @apply border-b-px smp:border-b-0 smp:border-l-px border-border;
+  width: 100vw;
   font-size: 50px;
 }
 
@@ -26,8 +28,10 @@
   position: unset;
 }
 :host([open]) > div.content {
-  @apply min-w-sidenav max-w-sidenav flex pl-sm;
-  @apply z-20;
+  @apply flex pl-sm;
+  @apply min-w-full max-w-full;
+  @apply smp:min-w-sidenav smp:max-w-sidenav;
+  @apply z-20 top-bar smp:top-0;
   @apply border-l-px border-border;
 }
 :host([open]) > div.expander {

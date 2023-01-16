@@ -4,9 +4,10 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from '../scss/Styles.scss';
 // @ts-ignore
 import sideStyles from '../scss/SideStyles.scss';
+import {ZincElement} from "../../../ts/element";
 
 @customElement('zn-page')
-export class ZincPage extends LitElement {
+export class ZincPage extends ZincElement {
     static get styles() {
         return [unsafeCSS(styles)];
     }
@@ -24,20 +25,15 @@ export class ZincPage extends LitElement {
 
 
 @customElement('zn-pageside')
-export class ZincPageSide extends LitElement {
+export class ZincPageSide extends ZincElement {
     static get styles() {
         return [unsafeCSS(sideStyles)];
     }
 
+    public slot = "side";
 
     @property({attribute: 'open', type: Boolean, reflect: true})
     private open: boolean = false;
-
-
-    constructor() {
-        super();
-        this.slot = "side"
-    }
 
     _handleClick(e) {
         this.open = !this.open;

@@ -1,7 +1,7 @@
 @tailwind base;
 :host > div {
   @apply flex justify-center border-b overflow-hidden pb-sm;
-  @apply border-border dark:border-darkBorder;
+  @apply border-border;
   @apply bg-white;
 }
 
@@ -9,11 +9,11 @@
   @apply bg-transparent;
 }
 
-:host([darkMode]) > div {
-  @apply bg-dark-800;
+:host([d]) > div {
+  @apply bg-dark-800 border-darkBorder;
 }
-:host([darkMode]) > div h1 {
-  @apply text-primary-500;
+:host([d]) > div h1 {
+  @apply text-primary-400;
 }
 
 :host([navigation]) > div {

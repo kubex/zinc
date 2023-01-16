@@ -5,12 +5,12 @@ import {PropertyValues} from "@lit/reactive-element";
 
 
 export class ZincElement extends LitElement {
-    @property({type: Boolean, attribute: 'darkMode', reflect: true})
-    public darkMode: boolean = false;
+    @property({type: Boolean, attribute: 'd', reflect: true})
+    public d: boolean = false;
 
     constructor() {
         super();
-        this.darkMode = document.documentElement.classList.contains('dark')
-            || document.documentElement.attributes.getNamedItem('darkMode') != null;
+        this.d = document.documentElement.classList.contains('dark')
+            || document.documentElement.attributes.getNamedItem('d') != null;
     }
 }

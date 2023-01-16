@@ -11,10 +11,23 @@ export class ZincColumns extends LitElement {
 
     @property({attribute: 'layout', type: String, reflect: true})
     private layout: string = ""
+    @property({attribute: 'expanded', type: Boolean, reflect: true})
+    private expanded: boolean = false
 
     layoutClass = "";
 
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('resize', this._resize.bind(this));
+    }
+
+    _resize() {
+        this.expanded = this.parentElement.offsetWidth > 768;
+    }
+
     render() {
+        this._resize();
+
         if (this.layout.length < 1) {
             let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
             let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
@@ -53,9 +66,6 @@ export class ZincColumns extends LitElement {
                 colCount++;
             }
         }
-        console.log(slots);
-
-        console.log('render', span, colCount)
         return html`
           <div class="${this.layoutClass}">
             <div class="${slots[0]}">

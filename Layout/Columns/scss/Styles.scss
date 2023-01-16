@@ -9,19 +9,32 @@
 
 
   .s1 {
-    @apply col-span-2 lg:col-span-1;
+    @apply col-span-2 ;
   }
 
   .s2 {
-    @apply col-span-4 lg:col-span-2;
+    @apply col-span-4;
   }
 
   .s3 {
-    @apply col-span-4 lg:col-span-3;
+    @apply col-span-4 ;
   }
 
   .s4 {
     @apply col-span-4;
   }
+}
 
+:host([expanded]) {
+  .s1 {
+    @apply col-span-1;
+  }
+
+  .s2 {
+    @apply col-span-2;
+  }
+
+  .s3 {
+    @apply col-span-3;
+  }
 }

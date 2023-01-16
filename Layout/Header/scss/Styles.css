@@ -1,46 +1,53 @@
 @tailwind base;
-zn-header, :host {
-  @apply flex justify-center border-b overflow-hidden;
-  @apply bg-white dark:bg-dark-800;
+:host > div {
+  @apply flex justify-center border-b overflow-hidden pb-sm;
   @apply border-border dark:border-darkBorder;
+  @apply bg-white;
 }
 
-:host[transparent], zn-header[transparent] {
+:host([transparent]) > div {
   @apply bg-transparent;
 }
 
-zn-header:not([navigation]), :host:not([navigation]) {
-  @apply pb-sm;
+:host([darkMode]) > div {
+  @apply bg-dark-800;
+}
+:host([darkMode]) > div h1 {
+  @apply text-primary-500;
 }
 
-:host {
+:host([navigation]) > div {
+  @apply pb-0;
+}
+
+:host > div {
   @apply gap-sm pt-sm;
 }
-:host .width-container {
+:host > div .width-container {
   @apply w-full flex flex-wrap w-full h-fit px-sm md:px-lg;
   max-width: var(--max-width);
 }
-:host h1 {
+:host > div h1 {
   @apply text-title grow;
-  @apply text-primary-800 dark:text-primary-400;
+  @apply text-primary-800;
 }
-:host h1:empty, :host:empty {
+:host > div h1:empty, :host > div:empty {
   @apply hidden;
 }
-:host slot {
+:host > div slot {
   @apply flex items-center flex-wrap gap-xs;
 }
-:host ul.header-nav {
-  @apply box-border flex basis-full gap-lg md:gap-xl;
+:host > div ul.header-nav {
+  @apply box-border flex basis-full gap-lg md:gap-xl pt-xs;
 }
-:host ul.header-nav li {
+:host > div ul.header-nav li {
   @apply text-navitem font-semibold relative;
 }
-:host ul.header-nav li::before {
+:host > div ul.header-nav li::before {
   @apply inset-x-1/2 absolute bottom-0 transition-all duration-200;
   content: "";
 }
-:host ul.header-nav li.active::before, :host ul.header-nav li:hover::before {
+:host > div ul.header-nav li.active::before, :host > div ul.header-nav li:hover::before {
   @apply cursor-pointer;
   @apply bg-secondary-500 h-xxs;
   left: -6px;

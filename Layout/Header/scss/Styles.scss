@@ -1,20 +1,28 @@
 @tailwind base;
 
-zn-header, :host {
-  @apply flex justify-center border-b overflow-hidden;
-  @apply bg-white dark:bg-dark-800;
+:host > div {
+  @apply flex justify-center border-b overflow-hidden pb-sm;
   @apply border-border dark:border-darkBorder;
+  @apply bg-white;
 }
 
-:host[transparent], zn-header[transparent] {
+:host([transparent]) > div {
   @apply bg-transparent;
 }
 
-zn-header:not([navigation]), :host:not([navigation]) {
-  @apply pb-sm;
+:host([darkMode]) > div {
+  @apply bg-dark-800;
+
+  h1 {
+    @apply text-primary-500;
+  }
 }
 
-:host {
+:host([navigation]) > div {
+  @apply pb-0;
+}
+
+:host > div {
 
   @apply gap-sm pt-sm;
 
@@ -25,7 +33,7 @@ zn-header:not([navigation]), :host:not([navigation]) {
 
   h1 {
     @apply text-title grow;
-    @apply text-primary-800 dark:text-primary-400;
+    @apply text-primary-800;
 
   }
 
@@ -38,7 +46,7 @@ zn-header:not([navigation]), :host:not([navigation]) {
   }
 
   ul.header-nav {
-    @apply box-border flex basis-full gap-lg md:gap-xl;
+    @apply box-border flex basis-full gap-lg md:gap-xl pt-xs;
 
     li {
 

@@ -2,9 +2,10 @@ import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
+import {ZincElement} from "../../../ts/element";
 
 @customElement('zn-header')
-export class ZincHeader extends LitElement {
+export class ZincHeader extends ZincElement {
     static get styles() {
         return [unsafeCSS(styles)];
     }
@@ -22,16 +23,17 @@ export class ZincHeader extends LitElement {
     private maxWidth;
 
     render() {
-
         let header = html`
-          <div class="width-container">
-            <h1>${this.caption}</h1>
-            <slot></slot>
-            <ul class="header-nav">
-              ${this.navigation.map((item, index) =>
-                html`
-                  <li><a href="${item.path}">${item.title}</a></li>`)}
-            </ul>
+          <div>
+            <div class="width-container">
+              <h1>${this.caption}</h1>
+              <slot></slot>
+              <ul class="header-nav">
+                ${this.navigation.map((item, index) =>
+                  html`
+                    <li><a href="${item.path}">${item.title}</a></li>`)}
+              </ul>
+            </div>
           </div>
         `
         if (this.maxWidth > 0) {

@@ -1,0 +1,36 @@
+@tailwind base;
+:host {
+  @apply relative md:w-spanel md:min-w-spanel md:max-w-spanel;
+}
+:host > div {
+  @apply absolute bg-primary-50;
+}
+:host > div.content {
+  @apply overflow-y-auto max-w-bar md:min-w-spanel;
+  @apply hidden md:flex right-0 inset-y-0;
+  @apply md:min-w-sidenav md:max-w-sidenav;
+}
+:host > div.expander {
+  @apply hidden smp:flex md:hidden inset-0 z-10;
+  @apply justify-center items-center w-bar cursor-pointer;
+  @apply border-l-px border-border;
+  font-size: 50px;
+}
+
+:host([d]) > div {
+  @apply border-darkBorder bg-dark-900;
+}
+
+:host([open]) {
+  position: unset;
+}
+:host([open]) > div.content {
+  @apply min-w-sidenav max-w-sidenav flex pl-sm;
+  @apply z-20;
+  @apply border-l-px border-border;
+}
+:host([open]) > div.expander {
+  @apply inset-0 w-full bg-black opacity-5;
+}
+
+/*# sourceMappingURL=SideStyles.css.map */

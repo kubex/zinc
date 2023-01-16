@@ -14,8 +14,8 @@ module.exports = {
   theme:       {
     colors:   {
       transparent: 'transparent',
-      dark:        colors.zinc,
-      darkBorder:  colors.zinc["700"],
+      dark:        colors.slate,
+      darkBorder:  colors.slate["700"],
       border:      colors.slate["300"],
       primary:     colors.violet,
       secondary:   colors.orange,

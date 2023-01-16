@@ -1,10 +1,11 @@
-import {html, LitElement, unsafeCSS} from 'lit';
+import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
+import {ZincElement} from "../../../ts/element";
 
 @customElement('zn-panel')
-export class ZincPanel extends LitElement {
+export class ZincPanel extends ZincElement {
     static get styles() {
         return [unsafeCSS(styles)];
     }
@@ -50,10 +51,11 @@ export class ZincPanel extends LitElement {
         }
 
         return html`
-          ${header}
-          <div class="body">
-            <slot></slot>
-          </div>
-          ${footer}`
+          <div>${header}
+            <div class="body">
+              <slot></slot>
+            </div>
+               ${footer}
+          </div>`
     }
 }

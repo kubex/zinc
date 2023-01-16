@@ -1,25 +1,17 @@
 @tailwind base;
 
-zn-panel, :host {
+:host > div {
+
+
   @apply block p-sm smp:rounded border-t border-b smp:border;
   @apply overflow-hidden grow flex flex-col;
   @apply basis-panel min-w-panel max-w-screen-md;
 
-  @apply border-border dark:border-darkBorder;
-  @apply bg-white dark:bg-dark-700;
-}
+  @apply border-border bg-white;
 
-:host[small], zn-panel[small] {
-  @apply min-w-spanel basis-spanel;
-  @apply bg-transparent border-0;
-}
-
-
-:host {
   .header {
     @apply flex items-center pb-sm border-b;
-    @apply border-border border-darkBorder;
-    @apply text-txt-700 dark:text-dark-100;
+    @apply border-border text-txt-700;
 
     span {
       @apply text-lg font-semibold;
@@ -56,5 +48,21 @@ zn-panel, :host {
   .footer {
     @apply text-sm text-txt-500 block;
     @apply pt-sm border-border border-t;
+  }
+}
+
+
+:host[small] > div {
+  @apply min-w-spanel basis-spanel;
+  @apply bg-transparent border-0;
+}
+
+:host([d]) > div {
+  @apply border-transparent;
+  @apply bg-dark-800;
+
+  .header {
+    @apply border-darkBorder;
+    @apply text-dark-100;
   }
 }

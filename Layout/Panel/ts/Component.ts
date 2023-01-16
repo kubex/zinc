@@ -10,7 +10,6 @@ export class ZincPanel extends ZincElement {
         return [unsafeCSS(styles)];
     }
 
-
     @property({attribute: 'caption', type: String, reflect: true})
     private caption: String = "";
 

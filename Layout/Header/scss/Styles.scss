@@ -1,7 +1,9 @@
 @tailwind base;
 
 zn-header, :host {
-  @apply flex justify-center border-b border-border bg-white overflow-hidden;
+  @apply flex justify-center border-b overflow-hidden;
+  @apply bg-white dark:bg-dark-800;
+  @apply border-border dark:border-darkBorder;
 }
 
 :host[transparent], zn-header[transparent] {
@@ -22,7 +24,9 @@ zn-header:not([navigation]), :host:not([navigation]) {
   }
 
   h1 {
-    @apply text-title grow text-primary-800;
+    @apply text-title grow;
+    @apply text-primary-800 dark:text-primary-300;
+
   }
 
   h1:empty, &:empty {

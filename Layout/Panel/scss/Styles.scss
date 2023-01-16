@@ -2,9 +2,11 @@
 
 zn-panel, :host {
   @apply block p-sm smp:rounded border-t border-b smp:border;
-  @apply border-border bg-white dark:border-darkBorder dark:bg-dark-700;
   @apply overflow-hidden grow flex flex-col;
   @apply basis-panel min-w-panel max-w-screen-md;
+
+  @apply border-border dark:border-darkBorder;
+  @apply bg-white dark:bg-dark-700;
 }
 
 :host[small], zn-panel[small] {
@@ -15,7 +17,9 @@ zn-panel, :host {
 
 :host {
   .header {
-    @apply flex items-center pb-sm border-b border-border;
+    @apply flex items-center pb-sm border-b;
+    @apply border-border border-darkBorder;
+    @apply dark:text-dark-100;
 
     span {
       @apply text-lg font-semibold;

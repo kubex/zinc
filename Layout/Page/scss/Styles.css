@@ -2,7 +2,10 @@
   @apply relative w-full h-full flex flex-col-reverse smp:flex-row;
 }
 :host .pageside {
-  @apply md:basis-spanel h-bar max-h-bar smp:max-h-full w-full smp:h-full smp:flex smp:min-w-bar md:min-w-spanel smp:max-w-spanel smp:grow;
+  @apply h-bar max-h-bar w-full;
+  @apply md:basis-spanel smp:max-h-full smp:h-full smp:flex smp:min-w-bar;
+  @apply smp:max-w-bar smp:grow
+    @apply md:basis-spanel md:min-w-spanel;
 }
 :host div {
   @apply grow;

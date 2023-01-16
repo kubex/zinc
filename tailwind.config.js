@@ -13,14 +13,27 @@ module.exports = {
   darkMode:    'class',
   theme:       {
     colors:   {
-      transparent: 'transparent',
+      darkBorder: colors.slate["700"],
+      darkTxt:    {
+        900: 'rgba(255,255,255, 1)',
+        800: 'rgba(255,255,255, 0.87)',
+        600: 'rgba(255,255,255, 0.60)',
+        400: 'rgba(255,255,255, 0.40)',
+      },
+
+      border: colors.slate["300"],
+      txt:    {
+        900: 'rgba(0, 0, 0, 1)',
+        800: 'rgba(0, 0, 0, 0.87)',
+        600: 'rgba(0, 0, 0, 0.60)',
+        400: 'rgba(0, 0, 0, 0.40)',
+      },
+
       dark:        colors.slate,
-      darkBorder:  colors.slate["700"],
-      border:      colors.slate["300"],
+      transparent: 'transparent',
       primary:     colors.violet,
       secondary:   colors.orange,
       tertiary:    colors.green,
-      txt:         colors.slate,
 
       'white': '#FFFFFF',
       'black': '#000000',

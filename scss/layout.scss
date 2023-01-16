@@ -12,12 +12,13 @@ html, body {
 
 body {
   @apply w-full flex flex-row pt-bar;
-  @apply bg-primary-50;
+  @apply bg-primary-50 dark:bg-dark-800;
 
   > header {
-    @apply bg-white;
+    @apply bg-white dark:bg-dark-800;
     @apply absolute inset-x-0 top-0 h-bar z-header;
     @apply flex items-center;
+    @apply border-border border-b dark:border-darkBorder;
   }
 
 
@@ -26,7 +27,7 @@ body {
   }
 
   > nav {
-    @apply bg-primary-700;
+    @apply bg-primary-700 dark:bg-primary-900;
     @apply w-sidenav max-w-bar lg:min-w-bar;
     @apply z-sidenav absolute inset-y-0 left-0 hidden overflow-hidden;
     @apply flex-col lg:flex lg:relative;
@@ -44,7 +45,7 @@ body {
     &.visible {
       @apply max-w-bar md:w-bar md:min-w-bar;
       @apply md:flex flex-col overflow-x-hidden;
-      @apply bg-primary-700;
+      @apply bg-primary-700 dark:bg-primary-900;
     }
 
     &.open {

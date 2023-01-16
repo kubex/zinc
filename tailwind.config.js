@@ -15,14 +15,15 @@ module.exports = {
     colors:   {
       transparent: 'transparent',
       dark:        colors.zinc,
+      darkBorder:  colors.zinc["700"],
       border:      colors.slate["300"],
       primary:     colors.violet,
       secondary:   colors.orange,
       tertiary:    colors.green,
       txt:         colors.slate,
 
-      'white':   '#FFFFFF',
-      'black':   '#000000',
+      'white': '#FFFFFF',
+      'black': '#000000',
 
       'error':   '#FD003E',
       'info':    '#7DD3FC',

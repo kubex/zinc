@@ -3,55 +3,27 @@
   @apply grow;
 
   > div {
-    @apply col-span-full grid;
+    @apply grid;
     @apply smp:gap-sm md:gap-md lg:gap-lg hd:gap-xl;
 
-    @apply grid-cols-2 md:grid-cols-4;
+    @apply grid-cols-4;
   }
 
 
-  .c {
-    div {
-      @apply flex col-span-1;
-    }
+  .s1 {
+    @apply col-span-2 md:col-span-1;
   }
 
-  .c-1-2 {
-    div:nth-of-type(1) {
-      @apply col-span-2;
-    }
+  .s2 {
+    @apply col-span-4 md:col-span-2;
   }
 
-  .c-1-3 {
-    div:nth-of-type(1) {
-      @apply col-span-3;
-    }
+  .s3 {
+    @apply col-span-4 md:col-span-3;
   }
 
-  .c-1-4 {
-    div:nth-of-type(1) {
-      @apply col-span-4;
-    }
+  .s4 {
+    @apply col-span-4;
   }
-
-
-  .c-2-2 {
-    div:nth-of-type(2) {
-      @apply col-span-2;
-    }
-  }
-
-  .c-2-3 {
-    div:nth-of-type(2) {
-      @apply col-span-3;
-    }
-  }
-
-  .c-3-2 {
-    div:nth-of-type(3) {
-      @apply col-span-2;
-    }
-  }
-
 
 }

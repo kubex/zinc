@@ -39,70 +39,38 @@ export class ZincColumns extends LitElement {
         }
 
         let cols = this.layout.replace(/,/g, ' ').split(" ");
-        this.layoutClass = "c";
+        this.layoutClass = "";
         let span = 0;
         let colCount = 0;
 
+        let slots = ['', '', '', ''];
+
         for (let i = 0; i < cols.length; i++) {
             span += parseInt(cols[i]);
-            console.log('span', span, cols[i])
             if (span <= 4) {
-                this.layoutClass += " c-" + (i + 1) + "-" + cols[i];
+                this.layoutClass += " c" + (i + 1);
+                slots[i] = "s" + cols[i];
                 colCount++;
             }
         }
+        console.log(slots);
+
         console.log('render', span, colCount)
-        switch (colCount) {
-            case 1:
-                return html`
-                  <div class="${this.layoutClass}">
-                    <div>
-                      <slot name="c1"></slot>
-                    </div>
-                  </div>
-                `;
-            case 2:
-                return html`
-                  <div class="${this.layoutClass}">
-                    <div>
-                      <slot name="c1"></slot>
-                    </div>
-                    <div>
-                      <slot name="c2"></slot>
-                    </div>
-                  </div>
-                `;
-            case 3:
-                return html`
-                  <div class="${this.layoutClass}">
-                    <div>
-                      <slot name="c1"></slot>
-                    </div>
-                    <div>
-                      <slot name="c2"></slot>
-                    </div>
-                    <div>
-                      <slot name="c3"></slot>
-                    </div>
-                  </div>
-                `;
-            case 4:
-                return html`
-                  <div class="${this.layoutClass}">
-                    <div>
-                      <slot name="c1"></slot>
-                    </div>
-                    <div>
-                      <slot name="c2"></slot>
-                    </div>
-                    <div>
-                      <slot name="c3"></slot>
-                    </div>
-                    <div>
-                      <slot name="c4"></slot>
-                    </div>
-                  </div>
-                `;
-        }
+        return html`
+          <div class="${this.layoutClass}">
+            <div class="${slots[0]}">
+              <slot name="c1"></slot>
+            </div>
+            <div class="${slots[1]}">
+              <slot name="c2"></slot>
+            </div>
+            <div class="${slots[2]}">
+              <slot name="c3"></slot>
+            </div>
+            <div class="${slots[3]}">
+              <slot name="c4"></slot>
+            </div>
+          </div>
+        `;
     }
 }

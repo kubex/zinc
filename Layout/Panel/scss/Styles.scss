@@ -64,5 +64,20 @@
   .header {
     @apply border-darkBorder;
     @apply text-dark-100;
+
+    & > div.nav {
+      ul {
+        li {
+          &.active {
+            @apply bg-dark-700 text-primary-400;
+          }
+
+          &:hover {
+            @apply bg-dark-600;
+          }
+        }
+      }
+    }
+
   }
 }

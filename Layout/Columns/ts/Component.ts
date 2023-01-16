@@ -10,52 +10,98 @@ export class ZincColumns extends LitElement {
     }
 
     @property({attribute: 'layout', type: String, reflect: true})
-    private layout: string = "2,2"
+    private layout: string = ""
 
     layoutClass = "";
 
     render() {
+        if (this.layout.length < 1) {
+            let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
+            let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
+            let c3c = this.querySelectorAll('[slot="c3"]').length > 0 ? 1 : 0;
+            let c4c = this.querySelectorAll('[slot="c4"]').length > 0 ? 1 : 0;
+            let slotCount = c1c + c2c + c3c + c4c;
+
+            switch (slotCount) {
+                case 1:
+                    this.layout += "4";
+                    break;
+                case 2:
+                    this.layout += "2,2";
+                    break;
+                case 3:
+                    this.layout += "1,1,2";
+                    break;
+                case 4:
+                    this.layout += "1,1,1,1";
+                    break;
+            }
+        }
+
         let cols = this.layout.replace(/,/g, ' ').split(" ");
-        this.layoutClass = "col";
+        this.layoutClass = "c";
         let span = 0;
         let colCount = 0;
+
         for (let i = 0; i < cols.length; i++) {
             span += parseInt(cols[i]);
+            console.log('span', span, cols[i])
             if (span <= 4) {
-                this.layoutClass += " col-" + (i + 1) + "-" + cols[i];
+                this.layoutClass += " c-" + (i + 1) + "-" + cols[i];
                 colCount++;
             }
         }
+        console.log('render', span, colCount)
         switch (colCount) {
             case 1:
                 return html`
-                <div class="${this.layoutClass}">
-                    <div><slot name="col1"></slot></div>
-                </div>
+                  <div class="${this.layoutClass}">
+                    <div>
+                      <slot name="c1"></slot>
+                    </div>
+                  </div>
                 `;
             case 2:
                 return html`
-                <div class="${this.layoutClass}">
-                    <div><slot name="col1"></slot></div>
-                    <div><slot name="col2"></slot></div>
-                </div>
+                  <div class="${this.layoutClass}">
+                    <div>
+                      <slot name="c1"></slot>
+                    </div>
+                    <div>
+                      <slot name="c2"></slot>
+                    </div>
+                  </div>
                 `;
             case 3:
                 return html`
-                <div class="${this.layoutClass}">
-                    <div><slot name="col1"></slot></div>
-                    <div><slot name="col2"></slot></div>
-                    <div><slot name="col3"></slot></div>
-                </div>
+                  <div class="${this.layoutClass}">
+                    <div>
+                      <slot name="c1"></slot>
+                    </div>
+                    <div>
+                      <slot name="c2"></slot>
+                    </div>
+                    <div>
+                      <slot name="c3"></slot>
+                    </div>
+                  </div>
                 `;
             case 4:
                 return html`
-                <div class="${this.layoutClass}">
-                    <div><slot name="col1"></slot></div>
-                    <div><slot name="col2"></slot></div>
-                    <div><slot name="col3"></slot></div>
-                    <div><slot name="col4"></slot></div>
-                </div>
+                  <div class="${this.layoutClass}">
+                    <div>
+                      <slot name="c1"></slot>
+                    </div>
+                    <div>
+                      <slot name="c2"></slot>
+                    </div>
+                    <div>
+                      <slot name="c3"></slot>
+                    </div>
+                    <div>
+                      <slot name="c4"></slot>
+                    </div>
+                  </div>
                 `;
         }
     }

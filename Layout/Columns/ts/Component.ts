@@ -28,11 +28,12 @@ export class ZincColumns extends LitElement {
     render() {
         this._resize();
 
+        let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
+        let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
+        let c3c = this.querySelectorAll('[slot="c3"]').length > 0 ? 1 : 0;
+        let c4c = this.querySelectorAll('[slot="c4"]').length > 0 ? 1 : 0;
+
         if (this.layout.length < 1) {
-            let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
-            let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
-            let c3c = this.querySelectorAll('[slot="c3"]').length > 0 ? 1 : 0;
-            let c4c = this.querySelectorAll('[slot="c4"]').length > 0 ? 1 : 0;
             let slotCount = c1c + c2c + c3c + c4c;
 
             switch (slotCount) {
@@ -66,20 +67,28 @@ export class ZincColumns extends LitElement {
                 colCount++;
             }
         }
+
+        let c1 = c1c ? html`
+          <div class="${slots[0]}">
+            <slot name="c1"></slot>
+          </div>` : null;
+        let c2 = c2c ? html`
+          <div class="${slots[1]}">
+            <slot name="c2"></slot>
+          </div>` : null;
+        let c3 = c3c ? html`
+            <div class="${slots[2]}">
+                <slot name="c3"></slot>
+            </div>` : null;
+        let c4 = c4c ? html`
+            <div class="${slots[3]}">
+                <slot name="c4"></slot>
+            </div>` : null;
+
+
         return html`
           <div class="${this.layoutClass}">
-            <div class="${slots[0]}">
-              <slot name="c1"></slot>
-            </div>
-            <div class="${slots[1]}">
-              <slot name="c2"></slot>
-            </div>
-            <div class="${slots[2]}">
-              <slot name="c3"></slot>
-            </div>
-            <div class="${slots[3]}">
-              <slot name="c4"></slot>
-            </div>
+            ${c1} ${c2} ${c3} ${c4}
           </div>
         `;
     }

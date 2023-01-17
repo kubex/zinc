@@ -16,12 +16,19 @@ export class AppContainer extends LitElement {
     @property({type: String, attribute: 'dark-mode', reflect: true})
     public darkMode: string = 'false';
     @property({type: HTMLDivElement})
-    private container: HTMLDivElement = (() => {
+    protected container: HTMLDivElement = (() => {
         return document.createElement('div');
     })();
 
     static get styles() {
-        return [unsafeCSS(layoutStyles), unsafeCSS(styles)];
+        return [this.genericStyles(), unsafeCSS(styles)];
+    }
+
+    static genericStyles() {
+        return unsafeCSS(layoutStyles);
+    }
+
+    protected prepareContainer() {
     }
 
     update(changedProperties: PropertyValues) {
@@ -52,6 +59,9 @@ export class AppContainer extends LitElement {
         this.container.getElementsByTagName = function (className) {
             return shad.querySelectorAll(className);
         };
+
+        this.prepareContainer()
+
         this.shadowRoot.append(this.container);
         //Form.init(this.shadowRoot);
 

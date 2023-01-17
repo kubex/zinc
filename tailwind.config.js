@@ -102,6 +102,9 @@ module.exports = {
         'mpanel':  '320px',
         'panel':   '360px',
       },
+      minHeight:   {
+        'bar': '50px',
+      },
       borderWidth: {
         DEFAULT: '1px',
         '0':     '0',

@@ -5,42 +5,85 @@
   @apply relative md:w-spanel md:min-w-spanel md:max-w-spanel;
 
   > div {
-    @apply pt-sm md:pt-md lg:pt-lg;
-    @apply absolute bg-primary-50;
+    @apply absolute bg-white md:bg-primary-50;
   }
 
   > div.content {
+    @apply pt-sm md:pt-md lg:pt-lg;
     @apply overflow-y-auto max-w-bar md:min-w-spanel;
-    @apply hidden md:flex right-0 inset-y-0;
-    @apply md:min-w-sidenav md:max-w-sidenav;
+    @apply hidden md:flex flex-col right-0 inset-y-0;
+    @apply md:min-w-spanel md:max-w-spanel;
+    @apply pr-sm md:pr-0;
   }
 
   > div.expander {
-    @apply flex md:hidden inset-0 z-10 cursor-pointer;
-    @apply justify-center items-center;
+    @apply flex flex-row-reverse smp:flex-col md:hidden inset-0 z-10 cursor-pointer;
+    @apply items-center justify-center smp:justify-start;
     @apply h-bar smp:h-full;
     @apply border-b-px smp:border-b-0 smp:border-l-px border-border;
     @apply w-[100vw] smp:w-bar md:hidden;
-    font-size: 50px;
+    @apply bg-white;
+
+    span {
+      writing-mode: horizontal-tb;
+      @screen smp {
+        writing-mode: vertical-rl;
+      }
+      @apply grow pl-md;
+    }
+
+    span.open {
+      @apply block;
+    }
+
+    span.close {
+      @apply hidden;
+    }
+
+    zn-icon {
+      @apply text-secondary-500 mx-md smp:my-md;
+
+      @apply rotate-0 smp:rotate-90 ;
+    }
   }
 }
 
 :host([d]) > div {
   @apply border-darkBorder bg-dark-900;
+
+
+  > div.expander {
+    @apply bg-dark-900;
+  }
 }
 
 :host([open]) {
-  position: unset;
 
-  > div.content {
-    @apply flex pl-sm;
-    @apply min-w-full max-w-full;
-    @apply smp:min-w-sidenav smp:max-w-sidenav;
-    @apply z-20 top-bar smp:top-0;
-    @apply border-l-px border-border;
-  }
+  @media (max-width: theme('screens.md')) {
+    position: unset;
 
-  > div.expander {
-    @apply inset-0 w-full bg-black opacity-5;
+    > div.content {
+      @apply flex pl-sm;
+      @apply min-w-full max-w-full;
+      @apply smp:min-w-spanel smp:max-w-spanel;
+      @apply z-20 top-bar smp:top-0;
+    }
+
+    > div.expander {
+
+      @apply smp:left-auto smp:right-spanel;
+
+      zn-icon {
+        @apply rotate-180 smp:-rotate-90;
+      }
+
+      span.open {
+        @apply hidden;
+      }
+
+      span.close {
+        @apply block font-semibold;
+      }
+    }
   }
 }

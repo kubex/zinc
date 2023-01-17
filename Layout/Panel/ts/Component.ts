@@ -11,11 +11,11 @@ export class ZincPanel extends ZincElement {
     }
 
     @property({attribute: 'caption', type: String, reflect: true})
-    private caption: String = "";
+    private caption;
 
 
     @property({attribute: 'small', type: Boolean, reflect: true})
-    private small: boolean = false;
+    private small;
 
     @property({attribute: 'navigation', type: Array})
     private navigation = [];

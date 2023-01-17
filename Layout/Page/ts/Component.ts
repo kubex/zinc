@@ -30,6 +30,9 @@ export class ZincPageSide extends ZincElement {
         return [unsafeCSS(sideStyles)];
     }
 
+    @property({attribute: 'caption', type: String, reflect: true})
+    private caption;
+
     public slot = "side";
 
     @property({attribute: 'open', type: Boolean, reflect: true})
@@ -41,7 +44,11 @@ export class ZincPageSide extends ZincElement {
 
     render() {
         return html`
-          <div class="expander" @click="${this._handleClick}">&#8612;</div>
+          <div class="expander" @click="${this._handleClick}">
+            <zn-icon src="arrow_downward" library="material"></zn-icon>
+            <span class="close">Close </span>
+            <span class="open">Show ${this.caption}</span>
+          </div>
           <div class="content">
             <slot></slot>
           </div>`

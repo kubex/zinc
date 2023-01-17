@@ -3,39 +3,72 @@
   @apply relative md:w-spanel md:min-w-spanel md:max-w-spanel;
 }
 :host > div {
-  @apply pt-sm md:pt-md lg:pt-lg;
-  @apply absolute bg-primary-50;
+  @apply absolute bg-white md:bg-primary-50;
 }
 :host > div.content {
+  @apply pt-sm md:pt-md lg:pt-lg;
   @apply overflow-y-auto max-w-bar md:min-w-spanel;
-  @apply hidden md:flex right-0 inset-y-0;
-  @apply md:min-w-sidenav md:max-w-sidenav;
+  @apply hidden md:flex flex-col right-0 inset-y-0;
+  @apply md:min-w-spanel md:max-w-spanel;
+  @apply pr-sm md:pr-0;
 }
 :host > div.expander {
-  @apply flex md:hidden inset-0 z-10 cursor-pointer;
-  @apply justify-center items-center;
+  @apply flex flex-row-reverse smp:flex-col md:hidden inset-0 z-10 cursor-pointer;
+  @apply items-center justify-center smp:justify-start;
   @apply h-bar smp:h-full;
   @apply border-b-px smp:border-b-0 smp:border-l-px border-border;
   @apply w-[100vw] smp:w-bar md:hidden;
-  font-size: 50px;
+  @apply bg-white;
+}
+:host > div.expander span {
+  writing-mode: horizontal-tb;
+  @apply grow pl-md;
+}
+@screen smp {
+  :host > div.expander span {
+    writing-mode: vertical-rl;
+  }
+}
+:host > div.expander span.open {
+  @apply block;
+}
+:host > div.expander span.close {
+  @apply hidden;
+}
+:host > div.expander zn-icon {
+  @apply text-secondary-500 mx-md smp:my-md;
+  @apply rotate-0 smp:rotate-90;
 }
 
 :host([d]) > div {
   @apply border-darkBorder bg-dark-900;
 }
+:host([d]) > div > div.expander {
+  @apply bg-dark-900;
+}
 
-:host([open]) {
-  position: unset;
-}
-:host([open]) > div.content {
-  @apply flex pl-sm;
-  @apply min-w-full max-w-full;
-  @apply smp:min-w-sidenav smp:max-w-sidenav;
-  @apply z-20 top-bar smp:top-0;
-  @apply border-l-px border-border;
-}
-:host([open]) > div.expander {
-  @apply inset-0 w-full bg-black opacity-5;
+@media (max-width: theme("screens.md")) {
+  :host([open]) {
+    position: unset;
+  }
+  :host([open]) > div.content {
+    @apply flex pl-sm;
+    @apply min-w-full max-w-full;
+    @apply smp:min-w-spanel smp:max-w-spanel;
+    @apply z-20 top-bar smp:top-0;
+  }
+  :host([open]) > div.expander {
+    @apply smp:left-auto smp:right-spanel;
+  }
+  :host([open]) > div.expander zn-icon {
+    @apply rotate-180 smp:-rotate-90;
+  }
+  :host([open]) > div.expander span.open {
+    @apply hidden;
+  }
+  :host([open]) > div.expander span.close {
+    @apply block font-semibold;
+  }
 }
 
 /*# sourceMappingURL=SideStyles.css.map */

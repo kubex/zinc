@@ -22,6 +22,7 @@
 :host > div.expander span {
   writing-mode: horizontal-tb;
   @apply grow pl-md smp:pl-0;
+  @apply hidden;
 }
 @screen smp {
   :host > div.expander span {
@@ -30,9 +31,6 @@
 }
 :host > div.expander span.open {
   @apply block;
-}
-:host > div.expander span.close {
-  @apply hidden;
 }
 :host > div.expander zn-icon {
   @apply text-secondary-500 mx-md smp:my-md;
@@ -66,7 +64,10 @@
     @apply hidden;
   }
   :host([open]) > div.expander span.close {
-    @apply block font-semibold;
+    @apply hidden smp:block;
+  }
+  :host([open]) > div.expander span.close-sm {
+    @apply block smp:hidden font-semibold;
   }
 }
 

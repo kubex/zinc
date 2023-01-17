@@ -43,10 +43,12 @@ export class ZincPageSide extends ZincElement {
     }
 
     render() {
+        let smpCap = this.caption ?? "Close"
         return html`
           <div class="expander" @click="${this._handleClick}">
             <zn-icon src="arrow_downward" library="material"></zn-icon>
-            <span class="close">Close </span>
+            <span class="close">Close</span>
+            <span class="close-sm">${smpCap}</span>
             <span class="open">Show ${this.caption}</span>
           </div>
           <div class="content">

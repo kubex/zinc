@@ -29,14 +29,11 @@
         writing-mode: vertical-rl;
       }
       @apply grow pl-md smp:pl-0;
+      @apply hidden;
     }
 
     span.open {
       @apply block;
-    }
-
-    span.close {
-      @apply hidden;
     }
 
     zn-icon {
@@ -81,7 +78,11 @@
       }
 
       span.close {
-        @apply block font-semibold;
+        @apply hidden smp:block;
+      }
+
+      span.close-sm {
+        @apply block smp:hidden font-semibold;
       }
     }
   }

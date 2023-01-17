@@ -10,11 +10,12 @@ import layoutStyles from '../scss/layout.scss';
 @customElement('app-container')
 export class AppContainer extends LitElement {
     @property({type: Boolean, attribute: 'allow-scripts'})
-    private allowScripts: boolean = false;
+    private allowScripts;
     @property({type: Boolean, attribute: 'flex-frame'})
-    private flexFrame: boolean = false;
-    @property({type: String, attribute: 'dark-mode', reflect: true})
-    public darkMode: string = 'false';
+    private flexFrame;
+    @property({type: Boolean, attribute: 'dark-mode', reflect: true})
+    public darkMode;
+
     @property({type: HTMLDivElement})
     protected container: HTMLDivElement = (() => {
         return document.createElement('div');
@@ -109,7 +110,7 @@ export class AppContainer extends LitElement {
         });
     }
 
-    private _evalCode(content, src = '') {
+    protected _evalCode(content, src = '') {
         const fn = new Function('document', content);
         try {
             fn(this.container);
@@ -118,7 +119,7 @@ export class AppContainer extends LitElement {
         }
     }
 
-    private _evalScript(script: HTMLOrSVGScriptElement) {
+    protected _evalScript(script: HTMLOrSVGScriptElement) {
         fetch(script.getAttribute('src'))
             .then(response => response.text())
             .then((body) => this._evalCode(body, script.getAttribute('src')))

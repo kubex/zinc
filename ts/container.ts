@@ -5,7 +5,7 @@ import {PropertyValues} from "@lit/reactive-element";
 // @ts-ignore
 import styles from '../scss/container.scss';
 // @ts-ignore
-import layoutStyles from '../scss/layout.scss';
+import commonStyles from '../scss/common.scss';
 
 @customElement('app-container')
 export class AppContainer extends LitElement {
@@ -26,7 +26,7 @@ export class AppContainer extends LitElement {
     }
 
     static genericStyles() {
-        return unsafeCSS(layoutStyles);
+        return unsafeCSS(commonStyles);
     }
 
     protected prepareContainer() {

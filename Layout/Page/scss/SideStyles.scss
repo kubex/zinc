@@ -2,7 +2,7 @@
 
 
 :host {
-  @apply relative md:w-spanel md:min-w-spanel md:max-w-spanel;
+  @apply relative md:w-mpanel md:min-w-mpanel md:max-w-mpanel;
 
   > div {
     @apply absolute bg-white md:bg-primary-50;
@@ -10,9 +10,8 @@
 
   > div.content {
     @apply pt-sm md:pt-md lg:pt-lg;
-    @apply overflow-y-auto max-w-bar md:min-w-spanel;
+    @apply overflow-y-auto max-w-bar md:min-w-mpanel;
     @apply hidden md:flex flex-col right-0 inset-y-0;
-    @apply md:min-w-spanel md:max-w-spanel;
     @apply pr-sm md:pr-0;
   }
 
@@ -65,13 +64,13 @@
     > div.content {
       @apply flex pl-sm;
       @apply min-w-full max-w-full;
-      @apply smp:min-w-spanel smp:max-w-spanel;
+      @apply smp:min-w-mpanel smp:max-w-mpanel;
       @apply z-20 top-bar smp:top-0;
     }
 
     > div.expander {
 
-      @apply smp:left-auto smp:right-spanel;
+      @apply smp:left-auto smp:right-mpanel;
 
       zn-icon {
         @apply rotate-180 smp:-rotate-90;

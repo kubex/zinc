@@ -58,6 +58,7 @@ module.exports = {
       'bar':     '50px',
       'sidenav': '240px',
       'spanel':  '250px',
+      'mpanel':  '280px',
       'panel':   '360px',
     },
     screens:  {
@@ -89,6 +90,7 @@ module.exports = {
         'bar':     '50px',
         'sidenav': '240px',
         'spanel':  '250px',
+        'mpanel':  '280px',
         'panel':   '360px',
         '50p':     '50%',
         '70p':     '70%',
@@ -97,6 +99,7 @@ module.exports = {
         'bar':     '50px',
         'sidenav': '240px',
         'spanel':  '250px',
+        'mpanel':  '280px',
         'panel':   '360px',
       },
       borderWidth: {

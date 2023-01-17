@@ -4,9 +4,10 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from '../scss/Styles.scss';
 // @ts-ignore
 import propertyStyles from '../scss/Property.scss';
+import {ZincElement} from "../../../ts/element";
 
 @customElement('zn-plist')
-export class ZincPropertyList extends LitElement {
+export class ZincPropertyList extends ZincElement {
     static styles = unsafeCSS(styles);
 
     @property({attribute: 'icon', type: Boolean, reflect: true})
@@ -21,7 +22,7 @@ export class ZincPropertyList extends LitElement {
 
 
 @customElement('zn-prop')
-export class ZincProperty extends LitElement {
+export class ZincProperty extends ZincElement {
     static styles = unsafeCSS(propertyStyles);
 
     @property({attribute: 'caption', type: String, reflect: true})

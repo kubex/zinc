@@ -29,6 +29,7 @@ export class AppContainer extends LitElement {
     }
 
     protected prepareContainer() {
+        this.container.innerHTML = '';
     }
 
     update(changedProperties: PropertyValues) {
@@ -60,8 +61,6 @@ export class AppContainer extends LitElement {
             return shad.querySelectorAll(className);
         };
 
-        this.prepareContainer()
-
         this.shadowRoot.append(this.container);
         //Form.init(this.shadowRoot);
 
@@ -85,12 +84,14 @@ export class AppContainer extends LitElement {
             this.shadowRoot.removeChild(slot);
         }
 
+        this.prepareContainer()
+
         if (!this.flexFrame) {
-            this.container.innerHTML = '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
+            this.container.innerHTML += '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
                 + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
                 + data;
         } else {
-            this.container.innerHTML = data;
+            this.container.innerHTML += data;
             return;
         }
 

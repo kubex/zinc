@@ -53,7 +53,7 @@ export class ZincColumns extends LitElement {
         }
 
         let cols = this.layout.replace(/,/g, ' ').split(" ");
-        this.layoutClass = "";
+        this.layoutClass = "lo-" + this.layout.replace(/,/g, '');
         let span = 0;
         let colCount = 0;
 
@@ -77,13 +77,13 @@ export class ZincColumns extends LitElement {
             <slot name="c2"></slot>
           </div>` : null;
         let c3 = c3c ? html`
-            <div class="${slots[2]}">
-                <slot name="c3"></slot>
-            </div>` : null;
+          <div class="${slots[2]}">
+            <slot name="c3"></slot>
+          </div>` : null;
         let c4 = c4c ? html`
-            <div class="${slots[3]}">
-                <slot name="c4"></slot>
-            </div>` : null;
+          <div class="${slots[3]}">
+            <slot name="c4"></slot>
+          </div>` : null;
 
 
         return html`

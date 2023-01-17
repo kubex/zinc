@@ -15,10 +15,17 @@
   .s2, .s3, .s4 {
     @apply col-span-4;
   }
+
+  .lo-31, .lo13 {
+    .s1 {
+      @apply col-span-4;
+    }
+  }
+
 }
 
 :host([expanded]) {
-  .s1 {
+  .s1, .lo-31 .s1, .lo13 .s1 {
     @apply col-span-1;
   }
 

@@ -1,8 +1,11 @@
 @tailwind base;
+@import "../../../scss/variables";
 
 
 :host {
   @apply relative lg:w-mpanel lg:min-w-spanel lg:max-w-mpanel;
+
+  @extend %scrollbars;
 
   > div {
     @apply absolute bg-white lg:bg-primary-50;

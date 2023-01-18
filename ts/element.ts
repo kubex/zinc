@@ -5,7 +5,7 @@ import {PropertyValues} from "@lit/reactive-element";
 
 
 export class ZincElement extends LitElement {
-    @property({type: Boolean, attribute: 'd', reflect: true})
+    @property({type: Boolean, attribute: 'd'})
     public d: boolean = false;
 
     constructor() {
@@ -17,6 +17,7 @@ export class ZincElement extends LitElement {
 
     public _updateDarkMode() {
         this.d = document.documentElement.classList.contains('dark');
+        this.classList.toggle('dark', this.d);
     }
 }
 

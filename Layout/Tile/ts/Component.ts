@@ -12,19 +12,25 @@ export class ZincTile extends ZincElement {
 
     @property({attribute: 'caption', type: String, reflect: true})
     private caption;
+
     @property({attribute: 'description', type: String, reflect: true})
     private description;
 
+    @property({attribute: 'right', type: Boolean, reflect: true})
+    private right;
+
+
     render() {
+        const properties = this.querySelectorAll('zn-prop');
         return html`
           <div>
-            <div>
+            <slot name="primary"></slot>
+            <div class="summary">
               <div class="caption">${this.caption}</div>
               <div class="description">${this.description}</div>
             </div>
-            <div>
-              <slot></slot>
-            </div>
+            <slot name="chip"></slot>
+            ${properties}
           </div>
         `
     }

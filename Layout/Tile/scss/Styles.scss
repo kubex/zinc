@@ -17,7 +17,16 @@ zn-tile[d], :host([d]) {
 
   > div {
     @apply box-border w-full h-full flex items-center;
-    @apply p-sm;
+    @apply overflow-hidden flex-wrap;
+    @apply p-sm gap-md;
+
+    > * {
+      @apply h-full flex justify-center flex-col;
+    }
+
+    .summary {
+      @apply flex-grow min-w-[150px];
+    }
 
     .caption {
       @apply font-semibold text-txt-800;
@@ -25,6 +34,10 @@ zn-tile[d], :host([d]) {
 
     .description {
       @apply text-txt-600;
+    }
+
+    .caption, .description {
+      @apply overflow-clip whitespace-nowrap;
     }
   }
 }
@@ -51,3 +64,10 @@ zn-tile[d], :host([d]) {
     }
   }
 }
+
+:host([right]) {
+  .summary {
+    @apply text-right;
+  }
+}
+

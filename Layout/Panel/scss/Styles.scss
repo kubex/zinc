@@ -90,7 +90,10 @@
         }
       }
     }
+  }
 
+  zn-tile {
+    @apply dark:border-darkBorder;
   }
 
 
@@ -100,7 +103,7 @@
 }
 
 
-zn-panel zn-tile {
+zn-panel zn-tile, :host > div zn-tile {
   @apply border-t border-border dark:border-darkBorder;
   &:first-of-type {
     @apply border-t-0;

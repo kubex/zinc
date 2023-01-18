@@ -21,15 +21,21 @@ export class ZincTile extends ZincElement {
 
 
     render() {
+
+        let primary = this.querySelectorAll('[slot="primary"]').length > 0 ? html`
+          <slot name="primary"></slot>` : null;
+        let chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
+          <slot name="chip"></slot>` : null;
+
         const properties = this.querySelectorAll('zn-prop');
         return html`
           <div>
-            <slot name="primary"></slot>
+            ${primary}
             <div class="summary">
               <div class="caption">${this.caption}</div>
               <div class="description">${this.description}</div>
             </div>
-            <slot name="chip"></slot>
+            ${chip}
             ${properties}
           </div>
         `

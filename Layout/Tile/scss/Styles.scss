@@ -1,12 +1,16 @@
 @tailwind base;
 
+zn-tile:first-of-type, :host:first-of-type {
+  @apply border-t-0;
+}
+
 :host {
   @apply h-tile w-full flex items-center box-border overflow-hidden;
+  @apply border-t border-border;
 
   > div {
     @apply box-border w-full h-full flex items-center;
     @apply p-sm;
-    @apply border-t border-border;
 
     .caption {
       @apply font-semibold text-txt-800;

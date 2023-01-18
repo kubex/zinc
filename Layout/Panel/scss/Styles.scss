@@ -1,9 +1,14 @@
 @tailwind base;
+@import "../../../scss/variables";
+
+@tailwind base;
 
 :host {
   --row-count: 1;
   @apply overflow-hidden grow;
+  @extend %scrollbars;
 }
+
 
 :host > div {
   @apply block p-sm smp:rounded border-t border-b smp:border;

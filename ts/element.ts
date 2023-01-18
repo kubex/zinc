@@ -5,7 +5,7 @@ import {PropertyValues} from "@lit/reactive-element";
 
 
 export class ZincElement extends LitElement {
-    @property({type: Boolean, attribute: 'd'})
+    @property({type: Boolean, attribute: 'd', reflect: true})
     public d: boolean = false;
 
     constructor() {

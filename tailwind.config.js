@@ -56,6 +56,7 @@ module.exports = {
       'xl':  '25px',
 
       'bar':     '50px',
+      'tile':    '80px',
       'sidenav': '240px',
       'spanel':  '250px',
       'mpanel':  '320px',

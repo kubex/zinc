@@ -46,6 +46,7 @@
 
   .body {
     @apply overflow-y-auto grow;
+    @apply divide-y divide-border;
   }
 
   .footer {
@@ -92,20 +93,12 @@
     }
   }
 
-  zn-tile {
-    @apply dark:border-darkBorder;
+  .body {
+    @apply divide-darkBorder;
   }
 
 
   .footer {
     @apply text-darkTxt-400 border-darkBorder;
-  }
-}
-
-
-zn-panel zn-tile, :host > div zn-tile {
-  @apply border-t border-border dark:border-darkBorder;
-  &:first-of-type {
-    @apply border-t-0;
   }
 }

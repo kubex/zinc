@@ -1,27 +1,42 @@
+@tailwind base;
+
 :host {
-  @apply h-tile flex items-center w-full p-sm box-border;
+  @apply h-tile w-full flex items-center box-border overflow-hidden;
 
-  .caption {
-    @apply font-semibold text-txt-800;
-  }
+  > div {
+    @apply box-border w-full h-full flex items-center;
+    @apply p-sm;
+    @apply border-t border-border;
 
-  .description {
-    @apply text-txt-600;
+    .caption {
+      @apply font-semibold text-txt-800;
+    }
+
+    .description {
+      @apply text-txt-600;
+    }
   }
 }
 
 :host([child]) {
   @apply h-bar;
-  @apply px-xl;
+  > div {
+    @apply px-xl;
+
+    .description {
+      @apply hidden;
+    }
+  }
 }
 
 :host([d]) {
+  > div {
+    .caption {
+      @apply text-darkTxt-800;
+    }
 
-  .caption {
-    @apply text-darkTxt-800;
-  }
-
-  .description {
-    @apply text-darkTxt-600;
+    .description {
+      @apply text-darkTxt-600;
+    }
   }
 }

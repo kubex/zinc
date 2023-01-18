@@ -18,9 +18,14 @@ export class ZincTile extends ZincElement {
     render() {
         return html`
           <div>
-            <div class="caption">${this.caption}</div>
-            <div class="description">${this.description}</div>
+            <div>
+              <div class="caption">${this.caption}</div>
+              <div class="description">${this.description}</div>
+            </div>
+            <div>
+              <slot></slot>
+            </div>
           </div>
-          <slot></slot>`
+        `
     }
 }

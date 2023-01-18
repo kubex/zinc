@@ -1,12 +1,19 @@
 @tailwind base;
 
-zn-tile:first-of-type, :host:first-of-type {
+zn-tile:first-of-type, :host(:first-of-type) {
   @apply border-t-0;
+}
+
+zn-tile, :host {
+  @apply border-t border-border;
+}
+
+zn-tile[d], :host([d]) {
+  @apply border-darkBorder;
 }
 
 :host {
   @apply h-tile w-full flex items-center box-border overflow-hidden;
-  @apply border-t border-border;
 
   > div {
     @apply box-border w-full h-full flex items-center;

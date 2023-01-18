@@ -17,6 +17,9 @@ export class ZincPanel extends ZincElement {
     @property({attribute: 'small', type: Boolean, reflect: true})
     private small;
 
+    @property({attribute: 'rows', type: Number, reflect: true})
+    private rows;
+
     @property({attribute: 'navigation', type: Array})
     private navigation = [];
 
@@ -24,6 +27,8 @@ export class ZincPanel extends ZincElement {
     render() {
         let footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
         let actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
+
+        this.style.setProperty('--row-count', this.rows);
 
         let header;
         if (actionItems || this.caption || this.navigation.length > 0) {

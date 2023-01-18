@@ -1,6 +1,7 @@
 @tailwind base;
 
 :host {
+  --row-count: 1;
   @apply overflow-hidden grow;
 }
 
@@ -52,6 +53,13 @@
   .footer {
     @apply text-sm text-txt-400 block;
     @apply pt-sm border-border border-t;
+  }
+}
+
+:host([rows]) {
+  .body {
+    max-height: calc(theme('spacing.tile') * var(--row-count));
+    height: calc(theme('spacing.tile') * var(--row-count));
   }
 }
 

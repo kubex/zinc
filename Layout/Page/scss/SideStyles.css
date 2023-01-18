@@ -1,23 +1,23 @@
 @tailwind base;
 :host {
-  @apply relative md:w-mpanel md:min-w-spanel md:max-w-mpanel;
+  @apply relative lg:w-mpanel lg:min-w-spanel lg:max-w-mpanel;
 }
 :host > div {
-  @apply absolute bg-white md:bg-primary-50;
+  @apply absolute bg-white lg:bg-primary-50;
 }
 :host > div.content {
   @apply py-sm smp:py-md;
-  @apply overflow-y-auto max-w-bar md:min-w-mpanel;
-  @apply hidden md:flex flex-col right-0 inset-y-0;
-  @apply pr-md md:pr-0;
-  @apply md:pr-lg hd:pr-xl;
+  @apply overflow-y-auto max-w-bar lg:min-w-mpanel;
+  @apply hidden lg:flex flex-col right-0 inset-y-0;
+  @apply pr-md lg:pr-0;
+  @apply lg:pr-lg hd:pr-xl;
 }
 :host > div.expander {
-  @apply flex flex-row-reverse smp:flex-col md:hidden inset-0 z-10 cursor-pointer;
+  @apply flex flex-row-reverse smp:flex-col lg:hidden inset-0 z-10 cursor-pointer;
   @apply items-center justify-center smp:justify-start;
   @apply h-bar smp:h-full;
   @apply border-b-px smp:border-b-0 smp:border-l-px border-border;
-  @apply w-[100vw] smp:w-bar md:hidden;
+  @apply w-[100vw] smp:w-bar lg:hidden;
   @apply bg-white;
 }
 :host > div.expander span {
@@ -45,7 +45,7 @@
   @apply bg-dark-900;
 }
 
-@media (max-width: theme("screens.md")) {
+@media (max-width: theme("screens.lg")) {
   :host([open]) {
     position: unset;
   }

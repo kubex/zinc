@@ -6,13 +6,15 @@
 @import '_container/chips';
 
 .zn-gap {
-  @apply py-xxs smp:p-sm md:p-md lg:p-lg;
+  @extend %zn-gap;
+  /*
+  smp:p-sm md:p-md lg:p-lg
+  */
   @apply py-xxs
   @smp:p-sm
   @md:p-md
-  @lg:p-lg;
-  @extend %zn-gap;
-  @apply flex flex-wrap;
+  @lg:p-lg
+  flex flex-wrap;
 }
 
 .zn-gap-inner {
@@ -20,9 +22,9 @@
 }
 
 hr {
-  @apply w-full max-w-full;
-  @apply my-md;
-  @apply border-0 border-b-px border-border dark:border-darkBorder;
+  @apply w-full max-w-full
+  my-md
+  border-0 border-b-px border-border dark:border-darkBorder;
 }
 
 

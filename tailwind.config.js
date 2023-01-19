@@ -10,10 +10,6 @@ module.exports = {
     "./Components/**/ts/*.{ts,js,html}",
     "./Components/**/scss/*.{scss,css}"
   ],
-  safelist:    [
-    {pattern: /^text-/},
-    {pattern: /^font-/},
-  ],
   darkMode:    'class',
   theme:       {
     colors:   {

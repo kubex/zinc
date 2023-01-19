@@ -21,8 +21,30 @@ module.exports = {
         400: 'rgba(255,255,255, 0.40)',
       },
 
-      border: colors.slate["300"],
-      txt:    {
+      'border':    '#E7E7E7',
+      'primary':   {
+        50:  '#F9F7FF',
+        100: '#E2D9FF',
+        300: '#A771FE',
+        400: '#853bff',
+        500: '#4A17B2',
+        600: '#541EA8',
+        700: '#441096',
+        800: '#3B0E82',
+        900: '#230B54',
+      },
+      'secondary': {
+        100: '#FAE4CF',
+        500: '#FA7903',
+        900: '#914602',
+      },
+      'tertiary':  {
+        100: '#CCEDEC',
+        500: '#29C1BC',
+        900: '#157A77',
+      },
+
+      txt: {
         900: 'rgba(0, 0, 0, 1)',
         800: 'rgba(0, 0, 0, 0.87)',
         600: 'rgba(0, 0, 0, 0.60)',
@@ -31,9 +53,6 @@ module.exports = {
 
       dark:        colors.slate,
       transparent: 'transparent',
-      primary:     colors.violet,
-      secondary:   colors.orange,
-      tertiary:    colors.green,
 
       'white': '#FFFFFF',
       'black': '#000000',

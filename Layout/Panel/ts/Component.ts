@@ -17,6 +17,9 @@ export class ZincPanel extends ZincElement {
     @property({attribute: 'small', type: Boolean, reflect: true})
     private small;
 
+    @property({attribute: 'stat', type: Boolean, reflect: true})
+    private stat;
+
     @property({attribute: 'rows', type: Number, reflect: true})
     private rows;
 

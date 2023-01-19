@@ -40,10 +40,8 @@ module.exports = {
 
       'error':   '#FD003E',
       'info':    '#7DD3FC',
-      'warning': '#FBBF24',
+      'warning': '#FF6600',
       'success': '#10B981',
-
-      'fuchsia': '#D32CE3',
     },
     spacing:  {
       0:     '0px',

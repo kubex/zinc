@@ -12,7 +12,7 @@ module.exports = {
   ],
   darkMode:    'class',
   theme:       {
-    colors:   {
+    colors:     {
       darkBorder: colors.slate["700"],
       darkTxt:    {
         900: 'rgba(255,255,255, 1)',
@@ -62,7 +62,7 @@ module.exports = {
       'warning': '#FF6600',
       'success': '#10B981',
     },
-    spacing:  {
+    spacing:    {
       0:     '0px',
       'px':  '1px',
       'xxs': '3px',
@@ -79,7 +79,7 @@ module.exports = {
       'mpanel':  '320px',
       'panel':   '360px',
     },
-    screens:  {
+    screens:    {
       'sm':  '360px',
       'smp': '480px',
       'md':  '768px',
@@ -87,7 +87,15 @@ module.exports = {
       'hd':  '1440px',
       '4k':  '2560px',
     },
-    fontSize: {
+    containers: {
+      'sm':  '360px',
+      'smp': '480px',
+      'md':  '768px',
+      'lg':  '1100px',
+      'hd':  '1440px',
+      '4k':  '2560px',
+    },
+    fontSize:   {
       xs: ['11px', '13px'],
       sm: ['12px', '15px'],
       md: ['13px', '17px'],
@@ -96,7 +104,7 @@ module.exports = {
       navitem: ['14px', '36px'],
       title:   ['24px', {lineHeight: '40px', fontWeight: '500'}],
     },
-    extend:   {
+    extend:     {
       zIndex:      {
         'header':  300,
         'sidenav': 250,
@@ -141,5 +149,6 @@ module.exports = {
   },
   plugins:     [
     require('@tailwindcss/forms'),
+    require('@tailwindcss/container-queries'),
   ],
 }

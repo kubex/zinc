@@ -19,16 +19,14 @@ export class ZincColumns extends ZincElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('resize', this._resize.bind(this));
+        new ResizeObserver(this.resize).observe(this)
     }
 
-    _resize() {
-        this.expanded = this.parentElement.offsetWidth > 768;
+    resize = (e) => {
+        this.expanded = e[0].contentRect.width > 768;
     }
 
     render() {
-        this._resize();
-
         let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
         let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
         let c3c = this.querySelectorAll('[slot="c3"]').length > 0 ? 1 : 0;

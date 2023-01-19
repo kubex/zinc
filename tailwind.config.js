@@ -71,13 +71,13 @@ module.exports = {
       '4k':  '2560px',
     },
     fontSize: {
-      xs: ['10px', '14px'],
-      sm: ['12px', '16px'],
-      md: ['14px', '18px'],
-      lg: ['16px', '22px'],
+      xs: ['10px', '13px'],
+      sm: ['11px', '15px'],
+      md: ['13px', '17px'],
+      lg: ['15px', '21px'],
 
       navitem: ['14px', '36px'],
-      title:   ['24px', '40px'],
+      title:   ['24px', {lineHeight: '40px', fontWeight: '500'}],
     },
     extend:   {
       zIndex:      {

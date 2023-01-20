@@ -14,22 +14,30 @@ zn-tile[d], :host([d]) {
 
 :host {
   @apply h-tile w-full flex items-center box-border overflow-hidden;
+  container-type: inline-size;
 
   > div {
-    @apply box-border w-full h-full flex items-center;
-    @apply overflow-hidden flex-wrap;
-    @apply p-sm gap-md;
+    @apply box-border w-full h-full flex items-center
+    overflow-hidden
+    py-sm gap-md
+    @smp:flex-wrap;
 
     > * {
-      @apply h-full flex justify-center flex-col;
+      @apply h-full flex justify-center flex-col
+      @smp:flex-wrap;
     }
 
     slot[name="primary"] {
-      @apply w-[110px];
+      @apply min-w-[110px] w-[110px];
+    }
+
+    zn-prop, slot[name="chip"] {
+      @apply hidden grow
+      @smp:flex;
     }
 
     .summary {
-      @apply flex-grow min-w-[190px];
+      @apply grow shrink min-w-[190px] w-fit;
     }
 
     .caption {

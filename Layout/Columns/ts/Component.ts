@@ -23,7 +23,7 @@ export class ZincColumns extends ZincElement {
     }
 
     resize = (e) => {
-        this.expanded = e[0].contentRect.width > 768;
+        this.expanded = e[0].contentRect.width > 800;
     }
 
     render() {

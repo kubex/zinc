@@ -106,6 +106,9 @@ module.exports = {
       title:   ['24px', {lineHeight: '40px', fontWeight: '500'}],
     },
     extend:     {
+      lineHeight:  {
+        'md': '17px',
+      },
       zIndex:      {
         'header':  300,
         'sidenav': 250,

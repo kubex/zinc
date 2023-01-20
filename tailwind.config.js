@@ -96,12 +96,13 @@ module.exports = {
       '4k':  '2560px',
     },
     fontSize:   {
-      xs: ['11px', '13px'],
-      sm: ['12px', '15px'],
-      md: ['13px', '17px'],
-      lg: ['15px', '21px'],
+      xs: ['11px', {lineHeight: '13px'}],
+      sm: ['12px', {lineHeight: '15px'}],
+      md: ['13px', {lineHeight: '17px'}],
+      lg: ['15px', {lineHeight: '21px'}],
 
-      navitem: ['14px', '36px'],
+      caption: ['13px', {lineHeight: '25px', fontWeight: '500'}],
+      navitem: ['14px', {lineHeight: '36px'}],
       title:   ['24px', {lineHeight: '40px', fontWeight: '500'}],
     },
     extend:     {

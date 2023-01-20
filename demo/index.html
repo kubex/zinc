@@ -18,136 +18,133 @@
 
   </zn-header>
 
-  <zn-max-width>
-    <zn-page>
-      <zn-pageside caption="Customer Details">
-        <zn-plist>
-          <zn-prop caption="User ID">#234 442 424</zn-prop>
-          <zn-prop caption="ARR">$149.95</zn-prop>
-          <zn-prop caption="First Subscribed">3 years ago</zn-prop>
-          <zn-prop caption="Location">London, UK</zn-prop>
-          <zn-prop caption="Status">Paid Customer</zn-prop>
-        </zn-plist>
-        <hr/>
-        <zn-plist icon>
-          <zn-prop icon="email">gjbowers@companyname.com</zn-prop>
-          <zn-prop icon="phone">0791 727 3829</zn-prop>
-          <zn-prop icon="home">16-18 Barnes Wallis Road,<br/>Fareham, Hampshire,<br/>PO15 5TT</zn-prop>
-        </zn-plist>
-      </zn-pageside>
+  <zn-page caption="Customer Details">
+    <div slot="side">
+      <zn-plist>
+        <zn-prop caption="User ID">#234 442 424</zn-prop>
+        <zn-prop caption="ARR">$149.95</zn-prop>
+        <zn-prop caption="First Subscribed">3 years ago</zn-prop>
+        <zn-prop caption="Location">London, UK</zn-prop>
+        <zn-prop caption="Status">Paid Customer</zn-prop>
+      </zn-plist>
+      <hr/>
+      <zn-plist icon>
+        <zn-prop icon="email">gjbowers@companyname.com</zn-prop>
+        <zn-prop icon="phone">0791 727 3829</zn-prop>
+        <zn-prop icon="home">16-18 Barnes Wallis Road,<br/>Fareham, Hampshire,<br/>PO15 5TT</zn-prop>
+      </zn-plist>
+    </div>
 
 
-      <div class="zn-gap">
-        <zn-cols>
-          <zn-panel stat single slot="c1">
-            <zn-prop stack caption="MRR">$59.99</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c2">
-            <zn-prop stack caption="LTV">$4,532.35</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c3">
-            <zn-prop stack caption="Subscriptions">3</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c4">
-            <zn-prop stack caption="Next Bill">Jan 24 2023</zn-prop>
-          </zn-panel>
-        </zn-cols>
+    <div class="zn-gap">
+      <zn-cols>
+        <zn-panel stat single slot="c1">
+          <zn-prop stack caption="MRR">$59.99</zn-prop>
+        </zn-panel>
+        <zn-panel stat single slot="c2">
+          <zn-prop stack caption="LTV">$4,532.35</zn-prop>
+        </zn-panel>
+        <zn-panel stat single slot="c3">
+          <zn-prop stack caption="Subscriptions">3</zn-prop>
+        </zn-panel>
+        <zn-panel stat single slot="c4">
+          <zn-prop stack caption="Next Bill">Jan 24 2023</zn-prop>
+        </zn-panel>
+      </zn-cols>
 
 
-        <zn-cols>
+      <zn-cols>
 
-          <zn-panel slot="c1" rows="4" caption="Subscriptions">
+        <zn-panel slot="c1" rows="4" caption="Subscriptions">
 
-            <zn-tile caption="Antivirus Pro" description="Renews 2024-01-06 (1 Year)">
-              <span slot="primary" class="chip success">Active</span>
-            </zn-tile>
-            <zn-tile child caption="Unlimited Devices" description="Renews 2024-01-06 (1 Year)"></zn-tile>
-            <zn-tile caption="Domain Name" description="Renews 2024-01-06 (1 Year)">
-              <span slot="primary" class="chip warning">Suspended</span>
-            </zn-tile>
-            <zn-tile caption="Awesome Stuff" description="Renews 2024-01-06 (1 Year)">
-              <span slot="primary" class="chip error">Cancelled</span>
-            </zn-tile>
-
-            <span slot="footer">View All Subscriptions</span>
-
-          </zn-panel>
-
-          <zn-panel slot="c2" rows="4" caption="Billing" navigation='[{"title": "Transactions", "path": "/", "default":true},
-            {"title": "Payments", "path": "/communication"}]'>
-
-
-            <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-              <span slot="primary" class="chip success">Paid</span>
-            </zn-tile>
-            <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-              <span slot="primary" class="chip success">Paid</span>
-            </zn-tile>
-            <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-              <span slot="primary" class="chip success">Paid</span>
-            </zn-tile>
-            <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-              <span slot="primary" class="chip error">Refunded</span>
-            </zn-tile>
-            <span slot="footer">View Billing History</span>
-          </zn-panel>
-
-        </zn-cols>
-
-        <zn-cols>
-          <zn-panel slot="c1" caption="Payment Methods">
-
-            <zn-tile caption="Visa **** 1234" description="Expires on 11/23">
-              <span slot="primary" class="chip success">Active</span>
-            </zn-tile>
-            <zn-tile caption="PayPal Business" description="billybobbybob@gmail.com">
-              <span slot="primary" class="chip success">Active</span>
-            </zn-tile>
-            <zn-tile caption="MasterCard **** 5428 " description="Expired 11/19">
-              <span slot="primary" class="chip warning">Expired</span>
-            </zn-tile>
-            <span slot="footer">View All Payment Methods</span>
-
-          </zn-panel>
-          <zn-panel slot="c2" caption="Transactions">
-            <zn-tile caption="Capture (PaySafe UK)" description="542svz4-df4q-asdf-4q25-asdfgfgcvb">
-              <div slot="primary" class="text-center">
-                <strong class="text-md text-success">$12.99</strong><br/>
-                <span class="text-xs">01/11/22 @ 12:21</span>
-              </div>
-
-            </zn-tile>
-            <zn-tile caption="Authorization (PaySafe UK)" description="B-5EP36296PP286731M">
-              <div slot="primary" class="text-center">
-                <strong class="text-md text-success">$12.99</strong><br/>
-                <span class="text-xs">01/11/22 @ 12:20</span>
-              </div>
-            </zn-tile>
-            <zn-tile caption="Authorization (PaySafe UK)" description="54K42815X50437241">
-              <div slot="primary" class="text-center">
-                <strong class="text-md text-error">$12.99</strong><br/>
-                <span class="text-xs">01/11/22 @ 12:20</span>
-              </div>
-            </zn-tile>
-            <span slot="footer">View Transaction History</span>
-          </zn-panel>
-        </zn-cols>
-
-
-        <zn-panel caption="Notes">
-          <zn-tile caption="Mark Neale">
-            Every interaction and change to a contact is recorded in this timeline. Each event is individually
-            interactive, has easily scanned breadcrumbs, and live-links to any related contacts or collections.
+          <zn-tile caption="Antivirus Pro" description="Renews 2024-01-06 (1 Year)">
+            <span slot="primary" class="chip success">Active</span>
           </zn-tile>
+          <zn-tile child caption="Unlimited Devices" description="Renews 2024-01-06 (1 Year)"></zn-tile>
+          <zn-tile caption="Domain Name" description="Renews 2024-01-06 (1 Year)">
+            <span slot="primary" class="chip warning">Suspended</span>
+          </zn-tile>
+          <zn-tile caption="Awesome Stuff" description="Renews 2024-01-06 (1 Year)">
+            <span slot="primary" class="chip error">Cancelled</span>
+          </zn-tile>
+
+          <span slot="footer">View All Subscriptions</span>
 
         </zn-panel>
 
-      </div>
+        <zn-panel slot="c2" rows="4" caption="Billing" navigation='[{"title": "Transactions", "path": "/", "default":true},
+            {"title": "Payments", "path": "/communication"}]'>
 
-    </zn-page>
+
+          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
+            <span slot="primary" class="chip success">Paid</span>
+          </zn-tile>
+          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
+            <span slot="primary" class="chip success">Paid</span>
+          </zn-tile>
+          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
+            <span slot="primary" class="chip success">Paid</span>
+          </zn-tile>
+          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
+            <span slot="primary" class="chip error">Refunded</span>
+          </zn-tile>
+          <span slot="footer">View Billing History</span>
+        </zn-panel>
+
+      </zn-cols>
+
+      <zn-cols>
+        <zn-panel slot="c1" caption="Payment Methods">
+
+          <zn-tile caption="Visa **** 1234" description="Expires on 11/23">
+            <span slot="primary" class="chip success">Active</span>
+          </zn-tile>
+          <zn-tile caption="PayPal Business" description="billybobbybob@gmail.com">
+            <span slot="primary" class="chip success">Active</span>
+          </zn-tile>
+          <zn-tile caption="MasterCard **** 5428 " description="Expired 11/19">
+            <span slot="primary" class="chip warning">Expired</span>
+          </zn-tile>
+          <span slot="footer">View All Payment Methods</span>
+
+        </zn-panel>
+        <zn-panel slot="c2" caption="Transactions">
+          <zn-tile caption="Capture (PaySafe UK)" description="542svz4-df4q-asdf-4q25-asdfgfgcvb">
+            <div slot="primary" class="text-center">
+              <strong class="text-md text-success">$12.99</strong><br/>
+              <span class="text-xs">01/11/22 @ 12:21</span>
+            </div>
+
+          </zn-tile>
+          <zn-tile caption="Authorization (PaySafe UK)" description="B-5EP36296PP286731M">
+            <div slot="primary" class="text-center">
+              <strong class="text-md text-success">$12.99</strong><br/>
+              <span class="text-xs">01/11/22 @ 12:20</span>
+            </div>
+          </zn-tile>
+          <zn-tile caption="Authorization (PaySafe UK)" description="54K42815X50437241">
+            <div slot="primary" class="text-center">
+              <strong class="text-md text-error">$12.99</strong><br/>
+              <span class="text-xs">01/11/22 @ 12:20</span>
+            </div>
+          </zn-tile>
+          <span slot="footer">View Transaction History</span>
+        </zn-panel>
+      </zn-cols>
 
 
-  </zn-max-width>
+      <zn-panel caption="Notes">
+        <zn-tile caption="Mark Neale">
+          Every interaction and change to a contact is recorded in this timeline. Each event is individually
+          interactive, has easily scanned breadcrumbs, and live-links to any related contacts or collections.
+        </zn-tile>
+
+      </zn-panel>
+
+    </div>
+
+  </zn-page>
+
 
 </div>
 

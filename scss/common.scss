@@ -5,10 +5,6 @@
 @import "../scss/variables";
 @import '_container/chips';
 
-:root{
-  @apply text-sm;
-}
-
 .zn-gap {
   @extend %zn-gap;
   /*
@@ -25,7 +21,7 @@
   @extend %zn-gap;
 }
 
-hr {
+body hr, hr {
   @apply w-full max-w-full
   my-md
   border-0 border-b-px border-border dark:border-darkBorder;
@@ -38,4 +34,9 @@ zn-panel zn-tile {
 
 zn-panel zn-tile:first-of-type {
   @apply border-t-0;
+}
+
+
+* {
+  @apply subpixel-antialiased text-md text-txt-800 dark:text-darkTxt-800;
 }

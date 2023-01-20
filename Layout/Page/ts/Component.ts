@@ -28,23 +28,30 @@ export class ZincPage extends ZincElement {
     }
 
     render() {
-        let smpCap = this.caption ?? "Close"
+        let pageSide = null;
+        let mainClass = "";
+        if (this.querySelectorAll('[slot="side"]').length > 0) {
+            mainClass = "with-side";
+            let smpCap = this.caption ?? "Close"
+            pageSide = html`
+              <div class="pageside">
+                <div class="expander" @click="${this._handleClick}">
+                  <zn-icon src="arrow_downward" library="material"></zn-icon>
+                  <span class="close">Close</span>
+                  <span class="close-sm">${smpCap}</span>
+                  <span class="open">Show ${this.caption}</span>
+                </div>
+                <div class="content">
+                  <slot name="side"></slot>
+                </div>
+              </div>`;
+        }
         return html`
-          <div>
-            <div>
+          <div class="${mainClass}">
+            <div class="page-content">
               <slot></slot>
             </div>
-            <div class="pageside">
-              <div class="expander" @click="${this._handleClick}">
-                <zn-icon src="arrow_downward" library="material"></zn-icon>
-                <span class="close">Close</span>
-                <span class="close-sm">${smpCap}</span>
-                <span class="open">Show ${this.caption}</span>
-              </div>
-              <div class="content">
-                <slot name="side"></slot>
-              </div>
-            </div>
+            ${pageSide}
           </div>`
     }
 }

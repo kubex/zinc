@@ -1,28 +1,30 @@
 :host {
-  @apply flex flex-row ;
+  @apply flex flex-col overflow-hidden;
+  grid-column: span var(--colspan, 2);
 
   dd, dt {
     @apply m-0 p-0;
   }
 
   dt {
-    @apply mr-sm text-md;
+    @apply mr-0 text-md
+    text-txt-600 dark:text-darkTxt-600;
   }
 
   dd {
-    @apply grow text-right text-caption text-txt-800;
+    @apply grow-0 text-left text-caption text-txt-800 whitespace-nowrap overflow-ellipsis;
   }
 }
 
-:host([stack]) {
-  @apply flex-col;
+:host([inline]) {
+  @apply flex-row items-center grow w-full;
 
   dt {
-    @apply mr-0 text-txt-600 dark:text-darkTxt-600;
+    @apply mr-sm;
   }
 
   dd {
-    @apply grow-0 text-left;
+    @apply grow text-right whitespace-normal text-caption text-txt-800;
   }
 }
 

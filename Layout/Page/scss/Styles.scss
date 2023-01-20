@@ -3,18 +3,28 @@
 
 :host {
 
-  @apply flex justify-center;
+  @apply flex justify-center grow box-border;
   container-type: inline-size;
 
   > div {
+    @apply relative w-full h-full box-border;
     max-width: calc(var(--max-width) + 0px);
-    @apply relative w-full h-full flex flex-col-reverse
-    @smp:flex-row;
+  }
 
+  .page-content {
+    @apply flex flex-wrap flex-col;
+    @extend %zn-pad;
+    @extend %zn-gap;
+  }
+
+  > div.with-side {
+
+    @apply flex flex-col-reverse
+    @smp:flex-row;
 
     .pageside {
       @apply h-bar min-h-bar max-h-bar w-full overflow-visible
-      @lg:basis-mpanel
+      //@lg:basis-mpanel
       @smp:max-h-full
       @smp:h-auto
       @smp:top-0
@@ -24,7 +34,7 @@
       @smp:max-w-bar
       @smp:grow
       @lg:min-w-mpanel
-      @lg:max-w-panel
+      @lg:max-w-mpanel
       @lg:w-mpanel;
 
       > div {
@@ -35,9 +45,9 @@
       > div.content {
         @apply hidden overflow-y-auto max-w-bar
         @lg:min-w-mpanel
-        @lg:flex flex-col right-0 inset-y-0;
-
-        @apply py-sm
+        @lg:flex flex-col right-0 inset-y-0
+        transition-all duration-500 ease-in-out
+        py-sm
         @smp:py-md
         @lg:py-lg
         @hd:py-xl pr-md
@@ -74,9 +84,10 @@
 
         zn-icon {
           @apply text-secondary-500 mx-md
+          transition-all duration-500 ease-in-out
           @smp:my-md
           rotate-0
-          @smp:rotate-90 ;
+          @smp:rotate-90;
         }
       }
 

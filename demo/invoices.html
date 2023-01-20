@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Zinc-Layout Demo</title>
+  <script src="../dist/zn.js" type="text/javascript" defer></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">
+</head>
+<body>
+
+<app-container id="dest">
+</app-container>
+
+<div id="source" style="display: none">
+  <zn-header max-width caption="Invoices & Credit Notes" navigation='[{"title": "Invoices", "path": "/", "default":true},
+            {"title": "Credit Notes", "path": "/communication"}]'>
+
+  </zn-header>
+
+  <zn-page caption="Invoices">
+
+    <form>Filter Form Here</form>
+
+    <zn-panel>
+      <zn-tile caption="TXN-SDFG-GRS-4847" description="Credit Note ID">
+
+        <span slot="chip" class="chip warning">Refunded</span>
+
+        <zn-prop colspan="1" caption="Amount">$123.43</zn-prop>
+        <zn-prop caption="Reason">Subscription Chan fewgqwged</zn-prop>
+        <zn-prop caption="Credit Note ID">12 Jun 2021</zn-prop>
+
+      </zn-tile>
+      <zn-tile caption="TXN-SDFG-GRS-48 XN-SDFG-GRS-48 XN-SDFG-GRS-4847" description="Credit Note ID">
+
+        <span slot="chip" class="chip warning">Refunded</span>
+
+        <zn-prop colspan="1" caption="Amount">$12333.43</zn-prop>
+        <zn-prop caption="Reason">Subscription Changed</zn-prop>
+        <zn-prop caption="Credit Note ID">12 Jun 2021</zn-prop>
+
+      </zn-tile>
+      <zn-tile caption="TXN-SDFG-GRS-4847" description="Credit Note ID">
+
+        <span slot="chip" class="chip warning">Refunded</span>
+
+        <zn-prop colspan="1"  caption="Amount">$13.43</zn-prop>
+        <zn-prop caption="Reason">n Changed</zn-prop>
+        <zn-prop caption="Credit Note ID">12 Jun 2021</zn-prop>
+
+      </zn-tile>
+      <zn-tile caption="TXN-SDFG-GRS-4847" description="Credit Note ID">
+
+        <span slot="chip" class="chip warning">Refunded</span>
+
+        <zn-prop colspan="1" caption="Amount">$1233232.43</zn-prop>
+        <zn-prop caption="Reason">Subscription Changed</zn-prop>
+        <zn-prop caption="Credit Note ID">12 Jun gs 2021</zn-prop>
+
+      </zn-tile>
+    </zn-panel>
+
+  </zn-page>
+
+
+</div>
+
+<script>
+  document.getElementById("dest").innerHTML = document.getElementById("source").innerHTML;
+</script>
+</body>
+</html>

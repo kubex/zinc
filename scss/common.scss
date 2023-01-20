@@ -7,14 +7,18 @@
 
 .zn-gap {
   @extend %zn-gap;
-  /*
-  smp:p-sm md:p-md lg:p-lg
-  */
-  @apply py-xxs
-  @smp:p-sm
-  @md:p-md
-  @lg:p-lg
-  flex flex-wrap;
+  @extend %zn-pad;
+  @apply flex flex-wrap;
+}
+
+
+.zn-gap-in {
+  @extend %zn-gap;
+  @apply flex flex-wrap;
+}
+
+.zn-gap-md {
+  @apply flex flex-wrap gap-md;
 }
 
 .zn-gap-inner {

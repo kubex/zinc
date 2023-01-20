@@ -17,8 +17,11 @@ export class ZincProperty extends ZincElement {
     @property({attribute: 'library', type: String, reflect: true})
     private library = "material-outlined";
 
-    @property({attribute: 'stack', type: Boolean, reflect: true})
-    private stack;
+    @property({attribute: 'inline', type: Boolean, reflect: true})
+    private inline;
+
+    @property({attribute: 'colspan', type: Number, reflect: true})
+    private colspan;
 
     render() {
 
@@ -28,7 +31,12 @@ export class ZincProperty extends ZincElement {
               <zn-icon library="${this.library}" src="${this.icon}"></zn-icon>`;
         }
 
+        let colspan = this.colspan ? this.colspan : 2;
+
         return html`
+          <style>:host {
+            --colspan: ${colspan};
+          }</style>
           <dt>${icon}${this.caption}</dt>
           <dd>
             <slot></slot>

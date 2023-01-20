@@ -35,8 +35,10 @@ export class ZincTile extends ZincElement {
               <div class="caption">${this.caption}</div>
               <div class="description">${this.description}</div>
             </div>
-            ${chip}
-            ${properties}
+            <div class="extended">
+              ${chip}
+              ${properties}
+            </div>
           </div>
         `
     }

@@ -1,4 +1,20 @@
 @tailwind base;
+:host .page-content {
+  /*@apply gap-xxs smp:gap-sm md:gap-md lg:gap-lg hd:gap-xl;*/
+  @apply gap-xxs
+  @smp:gap-sm
+  @md:gap-md
+  @lg:gap-lg
+  @hd:gap-xl;
+}
+
+:host .page-content {
+  @apply py-xxs
+  @smp:p-sm
+  @md:p-md
+  @lg:p-lg;
+}
+
 @screen md {
   :host {
     /* Track */
@@ -21,17 +37,23 @@
 }
 
 :host {
-  @apply flex justify-center;
+  @apply flex justify-center grow box-border;
   container-type: inline-size;
 }
 :host > div {
+  @apply relative w-full h-full box-border;
   max-width: calc(var(--max-width) + 0px);
-  @apply relative w-full h-full flex flex-col-reverse
+}
+:host .page-content {
+  @apply flex flex-wrap flex-col;
+}
+:host > div.with-side {
+  @apply flex flex-col-reverse
     @smp:flex-row;
 }
-:host > div .pageside {
+:host > div.with-side .pageside {
   @apply h-bar min-h-bar max-h-bar w-full overflow-visible
-      @lg:basis-mpanel
+      //@lg:basis-mpanel
       @smp:max-h-full
       @smp:h-auto
       @smp:top-0
@@ -41,18 +63,19 @@
       @smp:max-w-bar
       @smp:grow
       @lg:min-w-mpanel
-      @lg:max-w-panel
+      @lg:max-w-mpanel
       @lg:w-mpanel;
 }
-:host > div .pageside > div {
+:host > div.with-side .pageside > div {
   @apply absolute bg-white
         @lg:bg-primary-50;
 }
-:host > div .pageside > div.content {
+:host > div.with-side .pageside > div.content {
   @apply hidden overflow-y-auto max-w-bar
         @lg:min-w-mpanel
-        @lg:flex flex-col right-0 inset-y-0;
-  @apply py-sm
+        @lg:flex flex-col right-0 inset-y-0
+        transition-all duration-500 ease-in-out
+        py-sm
         @smp:py-md
         @lg:py-lg
         @hd:py-xl pr-md
@@ -60,7 +83,7 @@
         @lg:pr-lg
         @hd:pr-xl;
 }
-:host > div .pageside > div.expander {
+:host > div.with-side .pageside > div.expander {
   @apply flex flex-row-reverse items-center justify-center
         @smp:flex-col
         @lg:hidden inset-0 z-10 cursor-pointer
@@ -72,27 +95,28 @@
         @smp:w-bar
         @lg:hidden  bg-white;
 }
-:host > div .pageside > div.expander span {
+:host > div.with-side .pageside > div.expander span {
   writing-mode: horizontal-tb;
   @apply grow pl-md
           @smp:pl-0
           hidden;
 }
 @container (min-width:theme("screens.smp")) {
-  :host > div .pageside > div.expander span {
+  :host > div.with-side .pageside > div.expander span {
     writing-mode: vertical-rl;
   }
 }
-:host > div .pageside > div.expander span.open {
+:host > div.with-side .pageside > div.expander span.open {
   @apply block;
 }
-:host > div .pageside > div.expander zn-icon {
+:host > div.with-side .pageside > div.expander zn-icon {
   @apply text-secondary-500 mx-md
+          transition-all duration-500 ease-in-out
           @smp:my-md
           rotate-0
           @smp:rotate-90;
 }
-:host > div > div {
+:host > div.with-side > div {
   @apply grow overflow-y-auto;
 }
 

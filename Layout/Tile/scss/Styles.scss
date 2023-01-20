@@ -18,17 +18,16 @@ zn-tile[d], :host([d]) {
 
   > div {
     @apply box-border w-full h-full flex items-center
-    overflow-hidden
-    py-sm gap-md
-    @smp:flex-wrap;
+    overflow-hidden flex-wrap
+    py-sm gap-md;
 
     > * {
-      @apply h-full flex justify-center flex-col
-      @smp:flex-wrap;
+      @apply h-full flex justify-center flex-col;
     }
 
     slot[name="primary"] {
       @apply min-w-[110px] w-[110px];
+      flex-basis: 110px;
     }
 
     zn-prop, slot[name="chip"] {
@@ -38,6 +37,7 @@ zn-tile[d], :host([d]) {
 
     .summary {
       @apply grow shrink min-w-[190px] w-fit;
+      flex-basis: 210px;
     }
 
     .caption {
@@ -50,6 +50,19 @@ zn-tile[d], :host([d]) {
 
     .caption, .description {
       @apply overflow-clip whitespace-nowrap;
+    }
+
+    .extended {
+      @apply grow shrink overflow-hidden gap-md items-center grid;
+      flex-basis: 50%;
+      gap: 50px 20px;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      grid-template-rows: 100% 0;
+    }
+
+    slot[name="chip"] {
+      @apply justify-center;
+      grid-column: span 2;
     }
   }
 }

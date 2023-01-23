@@ -38,7 +38,9 @@
       @lg:w-mpanel;
 
       > div {
-        @apply absolute bg-white
+        @apply absolute
+        bg-white
+        dark:bg-dark-800
         @lg:bg-primary-50;
       }
 
@@ -66,7 +68,8 @@
         @smp:border-b-0
         @smp:border-l-px border-border w-full
         @smp:w-bar
-        @lg:hidden  bg-white;
+        @lg:hidden
+        bg-white;
 
         span {
           writing-mode: horizontal-tb;
@@ -146,4 +149,26 @@
     }
   }
 }
+}
+
+
+:host([d]) {
+  > div.with-side {
+    .pageside {
+      > div {
+        @apply bg-dark-800;
+      }
+
+      > div.expander {
+        @apply border-darkBorder bg-dark-800;
+
+        zn-icon {
+          @apply text-secondary-500;
+        }
+      }
+
+
+    }
+  }
+
 }

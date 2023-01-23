@@ -19,6 +19,41 @@ export class ZincTile extends ZincElement {
     @property({attribute: 'right', type: Boolean, reflect: true})
     private right;
 
+    private menu;
+
+    _handleActions(e) {
+        let menu = this.menu[0];
+        let showMenu = document.createElement('div');
+
+        showMenu.classList.add('zn-menu--overlay');
+        showMenu.style.top = e.pageY + 'px';
+        showMenu.appendChild(menu);
+        document.body.appendChild(showMenu);
+        //Set the left position after the menu is added to the page
+        showMenu.style.left = (e.pageX - menu.offsetWidth) + 'px';
+
+        let backdrop = document.createElement('div');
+        document.body.appendChild(backdrop);
+        backdrop.classList.add('zn-menu_backdrop');
+
+
+        let close = function () {
+            showMenu.remove();
+            backdrop.remove();
+            document.removeEventListener('keyup', detachEsc);
+        }
+
+        let detachEsc = (e) => {
+            if (e.key === 'Escape') {
+                close();
+            }
+        }
+
+        showMenu.classList.add('zn-menu--ready');
+
+        backdrop.onclick = close;
+        document.addEventListener("keyup", detachEsc);
+    }
 
     render() {
 
@@ -26,6 +61,14 @@ export class ZincTile extends ZincElement {
           <slot name="primary"></slot>` : null;
         let chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
           <slot name="chip"></slot>` : null;
+
+        this.menu = this.querySelectorAll('zn-menu')
+
+        let actions = this.menu.length > 0 ? html`
+          <div class="actions">
+            <zn-icon @click="${this._handleActions}" library="material-outlined" src="more_vert"></zn-icon>
+          </div>` : html`
+          <div class="actions"></div>`;
 
         const properties = this.querySelectorAll('zn-prop');
         return html`
@@ -39,6 +82,7 @@ export class ZincTile extends ZincElement {
               ${chip}
               ${properties}
             </div>
+            ${actions}
           </div>
         `
     }

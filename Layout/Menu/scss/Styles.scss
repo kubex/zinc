@@ -1,0 +1,35 @@
+@tailwind base;
+@import "../../../scss/variables";
+
+@tailwind base;
+
+
+:host > div {
+  @apply block p-sm rounded border
+  flex flex-col grow
+  w-spanel
+  p-sm
+  border-border bg-white
+  gap-md;
+
+  li {
+    @apply block border-b border-border text-navitem p-xs;
+
+    &:hover {
+      @apply cursor-pointer bg-primary-50 rounded;
+    }
+  }
+
+  li:last-child {
+    @apply border-b-0;
+  }
+}
+
+
+.zn-menu--overlay {
+  @apply absolute drop-shadow-lg z-[2001] overflow-hidden;
+}
+
+.zn-menu_backdrop {
+  @apply fixed inset-0 z-[2000];
+}

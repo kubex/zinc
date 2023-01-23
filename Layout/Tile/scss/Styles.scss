@@ -65,6 +65,21 @@ zn-tile[d], :host([d]) {
       @apply justify-center;
       grid-column: span 2;
     }
+
+    .actions {
+      @apply text-secondary-500 max-w-[30px] w-[30px];
+
+      zn-icon {
+        @apply rounded-full p-md cursor-pointer;
+        &:hover {
+          @apply bg-primary-50 ;
+        }
+      }
+
+      zn-menu {
+        @apply absolute right-0 top-0;
+      }
+    }
   }
 }
 

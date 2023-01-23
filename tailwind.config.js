@@ -51,7 +51,18 @@ module.exports = {
         400: 'rgba(0, 0, 0, 0.40)',
       },
 
-      dark:        colors.slate,
+      dark: {
+        '50':  '#f8fafc',
+        '100': '#f1f5f9',
+        '200': '#e2e8f0',
+        '300': '#cbd5e1',
+        '400': '#94a3b8',
+        '500': '#64748b',
+        '600': '#475569',
+        '700': '#334155',
+        '800': '#18202f',
+        '900': '#0f172a'
+      },
       transparent: 'transparent',
 
       'white': '#FFFFFF',

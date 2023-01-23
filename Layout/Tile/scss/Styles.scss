@@ -18,7 +18,7 @@ zn-tile[d], :host([d]) {
 
   > div {
     @apply box-border w-full h-full flex items-center
-    overflow-hidden flex-wrap
+    overflow-hidden flex-nowrap
     py-sm gap-md;
 
     > * {
@@ -32,7 +32,7 @@ zn-tile[d], :host([d]) {
 
     zn-prop, slot[name="chip"] {
       @apply hidden grow
-      @smp:flex;
+      @sm:flex;
     }
 
     .summary {
@@ -49,14 +49,15 @@ zn-tile[d], :host([d]) {
     }
 
     .caption, .description {
-      @apply overflow-clip whitespace-nowrap;
+      @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
     }
 
     .extended {
-      @apply grow shrink overflow-hidden gap-md items-center grid;
-      flex-basis: 50%;
+      @apply hidden grow shrink overflow-hidden gap-md items-center
+      @smp:grid
+      @smp:basis-2/4;
       gap: 50px 20px;
-      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
       grid-template-rows: 100% 0;
     }
 

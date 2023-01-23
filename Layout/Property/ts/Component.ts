@@ -31,7 +31,7 @@ export class ZincProperty extends ZincElement {
               <zn-icon library="${this.library}" src="${this.icon}"></zn-icon>`;
         }
 
-        let colspan = this.colspan ? this.colspan : 2;
+        let colspan = this.colspan ? this.colspan : 3;
 
         return html`
           <style>:host {

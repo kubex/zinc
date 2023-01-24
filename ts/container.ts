@@ -62,7 +62,7 @@ export class AppContainer extends LitElement {
             return shad.querySelectorAll(className);
         };
 
-        this.shadowRoot.append(this.container);
+        this.shadowRoot.appendChild(this.container);
         //Form.init(this.shadowRoot);
 
         this.shadowRoot.addEventListener('submit', function (e) {
@@ -80,12 +80,14 @@ export class AppContainer extends LitElement {
     }
 
     set innerHTML(data) {
+        console.log("Data Stuff");
         const slot = this.shadowRoot.getElementById('slot');
         if (slot) {
             slot.parentElement.removeChild(slot);
         }
 
         this.prepareContainer()
+        console.log(data);
 
         if (this.flexFrame) {
             this.container.innerHTML += data;

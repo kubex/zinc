@@ -8,6 +8,14 @@
 :host, :root {
   flex-grow: 1;
   position: relative;
+
+  iframe.flexframe {
+    position: absolute;
+    border: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 :host > div, slot {
@@ -42,13 +50,3 @@
   align-items: center;
 }
 
-iframe.flexframe {
-  position: absolute;
-  border: 0;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-}

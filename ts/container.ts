@@ -82,19 +82,20 @@ export class AppContainer extends LitElement {
     set innerHTML(data) {
         const slot = this.shadowRoot.getElementById('slot');
         if (slot) {
-            this.shadowRoot.removeChild(slot);
+            slot.parentElement.removeChild(slot);
         }
 
         this.prepareContainer()
 
-        if (!this.flexFrame) {
-            this.container.innerHTML += '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
-                + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
-                + data;
-        } else {
+        if (this.flexFrame) {
             this.container.innerHTML += data;
             return;
         }
+
+        this.container.innerHTML += '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
+            + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
+            + data;
+
 
         if (!this.allowScripts) {
             return;

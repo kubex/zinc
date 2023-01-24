@@ -17,9 +17,7 @@ export class AppContainer extends LitElement {
     public darkMode;
 
     @property({type: HTMLDivElement})
-    protected container: HTMLDivElement = (() => {
-        return document.createElement('div');
-    })();
+    protected container: HTMLDivElement = document.createElement('div');
 
     static get styles() {
         return [this.genericStyles(), unsafeCSS(styles)];
@@ -61,7 +59,6 @@ export class AppContainer extends LitElement {
         this.container.getElementsByTagName = function (className) {
             return shad.querySelectorAll(className);
         };
-
         this.shadowRoot.appendChild(this.container);
         //Form.init(this.shadowRoot);
 
@@ -80,14 +77,12 @@ export class AppContainer extends LitElement {
     }
 
     set innerHTML(data) {
-        console.log("Data Stuff");
         const slot = this.shadowRoot.getElementById('slot');
         if (slot) {
-            slot.parentElement.removeChild(slot);
+            (slot.parentElement || this.shadowRoot).removeChild(slot);
         }
 
         this.prepareContainer()
-        console.log(data);
 
         if (this.flexFrame) {
             this.container.innerHTML += data;
@@ -133,15 +128,15 @@ export class AppContainer extends LitElement {
 
     render() {
         return html`
-          <div>
-            <slot id="slot">
-              <div class="page-loading">
-                <div><p>Loading, please wait...</p>
-                  <img alt="Loading"
-                       src="data:image/gif;base64,R0lGODlhKwALAPEAAP///wA1aYKbtQA1aSH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAKwALAAACMoSOCMuW2diD88UKG95W88uF4DaGWFmhZid93pq+pwxnLUnXh8ou+sSz+T64oCAyTBUAACH5BAkKAAAALAAAAAArAAsAAAI9xI4IyyAPYWOxmoTHrHzzmGHe94xkmJifyqFKQ0pwLLgHa82xrekkDrIBZRQab1jyfY7KTtPimixiUsevAAAh+QQJCgAAACwAAAAAKwALAAACPYSOCMswD2FjqZpqW9xv4g8KE7d54XmMpNSgqLoOpgvC60xjNonnyc7p+VKamKw1zDCMR8rp8pksYlKorgAAIfkECQoAAAAsAAAAACsACwAAAkCEjgjLltnYmJS6Bxt+sfq5ZUyoNJ9HHlEqdCfFrqn7DrE2m7Wdj/2y45FkQ13t5itKdshFExC8YCLOEBX6AhQAADsAAAAAAAAAAAA="/>
-                </div>
+          <slot id="slot">
+            <div class="page-loading">
+              <div>
+                <p>Loading, please wait...</p>
+                <img alt="Loading"
+                     src="data:image/gif;base64,R0lGODlhKwALAPEAAP///wA1aYKbtQA1aSH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAKwALAAACMoSOCMuW2diD88UKG95W88uF4DaGWFmhZid93pq+pwxnLUnXh8ou+sSz+T64oCAyTBUAACH5BAkKAAAALAAAAAArAAsAAAI9xI4IyyAPYWOxmoTHrHzzmGHe94xkmJifyqFKQ0pwLLgHa82xrekkDrIBZRQab1jyfY7KTtPimixiUsevAAAh+QQJCgAAACwAAAAAKwALAAACPYSOCMswD2FjqZpqW9xv4g8KE7d54XmMpNSgqLoOpgvC60xjNonnyc7p+VKamKw1zDCMR8rp8pksYlKorgAAIfkECQoAAAAsAAAAACsACwAAAkCEjgjLltnYmJS6Bxt+sfq5ZUyoNJ9HHlEqdCfFrqn7DrE2m7Wdj/2y45FkQ13t5itKdshFExC8YCLOEBX6AhQAADsAAAAAAAAAAAA="/>
               </div>
-            </slot>
-          </div>`;
+            </div>
+          </slot>
+        `;
     }
 }

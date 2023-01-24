@@ -148,7 +148,11 @@
 </div>
 
 <script>
-  document.getElementById("dest").innerHTML = document.getElementById("source").innerHTML;
+  setTimeout(() => {
+    const dest = document.getElementById('dest');
+    const source = document.getElementById('source');
+    dest.innerHTML = source.innerHTML;
+  }, 100);
 </script>
 </body>
 </html>

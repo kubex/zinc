@@ -31,7 +31,9 @@ export class ZincPanel extends ZincElement {
         let footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
         let actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
 
-        this.style.setProperty('--row-count', this.rows);
+        if (this.rows > 0) {
+            this.style.setProperty('--row-count', this.rows);
+        }
 
         let header;
         if (actionItems || this.caption || this.navigation.length > 0) {

@@ -14,6 +14,8 @@ export class ZincColumns extends ZincElement {
     private layout: string = ""
     @property({attribute: 'expanded', type: Boolean, reflect: true})
     private expanded: boolean = false
+    @property({attribute: 'min', type: Number, reflect: true})
+    private min
 
     layoutClass = "";
 
@@ -27,13 +29,18 @@ export class ZincColumns extends ZincElement {
     }
 
     render() {
+
+        if (this.min > 0) {
+            this.style.setProperty('--col-min', this.min + "px");
+        }
+
         let c1c = this.querySelectorAll('[slot="c1"]').length > 0 ? 1 : 0;
         let c2c = this.querySelectorAll('[slot="c2"]').length > 0 ? 1 : 0;
         let c3c = this.querySelectorAll('[slot="c3"]').length > 0 ? 1 : 0;
         let c4c = this.querySelectorAll('[slot="c4"]').length > 0 ? 1 : 0;
 
+        let slotCount = c1c + c2c + c3c + c4c;
         if (this.layout.length < 1) {
-            let slotCount = c1c + c2c + c3c + c4c;
 
             switch (slotCount) {
                 case 1:
@@ -51,19 +58,16 @@ export class ZincColumns extends ZincElement {
             }
         }
 
-        let cols = this.layout.replace(/,/g, ' ').split(" ");
+        let cols = this.layout.replace(/,/g, '').split("");
         this.layoutClass = "lo-" + this.layout.replace(/,/g, '');
         let span = 0;
-        let colCount = 0;
-
         let slots = ['', '', '', ''];
 
         for (let i = 0; i < cols.length; i++) {
-            span += parseInt(cols[i]);
+            span = span + parseInt(cols[i]);
             if (span <= 4) {
                 this.layoutClass += " c" + (i + 1);
                 slots[i] = "s" + cols[i];
-                colCount++;
             }
         }
 

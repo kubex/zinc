@@ -67,21 +67,26 @@ export class ZincTile extends ZincElement {
         let actions = this.menu.length > 0 ? html`
           <div class="actions">
             <zn-icon @click="${this._handleActions}" library="material-outlined" src="more_vert"></zn-icon>
-          </div>` : html`
-          <div class="actions"></div>`;
+          </div>` : null;
 
         const properties = this.querySelectorAll('zn-prop');
+
+        let extended = properties.length > 0 || chip != null ? html`
+          <div class="extended">
+            ${chip}
+            ${properties}
+          </div>` : null;
+
+        let summaryClass = extended == null ? 'summary' : 'summary extended';
+
         return html`
           <div>
             ${primary}
-            <div class="summary">
+            <div class="${summaryClass}">
               <div class="caption">${this.caption}</div>
               <div class="description">${this.description}</div>
             </div>
-            <div class="extended">
-              ${chip}
-              ${properties}
-            </div>
+            ${extended}
             ${actions}
           </div>
         `

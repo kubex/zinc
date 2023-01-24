@@ -10,6 +10,7 @@ module.exports = {
     "./Components/**/ts/*.{ts,js,html}",
     "./Components/**/scss/*.{scss,css}"
   ],
+
   darkMode:    'class',
   theme:       {
     colors:     {

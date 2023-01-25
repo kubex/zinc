@@ -77,7 +77,7 @@ export class ZincTile extends ZincElement {
             ${properties}
           </div>` : null;
 
-        let summaryClass = extended == null ? 'summary' : 'summary extended';
+        let summaryClass = extended == null ? 'summary' : 'summary extend';
 
         return html`
           <div>

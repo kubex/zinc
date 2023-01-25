@@ -15,6 +15,13 @@ export class ZincMenu extends ZincElement {
     @property({attribute: 'actions', type: Array})
     private actions = [];
 
+    public closer;
+
+    _handleAction(e, item) {
+        if (this.closer) {
+            this.closer();
+        }
+    }
 
     render() {
 
@@ -24,7 +31,9 @@ export class ZincMenu extends ZincElement {
               <ul>
                 ${this.actions.map((item, index) =>
                   html`
-                    <li><a href="${item.path}">${item.title}</a></li>`)}
+                    <li><a @click="${(e) => {
+                      this._handleAction(e, item);
+                    }}" href="${item.path}">${item.title}</a></li>`)}
               </ul>
             `
         }

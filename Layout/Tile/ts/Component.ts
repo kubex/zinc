@@ -3,6 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 // @ts-ignore
 import styles from '../scss/Styles.scss';
 import {ZincElement} from "../../../ts/element";
+import {ZincMenu} from "../../Menu/ts/Component";
 
 @customElement('zn-tile')
 export class ZincTile extends ZincElement {
@@ -47,6 +48,10 @@ export class ZincTile extends ZincElement {
             if (e.key === 'Escape') {
                 close();
             }
+        }
+
+        if (menu instanceof ZincMenu) {
+            menu.closer = close;
         }
 
         showMenu.classList.add('zn-menu--ready');

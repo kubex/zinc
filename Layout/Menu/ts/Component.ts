@@ -17,7 +17,7 @@ export class ZincMenu extends ZincElement {
 
     public closer;
 
-    _handleAction(e, item) {
+    _handleAction() {
         if (this.closer) {
             this.closer();
         }
@@ -32,10 +32,11 @@ export class ZincMenu extends ZincElement {
                 ${this.actions.map((item) => {
                   if (item.target && item.path) {
                     return html`
-                      <li><a href="${item.path}" data-target="${item.target}">${item.title}</a></li>`
+                      <li><a @click="{this._handleAction}" href="${item.path}"
+                             data-target="${item.target}">${item.title}</a></li>`
                   } else if (item.path) {
                     return html`
-                      <li><a href="${item.path}">${item.title}</a></li>`
+                      <li><a @click="{this._handleAction}" href="${item.path}">${item.title}</a></li>`
                   }
                   return null;
                 })}

@@ -29,13 +29,15 @@ export class ZincMenu extends ZincElement {
         if (this.actions.length > 0) {
             header = html`
               <ul>
-                ${this.actions.map((item, index) => {
-                  let target = item.target ? html`data-target="${item.target}"` : null;
-                  let href = item.path ? html`href="${item.path}"` : null;
-                  return html`
-                    <li><a @click="${(e) => {
-                      this._handleAction(e, item);
-                    }}" ${href} ${target}>${item.title}</a></li>`
+                ${this.actions.map((item) => {
+                  if (item.target && item.path) {
+                    return html`
+                      <li><a href="${item.path}" data-target="${item.target}">${item.title}</a></li>`
+                  } else if (item.path) {
+                    return html`
+                      <li><a href="${item.path}">${item.title}</a></li>`
+                  }
+                  return null;
                 })}
               </ul>
             `

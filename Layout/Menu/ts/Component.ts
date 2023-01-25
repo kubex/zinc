@@ -36,7 +36,7 @@ export class ZincMenu extends ZincElement {
                              data-target="${item.target}">${item.title}</a></li>`
                   } else if (item.path) {
                     return html`
-                      <li><a @click=${this._handleAction} href="${item.path}">${item.title}</a></li>`
+                      <li><a @click="${this._handleAction}" href="${item.path}">${item.title}</a></li>`
                   }
                   return null;
                 })}

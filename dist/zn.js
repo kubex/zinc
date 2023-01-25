@@ -105,7 +105,7 @@ const it=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
                 ${this.actions.map((t=>t.target&&t.path?I`
                       <li><a @click="${this._handleAction}" href="${t.path}"
                              data-target="${t.target}">${t.title}</a></li>`:t.path?I`
-                      <li><a @click=${this._handleAction} href="${t.path}">${t.title}</a></li>`:null))}
+                      <li><a @click="${this._handleAction}" href="${t.path}">${t.title}</a></li>`:null))}
               </ul>
             `),I`
           <div>${t}</div>`}};e([nt({attribute:"actions",type:Array})],Qt.prototype,"actions",void 0),Qt=e([it("zn-menu")],Qt);let Vt=class extends Nt{static get styles(){return[s(Xt)]}_handleActions(t){let e=this.menu[0],o=document.createElement("div");o.classList.add("zn-menu--overlay"),o.style.top=t.pageY+"px",o.appendChild(e),document.body.appendChild(o),o.style.left=t.pageX-e.offsetWidth+"px";let r=document.createElement("div");document.body.appendChild(r),r.classList.add("zn-menu_backdrop");let i=function(){o.remove(),r.remove(),document.removeEventListener("keyup",a)},a=t=>{"Escape"===t.key&&i()};e instanceof Qt&&(e.closer=i),o.classList.add("zn-menu--ready"),r.onclick=i,document.addEventListener("keyup",a)}render(){let t=this.querySelectorAll('[slot="primary"]').length>0?I`

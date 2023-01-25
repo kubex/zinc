@@ -32,7 +32,7 @@ export class ZincMenu extends ZincElement {
                 ${this.actions.map((item, index) => {
                   let target = item.target ? html`data-target="${item.target}"` : null;
                   let href = item.path ? html`href="${item.path}"` : null;
-                  html`
+                  return html`
                     <li><a @click="${(e) => {
                       this._handleAction(e, item);
                     }}" ${href} ${target}>${item.title}</a></li>`

@@ -43,12 +43,15 @@
 :host > div ul.header-nav li {
   @apply text-navitem font-semibold relative;
 }
+:host > div ul.header-nav li a {
+  @apply block cursor-pointer;
+}
 :host > div ul.header-nav li::before {
-  @apply inset-x-1/2 absolute bottom-0 cursor-pointer transition-all duration-500  h-xxs;
+  @apply inset-x-1/2 absolute bottom-0 transition-all duration-500  h-xxs;
   content: "";
 }
 :host > div ul.header-nav li:hover::before {
-  @apply bg-tertiary-500;
+  @apply bg-secondary-100;
   left: -5px;
   right: -5px;
 }

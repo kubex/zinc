@@ -52,13 +52,17 @@
 
       @apply text-navitem font-semibold relative;
 
+      a {
+        @apply block cursor-pointer;
+      }
+
       &::before {
-        @apply inset-x-1/2 absolute bottom-0 cursor-pointer transition-all duration-500  h-xxs;
+        @apply inset-x-1/2 absolute bottom-0 transition-all duration-500  h-xxs;
         content: "";
       }
 
       &:hover::before {
-        @apply bg-tertiary-500;
+        @apply bg-secondary-100;
         left: -5px;
         right: -5px;
       }

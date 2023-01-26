@@ -60,11 +60,29 @@
     @apply text-sm text-txt-400 block;
     @apply pt-sm border-border border-t;
   }
+
+  .header:empty, .footer:empty {
+    @apply hidden;
+  }
 }
 
 :host([rows]) {
+  > div {
+    @apply py-0;
+  }
+
+  .header {
+    @apply pt-md;
+  }
+
+  .footer {
+    @apply pb-md;
+  }
+}
+
+:host([rows]):not([rows=""]) {
   .body {
-    max-height: calc(theme('spacing.tile') * var(--row-count));
+    max-height: calc(theme('spacing.tile') * var(--row-count, 50));
     height: calc(theme('spacing.tile') * var(--row-count));
   }
 }

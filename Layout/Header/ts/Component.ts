@@ -22,6 +22,13 @@ export class ZincHeader extends ZincElement {
     @property({attribute: 'max-width', type: Number, reflect: true})
     private maxWidth;
 
+    _clickNav(e) {
+        e.target.closest('ul').querySelectorAll('li').forEach((item) => {
+            item.classList.remove('active');
+        });
+        e.target.closest('li').classList.add('active');
+    }
+
     render() {
         let header = html`
           <div>
@@ -29,9 +36,12 @@ export class ZincHeader extends ZincElement {
               <h1>${this.caption}</h1>
               <slot></slot>
               <ul class="header-nav">
-                ${this.navigation.map((item, index) =>
-                  html`
-                    <li><a href="${item.path}">${item.title}</a></li>`)}
+                ${this.navigation.map((item, index) => {
+                  let activeClass = item.path == window.location.pathname || item.active ? 'active' : '';
+                  return html`
+                    <li class="${activeClass}"><a @click="${this._clickNav}" href="${item.path}">${item.title}</a>
+                    </li>`;
+                })}
               </ul>
             </div>
           </div>

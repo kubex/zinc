@@ -53,15 +53,20 @@
       @apply text-navitem font-semibold relative;
 
       &::before {
-        @apply inset-x-1/2 absolute bottom-0 transition-all duration-200;
+        @apply inset-x-1/2 absolute bottom-0 cursor-pointer transition-all duration-500  h-xxs;
         content: "";
       }
 
-      &.active::before, &:hover::before {
-        @apply cursor-pointer;
-        @apply bg-secondary-500 h-xxs;
-        left: -6px;
-        right: -6px;
+      &:hover::before {
+        @apply bg-tertiary-500;
+        left: -5px;
+        right: -5px;
+      }
+
+      &.active::before {
+        @apply bg-secondary-500;
+        left: -10px;
+        right: -10px;
       }
     }
   }

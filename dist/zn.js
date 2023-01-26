@@ -93,7 +93,7 @@ const it=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
               <h1>${this.caption}</h1>
               <slot></slot>
               <ul class="header-nav">
-                ${this.navigation.map(((t,e)=>{let o=t.path==window.location.pathname||t.active?"active":"";return I`
+                ${this.navigation.map(((t,e)=>{let o=t.active?"active":"";return I`
                     <li class="${o}"><a @click="${this._clickNav}" href="${t.path}">${t.title}</a>
                     </li>`}))}
               </ul>

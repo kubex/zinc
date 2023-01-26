@@ -37,7 +37,7 @@ export class ZincHeader extends ZincElement {
               <slot></slot>
               <ul class="header-nav">
                 ${this.navigation.map((item, index) => {
-                  let activeClass = item.path == window.location.pathname || item.active ? 'active' : '';
+                  let activeClass = item.active ? 'active' : '';
                   return html`
                     <li class="${activeClass}"><a @click="${this._clickNav}" href="${item.path}">${item.title}</a>
                     </li>`;

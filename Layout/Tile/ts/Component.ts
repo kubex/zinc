@@ -20,6 +20,12 @@ export class ZincTile extends ZincElement {
     @property({attribute: 'right', type: Boolean, reflect: true})
     private right;
 
+    @property({attribute: 'data-uri', type: String, reflect: true})
+    private dataUri;
+
+    @property({attribute: 'data-target', type: String, reflect: true})
+    private dataTarget;
+
     private menu;
 
     _handleActions(e) {
@@ -84,12 +90,15 @@ export class ZincTile extends ZincElement {
 
         let summaryClass = extended == null ? 'summary' : 'summary extend';
 
+        let summary = html`
+          <div class="caption" data-uri="${this.dataUri}" data-target="${this.dataTarget}">${this.caption}</div>
+          <div class="description">${this.description}</div>`;
+
         return html`
           <div>
             ${primary}
             <div class="${summaryClass}">
-              <div class="caption">${this.caption}</div>
-              <div class="description">${this.description}</div>
+              ${summary}
             </div>
             ${extended}
             ${actions}

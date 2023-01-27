@@ -1,0 +1,46 @@
+:host {
+  @apply inline-block rounded-full px-sm py-xxs text-md text-center font-semibold w-fit m-px box-border;
+  @apply bg-tertiary-500 border-tertiary-500 text-white;
+  border: 1px solid !important;
+}
+
+
+:host([d]) {
+  @apply opacity-80;
+}
+
+:host([error]) {
+  @apply bg-error border-error ;
+}
+
+:host([info]) {
+  @apply bg-info border-info ;
+}
+
+:host([warning]) {
+  @apply bg-warning border-warning ;
+}
+
+:host([success]) {
+  @apply bg-success border-success ;
+}
+
+:host([outline]), :host([d]) {
+  @apply bg-transparent text-tertiary-500;
+}
+
+:host([d][error]), :host([outline][error]) {
+  @apply text-error;
+}
+
+:host([d][info]), :host([outline][info]) {
+  @apply text-info;
+}
+
+:host([d][warning]), :host([outline][warning]) {
+  @apply text-warning;
+}
+
+:host([d][success]), :host([outline][success]) {
+  @apply text-success;
+}

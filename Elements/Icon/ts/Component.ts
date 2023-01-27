@@ -15,6 +15,15 @@ const Library = {
     Libravatar: "libravatar"
 }
 
+const LibraryAlias = {
+    Material: "mi",
+    MaterialOutlined: "mio",
+    MaterialRound: "mir",
+    MaterialSharp: "mit",
+    MaterialTwoTone: "mis",
+    Gravatar: "grav",
+}
+
 @customElement('zn-icon')
 export class ZincIcon extends LitElement {
     static styles = unsafeCSS(styles);
@@ -28,7 +37,7 @@ export class ZincIcon extends LitElement {
     size = 24
 
     @property({reflect: true})
-    library = Library.MaterialOutlined
+    library = Library.None
 
     @property()
     round = false
@@ -80,16 +89,22 @@ export class ZincIcon extends LitElement {
     render() {
         switch (this.library) {
             case Library.Material:
+            case LibraryAlias.Material:
                 return html`<i class="mi mi">${this.src}</i>`;
             case Library.MaterialOutlined:
+            case LibraryAlias.MaterialOutlined:
                 return html`<i class="mi mi--outlined">${this.src}</i>`;
             case Library.MaterialRound:
+            case LibraryAlias.MaterialRound:
                 return html`<i class="mi mi--round">${this.src}</i>`;
             case Library.MaterialSharp:
+            case LibraryAlias.MaterialSharp:
                 return html`<i class="mi mi--sharp">${this.src}</i>`;
             case Library.MaterialTwoTone:
+            case LibraryAlias.MaterialTwoTone:
                 return html`<i class="mi mi--two-tone">${this.src}</i>`;
             case Library.Gravatar:
+            case LibraryAlias.Gravatar:
                 return html`<img
                   src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
             case Library.Libravatar:

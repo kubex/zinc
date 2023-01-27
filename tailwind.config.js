@@ -6,9 +6,9 @@ module.exports = {
     "./scss/*.scss",
     "./ts/*.ts",
     "./demo/*.html",
-    "./Components/**/demo/*.html}",
-    "./Components/**/ts/*.{ts,js,html}",
-    "./Components/**/scss/*.{scss,css}"
+    "./Elements/**/demo/*.html}",
+    "./Elements/**/ts/*.{ts,js,html}",
+    "./Elements/**/scss/*.{scss,css}"
   ],
 
   darkMode:    'class',

@@ -1,0 +1,36 @@
+@tailwind base;
+:host {
+  @apply bg-border relative inline-flex h-xl w-bar
+  items-center
+  flex-shrink-0 cursor-pointer rounded-full
+  border-sm border-border
+  transition-colors duration-200 ease-in-out
+  focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2;
+}
+:host span {
+  @apply scale-90   translate-x-0 pointer-events-none inline-block h-xl w-xl
+    transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out;
+}
+:host input {
+  @apply hidden;
+}
+
+:host([checked]) {
+  @apply bg-primary-500 border-primary-500;
+}
+:host([checked]) span {
+  @apply translate-x-full;
+}
+
+:host([d]) {
+  @apply bg-darkBorder;
+}
+:host([d]) span {
+  @apply opacity-50;
+}
+
+:host([d][checked]) {
+  @apply bg-primary-500;
+}
+
+/*# sourceMappingURL=Styles.css.map */

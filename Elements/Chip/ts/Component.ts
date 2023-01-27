@@ -5,13 +5,11 @@ import styles from '../scss/Styles.scss';
 import {ZincElement} from "../../../ts/element";
 
 @customElement('zn-chip')
-export class ZincProperty extends ZincElement {
+export class ZincChip extends ZincElement {
     static styles = unsafeCSS(styles);
 
     render() {
         return html`
-          <div>
-            <slot></slot>
-          </div>`;
+          <slot></slot>`;
     }
 }

@@ -21,83 +21,116 @@
 
     @apply flex flex-col-reverse
     @smp:flex-row;
+  }
 
-    .pageside {
-      @apply h-bar min-h-bar max-h-bar w-full overflow-visible
-      //@lg:basis-mpanel
-      @smp:max-h-full
-      @smp:h-auto
-      @smp:top-0
-      @smp:relative
-      @smp:flex
-      @smp:min-w-bar
-      @smp:max-w-bar
-      @smp:grow
-      @lg:min-w-mpanel
-      @lg:max-w-mpanel
-      @lg:w-mpanel;
+  > div.with-nav {
 
-      > div {
-        @apply absolute
-        bg-white
-        @lg:bg-primary-50;
-      }
+    @apply flex flex-col
+    @smp:flex-row-reverse;
+  }
 
-      > div.content {
-        @apply hidden overflow-y-auto max-w-bar
-        @lg:min-w-mpanel
-        @lg:flex flex-col right-0 inset-y-0
-        transition-all duration-500 ease-in-out
-        py-sm
-        @smp:py-md
-        @lg:py-lg
-        @hd:py-xl pr-md
-        @lg:pr-0
-        @lg:pr-lg
-        @hd:pr-xl;
-      }
+  .pageside {
+    @apply h-bar min-h-bar max-h-bar w-full overflow-visible
+    //@lg:basis-mpanel
+    @smp:max-h-full
+    @smp:h-auto
+    @smp:top-0
+    @smp:relative
+    @smp:flex
+    @smp:min-w-bar
+    @smp:max-w-bar
+    @smp:grow
+    @lg:min-w-mpanel
+    @lg:max-w-mpanel
+    @lg:w-mpanel;
 
-      > div.expander {
-        @apply flex flex-row-reverse items-center justify-center
-        @smp:flex-col
-        @lg:hidden inset-0 z-10 cursor-pointer
-        @smp:justify-start
-        border-b-px h-bar
-        @smp:h-full
-        @smp:border-b-0
-        @smp:border-l-px border-border w-full
-        @smp:w-bar
-        @lg:hidden
-        bg-white;
-
-        span {
-          writing-mode: horizontal-tb;
-        @container (min-width:theme('screens.smp')) {
-          writing-mode: vertical-rl;
-        }
-          @apply grow pl-md
-          @smp:pl-0
-          hidden;
-        }
-
-        span.open {
-          @apply block;
-        }
-
-        zn-icon {
-          @apply text-secondary-500 mx-md
-          transition-all duration-500 ease-in-out
-          @smp:my-md
-          rotate-0
-          @smp:rotate-90;
-        }
-      }
-
-
+    > div {
+      @apply absolute
+      bg-white
+      @lg:bg-primary-50;
     }
+
+    > div.content {
+      @apply hidden overflow-y-auto max-w-bar
+      @lg:min-w-mpanel
+      @lg:flex flex-col right-0 inset-y-0
+      transition-all duration-500 ease-in-out
+      py-sm
+      @smp:py-md
+      @lg:py-lg
+      @hd:py-xl pr-md
+      @lg:pr-0
+      @lg:pr-lg
+      @hd:pr-xl;
+    }
+
+    > div.expander {
+      @apply flex flex-row-reverse items-center justify-center overflow-hidden
+      @smp:flex-col
+      @lg:hidden inset-0 z-10 cursor-pointer
+      @smp:justify-start
+      border-b-px h-bar
+      @smp:h-full
+      @smp:border-b-0
+      @smp:border-l-px border-border w-full
+      @smp:w-bar
+      @lg:hidden
+      bg-white;
+
+      span {
+        writing-mode: horizontal-tb;
+      @container (min-width:theme('screens.smp')) {
+        writing-mode: vertical-rl;
+      }
+        @apply grow pl-md
+        @smp:pl-0
+        hidden;
+      }
+
+      span.open {
+        @apply block;
+      }
+
+      zn-icon {
+        @apply text-secondary-500 mx-md
+        transition-all duration-500 ease-in-out
+        @smp:my-md
+        rotate-0
+        @smp:rotate-90;
+      }
+    }
+
 
     > div {
       @apply grow overflow-y-auto;
+    }
+  }
+
+  > div.with-nav .pageside, > div.with-nav .pageside > div.content {
+    @apply
+    @lg:min-w-spanel
+    @lg:max-w-spanel;
+  }
+
+  > div.with-nav .pageside {
+
+
+    > div.content {
+      @apply pr-0 pl-md
+      @lg:pl-0
+      @lg:pl-lg
+      @hd:pl-xl;
+    }
+
+    > div.expander {
+      @apply
+      @smp:border-r-px
+      @smp:border-l-0;
+
+      zn-icon {
+        @apply
+        @smp:-rotate-90;
+      }
     }
   }
 
@@ -147,6 +180,25 @@
       }
     }
   }
+
+  > div.with-nav .pageside {
+    div.expander {
+      zn-icon {
+        @apply -rotate-180
+        @smp:rotate-90;
+      }
+
+      @apply
+      @smp:left-mpanel
+      @smp:right-auto;
+    }
+
+    div.content {
+      @apply
+      @smp:left-0
+      @smp:right-auto;
+    }
+  }
 }
 }
 
@@ -170,4 +222,29 @@
     }
   }
 
+}
+
+
+zn-page [slot="nav"] {
+  @apply flex flex-col;
+  h3 {
+    @apply text-lg pb-xs pt-md font-semibold;
+  }
+
+  a {
+    @apply flex gap-md py-sm justify-start items-center
+    border-border dark:border-darkBorder;
+
+    &:hover {
+      @apply text-secondary-500;
+    }
+  }
+
+  a ~ a {
+    @apply border-t;
+  }
+
+  h3 + a {
+    @apply border-t-0;
+  }
 }

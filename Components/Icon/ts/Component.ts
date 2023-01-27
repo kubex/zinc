@@ -28,7 +28,7 @@ export class ZincIcon extends LitElement {
     size = 24
 
     @property({reflect: true})
-    library = Library.None
+    library = Library.MaterialOutlined
 
     @property()
     round = false

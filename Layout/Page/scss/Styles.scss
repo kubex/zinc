@@ -12,21 +12,23 @@
   }
 
   .page-content {
-    @apply flex flex-wrap flex-col h-fit grow;
+    @apply flex flex-wrap flex-col h-fit
+    @smp:grow;
     @extend %zn-pad;
     @extend %zn-gap;
   }
 
   > div.with-side {
-
-    @apply flex flex-col-reverse
-    @smp:flex-row;
+    @apply flex-col-reverse;
   }
 
   > div.with-nav {
+    @apply flex-col;
+  }
 
-    @apply flex flex-col
-    @smp:flex-row-reverse;
+  > div.with-side, > div.with-nav {
+    @apply flex
+    @smp:flex-row;
   }
 
   .pageside {
@@ -114,6 +116,7 @@
 
   > div.with-nav .pageside {
 
+    order: -1;
 
     > div.content {
       @apply pr-0 pl-md

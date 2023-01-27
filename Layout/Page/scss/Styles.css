@@ -45,15 +45,18 @@
   max-width: calc(var(--max-width) + 0px);
 }
 :host .page-content {
-  @apply flex flex-wrap flex-col h-fit grow;
+  @apply flex flex-wrap flex-col h-fit
+    @smp:grow;
 }
 :host > div.with-side {
-  @apply flex flex-col-reverse
-    @smp:flex-row;
+  @apply flex-col-reverse;
 }
 :host > div.with-nav {
-  @apply flex flex-col
-    @smp:flex-row-reverse;
+  @apply flex-col;
+}
+:host > div.with-side, :host > div.with-nav {
+  @apply flex
+    @smp:flex-row;
 }
 :host .pageside {
   @apply h-bar min-h-bar max-h-bar w-full overflow-visible
@@ -128,6 +131,9 @@
 :host > div.with-nav .pageside, :host > div.with-nav .pageside > div.content {
   @apply @lg:min-w-spanel
     @lg:max-w-spanel;
+}
+:host > div.with-nav .pageside {
+  order: -1;
 }
 :host > div.with-nav .pageside > div.content {
   @apply pr-0 pl-md

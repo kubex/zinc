@@ -4,6 +4,7 @@ import {terser} from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from "autoprefixer";
+import copy from 'rollup-plugin-copy';
 import AtImport from 'postcss-import';
 import tailwindCss from 'tailwindcss';
 
@@ -31,6 +32,13 @@ const layout = {
               parser:    'postcss-scss',
             }),
     terser(),
+    copy({
+           targets: [
+             //{src: 'node_modules/@kubex/zinc/dist/zn.js', dest: 'compiled/js'}
+             {src: '../../zinc/dist/zn.js', dest: 'compiled/js'},
+             {src: 'dist/zn.js', dest: '../rubix/static/compiled/js'}
+           ]
+         }),
   ],
 };
 

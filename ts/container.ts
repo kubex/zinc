@@ -77,12 +77,33 @@ export class AppContainer extends LitElement {
     }
 
     public setInnerContent(data, elementId) {
-        const element = this.container.querySelector('#' + elementId);
+        const element = this.shadowQuery(elementId, this.container);
         if (element) {
             element.innerHTML = data;
             return true;
         }
         return false;
+    }
+
+    shadowQuery(selector: string, rootNode: Document | Element = document): Element | null {
+        const selectors = String(selector).split('>>>');
+        let currentNode = rootNode;
+
+        selectors.find((selector, index) => {
+            if (index === 0) {
+                currentNode = rootNode.querySelector(selectors[index]) as Element;
+            } else if (currentNode instanceof Element) {
+                currentNode = currentNode?.shadowRoot?.querySelector(selectors[index]) as Element;
+            }
+
+            return currentNode === null;
+        });
+
+        if (currentNode === rootNode) {
+            return null;
+        }
+
+        return currentNode as Element | null;
     }
 
     set innerHTML(data) {

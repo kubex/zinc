@@ -66,7 +66,7 @@ export class ZincPage extends ZincElement {
         return html`
           <div class="${mainClass}">
             ${navigation}
-            <div class="page-content">
+            <div id="page-content">
               <slot></slot>
             </div>
             ${pageSide}

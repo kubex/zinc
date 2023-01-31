@@ -76,6 +76,15 @@ export class AppContainer extends LitElement {
         })
     }
 
+    public setInnerContent(data, elementId) {
+        const element = this.container.querySelector('#' + elementId);
+        if (element) {
+            element.innerHTML = data;
+            return true;
+        }
+        return false;
+    }
+
     set innerHTML(data) {
         const slot = this.shadowRoot.getElementById('slot');
         if (slot) {

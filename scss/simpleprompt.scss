@@ -1,0 +1,162 @@
+$this: '.zn-simpleprompt';
+
+#{$this} {
+  &__bg {
+    @apply inset-0 fixed bg-opacity-50 bg-black z-[1000000];
+  }
+
+  &__wrapper {
+    @apply flex min-h-full items-start justify-center p-xs text-center mt-[10vh];
+    @apply sm:p-0;
+  }
+
+  &__container {
+    @apply relative transform overflow-hidden rounded-lg bg-white p-xl text-left shadow-xl transition-all;
+    @apply sm:my-sm sm:w-full sm:p-lg sm:max-w-md sm:max-h-[80%];
+
+    &--lg {
+      @apply sm:max-w-lg;
+    }
+  }
+
+  &__wrap {
+    @apply sm:flex sm:items-start;
+
+    #{$this} {
+
+      &__title {
+        @apply sm:mb-sm;
+      }
+
+      &__content {
+        @apply text-left flex-grow;
+      }
+
+
+      &__icon {
+        @apply mr-lg h-[38px] w-[38px] shrink-0;
+        @apply sm:mb-0;
+      }
+    }
+
+    + #{$this}__actions {
+      @apply mt-sm sm:mt-md;
+    }
+  }
+
+  &__icon {
+    @apply mx-auto mb-md flex h-[48px] w-[48px] items-center justify-center rounded-full;
+    @apply sm:mb-lg;
+
+    &--danger {
+      @apply bg-error bg-opacity-30;
+
+      > zn-icon {
+        @apply text-error;
+      }
+    }
+
+    &--warning {
+      @apply bg-warning bg-opacity-30;
+
+      > zn-icon {
+        @apply text-warning;
+      }
+    }
+
+    &--info {
+      @apply bg-info bg-opacity-30;
+
+      > zn-icon {
+        @apply text-info;
+      }
+    }
+
+    &--success {
+      @apply bg-success bg-opacity-30;
+
+      > zn-icon {
+        @apply text-success;
+      }
+    }
+  }
+
+  &__content {
+    @apply text-center;
+  }
+
+  &__title {
+    @apply text-lg font-medium leading-6 text-dark-700 mb-lg;
+  }
+
+  &__description {
+    @apply text-lg text-dark-400 font-extralight;
+  }
+
+  &__actions {
+    @apply mt-lg sm:mt-xl;
+
+    &--centered {
+      &#{$this}__actions {
+        @apply grid sm:gap-sm;
+
+        &--2 {
+          @apply grid-cols-2;
+        }
+      }
+
+      #{$this}__actions__action {
+        margin-left: 0 !important;
+      }
+    }
+
+    &--multi {
+      @apply sm:flex sm:justify-end;
+
+      #{$this}__actions__action {
+        @apply sm:w-auto sm:ml-lg;
+
+        &:first-of-type {
+          @apply sm:ml-0;
+        }
+      }
+    }
+
+
+    &__action {
+      @apply inline-flex w-full cursor-pointer px-md py-sm justify-center rounded-md border border-transparent bg-primary-500 font-medium text-white shadow-sm;
+      @apply hover:bg-primary-700;
+      @apply focus:outline-none focus:ring-primary-500 focus:ring-offset-2;
+      @apply sm:text-md;
+
+      &--secondary {
+        @apply bg-transparent border-dark-100 text-dark-800;
+        @apply hover:bg-dark-100
+      }
+
+      &--danger {
+        @apply bg-error;
+        @apply hover:bg-error hover:bg-opacity-60;
+      }
+
+      &--warning {
+        @apply bg-warning;
+        @apply hover:bg-warning hover:bg-opacity-60;
+      }
+
+      &--info {
+        @apply bg-info;
+        @apply hover:bg-info hover:bg-opacity-60;
+      }
+
+      &--success {
+        @apply bg-success;
+        @apply hover:bg-success hover:bg-opacity-60;
+      }
+    }
+  }
+
+  &--visible {
+    @apply overflow-hidden;
+  }
+}

@@ -8,14 +8,32 @@
 </head>
 <body>
 
-<app-container id="dest">
-</app-container>
+<div class="trigger m-lg border rounded p-md"
+     zn-prompt='{"centered": true, "type":"success", "content": "Lorem Ipsum dolor sit amet consectetur adipisicing elit. Consequatur amet labore.", "title": "Payment Successful", "actions": [{"title": "Close", "type":"secondary"}, {"title": "Roger That!", "type":"success"}]}'>
+  Hello World this is the trigger
+</div>
+
+<!--<div class="trigger m-lg border rounded p-md"-->
+<!--     zn-prompt='{"centered": false, "type":"info", "title": "Deactivate Account", "actions": [{"title": "Cancel", "type":"secondary"}, {"title": "Deactivate", "type":"danger"}]}'>-->
+<!--  Hello World this is another trigger-->
+<!--</div>-->
+
+<!--<div class="trigger m-lg border rounded p-md"-->
+<!--     zn-prompt='{"centered": false, "type":"warning", "content":"Are you sure you want to deactivate your account? All of  your data will be permanently removed from our servers forever. This action cannot be undone", "actions": [{"title": "Cancel", "type":"success"}, {"title": "Deactivate", "type":"warning"}, {"title": "Deactivate", "type":"info"}, {"title": "Deactivate", "type":"danger"}]}'>-->
+<!--  Hello World this is another trigger-->
+<!--</div>-->
+
+<!--<div class="trigger m-lg border rounded p-md"-->
+<!--     zn-prompt='{"centered": false, "type":"danger", "content":"Are you sure you want to deactivate your account? All of  your data will be permanently removed from our servers forever. This action cannot be undone", "title": "Deactivate Account", "actions": []}'>-->
+<!--  Hello World this is another trigger-->
+<!--</div>-->
+
+<app-container id="dest"></app-container>
 
 <div id="source" style="display: none">
   <zn-header max-width caption="Welcome Back, Mark!" navigation='[{"title": "Transactions", "path": "#", "default":true},
             {"title": "Payments", "active":true, "path": "#"},
             {"title": "Refunds", "path": "#"}]'>
-
   </zn-header>
 
   <zn-page caption="Customer Details">
@@ -56,7 +74,7 @@
       <zn-panel slot="c1" rows="4" caption="Subscriptions">
 
         <zn-tile caption="Antivirus Pro" description="Renews 2024-01-06 (1 Year)">
-          <zn-chip slot="primary" success>Active</zn-chip>
+          <zn-chip slot="primary" success>Paid</zn-chip>
         </zn-tile>
         <zn-tile child caption="Unlimited Devices" description="Renews 2024-01-06 (1 Year)"></zn-tile>
         <zn-tile caption="Domain Name" description="Renews 2024-01-06 (1 Year)">
@@ -143,16 +161,18 @@
     </zn-panel>
 
   </zn-page>
-
-
 </div>
+.zn-toasts {
+
 
 <script>
-  setTimeout(() => {
+  setTimeout(() =>
+  {
     const dest = document.getElementById('dest');
     const source = document.getElementById('source');
     dest.innerHTML = source.innerHTML;
   }, 100);
 </script>
+
 </body>
 </html>

@@ -13,3 +13,4 @@ import '../Elements/Icon/ts/Component'
 import '../Elements/Toggle/ts/Component'
 
 import './container'
+import './simpleprompt'

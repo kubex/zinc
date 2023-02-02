@@ -77,12 +77,21 @@ export class AppContainer extends LitElement {
     }
 
     public setInnerContent(data, elementId) {
+        const replaceElement = elementId.startsWith("!");
+        if (replaceElement) {
+            elementId = elementId.substring(1);
+        }
         const element = this.shadowQuery(elementId, this.container);
         if (element) {
-            element.innerHTML = data;
+            if (replaceElement && element.outerHTML) {
+                element.outerHTML = data;
+            } else {
+                element.innerHTML = data;
+            }
             return true;
         }
-        return false;
+        this.innerHTML = data;
+        return true;
     }
 
     shadowQuery(selector: string, rootNode: Document | Element = document): Element | null {

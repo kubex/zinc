@@ -31,18 +31,18 @@ $this: '.zn-simpleprompt';
       }
 
       &__content {
-        @apply text-left flex-grow;
+        @apply sm:text-left sm:flex-grow;
       }
 
 
       &__icon {
-        @apply mr-lg h-[38px] w-[38px] shrink-0;
+        @apply sm:mr-lg sm:h-[38px] sm:w-[38px] sm:shrink-0;
         @apply sm:mb-0;
       }
     }
 
     + #{$this}__actions {
-      @apply mt-sm sm:mt-md;
+      @apply sm:mt-sm sm:mt-md;
     }
   }
 
@@ -113,17 +113,17 @@ $this: '.zn-simpleprompt';
     }
 
     &--multi {
-      @apply sm:flex sm:justify-end;
+      @apply gap-sm;
+      @apply sm:flex sm:justify-end md:gap-0;
 
       #{$this}__actions__action {
-        @apply w-full sm:ml-lg;
+        @apply w-full sm:ml-lg mb-sm sm:mb-0;
 
         &:first-of-type {
           @apply sm:ml-0;
         }
       }
     }
-
 
     &__action {
       @extend %button;

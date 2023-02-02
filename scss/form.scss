@@ -81,5 +81,59 @@ form {
   input[list]::-webkit-calendar-picker-indicator {
     @apply py-xs px-sm;
   }
+}
 
+.dark form {
+  input[type=date],
+  input[type=datetime-local],
+  input[type=email],
+  input[type=month],
+  input[type=number],
+  input[type=password],
+  input[type=search],
+  input[type=tel],
+  input[type=text],
+  input[type=time],
+  input[type=url],
+  input[type=week],
+  input[type=file],
+  input[list],
+  textarea,
+  select,
+  [multiple] {
+    @apply border-dark-800 bg-dark-600 text-darkTxt-800;
+    @apply focus:border-primary-500 focus:ring-primary-500;
+    @apply placeholder:text-darkTxt-800 ;
+    color-scheme: dark;
+  }
+
+  label {
+    @apply text-darkTxt-800;
+  }
+
+  input[type=checkbox], input[type=radio] {
+    @apply text-primary-500 border-dark-800 accent-primary-500 bg-dark-600;
+    @apply focus:ring-primary-500;
+  }
+
+  input[type=range] {
+    @apply accent-primary-500;
+    color-scheme: dark;
+  }
+
+  fieldset {
+    @apply border-dark-600;
+  }
+
+  select, [multiple] > option:checked {
+    @apply bg-primary-50 text-darkTxt-800;
+  }
+
+  fieldset > legend {
+    @apply text-darkTxt-800;
+  }
+
+  input::-webkit-calendar-picker-indicator {
+    @apply bg-dark-800 text-darkTxt-800;
+  }
 }

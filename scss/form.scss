@@ -81,6 +81,19 @@ form {
   input[list]::-webkit-calendar-picker-indicator {
     @apply py-xs px-sm;
   }
+
+  .input--with-icon {
+    @apply relative;
+
+    zn-icon {
+      @apply absolute top-1/2 pointer-events-none transform -translate-y-1/2 left-sm bg-secondary-500 text-white rounded-full;
+      padding: 14px;
+    }
+
+    input {
+      padding-left: 40px;
+    }
+  }
 }
 
 :host([dark-mode="true"]) form, .dark form, :host([d]) form {
@@ -101,7 +114,7 @@ form {
   textarea,
   select,
   [multiple] {
-    @apply border-dark-800 bg-dark-600 text-darkTxt-800;
+    @apply border-dark-800 bg-dark-600 text-darkTxt-800 accent-secondary-500;
     @apply focus:border-primary-500 focus:ring-primary-500;
     @apply placeholder:text-darkTxt-800 ;
     color-scheme: dark;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="darks">
 <head>
   <meta charset="utf-8">
   <title>Zinc Forms Demo</title>
@@ -17,6 +17,21 @@
 
   <zn-page caption="Customer Details">
     <form>
+      <div>
+        <label>Select</label>
+        <select name="select">
+          <option value="selection_1">selection 1</option>
+          <option value="selection_2">selection 2</option>
+          <option value="selection_3">selection 3</option>
+        </select>
+      </div>
+      <div>
+        <label>Search</label>
+        <div class="input--with-icon">
+          <zn-icon src="search" size="16" library="mis"></zn-icon>
+          <input name="search" type="search"/>
+        </div>
+      </div>
       <div>
         <br><br>
         <h1 class="text-title">Field Set</h1>
@@ -153,6 +168,7 @@
         <button type="submit">Save</button>
         <button type="button">Cancel</button>
       </div>
+
     </form>
   </zn-page>
 </div>

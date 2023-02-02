@@ -81,7 +81,7 @@ export class ZincIcon extends LitElement {
     attributeChangedCallback(name: string, _old: string | null, value: string | null) {
         super.attributeChangedCallback(name, _old, value);
         if (name == "size") {
-            this.size = Number(value) - Number(value) % 8;
+            this.size = Number(value) - Number(value) % 4;
             this.style.setProperty('--icon-size', this.size + "px")
         }
     }

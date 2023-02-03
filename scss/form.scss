@@ -18,7 +18,7 @@ form {
   textarea,
   select,
   [multiple] {
-    @apply block w-full rounded-md border border-border shadow-sm bg-white;
+    @apply block w-full rounded-md border border-border shadow-sm bg-white shadow-inner;
     @apply focus:border-primary-500 focus:ring-primary-500;
     @apply sm:text-md sm:p-sm;
     @apply placeholder:text-md placeholder:font-normal placeholder:text-dark-400 placeholder:leading-6;
@@ -138,7 +138,11 @@ form {
     @apply border-dark-600;
   }
 
-  select, [multiple] > option:checked {
+  select {
+    @apply bg-dark-600;
+  }
+
+  select[multiple] > option:checked {
     @apply bg-primary-50 text-darkTxt-800;
   }
 

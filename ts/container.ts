@@ -63,14 +63,14 @@ export class AppContainer extends LitElement {
         //Form.init(this.shadowRoot);
 
         this.shadowRoot.addEventListener('submit', function (e) {
-            // @ts-ignore
-            if (!e.composed && e.path) {
+            if (!e.composed && e.composedPath()) {
                 e.preventDefault()
-                // @ts-ignore
-                e.path[0].dispatchEvent(new CustomEvent("submit", {
+                e.stopImmediatePropagation()
+                let frm = e.composedPath()[0]
+                frm.dispatchEvent(new CustomEvent("submit", {
                     bubbles: true,
                     composed: true,
-                    cancelable: true,
+                    cancelable: true
                 }))
             }
         })
@@ -123,17 +123,9 @@ export class AppContainer extends LitElement {
 
         this.prepareContainer()
 
-        if (this.flexFrame) {
-            this.container.innerHTML += data;
-            return;
-        }
+        this.container.innerHTML += data;
 
-        this.container.innerHTML += '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap">'
-            + '<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">'
-            + data;
-
-
-        if (!this.allowScripts) {
+        if (this.flexFrame || !this.allowScripts) {
             return;
         }
 

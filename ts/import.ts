@@ -11,6 +11,7 @@ import '../Elements/Property/ts/Component'
 import '../Elements/Menu/ts/Component'
 import '../Elements/Icon/ts/Component'
 import '../Elements/Toggle/ts/Component'
+import '../Elements/Alert/ts/Component'
 
 import './container'
 import './simpleprompt'

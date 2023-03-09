@@ -1,0 +1,34 @@
+:host {
+  @apply m-md;
+}
+
+.alert {
+  @apply text-center;
+
+  .icon {
+    @apply p-xs m-md rounded-full inline-block w-bar h-bar;
+  }
+
+  .title {
+    @apply text-title mb-sm;
+  }
+
+  .buttons {
+    @apply my-sm;
+  }
+
+  .buttons slot {
+    @apply m-md inline-flex gap-sm;
+  }
+
+}
+
+:host([success]) {
+  .icon {
+    @apply bg-success bg-opacity-30;
+
+    > zn-icon {
+      @apply text-success;
+    }
+  }
+}

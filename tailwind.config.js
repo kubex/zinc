@@ -42,7 +42,7 @@ module.exports = {
         400: 'rgba(255,255,255, 0.40)',
       },
 
-      'border':        '#E7E7E7',
+      'border':        '#DCE1E9',
       'primary':       {
         50:  '#e5e4ef',
         100: '#bebcd8',

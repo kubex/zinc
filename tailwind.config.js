@@ -14,6 +14,10 @@ module.exports = {
   darkMode:    'class',
   theme:       {
     colors:     {
+
+      bg:     "#F7F9FC",
+      darkBg: "#191D23",
+
       dark:        {
         '50':    '#f8fafc',
         '100':   '#f1f5f9',

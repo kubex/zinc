@@ -13,5 +13,9 @@ import '../Elements/Icon/ts/Component'
 import '../Elements/Toggle/ts/Component'
 import '../Elements/Alert/ts/Component'
 
+import '../Elements/Form/ts/Group'
+import '../Elements/Form/ts/Input'
+import '../Elements/Form/ts/TextInput'
+
 import './container'
 import './simpleprompt'

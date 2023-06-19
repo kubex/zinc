@@ -1,0 +1,33 @@
+:host {
+  @apply grid grid-cols-1 border-b border-border mb-md;
+}
+
+:host slot {
+  @apply grid
+  grid-cols-1 md:grid-cols-6
+  gap-x-md gap-y-md;
+}
+
+::slotted(*) {
+  @apply col-span-6;
+}
+
+::slotted([span="1"]) {
+  @apply md:col-span-1;
+}
+
+::slotted([span="2"]) {
+  @apply md:col-span-2;
+}
+
+::slotted([span="3"]) {
+  @apply md:col-span-3;
+}
+
+::slotted([span="4"]) {
+  @apply md:col-span-4;
+}
+
+::slotted([span="5"]) {
+  @apply md:col-span-5;
+}

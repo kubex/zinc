@@ -55,14 +55,10 @@ module.exports = {
         900: '#16004d',
       },
       'secondary':     {
-        100: '#FAE4CF',
-        500: '#FA7903',
-        900: '#914602',
+        500: '#6836F5',
       },
       'darkSecondary': {
-        100: '#FAE4CF',
-        500: '#ffb55f',
-        900: '#914602',
+        500: '#9282ff',
       },
       'tertiary':      {
         100: '#CCEDEC',

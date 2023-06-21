@@ -13,6 +13,10 @@
 :host([d]) > div {
   @apply bg-dark-900 border-darkBorder;
 
+  .breadcrumb {
+    @apply text-darkTxt-600;
+  }
+
   h1 {
     @apply text-darkTxt-900;
   }
@@ -31,6 +35,14 @@
     max-width: var(--max-width);
   }
 
+  .breadcrumb {
+    @apply block text-txt-400 w-full py-xxs;
+  }
+
+  .breadcrumb:empty {
+    @apply hidden;
+  }
+
   h1 {
     @apply text-title grow;
     @apply text-primary-800;
@@ -46,14 +58,14 @@
   }
 
   ul.header-nav {
-    @apply box-border flex basis-full gap-lg md:gap-xl pt-xs;
+    @apply box-border flex basis-full gap-lg pt-xs;
 
     li {
 
       @apply text-navitem font-semibold relative;
 
       a {
-        @apply block cursor-pointer pt-xs pb-sm;
+        @apply block cursor-pointer pb-xs px-xs;
       }
 
       &::before {
@@ -63,14 +75,14 @@
 
       &:hover::before {
         @apply bg-secondary-500 bg-opacity-50;
-        left: -5px;
-        right: -5px;
+        left: -2px;
+        right: -2px;
       }
 
       &.active::before {
         @apply bg-secondary-500;
-        left: -10px;
-        right: -10px;
+        left: -8px;
+        right: -8px;
       }
     }
   }

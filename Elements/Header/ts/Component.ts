@@ -19,6 +19,9 @@ export class ZincHeader extends ZincElement {
     @property({attribute: 'navigation', type: Array})
     private navigation = [];
 
+    @property({attribute: 'breadcrumb', type: Array})
+    private breadcrumb = [];
+
     @property({attribute: 'max-width', type: Number, reflect: true})
     private maxWidth;
 
@@ -33,8 +36,19 @@ export class ZincHeader extends ZincElement {
         let header = html`
           <div>
             <div class="width-container">
+              <div class="breadcrumb">${this.breadcrumb.map((item, index) => {
+                let prefix = index == 0 ? '' : ' / ';
+                if (item.path == '') {
+                  return html`
+                    ${prefix} <span>${item.title}</span>`;
+                }
+                return html`
+                  ${prefix} <a href="${item.path}">${item.title}</a>`;
+              })}</div>
               <h1>${this.caption}</h1>
-              <slot></slot>
+              <div class="actions">
+                <slot></slot>
+              </div>
               <ul class="header-nav">
                 ${this.navigation.map((item, index) => {
                   let activeClass = item.active ? 'active' : '';

@@ -98,13 +98,19 @@ export class ZincTable extends ZincElement {
             let summary = row.hasOwnProperty('summary') ? row['summary'] : '';
             let icon = row.hasOwnProperty('icon') ? row['icon'] : '';
 
+            let iconHtml = html``;
+            if (icon != '') {
+                iconHtml = html`
+                  <zn-icon rounded src="${icon}"></zn-icon>`;
+            }
+
             rowHtml.push(html`
               <td>
-                <zn-icon rounded src="${icon}"></zn-icon>
+                ${iconHtml}
                 <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
               </td>`)
 
-            if (row.hasOwnProperty('data')) {
+            if (row.hasOwnProperty('data') && row['data'] != null) {
                 row['data'].forEach((col, ck) => {
                     let minDisplay = this.columnDisplay[ck + 1];
                     let cellClass = ""

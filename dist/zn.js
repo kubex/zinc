@@ -198,11 +198,12 @@ const st=t=>e=>"function"==typeof e?((t,e)=>(customElements.define(t,e),e))(t,e)
                   <th class="${o}">${e}</th>`)}})),R`
           <thead>
           <tr>${t}</tr>
-          </thead>`}tableBody(){let t=[];return this.rows.forEach(((e,o)=>{let r=[],i=e.hasOwnProperty("caption")?e.caption:"",a=e.hasOwnProperty("summary")?e.summary:"",n=e.hasOwnProperty("icon")?e.icon:"";r.push(R`
+          </thead>`}tableBody(){let t=[];return this.rows.forEach(((e,o)=>{let r=[],i=e.hasOwnProperty("caption")?e.caption:"",a=e.hasOwnProperty("summary")?e.summary:"",n=e.hasOwnProperty("icon")?e.icon:"",s=R``;""!=n&&(s=R`
+                  <zn-icon rounded src="${n}"></zn-icon>`),r.push(R`
               <td>
-                <zn-icon rounded src="${n}"></zn-icon>
+                ${s}
                 <div><span class="caption">${i}</span><span class="summary">${a}</span></div>
-              </td>`),e.hasOwnProperty("data")&&e.data.forEach(((t,e)=>{let o=this.columnDisplay[e+1],i="";""!=o&&(i="hidden "+o+":table-cell"),r.push(R`
+              </td>`),e.hasOwnProperty("data")&&null!=e.data&&e.data.forEach(((t,e)=>{let o=this.columnDisplay[e+1],i="";""!=o&&(i="hidden "+o+":table-cell"),r.push(R`
                       <td class="${i}">${t}</td>`)})),t.push(R`
               <tr>${r}</tr>`)})),R`
           <tbody>

@@ -12,6 +12,7 @@ import '../Elements/Menu/ts/Component'
 import '../Elements/Icon/ts/Component'
 import '../Elements/Toggle/ts/Component'
 import '../Elements/Alert/ts/Component'
+import '../Elements/Table/ts/Component'
 
 import '../Elements/Form/ts/Group'
 import '../Elements/Form/ts/Input'

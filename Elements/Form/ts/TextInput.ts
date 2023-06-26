@@ -11,11 +11,11 @@ export class ZincTextInput extends ZincElement {
     }
 
     @property({attribute: 'id', type: String, reflect: true})
-    private id;
+    public id;
     @property({attribute: 'name', type: String, reflect: true})
     private name;
     @property({attribute: 'prefix', type: String, reflect: true})
-    private prefix;
+    public prefix;
     @property({attribute: 'placeholder', type: String, reflect: true})
     private placeholder;
     @property({attribute: 'value', type: String, reflect: true})

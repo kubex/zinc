@@ -1,14 +1,29 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
+const screens = [
+  'sm',
+  'smp',
+  'md',
+  'lg',
+  'hd',
+  '4k',
+]
+
 module.exports = {
-  content: [
+  content:  [
     "./scss/*.scss",
     "./ts/*.ts",
     "./demo/*.html",
     "./Elements/**/demo/*.html}",
     "./Elements/**/ts/*.{ts,js,html}",
     "./Elements/**/scss/*.{scss,css}"
+  ],
+  safelist: [
+    {
+      pattern:  /table-cell/,
+      variants: screens
+    }
   ],
 
   darkMode:    'class',

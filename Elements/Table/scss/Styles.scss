@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind screens;
+
+
+:host {
+  > div {
+    @apply overflow-x-auto block;
+  }
+
+  table {
+    @apply w-full table-auto text-left;
+  }
+
+  thead {
+    @apply bg-dark-100 font-medium border-b border-border;
+  }
+
+  tbody {
+    @apply divide-y divide-border text-txt-800;
+  }
+
+  th, td {
+    @apply py-sm px-md whitespace-nowrap;
+  }
+
+  td:first-child {
+    @apply flex items-center gap-x-sm;
+
+    span {
+      @apply block;
+    }
+
+    .caption {
+      @apply font-medium;
+    }
+
+    .summary {
+      @apply text-xs;
+    }
+
+  }
+}
+
+:host([borders]) {
+  > div {
+    @apply rounded-md border border-border;
+  }
+}
+
+:host([cborders]) {
+  tbody tr, thead tr {
+    @apply divide-x divide-border;
+  }
+}
+
+:host([d]) {
+
+  tbody {
+    @apply text-darkTxt-800;
+  }
+
+  thead {
+    @apply bg-dark-800  border-darkBorder;
+  }
+
+  tbody {
+    @apply divide-darkBorder;
+  }
+}
+
+:host([d][borders]) {
+  > div {
+    @apply border-darkBorder;
+  }
+}
+
+:host([d][cborders]) {
+  tbody tr, thead tr {
+    @apply divide-darkBorder;
+  }
+}

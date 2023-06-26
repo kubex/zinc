@@ -118,7 +118,8 @@ export class ZincTable extends ZincElement {
                     if (minDisplay != "") {
                         cellClass = "hidden " + minDisplay + ":table-cell"
                     }
-                    console.log(col);
+                    col = this.columnContent(col);
+
                     rowHtml.push(html`
                       <td class="${cellClass}">${col}</td>`)
                 })
@@ -131,5 +132,21 @@ export class ZincTable extends ZincElement {
           <tbody>
           ${rows}
           </tbody>`
+    }
+
+    columnContent(col) {
+        col = col.trim();
+        if (col.length > 4 && col[0] == '{') {
+            let colJson = JSON.parse(col);
+            if (colJson.hasOwnProperty('chip')) {
+                let chipState = "";
+                if (colJson.hasOwnProperty('state')) {
+                    chipState = colJson['state'];
+                }
+                col = html`
+                  <zn-chip ${chipState}>${colJson['chip']}</zn-chip>`;
+            }
+        }
+        return col
     }
 }

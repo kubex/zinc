@@ -12,14 +12,18 @@
   }
 
   #page-content {
-    @apply flex flex-wrap flex-col h-fit
+    @apply flex flex-wrap flex-col h-fit max-w-full
+    @md:max-w-full
     @smp:grow;
     @extend %zn-pad;
     @extend %zn-gap;
   }
 
   > div.with-side {
-    @apply flex-col pt-bar @smp:pt-0 @smp:flex-col-reverse;
+    @apply flex-col pt-bar
+    @smp:pt-0
+    @smp:flex-col-reverse;
+
   }
 
   > div.with-nav {
@@ -138,8 +142,22 @@
   }
 
   @extend %scrollbars;
-}
 
+@container (min-width:theme('screens.smp')) {
+  > div.with-side {
+    #page-content {
+      max-width: calc(100% - theme('spacing.bar'));
+    }
+  }
+}
+@container (min-width:theme('screens.lg')) {
+  > div.with-side {
+    #page-content {
+      max-width: calc(100% - theme('spacing.mpanel'));
+    }
+  }
+}
+}
 
 :host([open]) {
 

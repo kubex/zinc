@@ -5,16 +5,16 @@
 
 
 :host {
-  @apply max-w-full w-full;
+  @apply max-w-full w-full overflow-hidden;
 
   > div {
-    @apply w-full overflow-x-auto block;
+    @apply w-full max-w-full overflow-x-auto block;
   }
 
   table {
     border-collapse: separate;
     border-spacing: 0;
-    @apply w-full table-auto text-left;
+    @apply w-full max-w-full table-auto text-left;
   }
 
   tbody tr:first-child td:first-of-type {
@@ -39,6 +39,10 @@
 
   tbody {
     @apply text-txt-800 bg-white;
+
+    a {
+      @apply text-secondary-500 cursor-pointer;
+    }
   }
 
   tbody tr td {

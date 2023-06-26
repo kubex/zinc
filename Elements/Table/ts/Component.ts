@@ -94,8 +94,8 @@ export class ZincTable extends ZincElement {
         this.rows.forEach((row, rk) => {
             let rowHtml = []
 
-            let caption = row.hasOwnProperty('caption') ? row['caption'] : '';
-            let summary = row.hasOwnProperty('summary') ? row['summary'] : '';
+            let caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
+            let summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
             let icon = row.hasOwnProperty('icon') ? row['icon'] : '';
 
             let iconHtml = html``;
@@ -145,6 +145,12 @@ export class ZincTable extends ZincElement {
                 }
                 col = html`
                   <zn-chip ${chipState}>${colJson['chip']}</zn-chip>`;
+            } else if (colJson.hasOwnProperty('href')) {
+                let url = colJson['href'];
+                let text = colJson.hasOwnProperty('text') ? colJson['text'] : url;
+                let target = colJson.hasOwnProperty('target') ? colJson['target'] : '';
+                col = html`
+                  <a href="${url}" data-target="${target}">${text}</a>`;
             }
         }
         return col

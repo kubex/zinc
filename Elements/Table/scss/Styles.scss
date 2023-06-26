@@ -5,31 +5,63 @@
 
 
 :host {
+  @apply max-w-full w-full;
+
   > div {
-    @apply overflow-x-auto block;
+    @apply w-full overflow-x-auto block;
   }
 
   table {
+    border-collapse: separate;
+    border-spacing: 0;
     @apply w-full table-auto text-left;
   }
 
+  tbody tr:first-child td:first-of-type {
+    @apply rounded-tl-md;
+  }
+
+  tbody tr:first-child td:last-of-type {
+    @apply rounded-tr-md;
+  }
+
+  tbody tr:last-child td:first-of-type {
+    @apply rounded-bl-md;
+  }
+
+  tbody tr:last-child td:last-of-type {
+    @apply rounded-br-md;
+  }
+
   thead {
-    @apply bg-dark-100 font-medium border-b border-border;
+    @apply font-medium;
   }
 
   tbody {
-    @apply divide-y divide-border text-txt-800;
+    @apply text-txt-800 bg-white;
+  }
+
+  tbody tr td {
+    @apply border-b;
   }
 
   th, td {
-    @apply py-sm px-md whitespace-nowrap;
+    @apply py-md px-md whitespace-nowrap border-border;
   }
 
-  td:first-child {
-    @apply flex items-center gap-x-sm;
+  th {
+    @apply pb-sm;
+  }
+
+  td:first-child > div {
+    @apply flex items-center gap-x-md;
 
     span {
       @apply block;
+    }
+
+    .caption:empty, .summary:empty {
+      @apply hidden;
     }
 
     .caption {
@@ -37,36 +69,53 @@
     }
 
     .summary {
-      @apply text-xs;
+      @apply text-xs text-txt-600 pt-xs;
     }
 
   }
 }
 
 :host([borders]) {
-  > div {
-    @apply rounded-md border border-border;
+
+  tr, td {
+    margin: 0;
+  }
+
+  tbody tr td:last-of-type {
+    @apply border-r;
+  }
+
+  tbody tr td:first-of-type {
+    @apply border-l;
+  }
+
+  tbody tr:first-of-type td {
+    @apply border-t;
+  }
+
+  tbody tr:last-of-type td {
+    @apply border-b;
   }
 }
 
 :host([cborders]) {
-  tbody tr, thead tr {
-    @apply divide-x divide-border;
+  tbody tr td {
+    @apply border-l;
   }
 }
 
 :host([d]) {
 
   tbody {
-    @apply text-darkTxt-800;
+    @apply text-darkTxt-800 bg-transparent;
   }
 
-  thead {
-    @apply bg-dark-800  border-darkBorder;
+  thead, tbody, th, td {
+    @apply border-darkBorder;
   }
 
-  tbody {
-    @apply divide-darkBorder;
+  td:first-child > div .summary {
+    @apply text-darkTxt-600;
   }
 }
 

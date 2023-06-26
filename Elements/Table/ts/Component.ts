@@ -101,13 +101,14 @@ export class ZincTable extends ZincElement {
             let iconHtml = html``;
             if (icon != '') {
                 iconHtml = html`
-                  <zn-icon rounded src="${icon}"></zn-icon>`;
+                  <zn-icon round size="40" src="${icon}"></zn-icon>`;
             }
 
             rowHtml.push(html`
               <td>
-                ${iconHtml}
-                <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
+                <div>${iconHtml}
+                  <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
+                </div>
               </td>`)
 
             if (row.hasOwnProperty('data') && row['data'] != null) {
@@ -117,6 +118,7 @@ export class ZincTable extends ZincElement {
                     if (minDisplay != "") {
                         cellClass = "hidden " + minDisplay + ":table-cell"
                     }
+                    console.log(col);
                     rowHtml.push(html`
                       <td class="${cellClass}">${col}</td>`)
                 })

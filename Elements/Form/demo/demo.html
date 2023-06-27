@@ -15,10 +15,8 @@
     <zn-input label="About" advice="Write a few sentences about yourself."><textarea></textarea></zn-input>
     <zn-input label="Photo"><input type="file"/></zn-input>
     <zn-input label="Cover photo">
-      <zn-drag-upload>
-        [IMG]
-        :Upload a file:[linked] or drag and drop.
-        (PNG, JPG, GIF)[types] up to (10MB)[limit]
+      <zn-drag-upload text="Drag and drop a File or Click Upload"
+                      types="image/png,image/jpeg,image/gif" size="10">
       </zn-drag-upload>
     </zn-input>
   </zn-form-group>

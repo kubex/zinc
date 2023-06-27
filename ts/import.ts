@@ -17,6 +17,7 @@ import '../Elements/Table/ts/Component'
 import '../Elements/Form/ts/Group'
 import '../Elements/Form/ts/Input'
 import '../Elements/Form/ts/TextInput'
+import '../Elements/Form/ts/DragUpload'
 
 import './container'
 import './simpleprompt'

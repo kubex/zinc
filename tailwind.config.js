@@ -1,5 +1,5 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 const screens = [
   'sm',
@@ -7,17 +7,15 @@ const screens = [
   'md',
   'lg',
   'hd',
-  '4k',
-]
+  '4k'
+];
 
 module.exports = {
   content:  [
-    "./scss/*.scss",
-    "./ts/*.ts",
-    "./demo/*.html",
-    "./Elements/**/demo/*.html}",
-    "./Elements/**/ts/*.{ts,js,html}",
-    "./Elements/**/scss/*.{scss,css}"
+    './scss/**/*.scss',
+    './ts/**/*.ts',
+    './demo/**/*.html',
+    './Elements/**/*.{ts,js,html,scss,css}'
   ],
   safelist: [
     {
@@ -30,8 +28,8 @@ module.exports = {
   theme:       {
     colors:     {
 
-      bg:     "#F7F9FC",
-      darkBg: "#191D23",
+      bg:     '#F7F9FC',
+      darkBg: '#191D23',
 
       dark:        {
         '50':    '#f8fafc',
@@ -48,13 +46,13 @@ module.exports = {
         '800-n': '#17013d',
         '900-n': '#110030'
       },
-      darkBorderN: "#332250",
-      darkBorder:  "#343840",
+      darkBorderN: '#332250',
+      darkBorder:  '#343840',
       darkTxt:     {
         900: 'rgba(255,255,255, 1)',
         800: 'rgba(255,255,255, 0.87)',
         600: 'rgba(255,255,255, 0.60)',
-        400: 'rgba(255,255,255, 0.40)',
+        400: 'rgba(255,255,255, 0.40)'
       },
 
       'border':        '#DCE1E9',
@@ -67,30 +65,30 @@ module.exports = {
         600: '#322578',
         700: '#2b1c6d',
         800: '#231262',
-        900: '#16004d',
+        900: '#16004d'
       },
       'secondary':     {
-        500: '#6836F5',
+        500: '#6836F5'
       },
       'darkSecondary': {
-        500: '#9282ff',
+        500: '#9282ff'
       },
       'tertiary':      {
         100: '#CCEDEC',
         500: '#29C1BC',
-        900: '#157A77',
+        900: '#157A77'
       },
       'darkTertiary':  {
         100: '#CCEDEC',
         500: '#81e7ff',
-        900: '#157A77',
+        900: '#157A77'
       },
 
       txt: {
         900: 'rgba(0, 0, 0, 1)',
         800: 'rgba(0, 0, 0, 0.87)',
         600: 'rgba(0, 0, 0, 0.60)',
-        400: 'rgba(0, 0, 0, 0.40)',
+        400: 'rgba(0, 0, 0, 0.40)'
       },
 
       transparent: 'transparent',
@@ -101,7 +99,7 @@ module.exports = {
       'error':   '#FF3737',
       'info':    '#7DD3FC',
       'warning': '#FF6600',
-      'success': '#10B981',
+      'success': '#10B981'
     },
     spacing:    {
       0:     '0px',
@@ -118,7 +116,7 @@ module.exports = {
       'sidenav': '240px',
       'spanel':  '250px',
       'mpanel':  '320px',
-      'panel':   '360px',
+      'panel':   '360px'
     },
     screens:    {
       'sm':  '360px',
@@ -126,7 +124,7 @@ module.exports = {
       'md':  '768px',
       'lg':  '1100px',
       'hd':  '1440px',
-      '4k':  '2560px',
+      '4k':  '2560px'
     },
     containers: {
       'sm':  '360px',
@@ -134,7 +132,7 @@ module.exports = {
       'md':  '768px',
       'lg':  '1100px',
       'hd':  '1440px',
-      '4k':  '2560px',
+      '4k':  '2560px'
     },
     fontSize:   {
       xs: ['11px', {lineHeight: '13px'}],
@@ -144,15 +142,15 @@ module.exports = {
 
       caption: ['13px', {lineHeight: '25px', fontWeight: '500'}],
       navitem: ['14px', {lineHeight: '36px'}],
-      title:   ['24px', {lineHeight: '40px', fontWeight: '500'}],
+      title:   ['24px', {lineHeight: '40px', fontWeight: '500'}]
     },
     extend:     {
       lineHeight:  {
-        'md': '17px',
+        'md': '17px'
       },
       zIndex:      {
         'header':  300,
-        'sidenav': 250,
+        'sidenav': 250
       },
       boxShadow:   {
         'nav': '5px 0 40px #000000'
@@ -164,17 +162,17 @@ module.exports = {
         'mpanel':  '320px',
         'panel':   '360px',
         '50p':     '50%',
-        '70p':     '70%',
+        '70p':     '70%'
       },
       minWidth:    {
         'bar':     '50px',
         'sidenav': '240px',
         'spanel':  '250px',
         'mpanel':  '320px',
-        'panel':   '360px',
+        'panel':   '360px'
       },
       minHeight:   {
-        'bar': '50px',
+        'bar': '50px'
       },
       borderWidth: {
         DEFAULT: '1px',
@@ -182,18 +180,18 @@ module.exports = {
         'px':    '1px',
         'xs':    '2px',
         'sm':    '3px',
-        'md':    '4px',
+        'md':    '4px'
       },
       fontFamily:  {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
-      },
-    },
+        sans: ['Inter', ...defaultTheme.fontFamily.sans]
+      }
+    }
   },
   corePlugins: {
-    preflight: true,
+    preflight: true
   },
   plugins:     [
     require('@tailwindcss/forms'),
-    require('@tailwindcss/container-queries'),
-  ],
-}
+    require('@tailwindcss/container-queries')
+  ]
+};

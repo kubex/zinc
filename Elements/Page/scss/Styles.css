@@ -1,4 +1,3 @@
-@tailwind base;
 :host #page-content {
   /*@apply gap-xxs smp:gap-sm md:gap-md lg:gap-lg hd:gap-xl;*/
   @apply gap-xxs
@@ -21,16 +20,20 @@
     /* Handle */
     /* Handle on hover */
   }
+
   :host ::-webkit-scrollbar {
     width: 5px;
   }
+
   :host ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   :host ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 5px;
   }
+
   :host ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.2);
   }
@@ -40,167 +43,204 @@
   @apply flex justify-center grow box-border;
   container-type: inline-size;
 }
+
 :host > div {
   @apply relative w-full h-full box-border;
   max-width: calc(var(--max-width) + 0px);
 }
+
 :host #page-content {
   @apply flex flex-wrap flex-col h-fit
-    @smp:grow;
+  @smp:grow;
 }
+
 :host > div.with-side {
   @apply flex-col-reverse;
 }
+
 :host > div.with-nav {
   @apply flex-col;
 }
+
 :host > div.with-side, :host > div.with-nav {
   @apply flex
-    @smp:flex-row;
+  @smp:flex-row;
 }
+
 :host .pageside {
   @apply h-bar min-h-bar max-h-bar w-full overflow-visible
-    //@lg:basis-mpanel
-    @smp:max-h-full
-    @smp:h-auto
-    @smp:top-0
-    @smp:relative
-    @smp:flex
-    @smp:min-w-bar
-    @smp:max-w-bar
-    @smp:grow
-    @lg:min-w-mpanel
-    @lg:max-w-mpanel
-    @lg:w-mpanel;
+  //
+  @lg:basis-mpanel
+  @smp:max-h-full
+  @smp:h-auto
+  @smp:top-0
+  @smp:relative
+  @smp:flex
+  @smp:min-w-bar
+  @smp:max-w-bar
+  @smp:grow
+  @lg:min-w-mpanel
+  @lg:max-w-mpanel
+  @lg:w-mpanel;
 }
+
 :host .pageside > div {
   @apply absolute
-      bg-white
-      @lg:bg-primary-50;
+  bg-white
+  @lg:bg-primary-50;
 }
+
 :host .pageside > div.content {
   @apply hidden overflow-y-auto max-w-bar
-      @lg:min-w-mpanel
-      @lg:flex flex-col right-0 inset-y-0
-      transition-all duration-500 ease-in-out
-      py-sm
-      @smp:py-md
-      @lg:py-lg
-      @hd:py-xl pr-md
-      @lg:pr-0
-      @lg:pr-lg
-      @hd:pr-xl;
+  @lg:min-w-mpanel
+  @lg:flex flex-col right-0 inset-y-0
+  transition-all duration-500 ease-in-out
+  py-sm
+  @smp:py-md
+  @lg:py-lg
+  @hd:py-xl pr-md
+  @lg:pr-0
+  @lg:pr-lg
+  @hd:pr-xl;
 }
+
 :host .pageside > div.expander {
   @apply flex flex-row-reverse items-center justify-center overflow-hidden
-      @smp:flex-col
-      @lg:hidden inset-0 z-10 cursor-pointer
-      @smp:justify-start
-      border-b-px h-bar
-      @smp:h-full
-      @smp:border-b-0
-      @smp:border-l-px border-border w-full
-      @smp:w-bar
-      @lg:hidden
-      bg-white;
+  @smp:flex-col
+  @lg:hidden inset-0 z-10 cursor-pointer
+  @smp:justify-start
+  border-b-px h-bar
+  @smp:h-full
+  @smp:border-b-0
+  @smp:border-l-px border-border w-full
+  @smp:w-bar
+  @lg:hidden
+  bg-white;
 }
+
 :host .pageside > div.expander span {
   writing-mode: horizontal-tb;
   @apply grow pl-md
-        @smp:pl-0
-        hidden;
+  @smp:pl-0
+  hidden;
 }
+
 @container (min-width:theme("screens.smp")) {
   :host .pageside > div.expander span {
     writing-mode: vertical-rl;
   }
 }
+
 :host .pageside > div.expander span.open {
   @apply block;
 }
+
 :host .pageside > div.expander zn-icon {
   @apply text-secondary-500 mx-md
-        transition-all duration-500 ease-in-out
-        @smp:my-md
-        rotate-0
-        @smp:rotate-90;
+  transition-all duration-500 ease-in-out
+  @smp:my-md
+  rotate-0
+  @smp:rotate-90;
 }
+
 :host .pageside > div {
   @apply grow overflow-y-auto;
 }
+
 :host > div.with-nav .pageside, :host > div.with-nav .pageside > div.content {
-  @apply @lg:min-w-spanel
-    @lg:max-w-spanel;
+  @apply
+  @lg:min-w-spanel
+  @lg:max-w-spanel;
 }
+
 :host > div.with-nav .pageside {
   order: -1;
 }
+
 :host > div.with-nav .pageside > div.content {
   @apply pr-0 pl-md
-      @lg:pl-0
-      @lg:pl-lg
-      @hd:pl-xl;
+  @lg:pl-0
+  @lg:pl-lg
+  @hd:pl-xl;
 }
+
 :host > div.with-nav .pageside > div.expander {
-  @apply @smp:border-r-px
-      @smp:border-l-0;
+  @apply
+  @smp:border-r-px
+  @smp:border-l-0;
 }
+
 :host > div.with-nav .pageside > div.expander zn-icon {
-  @apply @smp:-rotate-90;
+  @apply
+  @smp:-rotate-90;
 }
 
 @container (max-width:theme("screens.lg")) {
   :host([open]) > div .pageside {
     position: unset;
   }
+
   :host([open]) > div .pageside > div.content {
     @apply flex p-lg
-      w-full max-w-full
-      @smp:max-w-mpanel
-      @smp:min-w-mpanel
-      @smp:max-w-mpanel overflow-x-hidden
-      z-20 top-bar
-      @smp:top-0;
+    w-full max-w-full
+    @smp:max-w-mpanel
+    @smp:min-w-mpanel
+    @smp:max-w-mpanel overflow-x-hidden
+    z-20 top-bar
+    @smp:top-0;
   }
+
   :host([open]) > div .pageside > div.expander {
-    @apply @smp:left-auto
-      @smp:right-mpanel;
+    @apply
+    @smp:left-auto
+    @smp:right-mpanel;
   }
+
   :host([open]) > div .pageside > div.expander zn-icon {
     @apply rotate-180
-        @smp:-rotate-90;
+    @smp:-rotate-90;
   }
+
   :host([open]) > div .pageside > div.expander span.open {
     @apply hidden;
   }
+
   :host([open]) > div .pageside > div.expander span.close {
     @apply hidden
-        @smp:block;
+    @smp:block;
   }
+
   :host([open]) > div .pageside > div.expander span.close-sm {
     @apply block
-        @smp:hidden font-semibold;
+    @smp:hidden font-semibold;
   }
+
   :host([open]) > div.with-nav .pageside div.expander {
-    @apply @smp:left-mpanel
-      @smp:right-auto;
+    @apply
+    @smp:left-mpanel
+    @smp:right-auto;
   }
+
   :host([open]) > div.with-nav .pageside div.expander zn-icon {
     @apply -rotate-180
-        @smp:rotate-90;
+    @smp:rotate-90;
   }
+
   :host([open]) > div.with-nav .pageside div.content {
-    @apply @smp:left-0
-      @smp:right-auto;
+    @apply
+    @smp:left-0
+    @smp:right-auto;
   }
 }
 
 :host([d]) > div.with-side .pageside > div, :host([d]) > div.with-nav .pageside > div {
   @apply bg-dark-900;
 }
+
 :host([d]) > div.with-side .pageside > div.expander, :host([d]) > div.with-nav .pageside > div.expander {
   @apply border-darkBorder bg-dark-900;
 }
+
 :host([d]) > div.with-side .pageside > div.expander zn-icon, :host([d]) > div.with-nav .pageside > div.expander zn-icon {
   @apply text-darkSecondary-500;
 }

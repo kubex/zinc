@@ -1,11 +1,11 @@
 :host, zn-tabs {
-  @apply bg-white inline-block w-full;
+  @apply bg-white dark:bg-dark-700 inline-block w-full;
 
   nav {
     @apply flex flex-row justify-between items-center gap-lg p-sm border-0 border-b border-border border-solid mb-md;
 
     ::slotted([slot="tab"]) {
-      @apply p-xs px-sm bg-primary-100 text-darkTxt-400 rounded-md cursor-pointer;
+      @apply p-xs px-sm bg-primary-400/40 text-darkTxt-400 rounded-md cursor-pointer;
     }
 
     ::slotted([slot="tab"][selected]) {

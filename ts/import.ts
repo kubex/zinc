@@ -18,6 +18,7 @@ import '../Elements/Form/ts/Group'
 import '../Elements/Form/ts/Input'
 import '../Elements/Form/ts/TextInput'
 import '../Elements/Form/ts/DragUpload'
+import '../Elements/Form/ts/Checkbox'
 
 import './container'
 import './simpleprompt'

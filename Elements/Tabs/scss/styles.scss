@@ -1,0 +1,27 @@
+:host, zn-tabs {
+  @apply bg-white inline-block w-full;
+
+  nav {
+    @apply flex flex-row justify-between items-center gap-lg p-sm border-0 border-b border-border border-solid mb-md;
+
+    ::slotted([slot="tab"]) {
+      @apply p-xs px-sm bg-primary-100 text-darkTxt-400 rounded-md cursor-pointer;
+    }
+
+    ::slotted([slot="tab"][selected]) {
+      @apply bg-primary-400 text-white;
+    }
+  }
+
+  ::slotted([slot="panel"]) {
+    @apply hidden;
+  }
+
+  ::slotted([slot="panel"][selected]) {
+    @apply block w-full p-md;
+  }
+
+  .tabs__header {
+    @apply flex flex-row justify-end gap-md;
+  }
+}

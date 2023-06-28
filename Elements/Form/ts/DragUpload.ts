@@ -32,7 +32,7 @@ export class ZincDragUpload extends ZincElement {
   render() {
     return html`
       <div id="drag-upload"
-           class="flex flex-col items-center justify-center bg-white p-md rounded-md border-dashed border-dark-200 border-2">
+           class="flex flex-col items-center justify-center bg-white p-md rounded-md border-dashed border-dark-200 border-2 dark:bg-dark-600 dark:border-dark-800">
         <p>
           ${this.text}
         </p>

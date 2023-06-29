@@ -29,8 +29,7 @@ export class ZincTextInput extends ZincElement {
 
   render() {
     return html`
-      <div
-        class="flex">
+      <div class="flex">
         <span class="flex select-none items-center">${this.prefix}</span>
         <input class="flex-1"
                id="${this.id}"

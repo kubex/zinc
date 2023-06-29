@@ -27,68 +27,69 @@ export class ZincChip extends ZincElement {
   firstUpdated() {
     const ctx = (this.renderRoot.querySelector('#myChart2') as HTMLCanvasElement).getContext('2d');
 
-    this.myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-          datasets: [
-            {
-              data: [
-
-                {x: "Mon", y: 20000},
-                {x: "Tue", y: 20400},
-                {x: "Wed", y: 19000},
-                {x: "Thu", y: 18700},
-                {x: "Fri", y: 18942},
-                {x: "Sat", y: 19243},
-                {x: "Sun", y: 19400},
-              ],
-            }
-          ]
+    const config = {
+      type: 'line',
+      data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [
+          {
+            data: [
+              {x: "Mon", y: 20000},
+              {x: "Tue", y: 20400},
+              {x: "Wed", y: 19000},
+              {x: "Thu", y: 18700},
+              {x: "Fri", y: 18942},
+              {x: "Sat", y: 19243},
+              {x: "Sun", y: 19400},
+            ],
+          }
+        ]
+      },
+      options: {
+        layout: {
+          padding: 20
         },
-        options: {
-          layout: {
-            padding: 20
+        elements: {
+          point: {
+            radius: 6,
+            backgroundColor: 'rgb(60, 216, 187)',
+            borderColor: 'rgb(60, 216, 187)',
           },
-          elements: {
-            point: {
-              radius: 6,
-              backgroundColor: 'rgb(60, 216, 187)',
-              borderColor: 'rgb(60, 216, 187)',
-            },
-            line: {
-              borderWidth: 3,
-              borderColor: 'rgb(60, 216, 187)',
-              backgroundColor: 'rgba(60, 216, 187, 0.1)',
-              fill: true,
-            }
-          },
-          scales: {
-            y: {
-              type: 'linear',
-              grid: {
-                offset: true,
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-            },
-          },
-          maintainAspectRatio: false,
-          plugins: {
-            htmlLegend: {
-              containerID: 'legend-container',
-            },
-            legend: {
-              display: false,
-            }
+          line: {
+            borderWidth: 3,
+            borderColor: 'rgb(60, 216, 187)',
+            backgroundColor: 'rgba(60, 216, 187, 0.1)',
+            fill: true,
           }
         },
-        plugins: [htmlLegendPlugin]
-      }
-    );
+        scales: {
+          y: {
+            type: 'linear',
+            grid: {
+              offset: true,
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+          },
+        },
+        maintainAspectRatio: false,
+        plugins: {
+          htmlLegend: {
+            containerID: 'legend-container',
+          },
+          legend: {
+            display: false,
+          }
+        }
+      },
+      plugins: [htmlLegendPlugin]
+    };
+
+    // @ts-ignore
+    this.myChart = new Chart(ctx, config);
   }
 
 

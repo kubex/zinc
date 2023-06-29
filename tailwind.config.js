@@ -11,7 +11,7 @@ const screens = [
 ];
 
 module.exports = {
-  content:  [
+  content: [
     './scss/**/*.scss',
     './ts/**/*.ts',
     './demo/**/*.html',
@@ -19,45 +19,45 @@ module.exports = {
   ],
   safelist: [
     {
-      pattern:  /table-cell/,
+      pattern: /table-cell/,
       variants: screens
     }
   ],
 
-  darkMode:    'class',
-  theme:       {
-    colors:     {
+  darkMode: 'class',
+  theme: {
+    colors: {
 
-      bg:     '#F7F9FC',
+      bg: '#F7F9FC',
       darkBg: '#191D23',
 
-      dark:        {
-        '50':    '#f8fafc',
-        '100':   '#f1f5f9',
-        '200':   '#e2e8f0',
-        '300':   '#cbd5e1',
-        '400':   '#94a3b8',
-        '500':   '#64748b',
-        '600':   '#475569',
-        '700':   '#3B444B',
-        '800':   '#1D2129',
-        '900':   '#191D23',
+      dark: {
+        '50': '#f8fafc',
+        '100': '#f1f5f9',
+        '200': '#e2e8f0',
+        '300': '#cbd5e1',
+        '400': '#94a3b8',
+        '500': '#64748b',
+        '600': '#475569',
+        '700': '#3B444B',
+        '800': '#1D2129',
+        '900': '#191D23',
         '700-n': '#180048',
         '800-n': '#17013d',
         '900-n': '#110030'
       },
       darkBorderN: '#332250',
-      darkBorder:  '#343840',
-      darkTxt:     {
+      darkBorder: '#343840',
+      darkTxt: {
         900: 'rgba(255,255,255, 1)',
         800: 'rgba(255,255,255, 0.87)',
         600: 'rgba(255,255,255, 0.60)',
         400: 'rgba(255,255,255, 0.40)'
       },
 
-      'border':        '#DCE1E9',
-      'primary':       {
-        50:  '#e5e4ef',
+      'border': '#DCE1E9',
+      'primary': {
+        50: '#e5e4ef',
         100: '#bebcd8',
         300: '#6d68a4',
         400: '#524a92',
@@ -67,18 +67,18 @@ module.exports = {
         800: '#231262',
         900: '#16004d'
       },
-      'secondary':     {
+      'secondary': {
         500: '#6836F5'
       },
       'darkSecondary': {
         500: '#9282ff'
       },
-      'tertiary':      {
+      'tertiary': {
         100: '#CCEDEC',
         500: '#29C1BC',
         900: '#157A77'
       },
-      'darkTertiary':  {
+      'darkTertiary': {
         100: '#CCEDEC',
         500: '#81e7ff',
         900: '#157A77'
@@ -96,27 +96,27 @@ module.exports = {
       'white': '#FFFFFF',
       'black': '#000000',
 
-      'error':   '#FF3737',
-      'info':    '#7DD3FC',
+      'error': '#FF3737',
+      'info': '#7DD3FC',
       'warning': '#FF6600',
       'success': '#10B981'
     },
-    spacing:    {
-      0:     '0px',
-      'px':  '1px',
+    spacing: {
+      0: '0px',
+      'px': '1px',
       'xxs': '3px',
-      'xs':  '5px',
-      'sm':  '10px',
-      'md':  '15px',
-      'lg':  '20px',
-      'xl':  '25px',
+      'xs': '5px',
+      'sm': '10px',
+      'md': '15px',
+      'lg': '20px',
+      'xl': '25px',
 
-      'bar':     '50px',
-      'tile':    '80px',
+      'bar': '50px',
+      'tile': '80px',
       'sidenav': '240px',
-      'spanel':  '250px',
-      'mpanel':  '320px',
-      'panel':   '360px'
+      'spanel': '250px',
+      'mpanel': '320px',
+      'panel': '360px'
     },
     screens:    {
       'sm':  '360px',
@@ -142,47 +142,47 @@ module.exports = {
 
       caption: ['13px', {lineHeight: '25px', fontWeight: '500'}],
       navitem: ['14px', {lineHeight: '36px'}],
-      title:   ['24px', {lineHeight: '40px', fontWeight: '500'}]
+      title: ['24px', {lineHeight: '40px', fontWeight: '500'}]
     },
-    extend:     {
-      lineHeight:  {
+    extend: {
+      lineHeight: {
         'md': '17px'
       },
-      zIndex:      {
-        'header':  300,
+      zIndex: {
+        'header': 300,
         'sidenav': 250
       },
-      boxShadow:   {
+      boxShadow: {
         'nav': '5px 0 40px #000000'
       },
-      maxWidth:    {
-        'bar':     '50px',
+      maxWidth: {
+        'bar': '50px',
         'sidenav': '240px',
-        'spanel':  '250px',
-        'mpanel':  '320px',
-        'panel':   '360px',
-        '50p':     '50%',
-        '70p':     '70%'
+        'spanel': '250px',
+        'mpanel': '320px',
+        'panel': '360px',
+        '50p': '50%',
+        '70p': '70%'
       },
-      minWidth:    {
-        'bar':     '50px',
+      minWidth: {
+        'bar': '50px',
         'sidenav': '240px',
-        'spanel':  '250px',
-        'mpanel':  '320px',
-        'panel':   '360px'
+        'spanel': '250px',
+        'mpanel': '320px',
+        'panel': '360px'
       },
-      minHeight:   {
+      minHeight: {
         'bar': '50px'
       },
       borderWidth: {
         DEFAULT: '1px',
-        '0':     '0',
-        'px':    '1px',
-        'xs':    '2px',
-        'sm':    '3px',
-        'md':    '4px'
+        '0': '0',
+        'px': '1px',
+        'xs': '2px',
+        'sm': '3px',
+        'md': '4px'
       },
-      fontFamily:  {
+      fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans]
       }
     }
@@ -190,7 +190,7 @@ module.exports = {
   corePlugins: {
     preflight: true
   },
-  plugins:     [
+  plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/container-queries')
   ]

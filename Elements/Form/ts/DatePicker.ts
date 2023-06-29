@@ -3,7 +3,6 @@ import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../../../ts/element";
 
 import styles from '../scss/DatePicker.scss';
-import DateRangePicker from "flowbite-datepicker/js/DateRangePicker";
 
 @customElement('zn-datepicker')
 export class ZincDatePicker extends ZincElement {
@@ -18,13 +17,6 @@ export class ZincDatePicker extends ZincElement {
 
   createRenderRoot() {
     return this;
-  }
-
-  protected firstUpdated() {
-    // @ts-ignore
-    this.getRootNode().querySelectorAll('[datepicker]').forEach((datepicker) => {
-      const picker = new DateRangePicker(datepicker, {});
-    });
   }
 
   render() {

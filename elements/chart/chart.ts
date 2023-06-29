@@ -1,10 +1,10 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {ZincElement} from "../../../ts/element";
+import {ZincElement} from "../../ts/element";
 import {Chart, registerables} from 'chart.js'
-
-import styles from '../scss/Styles.scss';
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
+
+import styles from './chart.scss';
 
 @customElement('zn-chart')
 export class ZincChip extends ZincElement {

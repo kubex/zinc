@@ -15,7 +15,7 @@ module.exports = {
     './scss/**/*.scss',
     './ts/**/*.ts',
     './demo/**/*.html',
-    './Elements/**/*.{ts,js,html,scss,css}'
+    './elements/**/*.{ts,js,html,scss,css}'
   ],
   safelist: [
     {

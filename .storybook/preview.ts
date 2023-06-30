@@ -1,5 +1,5 @@
 import type {Preview} from "@storybook/web-components";
-import {withThemeByClassName, withThemeByDataAttribute} from "@storybook/addon-styling";
+import {withThemeByClassName} from "@storybook/addon-styling";
 
 const preview: Preview = {
   parameters: {
@@ -19,9 +19,8 @@ export const decorators = [
       light: 'light',
       dark: 'dark'
     },
-    defaultTheme: 'light',
+    defaultTheme: 'light'
   }),
-
 ];
 
 export default preview;

@@ -1,7 +1,5 @@
 import {LitElement} from 'lit';
 import {property} from 'lit/decorators.js';
-// @ts-ignore
-import {PropertyValues} from "@lit/reactive-element";
 
 const screenSizes = {
   'sm': '360px',

@@ -21,13 +21,41 @@ export class ZincSimpleChart extends ZincElement {
   firstUpdated() {
     const ctx = (this.renderRoot.querySelector('#myChart') as HTMLCanvasElement).getContext('2d');
 
-    console.log(this.datasets);
-
     const config = {
       type: 'bar',
       data: {
-        labels: this.labels,
-        datasets: this.datasets
+        labels: [
+          "Jun 2016",
+          "Jul 2016",
+          "Aug 2016",
+          "Sep 2016",
+          "Oct 2016",
+          "Nov 2016",
+          "Dec 2016",
+          "Jan 2017",
+          "Feb 2017",
+          "Mar 2017",
+          "Apr 2017",
+          "May 2017"
+        ],
+        datasets: [
+          {
+            data: [
+              56.4,
+              39.8,
+              66.8,
+              66.4,
+              40.6,
+              55.2,
+              77.4,
+              69.8,
+              57.8,
+              76,
+              110.8,
+              142.6
+            ],
+          }
+        ]
       },
       options: {
         responsive: true,

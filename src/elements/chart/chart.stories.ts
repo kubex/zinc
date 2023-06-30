@@ -32,7 +32,9 @@ const datasets = [
       {x: "Fri", y: 18942},
       {x: "Sat", y: 19243},
       {x: "Sun", y: 19400},
-    ]
+    ],
+    borderColor: 'rgb(79,180,107)',
+    backgroundColor: 'rgb(39,168,78)',
   },
   {
     label: 'Dataset 2',

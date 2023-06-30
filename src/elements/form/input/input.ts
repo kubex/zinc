@@ -1,6 +1,6 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {ZincElement} from "../../ts/element";
+import {ZincElement} from "../../../ts/element";
 
 import styles from './input.scss';
 

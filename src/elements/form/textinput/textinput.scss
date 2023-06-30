@@ -1,7 +1,7 @@
 @tailwind base;
 
 :host, zn-text-input {
-  @apply block w-full h-full;
+  @apply flex w-full h-full;
   @apply focus-within:ring-primary-500 focus-within:ring-2 border-border overflow-hidden rounded-md p-0 #{!important};
   @apply dark:border-dark-800 #{!important};
 
@@ -11,7 +11,7 @@
   }
 
   input {
-    @apply placeholder:text-md placeholder:font-normal placeholder:text-dark-400 placeholder:leading-6;
+    @apply flex-1 placeholder:text-md placeholder:font-normal placeholder:text-dark-400 placeholder:leading-6;
     @apply sm:text-md sm:p-sm;
     @apply p-0 pl-sm border-none outline-none shadow-inner;
     @apply dark:bg-dark-600 dark:border-dark-800 dark:text-darkTxt-400 placeholder:text-darkTxt-400;

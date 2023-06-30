@@ -1,8 +1,8 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {ZincElement} from "../../ts/element";
+import {ZincElement} from "../../../ts/element";
 
-import styles from './textinput.scss';
+import styles from './checkbox.scss';
 
 @customElement('zn-checkbox')
 export class ZincCheckBox extends ZincElement {
@@ -23,13 +23,14 @@ export class ZincCheckBox extends ZincElement {
 
   render() {
     return html`
-      <div class="relative flex items-start my-md">
-        <div class="flex h-[15px] items-center">
+      <div class="checkbox__wrapper">
+        <div class="checkbox__input-wrapper">
           <input type="checkbox" name="${this.name}" id="${this.name}">
         </div>
-        <div class="ml-sm text-sm leading-6">
-          <label for="${this.name}" class="text-dark-900 !m-0">${this.title}</label>
-          <p class="text-dark-500">${this.description}</p>
+        <div class="checkbox__label-wrapper">
+          <label for="${this.name}">${this.title}
+            <p>${this.description}</p>
+          </label
         </div>
       </div>`
   }

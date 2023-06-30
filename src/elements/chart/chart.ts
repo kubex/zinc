@@ -1,7 +1,7 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../../ts/element";
-import {Chart, registerables} from 'chart.js'
+import {Chart, ChartConfiguration, registerables} from 'chart.js'
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
 
 import styles from './chart.scss';
@@ -9,10 +9,10 @@ import styles from './chart.scss';
 @customElement('zn-chart')
 export class ZincChip extends ZincElement {
   static styles = unsafeCSS(styles);
-  private myChart: any;
+  private myChart: Chart;
 
-  @property({attribute: 'datasets', type: Array, reflect: true}) public datasets = [];
-  @property({attribute: 'labels', type: Array, reflect: true}) public labels = [];
+  @property({attribute: 'datasets', type: Array, reflect: true}) public datasets;
+  @property({attribute: 'labels', type: Array, reflect: true}) public labels;
   @property({attribute: 'type', type: String, reflect: true}) public type = 'line';
 
   constructor() {
@@ -29,9 +29,9 @@ export class ZincChip extends ZincElement {
 
   firstUpdated() {
     const ctx = (this.renderRoot.querySelector('#myChart2') as HTMLCanvasElement).getContext('2d');
+    console.log(this.datasets);
 
     const drawBackground = this.datasets.length <= 1;
-
     const config = {
       type: this.type,
       data: {
@@ -81,8 +81,7 @@ export class ZincChip extends ZincElement {
       plugins: [htmlLegendPlugin]
     };
 
-    // @ts-ignore
-    this.myChart = new Chart(ctx, config);
+    this.myChart = new Chart(ctx, config as ChartConfiguration);
   }
 
   render() {

@@ -16,7 +16,7 @@ export class AppContainer extends LitElement {
   @property({type: Boolean, attribute: 'dark-mode', reflect: true})
   public darkMode;
 
-  @property({type: HTMLDivElement})
+  @property({type: Object, attribute: false})
   protected container: HTMLDivElement = document.createElement('div');
 
   static get styles() {

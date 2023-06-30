@@ -54,7 +54,7 @@ const datasets = [
 
 export const Default = ({datasets, labels}) =>
   html`
-    <zn-chart .datasets=${dataset} .labels=${labels}></zn-chart>`;
+    <zn-chart .datasets=${datasets} .labels=${labels}></zn-chart>`;
 
 export const MultiLine = () =>
   html`

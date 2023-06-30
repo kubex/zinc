@@ -30,7 +30,7 @@ export class ZincCheckBox extends ZincElement {
         <div class="checkbox__label-wrapper">
           <label for="${this.name}">${this.title}
             <p>${this.description}</p>
-          </label
+          </label>
         </div>
       </div>`
   }

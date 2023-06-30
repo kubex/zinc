@@ -6,7 +6,7 @@ export default {
 
 export const Default = ({label, text, types, size}) =>
   html`
-    <form method="post">
+    <form method="POST">
       <zn-form-group>
         <zn-input .label=${label}>
           <zn-drag-upload .text=${text} .types=${types} .size=${size}>

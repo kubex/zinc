@@ -6,7 +6,7 @@ export default {
 
 export const Default = ({content}) =>
   html`
-    <form method="post" style="padding: 30px;">
+    <form method="POST" style="padding: 30px;">
       <zn-form-group caption="Something">
         <zn-datepicker></zn-datepicker>
       </zn-form-group>

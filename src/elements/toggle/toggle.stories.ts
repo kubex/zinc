@@ -6,7 +6,7 @@ export default {
 
 export const Default = () =>
   html`
-    <form method="post" style="padding: 30px;">
+    <form method="POST" style="padding: 30px;">
       <zn-toggle name="tog-form" value="checked"></zn-toggle>
       <input type="submit" value="Go">
     </form>

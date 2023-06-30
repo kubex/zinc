@@ -30,16 +30,16 @@ export class ZincIcon extends LitElement {
 
   gravatarOptions = ""
 
-  @property({reflect: true})
+  @property({type: String, reflect: true})
   src = ""
 
-  @property({reflect: true})
+  @property({type: Number, reflect: true})
   size = 24
 
-  @property({reflect: true})
+  @property({type: String, reflect: true})
   library = Library.None
 
-  @property()
+  @property({type: Boolean, reflect: true})
   round = false
 
   connectedCallback() {
@@ -114,7 +114,7 @@ export class ZincIcon extends LitElement {
 
     if (this.src != "") {
       return html`
-        <img src="${this.src}" class="${this.library}/">`;
+        <img src="${this.src}" class="${this.library}" />`;
     }
 
     return html`

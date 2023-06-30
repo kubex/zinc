@@ -6,7 +6,7 @@ export default {
 
 export const Default = ({caption, description}) =>
   html`
-    <form method="post" style="padding: 30px;">
+    <form method="POST" style="padding: 30px;">
       <zn-form-group .caption=${caption} .description=${description}>
         <input type="text" placeholder="Enter your name"/>
       </zn-form-group>
@@ -21,7 +21,7 @@ Default.args = {
 
 export const CaptionOnly = ({caption}) =>
   html`
-    <form method="post" style="padding: 30px;">
+    <form method="POST" style="padding: 30px;">
       <zn-form-group .caption=${caption}>
         <input type="text" placeholder="Enter your name"/>
       </zn-form-group>

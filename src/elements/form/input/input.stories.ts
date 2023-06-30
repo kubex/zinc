@@ -6,7 +6,7 @@ export default {
 
 export const Default = () =>
   html`
-    <form method="post">
+    <form method="POST">
       <zn-form-group caption="Personal Information" description="Use a permanent address where you can receive mail.">
         <zn-input label="First Name" span="3"><input type="text" name="first_name"/></zn-input>
         <zn-input label="Last Name" span="3"><input type="text" name="last_name"/></zn-input>

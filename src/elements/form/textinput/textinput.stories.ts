@@ -6,7 +6,7 @@ export default {
 
 export const Default = ({label, span, prefix, name, placeholder}) =>
   html`
-    <form method="post">
+    <form method="POST">
       <zn-form-group>
         <zn-input .span=${span} .label=${label}>
           <zn-text-input .prefix=${prefix} .name=${name} .placeholder=${placeholder}></zn-text-input>

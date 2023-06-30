@@ -17,6 +17,9 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
+    "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
+    "lint:eslint": "eslint 'src/**/*.ts'",
+    "lint:lit-analyzer": "lit-analyzer",
     "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
@@ -40,10 +43,14 @@
     "@storybook/web-components": "^7.0.24",
     "@storybook/web-components-vite": "^7.0.24",
     "@types/chartjs": "^0.0.31",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
     "air-datepicker": "^3.3.5",
     "autoprefixer": "^10.4.4",
     "chart.js": "^4.3.0",
+    "eslint": "^8.43.0",
     "glob": "^10.3.1",
+    "lit-analyzer": "^1.2.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.12",
     "postcss-discard-comments": "^6.0.0",

@@ -6,7 +6,7 @@ export default {
 
 export const Default = () =>
   html`
-    <form method="post" style="padding: 30px;">
+    <form method="POST" style="padding: 30px;">
       <zn-form-group caption="Notifications"
                      description="We'll always let you know about important changes, but you pick what else you want to hear about.">
         <zn-input label="By Email">

@@ -6,7 +6,7 @@ export default {
 
 export const Default = ({caption}) =>
   html`
-    <form method="post">
+    <form method="POST">
       <zn-form-group .caption=${caption}>
         <zn-datepicker></zn-datepicker>
       </zn-form-group>

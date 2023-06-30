@@ -36,3 +36,9 @@ export const Default = () =>
       <span slot="footer">Footer Content</span>
     </zn-panel>
   `;
+
+export const Tiles = () => `
+  <zn-panel stat single>
+    <zn-prop stack caption="MRR">$59.99</zn-prop>
+  </zn-panel>
+  `;

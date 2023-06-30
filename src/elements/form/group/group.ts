@@ -6,15 +6,12 @@ import styles from './group.scss';
 
 @customElement('zn-form-group')
 export class ZincFormGroup extends ZincElement {
+  @property({attribute: 'caption', type: String, reflect: true}) caption;
+  @property({attribute: 'description', type: String, reflect: true}) description;
+
   static get styles() {
     return [unsafeCSS(styles)];
   }
-
-  @property({attribute: 'caption', type: String, reflect: true})
-  private caption;
-  @property({attribute: 'description', type: String, reflect: true})
-  private description;
-
 
   render() {
     return html`

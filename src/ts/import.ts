@@ -15,6 +15,7 @@ import '../elements/alert/alert'
 import '../elements/table/table'
 import '../elements/tabs/tabs'
 import '../elements/chart/chart'
+import '../elements/simplechart/simplechart'
 
 import '../elements/form/group/group'
 import '../elements/form/input/input'

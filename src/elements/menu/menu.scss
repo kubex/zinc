@@ -1,0 +1,53 @@
+@tailwind base;
+@import "../../scss/variables";
+
+@tailwind base;
+
+
+:host > div {
+  @apply block p-sm rounded border
+  flex flex-col grow
+  w-spanel
+  p-sm
+  border-border bg-white
+  gap-md;
+
+  li {
+    @apply block border-b border-border text-navitem p-xs;
+
+    a {
+      display: block;
+
+      &:hover {
+        @apply cursor-pointer text-secondary-500;
+      }
+    }
+  }
+
+  li:last-child {
+    @apply border-b-0;
+  }
+}
+
+:host([d]) > div {
+  @apply bg-dark-900 border-darkBorder;
+
+  li {
+    @apply border-darkBorder;
+
+    a {
+      &:hover {
+        @apply text-darkSecondary-500;
+      }
+    }
+  }
+}
+
+
+.zn-menu--overlay {
+  @apply absolute drop-shadow-lg z-[2001] overflow-hidden;
+}
+
+.zn-menu_backdrop {
+  @apply fixed inset-0 z-[2000];
+}

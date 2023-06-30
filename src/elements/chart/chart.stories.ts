@@ -6,5 +6,5 @@ export default {
 
 export const Default = () =>
   html`
-      <zn-chart></zn-chart>
+    <zn-chart></zn-chart>
   `;

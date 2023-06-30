@@ -11,7 +11,6 @@ export class ZincChip extends ZincElement {
   static styles = unsafeCSS(styles);
   private myChart: any;
 
-
   constructor() {
     super();
     Chart.register(...registerables)
@@ -92,15 +91,14 @@ export class ZincChip extends ZincElement {
     this.myChart = new Chart(ctx, config);
   }
 
-
   render() {
     return html`
+      <div>
+        <div id="legend-container"></div>
         <div>
-            <div id="legend-container"></div>
-            <div>
-                <canvas id="myChart2" width="400" height="400"></canvas>
-            </div>
+          <canvas id="myChart2" width="400" height="400"></canvas>
         </div>
+      </div>
     `;
   }
 }

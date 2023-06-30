@@ -60,7 +60,7 @@ export class AppContainer extends LitElement {
             return shad.querySelectorAll(className);
         };
         this.shadowRoot.appendChild(this.container);
-        //Form.init(this.shadowRoot);
+        //form.init(this.shadowRoot);
 
         this.shadowRoot.addEventListener('submit', function (e) {
             if (!e.composed && e.composedPath()) {

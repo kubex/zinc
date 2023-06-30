@@ -129,8 +129,8 @@ export class ZincSimpleChart extends ZincElement {
             borderRadius: 10,
             barThickness: 2,
             maxBarThickness: 2,
-            backgroundColor: "#559AFC",
-            hoverBackgroundColor: "#18437c",
+            backgroundColor: "#29C1BC",
+            hoverBackgroundColor: "#19837f",
           }
         },
         scales: {

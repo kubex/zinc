@@ -1,11 +1,12 @@
 import type {StorybookConfig} from "@storybook/web-components-vite";
 
 const config: StorybookConfig = {
-  stories: ["../elements/**/*.mdx", "../elements/**/*.stories.@(js|jsx|ts|tsx)", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    '@storybook/addon-styling'
+    '@storybook/addon-styling',
+    '@storybook/addon-a11y'
   ],
   framework: {
     name: "@storybook/web-components-vite",

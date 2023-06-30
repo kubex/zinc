@@ -6,7 +6,7 @@ import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'ts/import.ts',
+  input: 'src/ts/import.ts',
   output: {
     dir: 'dist',
     format: 'iife',

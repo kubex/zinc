@@ -1,10 +1,10 @@
 import {html} from 'lit-html';
 
 export default {
-  title: 'columns',
+  title: 'Pages/Columns',
 };
 
-export const Primary = () =>
+export const Default = () =>
   html`
       <style>
           body {

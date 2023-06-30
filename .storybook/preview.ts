@@ -1,9 +1,6 @@
 import type {Preview} from "@storybook/web-components";
 import {withThemeByDataAttribute} from "@storybook/addon-styling";
 
-import '../dist/zn.js';
-import '../dist/zn.css';
-
 const preview: Preview = {
   parameters: {
     actions: {argTypesRegex: "^on[A-Z].*"},
@@ -24,7 +21,8 @@ export const decorators = [
     },
     defaultTheme: 'light',
     attributeName: 'data-mode',
-  })
+  }),
+
 ];
 
 export default preview;

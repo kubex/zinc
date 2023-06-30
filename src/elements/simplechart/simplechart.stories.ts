@@ -4,7 +4,7 @@ export default {
   title: 'Elements/SimpleChart',
 };
 
-const labels = [
+const chartLabels = [
   "Jun 2016",
   "Jul 2016",
   "Aug 2016",
@@ -19,7 +19,7 @@ const labels = [
   "May 2017"
 ];
 
-const dataset = [
+const chartDataset = [
   {
     data: [
       56.4,
@@ -39,11 +39,11 @@ const dataset = [
 ];
 
 
-export const Default = ({dataset, labels}) =>
+export const Default = ({labels}) =>
   html`
-    <zn-simplechart .datasets=${dataset} .labels=${labels}></zn-simplechart>`;
+    <zn-simplechart .datasets=${chartDataset} .labels=${labels}></zn-simplechart>`;
 
 Default.args = {
-  datasets: dataset,
-  labels: labels
+  datasets: chartDataset,
+  labels: chartLabels
 }

@@ -19,11 +19,14 @@ export class ZincTextInput extends ZincElement {
   }
 
   render() {
+
+
     return html`
       <span>${this.prefix}</span>
       <input id="${this.id}"
              name="${this.name}"
              placeholder="${this.placeholder}"
-             value="${this.value}"/>`
+             value="${this.value}"/>
+      <slot></slot>`
   }
 }

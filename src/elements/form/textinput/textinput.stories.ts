@@ -12,8 +12,17 @@ export const Default = ({label, span, prefix, name, placeholder}) =>
           <zn-text-input .prefix=${prefix} .name=${name} .placeholder=${placeholder}></zn-text-input>
         </zn-input>
       </zn-form-group>
-
       <input type="submit" value="Submit"/>
+    </form>
+
+    <form method="POST">
+      <zn-form-group>
+        <zn-input .span=${span} .label=${label}>
+          <zn-text-input .prefix=${prefix} .name=${name} .placeholder=${placeholder}>
+            <input type="submit" value="Submit"/>
+          </zn-text-input>
+        </zn-input>
+      </zn-form-group>
     </form>
   `;
 

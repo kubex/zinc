@@ -143,7 +143,7 @@ module.exports = {
       md: ['13px', {lineHeight: '17px'}],
       lg: ['15px', {lineHeight: '21px'}],
 
-      caption: ['13px', {lineHeight: '25px', fontWeight: '500'}],
+      caption: ['13px', {lineHeight: '20px', fontWeight: '500'}],
       navitem: ['14px', {lineHeight: '36px'}],
       title:   ['24px', {lineHeight: '40px', fontWeight: '500'}]
     },

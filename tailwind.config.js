@@ -156,7 +156,7 @@ module.exports = {
         'nav': '5px 0 40px #000000'
       },
       maxWidth:    {
-        'bar':     '50px',
+        'bar':     '60px',
         'sidenav': '240px',
         'spanel':  '250px',
         'mpanel':  '320px',
@@ -165,14 +165,14 @@ module.exports = {
         '70p':     '70%'
       },
       minWidth:    {
-        'bar':     '50px',
+        'bar':     '60px',
         'sidenav': '240px',
         'spanel':  '250px',
         'mpanel':  '320px',
         'panel':   '360px'
       },
       minHeight:   {
-        'bar': '50px'
+        'bar': '60px'
       },
       borderWidth: {
         DEFAULT: '1px',

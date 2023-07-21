@@ -52,12 +52,9 @@ export const Default = () =>
             <zn-prop stack caption="Next Bill">Jan 24 2023</zn-prop>
           </zn-panel>
         </zn-cols>
-
-
+        
         <zn-cols>
-
           <zn-panel slot="c1" rows="4" caption="Subscriptions">
-
             <zn-tile caption="Antivirus Pro" description="Renews 2024-01-06 (1 Year)">
               <zn-chip slot="primary" success>Paid</zn-chip>
             </zn-tile>
@@ -135,8 +132,7 @@ export const Default = () =>
             <span slot="footer">View Transaction History</span>
           </zn-panel>
         </zn-cols>
-
-
+        
         <zn-panel caption="Notes">
           <zn-tile caption="Mark Neale">
             Every interaction and change to a contact is recorded in this timeline. Each event is individually

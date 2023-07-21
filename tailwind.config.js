@@ -99,7 +99,10 @@ module.exports = {
       'error':   '#ED546D',
       'info':    '#7DD3FC',
       'warning': '#FF6600',
-      'success': '#3CD8BB'
+      'success': '#3CD8BB',
+      grey: {
+        400: '#7F8090'
+      }
     },
     spacing:    {
       0:     '0px',

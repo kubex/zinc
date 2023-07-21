@@ -29,6 +29,16 @@ export class ZincPanel extends ZincElement {
     const footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
     const actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
 
+    let nav = html``;
+    if (this.navigation.length > 0) {
+      nav = html`<div class="nav">
+        <ul>
+          ${this.navigation.map((item, index) => html`
+              <li><a href="${item.path}">${item.title}</a></li>`)}
+        </ul>
+      </div>`;
+    }
+
     if (this.rows > 0) {
       this.style.setProperty('--row-count', this.rows);
     }
@@ -38,15 +48,10 @@ export class ZincPanel extends ZincElement {
       header = html`
         <div class="header">
           <span>${this.caption}</span>
-          <div class="nav">
-            <ul>
-              ${this.navigation.map((item, index) =>
-                html`
-                  <li><a href="${item.path}">${item.title}</a></li>`)}
-            </ul>
-          </div>
           <slot name="actions"></slot>
-        </div>`
+        </div>
+        ${nav}
+      `
     }
 
     let footer;

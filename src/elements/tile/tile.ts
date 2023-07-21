@@ -29,8 +29,8 @@ export class ZincTile extends ZincElement {
   private menu;
 
   _handleActions(e) {
-    let menu = this.menu[0];
-    let showMenu = document.createElement('div');
+    const menu = this.menu[0];
+    const showMenu = document.createElement('div');
 
     showMenu.classList.add('zn-menu--overlay');
     showMenu.style.top = e.pageY + 'px';
@@ -39,18 +39,18 @@ export class ZincTile extends ZincElement {
     //Set the left position after the menu is added to the page
     showMenu.style.left = (e.pageX - menu.offsetWidth) + 'px';
 
-    let backdrop = document.createElement('div');
+    const backdrop = document.createElement('div');
     document.body.appendChild(backdrop);
     backdrop.classList.add('zn-menu_backdrop');
 
 
-    let close = function () {
+    const close = function () {
       showMenu.remove();
       backdrop.remove();
       document.removeEventListener('keyup', detachEsc);
     }
 
-    let detachEsc = (e) => {
+    const detachEsc = (e) => {
       if (e.key === 'Escape') {
         close();
       }
@@ -68,31 +68,34 @@ export class ZincTile extends ZincElement {
 
   render() {
 
-    let primary = this.querySelectorAll('[slot="primary"]').length > 0 ? html`
+    const primary = this.querySelectorAll('[slot="primary"]').length > 0 ? html`
       <slot name="primary"></slot>` : null;
-    let chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
+    const chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
       <slot name="chip"></slot>` : null;
 
     this.menu = this.querySelectorAll('zn-menu')
 
-    let actions = this.menu.length > 0 ? html`
+    const actions = this.menu.length > 0 ? html`
       <div class="actions">
         <zn-icon @click="${this._handleActions}" library="material-outlined" src="more_vert"></zn-icon>
       </div>` : null;
 
     const properties = this.querySelectorAll('zn-prop');
 
-    let extended = properties.length > 0 || chip != null ? html`
+    const extended = properties.length > 0 || chip != null ? html`
       <div class="extended">
-        ${chip}
         ${properties}
+        ${chip}
       </div>` : null;
 
-    let summaryClass = extended == null ? 'summary' : 'summary extend';
+    const summaryClass = extended == null ? 'summary' : 'summary extend';
 
-    let summary = html`
+    const summary = html`
       <div class="caption" data-uri="${this.dataUri}" data-target="${this.dataTarget}">${this.caption}</div>
       <div class="description">${this.description}</div>`;
+
+    const status = this.querySelectorAll('[slot="status"]').length > 0 ? html`
+      <slot name="status"></slot>` : null;
 
     return html`
       <div>
@@ -102,6 +105,7 @@ export class ZincTile extends ZincElement {
         </div>
         ${extended}
         ${actions}
+        ${status}
       </div>
     `
   }

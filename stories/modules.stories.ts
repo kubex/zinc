@@ -20,62 +20,116 @@ export const Default = () =>
 
       <zn-header max-width
                  caption="Mark Frederik Hanslanderbutterzlut"
-                 navigation='[{"title": "Overview", "path": "/", "default":true}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}]'
-                 breadcrumb='[{"title": "Transactions", "path": "/"}, {"title": "Payments", "path": "/communication"}, {"title": "Refunds", "path": "/communication"}]'/>
+                 navigation='[{"title": "Overview", "path": "#", "default":true}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}]'
+                 breadcrumb='[{"title": "Home", "path": "#"}, {"title": "Customers", "path": "#"}, {"title": "Marko Frederik Hanslanderbutterzlut", "path": "#"}]'/>
       </zn-header>
 
       <zn-page caption="Overview">
         <div slot="side">
+
           <zn-panel caption="Customer Details">
-            <zn-prop inline caption="User ID">#234 442 424</zn-prop>
-            <zn-prop inline caption="ARR">$149.95</zn-prop>
-            <zn-prop inline caption="First Subscribed">3 years ago</zn-prop>
-            <zn-prop inline caption="Location">London, UK</zn-prop>
-            <zn-prop inline caption="Status">Paid Customer</zn-prop>
-            <hr/>
-            <zn-prop inline icon="email">gjbowers@companyname.com</zn-prop>
-            <zn-prop inline icon="phone">0791 727 3829</zn-prop>
-            <zn-prop inline icon="home">16-18 Barnes Wallis Road,<br/>Fareham, Hampshire,<br/>PO15 5TT
+            <zn-prop caption="First Name">Marko</zn-prop>
+            <zn-prop caption="Last Name">Hanslanderbutterzlut</zn-prop>
+            <zn-prop caption="Email">first.last@companyname.com</zn-prop>
+            <zn-prop caption="Phone">+44 (0) 1962 21 31 00</zn-prop>
+            <zn-prop caption="Billing Address">16 - 18 Barnes Wallis Road, Fareham, Hampshire, PO15 5TT, England
             </zn-prop>
           </zn-panel>
+
+          <zn-panel caption="Additional Details">
+            <zn-prop caption="Created">2019-06-03</zn-prop>
+            <zn-prop caption="User ID">123 - 543 - 756</zn-prop>
+            <zn-prop caption="Status">Active Customer</zn-prop>
+            <zn-prop caption="Webshield Status">Installed</zn-prop>
+            <zn-prop caption="Default Browser">Chrome v35</zn-prop>
+            <zn-prop caption="Current Primary Pet">Dog - Poodle</zn-prop>
+            <zn-prop caption="Insurance Provider">Aviva</zn-prop>
+          </zn-panel>
+
+          <zn-panel caption="Quick Actions">
+            <zn-prop caption="Created">2019-06-03</zn-prop>
+            <zn-prop caption="User ID">123 - 543 - 756</zn-prop>
+            <zn-prop caption="Status">Active Customer</zn-prop>
+            <zn-prop caption="Webshield Status">Installed</zn-prop>
+            <zn-prop caption="Default Browser">Chrome v35</zn-prop>
+            <zn-prop caption="Current Primary Pet">Dog - Poodle</zn-prop>
+            <zn-prop caption="Insurance Provider">Aviva</zn-prop>
+          </zn-panel>
+
         </div>
 
-        <zn-cols>
-          <zn-panel stat single slot="c1">
-            <zn-prop stack caption="MRR">$59.99</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c2">
-            <zn-prop stack caption="LTV">$4,532.35</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c3">
-            <zn-prop stack caption="Subscriptions">3</zn-prop>
-          </zn-panel>
-          <zn-panel stat single slot="c4">
-            <zn-prop stack caption="Next Bill">Jan 24 2023</zn-prop>
-          </zn-panel>
-        </zn-cols>
-
-        <zn-panel rows="4" caption="Subscriptions"
-                  navigation='[{"title": "Transactions", "path": "/", "default":true},{"title": "Payments", "path": "/communication"}]'>
-
-          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-            <zn-chip slot="primary" success>Paid</zn-chip>
+        <zn-panel caption="Subscriptions"
+                  navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+          <zn-tile caption="Antivirus Webshield Pro - 12 Months" description="Renews - May 24th 2023">
+            <zn-chip slot="status" success>active</zn-chip>
           </zn-tile>
-          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-            <zn-chip slot="primary" success>Paid</zn-chip>
+          <zn-tile caption="Antivirus Webshield Pro - 12 Months" description="Renews - May 24th 2023">
+            <zn-chip slot="status" success>active</zn-chip>
           </zn-tile>
-          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-            <zn-chip slot="primary" success>Paid</zn-chip>
-          </zn-tile>
-          <zn-tile caption="INV123-322-123 - $12.99" description="May 17 2022">
-            <zn-chip slot="primary" error>Refunded</zn-chip>
-          </zn-tile>
-          
-          <span slot="footer">View  All &rarr;</span>
-          
         </zn-panel>
-      </zn-page>
 
+        <zn-panel caption="Billing"
+                  navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+          <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+            <zn-chip slot="status" success>paid</zn-chip>
+          </zn-tile>
+          <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+            <zn-chip slot="status" success>paid</zn-chip>
+          </zn-tile>
+          <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+            <zn-chip slot="status" success>paid</zn-chip>
+          </zn-tile>
+          <span slot="footer">View  All &rarr;</span>
+        </zn-panel>
+
+        <zn-panel caption="Payment Methods"
+                  navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+          <zn-tile caption="Visa •••• 2341 (Primary Method)" description="Expires - 31st May 2023">
+            <zn-icon slot="primary" src="check" size="48" library="mio" style="--icon-size:32px;"></zn-icon>
+            <zn-chip slot="status" success>active</zn-chip>
+          </zn-tile>
+          <zn-tile caption="Mastercard •••• 2341" description="Expires - 31st May 2023">
+            <zn-chip slot="status" success>active</zn-chip>
+          </zn-tile>
+          <zn-tile caption="Visa •••• 2341" description="Expired - 31st January 2023">
+            <zn-chip slot="status" error>expired</zn-chip>
+          </zn-tile>
+          <span slot="footer">View  All &rarr;</span>
+        </zn-panel>
+
+        <zn-panel caption="Latest Transactions"
+                  navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+          <zn-tile caption="Capture (Paysafe UK)" description="876sfd-976sdf574-khbsdfc6r5">
+            <zn-icon slot="primary" src="check" size="48" library="mio" style="--icon-size:32px;"></zn-icon>
+            <zn-chip slot="status" success>active</zn-chip>
+          </zn-tile>
+          <zn-tile caption="Mastercard •••• 2341" description="Expires - 31st May 2023">
+            <zn-chip slot="status" success>active</zn-chip>
+          </zn-tile>
+          <zn-tile caption="Visa •••• 2341" description="Expired - 31st January 2023">
+            <zn-chip slot="status" error>expired</zn-chip>
+          </zn-tile>
+          <span slot="footer">View  All &rarr;</span>
+        </zn-panel>
+
+        <zn-panel caption="Latest Notes">
+          <button slot="actions">Add a Note</button>
+
+          <zn-tile caption="by Mark Neale (Twat)">
+            Every interaction and change to a contact is recorded in this timeline. Each event is individually
+            interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
+            collections.
+          </zn-tile>
+          <zn-tile caption="by Mark Neale (Twat)">
+            Every interaction and change to a contact is recorded in this timeline. Each event is individually
+            interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
+            collections.
+          </zn-tile>
+
+        </zn-panel>
+
+
+      </zn-page>
 
     </div>
 

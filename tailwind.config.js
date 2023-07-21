@@ -96,10 +96,10 @@ module.exports = {
       'white': '#FFFFFF',
       'black': '#000000',
 
-      'error':   '#FF3737',
+      'error':   '#ED546D',
       'info':    '#7DD3FC',
       'warning': '#FF6600',
-      'success': '#10B981'
+      'success': '#3CD8BB'
     },
     spacing:    {
       0:     '0px',

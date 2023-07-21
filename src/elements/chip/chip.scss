@@ -1,28 +1,22 @@
 :host {
-  @apply inline-block rounded-full px-md py-xs text-md text-center font-normal w-fit m-px box-border;
-  @apply bg-tertiary-500 border-tertiary-500 text-white uppercase;
-  border: 1px solid !important;
-  letter-spacing: 2px;
-}
-
-:host([d]) {
-  @apply opacity-80;
+  @apply inline-block rounded-lg px-sm py-xs text-sm text-center font-semibold w-fit m-px box-border;
+  @apply bg-tertiary-500 border-tertiary-500 text-white capitalize;
 }
 
 :host([error]) {
-  @apply bg-error border-error ;
+  @apply bg-error/10 border-px border-error text-error #{!important};
 }
 
 :host([info]) {
-  @apply bg-info border-info ;
+  @apply bg-info/10 border-px border-info text-info #{!important};
 }
 
 :host([warning]) {
-  @apply bg-warning border-warning ;
+  @apply bg-warning/10 border-px border-warning text-warning #{!important};
 }
 
 :host([success]) {
-  @apply bg-success border-success ;
+  @apply bg-success/10 border-px border-success text-success #{!important};
 }
 
 :host([outline]), :host([d]) {

@@ -67,6 +67,10 @@
       @lg:pr-0
       @lg:pr-lg
       @hd:pr-xl;
+
+      ::slotted(*) {
+        @apply flex flex-col gap-lg;
+      }
     }
 
     > div.expander {
@@ -148,8 +152,7 @@
       max-width: calc(100% - theme('spacing.bar'));
     }
   }
-}
-@container (min-width:theme('screens.lg')) {
+} @container (min-width:theme('screens.lg')) {
   > div.with-side {
     #page-content {
       max-width: calc(100% - theme('spacing.mpanel'));

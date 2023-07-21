@@ -115,12 +115,12 @@ export const Default = () =>
         <zn-panel caption="Latest Notes">
           <button slot="actions">Add a Note</button>
 
-          <zn-tile caption="by Mark Neale (Twat)">
+          <zn-tile caption="by Mark Neale (CSA)">
             Every interaction and change to a contact is recorded in this timeline. Each event is individually
             interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
             collections.
           </zn-tile>
-          <zn-tile caption="by Mark Neale (Twat)">
+          <zn-tile caption="by Mark Neale (CSA)">
             Every interaction and change to a contact is recorded in this timeline. Each event is individually
             interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
             collections.

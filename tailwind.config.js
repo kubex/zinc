@@ -10,6 +10,24 @@ const screens = [
   '4k'
 ];
 
+let containers = {
+  'sm':  '360px',
+  'smp': '480px',
+  'md':  '768px',
+  'lg':  '1100px',
+  'hd':  '1440px',
+  '4k':  '2560px'
+};
+
+let commonSizes = {
+  'bar':     '60px',
+  'tile':    '80px',
+  'sidenav': '240px',
+  'spanel':  '260px',
+  'mpanel':  '320px',
+  'panel':   '360px'
+};
+
 module.exports = {
   content:  [
     './scss/**/*.scss',
@@ -27,10 +45,8 @@ module.exports = {
   darkMode:    'class',
   theme:       {
     colors:     {
-
-      bg:     '#F7F9FC',
-      darkBg: '#191D23',
-
+      bg:          '#F7F9FC',
+      darkBg:      '#191D23',
       dark:        {
         '50':    '#f8fafc',
         '100':   '#f1f5f9',
@@ -83,18 +99,15 @@ module.exports = {
         500: '#81e7ff',
         900: '#157A77'
       },
-
-      txt: {
+      txt:             {
         900: 'rgba(0, 0, 0, 1)',
         800: 'rgba(0, 0, 0, 0.87)',
         600: 'rgba(0, 0, 0, 0.60)',
         400: 'rgba(0, 0, 0, 0.40)'
       },
-
-      transparent: 'transparent',
-
-      'white': '#FFFFFF',
-      'black': '#000000',
+      transparent:     'transparent',
+      'white':         '#FFFFFF',
+      'black':         '#000000',
 
       'error':   '#ED546D',
       'info':    '#7DD3FC',
@@ -113,39 +126,19 @@ module.exports = {
       'md':  '15px',
       'lg':  '20px',
       'xl':  '25px',
-
-      'bar':     '60px',
-      'tile':    '80px',
-      'sidenav': '240px',
-      'spanel':  '250px',
-      'mpanel':  '320px',
-      'panel':   '360px'
+      ...commonSizes
     },
-    screens:    {
-      'sm':  '360px',
-      'smp': '480px',
-      'md':  '768px',
-      'lg':  '1100px',
-      'hd':  '1440px',
-      '4k':  '2560px'
-    },
-    containers: {
-      'sm':  '360px',
-      'smp': '480px',
-      'md':  '768px',
-      'lg':  '1100px',
-      'hd':  '1440px',
-      '4k':  '2560px'
-    },
+    screens:    containers,
+    containers: containers,
     fontSize:   {
-      xs: ['12px', {lineHeight: '18px'}],
-      sm: ['13px', {lineHeight: '18px'}],
-      base: ['14px', {lineHeight: '18px'}],
-      lg: ['14px', {lineHeight: '21px'}],
-      xl: ['16px', {lineHeight: '20px'}],
+      xs:    ['12px', {lineHeight: '18px'}],
+      sm:    ['13px', {lineHeight: '18px'}],
+      base:  ['14px', {lineHeight: '18px'}],
+      lg:    ['14px', {lineHeight: '21px'}],
+      xl:    ['16px', {lineHeight: '20px'}],
       '2xl': ['18px', {lineHeight: '21px'}],
       '3xl': ['20px', {lineHeight: '24px'}],
-      '4xl': ['24px', {lineHeight: '29px'}],
+      '4xl': ['24px', {lineHeight: '29px'}]
     },
     extend:     {
       lineHeight:  {
@@ -159,23 +152,15 @@ module.exports = {
         'nav': '5px 0 40px #000000'
       },
       maxWidth:    {
-        'bar':     '60px',
-        'sidenav': '240px',
-        'spanel':  '250px',
-        'mpanel':  '320px',
-        'panel':   '360px',
-        '50p':     '50%',
-        '70p':     '70%'
+        '50p': '50%',
+        '70p': '70%',
+        ...commonSizes
       },
       minWidth:    {
-        'bar':     '60px',
-        'sidenav': '240px',
-        'spanel':  '250px',
-        'mpanel':  '320px',
-        'panel':   '360px'
+        ...commonSizes
       },
       minHeight:   {
-        'bar': '60px'
+        ...commonSizes
       },
       borderWidth: {
         DEFAULT: '1px',

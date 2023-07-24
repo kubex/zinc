@@ -100,7 +100,7 @@ module.exports = {
       'info':    '#7DD3FC',
       'warning': '#FF6600',
       'success': '#3CD8BB',
-      grey: {
+      grey:      {
         400: '#7F8090'
       }
     },
@@ -138,14 +138,14 @@ module.exports = {
       '4k':  '2560px'
     },
     fontSize:   {
-      xs: ['11px', {lineHeight: '13px'}],
-      sm: ['12px', {lineHeight: '15px'}],
-      md: ['13px', {lineHeight: '17px'}],
-      lg: ['15px', {lineHeight: '21px'}],
-
-      caption: ['13px', {lineHeight: '20px', fontWeight: '500'}],
-      navitem: ['14px', {lineHeight: '36px'}],
-      title:   ['24px', {lineHeight: '40px', fontWeight: '500'}]
+      xs: ['12px', {lineHeight: '18px'}],
+      sm: ['13px', {lineHeight: '18px'}],
+      base: ['14px', {lineHeight: '18px'}],
+      lg: ['14px', {lineHeight: '21px'}],
+      xl: ['16px', {lineHeight: '20px'}],
+      '2xl': ['18px', {lineHeight: '21px'}],
+      '3xl': ['20px', {lineHeight: '24px'}],
+      '4xl': ['24px', {lineHeight: '29px'}],
     },
     extend:     {
       lineHeight:  {

@@ -1,16 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 
-const screens = [
-  'sm',
-  'smp',
-  'md',
-  'lg',
-  'hd',
-  '4k'
-];
-
-let containers = {
+const containers = {
   'sm':  '360px',
   'smp': '480px',
   'md':  '768px',
@@ -18,8 +9,8 @@ let containers = {
   'hd':  '1440px',
   '4k':  '2560px'
 };
-
-let commonSizes = {
+const screens = Object.keys(containers);
+const commonSizes = {
   'bar':     '60px',
   'tile':    '80px',
   'sidenav': '240px',

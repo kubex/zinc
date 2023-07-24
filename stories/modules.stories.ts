@@ -115,16 +115,29 @@ export const Default = () =>
         <zn-panel caption="Latest Notes">
           <button slot="actions">Add a Note</button>
 
-          <zn-tile caption="by Mark Neale (CSA)">
-            Every interaction and change to a contact is recorded in this timeline. Each event is individually
-            interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
-            collections.
-          </zn-tile>
-          <zn-tile caption="by Mark Neale (CSA)">
-            Every interaction and change to a contact is recorded in this timeline. Each event is individually
-            interactive, has easily scanned breadcrumbs, and live-links to any related contacts or
-            collections.
-          </zn-tile>
+          <zn-note>
+            <span slot="caption">by Mark Neale (CSA)</span>
+            <span slot="date">May 24th 2023 @ 14:21</span>
+
+            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+              in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+              are going to use a passage of Lorem Ipsum.</p>
+
+            <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
+              Ipsum or randomised words which don't look even slightly believable.</p>
+          </zn-note>
+
+          <zn-note>
+            <span slot="caption">by Mark Neale (CSA)</span>
+            <span slot="date">May 24th 2023 @ 14:21</span>
+
+            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+              in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+              are going to use a passage of Lorem Ipsum.</p>
+
+            <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
+              Ipsum or randomised words which don't look even slightly believable.</p>
+          </zn-note>
 
         </zn-panel>
 

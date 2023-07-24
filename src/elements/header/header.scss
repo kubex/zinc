@@ -37,6 +37,7 @@
 
   .breadcrumb {
     @apply block text-txt-400 w-full py-xxs;
+    padding-top:10px;
   }
 
   .breadcrumb:empty {
@@ -46,6 +47,7 @@
   h1 {
     @apply text-title grow;
     @apply text-primary-800;
+    line-height: 20px;
 
   }
 
@@ -58,14 +60,18 @@
   }
 
   ul.header-nav {
-    @apply box-border flex basis-full gap-lg pt-xs;
+    @apply box-border flex basis-full gap-[30px] pt-xs;
 
     li {
 
       @apply text-navitem font-semibold relative;
+      @apply text-dark-600 text-opacity-80;
 
       a {
-        @apply block cursor-pointer pb-xs px-xs;
+        @apply block cursor-pointer;
+        padding-bottom: 4px;
+        line-height: 30px;
+        padding-top: 10px;
       }
 
       &::before {

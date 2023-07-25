@@ -1,0 +1,54 @@
+@tailwind base;
+@import "../../scss/variables";
+
+:host > div {
+  @apply border-b border-border;
+}
+
+:host(:not([expanded])) {
+  @apply cursor-pointer;
+}
+
+:host([expanded]) .expand {
+  transform: rotate(180deg);
+}
+
+.header {
+  @apply flex flex-row justify-between cursor-pointer overflow-hidden p-md items-center;
+
+  .caption {
+    @apply text-xl font-semibold mb-sm;
+  }
+
+  .summary {
+    @apply text-xs font-medium text-txt-600;
+  }
+
+  .label {
+    @apply text-xs font-medium text-txt-600;
+  }
+
+
+  &__right {
+    @apply flex flex-row items-center;
+  }
+}
+
+.content {
+  @apply p-md pt-0;
+}
+
+.content {
+  transition: .1s all ease-out;
+}
+
+:host(:not([expanded])) .content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.expand {
+  @apply ml-md;
+}

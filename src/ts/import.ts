@@ -1,5 +1,7 @@
 import '../scss/layout.scss'
 
+
+import '../elements/accordion/accordion'
 import '../elements/columns/columns'
 import '../elements/panel/panel'
 import '../elements/page/page'

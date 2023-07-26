@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  ::slotted(*) {
+    flex-grow: 1;
+    min-width: 260px;
+  }
+
+  ::slotted(:not([span])) {
+    flex-basis: 100%;
+  }
+
+  ::slotted([span='1']) {
+    flex-basis: calc(100% / 4) !important;
+  }
+
+  ::slotted([span='2']) {
+    flex-basis: calc((100% / 2) - (20px)) !important;
+  }
+
+  ::slotted([span='3']) {
+    flex-basis: calc(100% - 20px) !important;
+  }
+}
+
+:host([columns='2']) {
+  ::slotted(*) {
+    flex-basis: calc((100% / 2) - 20px);
+  }
+}
+
+:host([columns='3']) {
+  ::slotted(*) {
+    flex-basis: calc((100% / 3) - 20px);
+  }
+}
+
+:host([columns='4']) {
+  ::slotted(*) {
+    flex-basis: calc((100% / 4) - 20px);
+  }
+}

@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-family: var(--font-family);
+    width: 100%;
+    padding: var(--padding-sm) 0;
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+  }
+
+  input {
+    font-family: var(--font-family);
+    font-weight: 500;
+    color: #7F8090;
+    display: flex;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #F7F7F7;
+    padding: 15px 18px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+  }
+
+  .error {
+    font-family: var(--font-family);
+    margin-left: auto;
+    margin-top: 1px;
+    margin-right: 1px;
+    color: #7F8090;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 500;
+  }
+}
+
+:host([error]:not([error=""])) {
+  input {
+    border-color: var(--color-error);
+  }
+}

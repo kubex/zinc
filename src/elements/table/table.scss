@@ -4,10 +4,10 @@
 @tailwind screens;
 
 :host {
-  @apply max-w-full w-full overflow-hidden;
+  @apply max-w-full w-full overflow-hidden grid;
 
   > div {
-    @apply w-full max-w-full overflow-x-auto block;
+    @apply w-full max-w-full overflow-x-auto;
   }
 
   table {
@@ -48,19 +48,27 @@
     @apply border-b;
   }
 
+  tr:last-of-type td {
+    @apply border-none;
+  }
+
+  td {
+    @apply text-sm;
+  }
+
   th, td {
-    @apply py-md px-md whitespace-nowrap border-border;
+    @apply py-lg px-md whitespace-nowrap border-border text-txt-600;
   }
 
   th {
-    @apply pb-sm;
+    @apply pb-lg text-txt-900;
   }
 
   td:first-child > div {
     @apply flex items-center gap-x-md;
 
     span {
-      @apply block;
+      @apply block text-txt-900;
     }
 
     .caption:empty, .summary:empty {
@@ -68,7 +76,7 @@
     }
 
     .caption {
-      @apply font-medium;
+      @apply font-semibold text-black;
     }
 
     .summary {
@@ -82,14 +90,6 @@
 
   tr, td {
     margin: 0;
-  }
-
-  tbody tr td:last-of-type {
-    @apply border-r;
-  }
-
-  tbody tr td:first-of-type {
-    @apply border-l;
   }
 
   tbody tr:first-of-type td {

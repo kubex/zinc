@@ -141,6 +141,10 @@ export const Default = () =>
 
         </zn-panel>
 
+        <zn-panel caption="Table Name">
+          <zn-table selectable="" borders=""
+                    data="{&quot;header&quot;:[{&quot;name&quot;:&quot;Transaction&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Date / Time&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Transacted&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Requested&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Gateway&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Gateway&quot;,&quot;display&quot;:&quot;&quot;}],&quot;items&quot;:[{&quot;caption&quot;:&quot;TRANSACTION_TYPE_CAPTURE&quot;,&quot;summary&quot;:&quot;PENDING&quot;,&quot;icon&quot;:&quot;&quot;,&quot;data&quot;:[&quot;2023-06-26 16:16:09&quot;,&quot;1.00 GBP&quot;,&quot;1.00 GBP&quot;,&quot;paysafe-connector&quot;,&quot;paysafe&quot;]},{&quot;caption&quot;:&quot;TRANSACTION_TYPE_AUTHORIZE&quot;,&quot;summary&quot;:&quot;COMPLETED&quot;,&quot;icon&quot;:&quot;&quot;,&quot;data&quot;:[&quot;2023-06-26 16:15:13&quot;,&quot;1.00 GBP&quot;,&quot;1.00 GBP&quot;,&quot;paysafe-connector&quot;,&quot;paysafe&quot;]}]}"></zn-table>
+        </zn-panel>
 
       </zn-page>
 

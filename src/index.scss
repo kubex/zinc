@@ -1,21 +1,10 @@
-@use './variables';
+@use "variables";
+@use "sass:meta";
 
 html, :host, .light {
-  --font-family: 'Inter', sans-serif;
-
-  @each $key, $value in variables.$sizes {
-    --#{$key}: #{$value};
+  @each $name, $value in meta.module-variables("variables") {
+    --#{$name}: #{$value};
   }
-
-  --container: 1440;
-
-  --padding-sm: 0.25rem;
-  --color-primary: #6836F5;
-  --color-primary-dark: #4924b9;
-  --color-error: #ED546D;
-  --color-text: #1F2937;
-  --color-body: #fff;
-
 }
 
 .dark {

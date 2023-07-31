@@ -1,5 +1,5 @@
 @use "sass:map";
-@use '../variables';
+@use '../scss';
 
 :host {
   box-sizing: border-box;
@@ -17,7 +17,7 @@
 
     &.with-side {
       padding-top: var(--bar);
-      @container (min-width: #{map.get(variables.$sizes, 'sm')}) {
+      @include scss.container(scss.$screens-sm) {
         padding-top: 0;
         flex-direction: row-reverse;
       }
@@ -29,7 +29,7 @@
   }
 }
 
-@container (max-width: #{map.get(variables.$sizes, 'sm')}) {
+@include scss.container(scss.$screens-sm) {
   :host {
     #page-content {
       background-color: blue;

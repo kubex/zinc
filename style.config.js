@@ -70,7 +70,7 @@ _.forEach(theme, function (value, key)
 });
 
 const limitedFilter = (token) =>
-  ["colors", "spacing", "fontFamily", "fontSize"].includes(token.attributes.category);
+  ["colors", "spacing", "fontFamily", "fontSize", "screens"].includes(token.attributes.category);
 
 module.exports = {
   tokens,
@@ -80,7 +80,7 @@ module.exports = {
       buildPath:      'src/',
       files:          [
         {
-          destination: '_variables.scss',
+          destination: 'scss/_variables.scss',
           format:      'scss/variables',
           filter:      limitedFilter
         }

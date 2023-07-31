@@ -3,4 +3,4 @@ import './Input';
 import './Group';
 import './Page';
 
-import 'index.scss';
+import 'src/scss/index.scss';

@@ -1,0 +1,28 @@
+$font-family-sans: 'Roboto', sans-serif;
+
+$themes: (
+  default: (
+    color-body: #F9F9F9,
+    color-text: #343434,
+    color-primary: #2563EB,
+    color-secondary: #4fb46b,
+  ),
+  dark: (
+    color-body: #343434,
+    color-text: #F9F9F9,
+    color-primary: #4b5f86,
+    color-secondary: #4fb46b,
+  ),
+);
+
+@function deep-map-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+
+@function t($theme-name, $component) {
+  @return deep-map-get($themes, $theme-name, $component);
+}

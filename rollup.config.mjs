@@ -15,22 +15,24 @@ const commonPlugins = [
   production && terser({format: {comments: false}}) // minify, but only in production
 ];
 
+const output = {
+  file:      'dist/main.min.js',
+  name:      'main.js',
+  format:    'iife',
+  sourcemap: !production
+};
 
-export default {
+const main = {
   input:   'src/index.ts',
-  output:  {
-    file:      'dist/main.min.js',
-    name:      'main.js',
-    format:    'iife', // immediately-invoked function expression — suitable for <script> tags
-    sourcemap: !production
-  },
+  output:  output,
   plugins: [
     ...commonPlugins,
-    postcss(
-      {
-        extract:   false,
-        minimize:  production,
-        sourceMap: !production,
-      })
+    postcss({
+      extract:   false,
+      minimize:  production,
+      sourceMap: !production
+    })
   ]
 };
+
+export default main;

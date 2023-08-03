@@ -12,12 +12,13 @@ export class Page extends LitElement {
 
   protected render(): unknown {
     let aside = html``;
+    let nav = html``;
     let mainClass = "";
 
-    if (this.querySelectorAll('[slot="aside"]').length > 0) {
+    if (this.querySelectorAll('[slot="side"]').length > 0) {
       mainClass = "with-side";
       aside = html`
-        <div class="aside">
+        <div class="pageside">
           ${this._expander()}
           <div class="content">
             <slot name="side"></slot>
@@ -28,7 +29,7 @@ export class Page extends LitElement {
 
     if (this.querySelectorAll('[slot="nav"]').length > 0) {
       mainClass = "with-nav";
-      aside = html`
+      nav = html`
         <div class="pageside">
           ${this._expander()}
           <div class="content">
@@ -40,6 +41,7 @@ export class Page extends LitElement {
 
     return html`
       <div class="${mainClass}">
+        ${nav}
         <div id="page-content">
           <slot></slot>
         </div>

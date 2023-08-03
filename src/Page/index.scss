@@ -13,26 +13,162 @@
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    max-width: calc(var(--container) + px);
+    max-width: var(--hd);
 
     &.with-side {
       padding-top: var(--bar);
-      @include scss.container(scss.$screens-sm) {
+      flex-direction: column;
+      @include scss.csmp {
         padding-top: 0;
-        flex-direction: row-reverse;
+        flex-direction: column-reverse;
+      }
+    }
+
+    &.with-nav {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &.with-side, &.with-nav {
+      display: flex;
+      @include scss.csmp {
+        flex-direction: row;
       }
     }
   }
 
   #page-content {
-    background-color: red;
+    @extend %zn-pad;
+    @extend %zn-gap;
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: fit-content;
+    max-width: 100%;
+
+    @include scss.csmp {
+      flex-grow: 1;
+    }
+
+    @include scss.cmd {
+      max-width: 100%;
+    }
+  }
+
+  .pageside {
+    height: var(--bar);
+    min-height: var(--bar);
+    max-height: var(--bar);
+    width: 100%;
+    overflow: visible;
+
+    @include scss.csmp {
+      max-height: 100%;
+      min-width: var(--bar);
+      max-width: var(--bar);
+      flex-grow: 1;
+      height: auto;
+      top: 0;
+      position: relative;
+      display: flex;
+    }
+
+    @include scss.clg {
+      min-width: var(--mpanel);
+      max-width: var(--mpanel);
+      width: var(--mpanel);
+    }
+
+    > div {
+      position: absolute;
+      background: white;
+      flex-grow: 1;
+      overflow-y: auto;
+
+      @include scss.clg {
+        background: #F7F9FC;
+      }
+
+      &.content {
+        display: none;
+        overflow-y: auto;
+        max-width: var(--bar);
+
+        @include scss.csmp {
+          padding-top: map.get(scss.$spacing, 'md');
+          padding-bottom: map.get(scss.$spacing, 'md');
+        }
+
+        @include scss.clg() {
+          padding-top: map.get(scss.$spacing, 'lg');
+          padding-bottom: map.get(scss.$spacing, 'lg');
+          padding-right: map.get(scss.$spacing, 'lg');
+          min-width: var(--mpanel);
+          display: flex;
+          flex-direction: column;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          transition: all 500ms ease-in-out;
+        }
+
+        @include scss.chd {
+          padding-top: map.get(scss.$spacing, 'xl');
+          padding-bottom: map.get(scss.$spacing, 'xl');
+          padding-right: map.get(scss.$spacing, 'xl');
+        }
+
+        ::slotted(*) {
+          display: flex;
+          flex-direction: column;
+          gap: map.get(scss.$spacing, 'lg');;
+        }
+      }
+
+      &.expander {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        @include scss.csmp {
+          flex-direction: column;
+          justify-content: start;
+          border-bottom: 1px solid;
+          height: 100%;
+          width: var(--bar);
+        }
+      }
+    }
   }
 }
 
-@include scss.container(scss.$screens-sm) {
-  :host {
-    #page-content {
-      background-color: blue;
+:host([open]) {
+  @container (max-width=#{map.get(scss.$containers, 'lg')}) {
+    > div .pageside {
+      position: unset;
+
+      > div.content {
+        display: flex;
+        padding-top: map.get(scss.$spacing, 'lg');
+        padding-bottom: map.get(scss.$spacing, 'lg');
+        width: 100%;
+        max-width: 100%;
+
+        @include scss.csmp {
+          max-width: var(--mpanel);
+          min-width: var(--mpanel);
+          overflow-x: hidden;
+          z-index: 20;
+          top: 0;
+        }
+      }
+
+      > div.expander {
+
+      }
     }
   }
 }

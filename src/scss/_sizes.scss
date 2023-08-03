@@ -1,0 +1,121 @@
+@use 'sass:map';
+
+$containers: (
+  sm: '360px',
+  smp: '480px',
+  md: '768px',
+  lg: '1100px',
+  hd: '1440px',
+  '4k': '2560px'
+);
+
+$commonSizes: (
+  bar: '60px',
+  tile: '80px',
+  sidenav: '240px',
+  spanel: '260px',
+  mpanel: '320px',
+  panel: '360px'
+);
+
+$spacing: (
+  px: '1px',
+  xxs: '3px',
+  xs: '5px',
+  sm: '10px',
+  md: '15px',
+  lg: '20px',
+  xl: '25px',
+);
+
+@mixin sm {
+  @media (min-width: map.get($containers, sm)) {
+    @content;
+  }
+}
+
+@mixin smp {
+  @media (min-width: map.get($containers, smp)) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: map.get($containers, md)) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: map.get($containers, lg)) {
+    @content;
+  }
+}
+
+@mixin hd {
+  @media (min-width: map.get($containers, hd)) {
+    @content;
+  }
+}
+
+@mixin csm {
+  @container (min-width: map.get($containers, sm)) {
+    @content;
+  }
+}
+
+@mixin csmp {
+  @container (min-width: map.get($containers, smp)) {
+    @content;
+  }
+}
+
+@mixin cmd {
+  @container (min-width: map.get($containers, md)) {
+    @content;
+  }
+}
+
+@mixin clg {
+  @container (min-width: map.get($containers, lg)) {
+    @content;
+  }
+}
+
+@mixin chd {
+  @container (min-width: map.get($containers, hd)) {
+    @content;
+  }
+}
+
+%zn-pad {
+  padding: map.get($spacing, xs);
+
+  @include csmp {
+    padding: map.get($spacing, sm);
+  }
+
+  @include cmd {
+    padding: map.get($spacing, md);
+  }
+
+  @include clg {
+    padding: map.get($spacing, lg);
+  }
+}
+
+%zn-gap {
+  gap: map.get($spacing, xxs);
+
+  @include csmp {
+    gap: map.get($spacing, sm);
+  }
+
+  @include cmd {
+    gap: map.get($spacing, md);
+  }
+
+  @include clg {
+    gap: map.get($spacing, lg);
+  }
+}

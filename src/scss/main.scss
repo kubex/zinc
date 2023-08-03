@@ -1,0 +1,53 @@
+@use "sass:map";
+@use "./index";
+
+html, :host {
+  --font-family-sans: #{index.$font-family-sans};
+  --color-body: #{index.t(default, 'color-body')};
+  --color-text: #{index.t(default, 'color-text')};
+  --color-primary: #{index.t(default, 'color-primary')};
+  --color-secondary: #{index.t(default, 'color-secondary')};
+
+  --bar: map.get(index.$commonSizes, bar);
+  --tile: map.get(index.$commonSizes, tile);
+  --sidenav: map.get(index.$commonSizes, sidenav);
+  --spanel: map.get(index.$commonSizes, spanel);
+  --mpanel: map.get(index.$commonSizes, mpanel);
+  --panel: map.get(index.$commonSizes, panel);
+
+  --sm: map.get(index.$containers, sm);
+  --smp: map.get(index.$containers, smp);
+  --md: map.get(index.$containers, md);
+  --lg: map.get(index.$containers, lg);
+  --hd: map.get(index.$containers, hd);
+  --4k: map.get(index.$containers, '4k');
+}
+
+[t="dark"] {
+  --color-body: #{index.t(dark, 'color-body')};
+  --color-text: #{index.t(dark, 'color-text')};
+  --color-primary: #{index.t(dark, 'color-primary')};
+  --color-secondary: #{index.t(dark, 'color-secondary')};
+}
+
+html, body {
+  font-family: var(--font-family-sans);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--color-text);
+  background-color: var(--color-body);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}

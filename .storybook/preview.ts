@@ -2,11 +2,21 @@
 import React from 'react';
 import type {Preview} from "@storybook/web-components";
 import {DocsContainer} from '@storybook/addon-docs';
-import {useDarkMode} from 'storybook-dark-mode';
+import {DecoratorHelpers, withThemeByDataAttribute} from "@storybook/addon-styling";
 import {themes} from '@storybook/theming';
 
-import '../src/index.scss';
+import '../src/scss/main.scss';
 
+export const decorators = [
+  withThemeByDataAttribute({
+    themes: {
+      default: 'default',
+      dark: 'dark',
+    },
+    defaultTheme: 'default',
+    attributeName: 't',
+  })
+];
 
 const preview: Preview = {
   parameters: {
@@ -17,14 +27,13 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
-    darkMode: {
-      darkClass: 'dark',
-      lightClass: 'light',
-      stylePreview: true,
-    },
     docs: {
-      container: (context: any) => {
-        const isDark = useDarkMode();
+      container: (context) => {
+        console.log('context', context)
+        if (!context.theme) {
+          return React.createElement(DocsContainer, {...context});
+        }
+        const isDark = DecoratorHelpers.pluckThemeFromContext(context) === 'dark';
         const props = {
           ...context,
           theme: isDark ? themes.dark : themes.light,
@@ -35,4 +44,5 @@ const preview: Preview = {
     },
   },
 };
+
 export default preview;

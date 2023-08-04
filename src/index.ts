@@ -5,3 +5,4 @@ import './Group';
 import './Page';
 import './Icon';
 import './Header';
+import './Panel';

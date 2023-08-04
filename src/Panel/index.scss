@@ -1,0 +1,135 @@
+@use "sass:map";
+@use "../scss";
+
+:host {
+  --row-count: 1;
+  overflow: hidden;
+  flex-grow: 1;
+
+  @extend %scrollbars;
+
+  > div {
+    padding: map.get(scss.$spacing, 'md');
+    border-width: 1px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: map.get(scss.$commonSizes, 'panel');
+    min-width: map.get(scss.$commonSizes, 'panel');
+    background-color: var(--color-panel);
+
+
+    @include scss.m(smp) {
+      border-radius: 10px;
+    }
+
+    .header {
+      display: flex;
+      justify-items: center;
+      padding-bottom: map.get(scss.$spacing, 'sm');
+
+      span {
+        font-weight: 500;
+        flex-grow: 1;
+        color: var(--color-primary);
+      }
+    }
+
+    div.nav {
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 100%;
+
+      ul {
+        display: flex;
+        margin: map.get(scss.$spacing, 'xs') 0 0;
+        padding: 0;
+        gap: map.get(scss.$spacing, 'md');
+        border-bottom-width: 1px;
+        width: 100%;
+
+        li {
+          font-weight: 600;
+          padding-bottom: map.get(scss.$spacing, 'xs');
+          border-bottom-width: 3px;
+          border-color: transparent;
+          font-size: 80%;
+
+          &:hover, &.active {
+            border-color: var(--color-primary);
+            cursor: pointer;
+            margin-bottom: -2px;
+          }
+        }
+      }
+    }
+
+    .body {
+      overflow-y: auto;
+      flex-grow: 1;
+
+      > * {
+        border-top-width: 1px;
+
+        &:first-of-type {
+          border-top-width: 0;
+        }
+      }
+    }
+
+    .footer {
+      display: block;
+      padding-top: map.get(scss.$spacing, 'md');
+      border-top-width: 1px;
+      font-weight: 500;
+    }
+
+    .header:empty, .footer:empty {
+      display: none;
+    }
+  }
+}
+
+:host([rows]) {
+  > div {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .header {
+    padding-top: map.get(scss.$spacing, 'md');
+  }
+
+  .footer {
+    padding-bottom: map.get(scss.$spacing, 'md');
+  }
+}
+
+:host([rows]:not([rows=""])) {
+  .body {
+    $tile: map.get(scss.$commonSizes, 'tile');
+    max-height: calc($tile * var(--row-count, 50));
+    height: calc($tile * var(--row-count));
+  }
+}
+
+:host([single]) > div {
+  width: 100%;
+  border-width: 1px;
+  min-width: 0;
+
+  & > div.nav {
+    display: none;
+  }
+}
+
+:host([stat]) > div {
+  padding: map.get(scss.$spacing, 'md');
+}
+
+:host([small]) > div {
+  min-width: map.get(scss.$commonSizes, 'spanel');
+  flex-basis: map.get(scss.$commonSizes, 'spanel');
+  background-color: transparent;
+  border-width: 0;
+}

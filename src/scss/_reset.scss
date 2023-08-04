@@ -1,0 +1,55 @@
+html, body {
+  line-height: 1.5;
+  text-size-adjust: 100%;
+  font-family: var(--font-family-sans);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  box-sizing: border-box;
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  color: var(--color-text);
+  background-color: var(--color-body);
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+*, *:before, *:after {
+  border: 0 solid var(--color-border);
+  box-sizing: inherit;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}

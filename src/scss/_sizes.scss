@@ -28,78 +28,51 @@ $spacing: (
   xl: '25px',
 );
 
-@mixin sm {
-  @media (min-width: map.get($containers, sm)) {
-    @content;
+@mixin c($min, $max: null) {
+  @if $min and $max {
+    @container (min-width: map.get($containers, $min)) and (max-width: map.get($containers, $max)) {
+      @content;
+    }
+  } @else if $min {
+    @container (min-width: map.get($containers, $min)) {
+      @content;
+    }
+  } @else if $max {
+    @container (max-width: map.get($containers, $max)) {
+      @content;
+    }
   }
 }
 
-@mixin smp {
-  @media (min-width: map.get($containers, smp)) {
-    @content;
+@mixin m($min, $max: null) {
+  @if $min and $max {
+    @media (min-width: map.get($containers, $min)) and (max-width: map.get($containers, $max)) {
+      @content;
+    }
+  } @else if $min {
+    @media (min-width: map.get($containers, $min)) {
+      @content;
+    }
+  } @else if $max {
+    @media (max-width: map.get($containers, $max)) {
+      @content;
+    }
   }
 }
 
-@mixin md {
-  @media (min-width: map.get($containers, md)) {
-    @content;
-  }
-}
-
-@mixin lg {
-  @media (min-width: map.get($containers, lg)) {
-    @content;
-  }
-}
-
-@mixin hd {
-  @media (min-width: map.get($containers, hd)) {
-    @content;
-  }
-}
-
-@mixin csm {
-  @container (min-width: map.get($containers, sm)) {
-    @content;
-  }
-}
-
-@mixin csmp {
-  @container (min-width: map.get($containers, smp)) {
-    @content;
-  }
-}
-
-@mixin cmd {
-  @container (min-width: map.get($containers, md)) {
-    @content;
-  }
-}
-
-@mixin clg {
-  @container (min-width: map.get($containers, lg)) {
-    @content;
-  }
-}
-
-@mixin chd {
-  @container (min-width: map.get($containers, hd)) {
-    @content;
-  }
-}
 
 %zn-pad {
   padding: map.get($spacing, xs);
 
-  @include csmp {
+  @include c(smp) {
     padding: map.get($spacing, sm);
   }
 
-  @include cmd {
+  @include c(md) {
     padding: map.get($spacing, md);
   }
 
-  @include clg {
+  @include c(lg) {
     padding: map.get($spacing, lg);
   }
 }
@@ -107,15 +80,15 @@ $spacing: (
 %zn-gap {
   gap: map.get($spacing, xxs);
 
-  @include csmp {
+  @include c(smp) {
     gap: map.get($spacing, sm);
   }
 
-  @include cmd {
+  @include c(md) {
     gap: map.get($spacing, md);
   }
 
-  @include clg {
+  @include c(lg) {
     gap: map.get($spacing, lg);
   }
 }

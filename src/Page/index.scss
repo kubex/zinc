@@ -18,7 +18,7 @@
     &.with-side {
       padding-top: var(--bar);
       flex-direction: column;
-      @include scss.csmp {
+      @include scss.c(smp) {
         padding-top: 0;
         flex-direction: column-reverse;
       }
@@ -31,7 +31,7 @@
 
     &.with-side, &.with-nav {
       display: flex;
-      @include scss.csmp {
+      @include scss.c(smp) {
         flex-direction: row;
       }
     }
@@ -47,11 +47,11 @@
     height: fit-content;
     max-width: 100%;
 
-    @include scss.csmp {
+    @include scss.c(smp) {
       flex-grow: 1;
     }
 
-    @include scss.cmd {
+    @include scss.c(md) {
       max-width: 100%;
     }
   }
@@ -63,7 +63,7 @@
     width: 100%;
     overflow: visible;
 
-    @include scss.csmp {
+    @include scss.c(smp) {
       max-height: 100%;
       min-width: var(--bar);
       max-width: var(--bar);
@@ -74,7 +74,7 @@
       display: flex;
     }
 
-    @include scss.clg {
+    @include scss.c(lg) {
       min-width: var(--mpanel);
       max-width: var(--mpanel);
       width: var(--mpanel);
@@ -86,7 +86,7 @@
       flex-grow: 1;
       overflow-y: auto;
 
-      @include scss.clg {
+      @include scss.c(lg) {
         background: #F7F9FC;
       }
 
@@ -95,12 +95,12 @@
         overflow-y: auto;
         max-width: var(--bar);
 
-        @include scss.csmp {
+        @include scss.c(smp) {
           padding-top: map.get(scss.$spacing, 'md');
           padding-bottom: map.get(scss.$spacing, 'md');
         }
 
-        @include scss.clg() {
+        @include scss.c(lg) {
           padding-top: map.get(scss.$spacing, 'lg');
           padding-bottom: map.get(scss.$spacing, 'lg');
           padding-right: map.get(scss.$spacing, 'lg');
@@ -113,7 +113,7 @@
           transition: all 500ms ease-in-out;
         }
 
-        @include scss.chd {
+        @include scss.c(hd) {
           padding-top: map.get(scss.$spacing, 'xl');
           padding-bottom: map.get(scss.$spacing, 'xl');
           padding-right: map.get(scss.$spacing, 'xl');
@@ -133,7 +133,7 @@
         justify-content: center;
         overflow: hidden;
 
-        @include scss.csmp {
+        @include scss.c(smp) {
           flex-direction: column;
           justify-content: start;
           border-bottom: 1px solid;
@@ -146,7 +146,7 @@
 }
 
 :host([open]) {
-  @container (max-width=#{map.get(scss.$containers, 'lg')}) {
+  @include scss.c($min: false, $max: lg) {
     > div .pageside {
       position: unset;
 
@@ -157,7 +157,7 @@
         width: 100%;
         max-width: 100%;
 
-        @include scss.csmp {
+        @include scss.c(smp) {
           max-width: var(--mpanel);
           min-width: var(--mpanel);
           overflow-x: hidden;

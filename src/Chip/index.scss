@@ -1,0 +1,37 @@
+@use "sass:map";
+@use "../scss";
+
+:host {
+  display: inline-block;
+  border-radius: 5px;
+  padding: map.get(scss.$spacing, xs) map.get(scss.$spacing, sm);
+  text-align: center;
+  font-weight: 600;
+  width: fit-content;
+  margin: 1px;
+  color: white;
+  text-transform: uppercase;
+  font-size: 80%;
+
+  // Todo add tertiary
+  @apply bg-tertiary-500 border-tertiary-500;
+}
+
+:host([error]) {
+  @apply bg-error/10 border-px border-error text-error #{!important};
+}
+
+:host([info]) {
+  @apply bg-info/10 border-px border-info text-info #{!important};
+}
+
+:host([warning]) {
+  @apply bg-warning/10 border-px border-warning text-warning #{!important};
+}
+
+:host([success]) {
+  color: var(--color-success);
+  border-color: var(--color-success);
+  border-width: 1px;
+  background-color: var(--color-success)10;
+}

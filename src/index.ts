@@ -9,3 +9,4 @@ import './Panel';
 import './Tile';
 import './Menu';
 import './Alert';
+import './Chip';

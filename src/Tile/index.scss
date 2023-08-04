@@ -1,0 +1,143 @@
+@use "sass:map";
+@use "../scss";
+
+zn-tile:first-of-type, :host(:first-of-type) {
+  border-top-width: 0;
+}
+
+zn-tile, :host {
+  border-top-width: 1px;
+}
+
+:host {
+  container-type: inline-size;
+  display: flex;
+  height: map.get(scss.$commonSizes, tile);
+  width: 100%;
+  align-items: center;
+  overflow: hidden;
+
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    padding-top: map.get(scss.$spacing, sm);
+    padding-bottom: map.get(scss.$spacing, sm);
+    gap: map.get(scss.$spacing, md);
+
+    > * {
+      height: 100%;
+      display: flex;
+      justify-items: center;
+      flex-direction: column;
+    }
+
+    slot[name="primary"] {
+      flex-basis: 130px;
+      min-width: 110px;
+      width: 110px;
+    }
+
+    zn-prop, slot[name="chip"] {
+      display: none;
+      flex-grow: 1;
+
+      @include scss.c(sm) {
+        display: flex;
+      }
+    }
+
+    .summary {
+      flex-grow: 1;
+      flex-shrink: 1;
+      min-width: 190px;
+      width: fit-content;
+      flex-basis: 210px;
+    }
+
+    .caption {
+      // TODO font sizes
+    }
+
+    .caption[data-uri]:not([data-uri=""]) {
+      cursor: pointer;
+      color: var(--color-primary);
+    }
+
+    .description {
+      // TODO font colors
+    }
+
+    .caption, .description {
+      @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+    }
+
+    .extended {
+      display: none;
+      flex-grow: 1;
+      flex-shrink: 1;
+      overflow: hidden;
+      align-items: center;
+      gap: 50px 20px;
+      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+      grid-template-rows: 100% 0;
+
+      @include scss.c(smp) {
+        display: grid;
+        flex-basis: 50%;
+      }
+    }
+
+    slot[name="chip"] {
+      justify-items: center;
+      grid-column: span 2;
+    }
+
+    .actions {
+      max-width: 30px;
+      width: 30px;
+
+      zn-icon {
+        cursor: pointer;
+        padding: map.get(scss.$spacing, md);
+        border-radius: 100%;
+
+        &:hover {
+        }
+      }
+
+      zn-menu {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+  }
+}
+
+:host([child]) {
+  height: map.get(scss.$commonSizes, bar);
+
+  > div {
+    padding-left: map.get(scss.$spacing, xl);
+
+    .description {
+      display: none;
+    }
+  }
+}
+
+:host([right]) {
+  .summary {
+    text-align: right;
+  }
+
+  .summary.extend {
+    @include scss.c(smp) {
+      text-align: left;
+    }
+  }
+}

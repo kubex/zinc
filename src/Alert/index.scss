@@ -1,0 +1,44 @@
+@use "sass:map";
+@use "../scss";
+
+:host {
+  margin: map.get(scss.$spacing, md);
+}
+
+.alert {
+  text-align: center;
+
+  .icon {
+    display: inline-block;
+    padding: map.get(scss.$spacing, xs);
+    margin: map.get(scss.$spacing, md);
+    border-radius: 50%;
+    width: map.get(scss.$commonSizes, bar);
+    height: map.get(scss.$commonSizes, bar);
+  }
+
+  .title {
+    margin-bottom: map.get(scss.$spacing, sm);
+  }
+
+  .buttons {
+    margin-top: map.get(scss.$spacing, sm);
+    margin-bottom: map.get(scss.$spacing, sm);
+  }
+
+  .buttons slot {
+    display: inline-flex;
+    margin: map.get(scss.$spacing, md);
+    gap: map.get(scss.$spacing, sm);
+  }
+}
+
+:host([success]) {
+  .icon {
+    background-color: var(--color-success)/50;
+
+    > zn-icon {
+      color: var(--color-success);
+    }
+  }
+}

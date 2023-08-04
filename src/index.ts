@@ -8,3 +8,4 @@ import './Header';
 import './Panel';
 import './Tile';
 import './Menu';
+import './Alert';

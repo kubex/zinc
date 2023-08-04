@@ -1,3 +1,4 @@
+@use "../Page/index" as page;
 @use "sass:map";
 @use "./index";
 
@@ -7,20 +8,21 @@ html, :host {
   --color-text: #{index.t(default, 'color-text')};
   --color-primary: #{index.t(default, 'color-primary')};
   --color-secondary: #{index.t(default, 'color-secondary')};
+  --color-border: #{index.t(default, 'color-border')};
 
-  --bar: map.get(index.$commonSizes, bar);
-  --tile: map.get(index.$commonSizes, tile);
-  --sidenav: map.get(index.$commonSizes, sidenav);
-  --spanel: map.get(index.$commonSizes, spanel);
-  --mpanel: map.get(index.$commonSizes, mpanel);
-  --panel: map.get(index.$commonSizes, panel);
+  --bar: #{map.get(index.$commonSizes, bar)};
+  --tile: #{map.get(index.$commonSizes, tile)};
+  --sidenav: #{map.get(index.$commonSizes, sidenav)};
+  --spanel: #{map.get(index.$commonSizes, spanel)};
+  --mpanel: #{map.get(index.$commonSizes, mpanel)};
+  --panel: #{map.get(index.$commonSizes, panel)};
 
-  --sm: map.get(index.$containers, sm);
-  --smp: map.get(index.$containers, smp);
-  --md: map.get(index.$containers, md);
-  --lg: map.get(index.$containers, lg);
-  --hd: map.get(index.$containers, hd);
-  --4k: map.get(index.$containers, '4k');
+  --sm: #{map.get(index.$containers, sm)};
+  --smp: #{map.get(index.$containers, smp)};
+  --md: #{map.get(index.$containers, md)};
+  --lg: #{map.get(index.$containers, lg)};
+  --hd: #{map.get(index.$containers, hd)};
+  --4k: #{map.get(index.$containers, '4k')};
 }
 
 [t="dark"] {
@@ -28,6 +30,7 @@ html, :host {
   --color-text: #{index.t(dark, 'color-text')};
   --color-primary: #{index.t(dark, 'color-primary')};
   --color-secondary: #{index.t(dark, 'color-secondary')};
+  --color-border: #{index.t(dark, 'color-border')};
 }
 
 html, body {
@@ -49,5 +52,6 @@ html, body {
 }
 
 *, *:before, *:after {
+  border: 0 solid;
   box-sizing: inherit;
 }

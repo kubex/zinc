@@ -30,15 +30,15 @@ $spacing: (
 
 @mixin c($min, $max: null) {
   @if $min and $max {
-    @container (min-width: map.get($containers, $min)) and (max-width: map.get($containers, $max)) {
+    @container (min-width: #{map.get($containers, $min)}) and (max-width: #{map.get($containers, $max)}) {
       @content;
     }
   } @else if $min {
-    @container (min-width: map.get($containers, $min)) {
+    @container (min-width: #{map.get($containers, $min)}) {
       @content;
     }
   } @else if $max {
-    @container (max-width: map.get($containers, $max)) {
+    @container (max-width: #{map.get($containers, $max)}) {
       @content;
     }
   }
@@ -46,15 +46,15 @@ $spacing: (
 
 @mixin m($min, $max: null) {
   @if $min and $max {
-    @media (min-width: map.get($containers, $min)) and (max-width: map.get($containers, $max)) {
+    @media (min-width: #{map.get($containers, $min)}) and (max-width: #{map.get($containers, $max)}) {
       @content;
     }
   } @else if $min {
-    @media (min-width: map.get($containers, $min)) {
+    @media (min-width: #{map.get($containers, $min)}) {
       @content;
     }
   } @else if $max {
-    @media (max-width: map.get($containers, $max)) {
+    @media (max-width: #{map.get($containers, $max)}) {
       @content;
     }
   }
@@ -90,5 +90,30 @@ $spacing: (
 
   @include c(lg) {
     gap: map.get($spacing, lg);
+  }
+}
+
+
+%scrollbars {
+  @include m(md) {
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
   }
 }

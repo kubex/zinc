@@ -1,51 +1,50 @@
-import {html, LitElement, unsafeCSS} from "lit";
+import {ZincElement} from "../zinc";
+import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 
 @customElement('zn-page')
-export class Page extends LitElement {
+export class Page extends ZincElement {
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
 
   static styles = unsafeCSS(styles);
 
-  protected render(): unknown {
-    let aside = html``;
-    let nav = html``;
+  render() {
+    let pageSide = null;
+    let navigation = null;
     let mainClass = "";
 
     if (this.querySelectorAll('[slot="side"]').length > 0) {
       mainClass = "with-side";
-      aside = html`
+      pageSide = html`
         <div class="pageside">
           ${this._expander()}
           <div class="content">
             <slot name="side"></slot>
           </div>
-        </div>
-      `
+        </div>`;
     }
 
     if (this.querySelectorAll('[slot="nav"]').length > 0) {
       mainClass = "with-nav";
-      nav = html`
+      pageSide = html`
         <div class="pageside">
           ${this._expander()}
           <div class="content">
             <slot name="nav"></slot>
           </div>
-        </div>
-      `
+        </div>`;
     }
 
     return html`
       <div class="${mainClass}">
-        ${nav}
+        ${navigation}
         <div id="page-content">
           <slot></slot>
         </div>
-        ${aside}
+        ${pageSide}
       </div>`
   }
 

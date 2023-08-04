@@ -2,11 +2,25 @@
 @use '../scss';
 
 :host {
+  @extend %scrollbars;
+
   box-sizing: border-box;
   container-type: inline-size;
   justify-content: center;
   flex-grow: 1;
   display: flex;
+
+  @include scss.c(smp) {
+    > div.with-side #page-content {
+      max-width: calc(100% - var(--bar));
+    }
+  }
+
+  @include scss.c(lg) {
+    > div.with-side #page-content {
+      max-width: calc(100% - var(--mpanel));
+    }
+  }
 
   > div {
     position: relative;
@@ -25,7 +39,6 @@
     }
 
     &.with-nav {
-      display: flex;
       flex-direction: column;
     }
 
@@ -94,6 +107,13 @@
         display: none;
         overflow-y: auto;
         max-width: var(--bar);
+        flex-direction: column;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        padding-top: map.get(scss.$spacing, 'sm');
+        padding-bottom: map.get(scss.$spacing, 'sm');
+        padding-right: map.get(scss.$spacing, 'md');
 
         @include scss.c(smp) {
           padding-top: map.get(scss.$spacing, 'md');
@@ -101,15 +121,11 @@
         }
 
         @include scss.c(lg) {
+          display: flex;
+          padding-right: map.get(scss.$spacing, 'lg');
           padding-top: map.get(scss.$spacing, 'lg');
           padding-bottom: map.get(scss.$spacing, 'lg');
-          padding-right: map.get(scss.$spacing, 'lg');
           min-width: var(--mpanel);
-          display: flex;
-          flex-direction: column;
-          right: 0;
-          top: 0;
-          bottom: 0;
           transition: all 500ms ease-in-out;
         }
 
@@ -132,42 +148,180 @@
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        border-bottom-width: 1px;
+        height: var(--bar);
+        border-color: var(--color-border);
+        width: 100%;
+        background-color: white;
 
         @include scss.c(smp) {
           flex-direction: column;
           justify-content: start;
-          border-bottom: 1px solid;
           height: 100%;
           width: var(--bar);
+          border-bottom-width: 0;
+          border-left-width: 1px;
+        }
+
+        @include scss.c(lg) {
+          display: none;
+        }
+
+        span {
+          writing-mode: horizontal-tb;
+          flex-grow: 1;
+          padding-left: map.get(scss.$spacing, 'md');
+          display: none;
+
+          @include scss.c(smp) {
+            writing-mode: vertical-rl;
+          }
+
+          @include scss.c(smp) {
+            padding-left: 0;
+          }
+
+          &.open {
+            display: block;
+          }
+        }
+
+        zn-icon {
+          color: var(--color-text);
+          margin-left: map.get(scss.$spacing, 'md');
+          margin-right: map.get(scss.$spacing, 'md');
+          transition: all 500ms ease-in-out;
+          rotate: 0;
+
+          @include scss.c(smp) {
+            margin-top: map.get(scss.$spacing, 'md');
+            margin-bottom: map.get(scss.$spacing, 'md');
+            rotate: 90deg;
+          }
+        }
+      }
+    }
+  }
+
+  > div.with-nav .pageside, > div.with-nav .pageside > div.content {
+    @include scss.c(lg) {
+      min-width: var(--spanel);
+      max-width: var(--spanel);
+    }
+  }
+
+  > div.with-nav .pageside {
+    order: -1;
+
+    div {
+      &.content {
+        padding-right: 0;
+        padding-left: map.get(scss.$spacing, 'md');
+
+        @include scss.c(lg) {
+          padding-left: map.get(scss.$spacing, 'lg');
+        }
+
+        @include scss.c(hd) {
+          padding-left: map.get(scss.$spacing, 'xl');
+        }
+      }
+
+      &, &.expander {
+        @include scss.c(smp) {
+          border-right-width: 1px;
+          border-left-width: 0;
+
+          zn-icon {
+            rotate: -90deg;
+          }
         }
       }
     }
   }
 }
 
-:host([open]) {
-  @include scss.c($min: false, $max: lg) {
+@include scss.c($min: false, $max: lg) {
+  :host([open]) {
     > div .pageside {
       position: unset;
 
       > div.content {
         display: flex;
-        padding-top: map.get(scss.$spacing, 'lg');
-        padding-bottom: map.get(scss.$spacing, 'lg');
+        padding: map.get(scss.$spacing, 'lg');
         width: 100%;
         max-width: 100%;
+        overflow-x: hidden;
+        z-index: 20;
+        top: var(--bar);
 
         @include scss.c(smp) {
           max-width: var(--mpanel);
           min-width: var(--mpanel);
-          overflow-x: hidden;
-          z-index: 20;
           top: 0;
         }
       }
 
       > div.expander {
+        @include scss.c(smp) {
+          left: auto;
+          right: var(--mpanel);
+        }
 
+        zn-icon {
+          rotate: 180deg;
+
+          @include scss.c(smp) {
+            rotate: -90deg;
+          }
+        }
+
+        span {
+          &.open {
+            display: none;
+          }
+
+          &.close {
+            display: none;
+            @include scss.c(smp) {
+              display: block;
+            }
+          }
+
+          &.close-sm {
+            display: block;
+            font-weight: 500;
+            @include scss.c(smp) {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    > div.with-nav .pageside {
+      div {
+        &.expander {
+          @include scss.c(smp) {
+            left: var(--mpanel);
+            right: auto;
+
+            zn-icon {
+              rotate: -180deg;
+
+              @include scss.c(smp) {
+                rotate: 90deg;
+              }
+            }
+          }
+        }
+
+        &.content {
+          @include scss.c(smp) {
+            left: 0;
+            right: auto;
+          }
+        }
       }
     }
   }

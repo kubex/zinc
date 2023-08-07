@@ -1,1 +1,1 @@
-export {Property} from './Property';
+export {Property} from './property';

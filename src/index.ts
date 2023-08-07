@@ -13,3 +13,4 @@ import './Alert';
 import './Chip';
 import './Table';
 import './Property';
+import './Chart';

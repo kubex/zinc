@@ -16,3 +16,4 @@ import './Property';
 import './Chart';
 import './SimpleChart';
 import './Toggle';
+import './Tabs';

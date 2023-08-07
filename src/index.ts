@@ -17,3 +17,5 @@ import './Chart';
 import './SimpleChart';
 import './Toggle';
 import './Tabs';
+
+import './simpleprompt';

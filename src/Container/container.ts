@@ -3,7 +3,6 @@ import {customElement, property} from 'lit/decorators.js';
 import {PropertyValues} from "@lit/reactive-element";
 
 import styles from './index.scss';
-import commonStyles from './common.scss';
 
 @customElement('app-container')
 export class Container extends LitElement {
@@ -13,7 +12,7 @@ export class Container extends LitElement {
   @property({type: Object, attribute: false}) container: HTMLElement = document.createElement('div');
 
   static get styles() {
-    return [unsafeCSS(commonStyles), unsafeCSS(styles)];
+    return [unsafeCSS(styles)];
   }
 
   protected prepareContainer() {

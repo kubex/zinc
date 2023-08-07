@@ -1,0 +1,81 @@
+@use "sass:map";
+@use "variables";
+
+$var-prefix: '--zn-';
+
+@function hex-to-rgb($color) {
+  @return red($color), green($color), blue($color);
+}
+
+// Global Colors
+$theme-colors: (
+  'primary': hex-to-rgb(map.get(variables.$purple, 700)),
+  'secondary': hex-to-rgb(map.get(variables.$green, 500)),
+  'tertiary': hex-to-rgb(map.get(variables.$turquoise, 500)),
+  'warning': hex-to-rgb(map.get(variables.$yellow, 500)),
+  'error': hex-to-rgb(map.get(variables.$red, 500)),
+  'success': hex-to-rgb(map.get(variables.$green, 500)),
+  'info': hex-to-rgb(map.get(variables.$blue, 500)),
+  'panel': hex-to-rgb(#fff)
+);
+
+// Default Theme
+$theme-default: (
+  'text': hex-to-rgb(map.get(variables.$slate, 800)),
+  'heading': hex-to-rgb(map.get(variables.$slate, 900)),
+  'body': hex-to-rgb(map.get(variables.$slate, 50)),
+);
+
+// Light Theme
+$theme-light: (
+  'text': hex-to-rgb(variables.$black),
+  'body': hex-to-rgb(variables.$white),
+);
+
+// Dark theme
+$theme-dark: (
+  'text': hex-to-rgb(variables.$white),
+  'body': hex-to-rgb(variables.$black),
+);
+
+@mixin spread-map($map: (), $pre: '') {
+  @if type-of($map) != 'map' {
+    @error 'spread-map() only works with maps';
+  }
+
+  @each $key, $value in $map {
+    #{$pre}#{$key}: #{$value};
+  }
+}
+
+:root {
+  // Theme Colors
+  @include spread-map($theme-colors, #{$var-prefix} + 'color-');
+  @include spread-map($theme-default, #{$var-prefix});
+
+  // Spacing
+  @include spread-map(variables.$spacing, #{$var-prefix} + 'spacing-');
+  @include spread-map(variables.$container, #{$var-prefix} + 'container-');
+  @include spread-map(variables.$common-sizes, #{$var-prefix} + 'size-');
+
+  // Font Families
+  #{$var-prefix}font-family-sans: 'Roboto', sans-serif;
+  #{$var-prefix}font-family-serif: 'Roboto Slab', serif;
+  #{$var-prefix}font-family-mono: 'Roboto Mono', monospace;
+
+  // Default Opacities
+  #{$var-prefix}bg-opacity: 1;
+  #{$var-prefix}text-opacity: 1;
+
+  // Border
+  #{$var-prefix}border-width: 0;
+  #{$var-prefix}border-color: map.get(variables.$slate, 300);
+}
+
+[t="light"] {
+  @include spread-map($theme-light, #{$var-prefix});
+}
+
+[t="dark"] {
+  @include spread-map($theme-dark, #{$var-prefix});
+}

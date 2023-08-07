@@ -1,22 +1,20 @@
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   display: flex;
   flex-direction: column;
 
   label {
-    font-family: var(--font-family);
     width: 100%;
-    padding: var(--padding-sm) 0;
-    color: rgb(var(--color-text));
+    padding: var(--zn-spacing-sm) 0;
+    color: rgb(var(--zn-text));
     font-size: 14px;
     line-height: 18px;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   input {
-    font-family: var(--font-family);
-    font-weight: 500;
+    font-weight: 400;
     color: #7F8090;
     display: flex;
     width: 100%;
@@ -24,11 +22,11 @@
     background-color: #F7F7F7;
     padding: 15px 18px;
     box-sizing: border-box;
-    border: 1px solid transparent;
+    border-width: 1px;
+    border-color: transparent;
   }
 
   .error {
-    font-family: var(--font-family);
     margin-left: auto;
     margin-top: 1px;
     margin-right: 1px;
@@ -41,6 +39,6 @@
 
 :host([error]:not([error=""])) {
   input {
-    border-color: rgb(var(--color-error));
+    border-color: rgb(var(--zn-color-error));
   }
 }

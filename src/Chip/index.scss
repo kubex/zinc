@@ -1,10 +1,10 @@
 @use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   display: inline-block;
   border-radius: 5px;
-  padding: map.get(scss.$spacing, xs) map.get(scss.$spacing, sm);
+  padding: var(--zn-spacing-xs) var(--zn-spacing-sm);
   text-align: center;
   font-weight: 600;
   width: fit-content;
@@ -12,34 +12,34 @@
   color: white;
   text-transform: uppercase;
   font-size: 80%;
-  background: rgb(var(--color-tertiary));
-  border-color: rgb(var(--color-tertiary));
+  background: rgba(var(--zn-color-tertiary), var(--zn-bg-opacity));
+  border-color: rgba(var(--zn-color-tertiary));
 }
 
 :host([error]) {
-  color: rgb(var(--color-error));
-  border-color: rgb(var(--color-error)) !important;
-  border-width: 1px !important;
-  background: rgba(var(--color-error), .10);
+  color: rgb(var(--zn-color-error));
+  border-color: rgb(var(--zn-color-error));
+  border-width: 1px;
+  background: rgba(var(--zn-color-error), .10);
 }
 
 :host([info]) {
-  color: rgb(var(--color-info));
-  border-color: rgb(var(--color-info)) !important;
-  border-width: 1px !important;
-  background: rgba(var(--color-info), .10);
+  color: rgb(var(--zn-color-info));
+  border-color: rgb(var(--zn-color-info));
+  border-width: 1px;
+  background: rgba(var(--zn-color-info), .10);
 }
 
 :host([warning]) {
-  color: rgb(var(--color-warning));
-  border-color: rgb(var(--color-warning)) !important;
-  border-width: 1px !important;
-  background: rgba(var(--color-warning), .10);
+  color: rgb(var(--zn-color-warning));
+  border-color: rgb(var(--zn-color-warning));
+  border-width: 1px;
+  background: rgba(var(--zn-color-warning), .10);
 }
 
 :host([success]) {
-  color: rgb(var(--color-success));
-  border-color: rgb(var(--color-success)) !important;
-  border-width: 1px !important;
-  background: rgba(var(--color-success), .10);
+  color: rgb(var(--zn-color-success));
+  border-color: rgb(var(--zn-color-success));
+  border-width: 1px;
+  background: rgba(var(--zn-color-success), .10);
 }

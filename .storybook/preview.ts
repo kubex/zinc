@@ -5,7 +5,7 @@ import {DocsContainer} from '@storybook/addon-docs';
 import {DecoratorHelpers, withThemeByDataAttribute} from "@storybook/addon-styling";
 import {themes} from '@storybook/theming';
 
-import '../src/_scss/main.scss';
+import '../scss/boot.scss';
 
 export const decorators = [
   withThemeByDataAttribute({

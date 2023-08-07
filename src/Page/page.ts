@@ -56,7 +56,7 @@ export class Page extends ZincElement {
         <span class="close"> Close </span>
         <span class="close-sm">${smpCap}</span>
         <span class="open"> Show ${this.caption}</span>
-      </div>;`
+      </div>`;
   }
 
   handleClick(e) {

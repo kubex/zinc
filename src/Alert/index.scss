@@ -1,8 +1,7 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
-  margin: map.get(scss.$spacing, md);
+  margin: var(--zn-spacing-md);
 }
 
 .alert {
@@ -10,26 +9,26 @@
 
   .icon {
     display: inline-block;
-    padding: map.get(scss.$spacing, xs);
-    margin: map.get(scss.$spacing, md);
+    padding: var(--zn-spacing-xs);
+    margin: var(--zn-spacing-md);
     border-radius: 50%;
-    width: map.get(scss.$commonSizes, bar);
-    height: map.get(scss.$commonSizes, bar);
+    width: var(--zn-size-bar);
+    height: var(--zn-size-bar);
   }
 
   .title {
-    margin-bottom: map.get(scss.$spacing, sm);
+    margin-bottom: var(--zn-spacing-sm);
   }
 
   .buttons {
-    margin-top: map.get(scss.$spacing, sm);
-    margin-bottom: map.get(scss.$spacing, sm);
+    margin-top: var(--zn-spacing-sm);
+    margin-bottom: var(--zn-spacing-sm);
   }
 
   .buttons slot {
     display: inline-flex;
-    margin: map.get(scss.$spacing, md);
-    gap: map.get(scss.$spacing, sm);
+    margin: var(--zn-spacing-md);
+    gap: var(--zn-spacing-sm);
   }
 }
 

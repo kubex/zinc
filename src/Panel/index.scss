@@ -1,32 +1,29 @@
 @use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   --row-count: 1;
   overflow: hidden;
   flex-grow: 1;
 
-  @extend %scrollbars;
-
   > div {
-    padding: map.get(scss.$spacing, 'md');
+    padding: var(--zn-spacing-md);
     border-width: 1px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    flex-basis: map.get(scss.$commonSizes, 'panel');
-    min-width: map.get(scss.$commonSizes, 'spanel');
-    background-color: rgb(var(--color-panel));
+    flex-basis: var(-zn-size-panel);
+    min-width: var(-zn-size-panel);
+    background-color: rgb(var(--zn-color-panel));
 
-
-    @include scss.m(smp) {
+    @include wc.media(smp) {
       border-radius: 10px;
     }
 
     .header {
       display: flex;
       justify-items: center;
-      padding-bottom: map.get(scss.$spacing, 'sm');
+      padding-bottom: var(--zn-spacing-sm);
 
       span {
         font-weight: 500;
@@ -42,15 +39,15 @@
 
       ul {
         display: flex;
-        margin: map.get(scss.$spacing, 'xs') 0 0;
+        margin: var(--zn-spacing-xs) 0 0;
         padding: 0;
-        gap: map.get(scss.$spacing, 'md');
+        gap: var(--zn-spacing-md);
         border-bottom-width: 1px;
         width: 100%;
 
         li {
           font-weight: 600;
-          padding-bottom: map.get(scss.$spacing, 'xs');
+          padding-bottom: var(--zn-spacing-xs);
           border-bottom-width: 3px;
           border-color: transparent;
           font-size: 80%;
@@ -75,7 +72,7 @@
 
     .footer {
       display: block;
-      padding-top: map.get(scss.$spacing, 'md');
+      padding-top: var(--zn-spacing-md);
       border-top-width: 1px;
       font-weight: 500;
     }
@@ -93,17 +90,17 @@
   }
 
   .header {
-    padding-top: map.get(scss.$spacing, 'md');
+    padding-top: var(--zn-spacing-md);
   }
 
   .footer {
-    padding-bottom: map.get(scss.$spacing, 'md');
+    padding-bottom: var(--zn-spacing-md);
   }
 }
 
 :host([rows]:not([rows=""])) {
   .body {
-    $tile: map.get(scss.$commonSizes, 'tile');
+    $tile: var(--zn-sizes-tile);
     max-height: calc($tile * var(--row-count, 50));
     height: calc($tile * var(--row-count));
   }
@@ -120,12 +117,12 @@
 }
 
 :host([stat]) > div {
-  padding: map.get(scss.$spacing, 'md');
+  padding: var(--zn-spacing-md);
 }
 
 :host([small]) > div {
-  min-width: map.get(scss.$commonSizes, 'spanel');
-  flex-basis: map.get(scss.$commonSizes, 'spanel');
+  min-width: var(--zn-size-spanel);
+  flex-basis: var(--zn-size-spanel);
   background-color: transparent;
   border-width: 0;
 }

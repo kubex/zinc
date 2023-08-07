@@ -1,0 +1,82 @@
+@use "sass:map";
+@use "../variables/spacing";
+
+@mixin media($min, $max: null) {
+  @if $min and $max {
+    @media (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  } @else if $min {
+    @media (min-width: #{map.get(spacing.$container, $min)}) {
+      @content;
+    }
+  } @else if $max {
+    @media (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  }
+}
+
+@mixin container($min, $max: null) {
+  @if $min and $max {
+    @container (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  } @else if $min {
+    @container (min-width: #{map.get(spacing.$container, $min)}) {
+      @content;
+    }
+  } @else if $max {
+    @container (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  }
+}
+
+@mixin gap() {
+  gap: var(--zn-spacing-xxs);
+
+  @include container(smp) {
+    gap: var(--zn-spacing-sm);
+  }
+
+  @include container(md) {
+    gap: var(--zn-spacing-md);
+  }
+
+  @include container(lg) {
+    gap: var(--zn-spacing-lg);
+  }
+}
+
+@mixin gap {
+  gap: var(--zn-spacing-xxs);
+
+  @include container(smp) {
+    gap: var(--zn-spacing-sm);
+  }
+
+  @include container(md) {
+    gap: var(--zn-spacing-md);
+  }
+
+  @include container(lg) {
+    gap: var(--zn-spacing-lg);
+  }
+}
+
+@mixin padding {
+  padding: var(--zn-spacing-xs);
+
+  @include container(smp) {
+    padding: var(--zn-spacing-sm);
+  }
+
+  @include container(md) {
+    padding: var(--zn-spacing-md);
+  }
+
+  @include container(lg) {
+    padding: var(--zn-spacing-lg);
+  }
+}

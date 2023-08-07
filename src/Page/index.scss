@@ -1,24 +1,21 @@
-@use "sass:map";
-@use '../_scss';
+@use "../../scss/wc";
 
 :host {
-  @extend %scrollbars;
-
-  box-sizing: border-box;
+  @include wc.scrollbars;
   container-type: inline-size;
   justify-content: center;
   flex-grow: 1;
   display: flex;
 
-  @include scss.c(smp) {
+  @include wc.container(smp) {
     > div.with-side #page-content {
-      max-width: calc(100% - var(--bar));
+      max-width: calc(100% - var(--zn-size-bar));
     }
   }
 
-  @include scss.c(lg) {
+  @include wc.container(lg) {
     > div.with-side #page-content {
-      max-width: calc(100% - var(--mpanel));
+      max-width: calc(100% - var(--zn-size-mpanel));
     }
   }
 
@@ -26,13 +23,12 @@
     position: relative;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    max-width: var(--hd);
+    max-width: var(--zn-container-hd);
 
     &.with-side {
-      padding-top: var(--bar);
+      padding-top: var(--zn-size-bar);
       flex-direction: column;
-      @include scss.c(smp) {
+      @include wc.container(smp) {
         padding-top: 0;
         flex-direction: column-reverse;
       }
@@ -44,15 +40,15 @@
 
     &.with-side, &.with-nav {
       display: flex;
-      @include scss.c(smp) {
+      @include wc.container(smp) {
         flex-direction: row;
       }
     }
   }
 
   #page-content {
-    @extend %zn-pad;
-    @extend %zn-gap;
+    @include wc.padding;
+    @include wc.gap;
 
     display: flex;
     flex-wrap: wrap;
@@ -60,26 +56,26 @@
     height: fit-content;
     max-width: 100%;
 
-    @include scss.c(smp) {
+    @include wc.container(smp) {
       flex-grow: 1;
     }
 
-    @include scss.c(md) {
+    @include wc.container(md) {
       max-width: 100%;
     }
   }
 
   .pageside {
-    height: var(--bar);
-    min-height: var(--bar);
-    max-height: var(--bar);
+    height: var(--zn-size-bar);
+    min-height: var(--zn-size-bar);
+    max-height: var(--zn-size-bar);
     width: 100%;
     overflow: visible;
 
-    @include scss.c(smp) {
+    @include wc.container(smp) {
       max-height: 100%;
-      min-width: var(--bar);
-      max-width: var(--bar);
+      min-width: var(--zn-size-bar);
+      max-width: var(--zn-size-bar);
       flex-grow: 1;
       height: auto;
       top: 0;
@@ -87,10 +83,10 @@
       display: flex;
     }
 
-    @include scss.c(lg) {
-      min-width: var(--mpanel);
-      max-width: var(--mpanel);
-      width: var(--mpanel);
+    @include wc.container(lg) {
+      min-width: var(--zn-size-mpanel);
+      max-width: var(--zn-size-mpanel);
+      width: var(--zn-size-mpanel);
     }
 
     > div {
@@ -99,45 +95,45 @@
       flex-grow: 1;
       overflow-y: auto;
 
-      @include scss.c(lg) {
+      @include wc.container(lg) {
         background: rgb(var(--color-body));
       }
 
       &.content {
         display: none;
         overflow-y: auto;
-        max-width: var(--bar);
+        max-width: var(--zn-size-bar);
         flex-direction: column;
         right: 0;
         top: 0;
         bottom: 0;
-        padding-top: map.get(scss.$spacing, 'sm');
-        padding-bottom: map.get(scss.$spacing, 'sm');
-        padding-right: map.get(scss.$spacing, 'md');
+        padding-top: var(--zn-spacing-sm);
+        padding-bottom: var(--zn-spacing-sm);
+        padding-right: var(--zn-spacing-md);
 
-        @include scss.c(smp) {
-          padding-top: map.get(scss.$spacing, 'md');
-          padding-bottom: map.get(scss.$spacing, 'md');
+        @include wc.container(smp) {
+          padding-top: var(--zn-spacing-md);
+          padding-bottom: var(--zn-spacing-md);
         }
 
-        @include scss.c(lg) {
+        @include wc.container(lg) {
           display: flex;
-          padding-right: map.get(scss.$spacing, 'lg');
-          padding-top: map.get(scss.$spacing, 'lg');
-          padding-bottom: map.get(scss.$spacing, 'lg');
-          min-width: var(--mpanel);
+          padding-right: var(--zn-spacing-lg);
+          padding-top: var(--zn-spacing-lg);
+          padding-bottom: var(--zn-spacing-lg);
+          min-width: var(--zn-size-mpanel);
         }
 
-        @include scss.c(hd) {
-          padding-top: map.get(scss.$spacing, 'xl');
-          padding-bottom: map.get(scss.$spacing, 'xl');
-          padding-right: map.get(scss.$spacing, 'xl');
+        @include wc.container(hd) {
+          padding-top: var(--zn-spacing-xl);
+          padding-bottom: var(--zn-spacing-xl);
+          padding-right: var(--zn-spacing-xl);
         }
 
         ::slotted(*) {
           display: flex;
           flex-direction: column;
-          gap: map.get(scss.$spacing, 'lg');;
+          gap: var(--zn-spacing-lg);
         }
       }
 
@@ -149,34 +145,34 @@
         overflow: hidden;
         border: 0 solid rgb(var(--color-border));
         border-bottom-width: 1px;
-        height: var(--bar);
+        height: var(--zn-size-bar);
         width: 100%;
         background-color: white;
 
-        @include scss.c(smp) {
+        @include wc.container(smp) {
           flex-direction: column;
           justify-content: start;
           height: 100%;
-          width: var(--bar);
+          width: var(--zn-size-bar);
           border-bottom-width: 0;
           border-left-width: 1px;
         }
 
-        @include scss.c(lg) {
+        @include wc.container(lg) {
           display: none;
         }
 
         span {
           writing-mode: horizontal-tb;
           flex-grow: 1;
-          padding-left: map.get(scss.$spacing, 'md');
+          padding-left: var(--zn-spacing-md);
           display: none;
 
-          @include scss.c(smp) {
+          @include wc.container(smp) {
             writing-mode: vertical-rl;
           }
 
-          @include scss.c(smp) {
+          @include wc.container(smp) {
             padding-left: 0;
           }
 
@@ -187,14 +183,14 @@
 
         zn-icon {
           color: rgb(var(--color-text));
-          margin-left: map.get(scss.$spacing, 'md');
-          margin-right: map.get(scss.$spacing, 'md');
+          margin-left: var(--zn-spacing-md);
+          margin-right: var(--zn-spacing-md);
           transition: all 500ms ease-in-out;
           rotate: 0;
 
-          @include scss.c(smp) {
-            margin-top: map.get(scss.$spacing, 'md');
-            margin-bottom: map.get(scss.$spacing, 'md');
+          @include wc.container(smp) {
+            margin-top: var(--zn-spacing-md);
+            margin-bottom: var(--zn-spacing-md);
             rotate: 90deg;
           }
         }
@@ -203,7 +199,7 @@
   }
 
   > div.with-nav .pageside, > div.with-nav .pageside > div.content {
-    @include scss.c(lg) {
+    @include wc.container(lg) {
       min-width: var(--spanel);
       max-width: var(--spanel);
     }
@@ -215,19 +211,19 @@
     div {
       &.content {
         padding-right: 0;
-        padding-left: map.get(scss.$spacing, 'md');
+        padding-left: var(--zn-spacing-md);
 
-        @include scss.c(lg) {
-          padding-left: map.get(scss.$spacing, 'lg');
+        @include wc.container(lg) {
+          padding-left: var(--zn-spacing-lg);
         }
 
-        @include scss.c(hd) {
-          padding-left: map.get(scss.$spacing, 'xl');
+        @include wc.container(hd) {
+          padding-left: var(--zn-spacing-xl);
         }
       }
 
       &, &.expander {
-        @include scss.c(smp) {
+        @include wc.container(smp) {
           border-right-width: 1px;
           border-left-width: 0;
 
@@ -240,37 +236,37 @@
   }
 }
 
-@include scss.c($min: false, $max: lg) {
+@include wc.container($min: false, $max: lg) {
   :host([open]) {
     > div .pageside {
       position: unset;
 
       > div.content {
         display: flex;
-        padding: map.get(scss.$spacing, 'lg');
+        padding: var(--zn-spacing-lg);
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;
         z-index: 20;
-        top: var(--bar);
+        top: var(--zn-size-bar);
 
-        @include scss.c(smp) {
-          max-width: var(--mpanel);
-          min-width: var(--mpanel);
+        @include wc.container(smp) {
+          max-width: var(--zn-size-mpanel);
+          min-width: var(--zn-size-mpanel);
           top: 0;
         }
       }
 
       > div.expander {
-        @include scss.c(smp) {
+        @include wc.container(smp) {
           left: auto;
-          right: var(--mpanel);
+          right: var(--zn-size-mpanel);
         }
 
         zn-icon {
           rotate: 180deg;
 
-          @include scss.c(smp) {
+          @include wc.container(smp) {
             rotate: -90deg;
           }
         }
@@ -282,7 +278,7 @@
 
           &.close {
             display: none;
-            @include scss.c(smp) {
+            @include wc.container(smp) {
               display: block;
             }
           }
@@ -290,7 +286,7 @@
           &.close-sm {
             display: block;
             font-weight: 500;
-            @include scss.c(smp) {
+            @include wc.container(smp) {
               display: none;
             }
           }
@@ -301,14 +297,14 @@
     > div.with-nav .pageside {
       div {
         &.expander {
-          @include scss.c(smp) {
-            left: var(--mpanel);
+          @include wc.container(smp) {
+            left: var(--zn-size-mpanel);
             right: auto;
 
             zn-icon {
               rotate: -180deg;
 
-              @include scss.c(smp) {
+              @include wc.container(smp) {
                 rotate: 90deg;
               }
             }
@@ -316,7 +312,7 @@
         }
 
         &.content {
-          @include scss.c(smp) {
+          @include wc.container(smp) {
             left: 0;
             right: auto;
           }

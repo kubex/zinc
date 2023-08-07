@@ -1,5 +1,4 @@
-@use "sass:map";
-@use '../_scss';
+@use '../../scss/wc';
 
 :host([transparent]) > div {
   background-color: transparent;
@@ -12,26 +11,26 @@
 :host > div {
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid rgb(var(--color-border));
+  border-bottom-width: 1px;
   overflow: hidden;
-  background-color: rgb(var(--color-panel));
-  gap: map.get(scss.$spacing, 'sm');
-  padding-top: map.get(scss.$spacing, 'sm');
-  padding-bottom: map.get(scss.$spacing, 'sm');
+  background-color: rgb(var(--zn-color-panel));
+  gap: var(--zn-spacing-sm);
+  padding-top: var(--zn-spacing-sm);
+  padding-bottom: var(--zn-spacing-sm);
 
   .width-container {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    max-width: var(--hd);
-    gap: map.get(scss.$spacing, 'sm');
+    max-width: var(--zn-container-hd);
+    gap: var(--zn-spacing-sm);
     height: fit-content;
-    padding-left: map.get(scss.$spacing, 'sm');
-    padding-right: map.get(scss.$spacing, 'sm');
+    padding-left: var(--zn-spacing-sm);
+    padding-right: var(--zn-spacing-sm);
 
-    @include scss.m(md) {
-      padding-left: map.get(scss.$spacing, 'lg');
-      padding-right: map.get(scss.$spacing, 'lg');
+    @include wc.media(md) {
+      padding-left: var(--zn-spacing-lg);
+      padding-right: var(--zn-spacing-lg);
     }
   }
 
@@ -39,7 +38,7 @@
     display: block;
     color: rgb(var(--color-text));
     width: 100%;
-    padding-bottom: map.get(scss.$spacing, 'xxs');
+    padding-bottom: var(--zn-spacing-xxs);
     padding-top: 10px;
 
     &:empty {
@@ -51,7 +50,7 @@
     flex-grow: 1;
     font-size: 24px;
     line-height: 20px;
-    color: rgb(var(--color-primary));
+    color: rgb(var(--zn-color-primary));
     margin: 0;
     font-weight: inherit;
 
@@ -64,16 +63,15 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: map.get(scss.$spacing, 'xs');
+    gap: var(--zn-spacing-xs);
   }
 
   ul.header-nav {
     display: flex;
     flex-basis: 100%;
     gap: 30px;
-    padding: 0;
     margin: 0;
-    padding-top: map.get(scss.$spacing, 'xs');
+    padding: var(--zn-spacing-xs) 0 0;
     list-style: none;
 
     li {
@@ -88,7 +86,7 @@
         bottom: 0;
         position: absolute;
         transition: all 300ms ease-in-out;
-        height: map.get(scss.$spacing, 'xxs');
+        height: var(--zn-spacing-xxs);
       }
 
       &:hover:before {

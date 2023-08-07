@@ -1,5 +1,4 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host, zn-tabs {
   background-color: white;
@@ -11,19 +10,19 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: map.get(scss.$spacing, lg);
-    border-bottom-width: 1px !important;
-    margin-bottom: map.get(scss.$spacing, md);
+    gap: var(--zn-spacing-lg);
+    border-bottom-width: 1px;
+    margin-bottom: var(--zn-spacing-md);
 
     ::slotted([slot="tab"]) {
-      padding: map.get(scss.$spacing, xs) map.get(scss.$spacing, sm);
-      background-color: rgba(var(--color-primary), .40);
+      padding: var(--zn-spacing-xs) var(--zn-spacing-sm);
+      background-color: rgba(var(--zn-color-primary), .40);
       border-radius: 10px;
       cursor: pointer;
     }
 
     ::slotted([slot="tab"][selected]) {
-      background-color: rgb(var(--color-primary));
+      background-color: rgb(var(--zn-color-primary));
       color: white;
     }
   }
@@ -35,13 +34,13 @@
   ::slotted([slot="panel"][selected]) {
     display: block;
     width: 100%;
-    padding: map.get(scss.$spacing, md);
+    padding: var(--zn-spacing-md);
   }
 
   .tabs__header {
     display: flex;
     flex-direction: row;
     justify-items: flex-end;
-    gap: map.get(scss.$spacing, md);
+    gap: var(--zn-spacing-md);
   }
 }

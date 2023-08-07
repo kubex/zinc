@@ -1,21 +1,20 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host > div {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: map.get(scss.$spacing, sm);
+  padding: var(--zn-spacing-sm);
   border-radius: 5px;
   border-width: 1px;
-  width: map.get(scss.$commonSizes, spanel);
-  background-color: rgb(var(--color-panel));
-  gap: map.get(scss.$spacing, md);
+  width: var(--zn-size-spanel);
+  background-color: rgb(var(--zn-color-panel));
+  gap: var(--zn-spacing-md);
 
   li {
     display: block;
     border-bottom-width: 1px;
-    padding: map.get(scss.$spacing, xs);
+    padding: var(--zn-spacing-xs);
 
     a {
       display: block;

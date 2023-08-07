@@ -1,5 +1,4 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 zn-tile:first-of-type, :host(:first-of-type) {
   border-top-width: 0;
@@ -12,7 +11,7 @@ zn-tile, :host {
 :host {
   container-type: inline-size;
   display: flex;
-  height: map.get(scss.$commonSizes, tile);
+  height: var(--zn-size-tile);
   width: 100%;
   align-items: center;
   overflow: hidden;
@@ -24,14 +23,14 @@ zn-tile, :host {
     align-items: center;
     overflow: hidden;
     flex-wrap: nowrap;
-    padding-top: map.get(scss.$spacing, sm);
-    padding-bottom: map.get(scss.$spacing, sm);
-    gap: map.get(scss.$spacing, md);
+    padding-top: var(--zn-spacing-sm);
+    padding-bottom: var(--zn-spacing-sm);
+    gap: var(--zn-spacing-md);
 
     > * {
       height: 100%;
       display: flex;
-      justify-items: center;
+      justify-content: center;
       flex-direction: column;
     }
 
@@ -45,7 +44,7 @@ zn-tile, :host {
       display: none;
       flex-grow: 1;
 
-      @include scss.c(sm) {
+      @include wc.container(sm) {
         display: flex;
       }
     }
@@ -64,7 +63,7 @@ zn-tile, :host {
 
     .caption[data-uri]:not([data-uri=""]) {
       cursor: pointer;
-      color: rgb(var(--color-primary));
+      color: rgb(var(--zn-color-primary));
     }
 
     .description {
@@ -85,7 +84,7 @@ zn-tile, :host {
       grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
       grid-template-rows: 100% 0;
 
-      @include scss.c(smp) {
+      @include wc.container(smp) {
         display: grid;
         flex-basis: 50%;
       }
@@ -102,7 +101,7 @@ zn-tile, :host {
 
       zn-icon {
         cursor: pointer;
-        padding: map.get(scss.$spacing, md);
+        padding: var(--zn-spacing-md);
         border-radius: 100%;
 
         &:hover {
@@ -119,10 +118,10 @@ zn-tile, :host {
 }
 
 :host([child]) {
-  height: map.get(scss.$commonSizes, bar);
+  height: var(--zn-size-bar);
 
   > div {
-    padding-left: map.get(scss.$spacing, xl);
+    padding-left: var(--zn-spacing-xl);
 
     .description {
       display: none;
@@ -136,7 +135,7 @@ zn-tile, :host {
   }
 
   .summary.extend {
-    @include scss.c(smp) {
+    @include wc.container(smp) {
       text-align: left;
     }
   }

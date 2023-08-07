@@ -1,13 +1,12 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-top: map.get(scss.$spacing, md);
-  margin-bottom: map.get(scss.$spacing, md);
-  gap: map.get(scss.$spacing, xxs);
+  margin-top: var(--zn-spacing-md);
+  margin-bottom: var(--zn-spacing-md);
+  gap: var(--zn-spacing-xxs);
   grid-column: span var(--colspan, 3);
 
   dd, dt {
@@ -34,7 +33,7 @@
   width: 100%;
 
   dt {
-    margin-right: map.get(scss.$spacing, sm);
+    margin-right: var(--zn-spacing-sm);
   }
 
   dd {

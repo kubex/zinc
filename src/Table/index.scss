@@ -1,5 +1,4 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   max-width: 100%;
@@ -43,7 +42,7 @@
   }
 
   tbody {
-    background-color: rgb(var(--color-panel));
+    background-color: rgb(var(--zn-color-panel));
 
     a {
       cursor: pointer;
@@ -56,18 +55,18 @@
   }
 
   th, td {
-    padding: map.get(scss.$spacing, 'sm');
+    padding:var(--zn-spacing-sm);
     white-space: nowrap;
   }
 
   th {
-    padding-bottom: map.get(scss.$spacing, 'sm');
+    padding-bottom:var(--zn-spacing-sm);
   }
 
   td:first-child > div {
     display: flex;
     justify-items: center;
-    row-gap: map.get(scss.$spacing, 'md');
+    row-gap: var(--zn-spacing-md);
 
     span {
       display: block;
@@ -83,7 +82,7 @@
 
     .summary {
       font-size: 80%;
-      padding-top: map.get(scss.$spacing, 'xs');
+      padding-top: var(--zn-spacing-xs);
     }
 
   }

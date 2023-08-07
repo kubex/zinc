@@ -1,28 +1,27 @@
-@use "sass:map";
-@use "../_scss";
+@use "../../scss/wc";
 
 :host {
   position: relative;
   display: inline-flex;
-  height: map.get(scss.$spacing, xl);
-  width: map.get(scss.$spacing, bar);
+  height: var(--zn-spacing-xl);
+  width: var(--zn-size-br);
   align-items: center;
   flex-shrink: 0;
   cursor: pointer;
   border-radius: 50%;
-  border-width: map.get(scss.$spacing, sm) !important;
+  border-width: var(--zn-spacing-sm) !important;
   transition: color .2s ease-in-out, background-color .2s ease-in-out, border-color .2s ease-in-out;
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgb(var(--color-tertiary)), 0 0 0 4px rgb(var(--color-tertiary));
+    box-shadow: 0 0 0 2px rgb(var(--zn-color-tertiary)), 0 0 0 4px rgb(var(--zn-color-tertiary));
   }
 
   span {
     transform: scale(0.9) translateX(0);
     pointer-events: none;
     display: inline-block;
-    width: map.get(scss.$spacing, xl);
+    width: var(--zn-spacing-xl);
     border-radius: 50%;
     background-color: #fff;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 1px rgba(0, 0, 0, .1);
@@ -36,8 +35,8 @@
 }
 
 :host([checked]) {
-  background-color: rgb(var(--color-tertiary));
-  border-color: rgb(var(--color-tertiary)) !important;
+  background-color: rgb(var(--zn-color-tertiary));
+  border-color: rgb(var(--zn-color-tertiary)) !important;
 
   span {
     transform: translateX(100%);

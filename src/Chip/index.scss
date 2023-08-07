@@ -12,26 +12,34 @@
   color: white;
   text-transform: uppercase;
   font-size: 80%;
-
-  // Todo add tertiary
-  @apply bg-tertiary-500 border-tertiary-500;
+  background-color: rgb(var(--color-tertiary));
+  border-color: rgb(var(--color-tertiary));
 }
 
 :host([error]) {
-  @apply bg-error/10 border-px border-error text-error #{!important};
+  color: rgb(var(--color-error));
+  border-color: rgb(var(--color-error));
+  border-width: 1px;
+  background-color: rgb(var(--color-error));
 }
 
 :host([info]) {
-  @apply bg-info/10 border-px border-info text-info #{!important};
+  color: rgb(var(--color-info));
+  border-color: rgb(var(--color-info));
+  border-width: 1px;
+  background-color: rgb(var(--color-info));
 }
 
 :host([warning]) {
-  @apply bg-warning/10 border-px border-warning text-warning #{!important};
+  color: rgb(var(--color-warning));
+  border-color: rgb(var(--color-warning));
+  border-width: 1px;
+  background-color: rgb(var(--color-warning));
 }
 
 :host([success]) {
-  color: var(--color-success);
-  border-color: var(--color-success);
+  color: rgb(var(--color-success));
+  border-color: rgb(var(--color-success));
   border-width: 1px;
-  background-color: var(--color-success)10;
+  background-color: rgb(var(--color-success));
 }

@@ -8,7 +8,7 @@
 
   > div {
     padding: var(--zn-spacing-md);
-    border-width: 1px;
+    border-width: 1px !important;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -49,11 +49,11 @@
           font-weight: 600;
           padding-bottom: var(--zn-spacing-xs);
           border-bottom-width: 3px;
-          border-color: transparent;
+          border-color: transparent !important;
           font-size: 80%;
 
           &:hover, &.active {
-            border-color: rgb(var(--color-primary));
+            border-color: rgb(var(--color-primary)) !important;
             cursor: pointer;
             margin-bottom: -2px;
           }
@@ -108,7 +108,7 @@
 
 :host([single]) > div {
   width: 100%;
-  border-width: 1px;
+  border-width: 1px !important;
   min-width: 0;
 
   & > div.nav {

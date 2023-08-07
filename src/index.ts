@@ -1,3 +1,4 @@
+import './Accordion';
 import './Container';
 import './Button';
 import './Input';

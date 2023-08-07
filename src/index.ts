@@ -10,3 +10,5 @@ import './Tile';
 import './Menu';
 import './Alert';
 import './Chip';
+import './Table';
+import './Property';

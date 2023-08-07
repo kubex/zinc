@@ -1,0 +1,54 @@
+@use "sass:map";
+@use "../scss";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: map.get(scss.$spacing, md);
+  margin-bottom: map.get(scss.$spacing, md);
+  gap: map.get(scss.$spacing, xxs);
+  grid-column: span var(--colspan, 3);
+
+  dd, dt {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  dt {
+    margin-right: 0;
+    font-weight: 500;
+  }
+
+  dd {
+    text-overflow: ellipsis;
+    color: rgb(var(--color-text));
+  }
+}
+
+:host([inline]) {
+  flex-direction: row;
+  justify-items: center;
+  flex-grow: 1;
+  width: 100%;
+
+  dt {
+    margin-right: map.get(scss.$spacing, sm);
+  }
+
+  dd {
+    flex-grow: 1;
+    text-align: right;
+    white-space: normal;
+    font-size: 80%;
+  }
+}
+
+
+:host([icon]) {
+  dd {
+    text-align: left;
+    font-weight: normal;
+  }
+}

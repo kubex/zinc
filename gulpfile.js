@@ -3,7 +3,7 @@ var postcss = require('gulp-postcss');
 var sass = require('gulp-sass')(require('sass'));
 var rename = require('gulp-rename');
 
-var scssPath = './src/scss/main.scss';
+var scssPath = './src/_scss/main.scss';
 
 function buildStyles()
 {
@@ -18,5 +18,5 @@ exports.default = buildStyles;
 exports.watch = function ()
 {
   buildStyles();
-  gulp.watch('./src/scss/**/*.scss', buildStyles);
+  gulp.watch('./src/_scss/**/*.scss', buildStyles);
 };

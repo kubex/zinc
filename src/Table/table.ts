@@ -3,8 +3,6 @@ import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 
-export type InputType = 'text' | 'number';
-
 @customElement('zn-table')
 export class Table extends LitElement {
   @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false

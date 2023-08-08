@@ -2,6 +2,8 @@
 @use "../../scss/wc";
 
 :host {
+  @include wc.scrollbars;
+
   --row-count: 1;
   overflow: hidden;
   flex-grow: 1;
@@ -42,7 +44,7 @@
         margin: wc.spacing(xs) 0 0;
         padding: 0;
         gap: wc.spacing(md);
-        border-bottom-width: 1px;
+        border-bottom-width: 1px !important;
         width: 100%;
 
         li {
@@ -66,8 +68,9 @@
       overflow-y: auto;
       flex-grow: 1;
 
-      // TODO - convert divide-y from tailwind to css
-      // @apply divide-y divide-border;
+      > :not([hidden]) ~ :not([hidden]) {
+        border: 1px solid black !important;
+      }
 
     }
 
@@ -76,6 +79,7 @@
       padding-top: wc.spacing(md);
       border-top-width: 1px;
       font-weight: 500;
+      color: rgb(var(--zn-color-primary));
     }
 
     .header:empty, .footer:empty {

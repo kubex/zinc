@@ -18,5 +18,6 @@ import './SimpleChart';
 import './Toggle';
 import './Note';
 import './Tabs';
+import './Columns';
 
 import './simpleprompt';

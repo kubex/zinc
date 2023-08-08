@@ -1,0 +1,19 @@
+@use '../mixins';
+@use '../variables';
+
+@mixin button {
+  border-radius: 10px;
+  display: inline-flex;
+  justify-content: center;
+  padding: mixins.spacing(md) mixins.spacing(lg);
+  margin: auto;
+  width: fit-content;
+  background-color: rgb(var(--zn-color-primary));
+  color: white;
+  font-weight: 600;
+}
+
+
+button {
+  @include button;
+}

@@ -1,0 +1,135 @@
+@use '../mixins';
+@use '../variables';
+@use "./button";
+
+form {
+  input[type=date],
+  input[type=datetime-local],
+  input[type=email],
+  input[type=month],
+  input[type=number],
+  input[type=password],
+  input[type=search],
+  input[type=tel],
+  input[type=text],
+  input[type=time],
+  input[type=url],
+  input[type=week],
+  input[type=file],
+  input[list],
+  textarea,
+  select,
+  [multiple] {
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    background-color: rgb(var(--zn-panel));
+
+    &:focus {
+      outline: none;
+      border-color: rgb(var(--zn-color-primary));
+      box-shadow: 0 0 0 3px rgba(var(--zn-color-primary), 0.3);
+    }
+
+    &::placeholder {
+      font-weight: 400;
+      color: rgb(var(--zn-text));
+    }
+
+    @include mixins.media-query(sm) {
+      padding: mixins.spacing(sm);
+    }
+  }
+
+  label {
+    font-size: 90%;
+    display: block;
+    margin-bottom: mixins.spacing(xs);
+    margin-top: mixins.spacing(md);
+  }
+
+  input[type=checkbox], input[type=radio] {
+    border-radius: 5px;
+  }
+
+  input[type=radio] {
+    border-radius: 50%;
+  }
+
+  input[type=range] {
+    appearance: none;
+    border-radius: 10px;
+    background-color: rgb(var(--zn-border-color));
+    height: mixins.spacing(sm);
+    accent-color: rgb(var(--zn-color-primary));
+    width: 100%;
+    max-width: mixins.container-width(md);
+  }
+
+  fieldset {
+    border-color: rgba(var(--zn-color-primary), 20%);
+    border-width: 2px;
+    padding: 0 mixins.spacing(md) mixins.spacing(md);
+  }
+
+  select, [multiple] {
+
+    option {
+      padding: mixins.spacing(xs);
+    }
+
+    > option:checked {
+      background-color: rgba(var(--zn-color-primary), 20%);
+      border-radius: 5px;
+    }
+  }
+
+  fieldset > legend {
+    padding: mixins.spacing(xs);
+  }
+
+  input[type=button], input[type=submit], button[type=submit], button[type=button] {
+    @include button.button;
+
+    width: auto;
+  }
+
+  div + button {
+    margin-top: mixins.spacing(md);
+  }
+
+  input[type=file]::-webkit-file-upload-button {
+    @include button.button;
+
+    margin-right: mixins.spacing(sm);
+  }
+
+  input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: mixins.spacing(sm);
+  }
+
+  input[list]::-webkit-calendar-picker-indicator {
+    padding: mixins.spacing(sm) selector-parse(xs)
+  }
+
+  .input--with-icon {
+    position: relative;
+
+    zn-icon {
+      padding: 14px;
+      position: absolute;
+      top: 50%;
+      pointer-events: none;
+      transform: translateY(-50%);
+      left: mixins.spacing(sm);
+      background-color: rgb(var(--zn-color-primary));
+      color: rgb(var(--zn-text));
+      border-radius: 50%;
+    }
+
+    input {
+      padding-left: 40px;
+    }
+  }
+}

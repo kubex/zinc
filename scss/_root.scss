@@ -16,26 +16,33 @@ $theme-colors: (
   'error': hex-to-rgb(map.get(variables.$red, 500)),
   'success': hex-to-rgb(map.get(variables.$green, 500)),
   'info': hex-to-rgb(map.get(variables.$blue, 500)),
-  'panel': hex-to-rgb(#fff)
 );
 
 // Default Theme
 $theme-default: (
   'text': hex-to-rgb(map.get(variables.$slate, 800)),
+  'text-light': hex-to-rgb(map.get(variables.$slate, 400)),
   'heading': hex-to-rgb(map.get(variables.$slate, 900)),
   'body': hex-to-rgb(map.get(variables.$slate, 50)),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 300)),
 );
 
 // Light Theme
 $theme-light: (
   'text': hex-to-rgb(variables.$black),
+  'text-light': hex-to-rgb(variables.$black),
   'body': hex-to-rgb(variables.$white),
+  'panel': hex-to-rgb(map.get(variables.$slate, 200)),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 200)),
 );
 
 // Dark theme
 $theme-dark: (
   'text': hex-to-rgb(variables.$white),
-  'body': hex-to-rgb(variables.$black),
+  'text-light': hex-to-rgb(variables.$white),
+  'body': hex-to-rgb(map.get(variables.$slate, 900)),
+  'panel': hex-to-rgb(map.get(variables.$slate, 800)),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 700)),
 );
 
 @mixin spread-map($map: (), $pre: '') {
@@ -61,9 +68,6 @@ $theme-dark: (
   // Default Opacities
   #{$var-prefix}bg-opacity: 1;
   #{$var-prefix}text-opacity: 1;
-
-  // Border
-  #{$var-prefix}border-color: map.get(variables.$slate, 300);
 }
 
 [t="light"] {

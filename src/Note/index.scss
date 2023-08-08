@@ -1,0 +1,39 @@
+@use "../../scss/wc";
+
+:host {
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    padding-top: wc.spacing(md);
+    padding-bottom: wc.spacing(md);
+    gap: wc.spacing(md);
+  }
+}
+
+zn-note, :host {
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .caption {
+      font-weight: 600;
+    }
+
+    .date {
+      font-size: 90%;
+      color: rgb(var(--zn-text-light));
+    }
+  }
+
+  .body {
+    color: rgb(var(--zn-text-light));
+    display: flex;
+    flex-direction: column;
+    gap: wc.spacing(md);
+    max-width: wc.container-width(md);
+  }
+}

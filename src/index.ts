@@ -16,6 +16,7 @@ import './Property';
 import './Chart';
 import './SimpleChart';
 import './Toggle';
+import './Note';
 import './Tabs';
 
 import './simpleprompt';

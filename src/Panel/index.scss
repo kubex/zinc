@@ -7,7 +7,7 @@
   flex-grow: 1;
 
   > div {
-    padding: var(--zn-spacing-md);
+    padding: wc.spacing(md);
     border-width: 1px !important;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@
     .header {
       display: flex;
       justify-items: center;
-      padding-bottom: var(--zn-spacing-sm);
+      padding-bottom: wc.spacing(sm);
 
       span {
         font-weight: 500;
@@ -39,15 +39,15 @@
 
       ul {
         display: flex;
-        margin: var(--zn-spacing-xs) 0 0;
+        margin: wc.spacing(xs) 0 0;
         padding: 0;
-        gap: var(--zn-spacing-md);
+        gap: wc.spacing(md);
         border-bottom-width: 1px;
         width: 100%;
 
         li {
           font-weight: 600;
-          padding-bottom: var(--zn-spacing-xs);
+          padding-bottom: wc.spacing(xs);
           border-bottom-width: 3px;
           border-color: transparent !important;
           font-size: 80%;
@@ -72,7 +72,7 @@
 
     .footer {
       display: block;
-      padding-top: var(--zn-spacing-md);
+      padding-top: wc.spacing(md);
       border-top-width: 1px;
       font-weight: 500;
     }
@@ -90,11 +90,11 @@
   }
 
   .header {
-    padding-top: var(--zn-spacing-md);
+    padding-top: wc.spacing(md);
   }
 
   .footer {
-    padding-bottom: var(--zn-spacing-md);
+    padding-bottom: wc.spacing(md);
   }
 }
 
@@ -117,12 +117,12 @@
 }
 
 :host([stat]) > div {
-  padding: var(--zn-spacing-md);
+  padding: wc.spacing(md);
 }
 
 :host([small]) > div {
-  min-width: var(--zn-size-spanel);
-  flex-basis: var(--zn-size-spanel);
+  min-width: wc.common-size(spanel);
+  flex-basis: wc.common-size(spanel);
   background-color: transparent;
   border-width: 0;
 }

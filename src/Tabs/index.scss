@@ -10,12 +10,12 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: var(--zn-spacing-lg);
+    gap: wc.spacing(lg);
     border-bottom-width: 1px;
-    margin-bottom: var(--zn-spacing-md);
+    margin-bottom: wc.spacing(md);
 
     ::slotted([slot="tab"]) {
-      padding: var(--zn-spacing-xs) var(--zn-spacing-sm);
+      padding: wc.spacing(xs) wc.spacing(sm);
       background-color: rgba(var(--zn-color-primary), .40);
       border-radius: 10px;
       cursor: pointer;
@@ -34,13 +34,13 @@
   ::slotted([slot="panel"][selected]) {
     display: block;
     width: 100%;
-    padding: var(--zn-spacing-md);
+    padding: wc.spacing(md);
   }
 
   .tabs__header {
     display: flex;
     flex-direction: row;
     justify-items: flex-end;
-    gap: var(--zn-spacing-md);
+    gap: wc.spacing(md);
   }
 }

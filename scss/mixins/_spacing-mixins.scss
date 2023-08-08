@@ -33,50 +33,59 @@
   }
 }
 
-@mixin gap() {
-  gap: var(--zn-spacing-xxs);
-
-  @include container(smp) {
-    gap: var(--zn-spacing-sm);
-  }
-
-  @include container(md) {
-    gap: var(--zn-spacing-md);
-  }
-
-  @include container(lg) {
-    gap: var(--zn-spacing-lg);
-  }
-}
-
 @mixin gap {
-  gap: var(--zn-spacing-xxs);
+  gap: spacing(xxs);
 
   @include container(smp) {
-    gap: var(--zn-spacing-sm);
+    gap: spacing(sm);
   }
 
   @include container(md) {
-    gap: var(--zn-spacing-md);
+    gap: spacing(md);
   }
 
   @include container(lg) {
-    gap: var(--zn-spacing-lg);
+    gap: spacing(lg);
   }
 }
 
 @mixin padding {
-  padding: var(--zn-spacing-xs);
+  padding: spacing(xs);
 
   @include container(smp) {
-    padding: var(--zn-spacing-sm);
+    padding: spacing(sm);
   }
 
   @include container(md) {
-    padding: var(--zn-spacing-md);
+    padding: spacing(md);
   }
 
   @include container(lg) {
-    padding: var(--zn-spacing-lg);
+    padding: spacing(lg);
+  }
+}
+
+@function spacing($size, $default: sm) {
+  @if map.has-key(spacing.$spacing, $size) {
+    @return map.get(spacing.$spacing, $size);
+  } @else {
+    @warn "Unknown spacing size `#{$size}`. Using default `#{$default}`.";
+    @return map.get(spacing.$spacing, $default);
+  }
+}
+
+@function common-size($size) {
+  @if map.has-key(spacing.$common-sizes, $size) {
+    @return map.get(spacing.$common-sizes, $size);
+  } @else {
+    @warn "Unknown common size `#{$size}`.";
+  }
+}
+
+@function container-width($size) {
+  @if map.has-key(spacing.$container, $size) {
+    @return map.get(spacing.$container, $size);
+  } @else {
+    @warn "Unknown container size `#{$size}`.";
   }
 }

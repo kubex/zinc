@@ -11,7 +11,7 @@ zn-tile, :host {
 :host {
   container-type: inline-size;
   display: flex;
-  height: var(--zn-size-tile);
+  height: wc.common-size(tile);
   width: 100%;
   align-items: center;
   overflow: hidden;
@@ -23,9 +23,9 @@ zn-tile, :host {
     align-items: center;
     overflow: hidden;
     flex-wrap: nowrap;
-    padding-top: var(--zn-spacing-sm);
-    padding-bottom: var(--zn-spacing-sm);
-    gap: var(--zn-spacing-md);
+    padding-top: wc.spacing(sm);
+    padding-bottom: wc.spacing(sm);
+    gap: wc.spacing(md);
 
     > * {
       height: 100%;
@@ -101,7 +101,7 @@ zn-tile, :host {
 
       zn-icon {
         cursor: pointer;
-        padding: var(--zn-spacing-md);
+        padding: wc.spacing(md);
         border-radius: 100%;
 
         &:hover {
@@ -118,10 +118,10 @@ zn-tile, :host {
 }
 
 :host([child]) {
-  height: var(--zn-size-bar);
+  height: wc.common-size(bar);
 
   > div {
-    padding-left: var(--zn-spacing-xl);
+    padding-left: wc.spacing(xl);
 
     .description {
       display: none;

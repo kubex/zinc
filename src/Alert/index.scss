@@ -1,7 +1,7 @@
 @use "../../scss/wc";
 
 :host {
-  margin: var(--zn-spacing-md);
+  margin: wc.spacing(md);
 }
 
 .alert {
@@ -9,26 +9,26 @@
 
   .icon {
     display: inline-block;
-    padding: var(--zn-spacing-xs);
-    margin: var(--zn-spacing-md);
+    padding: wc.spacing(xs);
+    margin: wc.spacing(md);
     border-radius: 50%;
-    width: var(--zn-size-bar);
-    height: var(--zn-size-bar);
+    width: wc.common-size(bar);
+    height: wc.common-size(bar);
   }
 
   .title {
-    margin-bottom: var(--zn-spacing-sm);
+    margin-bottom: wc.spacing(sm);
   }
 
   .buttons {
-    margin-top: var(--zn-spacing-sm);
-    margin-bottom: var(--zn-spacing-sm);
+    margin-top: wc.spacing(sm);
+    margin-bottom: wc.spacing(sm);
   }
 
   .buttons slot {
     display: inline-flex;
-    margin: var(--zn-spacing-md);
-    gap: var(--zn-spacing-sm);
+    margin: wc.spacing(md);
+    gap: wc.spacing(sm);
   }
 }
 

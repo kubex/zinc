@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../variables/spacing";
 
-@mixin media($min, $max: null) {
+@mixin media-query($min, $max: null) {
   @if $min and $max {
     @media (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
       @content;
@@ -17,7 +17,7 @@
   }
 }
 
-@mixin container($min, $max: null) {
+@mixin container-query($min, $max: null) {
   @if $min and $max {
     @container (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
       @content;
@@ -36,15 +36,15 @@
 @mixin gap {
   gap: spacing(xxs);
 
-  @include container(smp) {
+  @include container-query(smp) {
     gap: spacing(sm);
   }
 
-  @include container(md) {
+  @include container-query(md) {
     gap: spacing(md);
   }
 
-  @include container(lg) {
+  @include container-query(lg) {
     gap: spacing(lg);
   }
 }
@@ -52,15 +52,15 @@
 @mixin padding {
   padding: spacing(xs);
 
-  @include container(smp) {
+  @include container-query(smp) {
     padding: spacing(sm);
   }
 
-  @include container(md) {
+  @include container-query(md) {
     padding: spacing(md);
   }
 
-  @include container(lg) {
+  @include container-query(lg) {
     padding: spacing(lg);
   }
 }

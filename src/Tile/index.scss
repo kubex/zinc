@@ -44,7 +44,7 @@ zn-tile, :host {
       display: none;
       flex-grow: 1;
 
-      @include wc.container(sm) {
+      @include wc.container-query(sm) {
         display: flex;
       }
     }
@@ -84,7 +84,7 @@ zn-tile, :host {
       grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
       grid-template-rows: 100% 0;
 
-      @include wc.container(smp) {
+      @include wc.container-query(smp) {
         display: grid;
         flex-basis: 50%;
       }
@@ -135,7 +135,7 @@ zn-tile, :host {
   }
 
   .summary.extend {
-    @include wc.container(smp) {
+    @include wc.container-query(smp) {
       text-align: left;
     }
   }

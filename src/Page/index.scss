@@ -7,14 +7,14 @@
   flex-grow: 1;
   display: flex;
 
-  @include wc.container(smp) {
+  @include wc.container-query(smp) {
     > div.with-side #page-content {
       $w: wc.common-size(bar);
       max-width: calc(100% - $w);
     }
   }
 
-  @include wc.container(lg) {
+  @include wc.container-query(lg) {
     > div.with-side #page-content {
       $w: wc.common-size(mpanel);
       max-width: calc(100% - $w);
@@ -30,7 +30,7 @@
     &.with-side {
       padding-top: wc.common-size(bar);
       flex-direction: column;
-      @include wc.container(smp) {
+      @include wc.container-query(smp) {
         padding-top: 0;
         flex-direction: column-reverse;
       }
@@ -42,7 +42,7 @@
 
     &.with-side, &.with-nav {
       display: flex;
-      @include wc.container(smp) {
+      @include wc.container-query(smp) {
         flex-direction: row;
       }
     }
@@ -58,11 +58,11 @@
     height: fit-content;
     max-width: 100%;
 
-    @include wc.container(smp) {
+    @include wc.container-query(smp) {
       flex-grow: 1;
     }
 
-    @include wc.container(md) {
+    @include wc.container-query(md) {
       max-width: 100%;
     }
   }
@@ -74,7 +74,7 @@
     width: 100%;
     overflow: visible;
 
-    @include wc.container(smp) {
+    @include wc.container-query(smp) {
       max-height: 100%;
       min-width: wc.common-size(bar);
       max-width: wc.common-size(bar);
@@ -85,7 +85,7 @@
       display: flex;
     }
 
-    @include wc.container(lg) {
+    @include wc.container-query(lg) {
       min-width: wc.common-size(mpanel);
       max-width: wc.common-size(mpanel);
       width: wc.common-size(mpanel);
@@ -97,7 +97,7 @@
       flex-grow: 1;
       overflow-y: auto;
 
-      @include wc.container(lg) {
+      @include wc.container-query(lg) {
         background: rgb(var(--color-body));
       }
 
@@ -113,12 +113,12 @@
         padding-bottom: wc.spacing(sm);
         padding-right: wc.spacing(md);
 
-        @include wc.container(smp) {
+        @include wc.container-query(smp) {
           padding-top: wc.spacing(md);
           padding-bottom: wc.spacing(md);
         }
 
-        @include wc.container(lg) {
+        @include wc.container-query(lg) {
           display: flex;
           padding-right: wc.spacing(lg);
           padding-top: wc.spacing(lg);
@@ -126,7 +126,7 @@
           min-width: wc.common-size(mpanel);
         }
 
-        @include wc.container(hd) {
+        @include wc.container-query(hd) {
           padding-top: wc.spacing(xl);
           padding-bottom: wc.spacing(xl);
           padding-right: wc.spacing(xl);
@@ -151,7 +151,7 @@
         width: 100%;
         background-color: white;
 
-        @include wc.container(smp) {
+        @include wc.container-query(smp) {
           flex-direction: column;
           justify-content: start;
           height: 100%;
@@ -160,7 +160,7 @@
           border-left-width: 1px;
         }
 
-        @include wc.container(lg) {
+        @include wc.container-query(lg) {
           display: none;
         }
 
@@ -170,11 +170,11 @@
           padding-left: wc.spacing(md);
           display: none;
 
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             writing-mode: vertical-rl;
           }
 
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             padding-left: 0;
           }
 
@@ -190,7 +190,7 @@
           transition: all 500ms ease-in-out;
           rotate: 0;
 
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             margin-top: wc.spacing(md);
             margin-bottom: wc.spacing(md);
             rotate: 90deg;
@@ -201,7 +201,7 @@
   }
 
   > div.with-nav .pageside, > div.with-nav .pageside > div.content {
-    @include wc.container(lg) {
+    @include wc.container-query(lg) {
       min-width: var(--spanel);
       max-width: var(--spanel);
     }
@@ -215,17 +215,17 @@
         padding-right: 0;
         padding-left: wc.spacing(md);
 
-        @include wc.container(lg) {
+        @include wc.container-query(lg) {
           padding-left: wc.spacing(lg);
         }
 
-        @include wc.container(hd) {
+        @include wc.container-query(hd) {
           padding-left: wc.spacing(xl);
         }
       }
 
       &, &.expander {
-        @include wc.container(smp) {
+        @include wc.container-query(smp) {
           border-right-width: 1px;
           border-left-width: 0;
 
@@ -238,7 +238,7 @@
   }
 }
 
-@include wc.container($min: false, $max: lg) {
+@include wc.container-query($min: false, $max: lg) {
   :host([open]) {
     > div .pageside {
       position: unset;
@@ -252,7 +252,7 @@
         z-index: 20;
         top: wc.common-size(bar);
 
-        @include wc.container(smp) {
+        @include wc.container-query(smp) {
           max-width: wc.common-size(mpanel);
           min-width: wc.common-size(mpanel);
           top: 0;
@@ -260,7 +260,7 @@
       }
 
       > div.expander {
-        @include wc.container(smp) {
+        @include wc.container-query(smp) {
           left: auto;
           right: wc.common-size(mpanel);
         }
@@ -268,7 +268,7 @@
         zn-icon {
           rotate: 180deg;
 
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             rotate: -90deg;
           }
         }
@@ -280,7 +280,7 @@
 
           &.close {
             display: none;
-            @include wc.container(smp) {
+            @include wc.container-query(smp) {
               display: block;
             }
           }
@@ -288,7 +288,7 @@
           &.close-sm {
             display: block;
             font-weight: 500;
-            @include wc.container(smp) {
+            @include wc.container-query(smp) {
               display: none;
             }
           }
@@ -299,14 +299,14 @@
     > div.with-nav .pageside {
       div {
         &.expander {
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             left: wc.common-size(mpanel);
             right: auto;
 
             zn-icon {
               rotate: -180deg;
 
-              @include wc.container(smp) {
+              @include wc.container-query(smp) {
                 rotate: 90deg;
               }
             }
@@ -314,7 +314,7 @@
         }
 
         &.content {
-          @include wc.container(smp) {
+          @include wc.container-query(smp) {
             left: 0;
             right: auto;
           }

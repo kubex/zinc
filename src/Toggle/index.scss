@@ -4,29 +4,28 @@
   position: relative;
   display: inline-flex;
   height: wc.spacing(xl);
-  width: wc.common-size(bar);
-  align-items: center;
+  width: 50px;
   flex-shrink: 0;
   cursor: pointer;
-  border-radius: 50%;
-  border-width: wc.spacing(sm) !important;
+  border-radius: 20px;
+  align-items: center;
+  border-width: 1px !important;
   transition: color .2s ease-in-out, background-color .2s ease-in-out, border-color .2s ease-in-out;
 
   &:focus {
-    outline: none;
+    outline: 2px solid transparent;
     box-shadow: 0 0 0 2px rgb(var(--zn-color-tertiary)), 0 0 0 4px rgb(var(--zn-color-tertiary));
   }
 
   span {
-    transform: scale(0.9) translateX(0);
     pointer-events: none;
     display: inline-block;
     width: wc.spacing(xl);
+    height: wc.spacing(xl);
     border-radius: 50%;
     background-color: #fff;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 1px rgba(0, 0, 0, .1);
     transition: transform .2s ease-in-out, background-color .2s ease-in-out, opacity .2s ease-in-out;
-
   }
 
   input {

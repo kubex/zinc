@@ -1,107 +1,173 @@
+@use '../mixins';
+@use '../variables';
+
 $this: '.zn-simpleprompt';
 
 #{$this} {
   &__bg {
-    @apply inset-0 fixed bg-opacity-50 bg-black z-[1000000];
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 50%);
+    z-index: 1000000;
   }
 
   &__wrapper {
-    @apply flex min-h-full items-start justify-center p-xs text-center mt-[10vh];
-    @apply sm:p-0;
+    display: flex;
+    min-height: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding: mixins.spacing(xs);
+    text-align: center;
+    margin-top: 10vh;
+
+    @include mixins.media-query(sm) {
+      padding: 0;
+    }
   }
 
   &__container {
-    @apply relative transform overflow-hidden rounded-lg bg-white p-xl text-left shadow-xl transition-all;
-    @apply sm:my-sm sm:w-full sm:p-lg sm:max-w-md sm:max-h-[80%];
+    position: relative;
+    transform: translate(0, 0);
+    overflow: hidden;
+    border-radius: 5px;
+    background: white;
+    padding: mixins.spacing(xl);
+    text-align: left;
+
+    @include mixins.media-query(sm) {
+      margin: mixins.spacing(sm);
+      width: 100%;
+      padding: mixins.spacing(lg);
+      max-width: mixins.container-width(md);
+      max-height: 80%;
+    }
 
     &--lg {
-      @apply sm:max-w-lg;
+      @include mixins.media-query(lg) {
+        max-width: mixins.spacing(lg);
+      }
     }
   }
 
   &__wrap {
-    @apply sm:flex sm:items-start;
+    @include mixins.media-query(sm) {
+      display: flex;
+      align-items: flex-start;
+    }
 
     #{$this} {
 
       &__title {
-        @apply sm:mb-sm;
+        @include mixins.media-query(sm) {
+          margin-bottom: mixins.spacing(sm);
+        }
       }
 
       &__content {
-        @apply sm:text-left sm:flex-grow;
+        @include mixins.media-query(sm) {
+          text-align: left;
+          flex-grow: 1;
+        }
       }
 
 
       &__icon {
-        @apply sm:mr-lg sm:h-[38px] sm:w-[38px] sm:shrink-0;
-        @apply sm:mb-0;
+        @include mixins.media-query(sm) {
+          margin-right: mixins.spacing(lg);
+          height: 38px;
+          width: 38px;
+          flex-shrink: 0;
+          margin-bottom: 0;
+        }
       }
     }
 
     + #{$this}__actions {
-      @apply sm:mt-sm sm:mt-md;
+      @include mixins.media-query(sm) {
+        margin-top: mixins.spacing(md);
+      }
     }
   }
 
   &__icon {
-    @apply mx-auto mb-md flex h-[48px] w-[48px] items-center justify-center rounded-full;
-    @apply sm:mb-lg;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: mixins.spacing(md);
+    display: flex;
+    height: 48px;
+    width: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+
+    @include mixins.media-query(sm) {
+      margin-bottom: mixins.spacing(lg);
+    }
 
     &--danger {
-      @apply bg-error bg-opacity-30;
+      background: rgba(var(--zn-color-error), 30%);
 
       > zn-icon {
-        @apply text-error;
+        color: rgb(var(--zn-color-error));
       }
     }
 
     &--warning {
-      @apply bg-warning bg-opacity-30;
+      background: rgba(var(--zn-color-warning), 30%);
 
       > zn-icon {
-        @apply text-warning;
+        color: rgb(var(--zn-color-warning));
       }
     }
 
     &--info {
-      @apply bg-info bg-opacity-30;
+      background: rgba(var(--zn-color-info), 30%);
 
       > zn-icon {
-        @apply text-info;
+        color: rgb(var(--zn-color-info));
       }
     }
 
     &--success {
-      @apply bg-success bg-opacity-30;
+      background: rgba(var(--zn-color-success), 30%);
 
       > zn-icon {
-        @apply text-success;
+        color: rgb(var(--zn-color-success));
       }
     }
   }
 
   &__content {
-    @apply text-center;
+    text-align: center;
   }
 
   &__title {
-    @apply text-lg font-medium leading-6 text-dark-700 mb-lg;
+    // Title sizing
   }
 
   &__description {
-    @apply text-lg text-dark-400 font-extralight;
+    // Description Sizing
+    font-weight: 300;
   }
 
   &__actions {
-    @apply mt-lg sm:mt-xl;
+    margin-top: mixins.spacing(lg);
+    @include mixins.media-query(sm) {
+      margin-top: mixins.spacing(xl);
+    }
 
     &--centered {
       &#{$this}__actions {
-        @apply grid sm:gap-sm;
+        display: grid;
+        @include mixins.media-query(sm) {
+          gap: mixins.spacing(sm);
+        }
 
         &--2 {
-          @apply grid-cols-2;
+          grid-template-columns: repeat(2, 1fr);
         }
       }
 
@@ -111,99 +177,80 @@ $this: '.zn-simpleprompt';
     }
 
     &--multi {
-      @apply gap-sm;
-      @apply sm:flex sm:justify-end md:gap-0;
+      gap: mixins.spacing(sm);
+      @include mixins.media-query(sm) {
+        display: flex;
+        justify-content: flex-end;
+      }
+      @include mixins.media-query(md) {
+        gap: 0;
+      }
 
       #{$this}__actions__action {
-        @apply w-full sm:ml-lg mb-sm sm:mb-0;
+        width: 100%;
+        margin-bottom: mixins.spacing(sm);
+        @include mixins.media-query(sm) {
+          margin-left: mixins.spacing(sm);
+          margin-bottom: 0;
+        }
 
         &:first-of-type {
-          @apply sm:ml-0;
+          @include mixins.media-query(sm) {
+            margin-left: 0;
+          }
         }
       }
     }
 
     &__action {
-      @apply w-full px-md py-sm sm:text-base;
+      width: 100%;
+      padding: mixins.spacing(md) mixins.spacing(sm);
 
       &--secondary {
-        @apply bg-transparent border-dark-100 text-dark-800;
-        @apply hover:bg-dark-100
+        background-color: transparent;
+        border-color: rgba(var(--zn-color-tertiary), 20%) !important;
+        color: rgba(var(--zn-color-tertiary), 80%);
+
+        &:hover {
+          background-color: rgb(var(--zn-color-tertiary));
+        }
       }
 
       &--danger {
-        @apply bg-error;
-        @apply hover:bg-error hover:bg-opacity-60;
+        background-color: rgb(var(--zn-color-error));
+
+        &:hover {
+          background-color: rgba(var(--zn-color-error), 60);
+        }
       }
 
       &--warning {
-        @apply bg-warning;
-        @apply hover:bg-warning hover:bg-opacity-60;
+        background-color: rgb(var(--zn-color-warning));
+
+        &:hover {
+          background-color: rgba(var(--zn-color-warning), 60);
+        }
       }
 
       &--info {
-        @apply bg-info;
-        @apply hover:bg-info hover:bg-opacity-60;
+        background-color: rgb(var(--zn-color-info));
+
+        &:hover {
+          background-color: rgba(var(--zn-color-info), 60);
+        }
       }
 
       &--success {
-        @apply bg-success;
-        @apply hover:bg-success hover:bg-opacity-60;
+        background-color: rgb(var(--zn-color-success));
+
+        &:hover {
+          background-color: rgba(var(--zn-color-success), 60);
+        }
       }
     }
   }
 
   &--visible {
-    @apply overflow-hidden;
-  }
-}
-
-:host([dark-mode="true"]) #{$this}, .dark #{$this}, :host([d]) #{$this} {
-  &__bg {
-    @apply bg-opacity-80;
-  }
-
-  &__container {
-    @apply bg-dark-800;
-  }
-
-  &__title {
-    @apply text-darkTxt-800;
-  }
-
-  &__description {
-    @apply text-darkTxt-400;
-  }
-
-  &__actions {
-    &__action {
-      @apply bg-primary-500 text-white;
-      @apply focus:ring-primary-500 focus:ring-offset-2;
-
-      &--secondary {
-        @apply bg-transparent border-dark-600 text-darkTxt-800;
-        @apply hover:bg-dark-600
-      }
-
-      &--danger {
-        @apply border-error text-error bg-transparent;
-        @apply hover:bg-error hover:text-darkTxt-900 hover:bg-opacity-75;
-      }
-
-      &--warning {
-        @apply border-warning text-warning bg-transparent;
-        @apply hover:bg-warning hover:text-darkTxt-900 hover:bg-opacity-75;
-      }
-
-      &--info {
-        @apply border-info text-info bg-transparent;
-        @apply hover:bg-info hover:text-darkTxt-900 hover:bg-opacity-75;
-      }
-
-      &--success {
-        @apply border-success text-success bg-transparent;
-        @apply hover:bg-success hover:text-darkTxt-900 hover:bg-opacity-75;
-      }
-    }
+    overflow: hidden;
   }
 }

@@ -1,7 +1,7 @@
 import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Group';
-import '../../src/Input';
+import '../../src/FormElements/Input';
 import '../../src/Button';
 import {html} from "lit";
 

@@ -1,7 +1,6 @@
 import './Accordion';
 import './Container';
 import './Button';
-import './Input';
 import './Group';
 import './Page';
 import './Icon';
@@ -19,5 +18,10 @@ import './Toggle';
 import './Note';
 import './Tabs';
 import './Columns';
+import './Heading';
+import './FormElements/Group';
+import './FormElements/TextInput';
+import './FormElements/CheckBox';
+import './FormElements/Input';
 
 import './simpleprompt';

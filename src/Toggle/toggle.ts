@@ -11,9 +11,13 @@ export class Toggle extends LitElement {
   @property({attribute: 'checked', type: Boolean, reflect: true}) checked;
   @property({attribute: 'value', type: String, reflect: true}) value;
 
-  private internals;
+  private internals: any;
 
   static styles = unsafeCSS(styles);
+
+  static get formAssociated() {
+    return true;
+  }
 
   get required() {
     return this._isRequired;

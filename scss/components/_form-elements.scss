@@ -1,3 +1,4 @@
+@use "sass:map";
 @use '../mixins';
 @use '../variables';
 @use "./button";
@@ -23,7 +24,9 @@ form {
     display: block;
     width: 100%;
     border-radius: 5px;
-    background-color: rgb(var(--zn-panel));
+    border-width: 1px !important;
+    background-color: white;
+    box-shadow: inset 0 2px 4px 0 rgba(0,0,0,.05);
 
     &:focus {
       outline: none;
@@ -37,12 +40,12 @@ form {
     }
 
     @include mixins.media-query(sm) {
-      padding: mixins.spacing(sm);
+      padding: mixins.spacing(xs);
     }
   }
 
   label {
-    font-size: 90%;
+    font-weight: 500;
     display: block;
     margin-bottom: mixins.spacing(xs);
     margin-top: mixins.spacing(md);

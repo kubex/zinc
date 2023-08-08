@@ -1,6 +1,6 @@
 import {Meta, StoryObj} from "@storybook/web-components";
 
-import '../../src/Input';
+import '../../src/FormElements/Input';
 
 const meta: Meta = {
   component: 'zn-input',

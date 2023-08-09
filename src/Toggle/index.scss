@@ -20,11 +20,12 @@
   span {
     pointer-events: none;
     display: inline-block;
-    width: wc.spacing(xl);
-    height: wc.spacing(xl);
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background-color: #fff;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 1px rgba(0, 0, 0, .1);
+    transform: translateX(2px);
     transition: transform .2s ease-in-out, background-color .2s ease-in-out, opacity .2s ease-in-out;
   }
 
@@ -38,6 +39,6 @@
   border-color: rgb(var(--zn-color-tertiary)) !important;
 
   span {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + 6px));
   }
 }

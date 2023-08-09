@@ -11,10 +11,8 @@
 <body t="default" style="overflow: auto">
 <button data-toggle>toggle theme</button>
 
-<app-container id="dest">
-</app-container>
 
-<div id="source" style="display: none">
+<div id="source">
   <zn-header max-width
              caption="Mark Frederik Hanslanderbutterzlut"
              navigation='[{"title": "Overview", "path": "#", "default":true}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}]'
@@ -265,10 +263,6 @@
         </form>
       </zn-accordion>
     </zn-panel>
-    <zn-panel>
-      <zn-chart .datasets="{label:'Dataset 1', data: [{x:'Mon', y: 20000}]}" labels="['mon']"></zn-chart>
-    </zn-panel>
-
   </zn-page>
 </div>
 
@@ -287,14 +281,6 @@
       document.body.setAttribute('t', 'default');
     }
   });
-</script>
-<script>
-  setTimeout(() =>
-  {
-    const dest = document.getElementById('dest');
-    const source = document.getElementById('source');
-    dest.innerHTML = source.innerHTML;
-  }, 100);
 </script>
 </body>
 </html>

@@ -58,7 +58,8 @@ zn-tile, :host {
     }
 
     .caption {
-      // TODO font sizes
+      color: rgb(var(--zn-text-heading));
+      font-weight: 500;
     }
 
     .caption[data-uri]:not([data-uri=""]) {
@@ -67,11 +68,13 @@ zn-tile, :host {
     }
 
     .description {
-      color: rgb(var(--zn--text-header));
+      // Description
     }
 
     .caption, .description {
-      @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .extended {

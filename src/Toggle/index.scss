@@ -1,0 +1,44 @@
+@use "../../scss/wc";
+
+:host {
+  position: relative;
+  display: inline-flex;
+  height: wc.spacing(xl);
+  width: 50px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 20px;
+  align-items: center;
+  border-width: 1px !important;
+  transition: color .2s ease-in-out, background-color .2s ease-in-out, border-color .2s ease-in-out;
+
+  &:focus {
+    outline: 2px solid transparent;
+    box-shadow: 0 0 0 2px rgb(var(--zn-color-tertiary)), 0 0 0 4px rgb(var(--zn-color-tertiary));
+  }
+
+  span {
+    pointer-events: none;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 1px rgba(0, 0, 0, .1);
+    transform: translateX(2px);
+    transition: transform .2s ease-in-out, background-color .2s ease-in-out, opacity .2s ease-in-out;
+  }
+
+  input {
+    display: none;
+  }
+}
+
+:host([checked]) {
+  background-color: rgb(var(--zn-color-tertiary));
+  border-color: rgb(var(--zn-color-tertiary)) !important;
+
+  span {
+    transform: translateX(calc(100% + 6px));
+  }
+}

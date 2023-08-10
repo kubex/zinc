@@ -1,0 +1,64 @@
+@use "../../scss/wc";
+
+:host > div {
+  border-bottom-width: 1px;
+}
+
+:host(:not([expanded])) {
+  cursor: pointer;
+}
+
+:host([expanded]) .expand {
+  transform: rotate(180deg);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+  overflow: hidden;
+  padding: wc.spacing(md);
+  justify-items: center;
+
+  .caption {
+    font-weight: 600;
+    margin-bottom: wc.spacing(sm);
+    color: rgb(var(--zn-text-heading));
+  }
+
+  .summary {
+    font-weight: 500;
+    font-size: 90%;
+  }
+
+  .label {
+    font-weight: 500;
+    font-size: 90%;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.content {
+  padding: 0 wc.spacing(md) wc.spacing(md);
+}
+
+.content {
+  transition: .1s all ease-out;
+}
+
+:host(:not([expanded])) .content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.expand {
+  margin-left: wc.spacing(md);
+}

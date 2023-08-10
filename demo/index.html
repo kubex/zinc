@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../dist/main.min.css">
+</head>
+<body t="default" style="overflow: auto">
+<button data-toggle>toggle theme</button>
+
+
+<div id="source">
+  <zn-header max-width
+             caption="Mark Frederik Hanslanderbutterzlut"
+             navigation='[{"title": "Overview", "path": "#", "default":true}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}, {"title": "Section Title", "path": "#"}]'
+             breadcrumb='[{"title": "Home", "path": "#"}, {"title": "Customers", "path": "#"}, {"title": "Marko Frederik Hanslanderbutterzlut", "path": "#"}]'>
+  </zn-header>
+
+  <zn-page caption="Overview">
+    <div slot="side">
+
+      <zn-panel caption="Customer Details">
+        <zn-prop caption="First Name">Marko</zn-prop>
+        <zn-prop caption="Last Name">Hanslanderbutterzlut</zn-prop>
+        <zn-prop caption="Email">first.last@companyname.com</zn-prop>
+        <zn-prop caption="Phone">+44 (0) 1962 21 31 00</zn-prop>
+        <zn-prop caption="Billing Address">16 - 18 Barnes Wallis Road, Fareham, Hampshire, PO15 5TT, England
+        </zn-prop>
+      </zn-panel>
+
+      <zn-panel caption="Additional Details">
+        <zn-prop caption="Created">2019-06-03</zn-prop>
+        <zn-prop caption="User ID">123 - 543 - 756</zn-prop>
+        <zn-prop caption="Status">Active Customer</zn-prop>
+        <zn-prop caption="Webshield Status">Installed</zn-prop>
+        <zn-prop caption="Default Browser">Chrome v35</zn-prop>
+        <zn-prop caption="Current Primary Pet">Dog - Poodle</zn-prop>
+        <zn-prop caption="Insurance Provider">Aviva</zn-prop>
+      </zn-panel>
+
+      <zn-panel caption="Quick Actions">
+        <zn-prop caption="Created">2019-06-03</zn-prop>
+        <zn-prop caption="User ID">123 - 543 - 756</zn-prop>
+        <zn-prop caption="Status">Active Customer</zn-prop>
+        <zn-prop caption="Webshield Status">Installed</zn-prop>
+        <zn-prop caption="Default Browser">Chrome v35</zn-prop>
+        <zn-prop caption="Current Primary Pet">Dog - Poodle</zn-prop>
+        <zn-prop caption="Insurance Provider">Aviva</zn-prop>
+      </zn-panel>
+
+    </div>
+
+    <zn-panel>
+      <zn-toggle name="tog-form" value="checked"></zn-toggle>
+    </zn-panel>
+
+    <zn-panel caption="Subscriptions"
+              navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+      <zn-tile caption="Antivirus Webshield Pro - 12 Months" description="Renews - May 24th 2023">
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+      <zn-tile caption="Antivirus Webshield Pro - 12 Months" description="Renews - May 24th 2023">
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+    </zn-panel>
+
+    <zn-panel caption="Subscriptions">
+      <div link="link">
+        <zn-tile caption="Caption" description="Description">
+        </zn-tile>
+        <zn-tile caption="Caption 2" description="Description 2">
+        </zn-tile>
+      </div>
+      <div link="link-2">
+        <zn-tile caption="Caption 3" description="Description 3">
+        </zn-tile>
+        <zn-tile caption="Caption 4" description="Description 4">
+        </zn-tile>
+      </div>
+    </zn-panel>
+
+    <zn-panel caption="Billing"
+              navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+      <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+        <zn-chip slot="status" success>paid</zn-chip>
+      </zn-tile>
+      <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+        <zn-chip slot="status" success>paid</zn-chip>
+      </zn-tile>
+      <zn-tile caption="May 17th 2023 — $12.99" description="Invoice 123 - 543 - 756">
+        <zn-chip slot="status" success>paid</zn-chip>
+      </zn-tile>
+      <span slot="footer">View  All &rarr;</span>
+    </zn-panel>
+
+    <zn-panel caption="Payment Methods"
+              navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+      <zn-tile caption="Visa •••• 2341 (Primary Method)" description="Expires - 31st May 2023">
+        <zn-icon slot="primary" src="check" size="48" library="mio" style="--icon-size:32px;"></zn-icon>
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+      <zn-tile caption="Mastercard •••• 2341" description="Expires - 31st May 2023">
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+      <zn-tile caption="Visa •••• 2341" description="Expired - 31st January 2023">
+        <zn-chip slot="status" error>expired</zn-chip>
+      </zn-tile>
+      <span slot="footer">View  All &rarr;</span>
+    </zn-panel>
+
+    <zn-panel caption="Latest Transactions"
+              navigation='[{"title": "Overview", "path": "#", "default":true},{"title": "Successful", "path": "#"},{"title": "Declined", "path": "#"},{"title": "Captures", "path": "#"}]'>
+      <zn-tile caption="Capture (Paysafe UK)" description="876sfd-976sdf574-khbsdfc6r5">
+        <zn-icon slot="primary" src="check" size="48" library="mio" style="--icon-size:32px;"></zn-icon>
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+      <zn-tile caption="Mastercard •••• 2341" description="Expires - 31st May 2023">
+        <zn-chip slot="status" success>active</zn-chip>
+      </zn-tile>
+      <zn-tile caption="Visa •••• 2341" description="Expired - 31st January 2023">
+        <zn-chip slot="status" error>expired</zn-chip>
+      </zn-tile>
+      <span slot="footer">View  All &rarr;</span>
+    </zn-panel>
+
+    <zn-panel caption="Latest Notes">
+      <zn-button size="small" slot="actions" content="Add a Note"></zn-button>
+
+      <zn-note>
+        <span slot="caption">by Mark Neale (CSA)</span>
+        <span slot="date">May 24th 2023 @ 14:21</span>
+
+        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+          are going to use a passage of Lorem Ipsum.</p>
+
+        <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
+          Ipsum or randomised words which don't look even slightly believable.</p>
+      </zn-note>
+
+      <zn-note>
+        <span slot="caption">by Mark Neale (CSA)</span>
+        <span slot="date">May 24th 2023 @ 14:21</span>
+
+        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+          are going to use a passage of Lorem Ipsum.</p>
+
+        <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
+          Ipsum or randomised words which don't look even slightly believable.</p>
+      </zn-note>
+
+    </zn-panel>
+
+    <zn-panel>
+      <zn-table selectable="" borders=""
+                data="{&quot;header&quot;:[{&quot;name&quot;:&quot;Transaction&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Date / Time&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Transacted&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Requested&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Gateway&quot;,&quot;display&quot;:&quot;&quot;},{&quot;name&quot;:&quot;Gateway&quot;,&quot;display&quot;:&quot;&quot;}],&quot;items&quot;:[{&quot;caption&quot;:&quot;TRANSACTION_TYPE_CAPTURE&quot;,&quot;summary&quot;:&quot;PENDING&quot;,&quot;icon&quot;:&quot;&quot;,&quot;data&quot;:[&quot;2023-06-26 16:16:09&quot;,&quot;1.00 GBP&quot;,&quot;1.00 GBP&quot;,&quot;paysafe-connector&quot;,&quot;paysafe&quot;]},{&quot;caption&quot;:&quot;TRANSACTION_TYPE_AUTHORIZE&quot;,&quot;summary&quot;:&quot;COMPLETED&quot;,&quot;icon&quot;:&quot;&quot;,&quot;data&quot;:[&quot;2023-06-26 16:15:13&quot;,&quot;1.00 GBP&quot;,&quot;1.00 GBP&quot;,&quot;paysafe-connector&quot;,&quot;paysafe&quot;]}]}"></zn-table>
+    </zn-panel>
+
+    <zn-panel>
+      <form method="POST" style="padding: 30px;">
+        <zn-form-group caption="Something">
+          <zn-datepicker></zn-datepicker>
+        </zn-form-group>
+        <zn-form-group caption="Profile"
+                       description="This information will be displayed publicly so be careful what you share.">
+          <zn-input span="4" label="Website">
+            <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
+          </zn-input>
+          <zn-input label="About" advice="Write a few sentences about yourself."><textarea></textarea></zn-input>
+          <zn-input label="Photo"><input type="file"/></zn-input>
+          <zn-input label="Cover photo">
+            <zn-drag-upload text="Drag and drop a File or Click Upload"
+                            types="image/png,image/jpeg,image/gif" size="10">
+            </zn-drag-upload>
+          </zn-input>
+        </zn-form-group>
+        <zn-form-group caption="Personal Information" description="Use a permanent address where you can receive mail.">
+          <zn-input label="First Name" span="3"><input type="text" name="first_name"/></zn-input>
+          <zn-input label="Last Name" span="3"><input type="text" name="last_name"/></zn-input>
+          <zn-input label="Email address" span="5"><input type="text" name="email"/></zn-input>
+          <zn-input label="Country" span="3">
+            <select>
+              <option value="GB">United Kingdom</option>
+            </select>
+          </zn-input>
+          <zn-input label="Street address"></zn-input>
+          <zn-input span="2" label="City"><input type="text" name="city"/></zn-input>
+          <zn-input span="2" label="State / Province"><input type="text" name="state"/></zn-input>
+          <zn-input span="2" label="ZIP / Postal code"><input type="text" name="postal"/></zn-input>
+        </zn-form-group>
+        <zn-form-group caption="Notifications"
+                       description="We'll always let you know about important changes, but you pick what else you want to hear about.">
+          <zn-input label="By Email">
+            <zn-checkbox name="comments" title="Comments"
+                         description="Get notified when someones posts a comment on a posting"></zn-checkbox>
+            <zn-checkbox name="candidates" title="Candidates"
+                         description="Get notified when a candidate applies for a job"></zn-checkbox>
+            <zn-checkbox name="offers" title="Offers"
+                         description="Get notified when a candidate accepts or rejects an offer"></zn-checkbox>
+          </zn-input>
+          <zn-input label="Push Notifications" summary="These are delivered via SMS to your mobile phone.">
+            <zn-checkbox name="everything" title="Everything"></zn-checkbox>
+            <zn-checkbox name="email" title="Same as email"></zn-checkbox>
+            <zn-checkbox name="push" title="No push notifications"></zn-checkbox>
+          </zn-input>
+        </zn-form-group>
+        <input type="submit" value="Submit"/>
+      </form>
+    </zn-panel>
+
+    <zn-panel>
+      <zn-accordion label="Label" caption="Used on 3 URLs" summary="1234-1234-1234-1234-1244">
+        <zn-plist>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+        </zn-plist>
+        <form method="POST" span="4">
+          <zn-form-group caption="Add a URL">
+            <zn-input>
+              <zn-text-input prefix="https://" name="url" placeholder="This is the filled form response">
+                <input type="submit" value="Add a URL"/>
+              </zn-text-input>
+            </zn-input>
+          </zn-form-group>
+        </form>
+      </zn-accordion>
+      <zn-accordion label="Label" caption="Used on 3 URLs" summary="1234-1234-1234-1234-1244">
+        <zn-plist>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+        </zn-plist>
+        <form method="POST" span="4">
+          <zn-form-group caption="Add a URL">
+            <zn-input>
+              <zn-text-input prefix="https://" name="url" placeholder="This is the filled form response">
+                <input type="submit" value="Add a URL"/>
+              </zn-text-input>
+            </zn-input>
+          </zn-form-group>
+        </form>
+      </zn-accordion>
+      <zn-accordion label="Used on 3 URLs" caption="Token Name Goes Here" summary="1234-1234-1234-1234-1244">
+        <zn-plist>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+        </zn-plist>
+        <form method="POST" span="4">
+          <zn-form-group caption="Add a URL">
+            <zn-input>
+              <zn-text-input prefix="https://" name="url" placeholder="This is the filled form response">
+                <input type="submit" value="Add a URL"/>
+              </zn-text-input>
+            </zn-input>
+          </zn-form-group>
+        </form>
+      </zn-accordion>
+      <zn-accordion label="Label" caption="Used on 3 URLs" summary="1234-1234-1234-1234-1244">
+        <zn-plist>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+          <zn-prop inline=${inline} icon="close">https://kjnsdkjfndsjkfndsf-flkdsnfjkdf.io</zn-prop>
+        </zn-plist>
+        <form method="POST" span="4">
+          <zn-form-group caption="Add a URL">
+            <zn-input>
+              <zn-text-input prefix="https://" name="url" placeholder="This is the filled form response">
+                <input type="submit" value="Add a URL"/>
+              </zn-text-input>
+            </zn-input>
+          </zn-form-group>
+        </form>
+      </zn-accordion>
+    </zn-panel>
+  </zn-page>
+</div>
+
+<script src="../dist/main.min.js"></script>
+<script>
+  var button = document.querySelector('button[data-toggle]');
+  button.addEventListener('click', function ()
+  {
+    var theme = document.body.getAttribute('t');
+    if(theme === 'default')
+    {
+      document.body.setAttribute('t', 'dark');
+    }
+    else
+    {
+      document.body.setAttribute('t', 'default');
+    }
+  });
+</script>
+</body>
+</html>

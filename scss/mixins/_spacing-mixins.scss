@@ -1,0 +1,91 @@
+@use "sass:map";
+@use "../variables/spacing";
+
+@mixin media-query($min, $max: null) {
+  @if $min and $max {
+    @media (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  } @else if $min {
+    @media (min-width: #{map.get(spacing.$container, $min)}) {
+      @content;
+    }
+  } @else if $max {
+    @media (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  }
+}
+
+@mixin container-query($min, $max: null) {
+  @if $min and $max {
+    @container (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  } @else if $min {
+    @container (min-width: #{map.get(spacing.$container, $min)}) {
+      @content;
+    }
+  } @else if $max {
+    @container (max-width: #{map.get(spacing.$container, $max)}) {
+      @content;
+    }
+  }
+}
+
+@mixin gap {
+  gap: spacing(xxs);
+
+  @include container-query(smp) {
+    gap: spacing(sm);
+  }
+
+  @include container-query(md) {
+    gap: spacing(md);
+  }
+
+  @include container-query(lg) {
+    gap: spacing(lg);
+  }
+}
+
+@mixin padding {
+  padding: spacing(xs);
+
+  @include container-query(smp) {
+    padding: spacing(sm);
+  }
+
+  @include container-query(md) {
+    padding: spacing(md);
+  }
+
+  @include container-query(lg) {
+    padding: spacing(lg);
+  }
+}
+
+@function spacing($size, $default: sm) {
+  @if map.has-key(spacing.$spacing, $size) {
+    @return map.get(spacing.$spacing, $size);
+  } @else {
+    @warn "Unknown spacing size `#{$size}`. Using default `#{$default}`.";
+    @return map.get(spacing.$spacing, $default);
+  }
+}
+
+@function common-size($size) {
+  @if map.has-key(spacing.$common-sizes, $size) {
+    @return map.get(spacing.$common-sizes, $size);
+  } @else {
+    @warn "Unknown common size `#{$size}`.";
+  }
+}
+
+@function container-width($size) {
+  @if map.has-key(spacing.$container, $size) {
+    @return map.get(spacing.$container, $size);
+  } @else {
+    @warn "Unknown container size `#{$size}`.";
+  }
+}

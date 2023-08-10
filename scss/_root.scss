@@ -1,0 +1,88 @@
+@use "sass:map";
+@use "variables";
+
+$var-prefix: '--zn-';
+
+@function hex-to-rgb($color) {
+  @return red($color), green($color), blue($color);
+}
+
+// Global Colors
+$theme-colors: (
+  'primary': hex-to-rgb(map.get(variables.$purple, 700)),
+  'secondary': hex-to-rgb(map.get(variables.$green, 500)),
+  'tertiary': hex-to-rgb(map.get(variables.$turquoise, 500)),
+  'warning': hex-to-rgb(map.get(variables.$yellow, 500)),
+  'error': hex-to-rgb(map.get(variables.$red, 500)),
+  'success': hex-to-rgb(map.get(variables.$green, 500)),
+  'info': hex-to-rgb(map.get(variables.$blue, 500)),
+);
+
+// Default Theme
+$theme-default: (
+  'text': hex-to-rgb(map.get(variables.$slate, 500)),
+  'text-heading': hex-to-rgb(map.get(variables.$slate, 800)),
+  'text-page-title': '52, 52, 52',
+  'text-panel-title': hex-to-rgb(map.get(variables.$purple, 700)),
+  'body': hex-to-rgb(map.get(variables.$slate, 50)),
+  'panel': hex-to-rgb(variables.$white),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 300)),
+  'input-bg': '255, 255, 255',
+);
+
+// Light Theme
+$theme-light: (
+  'text': hex-to-rgb(variables.$black),
+  'text-heading': hex-to-rgb(variables.$black),
+  'text-page-title': hex-to-rgb(variables.$black),
+  'text-panel-title': hex-to-rgb(map.get(variables.$purple, 500)),
+  'body': hex-to-rgb(variables.$white),
+  'panel': hex-to-rgb(map.get(variables.$slate, 200)),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 200)),
+  'input-bg': '255, 255, 255',
+);
+
+// Dark theme
+$theme-dark: (
+  'text': hex-to-rgb(variables.$white),
+  'text-heading': hex-to-rgb(variables.$white),
+  'text-page-title': hex-to-rgb(variables.$black),
+  'text-panel-title': hex-to-rgb(map.get(variables.$purple, 500)),
+  'body': hex-to-rgb(map.get(variables.$slate, 900)),
+  'panel': hex-to-rgb(map.get(variables.$slate, 800)),
+  'border-color': hex-to-rgb(map.get(variables.$slate, 700)),
+  'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
+);
+
+@mixin spread-map($map: (), $pre: '') {
+  @if type-of($map) != 'map' {
+    @error 'spread-map() only works with maps';
+  }
+
+  @each $key, $value in $map {
+    #{$pre}#{$key}: #{$value};
+  }
+}
+
+:root {
+  // Theme Colors
+  @include spread-map($theme-colors, #{$var-prefix} + 'color-');
+  @include spread-map($theme-default, #{$var-prefix});
+
+  // Font Families
+  #{$var-prefix}font-family-sans: 'Roboto', sans-serif;
+  #{$var-prefix}font-family-serif: 'Roboto Slab', serif;
+  #{$var-prefix}font-family-mono: 'Roboto Mono', monospace;
+
+  // Default Opacities
+  #{$var-prefix}bg-opacity: 1;
+  #{$var-prefix}text-opacity: 1;
+}
+
+[t="light"] {
+  @include spread-map($theme-light, #{$var-prefix});
+}
+
+[t="dark"] {
+  @include spread-map($theme-dark, #{$var-prefix});
+}

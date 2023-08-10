@@ -1,0 +1,113 @@
+@use '../../scss/wc';
+
+:host([transparent]) > div {
+  background-color: transparent;
+}
+
+:host([navigation]) > div {
+  padding-bottom: 0;
+}
+
+:host > div {
+  display: flex;
+  justify-content: center;
+  border-bottom-width: 1px;
+  overflow: hidden;
+  background-color: rgb(var(--zn-panel));
+  gap: wc.spacing(sm);
+  padding-top: wc.spacing(sm);
+  padding-bottom: wc.spacing(sm);
+
+  .width-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: wc.container-width(hd);
+    gap: wc.spacing(sm);
+    height: fit-content;
+    padding-left: wc.spacing(sm);
+    padding-right: wc.spacing(sm);
+
+    @include wc.media-query(md) {
+      padding-left: wc.spacing(lg);
+      padding-right: wc.spacing(lg);
+    }
+  }
+
+  .breadcrumb {
+    display: block;
+    width: 100%;
+    padding-bottom: wc.spacing(xxs);
+    padding-top: 10px;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  h1 {
+    flex-grow: 1;
+    font-size: 24px;
+    line-height: 20px;
+    color: rgb(var(--zn-text-page-title));
+    margin: 0;
+    font-weight: inherit;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  slot {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: wc.spacing(xs);
+  }
+
+  ul.header-nav {
+    display: flex;
+    flex-basis: 100%;
+    gap: 30px;
+    margin: 0;
+    padding: wc.spacing(xs) 0 0;
+    list-style: none;
+    color: rgb(var(--zn-text-heading));
+
+    li {
+      // TODO fontsizes
+      font-weight: 500;
+      position: relative;
+
+      &::before {
+        content: '';
+        left: 50%;
+        right: 50%;
+        bottom: 0;
+        position: absolute;
+        transition: all 300ms ease-in-out;
+        height: wc.spacing(xxs);
+      }
+
+      &:hover:before {
+        // TODO Hover Before colors
+        left: -2px;
+        right: -2px;
+      }
+
+      a {
+        display: block;
+        cursor: pointer;
+        padding-bottom: 4px;
+        line-height: 30px;
+        padding-top: 10px;
+      }
+
+      &.active::before {
+        // TODO Active Before colors
+        left: -8px;
+        right: -8px;
+      }
+    }
+  }
+}

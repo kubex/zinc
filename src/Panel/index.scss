@@ -1,0 +1,137 @@
+@use "sass:map";
+@use "../../scss/wc";
+
+.hidden {
+  display: none;
+}
+
+:host {
+  @include wc.scrollbars;
+
+  --row-count: 1;
+  overflow: hidden;
+  flex-grow: 1;
+
+
+  > div {
+    padding: wc.spacing(md);
+    border-width: 1px !important;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: var(-zn-size-panel);
+    min-width: var(-zn-size-panel);
+    background-color: rgb(var(--zn-panel));
+
+    @include wc.media-query(smp) {
+      border-radius: 10px;
+    }
+
+    .header {
+      display: flex;
+      justify-items: center;
+      padding-bottom: wc.spacing(sm);
+
+      span {
+        font-weight: 500;
+        flex-grow: 1;
+        font-size: 18px;
+        color: rgba(var(--zn-text-panel-title), 100%);
+      }
+    }
+
+    div.nav {
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 100%;
+
+      ul {
+        display: flex;
+        margin: wc.spacing(xs) 0 0;
+        padding: 0;
+        gap: wc.spacing(md);
+        border-bottom-width: 1px !important;
+        width: 100%;
+
+        li {
+          font-weight: 500;
+          padding-bottom: wc.spacing(xs);
+          border-bottom-width: 3px;
+          border-color: transparent !important;
+
+          &:hover, &.active {
+            color: rgb(var(--zn-color-primary)) !important;
+            border-color: rgb(var(--zn-color-primary)) !important;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .body {
+      overflow-y: auto;
+      flex-grow: 1;
+
+      > :not([hidden]) ~ :not([hidden]) {
+        border: 1px solid black !important;
+      }
+
+    }
+
+    .footer {
+      display: block;
+      padding-top: wc.spacing(md);
+      border-top-width: 1px;
+      font-weight: 500;
+      color: rgb(var(--zn-color-primary));
+    }
+
+    .header:empty, .footer:empty {
+      display: none;
+    }
+  }
+}
+
+:host([rows]) {
+  > div {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .header {
+    padding-top: wc.spacing(md);
+  }
+
+  .footer {
+    padding-bottom: wc.spacing(md);
+  }
+}
+
+:host([rows]:not([rows=""])) {
+  .body {
+    $tile: var(--zn-sizes-tile);
+    max-height: calc($tile * var(--row-count, 50));
+    height: calc($tile * var(--row-count));
+  }
+}
+
+:host([single]) > div {
+  width: 100%;
+  border-width: 1px !important;
+  min-width: 0;
+
+  & > div.nav {
+    display: none;
+  }
+}
+
+:host([stat]) > div {
+  padding: wc.spacing(md);
+}
+
+:host([small]) > div {
+  min-width: wc.common-size(spanel);
+  flex-basis: wc.common-size(spanel);
+  background-color: transparent;
+  border-width: 0;
+}

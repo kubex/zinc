@@ -1,0 +1,43 @@
+@use "../../scss/wc";
+
+:host {
+  margin: wc.spacing(md);
+}
+
+.alert {
+  text-align: center;
+
+  .icon {
+    display: inline-block;
+    padding: wc.spacing(xs);
+    margin: wc.spacing(md);
+    border-radius: 50%;
+    width: wc.common-size(bar);
+    height: wc.common-size(bar);
+  }
+
+  .title {
+    margin-bottom: wc.spacing(sm);
+  }
+
+  .buttons {
+    margin-top: wc.spacing(sm);
+    margin-bottom: wc.spacing(sm);
+  }
+
+  .buttons slot {
+    display: inline-flex;
+    margin: wc.spacing(md);
+    gap: wc.spacing(sm);
+  }
+}
+
+:host([success]) {
+  .icon {
+    background-color: rgb(var(--zn-color-success));
+
+    > zn-icon {
+      color: rgb(var(--zn-color-success));
+    }
+  }
+}

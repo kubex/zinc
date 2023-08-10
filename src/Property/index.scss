@@ -1,0 +1,53 @@
+@use "../../scss/wc";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: wc.spacing(md);
+  margin-bottom: wc.spacing(md);
+  gap: wc.spacing(xxs);
+  grid-column: span var(--colspan, 3);
+
+  dd, dt {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  dt {
+    margin-right: 0;
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+  }
+
+  dd {
+    text-overflow: ellipsis;
+  }
+}
+
+:host([inline]) {
+  flex-direction: row;
+  justify-items: center;
+  flex-grow: 1;
+  width: 100%;
+
+  dt {
+    margin-right: wc.spacing(sm);
+  }
+
+  dd {
+    flex-grow: 1;
+    text-align: right;
+    white-space: normal;
+    font-size: 90%;
+  }
+}
+
+
+:host([icon]) {
+  dd {
+    text-align: left;
+    font-weight: normal;
+  }
+}

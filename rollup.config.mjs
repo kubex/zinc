@@ -1,7 +1,8 @@
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import typescript from '@rollup/plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
+import commonjs from '@rollup/plugin-commonjs';
 
 // `yarn watch` -> `production` is false
 // `yarn build` -> `production` is true
@@ -12,6 +13,7 @@ const production = true;
 const commonPlugins = [
   resolve(), // tells Rollup how to find node_modules packages
   typescript({'sourceMap': !production}),
+  commonjs(),
   production && terser({format: {comments: false}}) // minify, but only in production
 ];
 

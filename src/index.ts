@@ -24,5 +24,6 @@ import './FormElements/TextInput';
 import './FormElements/CheckBox';
 import './FormElements/Input';
 import './FormElements/DragUpload';
+import './FormElements/DatePicker';
 
 import './simpleprompt';

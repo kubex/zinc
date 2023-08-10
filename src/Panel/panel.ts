@@ -47,12 +47,16 @@ export class Panel extends LitElement {
           </ul>
         </div>`;
     } else if (navItems.length > 0) {
+      // on click prevent default and select next panel
       nav = html`
         <div class="nav">
           <ul>
             ${navItems.map((item, index) => html`
               <li class="${item.active ? 'active' : ''}">
-                <a href="#" @click="${() => this.selectPanel(index)}">${item.path}</a>
+                <a href="#" @click="${(e) => {
+                  e.preventDefault();
+                  this.selectPanel(index);
+                }}">${item.path}</a>
               </li>`)}
           </ul>
         </div>`;

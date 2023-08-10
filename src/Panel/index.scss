@@ -1,12 +1,17 @@
 @use "sass:map";
 @use "../../scss/wc";
 
+.hidden {
+  display: none;
+}
+
 :host {
   @include wc.scrollbars;
 
   --row-count: 1;
   overflow: hidden;
   flex-grow: 1;
+
 
   > div {
     padding: wc.spacing(md);
@@ -30,7 +35,8 @@
       span {
         font-weight: 500;
         flex-grow: 1;
-        color: rgb(var(--zn-text-panel-title));
+        font-size: 18px;
+        color: rgba(var(--zn-text-panel-title), 100%);
       }
     }
 
@@ -48,16 +54,15 @@
         width: 100%;
 
         li {
-          font-weight: 600;
+          font-weight: 500;
           padding-bottom: wc.spacing(xs);
           border-bottom-width: 3px;
           border-color: transparent !important;
-          font-size: 90%;
 
           &:hover, &.active {
+            color: rgb(var(--zn-color-primary)) !important;
             border-color: rgb(var(--zn-color-primary)) !important;
             cursor: pointer;
-            margin-bottom: -2px;
           }
         }
       }

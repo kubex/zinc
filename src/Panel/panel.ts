@@ -13,9 +13,29 @@ export class Panel extends LitElement {
 
   static styles = unsafeCSS(styles);
 
+  private selectedPanel: Number = 0;
+
   protected render(): unknown {
     const footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
     const actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
+
+    const navItems = [];
+    const panels = this.querySelectorAll('[link]');
+    panels.forEach((item, index) => {
+      if (index === 0) {
+        item.classList.remove('hidden');
+        navItems.push({
+          path: item.getAttribute('link'),
+          active: true
+        });
+      } else {
+        item.classList.add('hidden');
+        navItems.push({
+          path: item.getAttribute('link'),
+          active: false
+        });
+      }
+    });
 
     let nav = html``;
     if (this.navigation.length > 0) {
@@ -26,6 +46,16 @@ export class Panel extends LitElement {
               <li><a href="${item.path}">${item.title}</a></li>`)}
           </ul>
         </div>`;
+    } else if (navItems.length > 0) {
+      nav = html`
+        <div class="nav">
+          <ul>
+            ${navItems.map((item, index) => html`
+              <li class="${item.active ? 'active' : ''}">
+                <a href="#" @click="${() => this.selectPanel(index)}">${item.path}</a>
+              </li>`)}
+          </ul>
+        </div>`;
     }
 
     if (this.rows > 0) {
@@ -33,7 +63,7 @@ export class Panel extends LitElement {
     }
 
     let header;
-    if (actionItems || this.caption || this.navigation.length > 0) {
+    if (actionItems || this.caption || this.navigation.length > 0 || navItems.length > 0) {
       header = html`
         <div class="header">
           <span>${this.caption}</span>
@@ -58,6 +88,28 @@ export class Panel extends LitElement {
         </div>
         ${footer}
       </div>`
+  }
+
+  private selectPanel(index: number) {
+    this.selectedPanel = index;
+    const panels = this.querySelectorAll('[link]');
+    panels.forEach((item, index) => {
+      if (index === this.selectedPanel) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    // update ul li
+    const navItems = this.shadowRoot.querySelectorAll('.nav li');
+    navItems.forEach((item, index) => {
+      if (index === this.selectedPanel) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
   }
 }
 

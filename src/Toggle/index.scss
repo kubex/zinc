@@ -3,12 +3,13 @@
 :host {
   position: relative;
   display: inline-flex;
-  height: wc.spacing(xl);
   width: 50px;
+  height: 25px;
   flex-shrink: 0;
   cursor: pointer;
   border-radius: 20px;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.15);
   border-width: 1px !important;
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 
@@ -20,12 +21,12 @@
   span {
     pointer-events: none;
     display: inline-block;
-    width: 21px;
-    height: 21px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 1px rgba(0, 0, 0, .1);
-    transform: translateX(1px);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px, rgba(59, 130, 246, 0.5) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.1) 0px 1px 2px -1px;
+    transform: translateX(-1px) scale(0.8);
     transition: transform .3s ease-in-out, background-color .4s ease-in-out, opacity .2s ease-in-out;
   }
 
@@ -36,11 +37,11 @@
 
 :host([checked]) {
   background-color: rgb(var(--zn-color-tertiary));
-  border-color: rgb(var(--zn-color-tertiary)) !important;
+  border-color: rgba(var(--zn-color-tertiary), 0.8) !important;
 
   span {
     background-color: rgba(255, 255, 255, 1);
     border-color: transparent;
-    transform: translateX(calc(100% + 5px));
+    transform: translateX(calc(100% - 1px)) scale(0.9);
   }
 }

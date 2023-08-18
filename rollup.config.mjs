@@ -18,7 +18,7 @@ const commonPlugins = [
 ];
 
 const output = {
-  file:      'dist/main.min.js',
+  file:      'dist/zn.min.js',
   name:      'main.js',
   format:    'iife',
   sourcemap: !production

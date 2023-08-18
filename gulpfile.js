@@ -10,7 +10,7 @@ function buildStyles()
   return gulp.src(scssPath)
     .pipe(sass().on('error', sass.logError))
     .pipe(postcss())
-    .pipe(rename('main.min.css'))
+    .pipe(rename('zn.min.css'))
     .pipe(gulp.dest('./dist'));
 }
 

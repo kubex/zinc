@@ -34,11 +34,11 @@ export class ZincElement extends LitElement {
     constructor() {
         super();
 
-        window.addEventListener('darkmode', this._updateDarkMode.bind(this));
-        this._updateDarkMode();
+        window.addEventListener('theme-change', this._updateTheme.bind(this));
+        this._updateTheme();
     }
 
-    public _updateDarkMode() {
+    public _updateTheme() {
         this.t = document.documentElement.getAttribute('t');
     }
 }

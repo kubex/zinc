@@ -1,0 +1,28 @@
+@use "mixins";
+
+.zn-gap {
+  @include mixins.gap();
+  @include mixins.padding();
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.zn-gap-in {
+  @include mixins.gap();
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.zn-gap-md {
+  display: flex;
+  flex-wrap: wrap;
+  gap: mixins.spacing(md);
+  @apply flex flex-wrap gap-md;
+}
+
+.zn-gap-inner {
+  @include mixins.gap();
+}

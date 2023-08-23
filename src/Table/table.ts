@@ -43,8 +43,9 @@ export class Table extends LitElement {
                 this.columns.push('')
                 for (const row in this.data) {
                     for (const column in this.data[row]) {
-                        if (!this.columns.includes(column)) {
-                            this.columns.push(column);
+                        let colName = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1")
+                        if (!this.columns.includes(colName)) {
+                            this.columns.push(colName);
                         }
                     }
                     this.rows.push({data: Object.values(this.data[row])});

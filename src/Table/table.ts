@@ -74,6 +74,11 @@ export class Table extends LitElement {
 
         const headers = []
         this.columns.forEach((col, k) => {
+
+            if(col == ""){
+                return
+            }
+
             if (col == "_") {
                 col = ""
             }
@@ -115,7 +120,7 @@ export class Table extends LitElement {
                   <zn-icon round size="40" src="${icon}"></zn-icon>`;
             }
 
-            if ((caption + summary + icon + this.columns[0]) == "") {
+            if ((caption + summary + icon + this.columns[0]) != "") {
                 rowHtml.push(html`
                   <td>
                     <div>${iconHtml}

@@ -1,79 +1,80 @@
 import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, query} from 'lit/decorators.js';
 import {PropertyValues} from "@lit/reactive-element";
 
 import styles from './index.scss';
 
 @customElement('zn-toggle')
-export class Toggle extends LitElement {
-  @property({attribute: 'name', type: String, reflect: true}) name;
-  @property({attribute: 'required', type: Boolean, reflect: true}) _isRequired;
-  @property({attribute: 'checked', type: Boolean, reflect: true}) checked;
-  @property({attribute: 'value', type: String, reflect: true}) value;
+export class Toggle extends LitElement
+{
+  @property({attribute: 'name', type: String, reflect: true})
+  public name: string;
+  @property({attribute: 'required', type: Boolean, reflect: true})
+  private _isRequired: boolean;
+  @property({attribute: 'checked', type: Boolean, reflect: true})
+  public checked: boolean;
+  @property({attribute: 'value', type: String, reflect: true})
+  public value: string;
 
-  private internals: any;
+  @query('span')
+  private _input: HTMLInputElement;
+
+  private internals: ElementInternals;
 
   static styles = unsafeCSS(styles);
 
-  static get formAssociated() {
+  static get formAssociated()
+  {
     return true;
   }
 
-  get required() {
+  get required()
+  {
     return this._isRequired;
   }
 
-  set required(isRequired) {
+  set required(isRequired)
+  {
     this._isRequired = isRequired;
-    this.internals.ariaRequired = isRequired;
+    this.internals.ariaRequired = isRequired ? 'true' : 'false';
   }
 
-
-  _handleClick() {
-    let input = this.shadowRoot.querySelector('input');
-    input.checked = !input.checked;
-    if (input.checked) {
-      this.value = input.value;
-    } else {
-      this.value = '';
-    }
-    this.checked = input.checked;
-    this.internals.setFormValue(this.value);
+  _handleClick()
+  {
+    this.checked = !this.checked;
+    this._update();
   }
 
-  constructor() {
+  constructor()
+  {
     super();
-    this.addEventListener('click', this._handleClick);
     this.internals = this.attachInternals();
+    this.addEventListener('click', this._handleClick);
   }
 
-  _manageRequired() {
-    const input = this.shadowRoot.querySelector('input');
-    if (!input.checked && this.required) {
-      this.internals.setValidity({
-        valueMissing: true
-      }, 'This field is required', input);
-    } else {
+  static shadowRootOptions = {...LitElement.shadowRootOptions, delegatesFocus: true};
+
+  _update()
+  {
+    this.internals.setFormValue(this.checked ? this.value : null);
+    if (this.required && !this.checked)
+    {
+      this.internals.setValidity({valueMissing: true}, 'This field is required', this._input);
+    }
+    else
+    {
       this.internals.setValidity({});
     }
   }
 
-  firstUpdated(_changedProperties: PropertyValues) {
+  firstUpdated(_changedProperties: PropertyValues)
+  {
     super.firstUpdated(_changedProperties);
-    /** This ensures our element always participates in the form */
-    this.internals.setFormValue(this.checked ? this.value : null);
-
-    /** Make sure validations are set up */
-    this._manageRequired();
+    this._update();
   }
 
-  render() {
-    return html`
-      <input type="checkbox" name="${this.name}" id="input" .value="${this.value}" ?required="${this.required}"
-             novalidate>
-      <span></span>
-    `;
+  render()
+  {
+    return html`<span tabindex="-1"></span>`;
   }
 }
-
-

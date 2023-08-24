@@ -19,9 +19,9 @@ export class Toggle extends LitElement
   @query('span')
   private _input: HTMLInputElement;
 
-  private internals: ElementInternals;
-
   static styles = unsafeCSS(styles);
+
+  private internals: ElementInternals;
 
   static get formAssociated()
   {

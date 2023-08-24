@@ -41,6 +41,7 @@ export class Toggle extends LitElement
 
   _toggleValue()
   {
+    this._input.focus();
     this.checked = !this.checked;
     this._updateInternals();
   }

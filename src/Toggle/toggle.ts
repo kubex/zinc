@@ -39,22 +39,28 @@ export class Toggle extends LitElement
     this.internals.ariaRequired = isRequired ? 'true' : 'false';
   }
 
-  _handleClick()
+  _toggleValue()
   {
     this.checked = !this.checked;
-    this._update();
+    this._updateInternals();
   }
 
   constructor()
   {
     super();
     this.internals = this.attachInternals();
-    this.addEventListener('click', this._handleClick);
+    this.addEventListener('click', this._toggleValue);
+    this.addEventListener('keydown', (e) =>
+    {
+      if (e.key == ' ')
+      {
+        e.preventDefault();
+        this._toggleValue();
+      }
+    });
   }
 
-  static shadowRootOptions = {...LitElement.shadowRootOptions, delegatesFocus: true};
-
-  _update()
+  _updateInternals()
   {
     this.internals.setFormValue(this.checked ? this.value : null);
     if (this.required && !this.checked)
@@ -70,11 +76,11 @@ export class Toggle extends LitElement
   firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
-    this._update();
+    this._updateInternals();
   }
 
   render()
   {
-    return html`<span tabindex="-1"></span>`;
+    return html`<span tabindex="0"></span>`;
   }
 }

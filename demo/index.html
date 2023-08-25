@@ -205,10 +205,10 @@
           <zn-input span="4" label="Website">
             <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
           </zn-input>
-          <zn-input label="About" advice="Write a few sentences about yourself."><textarea></textarea></zn-input>
-          <zn-input label="Photo"><input type="file"/></zn-input>
+          <zn-input label="About" advice="Write a few sentences about yourself."><textarea name="about"></textarea></zn-input>
+          <zn-input label="Photo"><input name="photo" type="file"/></zn-input>
           <zn-input label="Cover photo">
-            <zn-drag-upload text="Drag and drop a File or Click Upload"
+            <zn-drag-upload text="Drag and drop a File or Click Upload" name="cover_photo"
                             types="image/png,image/jpeg,image/gif" size="10">
             </zn-drag-upload>
           </zn-input>
@@ -218,8 +218,9 @@
           <zn-input label="Last Name" span="3"><input type="text" name="last_name"/></zn-input>
           <zn-input label="Email address" span="5"><input type="text" name="email"/></zn-input>
           <zn-input label="Country" span="3">
-            <select>
+            <select name="country">
               <option value="GB">United Kingdom</option>
+              <option value="DE">Germany</option>
             </select>
           </zn-input>
           <zn-input label="Street address"></zn-input>

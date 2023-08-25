@@ -100,14 +100,18 @@ $theme-grey: (
   #{$var-prefix}text-opacity: 1;
 }
 
-[t="light"] {
+[t="default"], .theme-default {
+  @include spread-map($theme-default, #{$var-prefix});
+}
+
+[t="light"], .theme-light {
   @include spread-map($theme-light, #{$var-prefix});
 }
 
-[t="dark"] {
+[t="dark"], .theme-dark {
   @include spread-map($theme-dark, #{$var-prefix});
 }
 
-[t="grey"] {
+[t="grey"], .theme-grey {
   @include spread-map($theme-grey, #{$var-prefix});
 }

@@ -53,8 +53,6 @@ export class Table extends LitElement {
             }
         }
 
-        console.log(this.rows)
-
         return super.connectedCallback()
     }
 

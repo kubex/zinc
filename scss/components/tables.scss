@@ -1,0 +1,49 @@
+@use "../variables" as v;
+@use "../mixins" as m;
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  max-width: 100%;
+  table-layout: auto;
+  text-align: left;
+
+  thead {
+    font-weight: 500;
+  }
+
+  tbody {
+    background-color: rgb(var(--zn-panel));
+
+    a {
+      cursor: pointer;
+      color: rgb(var(--zn-accent));
+    }
+  }
+
+  tbody tr td {
+    border-top: 1px solid rgb(var(--zn-border-color));
+  }
+
+  th, td {
+    padding: m.spacing(sm);
+    white-space: nowrap;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  th {
+    padding-bottom: m.spacing(sm);
+  }
+}
+
+.zn-table-fixed {
+  table-layout: fixed;
+}

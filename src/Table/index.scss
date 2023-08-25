@@ -1,4 +1,5 @@
 @use "../../scss/wc";
+@use "../../scss/components/tables";
 
 :host {
   max-width: 100%;
@@ -10,57 +11,6 @@
     max-width: 100%;
     overflow-x: auto;
     display: block;
-  }
-
-  table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    max-width: 100%;
-    table-layout: auto;
-    text-align: left;
-  }
-
-  tbody tr:first-child td:first-of-type {
-    border-top-left-radius: 5px;
-  }
-
-  tbody tr:first-child td:last-of-type {
-    border-top-right-radius: 5px;
-  }
-
-  tbody tr:last-child td:first-of-type {
-    border-bottom-left-radius: 5px;
-  }
-
-  tbody tr:last-child td:last-of-type {
-    border-bottom-right-radius: 5px;
-  }
-
-  thead {
-    font-weight: 500;
-  }
-
-  tbody {
-    background-color: rgb(var(--zn-panel));
-
-    a {
-      cursor: pointer;
-      color: rgb(var(--zn-accent));
-    }
-  }
-
-  tbody tr td {
-    border-bottom-width: 1px !important;
-  }
-
-  th, td {
-    padding:wc.spacing(sm);
-    white-space: nowrap;
-  }
-
-  th {
-    padding-bottom:wc.spacing(sm);
   }
 
   td:first-child > div {
@@ -105,6 +55,7 @@
   tbody tr:first-of-type td {
     border-top-width: 1px !important;
   }
+
   tbody tr:last-of-type td {
     border-bottom-width: 1px !important;
   }
@@ -117,11 +68,8 @@
 }
 
 
-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-  max-width: 100%;
-  table-layout: auto;
-  text-align: left;
+:host([fixed]) {
+  table {
+    table-layout: fixed;
+  }
 }

@@ -1,3 +1,6 @@
+// required for postcss to extract base css file
+import '../scss/boot.scss';
+
 import './Accordion';
 import './Container';
 import './Button';

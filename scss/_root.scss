@@ -20,16 +20,16 @@ $theme-colors: (
 
 // Default Theme
 $theme-default: (
-  'text': hex-to-rgb(#9FACDD),
-  'text-heading': hex-to-rgb(#E1E1E1),
-  'text-page-title': hex-to-rgb(#E1E1E1),
-  'text-panel-title': hex-to-rgb(#ffffff),
-  'body': hex-to-rgb(#0C1330),
-  'panel': hex-to-rgb(#111B3F),
+  'text': hex-to-rgb(#D3C9EE),
+  'text-heading': hex-to-rgb(#FFFFFF),
+  'text-page-title': hex-to-rgb(#FFFFFF),
+  'text-panel-title': hex-to-rgb(#3CD8BB),
+  'body': hex-to-rgb(#150B33),
+  'panel': hex-to-rgb(#2A1A55),
   'panel-highlight': hex-to-rgb(#09112c),
   'border-color': hex-to-rgb(#080C1C),
   'accent': hex-to-rgb(#29C1BC),
-  'input-bg': hex-to-rgb(#0B1330),
+  'input-bg': hex-to-rgb(#150c38),
 );
 
 // Light Theme
@@ -48,14 +48,29 @@ $theme-light: (
 
 // Dark theme
 $theme-dark: (
+  'text': hex-to-rgb(variables.$white),
+  'text-heading': hex-to-rgb(variables.$white),
+  'text-page-title': hex-to-rgb(variables.$white),
+  'text-panel-title': hex-to-rgb(#29C1BC),
+  'body': hex-to-rgb(#0b0b15),
+  'panel': hex-to-rgb(#0e0f21),
+  'panel-highlight': hex-to-rgb(#1a1a1a),
+  'border-color': hex-to-rgb(#141624),
+  'accent': hex-to-rgb(#29C1BC),
+  'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
+);
+
+
+// Dark theme
+$theme-grey: (
   'text': hex-to-rgb(#808080),
   'text-heading': hex-to-rgb(#e1e1e1),
   'text-page-title': hex-to-rgb(#e1e1e1),
   'text-panel-title': hex-to-rgb(#29C1BC),
-  'body': hex-to-rgb(#0b0b15),
-  'panel': hex-to-rgb(#0e0f1b),
+  'body': hex-to-rgb(#1E1F22),
+  'panel': hex-to-rgb(#24262A),
   'panel-highlight': hex-to-rgb(#1a1a1a),
-  'border-color': hex-to-rgb(#141624),
+  'border-color': hex-to-rgb(#2B2D30),
   'accent': hex-to-rgb(#29C1BC),
   'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
 );
@@ -91,4 +106,8 @@ $theme-dark: (
 
 [t="dark"] {
   @include spread-map($theme-dark, #{$var-prefix});
+}
+
+[t="grey"] {
+  @include spread-map($theme-grey, #{$var-prefix});
 }

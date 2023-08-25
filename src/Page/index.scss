@@ -1,4 +1,4 @@
-@use "../../scss/wc";
+@use "../wc";
 
 :host {
   @include wc.scrollbars;
@@ -26,6 +26,7 @@
     width: 100%;
     height: 100%;
     max-width: wc.container-width(hd);
+    margin: auto;
 
     &.with-side {
       padding-top: wc.common-size(bar);
@@ -102,6 +103,9 @@
       }
 
       &.content {
+        @include wc.padding;
+        @include wc.gap;
+
         display: none;
         overflow-y: auto;
         max-width: wc.common-size(bar);
@@ -109,33 +113,17 @@
         right: 0;
         top: 0;
         bottom: 0;
-        padding-top: wc.spacing(sm);
-        padding-bottom: wc.spacing(sm);
-        padding-right: wc.spacing(md);
-
-        @include wc.container-query(smp) {
-          padding-top: wc.spacing(md);
-          padding-bottom: wc.spacing(md);
-        }
 
         @include wc.container-query(lg) {
+          padding-left: 0;
           display: flex;
-          padding-right: wc.spacing(lg);
-          padding-top: wc.spacing(lg);
-          padding-bottom: wc.spacing(lg);
           min-width: wc.common-size(mpanel);
-        }
-
-        @include wc.container-query(hd) {
-          padding-top: wc.spacing(xl);
-          padding-bottom: wc.spacing(xl);
-          padding-right: wc.spacing(xl);
         }
 
         ::slotted(*) {
           display: flex;
           flex-direction: column;
-          gap: wc.spacing(lg);
+          @include wc.gap;
         }
       }
 
@@ -248,7 +236,6 @@
 
       > div.content {
         display: flex;
-        padding: wc.spacing(lg);
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;

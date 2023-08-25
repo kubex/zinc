@@ -29,4 +29,4 @@ import './FormElements/Input';
 import './FormElements/DragUpload';
 import './FormElements/DatePicker';
 
-import './simpleprompt';
+// import './simpleprompt';

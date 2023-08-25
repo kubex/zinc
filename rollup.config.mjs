@@ -39,7 +39,7 @@ export default {
     }),
     // postcss for components
     postcss({
-      include: ['**/scss/components/**', '**/src/**'],
+      include: ['**/src/**', '**/scss/shared/**'],
       inject: false,
       extract: false,
       minimize: production,

@@ -10,52 +10,6 @@ Document
 *::before,
 *::after {
   box-sizing: border-box;
-  border-width: 0;
-  border-color: rgb(var(--zn-border-color));
-  border-style: solid;
-}
-
-/*
-Body
-
-1. Remove the margin in all browsers.
-2. As a best practice, apply a default `background-color`.
-3. Set a default `text-color`.
-4. Prevent adjustments of font size after orientation changes in iOS.
-5. Change the default tap highlight to be completely transparent in iOS.
-6. Add Host styling for Web Components.
-7. Use a consistent sensible line-height in all browsers.
-9. Use a more readable tab size.
-10. Use the configured `sans` font-family by default.
-11. font-feature-settings normal by default.
-12. font-variation-settings normal by default.
-*/
-:host { // 6
-  margin: 0; // 1
-  color: rgba(var(--zn-text), var(--zn-text-opacity)); // 3
-  -webkit-text-size-adjust: 100%; // 4
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0%); // 5
-  -moz-tab-size: 4; // 9
-  tab-size: 4; // 9
-  font-family: var(--zn-font-family-sans); // 10
-  font-feature-settings: normal; // 11
-  font-variation-settings: normal; // 12
-  border-width: 0;
-  border-color: rgb(var(--zn-border-color));
-  border-style: solid;
-  font-size: 14px;
-}
-
-/*
-1. Add the correct height in Firefox.
-2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
-3. Ensure horizontal rules are visible by default.
-*/
-
-hr {
-  height: 0; /* 1 */
-  color: inherit; /* 2 */
-  border-top-width: 1px; /* 3 */
 }
 
 /*
@@ -81,27 +35,6 @@ Add the correct font weight in Edge and Safari.
 b,
 strong {
   font-weight: bolder;
-}
-
-/*
-1. Use the `mono` font family by default.
-2. Correct the odd `em` font sizing in all browsers.
-*/
-
-code,
-kbd,
-samp,
-pre {
-  font-family: var(--zn-font-family-mono); /* 1 */
-  font-size: 1em; /* 2 */
-}
-
-/*
-Add the correct font size in all browsers.
-*/
-
-small {
-  font-size: 80%;
 }
 
 /*

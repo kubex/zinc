@@ -2,17 +2,13 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {PropertyValues} from "@lit/reactive-element";
+import {Dialog} from "../Dialog";
 
 @customElement('zn-confirm')
-export class ConfirmModal extends LitElement
+export class ConfirmModal extends Dialog
 {
-  @query('dialog', true)
-  private _dialog: HTMLDialogElement;
-
   static styles = unsafeCSS(styles);
 
-  @property({type: String, reflect: true}) trigger: string = '';
   @property({type: String, reflect: true}) title: string = '';
   @property({type: String, reflect: true}) content: string = '';
   @property({type: String, reflect: true}) action: string = '';
@@ -31,7 +27,6 @@ export class ConfirmModal extends LitElement
       'info': 'help'
     };
 
-
     return html`
       <zn-icon slot="primary" src=${src[this.type]} size="24" library="mio"></zn-icon>
     `;
@@ -48,41 +43,12 @@ export class ConfirmModal extends LitElement
         <form .action="${this.action}" .method="${this.method}">
           <p>${this.content}</p>
           <div class="button-group">
-            <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}</button>
+            <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
+            </button>
             <button type="submit">${this.confirmText}</button>
           </div>
         </form>
       </dialog>`;
-  }
-
-  connectedCallback()
-  {
-    super.connectedCallback();
-    const trigger = document.querySelector('#' + this.trigger);
-    if (trigger)
-    {
-      trigger.addEventListener('click', this.openDialog.bind(this));
-    }
-  }
-
-  disconnectedCallback()
-  {
-    super.disconnectedCallback();
-    const trigger = document.querySelector('#' + this.trigger);
-    if (trigger)
-    {
-      trigger.removeEventListener('click', this.openDialog.bind(this));
-    }
-  }
-
-  closeDialog()
-  {
-    this._dialog.close();
-  }
-
-  openDialog()
-  {
-    this._dialog.showModal();
   }
 }
 

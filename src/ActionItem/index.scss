@@ -1,0 +1,21 @@
+@use "../wc";
+
+:host {
+  > .content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > .actions {
+      margin-right: 10px;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      ::slotted(*) {
+        cursor: pointer;
+        display: flex;
+      }
+    }
+  }
+}

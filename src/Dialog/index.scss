@@ -4,8 +4,20 @@
 :host {
   dialog {
     background: rgb(var(--zn-panel));
-    border: none;
-    padding: 14px;
+    font-family: var(--zn-font-family-sans);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 540px;
+    width: 100%;
+    border-radius: 10px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+
+    &[open] {
+      display: flex;
+    }
 
     &::backdrop {
       background: rgba(0, 0, 0, 0.35);

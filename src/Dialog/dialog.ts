@@ -1,4 +1,4 @@
-import {html, LitElement, unsafeCSS} from "lit";
+import {CSSResultGroup, html, LitElement, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss';
@@ -10,7 +10,11 @@ export class Dialog extends LitElement
 
   @query('dialog', true)
   private _dialog: HTMLDialogElement;
-  static styles = unsafeCSS(styles);
+
+  static get styles(): CSSResultGroup
+  {
+    return unsafeCSS(styles);
+  }
 
   connectedCallback()
   {

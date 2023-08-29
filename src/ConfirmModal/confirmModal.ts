@@ -1,5 +1,5 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property, query} from 'lit/decorators.js';
+import {CSSResultGroup, html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 import {Dialog} from "../Dialog";
@@ -7,7 +7,10 @@ import {Dialog} from "../Dialog";
 @customElement('zn-confirm')
 export class ConfirmModal extends Dialog
 {
-  static styles = unsafeCSS(styles);
+  static get styles(): CSSResultGroup
+  {
+    return [super.styles, unsafeCSS(styles)];
+  }
 
   @property({type: String, reflect: true}) title: string = '';
   @property({type: String, reflect: true}) content: string = '';

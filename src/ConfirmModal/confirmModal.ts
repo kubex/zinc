@@ -76,9 +76,9 @@ export class ConfirmModal extends LitElement {
   toggleDialog() {
     const dialog = this.shadowRoot.querySelector('dialog');
     if (dialog.hasAttribute('open')) {
-      dialog.close();
+      this.closeDialog()
     } else {
-      dialog.showModal();
+      this.openDialog()
     }
   }
 

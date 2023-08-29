@@ -29,5 +29,3 @@ import './FormElements/Input';
 import './FormElements/DragUpload';
 import './FormElements/DatePicker';
 import './ConfirmModal';
-
-// import './simpleprompt';

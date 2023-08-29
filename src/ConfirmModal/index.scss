@@ -1,0 +1,92 @@
+@use "../wc";
+
+:host {
+  dialog {
+    font-family: var(--zn-font-family-sans);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 540px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: white;
+    border: 1px solid #E3E3E3;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+
+    &[open] {
+      display: flex;
+    }
+  }
+
+  dialog.type-warning zn-icon {
+    --icon-color: 60, 161, 216;
+  }
+
+  dialog.type-success zn-icon {
+    --icon-color: 60, 216, 187;
+  }
+
+  dialog.type-error zn-icon {
+    --icon-color: 237, 84, 109;
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #343434;
+    margin-bottom: 15px;
+  }
+
+  p {
+    text-align: center;
+    color: #7F8090;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 18px;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      display: flex;
+      flex-grow: 1;
+      padding: 10px 15px;
+      font-weight: 500;
+    }
+
+    button.button--secondary {
+      background-color: #F3EFFF;
+      color: rgb(var(--zn-color-primary));
+    }
+  }
+
+  zn-icon {
+    --icon-color: var(--zn-accent);
+    padding: 15px;
+    position: relative;
+    overflow: initial;
+    border-radius: 50%;
+    border: 3px solid rgb(var(--icon-color));
+    color: rgb(var(--icon-color));
+    margin-bottom: 33px;
+    margin-top: 13px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      background-color: rgba(var(--icon-color), 20%);
+      top: -13px;
+      left: -13px;
+      right: -13px;
+      bottom: -13px;
+      border-radius: 50%;
+    }
+  }
+}

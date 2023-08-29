@@ -10,6 +10,19 @@
 </head>
 <body t="default" style="overflow: auto">
 
+
+<zn-panel>
+  <button modal-trigger="modal-trigger-1">Modal trigger 1</button>
+  <zn-confirm-modal trigger="modal-trigger-1" title="Create Your New Token" type="error"
+                    content="If you do this you will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
+  </zn-confirm-modal>
+
+  <button modal-trigger="modal-trigger-2">Modal trigger 2</button>
+  <zn-confirm-modal trigger="modal-trigger-2" title="Another Modal Here" type="success"
+                    content="If you do this you will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
+  </zn-confirm-modal>
+</zn-panel>
+
 <div style="margin:auto; padding:10px; text-align: center;">
   <zn-panel>
     <button onclick="document.body.setAttribute('t', 'grey')">Grey Theme</button>
@@ -163,11 +176,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-           are going to use a passage of Lorem Ipsum.</p>
+          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+          are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-           Ipsum or randomised words which don't look even slightly believable.</p>
+          Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
       <zn-note>
@@ -175,11 +188,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-           are going to use a passage of Lorem Ipsum.</p>
+          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+          are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-           Ipsum or randomised words which don't look even slightly believable.</p>
+          Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
     </zn-panel>
@@ -196,8 +209,10 @@
         </zn-form-group>
 
         <zn-form-group>
-          standard <zn-toggle name="tog-form" value="custom value"></zn-toggle>
-          required <zn-toggle name="tog-form-required" required value="custom value"></zn-toggle>
+          standard
+          <zn-toggle name="tog-form" value="custom value"></zn-toggle>
+          required
+          <zn-toggle name="tog-form-required" required value="custom value"></zn-toggle>
         </zn-form-group>
 
         <zn-form-group caption="Profile"
@@ -205,7 +220,8 @@
           <zn-input span="4" label="Website">
             <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
           </zn-input>
-          <zn-input label="About" advice="Write a few sentences about yourself."><textarea name="about"></textarea></zn-input>
+          <zn-input label="About" advice="Write a few sentences about yourself."><textarea name="about"></textarea>
+          </zn-input>
           <zn-input label="Photo"><input name="photo" type="file"/></zn-input>
           <zn-input label="Cover photo">
             <zn-drag-upload text="Drag and drop a File or Click Upload" name="cover_photo"

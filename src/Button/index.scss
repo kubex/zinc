@@ -1,11 +1,17 @@
 @use "../wc";
 
-:host button {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 18px;
-  padding: 14px 20px;
-  border-radius: 10px;
+:host {
+  .grow {
+    flex-grow: 1;
+  }
+
+  button {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
+    padding: 14px 20px;
+    border-radius: 10px;
+  }
 }
 
 :host([variant="primary"]) button {
@@ -15,7 +21,7 @@
 
 :host([variant="secondary"]) button {
   background-color: #F3EFFF;
-  color: rgb(var(--zn-color-secondary));
+  color: rgb(var(--zn-color-primary));
 }
 
 :host([size="small"]) button {

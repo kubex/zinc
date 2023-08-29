@@ -1,0 +1,15 @@
+@use "../../scss/boot";
+@use "../wc";
+
+:host {
+  dialog {
+    background: rgb(var(--zn-panel));
+    border: none;
+    padding: 14px;
+
+    &::backdrop {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+    }
+  }
+}

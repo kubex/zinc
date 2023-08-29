@@ -13,6 +13,7 @@ import './Tile';
 import './Menu';
 import './Alert';
 import './Chip';
+import './Dialog';
 import './Table';
 import './Property';
 import './Chart';

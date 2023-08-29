@@ -4,7 +4,7 @@ import {customElement, property, query} from 'lit/decorators.js';
 import styles from './index.scss';
 import {PropertyValues} from "@lit/reactive-element";
 
-@customElement('zn-confirm-modal')
+@customElement('zn-confirm')
 export class ConfirmModal extends LitElement
 {
   @query('dialog', true)

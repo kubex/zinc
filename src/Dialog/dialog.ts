@@ -22,7 +22,7 @@ export class Dialog extends LitElement
     this.addEventListener('click', this._closeClickCheck.bind(this));
     this.shadowRoot.addEventListener('click', this._closeClickCheck.bind(this));
 
-    const trigger = document.querySelector('#' + this.trigger);
+    const trigger = this.parentElement.querySelector('#' + this.trigger);
     if (trigger)
     {
       trigger.addEventListener('click', this.openDialog.bind(this));

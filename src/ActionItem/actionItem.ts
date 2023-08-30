@@ -18,7 +18,6 @@ export class ActionItem extends LitElement
           <slot name="actions"></slot>
         </div>
         <p>${this.content}</p>
-        <slot name="dialog"></slot>
       </div>`;
   }
 }

@@ -1,5 +1,11 @@
 @use '../../wc';
 
+zn-text-input:focus-within {
+  border-color: rgb(var(--zn-accent)) !important;
+  box-shadow: 0 0 0 3px rgba(var(--zn-accent), 0.3) !important;
+  background-color: red;
+}
+
 :host, zn-text-input {
   display: flex;
   width: 100%;
@@ -31,6 +37,8 @@
     display: block;
     width: 100%;
     background-color: transparent !important;
+    border-color: transparent;
+    outline: none;
 
     &::placeholder {
       font-weight: 400;
@@ -39,7 +47,8 @@
 
     &:focus {
       outline: none;
-      border-color: rgb(var(--zn-border-color)) !important;
+      border-color: transparent !important;
+      box-shadow: none;
     }
 
     @include wc.media-query(sm) {

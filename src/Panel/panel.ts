@@ -96,8 +96,10 @@ export class Panel extends LitElement {
 
   private selectPanel(index: number) {
     this.selectedPanel = index;
-    const panels = this.querySelectorAll('[link]');
+    const panels = this.parentElement.querySelectorAll('[link]');
+    console.log(panels);
     panels.forEach((item, index) => {
+      console.log(this.selectedPanel);
       if (index === this.selectedPanel) {
         item.classList.remove('hidden');
       } else {

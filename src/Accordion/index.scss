@@ -1,5 +1,14 @@
 @use "../wc";
 
+zn-accordion:last-of-type > div, :host(:last-of-type) > div {
+  border-bottom-width: 0 !important;
+}
+
+zn-accordion > div, :host > div {
+  border-bottom-width: 1px !important;
+}
+
+
 :host(:not([expanded])) {
   cursor: pointer;
 }

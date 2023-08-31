@@ -57,11 +57,6 @@ export class Dialog extends LitElement
     }
   }
 
-  _showModal()
-  {
-    this._dialog.showModal();
-  }
-
   render()
   {
     return html`

@@ -14,11 +14,21 @@ export class Group extends ZincElement {
   }
 
   render() {
+    const caption = this.caption ? html`<h2 class="caption">${this.caption}</h2>` : null;
+    const description = this.description ? html`<p class="description">${this.description}</p>` : null;
+
+    let header = null;
+
+    if(caption || header) {
+      header = html`
+        <div class="header">
+          ${caption}
+          ${description}
+        </div>`
+    }
+
     return html`
-      <div>
-        <h2 class="caption">${this.caption}</h2>
-        <p class="description">${this.description}</p>
-      </div>
+      ${header}
       <div class="fg-inputs">
         <slot></slot>
       </div>`

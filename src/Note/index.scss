@@ -1,5 +1,18 @@
 @use "../wc";
 
+
+zn-note:first-of-type > div, :host(:first-of-type) > div {
+  border-top-width: 0 !important;
+}
+
+zn-note > div, :host > div {
+  border-width: 0;
+  border-top-width: 1px !important;
+  border-style: solid;
+  border-color: rgb(var(--zn-border-color));
+}
+
+
 :host {
   > div {
     width: 100%;

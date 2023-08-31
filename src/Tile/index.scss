@@ -1,11 +1,15 @@
 @use "../wc";
 
+
 zn-tile:first-of-type, :host(:first-of-type) {
-  border-top-width: 0;
+  border-top-width: 0 !important;
 }
 
 zn-tile, :host {
-  border-top-width: 1px;
+  border-width: 0;
+  border-top-width: 1px !important;
+  border-style: solid;
+  border-color: rgb(var(--zn-border-color));
 }
 
 :host {

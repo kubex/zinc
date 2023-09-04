@@ -15,7 +15,7 @@ export class ConfirmModal extends Dialog
   @property({type: String, reflect: true}) title: string = '';
   @property({type: String, reflect: true}) content: string = '';
   @property({type: String, reflect: true}) action: string = '';
-  @property({type: String, reflect: true}) method: string = '';
+  @property({type: String, reflect: true}) method: string = 'post';
   @property({type: String, reflect: true}) type: string = 'warning';
   @property({type: String, reflect: true}) confirmText: string = "Confirm";
   @property({type: String, reflect: true}) cancelText: string = "Cancel";
@@ -38,20 +38,34 @@ export class ConfirmModal extends Dialog
   render()
   {
     const icon = this.getIcon();
+
+    const buttonGroup = html`
+      <div class="button-group">
+        <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
+        </button>
+        <button @click="${this.submitDialog}"> ${this.confirmText}</button>
+      </div>
+    `;
+
     return html`
       <dialog class="type-${this.type}">
         <!-- default dialog close button -->
         ${icon}
         <h2 class="title">${this.title}</h2>
-        <form .action="${this.action}" .method="${this.method}">
-          <p>${this.content}</p>
-          <div class="button-group">
-            <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
-            </button>
-            <button type="submit">${this.confirmText}</button>
-          </div>
-        </form>
+        <p>${this.content}</p>
+        <slot></slot>
+        ${buttonGroup}
       </dialog>`;
+  }
+
+  submitDialog()
+  {
+    // get the form from the slot
+    const form = this.querySelector('form');
+    if (form)
+    {
+      form.submit();
+    }
   }
 }
 

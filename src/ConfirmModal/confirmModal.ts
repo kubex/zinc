@@ -39,14 +39,6 @@ export class ConfirmModal extends Dialog
   {
     const icon = this.getIcon();
 
-    const buttonGroup = html`
-      <div class="button-group">
-        <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
-        </button>
-        <button @click="${this.submitDialog}"> ${this.confirmText}</button>
-      </div>
-    `;
-
     return html`
       <dialog class="type-${this.type}">
         <!-- default dialog close button -->
@@ -54,7 +46,11 @@ export class ConfirmModal extends Dialog
         <h2 class="title">${this.title}</h2>
         <p>${this.content}</p>
         <slot></slot>
-        ${buttonGroup}
+        <div class="button-group">
+          <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
+          </button>
+          <button @click="${this.submitDialog}"> ${this.confirmText}</button>
+        </div>
       </dialog>`;
   }
 

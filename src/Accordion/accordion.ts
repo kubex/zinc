@@ -15,7 +15,7 @@ export class Accordion extends LitElement {
   render() {
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
-        <slot name="header" slot="header" class="header" @click="${(e: MouseEvent) => this.handleCollapse(e)}">
+        <slot name="header" class="header" @click="${(e: MouseEvent) => this.handleCollapse(e)}">
           <div>
             <p class="caption">${this.caption}</p>
             <p class="summary">${this.summary}</p>

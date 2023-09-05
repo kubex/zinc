@@ -39,13 +39,15 @@ export class Dialog extends LitElement
     }
   }
 
-  closeDialog()
+  closeDialog(e)
   {
+    e.stopPropagation();
     this._dialog.close();
   }
 
-  openDialog()
+  openDialog(e)
   {
+    e.stopPropagation();
     this._dialog.showModal();
   }
 
@@ -53,7 +55,7 @@ export class Dialog extends LitElement
   {
     if (e.target instanceof HTMLElement && e.target.hasAttribute('dialog-closer'))
     {
-      this.closeDialog();
+      this.closeDialog(e);
     }
   }
 

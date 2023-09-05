@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="../dist/zn.min.css">
+
+  <style>
+    .container {
+      display: flex;
+      height: 100%;
+    }
+
+    .wrapper {
+      border-right: 1px solid #E3E3E3;
+      height: 100%;
+      width: 316px;
+    }
+  </style>
+</head>
+<body t="default" style="overflow: auto">
+
+<div style="margin:auto; padding:10px; text-align: center;">
+  <zn-panel>
+    <button onclick="document.body.setAttribute('t', 'grey')">Grey Theme</button>
+    <button onclick="document.body.setAttribute('t', 'dark')">Dark Theme</button>
+    <button onclick="document.body.setAttribute('t', 'light')">Light Theme</button>
+    <button onclick="document.body.setAttribute('t', 'default')">Default Theme</button>
+  </zn-panel>
+</div>
+
+<div class="container">
+  <div class="wrapper">
+    <zn-chat-slot-container heading="Interactions" subHeading="Your Support Queue">
+      <div slot="active">
+        <zn-chat-slot heading="Mark Neale" content="I need help with zn password" lastMessage="1693907718"
+                      brand="protected"></zn-chat-slot>
+        <zn-chat-slot heading="Billy Bob" content="I need help with zn password" active></zn-chat-slot>
+        <zn-chat-slot heading="Billy Bob" content="I need help with zn password" accept></zn-chat-slot>
+      </div>
+      <div slot="queued">
+
+      </div>
+    </zn-chat-slot-container>
+  </div>
+  <zn-chat-container heading="Mark Neale" subHeading="You're Chatting With...">
+
+    <zn-chat-message-window>
+      <zn-chat-message sender="Mike" time="1693920297">
+        Hello, I’ve tried to install total adblock and it has made a mess of my machine. I’m not sure what to do now.
+        I’ve pushed all the buttons and tried all this things. Can you help?
+      </zn-chat-message>
+      <zn-chat-message sender="you" time="1693920297">
+        Most technical issues can be resolved by accessing our Help Center at help.{{BRAND}}.com, you can also speak to
+        one of our technical agents on live chat who will be more than happy to help resolve your problem.
+      </zn-chat-message>
+      <zn-chat-message sender="Mike" time="1693920563">
+        I don’t want to do that, I want to do this instead.
+      </zn-chat-message>
+    </zn-chat-message-window>
+
+    <zn-chat-response-window>
+      Message Mark @ ToDo Message component
+    </zn-chat-response-window>
+  </zn-chat-container>
+</div>
+
+<script src="../dist/zn.min.js"></script>
+</body>
+</html>

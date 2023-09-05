@@ -1,1 +1,1 @@
-export {ActionItem} from './actionItem';
+export {ActionItem} from './action-item';

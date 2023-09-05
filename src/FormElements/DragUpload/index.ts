@@ -1,1 +1,1 @@
-export {DragUpload} from './dragUpload';
+export {DragUpload} from './drag-upload';

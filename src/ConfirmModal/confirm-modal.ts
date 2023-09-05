@@ -60,7 +60,7 @@ export class ConfirmModal extends Dialog
     const form = this.querySelector('form');
     if (form)
     {
-      form.submit();
+      form.requestSubmit();
     }
   }
 }

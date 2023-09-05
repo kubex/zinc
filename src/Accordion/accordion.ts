@@ -4,7 +4,8 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-accordion')
-export class Accordion extends LitElement {
+export class Accordion extends LitElement
+{
   @property({type: String, reflect: true}) caption = '';
   @property({type: String, reflect: true}) summary = '';
   @property({type: String, reflect: true}) label = '';
@@ -12,7 +13,8 @@ export class Accordion extends LitElement {
 
   static styles = unsafeCSS(styles);
 
-  render() {
+  render()
+  {
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
         <slot name="header" class="header" @click="${(e: MouseEvent) => this.handleCollapse(e)}">
@@ -30,11 +32,13 @@ export class Accordion extends LitElement {
 
           </slot>
         </div>
-      </div>`
+      </div>`;
   }
 
-  handleCollapse(e) {
-    if (this.expanded) {
+  handleCollapse(e)
+  {
+    if (this.expanded)
+    {
       this.expanded = false;
       e.stopPropagation();
     }

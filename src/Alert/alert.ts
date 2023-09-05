@@ -19,7 +19,9 @@ export class Alert extends LitElement {
       <div class="content">
         <slot name="content"></slot>
       </div>
-      <slot name="actions"></slot>`;
+      <div class="actions">
+        <slot name="actions"></slot>
+      </div>`;
   }
 }
 

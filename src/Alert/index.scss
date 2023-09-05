@@ -16,6 +16,13 @@
   text-align: left;
 }
 
+.actions ::slotted(*) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: wc.spacing(sm);
+}
+
 :host([error]) {
   color: rgb(var(--zn-color-error));
   border-color: rgb(var(--zn-color-error)) !important;

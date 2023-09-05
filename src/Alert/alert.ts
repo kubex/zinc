@@ -1,5 +1,5 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement} from 'lit/decorators.js';
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
 
@@ -7,22 +7,19 @@ import styles from './index.scss';
 export class Alert extends LitElement {
 
   static styles = unsafeCSS(styles);
+  @property({ type: String }) icon: string = '';
 
   render() {
+    const icon = this.icon ? html`
+      <zn-icon library="mio" src="${this.icon}" id="xy2"></zn-icon>` : '';
+
+
     return html`
-      <div class="alert">
-        <div class="icon">
-          <zn-icon src="check" size="48" library="mio" style="--icon-size:32px;"></zn-icon>
-        </div>
-        <div class="title">Payment Success</div>
-        <div class="content">
-          <slot></slot>
-        </div>
-        <div class="buttons">
-          <slot name="buttons"></slot>
-        </div>
+      ${icon}
+      <div class="content">
+        <slot name="content"></slot>
       </div>
-    `;
+      <slot name="actions"></slot>`;
   }
 }
 

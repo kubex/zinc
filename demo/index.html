@@ -16,8 +16,22 @@
     <button onclick="document.body.setAttribute('t', 'dark')">Dark Theme</button>
     <button onclick="document.body.setAttribute('t', 'light')">Light Theme</button>
     <button onclick="document.body.setAttribute('t', 'default')">Default Theme</button>
-
     <zn-button size="small" icon="check"></zn-button>
+
+
+    <zn-alert icon="check">
+      <div slot="content">This is the content for the alert</div>
+      <div slot="actions">
+        <zn-button size="small" icon="copy"></zn-button>
+      </div>
+    </zn-alert>
+
+    <zn-alert icon="close" success>
+      <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
+      <div slot="actions">
+        <zn-button size="small" icon="copy"></zn-button>
+      </div>
+    </zn-alert>
   </zn-panel>
 </div>
 

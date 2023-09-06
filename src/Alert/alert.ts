@@ -17,11 +17,11 @@ export class Alert extends LitElement {
     if (this.icon) {
       if (this.collapse) {
         icon = this.icon ? html`
-          <zn-icon library="mio" src="${this.icon}" id="xy2" @click="${this.hideAlert}"
+          <zn-icon src="${this.icon}" id="xy2" @click="${this.hideAlert}"
                    style="cursor: pointer"></zn-icon>` : "";
       } else {
         icon = this.icon ? html`
-          <zn-icon library="mio" src="${this.icon}" id="xy2"></zn-icon>` : '';
+          <zn-icon  src="${this.icon}" id="xy2"></zn-icon>` : '';
       }
     }
 

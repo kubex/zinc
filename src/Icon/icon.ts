@@ -27,11 +27,10 @@ const LibraryAlias = {
 const colors = {
   "primary": "rgb(var(--zn-color-primary))",
   "secondary": "rgb(var(--zn-color-secondary))",
-  "tertiary": "rgb(var(--zn-color-tertiary))",
-  "info": "rgb(var(--zn-color-info-text))",
-  "warning": "rgb(var(--zn-color-warning-text))",
-  "error": "rgb(var(--zn-color-error-text))",
-  "success": "rgb(var(--zn-color-success-text))",
+  "info": "rgb(var(--zn-color-info))",
+  "warning": "rgb(var(--zn-color-warning))",
+  "error": "rgb(var(--zn-color-error))",
+  "success": "rgb(var(--zn-color-success))",
 };
 
 type Color = keyof typeof colors;
@@ -88,9 +87,6 @@ export class Icon extends LitElement
           break;
         case 'secondary':
           this.color = 'secondary';
-          break;
-        case 'tertiary':
-          this.color = 'tertiary';
           break;
       }
     }

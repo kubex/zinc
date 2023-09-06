@@ -7,19 +7,25 @@ $var-prefix: '--zn-';
   @return red($color), green($color), blue($color);
 }
 
+$brand-colours: (
+  'red': hex-to-rgb(#ED546D),
+  'blue': hex-to-rgb(#6483F2),
+  'green': hex-to-rgb(#2BC0C0),
+  'orange': hex-to-rgb(#FF8800),
+
+  'primary': hex-to-rgb(#6836F5),
+  'accent': hex-to-rgb(#47D6D6),
+);
+
 // Global Colors
 $theme-colors: (
-  'primary': hex-to-rgb(#6836F5),
-  'secondary': hex-to-rgb(#1B918D),
-  'tertiary': hex-to-rgb(#ED546D),
-  'info': hex-to-rgb(map.get(variables.$blue, 500)),
-  'info-text': hex-to-rgb(map.get(variables.$blue, 700)),
-  'warning': hex-to-rgb(map.get(variables.$yellow, 500)),
-  'warning-text': hex-to-rgb(map.get(variables.$yellow, 700)),
-  'error': hex-to-rgb(map.get(variables.$red, 500)),
-  'error-text': hex-to-rgb(map.get(variables.$red, 600)),
-  'success': hex-to-rgb(#29C1BC),
-  'success-text': hex-to-rgb(#148d89),
+  'primary': map.get($brand-colours, 'primary'),
+  'secondary': map.get($brand-colours, 'accent'),
+  'tertiary': map.get($brand-colours, 'red'),
+  'info': map.get($brand-colours, 'blue'),
+  'warning': map.get($brand-colours, 'orange'),
+  'error': map.get($brand-colours, 'red'),
+  'success': map.get($brand-colours, 'green'),
 );
 
 // Default Theme
@@ -54,30 +60,14 @@ $theme-light: (
 
 // Dark theme
 $theme-dark: (
-  'text': hex-to-rgb(variables.$white),
-  'text-heading': hex-to-rgb(variables.$white),
-  'text-page-title': hex-to-rgb(variables.$white),
+  'text': hex-to-rgb(#999999),
+  'text-heading': hex-to-rgb(#E1E1E1),
+  'text-page-title': hex-to-rgb(#E1E1E1),
   'text-panel-title': hex-to-rgb(#29C1BC),
-  'body': hex-to-rgb(#0b0b15),
-  'panel': hex-to-rgb(#0e0f21),
-  'panel-highlight': hex-to-rgb(#1a1a1a),
+  'body': hex-to-rgb(#121212),
+  'panel': hex-to-rgb(#181818),
+  'panel-highlight': hex-to-rgb(#2E2E2E),
   'border-color': hex-to-rgb(#141624),
-  'accent': hex-to-rgb(#29C1BC),
-  'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
-  'bright-bg': hex-to-rgb(#e1e1e1),
-);
-
-
-// Dark theme
-$theme-grey: (
-  'text': hex-to-rgb(#989898),
-  'text-heading': hex-to-rgb(#e1e1e1),
-  'text-page-title': hex-to-rgb(#e1e1e1),
-  'text-panel-title': hex-to-rgb(#29C1BC),
-  'body': hex-to-rgb(#1E1F22),
-  'panel': hex-to-rgb(#24262A),
-  'panel-highlight': hex-to-rgb(#1a1a1a),
-  'border-color': hex-to-rgb(#2B2D30),
   'accent': hex-to-rgb(#29C1BC),
   'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
   'bright-bg': hex-to-rgb(#e1e1e1),
@@ -108,18 +98,10 @@ $theme-grey: (
   #{$var-prefix}text-opacity: 1;
 }
 
-[t="default"], .theme-default {
-  @include spread-map($theme-default, #{$var-prefix});
-}
-
 [t="light"], .theme-light {
   @include spread-map($theme-light, #{$var-prefix});
 }
 
 [t="dark"], .theme-dark {
   @include spread-map($theme-dark, #{$var-prefix});
-}
-
-[t="grey"], .theme-grey {
-  @include spread-map($theme-grey, #{$var-prefix});
 }

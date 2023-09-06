@@ -13,43 +13,36 @@
 <div style="margin:auto; padding:10px; text-align: center;">
   <zn-panel>
     <button
-      onclick="document.body.setAttribute('t', 'grey'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'grey'}));">
-      Grey Theme
+      onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">
+      Light Theme
     </button>
     <button
       onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">
       Dark Theme
     </button>
-    <button
-      onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">
-      Light Theme
-    </button>
-    <button
-      onclick="document.body.setAttribute('t', 'default');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'default'}));">
-      Default Theme
-    </button>
 
 
-    <zn-alert icon="check" variant="info">
-      <div slot="content">This is the content for the alert</div>
+    <zn-alert icon="check:info" variant="info" caption="This is the content for the alert"></zn-alert>
+
+    <zn-alert icon="check:info" variant="info" caption="This is the content for the alert">
       <zn-button slot="actions" size="small" variant="info" icon="copy"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
     </zn-alert>
 
-    <zn-alert icon="close" variant="success" caption="Success HERE">
-      <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
+    <zn-alert icon="sentiment_satisfied_alt:success" variant="success" caption="Success HERE">
+      <div slot="content">This is the content <br/>for the alert <br/>for the alert <br/>for the alert <br/>for the alert </div>
       <zn-button slot="actions" size="small" icon="copy" variant="success"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
     </zn-alert>
 
     <zn-alert variant="warning" caption="Thing removed">
-      <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
+      <div slot="content">This is the content for the alert</div>
       <zn-button slot="actions" size="small" icon="copy" variant="warning"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
     </zn-alert>
 
     <zn-alert variant="error" caption="Thing removed">
-      <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
+      <div slot="content">This is the content for the alert </div>
       <zn-button slot="actions" size="small" icon="copy" variant="error"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
     </zn-alert>
@@ -82,7 +75,7 @@
 <zn-panel>
   <button id="confirm-trigger-1">Error Modal</button>
   <zn-confirm trigger="confirm-trigger-1" title="Create Your New Token" type="error" action="#" method="post"
-              content="If you do this you will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
+              content="If you do this youx will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
   </zn-confirm>
 
   <button id="confirm-trigger-2">Success Modal</button>

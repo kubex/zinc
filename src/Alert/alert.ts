@@ -29,7 +29,7 @@ export class Alert extends ZincElement {
       }
     }
 
-    const caption = this.caption ? html`<p>${this.caption}</p>` : '';
+    const caption = this.caption ? html`<h6>${this.caption}</h6>` : '';
 
     return html`
       ${icon}

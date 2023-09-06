@@ -78,6 +78,10 @@ export class Icon extends LitElement
         this.src = md5(this.src);
       }
     }
+    else if (this.library == "")
+    {
+      this.library = Library.MaterialOutlined;
+    }
     this.ravatarOptions();
   }
 

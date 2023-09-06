@@ -1,8 +1,10 @@
-import { html, LitElement, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import { ZincElement } from "../zinc";
+
+export type AlertVariations = 'error' | 'info' | 'success' | 'warning';
 
 @customElement('zn-alert')
 export class Alert extends ZincElement {
@@ -11,6 +13,7 @@ export class Alert extends ZincElement {
   @property({ type: String }) icon: string = '';
   @property({ type: String }) caption: string = '';
   @property({ type: Boolean }) collapse: boolean = false;
+  @property({ type: String }) variant: AlertVariations = 'info';
 
   render() {
     let icon;
@@ -22,7 +25,7 @@ export class Alert extends ZincElement {
                    style="cursor: pointer"></zn-icon>` : "";
       } else {
         icon = this.icon ? html`
-          <zn-icon  src="${this.icon}" id="xy2"></zn-icon>` : '';
+          <zn-icon src="${this.icon}" id="xy2"></zn-icon>` : '';
       }
     }
 

@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
 
-export type ButtonVariations = 'primary' | 'secondary';
+export type ButtonVariations = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 export type ButtonSizes = 'small' | 'normal' | 'large';
 export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';

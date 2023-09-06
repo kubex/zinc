@@ -16,23 +16,22 @@
     <button onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">Dark Theme</button>
     <button onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">Light Theme</button>
     <button onclick="document.body.setAttribute('t', 'default');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'default'}));">Default Theme</button>
-    <zn-button size="small" icon="check"></zn-button>
 
 
-    <zn-alert icon="check" info>
+    <zn-alert icon="check" variant="info">
       <div slot="content">This is the content for the alert</div>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
     </zn-alert>
 
-    <zn-alert icon="close" success caption="WARNING HERE">
+    <zn-alert icon="close" variant="success" caption="WARNING HERE">
       <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
       <div slot="actions">
-        <zn-button size="small" icon="copy"></zn-button>
+        <zn-button size="small" icon="copy" variant="info"></zn-button>
       </div>
     </zn-alert>
 
-    <zn-alert warning caption="Thing removed">
+    <zn-alert variant="warning" caption="Thing removed">
       <div slot="content">This is the content for the alert <strong>OMG this is so much better</strong></div>
     </zn-alert>
   </zn-panel>

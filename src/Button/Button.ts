@@ -27,7 +27,7 @@ export class Button extends LitElement {
     const typeAttribute = this.submit ? 'submit' : 'button';
     const shouldGrow = this.grow ? 'grow' : '';
     const icon = this.icon ? html`
-      <zn-icon library="mio" src="${this.icon}" id="xy2"></zn-icon>` : '';
+      <zn-icon src="${this.icon}" id="xy2"></zn-icon>` : '';
 
 
     if (this.icon) {

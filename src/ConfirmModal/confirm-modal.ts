@@ -31,7 +31,7 @@ export class ConfirmModal extends Dialog
     };
 
     return html`
-      <zn-icon slot="primary" src=${src[this.type]} size="24" library="mio"></zn-icon>
+      <zn-icon slot="primary" src=${src[this.type]} size="24"></zn-icon>
     `;
   }
 

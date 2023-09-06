@@ -19,13 +19,17 @@ const LibraryAlias = {
   Material: "mi",
   MaterialOutlined: "mio",
   MaterialRound: "mir",
-  MaterialSharp: "mit",
-  MaterialTwoTone: "mis",
+  MaterialSharp: "mis",
+  MaterialTwoTone: "mit",
   Gravatar: "grav",
 };
 
 const colors = {
-  "warn": "rgb(var(--zn-color-warning))",
+  "primary": "rgb(var(--zn-color-primary))",
+  "secondary": "rgb(var(--zn-color-secondary))",
+  "tertiary": "rgb(var(--zn-color-tertiary))",
+  "info": "rgb(var(--zn-color-info))",
+  "warning": "rgb(var(--zn-color-warning))",
   "error": "rgb(var(--zn-color-error))",
   "success": "rgb(var(--zn-color-success))",
 };
@@ -55,6 +59,41 @@ export class Icon extends LitElement
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
+
+    if (this.src.includes(':'))
+    {
+      const split = this.src.split(':');
+      this.src = split[0];
+      switch (split[1])
+      {
+        case 'round':
+          this.round = true;
+          break;
+        case 'info':
+          this.color = 'info';
+          break;
+        case 'warn':
+        case 'warning':
+          this.color = 'warning';
+          break;
+        case 'error':
+        case 'danger':
+          this.color = 'error';
+          break;
+        case 'success':
+          this.color = 'success';
+          break;
+        case 'primary':
+          this.color = 'primary';
+          break;
+        case 'secondary':
+          this.color = 'secondary';
+          break;
+        case 'tertiary':
+          this.color = 'tertiary';
+          break;
+      }
+    }
 
     if (this.src.includes('@'))
     {

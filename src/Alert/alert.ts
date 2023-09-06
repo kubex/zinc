@@ -8,7 +8,7 @@ export class Alert extends LitElement {
 
   static styles = unsafeCSS(styles);
   @property({ type: String }) icon: string = '';
-
+  @property({ type: String }) caption: string = '';
   @property({ type: Boolean }) collapse: boolean = false;
 
   render() {
@@ -25,9 +25,12 @@ export class Alert extends LitElement {
       }
     }
 
+    const caption = this.caption ? html`<p>${this.caption}</p>` : '';
+
     return html`
       ${icon}
       <div class="content">
+        ${caption}
         <slot name="content"></slot>
       </div>
       <div class="actions">

@@ -12,9 +12,20 @@
   border: 1px solid rgb(var(--zn-border-color));
 }
 
+:host([caption]) zn-icon {
+  align-self: flex-start;
+}
+
 .content {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
+  gap: 4px;
   text-align: left;
+
+  > p {
+    font-weight: 600;
+  }
 }
 
 .actions {

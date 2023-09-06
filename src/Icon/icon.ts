@@ -26,7 +26,7 @@ const LibraryAlias = {
 
 const colors = {
   "primary": "rgb(var(--zn-color-primary))",
-  "secondary": "rgb(var(--zn-color-secondary))",
+  "accent": "rgb(var(--zn-color-accent))",
   "info": "rgb(var(--zn-color-info))",
   "warning": "rgb(var(--zn-color-warning))",
   "error": "rgb(var(--zn-color-error))",
@@ -71,12 +71,10 @@ export class Icon extends LitElement
         case 'info':
           this.color = 'info';
           break;
-        case 'warn':
         case 'warning':
           this.color = 'warning';
           break;
         case 'error':
-        case 'danger':
           this.color = 'error';
           break;
         case 'success':
@@ -85,8 +83,8 @@ export class Icon extends LitElement
         case 'primary':
           this.color = 'primary';
           break;
-        case 'secondary':
-          this.color = 'secondary';
+        case 'accent':
+          this.color = 'accent';
           break;
       }
     }

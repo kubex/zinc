@@ -12,7 +12,6 @@ $brand-colours: (
   'blue': hex-to-rgb(#6483F2),
   'green': hex-to-rgb(#2BC0C0),
   'orange': hex-to-rgb(#FF8800),
-
   'primary': hex-to-rgb(#6836F5),
   'accent': hex-to-rgb(#47D6D6),
 );
@@ -20,27 +19,11 @@ $brand-colours: (
 // Global Colors
 $theme-colors: (
   'primary': map.get($brand-colours, 'primary'),
-  'secondary': map.get($brand-colours, 'accent'),
-  'tertiary': map.get($brand-colours, 'red'),
+  'accent': map.get($brand-colours, 'accent'),
   'info': map.get($brand-colours, 'blue'),
   'warning': map.get($brand-colours, 'orange'),
   'error': map.get($brand-colours, 'red'),
   'success': map.get($brand-colours, 'green'),
-);
-
-// Default Theme
-$theme-default: (
-  'text': hex-to-rgb(#D3C9EE),
-  'text-heading': hex-to-rgb(#FFFFFF),
-  'text-page-title': hex-to-rgb(#FFFFFF),
-  'text-panel-title': hex-to-rgb(#3CD8BB),
-  'body': hex-to-rgb(#150B33),
-  'panel': hex-to-rgb(#2A1A55),
-  'panel-highlight': hex-to-rgb(#09112c),
-  'border-color': hex-to-rgb(#080C1C),
-  'accent': hex-to-rgb(#29C1BC),
-  'input-bg': hex-to-rgb(#150c38),
-  'bright-bg': hex-to-rgb(#e9dffd),
 );
 
 // Light Theme
@@ -48,12 +31,12 @@ $theme-light: (
   'text': hex-to-rgb(map.get(variables.$slate, 500)),
   'text-heading': hex-to-rgb(map.get(variables.$slate, 800)),
   'text-page-title': '52, 52, 52',
-  'text-panel-title': hex-to-rgb(#6836F5),
+  'text-panel-title': map.get($brand-colours, 'primary'),
   'body': hex-to-rgb(map.get(variables.$slate, 50)),
   'panel': hex-to-rgb(variables.$white),
   'panel-highlight': hex-to-rgb(#f8f9fc),
   'border-color': hex-to-rgb(map.get(variables.$slate, 300)),
-  'accent': hex-to-rgb(#6836F5),
+  'accent': map.get($brand-colours, 'primary'),
   'input-bg': hex-to-rgb(#f7f7f7),
   'bright-bg': hex-to-rgb(#ffffff),
 );
@@ -63,12 +46,12 @@ $theme-dark: (
   'text': hex-to-rgb(#999999),
   'text-heading': hex-to-rgb(#E1E1E1),
   'text-page-title': hex-to-rgb(#E1E1E1),
-  'text-panel-title': hex-to-rgb(#29C1BC),
+  'text-panel-title': map.get($brand-colours, 'accent'),
   'body': hex-to-rgb(#121212),
   'panel': hex-to-rgb(#181818),
   'panel-highlight': hex-to-rgb(#2E2E2E),
   'border-color': hex-to-rgb(#141624),
-  'accent': hex-to-rgb(#29C1BC),
+  'accent': map.get($brand-colours, 'accent'),
   'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
   'bright-bg': hex-to-rgb(#e1e1e1),
 );
@@ -86,7 +69,7 @@ $theme-dark: (
 :root {
   // Theme Colors
   @include spread-map($theme-colors, #{$var-prefix} + 'color-');
-  @include spread-map($theme-default, #{$var-prefix});
+  @include spread-map($theme-light, #{$var-prefix});
 
   // Font Families
   #{$var-prefix}font-family-sans: 'Roboto', sans-serif;

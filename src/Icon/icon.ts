@@ -28,10 +28,10 @@ const colors = {
   "primary": "rgb(var(--zn-color-primary))",
   "secondary": "rgb(var(--zn-color-secondary))",
   "tertiary": "rgb(var(--zn-color-tertiary))",
-  "info": "rgb(var(--zn-color-info))",
-  "warning": "rgb(var(--zn-color-warning))",
-  "error": "rgb(var(--zn-color-error))",
-  "success": "rgb(var(--zn-color-success))",
+  "info": "rgb(var(--zn-color-info-text))",
+  "warning": "rgb(var(--zn-color-warning-text))",
+  "error": "rgb(var(--zn-color-error-text))",
+  "success": "rgb(var(--zn-color-success-text))",
 };
 
 type Color = keyof typeof colors;

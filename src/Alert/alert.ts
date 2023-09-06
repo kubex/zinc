@@ -2,9 +2,10 @@ import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
+import {ZincElement} from "../zinc";
 
 @customElement('zn-alert')
-export class Alert extends LitElement {
+export class Alert extends ZincElement {
 
   static styles = unsafeCSS(styles);
   @property({ type: String }) icon: string = '';

@@ -2,9 +2,11 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
+import {ZincElement} from "../zinc";
 
 @customElement('zn-panel')
-export class Panel extends LitElement {
+export class Panel extends ZincElement
+{
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'small', type: Boolean, reflect: true}) small;
   @property({attribute: 'stat', type: Boolean, reflect: true}) stat;
@@ -15,20 +17,25 @@ export class Panel extends LitElement {
 
   private selectedPanel: Number = 0;
 
-  protected render(): unknown {
+  protected render(): unknown
+  {
     const footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
     const actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
 
     const navItems = [];
     const panels = this.querySelectorAll('[link]');
-    panels.forEach((item, index) => {
-      if (index === 0) {
+    panels.forEach((item, index) =>
+    {
+      if (index === 0)
+      {
         item.classList.remove('hidden');
         navItems.push({
           path: item.getAttribute('link'),
           active: true
         });
-      } else {
+      }
+      else
+      {
         item.classList.add('hidden');
         navItems.push({
           path: item.getAttribute('link'),
@@ -38,7 +45,8 @@ export class Panel extends LitElement {
     });
 
     let nav = html``;
-    if (this.navigation.length > 0) {
+    if (this.navigation.length > 0)
+    {
       nav = html`
         <div class="nav">
           <ul>
@@ -46,14 +54,17 @@ export class Panel extends LitElement {
               <li><a href="${item.path}">${item.title}</a></li>`)}
           </ul>
         </div>`;
-    } else if (navItems.length > 0) {
+    }
+    else if (navItems.length > 0)
+    {
       // on click prevent default and select next panel
       nav = html`
         <div class="nav">
           <ul>
             ${navItems.map((item, index) => html`
               <li class="${item.active ? 'active' : ''}">
-                <a href="#" @click="${(e) => {
+                <a href="#" @click="${(e) =>
+                {
                   e.preventDefault();
                   this.selectPanel(index);
                 }}">${item.path}</a>
@@ -62,27 +73,30 @@ export class Panel extends LitElement {
         </div>`;
     }
 
-    if (this.rows > 0) {
+    if (this.rows > 0)
+    {
       this.style.setProperty('--row-count', this.rows);
     }
 
     let header;
-    if (actionItems || this.caption || this.navigation.length > 0 || navItems.length > 0) {
+    if (actionItems || this.caption || this.navigation.length > 0 || navItems.length > 0)
+    {
       header = html`
         <div class="header">
           <span>${this.caption}</span>
           <slot name="actions"></slot>
         </div>
         ${nav}
-      `
+      `;
     }
 
     let footer;
-    if (footerItems) {
+    if (footerItems)
+    {
       footer = html`
         <div class="footer">
           <slot name="footer"></slot>
-        </div>`
+        </div>`;
     }
 
     return html`
@@ -90,29 +104,38 @@ export class Panel extends LitElement {
         <div class="body">
           <slot></slot>
         </div>
-        ${footer}
-      </div>`
+           ${footer}
+      </div>`;
   }
 
-  private selectPanel(index: number) {
+  private selectPanel(index: number)
+  {
     this.selectedPanel = index;
     const panels = this.parentElement.querySelectorAll('[link]');
     console.log(panels);
-    panels.forEach((item, index) => {
+    panels.forEach((item, index) =>
+    {
       console.log(this.selectedPanel);
-      if (index === this.selectedPanel) {
+      if (index === this.selectedPanel)
+      {
         item.classList.remove('hidden');
-      } else {
+      }
+      else
+      {
         item.classList.add('hidden');
       }
     });
 
     // update ul li
     const navItems = this.shadowRoot.querySelectorAll('.nav li');
-    navItems.forEach((item, index) => {
-      if (index === this.selectedPanel) {
+    navItems.forEach((item, index) =>
+    {
+      if (index === this.selectedPanel)
+      {
         item.classList.add('active');
-      } else {
+      }
+      else
+      {
         item.classList.remove('active');
       }
     });

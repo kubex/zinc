@@ -12,14 +12,14 @@
 
 <div style="margin:auto; padding:10px; text-align: center;">
   <zn-panel>
-    <button onclick="document.body.setAttribute('t', 'grey')">Grey Theme</button>
-    <button onclick="document.body.setAttribute('t', 'dark')">Dark Theme</button>
-    <button onclick="document.body.setAttribute('t', 'light')">Light Theme</button>
-    <button onclick="document.body.setAttribute('t', 'default')">Default Theme</button>
+    <button onclick="document.body.setAttribute('t', 'grey'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'grey'}));">Grey Theme</button>
+    <button onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">Dark Theme</button>
+    <button onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">Light Theme</button>
+    <button onclick="document.body.setAttribute('t', 'default');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'default'}));">Default Theme</button>
     <zn-button size="small" icon="check"></zn-button>
 
 
-    <zn-alert icon="check" collapse>
+    <zn-alert icon="check" info>
       <div slot="content">This is the content for the alert</div>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>
       <zn-button slot="actions" size="small" icon="copy"></zn-button>

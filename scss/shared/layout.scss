@@ -1,0 +1,26 @@
+@use "../mixins";
+
+.grow {
+  flex-grow: 1;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.zn-pad {
+  @include mixins.padding();
+  padding-left: 0!important;
+  padding-right: 0!important;
+}
+
+.zn-pad-x {
+  @include mixins.padding();
+  padding-top: 0!important;
+  padding-bottom: 0!important;
+}

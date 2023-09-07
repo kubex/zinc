@@ -41,7 +41,7 @@ export class Alert extends ZincElement
       ${icon}
       <div class="content">
         ${caption}
-        <slot name="content"></slot>
+        <slot></slot>
       </div>
       <div class="actions">
         <slot name="actions"></slot>

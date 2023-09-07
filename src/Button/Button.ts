@@ -4,14 +4,14 @@ import { customElement, property } from 'lit/decorators.js';
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
 
-export type ButtonVariations = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
+export type ButtonColor = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 export type ButtonSizes = 'small' | 'normal' | 'large';
 export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';
 
 @customElement('zn-button')
 export class Button extends ZincElement {
-  @property({ type: String }) variant: ButtonVariations = 'primary';
+  @property({ type: String }) variant: ButtonColor = 'primary';
   @property({ type: String }) size: ButtonSizes;
   @property({ type: String }) verticalAlign: VerticalAlignments;
   @property({ type: Boolean }) disabled: boolean = false;
@@ -34,15 +34,15 @@ export class Button extends ZincElement {
     if (this.icon) {
       if (this.iconPosition === 'left') {
         return html`
-          <button class=${shouldGrow} type=${typeAttribute}>${icon}${this.content}</button>`
+          <button class=${shouldGrow} type=${typeAttribute}>${icon}${this.content}<slot></slot></button>`
       } else {
         return html`
-          <button class=${shouldGrow} type=${typeAttribute}>${this.content}${icon}</button>`
+          <button class=${shouldGrow} type=${typeAttribute}>${this.content}<slot></slot>${icon}</button>`
       }
     }
 
     return html`
-      <button class=${shouldGrow} type=${typeAttribute}>${this.content}</button>`
+      <button class=${shouldGrow} type=${typeAttribute}>${this.content}<slot></slot></button>`
   }
 }
 

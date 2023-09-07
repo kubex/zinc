@@ -10,45 +10,6 @@
 </head>
 <body t="light" style="overflow: auto">
 
-<div style="margin:auto; padding:10px; text-align: center;">
-  <zn-panel>
-    <button
-      onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">
-      Light Theme
-    </button>
-    <button
-      onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">
-      Dark Theme
-    </button>
-  </zn-panel>
-</div>
-
-<zn-panel>
-  <button id="confirm-trigger-1">Error Modal</button>
-  <zn-confirm trigger="confirm-trigger-1" title="Create Your New Token" type="error" action="#" method="post"
-              content="If you do this youx will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
-  </zn-confirm>
-
-  <button id="confirm-trigger-2">Success Modal</button>
-  <zn-confirm trigger="confirm-trigger-2" title="Another Modal Here" type="success" action="#" method="post"
-              content="If you do this you will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
-  </zn-confirm>
-
-  <button id="dialog-trigger">Custom Modal</button>
-  <zn-dialog trigger="dialog-trigger">
-    <form method="post" action="">
-      <zn-header caption="Here's an example dialog"></zn-header>
-      <zn-input span="4" label="Website">
-        <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
-      </zn-input>
-      <div id="buttons">
-        <input type="submit" value="Go"/>
-        <button type="button" dialog-closer>Closer</button>
-      </div>
-    </form>
-  </zn-dialog>
-</zn-panel>
-
 <div id="source">
 
   <zn-header max-width
@@ -59,6 +20,22 @@
 
   <zn-page caption="Overview">
     <div slot="side">
+
+      <zn-panel>
+        <div class="zn-gap">
+
+          <button
+            onclick="document.body.setAttribute('t', 'light');  window.dispatchEvent(new CustomEvent('theme-change', {detail:'light'}));">
+            Light Theme
+          </button>
+          <button
+            onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">
+            Dark Theme
+          </button>
+
+        </div>
+      </zn-panel>
+
 
       <zn-panel caption="Customer Details">
         <zn-prop caption="First Name">Marko</zn-prop>
@@ -100,7 +77,7 @@
       <zn-alert level="success" caption="Success Alert"></zn-alert>
 
       <zn-alert icon="check:info" level="info" caption="This is the content for the alert">
-        <zn-button slot="actions" size="small" variant="info" icon="copy"></zn-button>
+        <zn-button slot="actions" size="small" color="info" icon="copy"></zn-button>
         <zn-button slot="actions" size="small" icon="copy"></zn-button>
       </zn-alert>
 
@@ -108,21 +85,47 @@
         <div slot="content">This is the content <br/>for the alert <br/>for the alert <br/>for the alert <br/>for the
                             alert
         </div>
-        <zn-button slot="actions" size="small" icon="copy" variant="success"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy" color="success"></zn-button>
         <zn-button slot="actions" size="small" icon="copy"></zn-button>
       </zn-alert>
 
       <zn-alert level="warning" caption="Thing removed">
         <div slot="content">This is the content for the alert</div>
-        <zn-button slot="actions" size="small" icon="copy" variant="warning"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy" color="warning"></zn-button>
         <zn-button slot="actions" size="small" icon="copy"></zn-button>
       </zn-alert>
 
       <zn-alert level="error" caption="Thing removed">
         <div slot="content">This is the content for the alert</div>
-        <zn-button slot="actions" size="small" icon="copy" variant="error"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy" color="error"></zn-button>
         <zn-button slot="actions" size="small" icon="copy"></zn-button>
       </zn-alert>
+    </zn-panel>
+
+    <zn-panel>
+      <button id="confirm-trigger-1">Error Modal</button>
+      <zn-confirm trigger="confirm-trigger-1" title="Create Your New Token" type="error" action="#" method="post"
+                  content="If you do this youx will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
+      </zn-confirm>
+
+      <button id="confirm-trigger-2">Success Modal</button>
+      <zn-confirm trigger="confirm-trigger-2" title="Another Modal Here" type="success" action="#" method="post"
+                  content="If you do this you will not be abler to und this. This is a breaking change that will make you mad once you realise you can not reverse it.">
+      </zn-confirm>
+
+      <button id="dialog-trigger">Custom Modal</button>
+      <zn-dialog trigger="dialog-trigger">
+        <form method="post" action="">
+          <zn-header caption="Here's an example dialog"></zn-header>
+          <zn-input span="4" label="Website">
+            <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
+          </zn-input>
+          <div id="buttons">
+            <input type="submit" value="Go"/>
+            <button type="button" dialog-closer>Closer</button>
+          </div>
+        </form>
+      </zn-dialog>
     </zn-panel>
 
     <zn-panel>
@@ -146,6 +149,13 @@
           </zn-confirm>
         </div>
       </zn-action-item>
+    </zn-panel>
+
+    <zn-panel>
+      <zn-button color="error" size="mini">Mini Button</zn-button>
+      <zn-button size="small">Small Button</zn-button>
+      <zn-button size="normal">Normal Button</zn-button>
+      <zn-button size="large">Large Button</zn-button>
     </zn-panel>
 
     <zn-panel caption="Typography">

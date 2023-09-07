@@ -2,6 +2,7 @@ import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
+import {ZincElement} from "../zinc";
 
 export type ButtonVariations = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
 export type ButtonSizes = 'small' | 'normal' | 'large';
@@ -9,7 +10,7 @@ export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';
 
 @customElement('zn-button')
-export class Button extends LitElement {
+export class Button extends ZincElement {
   @property({ type: String }) variant: ButtonVariations = 'primary';
   @property({ type: String }) size: ButtonSizes;
   @property({ type: String }) verticalAlign: VerticalAlignments;

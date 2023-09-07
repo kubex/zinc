@@ -16,10 +16,12 @@ $brand-colours: (
   'accent': hex-to-rgb(#47D6D6),
 );
 
+$brand-colours-dark: (
+  'primary': hex-to-rgb(#8967ef),
+);
+
 // Global Colors
 $theme-colors: (
-  'primary': map.get($brand-colours, 'primary'),
-  'accent': map.get($brand-colours, 'accent'),
   'info': map.get($brand-colours, 'blue'),
   'warning': map.get($brand-colours, 'orange'),
   'error': map.get($brand-colours, 'red'),
@@ -36,7 +38,6 @@ $theme-light: (
   'panel': hex-to-rgb(variables.$white),
   'panel-highlight': hex-to-rgb(#f8f9fc),
   'border-color': hex-to-rgb(map.get(variables.$slate, 300)),
-  'accent': map.get($brand-colours, 'primary'),
   'input-bg': hex-to-rgb(#f7f7f7),
   'bright-bg': hex-to-rgb(#ffffff),
 );
@@ -46,12 +47,11 @@ $theme-dark: (
   'text': hex-to-rgb(#999999),
   'text-heading': hex-to-rgb(#E1E1E1),
   'text-page-title': hex-to-rgb(#E1E1E1),
-  'text-panel-title': map.get($brand-colours, 'accent'),
+  'text-panel-title': map.get($brand-colours-dark, 'primary'),
   'body': hex-to-rgb(#121212),
-  'panel': hex-to-rgb(#181818),
+  'panel': hex-to-rgb(#1E1E1E),
   'panel-highlight': hex-to-rgb(#2E2E2E),
-  'border-color': hex-to-rgb(#141624),
-  'accent': map.get($brand-colours, 'accent'),
+  'border-color': hex-to-rgb(#2E2E2E),
   'input-bg': hex-to-rgb(map.get(variables.$slate, 700)),
   'bright-bg': hex-to-rgb(#e1e1e1),
 );
@@ -68,8 +68,8 @@ $theme-dark: (
 
 :root {
   // Theme Colors
+  @include spread-map($brand-colours, #{$var-prefix});
   @include spread-map($theme-colors, #{$var-prefix} + 'color-');
-  @include spread-map($theme-light, #{$var-prefix});
 
   // Font Families
   #{$var-prefix}font-family-sans: 'Roboto', sans-serif;
@@ -87,4 +87,5 @@ $theme-dark: (
 
 [t="dark"], .theme-dark {
   @include spread-map($theme-dark, #{$var-prefix});
+  @include spread-map($brand-colours-dark, #{$var-prefix});
 }

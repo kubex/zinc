@@ -25,8 +25,8 @@ const LibraryAlias = {
 };
 
 const colors = {
-  "primary": "rgb(var(--zn-color-primary))",
-  "accent": "rgb(var(--zn-color-accent))",
+  "primary": "rgb(var(--zn-primary))",
+  "accent": "rgb(var(--zn-primary))",
   "info": "rgb(var(--zn-color-info))",
   "warning": "rgb(var(--zn-color-warning))",
   "error": "rgb(var(--zn-color-error))",

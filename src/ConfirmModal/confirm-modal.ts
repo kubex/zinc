@@ -41,15 +41,20 @@ export class ConfirmModal extends Dialog
 
     return html`
       <dialog class="type-${this.type}">
-        <!-- default dialog close button -->
-        ${icon}
-        <h2 class="title">${this.title}</h2>
-        <p>${this.content}</p>
-        <slot></slot>
-        <div class="button-group">
-          <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
-          </button>
-          <button @click="${this.submitDialog}"> ${this.confirmText}</button>
+
+        <div id="content"> <!-- default dialog close button -->
+              ${icon}
+          <h2 class="title">${this.title}</h2>
+          <p>${this.content}</p>
+          <slot></slot>
+          <div class="button-group">
+            <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
+            </button>
+            <button @click="${this.submitDialog}"> ${this.confirmText}</button>
+          </div>
+        </div>
+        <div class="done">
+          <zn-icon src="check:success" size="150"></zn-icon>
         </div>
       </dialog>`;
   }

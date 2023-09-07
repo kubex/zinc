@@ -13,63 +13,65 @@
     --icon-color: 237, 84, 109;
   }
 
-  .title {
-    font-size: 18px;
-    font-weight: 500;
-    color: rgb(var(--zn-text-heading));
-    margin-bottom: 15px;
-  }
-
-  p {
-    text-align: center;
-    color: rgb(var(--zn-text));
-    font-weight: 400;
-    font-size: 14px;
-    margin: 0 auto 20px;
-    line-height: 18px;
-    max-width: 90%;
-  }
-
-  .button-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-
-    button {
-      display: flex;
-      flex-grow: 1;
-      padding: 10px 15px;
+  div#content {
+    .title {
+      font-size: 18px;
       font-weight: 500;
+      color: rgb(var(--zn-text-heading));
+      margin-bottom: 15px;
     }
 
-    button.button--secondary {
-      background-color: #F3EFFF;
-      color: rgb(var(--zn-primary));
+    p {
+      text-align: center;
+      color: rgb(var(--zn-text));
+      font-weight: 400;
+      font-size: 14px;
+      margin: 0 auto 20px;
+      line-height: 18px;
+      max-width: 90%;
     }
-  }
 
-  zn-icon {
-    --icon-color: var(--zn-primary);
-    padding: 15px;
-    position: relative;
-    overflow: initial;
-    border-radius: 50%;
-    border: 3px solid rgb(var(--icon-color));
-    color: rgb(var(--icon-color));
-    margin-bottom: 33px;
-    margin-top: 13px;
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
 
-    &:before {
-      content: '';
-      position: absolute;
-      background-color: rgba(var(--icon-color), 20%);
-      top: -13px;
-      left: -13px;
-      right: -13px;
-      bottom: -13px;
+      button {
+        display: flex;
+        flex-grow: 1;
+        padding: 10px 15px;
+        font-weight: 500;
+      }
+
+      button.button--secondary {
+        background-color: #F3EFFF;
+        color: rgb(var(--zn-primary));
+      }
+    }
+
+    zn-icon {
+      --icon-color: var(--zn-primary);
+      padding: 15px;
+      position: relative;
+      overflow: initial;
       border-radius: 50%;
+      border: 3px solid rgb(var(--icon-color));
+      color: rgb(var(--icon-color));
+      margin-bottom: 33px;
+      margin-top: 13px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        background-color: rgba(var(--icon-color), 20%);
+        top: -13px;
+        left: -13px;
+        right: -13px;
+        bottom: -13px;
+        border-radius: 50%;
+      }
     }
   }
 }

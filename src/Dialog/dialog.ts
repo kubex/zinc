@@ -45,6 +45,16 @@ export class Dialog extends LitElement
     this._dialog.close();
   }
 
+  successCloseDialog()
+  {
+    this._dialog.classList.add('closing');
+    setTimeout(() =>
+    {
+      this._dialog.close();
+      this._dialog.classList.remove('closing');
+    }, 1000);
+  }
+
   openDialog(e)
   {
     e.stopPropagation();
@@ -63,7 +73,12 @@ export class Dialog extends LitElement
   {
     return html`
       <dialog>
-        <slot></slot>
+        <div id="content">
+          <slot></slot>
+        </div>
+        <div class="done">
+          <zn-icon src="check:success" size="150"></zn-icon>
+        </div>
       </dialog>
     `;
   }

@@ -1,29 +1,35 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import { ZincElement } from "../zinc";
+import {ZincElement} from "../zinc";
 
-export type AlertVariations = 'error' | 'info' | 'success' | 'warning';
+export type AlertLevel = '' | 'primary' | 'error' | 'info' | 'success' | 'warning';
 
 @customElement('zn-alert')
-export class Alert extends ZincElement {
+export class Alert extends ZincElement
+{
 
   static styles = unsafeCSS(styles);
-  @property({ type: String }) icon: string = '';
-  @property({ type: String }) caption: string = '';
-  @property({ type: Boolean }) collapse: boolean = false;
-  @property({ type: String }) variant: AlertVariations = 'info';
+  @property({type: String}) icon: string = '';
+  @property({type: String}) caption: string = '';
+  @property({type: Boolean}) collapse: boolean = false;
+  @property({type: String}) level: AlertLevel = '';
 
-  render() {
+  render()
+  {
     let icon;
 
-    if (this.icon) {
-      if (this.collapse) {
+    if (this.icon)
+    {
+      if (this.collapse)
+      {
         icon = this.icon ? html`
           <zn-icon src="${this.icon}" id="xy2" @click="${this.hideAlert}"
                    style="cursor: pointer"></zn-icon>` : "";
-      } else {
+      }
+      else
+      {
         icon = this.icon ? html`
           <zn-icon src="${this.icon}" id="xy2"></zn-icon>` : '';
       }
@@ -42,7 +48,8 @@ export class Alert extends ZincElement {
       </div>`;
   }
 
-  public hideAlert() {
+  public hideAlert()
+  {
     this.style.display = "none";
   }
 }

@@ -20,57 +20,8 @@
       onclick="document.body.setAttribute('t', 'dark'); window.dispatchEvent(new CustomEvent('theme-change', {detail:'dark'}));">
       Dark Theme
     </button>
-
-
-    <zn-alert icon="check:info" variant="info" caption="This is the content for the alert"></zn-alert>
-
-    <zn-alert icon="check:info" variant="info" caption="This is the content for the alert">
-      <zn-button slot="actions" size="small" variant="info" icon="copy"></zn-button>
-      <zn-button slot="actions" size="small" icon="copy"></zn-button>
-    </zn-alert>
-
-    <zn-alert icon="sentiment_satisfied_alt:success" variant="success" caption="Success HERE">
-      <div slot="content">This is the content <br/>for the alert <br/>for the alert <br/>for the alert <br/>for the alert </div>
-      <zn-button slot="actions" size="small" icon="copy" variant="success"></zn-button>
-      <zn-button slot="actions" size="small" icon="copy"></zn-button>
-    </zn-alert>
-
-    <zn-alert variant="warning" caption="Thing removed">
-      <div slot="content">This is the content for the alert</div>
-      <zn-button slot="actions" size="small" icon="copy" variant="warning"></zn-button>
-      <zn-button slot="actions" size="small" icon="copy"></zn-button>
-    </zn-alert>
-
-    <zn-alert variant="error" caption="Thing removed">
-      <div slot="content">This is the content for the alert </div>
-      <zn-button slot="actions" size="small" icon="copy" variant="error"></zn-button>
-      <zn-button slot="actions" size="small" icon="copy"></zn-button>
-    </zn-alert>
   </zn-panel>
 </div>
-
-<zn-panel>
-  <zn-action-item content="https://dflkngdfkjgndfg.dkjdfngdjfkg.io">
-    <div slot="actions">
-      <zn-icon library="mio" src="close" id="xy1" color="error"></zn-icon>
-      <zn-icon library="mio" src="check" id="xy2"></zn-icon>
-      <zn-confirm trigger="xy1" title="Create Your New Token"
-                  content="If you do this you will not be able to undo this. This is a breaking change that will make yo mad once you realise you cannot reverse it."
-                  action="#">
-        <form>
-          <zn-form-group>
-            <zn-input label="Token Name" span="12">
-              <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
-            </zn-input>
-          </zn-form-group>
-        </form>
-      </zn-confirm>
-      <zn-confirm trigger="xy2" title="two">
-        <form></form>
-      </zn-confirm>
-    </div>
-  </zn-action-item>
-</zn-panel>
 
 <zn-panel>
   <button id="confirm-trigger-1">Error Modal</button>
@@ -99,30 +50,6 @@
 </zn-panel>
 
 <div id="source">
-  <zn-table>
-    [
-    {
-    "Name": "g1-smalls",
-    "LocationType": "Regional",
-    "Status": 1,
-    "Version": "1.25.10-gke.1200",
-    "MachineType": "g1-small",
-    "ImageType": "Container-optimised OS with containerd (cos_containerd)",
-    "AutoScaling": false,
-    "IPv4PodIPRange": "10.134.0.0/20"
-    },
-    {
-    "Name": "pool-1",
-    "LocationType": "Regional",
-    "Status": 1,
-    "Version": "1.25.10-gke.1200",
-    "MachineType": "e2-standard-2",
-    "ImageType": "Container-optimised OS with containerd (cos_containerd)",
-    "AutoScaling": true,
-    "IPv4PodIPRange": "10.134.0.0/20"
-    }
-    ]
-  </zn-table>
 
   <zn-header max-width
              caption="Mark Frederik Hanslanderbutterzlut"
@@ -164,30 +91,89 @@
 
     </div>
 
+    <zn-panel caption="Alerts">
+      <zn-alert caption="Default Alert"></zn-alert>
+      <zn-alert level="primary" caption="Primary Alert"></zn-alert>
+      <zn-alert level="info" caption="Info Alert"></zn-alert>
+      <zn-alert level="warning" caption="Warning Alert"></zn-alert>
+      <zn-alert level="error" caption="Error Alert"></zn-alert>
+      <zn-alert level="success" caption="Success Alert"></zn-alert>
+
+      <zn-alert icon="check:info" level="info" caption="This is the content for the alert">
+        <zn-button slot="actions" size="small" variant="info" icon="copy"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy"></zn-button>
+      </zn-alert>
+
+      <zn-alert icon="sentiment_satisfied_alt:success" level="success" caption="Success HERE">
+        <div slot="content">This is the content <br/>for the alert <br/>for the alert <br/>for the alert <br/>for the
+                            alert
+        </div>
+        <zn-button slot="actions" size="small" icon="copy" variant="success"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy"></zn-button>
+      </zn-alert>
+
+      <zn-alert level="warning" caption="Thing removed">
+        <div slot="content">This is the content for the alert</div>
+        <zn-button slot="actions" size="small" icon="copy" variant="warning"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy"></zn-button>
+      </zn-alert>
+
+      <zn-alert level="error" caption="Thing removed">
+        <div slot="content">This is the content for the alert</div>
+        <zn-button slot="actions" size="small" icon="copy" variant="error"></zn-button>
+        <zn-button slot="actions" size="small" icon="copy"></zn-button>
+      </zn-alert>
+    </zn-panel>
+
+    <zn-panel>
+      <zn-action-item content="https://dflkngdfkjgndfg.dkjdfngdjfkg.io">
+        <div slot="actions">
+          <zn-icon library="mio" src="close" id="xy1" color="error"></zn-icon>
+          <zn-icon library="mio" src="check" id="xy2"></zn-icon>
+          <zn-confirm trigger="xy1" title="Create Your New Token"
+                      content="If you do this you will not be able to undo this. This is a breaking change that will make yo mad once you realise you cannot reverse it."
+                      action="#">
+            <form>
+              <zn-form-group>
+                <zn-input label="Token Name" span="12">
+                  <zn-text-input prefix="https://" name="website" placeholder="www.example.com"></zn-text-input>
+                </zn-input>
+              </zn-form-group>
+            </form>
+          </zn-confirm>
+          <zn-confirm trigger="xy2" title="two">
+            <form></form>
+          </zn-confirm>
+        </div>
+      </zn-action-item>
+    </zn-panel>
+
     <zn-panel caption="Typography">
       <h1>Heading 1</h1>
       <h2>Heading 2</h2>
       <h3>Heading 3</h3>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin nisl sed pretium porttitor. In hac
-        habitasse platea dictumst. Sed pharetra leo eget orci pulvinar gravida. Quisque ut commodo nibh, a venenatis
-        sapien.
-        Suspendisse sit amet viverra dolor. Vestibulum congue, velit viverra ultricies commodo, lorem lorem facilisis
-        nisl,
-        eget volutpat nibh odio ut tortor. Duis nec euismod ligula. Ut porttitor posuere erat, et ornare ante egestas
-        pellentesque. Phasellus sagittis quam sed lorem maximus gravida. Cras scelerisque tellus a viverra dapibus.
-        Suspendisse sed porta ex, fermentum dignissim turpis. Cras laoreet, eros non malesuada bibendum, enim lectus
-        commodo
-        lorem, in tristique sapien elit sed orci. Ut id fringilla arcu, eget lobortis lectus. Mauris vitae mollis
-        tellus.
-        Aenean purus nisl, bibendum ac nulla a, placerat convallis diam.</p>
+         habitasse platea dictumst. Sed pharetra leo eget orci pulvinar gravida. Quisque ut commodo nibh, a venenatis
+         sapien.
+         Suspendisse sit amet viverra dolor. Vestibulum congue, velit viverra ultricies commodo, lorem lorem facilisis
+         nisl,
+         eget volutpat nibh odio ut tortor. Duis nec euismod ligula. Ut porttitor posuere erat, et ornare ante egestas
+         pellentesque. Phasellus sagittis quam sed lorem maximus gravida. Cras scelerisque tellus a viverra dapibus.
+         Suspendisse sed porta ex, fermentum dignissim turpis. Cras laoreet, eros non malesuada bibendum, enim lectus
+         commodo
+         lorem, in tristique sapien elit sed orci. Ut id fringilla arcu, eget lobortis lectus. Mauris vitae mollis
+         tellus.
+         Aenean purus nisl, bibendum ac nulla a, placerat convallis diam.</p>
 
       <p>Donec sit amet nisl in nulla blandit sodales sit amet sit amet lacus. In vitae metus ipsum. Cras aliquet lacus
-        sit
-        amet nulla ullamcorper molestie. Vestibulum elit justo, maximus et pharetra ac, semper a purus. Nunc vehicula id
-        tellus sed scelerisque. Etiam elementum lacinia lacus, sit amet tempor ligula porta vitae. Fusce nisi ante,
-        ultricies
-        congue massa sit amet, convallis sodales tortor. Proin luctus turpis in sapien ultrices, ac mattis ante posuere.
-        Vivamus volutpat maximus est finibus eleifend. Phasellus id commodo sapien.</p>
+         sit
+         amet nulla ullamcorper molestie. Vestibulum elit justo, maximus et pharetra ac, semper a purus. Nunc vehicula
+         id
+         tellus sed scelerisque. Etiam elementum lacinia lacus, sit amet tempor ligula porta vitae. Fusce nisi ante,
+         ultricies
+         congue massa sit amet, convallis sodales tortor. Proin luctus turpis in sapien ultrices, ac mattis ante
+         posuere.
+         Vivamus volutpat maximus est finibus eleifend. Phasellus id commodo sapien.</p>
     </zn-panel>
 
     <zn-panel caption="Subscriptions"
@@ -267,11 +253,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-          are going to use a passage of Lorem Ipsum.</p>
+           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+           are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-          Ipsum or randomised words which don't look even slightly believable.</p>
+           Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
       <zn-note>
@@ -279,11 +265,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-          are going to use a passage of Lorem Ipsum.</p>
+           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+           are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-          Ipsum or randomised words which don't look even slightly believable.</p>
+           Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
     </zn-panel>
@@ -421,6 +407,35 @@
         </form>
       </zn-accordion>
     </zn-panel>
+
+
+    <zn-panel>
+      <zn-table>
+        [
+        {
+        "Name": "g1-smalls",
+        "LocationType": "Regional",
+        "Status": 1,
+        "Version": "1.25.10-gke.1200",
+        "MachineType": "g1-small",
+        "ImageType": "Container-optimised OS with containerd (cos_containerd)",
+        "AutoScaling": false,
+        "IPv4PodIPRange": "10.134.0.0/20"
+        },
+        {
+        "Name": "pool-1",
+        "LocationType": "Regional",
+        "Status": 1,
+        "Version": "1.25.10-gke.1200",
+        "MachineType": "e2-standard-2",
+        "ImageType": "Container-optimised OS with containerd (cos_containerd)",
+        "AutoScaling": true,
+        "IPv4PodIPRange": "10.134.0.0/20"
+        }
+        ]
+      </zn-table>
+    </zn-panel>
+
   </zn-page>
 </div>
 

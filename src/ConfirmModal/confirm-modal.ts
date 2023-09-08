@@ -12,7 +12,7 @@ export class ConfirmModal extends Dialog
     return [super.styles, unsafeCSS(styles)];
   }
 
-  @property({type: String, reflect: true}) title: string = '';
+  @property({type: String, reflect: true}) caption: string = '';
   @property({type: String, reflect: true}) content: string = '';
   @property({type: String, reflect: true}) action: string = '';
   @property({type: String, reflect: true}) method: string = 'post';
@@ -43,8 +43,8 @@ export class ConfirmModal extends Dialog
       <dialog class="type-${this.type}">
 
         <div id="content"> <!-- default dialog close button -->
-              ${icon}
-          <h2 class="title">${this.title}</h2>
+          ${icon}
+          <h2 class="title">${this.caption}</h2>
           <p>${this.content}</p>
           <slot></slot>
           <div class="button-group">

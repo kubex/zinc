@@ -4,22 +4,34 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-input')
-export class Input extends LitElement {
-  @property({attribute: 'for', type: String, reflect: true}) for;
-  @property({attribute: 'label', type: String, reflect: true}) label;
-  @property({attribute: 'class', type: String, reflect: true}) class;
-  @property({attribute: 'advice', type: String, reflect: true}) advice;
-  @property({attribute: 'summary', type: String, reflect: true}) summary;
+export class Input extends LitElement
+{
+  @property({type: String, reflect: true}) for;
+  @property({type: String, reflect: true}) label;
+  @property({type: String, reflect: true}) class;
+  @property({type: String, reflect: true}) advice;
+  @property({type: String, reflect: true}) summary;
+  @property({type: String, reflect: true}) prefix;
+  @property({type: String, reflect: true}) suffix;
 
   static styles = unsafeCSS(styles);
 
-  render() {
+  render()
+  {
     return html`
-      <div class="${this.class}">
-        <label for="${this.for}">${this.label}</label>
-        ${this.summary}
+      <label for="${this.for}">${this.label}</label>
+      ${this.summary}
+      <div class="wrap">
+        ${this.prefix ? html`<span @click="${this._getFocus}" class="prefix">${this.prefix}</span>` : ''}
         <slot></slot>
-        ${this.advice}
-      </div>`
+        ${this.suffix ? html`<span @click="${this._getFocus}" class="suffix">${this.suffix}</span>` : ''}
+      </div>
+      ${this.advice}
+    `;
+  }
+
+  _getFocus()
+  {
+    this.querySelector('input').focus();
   }
 }

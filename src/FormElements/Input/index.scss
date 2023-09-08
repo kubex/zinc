@@ -1,7 +1,61 @@
 @use '../../wc';
 
-:host {
+:host, zn-input {
   display: inline-block;
+
+  .wrap {
+    background-color: rgb(var(--zn-input-bg));
+    border: 1px solid transparent;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: text;
+
+    display: flex;
+    flex-shrink: 1;
+    width: 100%;
+
+    &:focus-within {
+      border: 1px solid rgb(var(--zn-primary)) !important;
+      box-shadow: 0 0 0 3px rgba(var(--zn-primary), 0.3) !important;
+    }
+
+    span {
+      background-color: rgb(var(--zn-border-color));
+      display: flex;
+      align-items: center;
+      border-right-width: 1px;
+      padding: wc.spacing(xxs);
+
+      @include wc.media-query(sm) {
+        padding: wc.spacing(sm);
+      }
+    }
+
+    ::slotted(input) {
+      margin: 0 !important;
+    }
+
+    ::slotted(input:not([type="range"]):not([type="color"]):not([type="button"]):not([type="reset"]):not([type="submit"]):not([type="file"])) {
+      display: block;
+      width: 100%;
+      outline: none !important;
+      border-radius: 0;
+      border-color: transparent !important;
+      box-shadow: none !important;
+      background-color: rgb(var(--zn-input-bg)) !important;
+      padding: wc.spacing(xxs) !important;
+
+      &::placeholder {
+        font-weight: 400;
+        color: rgba(var(--zn-text), .6);
+      }
+
+      @include wc.media-query(sm) {
+        padding: wc.spacing(sm) !important;
+      }
+    }
+
+  }
 }
 
 :host([span="1/4"]) {
@@ -37,4 +91,3 @@ input {
   width: 100%;
   padding: wc.spacing(md);
 }
-

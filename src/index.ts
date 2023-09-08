@@ -24,7 +24,6 @@ import './Tabs';
 import './Columns';
 import './Heading';
 import './FormElements/Group';
-import './FormElements/TextInput';
 import './FormElements/CheckBox';
 import './FormElements/Input';
 import './FormElements/DragUpload';

@@ -5,7 +5,8 @@ import {ZincElement} from "../zinc";
 import styles from './index.scss';
 
 @customElement('zn-header')
-export class Header extends ZincElement {
+export class Header extends ZincElement
+{
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
   @property({attribute: 'caption', type: String, reflect: true}) caption: String = "";
   @property({attribute: 'navigation', type: Array}) navigation = [];
@@ -14,20 +15,31 @@ export class Header extends ZincElement {
 
   static styles = unsafeCSS(styles);
 
-  clickNav(e) {
-    e.target.closest('ul').querySelectorAll('li').forEach((item) => {
+  clickNav(e)
+  {
+    e.target.closest('ul').querySelectorAll('li').forEach((item) =>
+    {
       item.classList.remove('active');
     });
     e.target.closest('li').classList.add('active');
   }
 
-  render() {
+  render()
+  {
+
+    if (this.caption == "" && this.navigation.length == 0 && this.breadcrumb.length == 0)
+    {
+      return html``;
+    }
+
     const header = html`
       <div>
         <div class="width-container">
-          <div class="breadcrumb">${this.breadcrumb.map((item, index) => {
+          <div class="breadcrumb">${this.breadcrumb.map((item, index) =>
+          {
             const prefix = index == 0 ? '' : ' / ';
-            if (item.path == '') {
+            if (item.path == '')
+            {
               return html`
                 ${prefix} <span>${item.title}</span>`;
             }
@@ -40,7 +52,8 @@ export class Header extends ZincElement {
             <slot></slot>
           </div>
           <ul class="header-nav">
-            ${this.navigation.map((item, index) => {
+            ${this.navigation.map((item, index) =>
+            {
               const activeClass = item.active ? 'active' : '';
               return html`
                 <li class="${activeClass}"><a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
@@ -49,13 +62,14 @@ export class Header extends ZincElement {
           </ul>
         </div>
       </div>
-    `
-    if (this.maxWidth > 0) {
+    `;
+    if (this.maxWidth > 0)
+    {
       return html`
         <style>:host {
-          --max-width: ${this.maxWidth}px; </style>${header}`
+          --max-width: ${this.maxWidth}px; </style>${header}`;
     }
 
-    return header
+    return header;
   }
 }

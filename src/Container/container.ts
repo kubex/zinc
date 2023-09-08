@@ -77,6 +77,10 @@ export class Container extends ZincElement {
         return true;
     }
 
+    public getElement(elementId) {
+        return this.shadowQuery(elementId, this.container);
+    }
+
     shadowQuery(selector: string, rootNode: Document | Element = document): Element | null {
         const selectors = String(selector).split('>>>');
         let currentNode = rootNode;

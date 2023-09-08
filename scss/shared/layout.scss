@@ -15,12 +15,27 @@
 
 .zn-pad {
   @include mixins.padding();
-  padding-left: 0!important;
-  padding-right: 0!important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .zn-pad-x {
   @include mixins.padding();
-  padding-top: 0!important;
-  padding-bottom: 0!important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+.act-vanish {
+  transition: opacity 1s, height 1s, padding 1s, margin 1s;
+  opacity: 1;
+}
+
+.act-vanish.act-vanish--progress {
+  background-color: rgba(var(--zn-color-error), 0.3);
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  height: 0 !important;
+  overflow: hidden;
 }

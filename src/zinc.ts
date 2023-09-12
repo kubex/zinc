@@ -18,23 +18,23 @@ export class ZincElement extends LitElement
   containerSize(width)
   {
     const screens = screenSizes;
-    if (width > screens['4k'])
+    if(width > screens['4k'])
     {
       return '4k';
     }
-    else if (width > parseInt(screens['hd']))
+    else if(width > parseInt(screens['hd']))
     {
       return 'hd';
     }
-    else if (width > parseInt(screens['lg']))
+    else if(width > parseInt(screens['lg']))
     {
       return 'lg';
     }
-    else if (width > parseInt(screens['md']))
+    else if(width > parseInt(screens['md']))
     {
       return 'md';
     }
-    else if (width > parseInt(screens['sm']))
+    else if(width > parseInt(screens['sm']))
     {
       return 'sm';
     }
@@ -54,17 +54,17 @@ export class ZincElement extends LitElement
 
   public _updateTheme(e)
   {
-    if (e == null)
+    if(e == null)
     {
       this.t = document.documentElement.getAttribute('t') ||
         window.document.documentElement.getAttribute('t') ||
         window.document.body.getAttribute('t');
     }
-    else if (e.detail['theme'])
+    else if(e.detail['theme'])
     {
       this.t = e.detail['theme'];
     }
-    else if (e.detail)
+    else if(e.detail)
     {
       this.t = e.detail;
     }

@@ -23,7 +23,7 @@ export class Dialog extends LitElement
     this.shadowRoot.addEventListener('click', this._closeClickCheck.bind(this));
 
     const trigger = this.parentElement.querySelector('#' + this.trigger);
-    if (trigger)
+    if(trigger)
     {
       trigger.addEventListener('click', this.openDialog.bind(this));
     }
@@ -33,7 +33,7 @@ export class Dialog extends LitElement
   {
     super.disconnectedCallback();
     const trigger = document.querySelector('#' + this.trigger);
-    if (trigger)
+    if(trigger)
     {
       trigger.removeEventListener('click', this.openDialog.bind(this));
     }
@@ -63,7 +63,7 @@ export class Dialog extends LitElement
 
   _closeClickCheck(e: Event)
   {
-    if (e.target instanceof HTMLElement && e.target.hasAttribute('dialog-closer'))
+    if(e.target instanceof HTMLElement && e.target.hasAttribute('dialog-closer'))
     {
       this.closeDialog(e);
     }

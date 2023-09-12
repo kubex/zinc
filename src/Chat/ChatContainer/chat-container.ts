@@ -1,10 +1,11 @@
-import {html, LitElement, unsafeCSS} from 'lit'
-import {customElement, property} from 'lit/decorators.js'
+import {html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './chat-container.scss';
 
 @customElement('zn-chat-container')
-export class ChatContainer extends LitElement {
+export class ChatContainer extends LitElement
+{
   static styles = unsafeCSS(styles);
 
   @property({type: String})
@@ -13,7 +14,8 @@ export class ChatContainer extends LitElement {
   @property({type: String})
   private subHeading = 'default subheading';
 
-  render() {
+  render()
+  {
     return html`
       <div>
         <div class="header">
@@ -23,6 +25,6 @@ export class ChatContainer extends LitElement {
         <div class="container">
           <slot></slot>
         </div>
-      </div>`
+      </div>`;
   }
 }

@@ -34,7 +34,7 @@ export class ChatMessage extends LitElement
     const time = new Date(parseInt(this.time) * 1000);
 
     // if not today, show date and time without seconds
-    if (time.getDate() !== (new Date()).getDate())
+    if(time.getDate() !== (new Date()).getDate())
     {
       return `@ ${time.toLocaleDateString()} ${time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
     }

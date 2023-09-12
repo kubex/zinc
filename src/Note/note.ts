@@ -4,10 +4,12 @@ import {customElement} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-note')
-export class Note extends LitElement {
+export class Note extends LitElement
+{
   static styles = unsafeCSS(styles);
 
-  protected render(): unknown {
+  protected render(): unknown
+  {
     return html`
       <div>
         <div class="header">
@@ -18,7 +20,7 @@ export class Note extends LitElement {
           <slot></slot>
         </div>
       </div>
-    `
+    `;
   }
 }
 

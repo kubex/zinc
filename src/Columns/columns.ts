@@ -4,27 +4,32 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-cols')
-export class Columns extends LitElement {
-  @property({attribute: 'layout', type: String, reflect: true}) layout: string = ""
-  @property({attribute: 'expanded', type: Boolean, reflect: true}) expanded: boolean = false
-  @property({attribute: 'min', type: Number, reflect: true}) min
+export class Columns extends LitElement
+{
+  @property({attribute: 'layout', type: String, reflect: true}) layout: string = "";
+  @property({attribute: 'expanded', type: Boolean, reflect: true}) expanded: boolean = false;
+  @property({attribute: 'min', type: Number, reflect: true}) min;
 
   layoutClass = "";
 
   static styles = unsafeCSS(styles);
 
-  connectedCallback() {
+  connectedCallback()
+  {
     super.connectedCallback();
-    new ResizeObserver(this.resize).observe(this)
+    new ResizeObserver(this.resize).observe(this);
   }
 
-  resize = (e) => {
+  resize = (e) =>
+  {
     this.expanded = e[0].contentRect.width > 800;
-  }
+  };
 
-  render() {
+  render()
+  {
 
-    if (this.min > 0) {
+    if(this.min > 0)
+    {
       this.style.setProperty('--col-min', this.min + "px");
     }
 
@@ -34,9 +39,11 @@ export class Columns extends LitElement {
     const c4c = this.querySelectorAll('[slot="c4"]').length > 0 ? 1 : 0;
 
     const slotCount = c1c + c2c + c3c + c4c;
-    if (this.layout.length < 1) {
+    if(this.layout.length < 1)
+    {
 
-      switch (slotCount) {
+      switch(slotCount)
+      {
         case 1:
           this.layout += "4";
           break;
@@ -57,9 +64,11 @@ export class Columns extends LitElement {
     let span = 0;
     const slots = ['', '', '', ''];
 
-    for (let i = 0; i < cols.length; i++) {
+    for(let i = 0; i < cols.length; i++)
+    {
       span = span + parseInt(cols[i]);
-      if (span <= 4) {
+      if(span <= 4)
+      {
         this.layoutClass += " c" + (i + 1);
         slots[i] = "s" + cols[i];
       }

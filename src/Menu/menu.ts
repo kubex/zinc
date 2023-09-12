@@ -4,7 +4,8 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-menu')
-export class Menu extends LitElement {
+export class Menu extends LitElement
+{
   @property({attribute: 'actions', type: Array}) actions = [];
 
   public closer;
@@ -12,34 +13,42 @@ export class Menu extends LitElement {
 
   static styles = unsafeCSS(styles);
 
-  _handleAction(e) {
-    if (this.closer) {
+  _handleAction(e)
+  {
+    if(this.closer)
+    {
       this.closer();
     }
   }
 
-  render() {
+  render()
+  {
     let header;
-    if (this.actions.length > 0) {
+    if(this.actions.length > 0)
+    {
       header = html`
         <ul>
-          ${this.actions.map((item) => {
-            if (item.target && item.path) {
-              return html`
+          ${this.actions.map((item) =>
+      {
+        if(item.target && item.path)
+        {
+          return html`
                 <li><a @click="${this._handleAction}" href="${item.path}"
-                       data-target="${item.target}">${item.title}</a></li>`
-            } else if (item.path) {
-              return html`
-                <li><a @click="${this._handleAction}" href="${item.path}">${item.title}</a></li>`
-            }
-            return null;
-          })}
+                       data-target="${item.target}">${item.title}</a></li>`;
+        }
+        else if(item.path)
+        {
+          return html`
+                <li><a @click="${this._handleAction}" href="${item.path}">${item.title}</a></li>`;
+        }
+        return null;
+      })}
         </ul>
-      `
+      `;
     }
 
     return html`
-      <div>${header}</div>`
+      <div>${header}</div>`;
   }
 }
 

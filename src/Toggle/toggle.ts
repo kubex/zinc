@@ -53,7 +53,7 @@ export class Toggle extends LitElement
     this.addEventListener('click', this._toggleValue);
     this.addEventListener('keydown', (e) =>
     {
-      if (e.key == ' ')
+      if(e.key == ' ')
       {
         e.preventDefault();
         this._toggleValue();
@@ -64,7 +64,7 @@ export class Toggle extends LitElement
   _updateInternals()
   {
     this.internals.setFormValue(this.checked ? this.value : null);
-    if (this.required && !this.checked)
+    if(this.required && !this.checked)
     {
       this.internals.setValidity({valueMissing: true}, 'This field is required', this._input);
     }

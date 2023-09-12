@@ -4,33 +4,38 @@ import {customElement} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-tabs')
-export class Tabs extends LitElement {
+export class Tabs extends LitElement
+{
   private _tabs: HTMLElement[];
   private _panels: HTMLElement[];
 
   static styles = unsafeCSS(styles);
 
-  constructor() {
+  constructor()
+  {
     super();
     this._tabs = Array.from(this.querySelectorAll('[slot="tab"]'));
     this._panels = Array.from(this.querySelectorAll('[slot="panel"]'));
     this.selectTab(0);
-    console.log(this._tabs, this._panels)
+    console.log(this._tabs, this._panels);
   }
 
-  selectTab(index) {
+  selectTab(index)
+  {
     this._tabs.forEach(tab => tab.removeAttribute('selected'));
     this._tabs[index].setAttribute('selected', '');
     this._panels.forEach(panel => panel.removeAttribute('selected'));
     this._panels[index].setAttribute('selected', '');
   }
 
-  handleSelect(e: PointerEvent) {
+  handleSelect(e: PointerEvent)
+  {
     const index = this._tabs.indexOf(e.target as HTMLElement);
     this.selectTab(index);
   }
 
-  render() {
+  render()
+  {
     return html`
       <nav>
         <h3>${this.title}</h3>

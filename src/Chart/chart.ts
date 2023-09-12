@@ -1,13 +1,14 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {Chart, ChartConfiguration, registerables} from 'chart.js'
+import {Chart, ChartConfiguration, registerables} from 'chart.js';
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
 import {ZincElement} from "../zinc";
 
 import styles from './index.scss';
 
 @customElement('zn-chart')
-export class ZincChart extends ZincElement {
+export class ZincChart extends ZincElement
+{
   static styles = unsafeCSS(styles);
   private myChart: Chart;
 
@@ -15,19 +16,22 @@ export class ZincChart extends ZincElement {
   @property({attribute: 'labels', type: Array, reflect: true}) public labels;
   @property({attribute: 'type', type: String, reflect: true}) public type = 'line';
 
-  constructor() {
+  constructor()
+  {
     super();
-    Chart.register(...registerables)
+    Chart.register(...registerables);
   }
 
-  static get properties() {
+  static get properties()
+  {
     return {
       Test: {type: String},
       myChart: {type: Object}
     };
   }
 
-  firstUpdated() {
+  firstUpdated()
+  {
     const ctx = (this.renderRoot.querySelector('#myChart2') as HTMLCanvasElement).getContext('2d');
     console.log(this.datasets);
 
@@ -84,7 +88,8 @@ export class ZincChart extends ZincElement {
     this.myChart = new Chart(ctx, config as ChartConfiguration);
   }
 
-  render() {
+  render()
+  {
     return html`
       <div>
         <div id="legend-container"></div>

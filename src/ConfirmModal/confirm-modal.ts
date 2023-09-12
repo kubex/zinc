@@ -63,7 +63,7 @@ export class ConfirmModal extends Dialog
   {
     // get the form from the slot
     const form = this.querySelector('form');
-    if (form)
+    if(form)
     {
       form.requestSubmit();
     }

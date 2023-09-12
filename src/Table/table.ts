@@ -20,23 +20,24 @@ export class Table extends LitElement
 
   connectedCallback()
   {
-    if (this.data === null || this.data === undefined)
+    if(this.data === null || this.data === undefined)
     {
-      if (this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
+      if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
       {
         const data = this.childNodes[0];
         try
         {
           this.data = JSON.parse(data.textContent);
-        } catch (e)
+        }
+        catch(e)
         { /* empty */
         }
       }
     }
 
-    if (this.data !== null && this.data !== undefined)
+    if(this.data !== null && this.data !== undefined)
     {
-      if (this.data.hasOwnProperty('header'))
+      if(this.data.hasOwnProperty('header'))
       {
         this.data['header'].forEach((col) =>
         {
@@ -44,20 +45,20 @@ export class Table extends LitElement
           this.columnDisplay.push(col.hasOwnProperty('display') ? col['display'] : '');
         });
       }
-      if (this.data.hasOwnProperty('items') && this.data['items'] != null)
+      if(this.data.hasOwnProperty('items') && this.data['items'] != null)
       {
         this.rows = this.data['items'];
       }
 
-      if (this.rows.length == 0 && this.columns.length == 0)
+      if(this.rows.length == 0 && this.columns.length == 0)
       {
         this.columns.push('');
-        for (const row in this.data)
+        for(const row in this.data)
         {
-          for (const column in this.data[row])
+          for(const column in this.data[row])
           {
             let colName = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
-            if (!this.columns.includes(colName))
+            if(!this.columns.includes(colName))
             {
               this.columns.push(colName);
             }
@@ -84,24 +85,24 @@ export class Table extends LitElement
 
   tableHead()
   {
-    if (this.headless) return;
+    if(this.headless) return;
 
     const headers = [];
     this.columns.forEach((col, k) =>
     {
 
-      if (col == "")
+      if(col == "")
       {
         return;
       }
 
-      if (col == "_")
+      if(col == "_")
       {
         col = "";
       }
 
       const minDisplay = this.columnDisplay[k];
-      if (k == 0)
+      if(k == 0)
       {
         headers.push(html`
           <th>${col}</th>`);
@@ -109,7 +110,7 @@ export class Table extends LitElement
       else
       {
         let cellClass = "";
-        if (minDisplay != "")
+        if(minDisplay != "")
         {
           cellClass = "hidden " + minDisplay + ":table-cell";
         }
@@ -138,13 +139,13 @@ export class Table extends LitElement
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
 
       let iconHtml = html``;
-      if (icon != '')
+      if(icon != '')
       {
         iconHtml = html`
           <zn-icon round size="40" src="${icon}"></zn-icon>`;
       }
 
-      if ((caption + summary + icon + this.columns[0]) != "")
+      if((caption + summary + icon + this.columns[0]) != "")
       {
         rowHtml.push(html`
           <td>
@@ -154,13 +155,13 @@ export class Table extends LitElement
           </td>`);
       }
 
-      if (row.hasOwnProperty('data') && row['data'] != null)
+      if(row.hasOwnProperty('data') && row['data'] != null)
       {
         row['data'].forEach((col, ck) =>
         {
           const minDisplay = this.columnDisplay[ck + 1];
           let cellClass = "";
-          if (minDisplay != "")
+          if(minDisplay != "")
           {
             cellClass = "hidden " + minDisplay + ":table-cell";
           }
@@ -183,20 +184,20 @@ export class Table extends LitElement
   columnContent(col)
   {
     col = String(col).trim();
-    if (col.length > 4 && col[0] == '{')
+    if(col.length > 4 && col[0] == '{')
     {
       const colJson = JSON.parse(col);
-      if (colJson.hasOwnProperty('chip'))
+      if(colJson.hasOwnProperty('chip'))
       {
         let chipState = "";
-        if (colJson.hasOwnProperty('state'))
+        if(colJson.hasOwnProperty('state'))
         {
           chipState = colJson['state'];
         }
         col = html`
           <zn-chip ${chipState}>${colJson['chip']}</zn-chip>`;
       }
-      else if (colJson.hasOwnProperty('href'))
+      else if(colJson.hasOwnProperty('href'))
       {
         const url = colJson['href'];
         const text = colJson.hasOwnProperty('text') ? colJson['text'] : url;

@@ -5,18 +5,21 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 
 @customElement('zn-page')
-export class Page extends ZincElement {
+export class Page extends ZincElement
+{
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
 
   static styles = unsafeCSS(styles);
 
-  render() {
+  render()
+  {
     let pageSide = null;
     let navigation = null;
     let mainClass = "";
 
-    if (this.querySelectorAll('[slot="side"]').length > 0) {
+    if(this.querySelectorAll('[slot="side"]').length > 0)
+    {
       mainClass = "with-side";
       pageSide = html`
         <div class="pageside">
@@ -27,7 +30,8 @@ export class Page extends ZincElement {
         </div>`;
     }
 
-    if (this.querySelectorAll('[slot="nav"]').length > 0) {
+    if(this.querySelectorAll('[slot="nav"]').length > 0)
+    {
       mainClass = "with-nav";
       pageSide = html`
         <div class="pageside">
@@ -45,11 +49,12 @@ export class Page extends ZincElement {
           <slot></slot>
         </div>
         ${pageSide}
-      </div>`
+      </div>`;
   }
 
-  _expander() {
-    const smpCap = this.caption ?? "Close"
+  _expander()
+  {
+    const smpCap = this.caption ?? "Close";
     return html`
       <div class="expander" @click="${(e: MouseEvent) => this.handleClick(e)}">
         <zn-icon src="arrow_downward" library="material"></zn-icon>
@@ -59,7 +64,8 @@ export class Page extends ZincElement {
       </div>`;
   }
 
-  handleClick(e) {
+  handleClick(e)
+  {
     this.open = !this.open;
     e.stopPropagation();
   }

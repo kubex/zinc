@@ -27,7 +27,7 @@ export class Header extends ZincElement
   render()
   {
 
-    if (this.caption == "" && this.navigation.length == 0 && this.breadcrumb.length == 0)
+    if(this.caption == "" && this.navigation.length == 0 && this.breadcrumb.length == 0)
     {
       return html``;
     }
@@ -36,16 +36,16 @@ export class Header extends ZincElement
       <div>
         <div class="width-container">
           <div class="breadcrumb">${this.breadcrumb.map((item, index) =>
-          {
-            const prefix = index == 0 ? '' : ' / ';
-            if (item.path == '')
-            {
-              return html`
+    {
+      const prefix = index == 0 ? '' : ' / ';
+      if(item.path == '')
+      {
+        return html`
                 ${prefix} <span>${item.title}</span>`;
-            }
-            return html`
+      }
+      return html`
               ${prefix} <a href="${item.path}">${item.title}</a>`;
-          })}
+    })}
           </div>
           <h1>${this.caption}</h1>
           <div class="actions">
@@ -53,17 +53,17 @@ export class Header extends ZincElement
           </div>
           <ul class="header-nav">
             ${this.navigation.map((item, index) =>
-            {
-              const activeClass = item.active ? 'active' : '';
-              return html`
+    {
+      const activeClass = item.active ? 'active' : '';
+      return html`
                 <li class="${activeClass}"><a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
                 </li>`;
-            })}
+    })}
           </ul>
         </div>
       </div>
     `;
-    if (this.maxWidth > 0)
+    if(this.maxWidth > 0)
     {
       return html`
         <style>:host {

@@ -5,7 +5,8 @@ import {Menu} from "../Menu";
 import styles from './index.scss';
 
 @customElement('zn-tile')
-export class Tile extends LitElement {
+export class Tile extends LitElement
+{
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'description', type: String, reflect: true}) description;
   @property({attribute: 'right', type: Boolean, reflect: true}) right;
@@ -16,7 +17,8 @@ export class Tile extends LitElement {
 
   static styles = unsafeCSS(styles);
 
-  _handleActions(e) {
+  _handleActions(e)
+  {
     const menu = this.menu[0];
     const showMenu = document.createElement('div');
 
@@ -32,19 +34,23 @@ export class Tile extends LitElement {
     backdrop.classList.add('zn-menu_backdrop');
 
 
-    const close = function () {
+    const close = function ()
+    {
       showMenu.remove();
       backdrop.remove();
       document.removeEventListener('keyup', detachEsc);
-    }
+    };
 
-    const detachEsc = (e) => {
-      if (e.key === 'Escape') {
+    const detachEsc = (e) =>
+    {
+      if(e.key === 'Escape')
+      {
         close();
       }
-    }
+    };
 
-    if (menu instanceof Menu) {
+    if(menu instanceof Menu)
+    {
       menu.closer = close;
     }
 
@@ -54,14 +60,15 @@ export class Tile extends LitElement {
     document.addEventListener("keyup", detachEsc);
   }
 
-  render() {
+  render()
+  {
 
     const primary = this.querySelectorAll('[slot="primary"]').length > 0 ? html`
       <slot name="primary"></slot>` : null;
     const chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
       <slot name="chip"></slot>` : null;
 
-    this.menu = this.querySelectorAll('zn-menu')
+    this.menu = this.querySelectorAll('zn-menu');
 
     const actions = this.menu.length > 0 ? html`
       <div class="actions">
@@ -95,7 +102,7 @@ export class Tile extends LitElement {
         ${actions}
         ${status}
       </div>
-    `
+    `;
   }
 }
 

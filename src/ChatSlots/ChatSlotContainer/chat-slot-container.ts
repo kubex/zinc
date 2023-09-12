@@ -19,12 +19,12 @@ export class ChatSlotContainer extends LitElement
     const slots = 2;
     const activeSlots = 1;
 
-    if (activeSlots < slots)
+    if(activeSlots < slots)
     {
       const text = html`
         <my-chat-slot-footer></my-chat-slot-footer>`;
       const element = this.querySelector('div[slot="active"]') as HTMLElement;
-      if (element !== null)
+      if(element !== null)
       {
         render(text, element);
       }

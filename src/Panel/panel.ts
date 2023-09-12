@@ -26,7 +26,7 @@ export class Panel extends ZincElement
     const panels = this.querySelectorAll('[link]');
     panels.forEach((item, index) =>
     {
-      if (index === 0)
+      if(index === 0)
       {
         item.classList.remove('hidden');
         navItems.push({
@@ -45,7 +45,7 @@ export class Panel extends ZincElement
     });
 
     let nav = html``;
-    if (this.navigation.length > 0)
+    if(this.navigation.length > 0)
     {
       nav = html`
         <div class="nav">
@@ -55,7 +55,7 @@ export class Panel extends ZincElement
           </ul>
         </div>`;
     }
-    else if (navItems.length > 0)
+    else if(navItems.length > 0)
     {
       // on click prevent default and select next panel
       nav = html`
@@ -64,22 +64,22 @@ export class Panel extends ZincElement
             ${navItems.map((item, index) => html`
               <li class="${item.active ? 'active' : ''}">
                 <a href="#" @click="${(e) =>
-                {
-                  e.preventDefault();
-                  this.selectPanel(index);
-                }}">${item.path}</a>
+      {
+        e.preventDefault();
+        this.selectPanel(index);
+      }}">${item.path}</a>
               </li>`)}
           </ul>
         </div>`;
     }
 
-    if (this.rows > 0)
+    if(this.rows > 0)
     {
       this.style.setProperty('--row-count', this.rows);
     }
 
     let header;
-    if (actionItems || this.caption || this.navigation.length > 0 || navItems.length > 0)
+    if(actionItems || this.caption || this.navigation.length > 0 || navItems.length > 0)
     {
       header = html`
         <div class="header">
@@ -91,7 +91,7 @@ export class Panel extends ZincElement
     }
 
     let footer;
-    if (footerItems)
+    if(footerItems)
     {
       footer = html`
         <div class="footer">
@@ -116,7 +116,7 @@ export class Panel extends ZincElement
     panels.forEach((item, index) =>
     {
       console.log(this.selectedPanel);
-      if (index === this.selectedPanel)
+      if(index === this.selectedPanel)
       {
         item.classList.remove('hidden');
       }
@@ -130,7 +130,7 @@ export class Panel extends ZincElement
     const navItems = this.shadowRoot.querySelectorAll('.nav li');
     navItems.forEach((item, index) =>
     {
-      if (index === this.selectedPanel)
+      if(index === this.selectedPanel)
       {
         item.classList.add('active');
       }

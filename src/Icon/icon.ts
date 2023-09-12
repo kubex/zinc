@@ -59,11 +59,11 @@ export class Icon extends LitElement
         href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
 
-    if (this.src.includes(':'))
+    if(this.src.includes(':'))
     {
       const split = this.src.split(':');
       this.src = split[0];
-      switch (split[1])
+      switch(split[1])
       {
         case 'round':
           this.round = true;
@@ -89,12 +89,12 @@ export class Icon extends LitElement
       }
     }
 
-    if (this.src.includes('@'))
+    if(this.src.includes('@'))
     {
-      if (this.library == "")
+      if(this.library == "")
       {
         const split = this.src.split('@');
-        if (split[1].includes('.'))
+        if(split[1].includes('.'))
         {
           this.library = Library.Gravatar;
         }
@@ -105,13 +105,13 @@ export class Icon extends LitElement
         }
       }
 
-      if (this.library == Library.Gravatar || this.library == Library.Libravatar)
+      if(this.library == Library.Gravatar || this.library == Library.Libravatar)
       {
         this.ravatarOptions();
         this.src = md5(this.src);
       }
     }
-    else if (this.library == "")
+    else if(this.library == "")
     {
       this.library = Library.MaterialOutlined;
     }
@@ -120,7 +120,7 @@ export class Icon extends LitElement
 
   ravatarOptions()
   {
-    if ((this.library == Library.Gravatar || this.library == Library.Libravatar) && this.src.includes('#'))
+    if((this.library == Library.Gravatar || this.library == Library.Libravatar) && this.src.includes('#'))
     {
       const split = this.src.split('#');
       this.gravatarOptions = "&d=" + split[1];
@@ -131,7 +131,7 @@ export class Icon extends LitElement
   attributeChangedCallback(name: string, _old: string | null, value: string | null)
   {
     super.attributeChangedCallback(name, _old, value);
-    if (name == "size")
+    if(name == "size")
     {
       this.size = Number(value) - Number(value) % 4;
       this.style.setProperty('--icon-size', this.size + "px");
@@ -141,7 +141,7 @@ export class Icon extends LitElement
   render()
   {
     const color = colors[this.color];
-    switch (this.library)
+    switch(this.library)
     {
       case Library.Material:
       case LibraryAlias.Material:
@@ -167,7 +167,7 @@ export class Icon extends LitElement
           src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
     }
 
-    if (this.src != "")
+    if(this.src != "")
     {
       return html`
         <img src="${this.src}" class="${this.library}"/>`;

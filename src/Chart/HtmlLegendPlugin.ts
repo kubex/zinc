@@ -1,9 +1,11 @@
-const getOrCreateLegendList = (chart, id) => {
+const getOrCreateLegendList = (chart, id) =>
+{
   const canvas = chart.ctx.canvas;
   const legendContainer = canvas.parentElement.parentElement.querySelector('#' + id);
   let listContainer = legendContainer.querySelector('ul');
 
-  if (!listContainer) {
+  if(!listContainer)
+  {
     listContainer = document.createElement('ul');
     listContainer.style.display = 'flex';
     listContainer.style.flexDirection = 'row';
@@ -18,18 +20,21 @@ const getOrCreateLegendList = (chart, id) => {
 
 export const htmlLegendPlugin = {
   id: 'htmlLegend',
-  afterUpdate(chart, args, options) {
+  afterUpdate(chart, args, options)
+  {
     const ul = getOrCreateLegendList(chart, options.containerID);
 
     // Remove old legend items
-    while (ul.firstChild) {
+    while (ul.firstChild)
+    {
       ul.firstChild.remove();
     }
 
     // Reuse the built-in legendItems generator
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
-    items.forEach(item => {
+    items.forEach(item =>
+    {
       const li = document.createElement('li');
       li.style.alignItems = 'center';
       li.style.cursor = 'pointer';
@@ -37,12 +42,16 @@ export const htmlLegendPlugin = {
       li.style.flexDirection = 'row';
       li.style.marginLeft = '10px';
 
-      li.onclick = () => {
+      li.onclick = () =>
+      {
         const {type} = chart.config;
-        if (type === 'pie' || type === 'doughnut') {
+        if(type === 'pie' || type === 'doughnut')
+        {
           // Pie and doughnut charts only have a single dataset and visibility is per item
           chart.toggleDataVisibility(item.index);
-        } else {
+        }
+        else
+        {
           chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
         }
         chart.update();

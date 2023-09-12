@@ -37,7 +37,7 @@ export class Accordion extends LitElement
 
   handleCollapse(e)
   {
-    if (this.expanded)
+    if(this.expanded)
     {
       this.expanded = false;
       e.stopPropagation();

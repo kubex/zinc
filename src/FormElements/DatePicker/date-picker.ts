@@ -7,7 +7,8 @@ import {PropertyValues} from "@lit/reactive-element";
 import styles from './index.scss';
 
 @customElement('zn-datepicker')
-export class DatePicker extends LitElement {
+export class DatePicker extends LitElement
+{
   @property({attribute: 'id', type: String, reflect: true}) id;
   @property({attribute: 'name', type: String, reflect: true}) name;
 
@@ -16,16 +17,20 @@ export class DatePicker extends LitElement {
 
   static styles = unsafeCSS(styles);
 
-  async initialiseDatepicker() {
-    if (this._instance) {
-      if (Object.prototype.hasOwnProperty.call(this._instance, 'destroy')) {
+  async initialiseDatepicker()
+  {
+    if(this._instance)
+    {
+      if(Object.prototype.hasOwnProperty.call(this._instance, 'destroy'))
+      {
         this._instance.destroy();
       }
     }
 
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
     console.log("input element", inputElement);
-    if (inputElement) {
+    if(inputElement)
+    {
       this._inputElement = inputElement;
       const options = await this.getOptions();
       this._instance = new AirDatepicker(inputElement, options);
@@ -33,16 +38,19 @@ export class DatePicker extends LitElement {
   }
 
 
-  async init() {
+  async init()
+  {
     await this.initialiseDatepicker();
   }
 
-  protected updated(_changedProperties: PropertyValues) {
+  protected updated(_changedProperties: PropertyValues)
+  {
     super.updated(_changedProperties);
     this.init();
   }
 
-  render() {
+  render()
+  {
     return html`
       <div class="datepicker__svg-container">
         <svg aria-hidden="true" fill="currentColor"
@@ -52,10 +60,11 @@ export class DatePicker extends LitElement {
                 clip-rule="evenodd"></path>
         </svg>
       </div>
-      <input type="text" placeholder="Select date">`
+      <input type="text" placeholder="Select date">`;
   }
 
-  private async getOptions(): Promise<Partial<AirDatepickerOptions>> {
+  private async getOptions(): Promise<Partial<AirDatepickerOptions>>
+  {
     return {
       locale: localeEn
     };

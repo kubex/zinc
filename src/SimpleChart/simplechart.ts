@@ -6,7 +6,8 @@ import {ZincElement} from "../zinc";
 import styles from './index.scss';
 
 @customElement('zn-simplechart')
-export class SimpleChart extends ZincElement {
+export class SimpleChart extends ZincElement
+{
   @property({attribute: 'datasets', type: Array}) datasets;
   @property({attribute: 'labels', type: Array}) labels;
 
@@ -14,12 +15,14 @@ export class SimpleChart extends ZincElement {
 
   static styles = unsafeCSS(styles);
 
-  constructor() {
+  constructor()
+  {
     super();
-    Chart.register(...registerables)
+    Chart.register(...registerables);
   }
 
-  firstUpdated() {
+  firstUpdated()
+  {
     const ctx = (this.renderRoot.querySelector('#myChart') as HTMLCanvasElement).getContext('2d');
 
     const config = {
@@ -67,12 +70,14 @@ export class SimpleChart extends ZincElement {
           },
           tooltip: {
             enabled: false,
-            external: function (context) {
+            external: function (context)
+            {
               // Tooltip Element
               let tooltipEl = document.getElementById("chartjs-tooltip");
 
               // Create element on first render
-              if (!tooltipEl) {
+              if(!tooltipEl)
+              {
                 tooltipEl = document.createElement("div");
                 tooltipEl.id = "chartjs-tooltip";
                 tooltipEl.innerHTML = "<table></table>";
@@ -81,36 +86,44 @@ export class SimpleChart extends ZincElement {
 
               // Hide if no tooltip
               const tooltipModel = context.tooltip;
-              if (tooltipModel.opacity === 0) {
+              if(tooltipModel.opacity === 0)
+              {
                 tooltipEl.style.opacity = "0";
                 return;
               }
 
               // Set caret Position
               tooltipEl.classList.remove("above", "below", "no-transform");
-              if (tooltipModel.yAlign) {
+              if(tooltipModel.yAlign)
+              {
                 tooltipEl.classList.add(tooltipModel.yAlign);
-              } else {
+              }
+              else
+              {
                 tooltipEl.classList.add("no-transform");
               }
 
-              function getBody(bodyItem) {
+              function getBody(bodyItem)
+              {
                 return bodyItem.lines;
               }
 
               // Set Text
-              if (tooltipModel.body) {
+              if(tooltipModel.body)
+              {
                 const titleLines = tooltipModel.title || [];
                 const bodyLines = tooltipModel.body.map(getBody);
 
                 let innerHtml = "<thead>";
 
-                titleLines.forEach(function (title) {
+                titleLines.forEach(function (title)
+                {
                   innerHtml += "<tr><th>" + title + "</th></tr>";
                 });
                 innerHtml += "</thead><tbody>";
 
-                bodyLines.forEach(function (body, i) {
+                bodyLines.forEach(function (body, i)
+                {
                   const colors = tooltipModel.labelColors[i];
                   let style = "background:" + colors.backgroundColor;
                   style += "; border-color:" + colors.borderColor;
@@ -176,7 +189,8 @@ export class SimpleChart extends ZincElement {
     this.myChart = new Chart(ctx, config as ChartConfiguration);
   }
 
-  render() {
+  render()
+  {
     return html`
       <div>
         <canvas id="myChart"></canvas>

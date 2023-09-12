@@ -20,9 +20,9 @@ export class Alert extends ZincElement
   {
     let icon;
 
-    if (this.icon)
+    if(this.icon)
     {
-      if (this.collapse)
+      if(this.collapse)
       {
         icon = this.icon ? html`
           <zn-icon src="${this.icon}" id="xy2" @click="${this.hideAlert}"

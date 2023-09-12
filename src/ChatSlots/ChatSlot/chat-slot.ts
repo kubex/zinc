@@ -23,7 +23,7 @@ export class ChatSlot extends LitElement
   render()
   {
     let brand = html``;
-    if (this.brand)
+    if(this.brand)
     {
       brand = html`(@${this.brand})`;
     }
@@ -50,23 +50,23 @@ export class ChatSlot extends LitElement
     let displayMinutes: number | string = minutes;
     let displaySeconds: number | string = seconds;
     let displayHours: number | string = hours;
-    if (minutes < 10)
+    if(minutes < 10)
     {
       displayMinutes = `0${minutes}`;
     }
 
-    if (seconds < 10)
+    if(seconds < 10)
     {
       displaySeconds = `0${seconds}`;
     }
 
-    if (hours < 10)
+    if(hours < 10)
     {
       displayHours = `0${hours}`;
     }
 
     let timeString = '';
-    if (hours > 0)
+    if(hours > 0)
     {
       timeString = `${displayHours}:${displayMinutes}:${displaySeconds}`;
     }

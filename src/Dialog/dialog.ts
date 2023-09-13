@@ -19,13 +19,16 @@ export class Dialog extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
-    this.addEventListener('click', this._closeClickCheck.bind(this));
-    this.shadowRoot.addEventListener('click', this._closeClickCheck.bind(this));
+    this.addEventListener('click', this._closeClickHandler.bind(this));
+    this.shadowRoot.addEventListener('click', this._closeClickHandler.bind(this));
 
-    const trigger = this.parentElement.querySelector('#' + this.trigger);
-    if(trigger)
+    if(this.trigger)
     {
-      trigger.addEventListener('click', this.openDialog.bind(this));
+      const trigger = this.parentElement.querySelector('#' + this.trigger);
+      if(trigger)
+      {
+        trigger.addEventListener('click', this._openDialog.bind(this));
+      }
     }
   }
 
@@ -35,14 +38,31 @@ export class Dialog extends LitElement
     const trigger = document.querySelector('#' + this.trigger);
     if(trigger)
     {
-      trigger.removeEventListener('click', this.openDialog.bind(this));
+      trigger.removeEventListener('click', this._openDialog.bind(this));
     }
   }
 
-  closeDialog(e)
+  protected _openDialog(e)
+  {
+    e.stopPropagation();
+    this.open();
+  }
+
+  protected _closeDialog(e)
   {
     e.stopPropagation();
     this._dialog.close();
+  }
+
+  open()
+  {
+    this._dialog.showModal();
+  }
+
+  close()
+  {
+    this._dialog.close();
+    this._dialog.classList.remove('closing');
   }
 
   successCloseDialog()
@@ -50,22 +70,15 @@ export class Dialog extends LitElement
     this._dialog.classList.add('closing');
     setTimeout(() =>
     {
-      this._dialog.close();
-      this._dialog.classList.remove('closing');
+      this.close();
     }, 1000);
   }
 
-  openDialog(e)
-  {
-    e.stopPropagation();
-    this._dialog.showModal();
-  }
-
-  _closeClickCheck(e: Event)
+  private _closeClickHandler(e: Event)
   {
     if(e.target instanceof HTMLElement && e.target.hasAttribute('dialog-closer'))
     {
-      this.closeDialog(e);
+      this._closeDialog(e);
     }
   }
 

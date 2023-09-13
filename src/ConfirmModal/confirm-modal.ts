@@ -48,8 +48,7 @@ export class ConfirmModal extends Dialog
           <p>${this.content}</p>
           <slot></slot>
           <div class="button-group">
-            <button type="button" class="button--secondary" @click="${this.closeDialog}">${this.cancelText}
-            </button>
+            <button type="button" class="button--secondary" dialog-closer>${this.cancelText}</button>
             <button @click="${this.submitDialog}"> ${this.confirmText}</button>
           </div>
         </div>
@@ -69,5 +68,3 @@ export class ConfirmModal extends Dialog
     }
   }
 }
-
-

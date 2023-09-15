@@ -6,7 +6,7 @@ import styles from './index.scss';
 @customElement('zn-dialog')
 export class Dialog extends LitElement
 {
-  @property({type: String, reflect: true}) trigger: string = '';
+  @property({type: String, reflect: true}) trigger: string;
 
   @query('dialog', true)
   private _dialog: HTMLDialogElement;

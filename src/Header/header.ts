@@ -8,10 +8,10 @@ import styles from './index.scss';
 export class Header extends ZincElement
 {
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
-  @property({attribute: 'caption', type: String, reflect: true}) caption: String = "";
+  @property({attribute: 'caption', type: String, reflect: true}) caption: String;
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
-  @property({attribute: 'max-width', type: Number, reflect: true}) maxWidth;
+  @property({attribute: 'max-width', type: Number, reflect: true}) maxWidth: number;
 
   static styles = unsafeCSS(styles);
 
@@ -36,16 +36,16 @@ export class Header extends ZincElement
       <div>
         <div class="width-container">
           <div class="breadcrumb">${this.breadcrumb.map((item, index) =>
-    {
-      const prefix = index == 0 ? '' : ' / ';
-      if(item.path == '')
-      {
-        return html`
+          {
+            const prefix = index == 0 ? '' : ' / ';
+            if(item.path == '')
+            {
+              return html`
                 ${prefix} <span>${item.title}</span>`;
-      }
-      return html`
+            }
+            return html`
               ${prefix} <a href="${item.path}">${item.title}</a>`;
-    })}
+          })}
           </div>
           <h1>${this.caption}</h1>
           <div class="actions">
@@ -53,12 +53,12 @@ export class Header extends ZincElement
           </div>
           <ul class="header-nav">
             ${this.navigation.map((item, index) =>
-    {
-      const activeClass = item.active ? 'active' : '';
-      return html`
+            {
+              const activeClass = item.active ? 'active' : '';
+              return html`
                 <li class="${activeClass}"><a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
                 </li>`;
-    })}
+            })}
           </ul>
         </div>
       </div>

@@ -11,7 +11,7 @@ export class Header extends ZincElement
   @property({attribute: 'caption', type: String, reflect: true}) caption: String;
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
-  @property({attribute: 'max-width', type: Number, reflect: true}) maxWidth: number;
+  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
 
   static styles = unsafeCSS(styles);
 
@@ -63,11 +63,11 @@ export class Header extends ZincElement
         </div>
       </div>
     `;
-    if(this.maxWidth > 0)
+    if(this.fullWidth)
     {
       return html`
         <style>:host {
-          --max-width: ${this.maxWidth}px; </style>${header}`;
+          --max-width: 100%; </style>${header}`;
     }
 
     return header;

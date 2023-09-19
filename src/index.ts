@@ -32,3 +32,4 @@ import './Chat';
 import './ChatSlots';
 import './StatsTile';
 import './SplitPane';
+import './Collapsible';

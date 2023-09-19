@@ -30,3 +30,4 @@ import './FormElements/DatePicker';
 import './ConfirmModal';
 import './Chat';
 import './ChatSlots';
+import './SplitPane';

@@ -1,0 +1,58 @@
+@use "sass:map";
+@use "../wc";
+
+:host {
+  display: flex;
+
+  #left-pane, #right-pane {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+
+  #left-pane {
+    min-width: 20%;
+  }
+
+  #right-pane {
+    width: 100%;
+    min-width: 10%;
+    max-width: var(--right-width, 50%);
+  }
+
+  #resizer {
+    position: relative;
+
+    &:before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: var(--resize-width, 2px);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: 1;
+      transform: translateX(-50%);
+    }
+
+    width: var(--resize-width, 2px);
+    padding: 0 var(--resize-padding, 5px);
+    cursor: col-resize;
+
+    &:hover:before {
+      background-color: cornflowerblue;
+    }
+  }
+}
+
+:host(.resizing) {
+  cursor: col-resize;
+
+  #resizer:before {
+    background-color: cornflowerblue;
+  }
+
+  #left-pane, #right-pane {
+    user-select: none;
+    pointer-events: none;
+  }
+}

@@ -3,6 +3,8 @@
 
 :host {
   display: flex;
+  height: 100%;
+  width: 100%;
 
   #left-pane, #right-pane {
     flex-grow: 1;
@@ -10,7 +12,7 @@
   }
 
   #left-pane {
-    min-width: 20%;
+    min-width: 10%;
   }
 
   #right-pane {
@@ -35,11 +37,11 @@
     }
 
     width: var(--resize-width, 2px);
-    padding: 0 var(--resize-padding, 5px);
+    padding: 0 var(--resize-padding, 12px);
     cursor: col-resize;
 
     &:hover:before {
-      background-color: cornflowerblue;
+      background-color: rgb(var(--zn-blue));
     }
   }
 }
@@ -48,7 +50,7 @@
   cursor: col-resize;
 
   #resizer:before {
-    background-color: cornflowerblue;
+    background-color: rgb(var(--zn-blue));
   }
 
   #left-pane, #right-pane {

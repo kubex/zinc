@@ -34,34 +34,38 @@
 }
 
 @mixin gap {
-  gap: spacing(xxs);
+  --zn-gap: #{spacing(xxs)};
   @include container-query(smp) {
-    gap: spacing(sm);
+    --zn-gap: #{spacing(sm)};
   }
 
   @include container-query(md) {
-    gap: spacing(md);
+    --zn-gap: #{spacing(md)};
   }
 
   @include container-query(lg) {
-    gap: spacing(lg);
+    --zn-gap: #{spacing(lg)};
   }
+
+  gap: var(--zn-gap, 0);
 }
 
 @mixin padding {
-  padding: spacing(xs);
+  --zn-padding: #{spacing(xs)};
 
   @include container-query(smp) {
-    padding: spacing(sm);
+    --zn-padding: #{spacing(sm)};
   }
 
   @include container-query(md) {
-    padding: spacing(md);
+    --zn-padding: #{spacing(md)};
   }
 
   @include container-query(lg) {
-    padding: spacing(lg);
+    --zn-padding: #{spacing(lg)};
   }
+
+  padding: var(--zn-padding, 0);
 }
 
 @function spacing($size, $default: sm) {
@@ -71,6 +75,10 @@
     @warn "Unknown spacing size `#{$size}`. Using default `#{$default}`.";
     @return map.get(spacing.$spacing, $default);
   }
+}
+
+@function reduce($size, $ratio) {
+  @return $size * $ratio;
 }
 
 @function common-size($size) {

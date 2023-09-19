@@ -1,10 +1,13 @@
 @use "sass:map";
 @use "../wc";
+@use "../../scss/mixins";
 
 :host {
   display: flex;
   height: 100%;
   width: 100%;
+  min-width: 350px;
+  container-type: inline-size;
 
   #left-pane, #right-pane {
     flex-grow: 1;
@@ -24,11 +27,19 @@
   #resizer {
     position: relative;
 
+    &:after {
+      content: "";
+      position: absolute;
+      inset: 0 -10px;
+      width: 20px;
+      z-index: 500;
+    }
+
     &:before {
       content: "";
       display: block;
       height: 100%;
-      width: var(--resize-width, 2px);
+      width: 1px;
       position: absolute;
       top: 0;
       left: 50%;
@@ -36,8 +47,11 @@
       transform: translateX(-50%);
     }
 
-    width: var(--resize-width, 2px);
-    padding: 0 var(--resize-padding, 12px);
+    min-width: 1px;
+    padding: var(--zn-padding);
+
+    padding-top: 0;
+    padding-bottom: 0;
     cursor: col-resize;
 
     &:hover:before {
@@ -48,13 +62,13 @@
 
 :host(.resizing) {
   cursor: col-resize;
+  user-select: none;
 
   #resizer:before {
     background-color: rgb(var(--zn-blue));
   }
 
   #left-pane, #right-pane {
-    user-select: none;
     pointer-events: none;
   }
 }

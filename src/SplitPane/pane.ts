@@ -27,7 +27,7 @@ export class SplitPane extends ZincElement
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
     if(this.storeKey != "" && this.storeKey != null)
     {
-      let storedValue = this.storage.getItem(this.storeKey);
+      let storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
         this.rightWidth = parseInt(storedValue);
@@ -71,7 +71,7 @@ export class SplitPane extends ZincElement
     this.rightWidth = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {
-      this.storage.setItem(this.storeKey, w);
+      this.storage.setItem('znsp:' + this.storeKey, w);
     }
   }
 

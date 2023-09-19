@@ -1,0 +1,30 @@
+@use "../wc";
+
+zn-stats-tile, :host {
+  border-style: solid;
+  border-color: rgb(var(--zn-border-color));
+  border-width: 1px;
+  background-color: rgb(var(--zn-panel));
+  padding: wc.spacing(md);
+
+  .amount {
+    color: rgb(var(--zn-text-heading));
+    font-weight: 600;
+    padding: wc.spacing(md) 0;
+    font-size: 25px;
+  }
+
+  .diff {
+    .positive {
+      color: rgb(var(--zn-color-success));
+    }
+
+    .negative {
+      color: rgb(var(--zn-color-error));
+    }
+
+    .neutral {
+      color: rgb(var(--zn-color-warning));
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import {html, unsafeCSS} from 'lit';
+import {CSSResultGroup, html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../../zinc";
 
@@ -10,7 +10,7 @@ export class Group extends ZincElement
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'description', type: String, reflect: true}) description;
 
-  static get styles()
+  static get styles(): CSSResultGroup
   {
     return [unsafeCSS(styles)];
   }

@@ -2,13 +2,14 @@
 
 :host {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--zn-gap);
   margin-bottom: 20px;
 
   ::slotted(*) {
     flex-grow: 1;
-    min-width: 260px;
+    min-width: var(-zn-size-sidenav);
   }
 
   ::slotted(:not([span])) {

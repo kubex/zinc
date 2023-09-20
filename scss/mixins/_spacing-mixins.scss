@@ -34,9 +34,10 @@
 }
 
 @mixin gap {
-  --zn-gap: #{spacing(xxs)};
+  --zn-gap: #{spacing(md)};
+  /* --zn-gap: #{spacing(xxs)};
   @include container-query(smp) {
-    --zn-gap: #{spacing(sm)};
+    --zn-gap: #{spacing(md)};
   }
 
   @include container-query(md) {
@@ -46,12 +47,13 @@
   @include container-query(lg) {
     --zn-gap: #{spacing(lg)};
   }
-
+ */
   gap: var(--zn-gap, 0);
 }
 
 @mixin padding {
-  --zn-padding: #{spacing(xs)};
+  --zn-padding: #{spacing(md)};
+  /* --zn-padding: #{spacing(xs)};
 
   @include container-query(smp) {
     --zn-padding: #{spacing(sm)};
@@ -63,7 +65,7 @@
 
   @include container-query(lg) {
     --zn-padding: #{spacing(lg)};
-  }
+  } */
 
   padding: var(--zn-padding, 0);
 }

@@ -78,6 +78,7 @@ $theme-dark: (
   // Theme Colors
   @include spread-map($brand-colours, #{$var-prefix});
   @include spread-map($theme-colors, #{$var-prefix} + 'color-');
+  @include spread-map(variables.$common-sizes, #{$var-prefix} + 'size-');
 
   // Font Families
   #{$var-prefix}font-family-sans: 'Roboto', sans-serif;

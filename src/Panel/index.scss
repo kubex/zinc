@@ -16,7 +16,7 @@
   position: relative;
   z-index: 1;
 
-  @include wc.media-query(smp) {
+  @include wc.container-query(smp) {
     &:before {
       position: absolute;
       content: '';
@@ -39,6 +39,10 @@
     flex-basis: var(-zn-size-panel);
     min-width: var(-zn-size-panel);
     background-color: rgb(var(--zn-panel));
+
+    @include wc.media-query(sm) {
+      border-radius: 5px;
+    }
 
     @include wc.media-query(smp) {
       border-radius: 10px;

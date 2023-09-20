@@ -1,1 +1,1 @@
-export {StatsTile} from './stats-tile';
+export {Stat} from './stat';

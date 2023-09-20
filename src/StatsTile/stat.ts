@@ -4,8 +4,8 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
 
-@customElement('zn-stats-tile')
-export class StatsTile extends ZincElement
+@customElement('zn-stat')
+export class Stat extends ZincElement
 {
   static styles = unsafeCSS(styles);
 

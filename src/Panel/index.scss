@@ -12,6 +12,23 @@
   overflow: visible;
   flex-grow: 1;
   max-width: 100%;
+  min-height: 30px;
+  position: relative;
+  z-index: 1;
+
+  @include wc.media-query(smp) {
+    &:before {
+      position: absolute;
+      content: '';
+      bottom: -3px;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background-color: rgb(var(--zn-shadow));
+      border-radius: 10px;
+      z-index: -1;
+    }
+  }
 
   > div {
     padding: wc.spacing(md);
@@ -31,6 +48,7 @@
       display: flex;
       justify-items: center;
       padding-bottom: wc.spacing(sm);
+      margin-top: wc.spacing(sm);
 
       span {
         font-weight: 500;
@@ -71,7 +89,6 @@
     .body {
       overflow-y: auto;
       flex-grow: 1;
-      margin-top: wc.spacing(sm);
 
       > :not([hidden]) ~ :not([hidden]) {
         border: 1px solid black !important;

@@ -4,7 +4,6 @@ import '../scss/boot.scss';
 import './Accordion';
 import './Container';
 import './Button';
-import './Group';
 import './Page';
 import './Icon';
 import './Header';

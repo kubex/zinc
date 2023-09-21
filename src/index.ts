@@ -33,3 +33,4 @@ import './StatsTile';
 import './SplitPane';
 import './Collapsible';
 import './EmptyState';
+import './ProgressBar';

@@ -3,7 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 
-@customElement('zn-grid')
+@customElement('zn-cols')
 export class Columns extends LitElement
 {
   static styles = unsafeCSS(styles);

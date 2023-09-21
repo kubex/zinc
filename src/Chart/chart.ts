@@ -94,7 +94,7 @@ export class ZincChart extends ZincElement
       <div>
         <div id="legend-container"></div>
         <div>
-          <canvas id="myChart2" width="400" height="400"></canvas>
+          <canvas id="myChart2" style="min-height: 200px;"></canvas>
         </div>
       </div>
     `;

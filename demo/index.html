@@ -20,11 +20,6 @@
              breadcrumb='[{"title": "Home", "path": "#"}, {"title": "Customers", "path": "#"}, {"title": "Marko Frederik Hanslanderbutterzlut", "path": "#"}]'>
   </zn-header>
 
-
-  <zn-collapsible caption="Menu Item 1" store-key="menu-one">Content One</zn-collapsible>
-  <zn-collapsible caption="Menu Item 2" store-key="menu-two">Content Two</zn-collapsible>
-  <zn-collapsible store-key="menu-three"><h5 slot="caption">HEADING FIVE</h5>Content One</zn-collapsible>
-
   <zn-page caption="Overview">
     <div slot="side">
 
@@ -79,27 +74,22 @@
 
     </div>
 
-    <br><br><br><br><br>
-
     <zn-cols layout="1,2,1">
-      <zn-panel><zn-empty-state icon="check:info" caption="Nothing to report on captain"><zn-button size="small">Button</zn-button></zn-empty-state></zn-panel>
-      <zn-panel><zn-empty-state icon="check:info" caption="No Errors"><zn-button size="small">Button</zn-button></zn-empty-state></zn-panel>
-      <zn-panel><zn-empty-state icon="check:info" caption="No Errors"></zn-empty-state></zn-panel>
+      <zn-panel></zn-panel>
+      <zn-panel>
+        <div class="zn-divide-y">
+          <div class="zn-gap equal">
+            <zn-stat class="m-auto" caption="Total Transaction Fees" description="Last 30 days" amount="30.55"
+                     previous="5.54"></zn-stat>
+          </div>
+          <div class="zn-gap equal">
+            <zn-stat class="m-auto" caption="Total Transaction Fees" description="Last 30 days" amount="30.55"
+                     previous="5.54"></zn-stat>
+          </div>
+        </div>
+      </zn-panel>
+      <zn-panel></zn-panel>
     </zn-cols>
-
-    <zn-cols layout="1,2,1">
-      <div slot="c1">col 3</div>
-    </zn-cols>
-
-    <br><br><br><br><br>
-
-    <zn-split-pane store-key="demo-split">
-      <div slot="left">LEFT
-      </div>
-      <div slot="right">RIGHT
-      </div>
-    </zn-split-pane>
-
 
     <zn-panel caption="Alerts">
       <zn-alert caption="Default Alert"></zn-alert>
@@ -116,7 +106,7 @@
 
       <zn-alert icon="sentiment_satisfied_alt:success" level="success" caption="Success HERE">
         <div>This is the content <br/>for the alert <br/>for the alert <br/>for the alert <br/>for the
-          alert
+             alert
         </div>
         <zn-button slot="actions" size="small" icon="copy" color="success"></zn-button>
         <zn-button slot="actions" size="small" icon="copy"></zn-button>
@@ -192,27 +182,27 @@
       <h2 class="zn-pad">Heading 2</h2>
       <h3 class="zn-pad-x">Heading 3</h3>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sollicitudin nisl sed pretium porttitor. In hac
-        habitasse platea dictumst. Sed pharetra leo eget orci pulvinar gravida. Quisque ut commodo nibh, a venenatis
-        sapien.
-        Suspendisse sit amet viverra dolor. Vestibulum congue, velit viverra ultricies commodo, lorem lorem facilisis
-        nisl,
-        eget volutpat nibh odio ut tortor. Duis nec euismod ligula. Ut porttitor posuere erat, et ornare ante egestas
-        pellentesque. Phasellus sagittis quam sed lorem maximus gravida. Cras scelerisque tellus a viverra dapibus.
-        Suspendisse sed porta ex, fermentum dignissim turpis. Cras laoreet, eros non malesuada bibendum, enim lectus
-        commodo
-        lorem, in tristique sapien elit sed orci. Ut id fringilla arcu, eget lobortis lectus. Mauris vitae mollis
-        tellus.
-        Aenean purus nisl, bibendum ac nulla a, placerat convallis diam.</p>
+         habitasse platea dictumst. Sed pharetra leo eget orci pulvinar gravida. Quisque ut commodo nibh, a venenatis
+         sapien.
+         Suspendisse sit amet viverra dolor. Vestibulum congue, velit viverra ultricies commodo, lorem lorem facilisis
+         nisl,
+         eget volutpat nibh odio ut tortor. Duis nec euismod ligula. Ut porttitor posuere erat, et ornare ante egestas
+         pellentesque. Phasellus sagittis quam sed lorem maximus gravida. Cras scelerisque tellus a viverra dapibus.
+         Suspendisse sed porta ex, fermentum dignissim turpis. Cras laoreet, eros non malesuada bibendum, enim lectus
+         commodo
+         lorem, in tristique sapien elit sed orci. Ut id fringilla arcu, eget lobortis lectus. Mauris vitae mollis
+         tellus.
+         Aenean purus nisl, bibendum ac nulla a, placerat convallis diam.</p>
 
       <p>Donec sit amet nisl in nulla blandit sodales sit amet sit amet lacus. In vitae metus ipsum. Cras aliquet lacus
-        sit
-        amet nulla ullamcorper molestie. Vestibulum elit justo, maximus et pharetra ac, semper a purus. Nunc vehicula
-        id
-        tellus sed scelerisque. Etiam elementum lacinia lacus, sit amet tempor ligula porta vitae. Fusce nisi ante,
-        ultricies
-        congue massa sit amet, convallis sodales tortor. Proin luctus turpis in sapien ultrices, ac mattis ante
-        posuere.
-        Vivamus volutpat maximus est finibus eleifend. Phasellus id commodo sapien.</p>
+         sit
+         amet nulla ullamcorper molestie. Vestibulum elit justo, maximus et pharetra ac, semper a purus. Nunc vehicula
+         id
+         tellus sed scelerisque. Etiam elementum lacinia lacus, sit amet tempor ligula porta vitae. Fusce nisi ante,
+         ultricies
+         congue massa sit amet, convallis sodales tortor. Proin luctus turpis in sapien ultrices, ac mattis ante
+         posuere.
+         Vivamus volutpat maximus est finibus eleifend. Phasellus id commodo sapien.</p>
     </zn-panel>
 
     <zn-panel caption="Subscriptions"
@@ -292,11 +282,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-          are going to use a passage of Lorem Ipsum.</p>
+           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+           are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-          Ipsum or randomised words which don't look even slightly believable.</p>
+           Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
       <zn-note>
@@ -304,11 +294,11 @@
         <span slot="date">May 24th 2023 @ 14:21</span>
 
         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-          in some form, by injected humour, or randomised words which don't look even slightly believable. If you
-          are going to use a passage of Lorem Ipsum.</p>
+           in some form, by injected humour, or randomised words which don't look even slightly believable. If you
+           are going to use a passage of Lorem Ipsum.</p>
 
         <p>Or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem
-          Ipsum or randomised words which don't look even slightly believable.</p>
+           Ipsum or randomised words which don't look even slightly believable.</p>
       </zn-note>
 
     </zn-panel>

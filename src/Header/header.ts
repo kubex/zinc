@@ -1,4 +1,4 @@
-import {html, unsafeCSS} from 'lit';
+import {html, TemplateResult, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../zinc";
 
@@ -27,15 +27,33 @@ export class Header extends ZincElement
   render()
   {
 
-    if(this.caption == "" && this.navigation.length == 0 && this.breadcrumb.length == 0)
+    if(this.caption == "" && (!this?.navigation?.length) && (!this?.breadcrumb?.length))
     {
       return html``;
     }
 
-    const header = html`
-      <div>
-        <div class="width-container">
-          <div class="breadcrumb">${this.breadcrumb.map((item, index) =>
+    let nav: TemplateResult;
+    if(this?.navigation?.length)
+    {
+      nav = html`
+        <ul class="header-nav">
+          ${this.navigation.map((item, index) =>
+          {
+            const activeClass = item.active ? 'active' : '';
+            return html`
+              <li class="${activeClass}">
+                <a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
+              </li>`;
+          })}
+        </ul>`;
+    }
+
+    let breadcrumb: TemplateResult;
+    if(this?.breadcrumb?.length)
+    {
+      breadcrumb = html`
+        <div class="breadcrumb">
+          ${this.breadcrumb.map((item, index) =>
           {
             const prefix = index == 0 ? '' : ' / ';
             if(item.path == '')
@@ -46,20 +64,25 @@ export class Header extends ZincElement
             return html`
               ${prefix} <a href="${item.path}">${item.title}</a>`;
           })}
-          </div>
-          <h1>${this.caption}</h1>
+        </div>`;
+    }
+
+    let caption: TemplateResult;
+    if(this.caption)
+    {
+      caption = html`
+        <h1>${this.caption}</h1>`;
+    }
+
+    const header = html`
+      <div>
+        <div class="width-container">
+          ${breadcrumb}
+          ${caption}
           <div class="actions">
             <slot></slot>
           </div>
-          <ul class="header-nav">
-            ${this.navigation.map((item, index) =>
-            {
-              const activeClass = item.active ? 'active' : '';
-              return html`
-                <li class="${activeClass}"><a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
-                </li>`;
-            })}
-          </ul>
+          ${nav}
         </div>
       </div>
     `;

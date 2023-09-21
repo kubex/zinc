@@ -3,37 +3,33 @@
 :host {
   flex-grow: 1;
   width: 100%;
+}
 
-  > div {
-    display: flex;
-    flex-wrap: wrap;
+:host(.grid) {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  flex-grow: 1;
 
-    @include wc.gap;
-  }
+  @include wc.gap;
 
-  .s1, .s2, .s3, .s4 {
+  ::slotted(div[col="1"]) {
     min-width: var(--col-min, 160px);
     flex-grow: 1;
   }
 
-
-  .s1 {
-    flex-basis: calc(var(--col-min, 160px));
-    flex-grow: 1;
-  }
-
-  .s2 {
-    flex-basis: calc(var(--col-min, 160px) * 2);
+  ::slotted(div[col="2"]) {
+    min-width: calc(var(--col-min, 160px) * 2);
     flex-grow: 2;
   }
 
-  .s3 {
-    flex-basis: calc(var(--col-min, 160px) * 3);
+  ::slotted(div[col="3"]) {
+    min-width: calc(var(--col-min, 160px) * 3);
     flex-grow: 3;
   }
 
-  .s4 {
-    flex-basis: calc(var(--col-min, 160px) * 3);
+  ::slotted(div[col="4"]) {
+    min-width: calc(var(--col-min, 160px) * 4);
     flex-grow: 4;
   }
 }

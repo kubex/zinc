@@ -8,8 +8,6 @@ import {ZincElement} from "../zinc";
 export class Panel extends ZincElement
 {
   @property({attribute: 'caption', type: String, reflect: true}) caption;
-  @property({attribute: 'small', type: Boolean, reflect: true}) small;
-  @property({attribute: 'stat', type: Boolean, reflect: true}) stat;
   @property({attribute: 'rows', type: Number, reflect: true}) rows;
   @property({attribute: 'navigation', type: Array}) navigation = [];
 
@@ -64,10 +62,10 @@ export class Panel extends ZincElement
             ${navItems.map((item, index) => html`
               <li class="${item.active ? 'active' : ''}">
                 <a href="#" @click="${(e) =>
-      {
-        e.preventDefault();
-        this.selectPanel(index);
-      }}">${item.path}</a>
+                {
+                  e.preventDefault();
+                  this.selectPanel(index);
+                }}">${item.path}</a>
               </li>`)}
           </ul>
         </div>`;

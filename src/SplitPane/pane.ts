@@ -1,4 +1,4 @@
-import {html, LitElement, unsafeCSS} from "lit";
+import {html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
@@ -15,8 +15,6 @@ export class SplitPane extends ZincElement
   private maxPercent = 80;
 
   @property({attribute: 'right-width', type: Number, reflect: true}) rightWidth = 50;
-  @property({type: Boolean}) padded = false;
-  @property({type: Boolean}) dark = false;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   // session storage if not local

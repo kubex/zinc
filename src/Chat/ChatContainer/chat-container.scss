@@ -1,13 +1,9 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+@use "../../wc";
 
 :host {
-  font-family: "Inter", sans-serif;
-  color: #343434;
   cursor: pointer;
   position: relative;
-  border-right: 1px solid #E3E3E3;
+  border-right: 1px solid rgb(var(--zn-border-color));
   width: calc(50% - 316px);
   min-width: 636px;
 
@@ -22,8 +18,8 @@
   display: flex;
   flex-direction: column;
   padding: 20px 20px 0 20px;
-  border-bottom: 1px solid #E3E3E3;
-  background-color: white;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-panel));
 }
 
 .container {
@@ -34,15 +30,14 @@
 }
 
 h3 {
-  color: #7F8090;
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;
-  margin: 0 0 8px 0;
 }
 
 h2 {
   font-size: 24px;
   font-weight: 500;
   margin: 0 0 20px 0;
+  color: rgb(var(--zn-text-heading))
 }

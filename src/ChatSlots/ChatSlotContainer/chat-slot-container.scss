@@ -1,18 +1,11 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-:host {
-  font-family: "Inter", sans-serif;
-  color: #343434;
-}
+@use "../../wc";
 
 .header {
   display: flex;
   flex-direction: column;
   padding: 20px 20px 0 20px;
-  border-bottom: 1px solid #E3E3E3;
-  background-color: white;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-panel));
 
   ul {
     display: flex;
@@ -26,21 +19,19 @@
       margin: 0;
       padding: 5px 0;
       font-weight: 500;
-      color: #7F8090;
       font-size: 12px;
       line-height: 18px;
       border-bottom: solid 5px transparent;
       cursor: pointer;
 
       &:hover, &.active {
-        border-bottom-color: #6836F5;
+        border-bottom-color: rgb(var(--zn-primary));
       }
     }
   }
 }
 
 h3 {
-  color: #7F8090;
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;
@@ -51,8 +42,5 @@ h2 {
   font-size: 24px;
   font-weight: 500;
   margin: 0 0 20px 0;
-}
-
-.footer {
-  color: orange;
+  color: rgb(var(--zn-text-heading));
 }

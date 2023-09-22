@@ -1,21 +1,17 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+@use "../../wc";
 
 :host {
-  font-family: "Inter", sans-serif;
-  color: #343434;
   cursor: pointer;
   position: relative;
 
   > div {
     padding: 30px 20px;
-    border-bottom: 1px solid #E3E3E3;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 }
 
 :host([active]) > div {
-  background-color: white;
+  background-color: rgb(var(--zn-panel));
 }
 
 h2 {
@@ -27,7 +23,6 @@ h2 {
 p {
   font-size: 12px;
   line-height: 18px;
-  color: #7F8090;
   margin: 0;
 }
 
@@ -35,7 +30,7 @@ p {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: #ED546D;
+  color: rgb(var(--zn-color-error));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -48,7 +43,7 @@ p {
 
   &-indicator {
     display: inline-block;
-    background-color: #ED546D;
+    color: rgb(var(--zn-color-error));
     width: 10px;
     height: 10px;
     border-radius: 50%;

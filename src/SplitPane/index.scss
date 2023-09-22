@@ -12,6 +12,7 @@
   #left-pane, #right-pane {
     flex-grow: 1;
     flex-shrink: 1;
+    overflow: auto;
   }
 
   #left-pane {
@@ -73,4 +74,13 @@
   #left-pane, #right-pane {
     pointer-events: none;
   }
+}
+
+:host([padded]) {
+  padding: 10px;
+}
+
+:host([dark]) #right-pane {
+  padding: 30px;
+  background-color: #eeedf1;
 }

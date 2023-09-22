@@ -59,7 +59,7 @@ export class Icon extends LitElement
         href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
 
-    if(this.src.includes(':'))
+    if(this.src.includes(':') && !this.src.includes(':/'))
     {
       const split = this.src.split(':');
       this.src = split[0];
@@ -111,7 +111,7 @@ export class Icon extends LitElement
         this.src = md5(this.src);
       }
     }
-    else if(this.library == "")
+    else if(this.library == "" && !this.src.includes('/'))
     {
       this.library = Library.MaterialOutlined;
     }

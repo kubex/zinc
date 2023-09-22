@@ -34,3 +34,4 @@ import './SplitPane';
 import './Collapsible';
 import './EmptyState';
 import './ProgressBar';
+import './Stepper';

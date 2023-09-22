@@ -9,13 +9,13 @@ import styles from './index.scss';
 @customElement('zn-datepicker')
 export class DatePicker extends LitElement
 {
+  static styles = unsafeCSS(styles);
+
   @property({attribute: 'id', type: String, reflect: true}) id;
   @property({attribute: 'name', type: String, reflect: true}) name;
 
   private _instance: AirDatepicker<HTMLInputElement>;
   private _inputElement: HTMLInputElement;
-
-  static styles = unsafeCSS(styles);
 
   async initialiseDatepicker()
   {
@@ -28,7 +28,6 @@ export class DatePicker extends LitElement
     }
 
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
-    console.log("input element", inputElement);
     if(inputElement)
     {
       this._inputElement = inputElement;
@@ -37,7 +36,6 @@ export class DatePicker extends LitElement
     }
   }
 
-
   async init()
   {
     await this.initialiseDatepicker();
@@ -45,8 +43,8 @@ export class DatePicker extends LitElement
 
   protected updated(_changedProperties: PropertyValues)
   {
-    super.updated(_changedProperties);
     this.init();
+    super.updated(_changedProperties);
   }
 
   render()
@@ -66,7 +64,7 @@ export class DatePicker extends LitElement
   private async getOptions(): Promise<Partial<AirDatepickerOptions>>
   {
     return {
-      locale: localeEn
+      locale: localeEn,
     };
   }
 }

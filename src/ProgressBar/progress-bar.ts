@@ -45,6 +45,7 @@ export class ProgressBar extends LitElement
           width="${this.value}%"
           height="100%"
           clip-path="url(#clip-path)"
+          rx="4px"
         />
       </svg>
       ${this.description

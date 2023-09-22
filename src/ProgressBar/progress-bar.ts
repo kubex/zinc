@@ -35,7 +35,7 @@ export class ProgressBar extends LitElement
           </clipPath>
         </defs>
         <rect
-          fill="rgba(var(--zn-input-bg))"
+          fill="rgba(var(--zn-border-color))"
           width="100%"
           height="100%"
           rx="4px"

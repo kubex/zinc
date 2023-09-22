@@ -36,35 +36,31 @@ export class Header extends ZincElement
     if(this?.navigation?.length)
     {
       nav = html`
-        <ul class="header-nav">
-          ${this.navigation.map((item, index) =>
-          {
-            const activeClass = item.active ? 'active' : '';
-            return html`
-              <li class="${activeClass}">
-                <a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
-              </li>`;
-          })}
-        </ul>`;
+        ${this.navigation.map((item, index) =>
+        {
+          const activeClass = item.active ? 'active' : '';
+          return html`
+            <li class="${activeClass}">
+              <a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
+            </li>`;
+        })}`;
     }
 
     let breadcrumb: TemplateResult;
     if(this?.breadcrumb?.length)
     {
       breadcrumb = html`
-        <div class="breadcrumb">
-          ${this.breadcrumb.map((item, index) =>
+        ${this.breadcrumb.map((item, index) =>
+        {
+          const prefix = index == 0 ? '' : ' / ';
+          if(item.path == '')
           {
-            const prefix = index == 0 ? '' : ' / ';
-            if(item.path == '')
-            {
-              return html`
-                ${prefix} <span>${item.title}</span>`;
-            }
             return html`
-              ${prefix} <a href="${item.path}">${item.title}</a>`;
-          })}
-        </div>`;
+              ${prefix} <span>${item.title}</span>`;
+          }
+          return html`
+            ${prefix} <a href="${item.path}">${item.title}</a>`;
+        })}`;
     }
 
     let caption: TemplateResult;
@@ -77,12 +73,16 @@ export class Header extends ZincElement
     const header = html`
       <div>
         <div class="width-container">
-          ${breadcrumb}
+          <div class="breadcrumb">
+            ${breadcrumb}
+          </div>
           ${caption}
           <div class="actions">
             <slot></slot>
           </div>
-          ${nav}
+          <ul class="header-nav">
+            ${nav}
+          </ul>
         </div>
       </div>
     `;

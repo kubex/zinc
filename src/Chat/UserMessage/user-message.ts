@@ -1,10 +1,10 @@
 import {html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
-import styles from './chat-message.scss';
+import styles from './user-message.scss';
 
 @customElement('zn-chat-message')
-export class ChatMessage extends LitElement
+export class UserMessage extends LitElement
 {
   static styles = unsafeCSS(styles);
 

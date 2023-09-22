@@ -9,6 +9,9 @@ zn-accordion > div, :host > div {
   border-bottom-width: 1px !important;
 }
 
+:host > div {
+  padding: mixins.spacing(md) 0;
+}
 
 :host(:not([expanded])) {
   cursor: pointer;
@@ -25,14 +28,11 @@ zn-accordion > div, :host > div {
   cursor: pointer;
   overflow: hidden;
 
-  @include mixins.padding();
-  padding-bottom: 0 !important;
-
   justify-items: center;
 
   .caption {
     font-weight: 600;
-    margin-bottom: wc.spacing(sm);
+    margin-bottom: wc.spacing(xs);
     color: rgb(var(--zn-text-heading));
   }
 

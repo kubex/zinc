@@ -4,6 +4,7 @@ import type {Preview} from "@storybook/web-components";
 import {DocsContainer} from '@storybook/addon-docs';
 import {DecoratorHelpers, withThemeByDataAttribute} from "@storybook/addon-styling";
 import {themes} from '@storybook/theming';
+import DocumentationTemplate from './DocumentationTemplate.mdx';
 
 import '../scss/boot.scss';
 
@@ -28,9 +29,12 @@ const preview: Preview = {
       },
     },
     docs: {
-      container: (context) => {
-        console.log('context', context)
-        if (!context.theme) {
+      page: DocumentationTemplate,
+      container: (context) =>
+      {
+        console.log('context', context);
+        if(!context.theme)
+        {
           return React.createElement(DocsContainer, {...context});
         }
         const isDark = DecoratorHelpers.pluckThemeFromContext(context) === 'dark';

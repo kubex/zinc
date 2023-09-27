@@ -37,7 +37,7 @@ export class MultiSelect extends LitElement
   render()
   {
     return html`
-      <select name="" id="" multiple class="">
+      <select name="" id="" multiple class="hidden">
         ${this._data.map((item) => html`
           <option value="${item}">${item}</option>`)}
       </select>
@@ -54,7 +54,9 @@ export class MultiSelect extends LitElement
         </span>
         <div class="inline-search">
           <input type="search" tabindex="0" autocorrect="off" autocapitalize="none" spellcheck="false"
-                 autocomplete="off" role="searchbox" placeholder @click="${e => this.toggle(e)}"
+                 autocomplete="off" role="searchbox"
+                 placeholder="${this.selectedItems.length > 0 ? '' : 'Select Something'}"
+                 @click="${e => this.toggle(e)}"
                  @keyup="${e => this.filter(e)}"/>
         </div>
       </div>

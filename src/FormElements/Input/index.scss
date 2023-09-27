@@ -1,5 +1,16 @@
 @use '../../wc';
 
+
+:host([prefix]) {
+  .wrap {
+    border: 1px solid rgb(var(--zn-border-color));
+  }
+
+  ::slotted(input) {
+    border: 0 !important;
+  }
+}
+
 :host, zn-input {
   display: inline-block;
   width: 100%;

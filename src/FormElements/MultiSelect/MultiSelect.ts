@@ -36,23 +36,31 @@ export class MultiSelect extends LitElement
 
   render()
   {
+    // if visible keep multi-select focused
+    if(this.visible)
+    {
+      const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
+      input?.focus();
+    }
+
     return html`
       <select name="" id="" multiple class="hidden">
         ${this._data.map((item) => html`
           <option value="${item}">${item}</option>`)}
       </select>
 
-      <div id="selection">
-        <span class="selection__container" role="combobox" aria-haspopup="true"
+      <div class="multi-select">
+        <span class="multi-select__selection" role="combobox" aria-haspopup="true"
               aria-expanded="${this.visible}" tabindex="-1" aria-disabled="false">
           <ul>
             ${this.selectedItems.map((item) => html`
-              <li title="${item}" @click="${e => this.removeSelectedItem(e)}">
+              <li title="${item}" class="multi-select__item">
+                <span @click="${e => this.removeSelectedItem(item)}">Remove</span>
                 ${item}
               </li>`)}
           </ul>
         </span>
-        <div class="inline-search">
+        <div class="multi-select__trigger multi-select__filter">
           <input type="search" tabindex="0" autocorrect="off" autocapitalize="none" spellcheck="false"
                  autocomplete="off" role="searchbox"
                  placeholder="${this.selectedItems.length > 0 ? '' : 'Select Something'}"
@@ -62,11 +70,14 @@ export class MultiSelect extends LitElement
       </div>
 
       ${this.visible ? html`
-        <div id="options">
+        <div class="multi-select__dropdown">
           <ul role="listbox" aria-multiselectable="true" aria-expanded="${this.visible}" aria-hidden="false">
             ${this._filteredList && this._filteredList.length === 0 ? html`
               No results found` : this._filteredList.map((item) => html`
-              <li aria-selected="${this.isItemSelected(item)}" @click="${e => this.addSelectedItem(e)}">${item}</li>`)}
+              <li aria-selected="${this.isItemSelected(item)}"
+                  class="multi-select__dropdown__item"
+                  @click="${e => this.addSelectedItem(item)}">${item}
+              </li>`)}
           </ul>
         </div>` : null}
     `;
@@ -89,6 +100,13 @@ export class MultiSelect extends LitElement
       if(!this.contains(node))
       {
         this.visible = false;
+        this.dispatchEvent(new CustomEvent('multi-select-toggle', {detail: {visible: this.visible}}));
+        this._filteredList = this._data;
+        const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
+        if(input)
+        {
+          input.value = '';
+        }
       }
     });
   }
@@ -118,14 +136,13 @@ export class MultiSelect extends LitElement
   }
 
   // On click of an option add it to the selected items
-  addSelectedItem(e)
+  addSelectedItem(item)
   {
-    const item = e.target.innerText;
 
     // if the item is already selected remove it
     if(this.selectedItems.includes(item))
     {
-      return this.removeSelectedItem(e);
+      return this.removeSelectedItem(item);
     }
 
     this.selectedItems.push(item);
@@ -135,10 +152,8 @@ export class MultiSelect extends LitElement
   }
 
   // Remove the item from the selected items
-  removeSelectedItem(e)
+  removeSelectedItem(item)
   {
-    const item = e.target.innerText;
-
     if(!this.selectedItems.includes(item))
     {
       return;

@@ -7,6 +7,27 @@
   display: none;
 }
 
-#selection {
-  cursor: pointer;
+.multi-select {
+  border: 2px solid #ccc;
+
+  &:focus-within {
+    border-color: #000;
+  }
+
+  &__selection {
+
+  }
+
+  &__trigger input {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
 }

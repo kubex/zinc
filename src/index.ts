@@ -26,6 +26,7 @@ import './FormElements/CheckBox';
 import './FormElements/Input';
 import './FormElements/DragUpload';
 import './FormElements/DatePicker';
+import './FormElements/MultiSelect';
 import './ConfirmModal';
 import './Chat';
 import './ChatSlots';

@@ -14,6 +14,8 @@ export class MultiSelect extends LitElement
   private _filteredList = [];
   private _data = [];
 
+  private _scrollPosition = 0;
+
   constructor()
   {
     super();
@@ -49,6 +51,14 @@ export class MultiSelect extends LitElement
       input?.focus();
     }
 
+    const dropdown = this.shadowRoot.querySelector('.multi-select__dropdown') as HTMLElement | null;
+    if(dropdown)
+    {
+      dropdown.scrollTop = this._scrollPosition;
+      dropdown.addEventListener('scroll', (e) => this._scrollPosition = dropdown.scrollTop);
+    }
+
+
     return html`
       <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
         <select name="" id="" multiple class="hidden">
@@ -58,6 +68,8 @@ export class MultiSelect extends LitElement
 
         <span class="multi-select__selection" role="combobox" aria-haspopup="true"
               aria-expanded="${this.visible}" tabindex="-1" aria-disabled="false">
+          ${this.selectedItems.length > 0 ? '' : html`
+            <div class="multi-select__placeholder">Please Select...</div>`}
           <ul>
             ${this.selectedItems.map((item) => html`
               <li title="${item}" class="multi-select__item">
@@ -66,19 +78,20 @@ export class MultiSelect extends LitElement
               </li>`)}
           </ul>
         </span>
-        <div class="multi-select__trigger multi-select__filter">
-          <input type="search" tabindex="0" autocorrect="off" autocapitalize="none" spellcheck="false"
-                 autocomplete="off" role="searchbox"
-                 placeholder="${this.selectedItems.length > 0 ? '' : 'Select Something'}"
-                 @keyup="${e => this.filter(e)}"/>
-        </div>
       </div>
 
       ${this.visible ? html`
         <div class="multi-select__dropdown">
+          <div class="multi-select__trigger multi-select__filter">
+            <input type="search" tabindex="0" autocorrect="off" autocapitalize="none" spellcheck="false"
+                   autocomplete="off" role="searchbox"
+                   placeholder="Search"
+                   @keyup="${e => this.filter(e)}"/>
+          </div>
           <ul role="listbox" aria-multiselectable="true" aria-expanded="${this.visible}" aria-hidden="false">
             ${this._filteredList && this._filteredList.length === 0 ? html`
-              No results found` : this._filteredList.map((item) => html`
+              <div class="multi-select__placeholder" style="padding-left: 10px">No Results Found...
+              </div>` : this._filteredList.map((item) => html`
               <li aria-selected="${this.isItemSelected(item)}"
                   class="multi-select__dropdown__item ${this.isItemSelected(item) ? 'multi-select__dropdown__item--selected' : ''}"
                   @click="${e => this.addSelectedItem(item)}">${item}

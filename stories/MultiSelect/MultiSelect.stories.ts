@@ -13,7 +13,7 @@ export default meta;
 
 export const Default = () =>
   html`
-    <div style="height: 500px; transform: translateZ(0);">
+    <div style="height: 300px; transform: translateZ(0);">
       <zn-multi-select></zn-multi-select>
     </div>`;
 

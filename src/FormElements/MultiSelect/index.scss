@@ -28,6 +28,12 @@
     border-bottom: 0;
   }
 
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    min-height: 31px;
+  }
+
   &__selection {
     ul {
       display: flex;
@@ -69,7 +75,10 @@
     appearance: none;
     border: none;
     background: transparent;
-    padding: 0;
+    padding: wc.spacing(sm);
+    min-height: 31px;
+    border-radius: 0;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
 
     &:focus {
       outline: none;

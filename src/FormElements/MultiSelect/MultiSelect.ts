@@ -13,7 +13,6 @@ export class MultiSelect extends LitElement
 
   private _filteredList = [];
   private _data = [];
-
   private _scrollPosition = 0;
 
   constructor()
@@ -44,23 +43,15 @@ export class MultiSelect extends LitElement
 
   render()
   {
-    // if visible keep multi-select focused
-    if(this.visible)
-    {
-      const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
-      input?.focus();
-    }
-
     const dropdown = this.shadowRoot.querySelector('.multi-select__dropdown') as HTMLElement | null;
     if(dropdown)
     {
-      dropdown.scrollTop = this._scrollPosition;
       dropdown.addEventListener('scroll', (e) => this._scrollPosition = dropdown.scrollTop);
+      dropdown.scrollTop = this._scrollPosition;
     }
 
-
     return html`
-      <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
+      <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e, true)}">
         <select name="" id="" multiple class="hidden">
           ${this._data.map((item) => html`
             <option value="${item}">${item}</option>`)}
@@ -73,7 +64,11 @@ export class MultiSelect extends LitElement
           <ul>
             ${this.selectedItems.map((item) => html`
               <li title="${item}" class="multi-select__item">
-                <span @click="${e => this.removeSelectedItem(item)}">Remove</span>
+                <span @click="${e => this.removeSelectedItem(e, item)}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"><path
+                    fill="none" d="M0 0h24v24H0z"/><path fill="currentColor"
+                                                         d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </span>
                 ${item}
               </li>`)}
           </ul>
@@ -94,7 +89,7 @@ export class MultiSelect extends LitElement
               </div>` : this._filteredList.map((item) => html`
               <li aria-selected="${this.isItemSelected(item)}"
                   class="multi-select__dropdown__item ${this.isItemSelected(item) ? 'multi-select__dropdown__item--selected' : ''}"
-                  @click="${e => this.addSelectedItem(item)}">${item}
+                  @click="${e => this.addSelectedItem(e, item)}">${item}
               </li>`)}
           </ul>
         </div>` : null}
@@ -120,9 +115,11 @@ export class MultiSelect extends LitElement
         this.visible = false;
         this.dispatchEvent(new CustomEvent('multi-select-toggle', {detail: {visible: this.visible}}));
         this._filteredList = this._data;
+        this._scrollPosition = 0;
         const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
         if(input)
         {
+          console.log('input', input);
           input.value = '';
         }
       }
@@ -147,20 +144,21 @@ export class MultiSelect extends LitElement
   }
 
   // On click of the text area toggle the dropdown
-  toggle(e)
+  toggle(e, force = false)
   {
-    this.visible = !this.visible;
+    e.preventDefault();
+    this.visible = force ? force : !this.visible;
     this.dispatchEvent(new CustomEvent('multi-select-toggle', {detail: {visible: this.visible}}));
   }
 
   // On click of an option add it to the selected items
-  addSelectedItem(item)
+  addSelectedItem(e, item)
   {
 
     // if the item is already selected remove it
     if(this.selectedItems.includes(item))
     {
-      return this.removeSelectedItem(item);
+      return this.removeSelectedItem(e, item);
     }
 
     this.selectedItems.push(item);
@@ -170,8 +168,9 @@ export class MultiSelect extends LitElement
   }
 
   // Remove the item from the selected items
-  removeSelectedItem(item)
+  removeSelectedItem(e, item)
   {
+    e.preventDefault();
     if(!this.selectedItems.includes(item))
     {
       return;

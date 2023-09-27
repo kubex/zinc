@@ -17,6 +17,7 @@
   padding: wc.spacing(sm);
   position: relative;
   cursor: pointer;
+  font-weight: 500;
 
   &:focus-within, &--open {
     border-color: rgb(var(--zn-primary));
@@ -27,6 +28,10 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: 0;
+
+    .opener svg {
+      transform: rotate(180deg);
+    }
   }
 
   &__placeholder {
@@ -36,10 +41,32 @@
   }
 
   &__selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .opener {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 45px;
+      pointer-events: all;
+      background-color: rgb(var(--zn-input-bg-accent));
+      border-left: 1px solid rgb(var(--zn-border-color));
+      margin: -#{wc.spacing(sm)};
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+
+      svg {
+        transition: all 0.2s ease-in-out;
+      }
+    }
+
     ul {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      flex-grow: 1;
       gap: wc.spacing(sm);
       pointer-events: none;
     }
@@ -57,7 +84,7 @@
   }
 
   &__dropdown {
-    border: 1px solid rgb(var(--zn-primary));
+    border: 1px solid rgb(var(--zn-border-color));
     border-top: 0;
     background-color: rgb(var(--zn-panel));
     overflow-x: scroll;
@@ -65,14 +92,15 @@
     z-index: 1000;
     width: 100%;
     max-height: 200px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 
     &__item {
       padding: wc.spacing(sm);
       cursor: pointer;
 
       &--selected, &:hover {
-        background-color: rgb(var(--zn-primary));
-        color: white;
+        background-color: rgb(var(--zn-input-bg));
       }
     }
   }
@@ -81,7 +109,7 @@
     appearance: none;
     border: none;
     background: transparent;
-    padding: wc.spacing(sm);
+    padding: wc.spacing(sm) wc.spacing(md);
     min-height: 31px;
     border-radius: 0;
     border-bottom: 1px solid rgb(var(--zn-border-color));

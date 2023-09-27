@@ -59,6 +59,7 @@ export class MultiSelect extends LitElement
 
         <span class="multi-select__selection" role="combobox" aria-haspopup="true"
               aria-expanded="${this.visible}" tabindex="-1" aria-disabled="false">
+          <span class="container">
           ${this.selectedItems.length > 0 ? '' : html`
             <div class="multi-select__placeholder">Please Select...</div>`}
           <ul>
@@ -72,6 +73,8 @@ export class MultiSelect extends LitElement
                 ${item}
               </li>`)}
           </ul>
+          </span>
+          <span class="opener"><svg xmlns="http://www.w3.org/2000/svg" width="12px" viewBox="0 0 12 8"><path fill="#7B7097" d="m6 7.4-6-6L1.4 0 6 4.6 10.6 0 12 1.4z"/></svg></span>
         </span>
       </div>
 

@@ -13,7 +13,9 @@ export default meta;
 
 export const Default = () =>
   html`
-    <zn-multi-select></zn-multi-select>`;
+    <div style="height: 500px; transform: translateZ(0);">
+      <zn-multi-select></zn-multi-select>
+    </div>`;
 
 
 Default.args = {

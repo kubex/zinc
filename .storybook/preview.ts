@@ -11,10 +11,10 @@ import '../scss/boot.scss';
 export const decorators = [
   withThemeByDataAttribute({
     themes: {
-      default: 'default',
+      light: 'light',
       dark: 'dark',
     },
-    defaultTheme: 'default',
+    defaultTheme: 'light',
     attributeName: 't',
   })
 ];

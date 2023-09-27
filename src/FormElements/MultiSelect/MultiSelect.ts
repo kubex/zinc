@@ -31,6 +31,12 @@ export class MultiSelect extends LitElement
       'United Kingdom',
       'United States',
       'France',
+      'Germany',
+      'Spain',
+      'Italy',
+      'China',
+      'Japan',
+      'Australia',
     ];
   }
 
@@ -44,12 +50,12 @@ export class MultiSelect extends LitElement
     }
 
     return html`
-      <select name="" id="" multiple class="hidden">
-        ${this._data.map((item) => html`
-          <option value="${item}">${item}</option>`)}
-      </select>
+      <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
+        <select name="" id="" multiple class="hidden">
+          ${this._data.map((item) => html`
+            <option value="${item}">${item}</option>`)}
+        </select>
 
-      <div class="multi-select">
         <span class="multi-select__selection" role="combobox" aria-haspopup="true"
               aria-expanded="${this.visible}" tabindex="-1" aria-disabled="false">
           <ul>
@@ -64,7 +70,6 @@ export class MultiSelect extends LitElement
           <input type="search" tabindex="0" autocorrect="off" autocapitalize="none" spellcheck="false"
                  autocomplete="off" role="searchbox"
                  placeholder="${this.selectedItems.length > 0 ? '' : 'Select Something'}"
-                 @click="${e => this.toggle(e)}"
                  @keyup="${e => this.filter(e)}"/>
         </div>
       </div>
@@ -75,7 +80,7 @@ export class MultiSelect extends LitElement
             ${this._filteredList && this._filteredList.length === 0 ? html`
               No results found` : this._filteredList.map((item) => html`
               <li aria-selected="${this.isItemSelected(item)}"
-                  class="multi-select__dropdown__item"
+                  class="multi-select__dropdown__item ${this.isItemSelected(item) ? 'multi-select__dropdown__item--selected' : ''}"
                   @click="${e => this.addSelectedItem(item)}">${item}
               </li>`)}
           </ul>

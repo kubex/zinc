@@ -13,16 +13,12 @@
   border-bottom-width: 1px;
   overflow: hidden;
   background-color: rgb(var(--zn-panel));
-  gap: wc.spacing(sm);
-  padding-top: wc.spacing(sm);
-  padding-bottom: wc.spacing(sm);
 
   .width-container {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     max-width: var(--max-width, wc.container-width(hd));
-    gap: wc.spacing(sm);
     height: fit-content;
     padding-left: wc.spacing(sm);
     padding-right: wc.spacing(sm);
@@ -31,16 +27,17 @@
       padding-left: wc.spacing(lg);
       padding-right: wc.spacing(lg);
     }
+
+    gap: 10px;
   }
 
   .breadcrumb {
     display: block;
     width: 100%;
-    padding-bottom: wc.spacing(xxs);
-    padding-top: 10px;
+    padding-top: 20px;
 
     &:empty {
-      display: none;
+      padding-top: 10px;
     }
   }
 
@@ -51,6 +48,7 @@
     color: rgb(var(--zn-text-page-title));
     margin: 0;
     font-weight: 600;
+    padding: 10px 0 20px 0;
 
     &:empty {
       display: none;
@@ -69,7 +67,6 @@
     flex-basis: 100%;
     gap: 30px;
     margin: 0;
-    padding: wc.spacing(xs) 0 0;
     list-style: none;
 
     li {
@@ -97,9 +94,7 @@
       a {
         display: block;
         cursor: pointer;
-        padding-bottom: 4px;
-        line-height: 30px;
-        padding-top: 10px;
+        padding-bottom: 10px;
       }
 
       &.active::before {

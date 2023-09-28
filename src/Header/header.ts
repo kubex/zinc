@@ -70,19 +70,16 @@ export class Header extends ZincElement
         <h1>${this.caption}</h1>`;
     }
 
+    // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
         <div class="width-container">
-          <div class="breadcrumb">
-            ${breadcrumb}
-          </div>
+          <div class="breadcrumb">${breadcrumb}</div>
           ${caption}
           <div class="actions">
             <slot></slot>
           </div>
-          <ul class="header-nav">
-            ${nav}
-          </ul>
+          <ul class="header-nav">${nav}</ul>
         </div>
       </div>
     `;

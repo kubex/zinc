@@ -13,7 +13,7 @@ export class Columns extends LitElement
 
   render()
   {
-    const layout: number[] = this.layout.split(' ').map((a) => parseInt(a)).filter((item) => !!item);
+    const layout: number[] = this.layout.split(/[\s,]+/).map((a) => parseInt(a)).filter((item) => !!item);
     if(layout.length === 0)
     {
       layout.push(1, 1, 1, 1);

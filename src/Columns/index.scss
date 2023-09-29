@@ -1,39 +1,14 @@
 @use "../wc";
 
 :host {
-  flex-grow: 1;
-  width: 100%;
-}
-
-:host(.grid) {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   flex-grow: 1;
 
   @include wc.gap;
+}
 
-  ::slotted([col="1"]) {
-    flex-basis: var(--col-min, 275px);
-    min-width: var(--col-min, 275px);
-    flex-grow: 1;
-  }
-
-  ::slotted([col="2"]) {
-    flex-basis: calc(var(--col-min, 275px) * 2);
-    min-width: calc(var(--col-min, 275px) * 2);
-    flex-grow: 2;
-  }
-
-  ::slotted([col="3"]) {
-    flex-basis: calc(var(--col-min, 275px) * 3);
-    min-width: calc(var(--col-min, 275px) * 3);
-    flex-grow: 3;
-  }
-
-  ::slotted([col="4"]) {
-    flex-basis: calc(var(--col-min, 275px) * 4);
-    min-width: calc(var(--col-min, 275px) * 4);
-    flex-grow: 4;
-  }
+::slotted(*) {
+  flex: 1 1 0;
 }

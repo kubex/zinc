@@ -21,7 +21,7 @@ export class Columns extends LitElement
       layout.push(1, 1, 1, 1);
     }
     this.layout = layout.join('');
-    this.maxColumns = Math.min(4, layout.reduce((a, b) => a + b, 0));
+    this.maxColumns = Math.min(5, layout.reduce((a, b) => a + b, 0));
 
     this.querySelectorAll(':scope > *')
       .forEach((element: HTMLElement, index) =>

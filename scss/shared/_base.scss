@@ -49,11 +49,14 @@ h1, h2, h3, h4, h5, h6 {
 
 kbd {
   font-family: monospace;
+
   background-color: #eee;
-  border-radius: 3px;
-  border: 1px solid #b4b4b4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
   color: #333;
+
+  border: 1px solid rgb(var(--zn-border-color));
+
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 1px 0 0 rgba(255, 255, 255, .5) inset;
   display: inline-block;
   font-size: 13px;
   line-height: 20px;
@@ -61,4 +64,11 @@ kbd {
   white-space: nowrap;
   min-width: 15px;
   color: rgba(0, 0, 0, 0.5);
+}
+
+[t="dark"] kbd{
+
+  background-color: #5e5e5e;
+  color: #eee;
+
 }

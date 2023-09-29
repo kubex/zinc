@@ -9,7 +9,9 @@ export class Columns extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: String}) layout: string = '';
+  @property({type: String, reflect: true, attribute: "layout"}) layout: string = '';
+  @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
+
 
   render()
   {
@@ -18,14 +20,14 @@ export class Columns extends LitElement
     {
       layout.push(1, 1, 1, 1);
     }
-    const layoutSum = layout.reduce((a, b) => a + b, 0) + 1;
+    this.layout = layout.join('');
+    this.maxColumns = Math.min(4, layout.reduce((a, b) => a + b, 0));
 
     this.querySelectorAll(':scope > *')
       .forEach((element: HTMLElement, index) =>
       {
         const col = index % layout.length;
-        const fr = layout[col] / layoutSum;
-        element.style.flexBasis = Math.floor(fr * 100) + '%';
+        element.classList.add('zn-col-' + layout[col]);
       });
 
     return html`

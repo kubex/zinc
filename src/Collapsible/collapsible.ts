@@ -15,11 +15,12 @@ export class Collapsible extends ZincElement
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey: string;
   @property({attribute: 'caption', type: String, reflect: true}) caption: string;
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
 
   connectedCallback()
   {
     super.connectedCallback();
-    this.storage = window.sessionStorage;
+    this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
 
     if(this.storeKey)
     {

@@ -15,6 +15,7 @@ export class Collapsible extends ZincElement
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey: string;
   @property({attribute: 'caption', type: String, reflect: true}) caption: string;
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean;
+  @property({attribute: 'default-open', type: Boolean, reflect: true}) defaultOpen: boolean;
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
 
   connectedCallback()
@@ -26,10 +27,7 @@ export class Collapsible extends ZincElement
     {
       this.storageKey = "zncpse:" + this.storeKey;
       let hasPref = this.storage.getItem(this.storageKey);
-      if(hasPref != "")
-      {
-        this.open = hasPref == "true";
-      }
+      this.open = hasPref != "" ? hasPref == "true" : this.defaultOpen;
     }
   }
 

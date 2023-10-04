@@ -40,6 +40,7 @@ type Color = keyof typeof colors;
 export class Icon extends LitElement
 {
   @property({type: String, reflect: true}) src = "";
+  @property({type: String, reflect: true}) alt = "";
   @property({type: Number, reflect: true}) size = 24;
   @property({type: String, reflect: true}) library = Library.None;
   @property({type: Boolean, reflect: true}) round = false;
@@ -161,16 +162,16 @@ export class Icon extends LitElement
       case Library.Gravatar:
       case LibraryAlias.Gravatar:
         return html`<img
-          src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+           alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
       case Library.Libravatar:
         return html`<img
-          src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+           alt="${this.alt}" src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
     }
 
     if(this.src != "")
     {
       return html`
-        <img src="${this.src}" class="${this.library}"/>`;
+        <img src="${this.src}" alt="${this.alt}" class="${this.library}"/>`;
     }
 
     return html`

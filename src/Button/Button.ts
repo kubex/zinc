@@ -5,7 +5,7 @@ import styles from './index.scss';
 import {ZincElement} from "../zinc";
 
 export type ButtonColor = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-export type ButtonSizes = 'small' | 'normal' | 'large';
+export type ButtonSizes = 'small' | 'normal' | 'medium' | 'large';
 export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';
 
@@ -38,17 +38,24 @@ export class Button extends ZincElement
       if(this.iconPosition === 'left')
       {
         return html`
-          <button class=${shouldGrow} type=${typeAttribute}>${icon}${this.content}<slot></slot></button>`;
+          <button class="${shouldGrow}" type="${typeAttribute}">${icon}${this.content}
+            <slot></slot>
+          </button>`;
       }
       else
       {
         return html`
-          <button class=${shouldGrow} type=${typeAttribute}>${this.content}<slot></slot>${icon}</button>`;
+          <button class="${shouldGrow}" type="${typeAttribute}">${this.content}
+            <slot></slot>
+                                                                ${icon}
+          </button>`;
       }
     }
 
     return html`
-      <button class=${shouldGrow} type=${typeAttribute}>${this.content}<slot></slot></button>`;
+      <button class=${shouldGrow} type=${typeAttribute}>${this.content}
+        <slot></slot>
+      </button>`;
   }
 }
 

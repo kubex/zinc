@@ -41,6 +41,10 @@ export class Table extends LitElement
       {
         this.data['header'].forEach((col) =>
         {
+          if(typeof col == 'string')
+          {
+            col = {name: col};
+          }
           this.columns.push(col.hasOwnProperty('name') ? col['name'] : '');
           this.columnDisplay.push(col.hasOwnProperty('display') ? col['display'] : '');
         });
@@ -133,6 +137,12 @@ export class Table extends LitElement
     this.rows.forEach((row, rk) =>
     {
       const rowHtml = [];
+      const basicData = !row.hasOwnProperty('caption') && !row.hasOwnProperty('data');
+
+      if(basicData)
+      {
+        row["data"] = row;
+      }
 
       const caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
@@ -145,7 +155,7 @@ export class Table extends LitElement
           <zn-icon round size="40" src="${icon}"></zn-icon>`;
       }
 
-      if((caption + summary + icon + this.columns[0]) != "")
+      if(!basicData && (caption + summary + icon + this.columns[0]) != "")
       {
         rowHtml.push(html`
           <td>

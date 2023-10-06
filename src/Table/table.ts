@@ -6,6 +6,7 @@ import styles from './index.scss';
 @customElement('zn-table')
 export class Table extends LitElement
 {
+  @property({attribute: 'capcol', type: Boolean, reflect: true}) capCol: boolean = false;
   @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
   @property({attribute: 'selectable', type: Boolean, reflect: true}) selectable: boolean = false;
   @property({attribute: 'borders', type: Boolean, reflect: true}) borders: boolean = false;
@@ -144,6 +145,7 @@ export class Table extends LitElement
         row["data"] = row;
       }
 
+      const actions = row.hasOwnProperty('actions') ? row['actions'] : [];
       const caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
@@ -151,17 +153,27 @@ export class Table extends LitElement
       let iconHtml = html``;
       if(icon != '')
       {
+        let iconSize = summary == '' ? 20 : 40;
         iconHtml = html`
-          <zn-icon round size="40" src="${icon}"></zn-icon>`;
+          <zn-icon round size="${iconSize}" src="${icon}"></zn-icon>`;
+      }
+      let actionsHtml = html``;
+      if(actions.length > 0)
+      {
+        actionsHtml = html`
+          <div class="actions">
+            <zn-icon src="more_vert"></zn-icon>
+          </div>`;
       }
 
       if(!basicData && (caption + summary + icon + this.columns[0]) != "")
       {
+        this.capCol = true;
         rowHtml.push(html`
-          <td>
-            <div>${iconHtml}
-              <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
-            </div>
+          <td class="capcol">
+            ${iconHtml}
+            <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
+            ${actionsHtml}
           </td>`);
       }
 
@@ -181,8 +193,15 @@ export class Table extends LitElement
             <td class="${cellClass}">${col}</td>`);
         });
       }
+
+      let rowClass = "";
+      if(summary != '')
+      {
+        rowClass = "with-summary";
+      }
+
       rows.push(html`
-        <tr>${rowHtml}</tr>`);
+        <tr class="${rowClass}">${rowHtml}</tr>`);
     });
 
     return html`

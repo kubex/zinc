@@ -6,7 +6,7 @@ import styles from './index.scss';
 @customElement('zn-table')
 export class Table extends LitElement
 {
-  @property({attribute: 'capcol', type: Boolean, reflect: true}) capCol: boolean = false;
+  @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
   @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
   @property({attribute: 'selectable', type: Boolean, reflect: true}) selectable: boolean = false;
   @property({attribute: 'borders', type: Boolean, reflect: true}) borders: boolean = false;
@@ -19,8 +19,16 @@ export class Table extends LitElement
 
   static styles = unsafeCSS(styles);
 
+    resizing() {
+      console.log("Doing a thing")
+    }
+
   connectedCallback()
   {
+    if(this.fixedFirst){
+        new ResizeObserver((entries) => this.resizing).observe(this.parentElement);
+    }
+
     if(this.data === null || this.data === undefined)
     {
       if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
@@ -168,12 +176,12 @@ export class Table extends LitElement
 
       if(!basicData && (caption + summary + icon + this.columns[0]) != "")
       {
-        this.capCol = true;
         rowHtml.push(html`
           <td class="capcol">
-            ${iconHtml}
-            <div><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
-            ${actionsHtml}
+            <div>
+              ${actionsHtml} ${iconHtml}
+              <div class="capd"><span class="caption">${caption}</span><span class="summary">${summary}</span></div>
+            </div>
           </td>`);
       }
 

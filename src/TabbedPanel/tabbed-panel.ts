@@ -56,7 +56,7 @@ export class TabbedPanel extends ZincElement
   {
     return html`
       <div class="tn">
-        <slot></slot>
+        <slot name="nav"></slot>
       </div>
       <div class="tc ${this._open ? 'tco' : ''}">
         <div class="m">
@@ -64,7 +64,9 @@ export class TabbedPanel extends ZincElement
                    @click="${this._handleBackButton}"></zn-icon>
           <div class="mt">${this._sectionTitle}</div>
         </div>
-        <div id="tab-content"></div>
+        <div id="tab-content">
+          <slot></slot>
+        </div>
       </div>
     `;
   }

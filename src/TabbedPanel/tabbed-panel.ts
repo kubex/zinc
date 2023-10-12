@@ -19,14 +19,12 @@ export class TabbedPanel extends ZincElement
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
-    const links = this.querySelectorAll('[nav-uri]');
+    const links = this.querySelectorAll('a[data-target]');
     links.forEach((link) =>
     {
       link.addEventListener('click', (e) => this._handleClick(e));
       link.classList.add('cursor-pointer');
     });
-
-    console.log(links);
   }
 
   public setInnerContent(content: HTMLElement)

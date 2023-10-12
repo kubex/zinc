@@ -19,14 +19,16 @@ export class Table extends LitElement
 
   static styles = unsafeCSS(styles);
 
-    resizing() {
-      console.log("Doing a thing")
-    }
+  resizing()
+  {
+    console.log("Doing a thing");
+  }
 
   connectedCallback()
   {
-    if(this.fixedFirst){
-        new ResizeObserver((entries) => this.resizing).observe(this.parentElement);
+    if(this.fixedFirst)
+    {
+      new ResizeObserver((entries) => this.resizing).observe(this.parentElement);
     }
 
     if(this.data === null || this.data === undefined)
@@ -154,9 +156,15 @@ export class Table extends LitElement
       }
 
       const actions = row.hasOwnProperty('actions') ? row['actions'] : [];
-      const caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
+      const uri = row.hasOwnProperty('uri') ? row['uri'] : [];
+      let caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
+
+      if(uri != "")
+      {
+        caption = html`<a href="${uri}">${caption}</a>`;
+      }
 
       let iconHtml = html``;
       if(icon != '')

@@ -26,7 +26,7 @@ export class Input extends LitElement
         <slot></slot>
         ${this.suffix ? html`<span @click="${this._getFocus}" class="suffix">${this.suffix}</span>` : ''}
       </div>
-      ${this.advice}
+      <span class="advice">${this.advice}</span>
     `;
   }
 

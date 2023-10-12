@@ -55,14 +55,14 @@ export class TabbedPanel extends ZincElement
   render()
   {
     return html`
-      <div class="tabbed-panel__nav">
+      <div class="tn">
         <slot></slot>
       </div>
-      <div class="tabbed-panel__content ${this._open ? 'tabbed-panel__content--open' : ''}">
-        <div class="mobile-actions">
+      <div class="tc ${this._open ? 'tco' : ''}">
+        <div class="m">
           <zn-icon src="arrow_back" library="material" alt="" size="24" style="--icon-size: 24px;"
                    @click="${this._handleBackButton}"></zn-icon>
-          <div class="mobile-actions__title">${this._sectionTitle}</div>
+          <div class="mt">${this._sectionTitle}</div>
         </div>
         <div id="tab-content"></div>
       </div>

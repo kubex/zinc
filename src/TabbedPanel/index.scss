@@ -20,7 +20,7 @@ zn-tabbed-panel, :host {
   }
 }
 
-.mobile-actions {
+.m {
   align-items: center;
   background-color: rgb(var(--zn-panel));
   border-bottom-width: 1px;
@@ -40,18 +40,18 @@ zn-tabbed-panel, :host {
     color: rgb(var(--zn-text));
   }
 
-  &__title {
+  &t {
     color: rgb(var(--zn-text));
   }
 }
 
-.tabbed-panel {
+.t {
 
-  &__nav {
+  &n{
     width: 100%;
   }
 
-  &__content {
+  &c {
     display: none;
     position: absolute;
     left: 0;
@@ -60,19 +60,19 @@ zn-tabbed-panel, :host {
     bottom: 0;
     z-index: 300;
 
-    &--open {
+    &o {
       display: block;
     }
   }
 
   @include mixins.media-query(md) {
-    &__nav {
+    &n {
       flex-shrink: 0;
       width: 100%;
       max-width: mixins.common-size(sidenav);
     }
 
-    &__content {
+    &c {
       display: block !important;
       position: initial;
       flex-grow: 1;

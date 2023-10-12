@@ -3,12 +3,11 @@
 @use "../../scss/mixins";
 
 zn-tabbed-panel, :host {
-  display: block;
+  display: flex;
   position: relative;
   flex: 1;
 
   @include mixins.media-query(md) {
-    display: flex;
     flex-direction: row;
     width: 100%;
   }
@@ -38,6 +37,7 @@ zn-tabbed-panel, :host {
     margin-left: wc.spacing(md);
     margin-right: wc.spacing(md);
     color: rgb(var(--zn-text));
+    cursor: pointer;
   }
 
   &t {
@@ -47,10 +47,10 @@ zn-tabbed-panel, :host {
 
 .t {
 
-  &n{
+  &n {
     width: 100%;
 
-    nav{
+    nav {
       width: 100%;
     }
 
@@ -64,6 +64,7 @@ zn-tabbed-panel, :host {
     right: 0;
     bottom: 0;
     z-index: 300;
+    background-color: rgb(var(--zn-body));
 
     &o {
       display: block;
@@ -81,6 +82,7 @@ zn-tabbed-panel, :host {
       display: block !important;
       position: initial;
       flex-grow: 1;
+      background-color: transparent;
     }
   }
 }

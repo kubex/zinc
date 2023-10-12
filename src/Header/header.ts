@@ -52,7 +52,7 @@ export class Header extends ZincElement
       breadcrumb = html`
         ${this.breadcrumb.map((item, index) =>
         {
-          const prefix = index == 0 ? '' : ' / ';
+          const prefix = index == 0 ? '' : ' > ';
           if(item.path == '')
           {
             return html`

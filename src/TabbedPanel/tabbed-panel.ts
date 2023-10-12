@@ -27,18 +27,10 @@ export class TabbedPanel extends ZincElement
     });
   }
 
-  public setInnerContent(content: HTMLElement)
-  {
-    const tabContent = this.shadowRoot.querySelector('#tab-content');
-    tabContent.innerHTML = '';
-    tabContent.appendChild(content);
-  }
-
   _handleClick(e: Event)
   {
     const target = e.target as HTMLElement;
     const title = target.innerText;
-    this.setInnerContent(document.createElement('div'));
 
     this._sectionTitle = title;
     this._open = true;
@@ -47,7 +39,6 @@ export class TabbedPanel extends ZincElement
   _handleBackButton(e)
   {
     this._open = false;
-    this.setInnerContent(document.createElement('div'));
   }
 
   render()
@@ -60,7 +51,7 @@ export class TabbedPanel extends ZincElement
         <div class="m">
           <zn-icon src="arrow_back" library="material" alt="" size="24" style="--icon-size: 24px;"
                    @click="${this._handleBackButton}"></zn-icon>
-          <div class="mt">${this._sectionTitle}</div>
+          <div class="mt"><h3>${this._sectionTitle}</h3></div>
         </div>
         <div id="tab-content">
           <slot></slot>

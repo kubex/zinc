@@ -4,6 +4,7 @@
 
 zn-tabbed-panel, :host {
   display: block;
+  position: relative;
 
   @include mixins.media-query(md) {
     display: flex;
@@ -58,7 +59,6 @@ zn-tabbed-panel, :host {
     right: 0;
     bottom: 0;
     z-index: 300;
-    background-color: rgb(var(--zn-panel));
 
     &--open {
       display: block;
@@ -76,7 +76,6 @@ zn-tabbed-panel, :host {
       display: block !important;
       position: initial;
       flex-grow: 1;
-      background-color: transparent;
     }
   }
 }

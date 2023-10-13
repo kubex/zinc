@@ -39,3 +39,4 @@ import './Stepper';
 import './TabbedPanel';
 import './Pagination';
 import './ActionItem';
+import './InlineEdit';

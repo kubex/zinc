@@ -37,3 +37,4 @@ import './EmptyState';
 import './ProgressBar';
 import './Stepper';
 import './TabbedPanel';
+import './Pagination';

@@ -16,7 +16,6 @@ export class ActionItem extends ZincElement
 
   protected render()
   {
-
     return html`
       <div class="ai">
         <a href="${this.uri}" class="ai__link">

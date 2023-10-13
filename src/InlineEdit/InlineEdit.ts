@@ -11,7 +11,6 @@ export class InlineEdit extends ZincElement
 
   @property({attribute: 'caption', type: String, reflect: true}) caption: string = ""; // Caption
   @property({attribute: 'description', type: String, reflect: true}) description: string = ""; // Description
-  @property({attribute: 'uri', type: String, reflect: true}) uri: string = ""; // Uri
 
   protected render()
   {

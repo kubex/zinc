@@ -25,7 +25,7 @@ export class ActionItem extends ZincElement
             <span class="ai__description">${this.description}</span>
           </div>
           <div class="ai__right">
-            <zn-icon library="material-outlined" src="arrow_forward" size="18"></zn-icon>
+            <zn-icon library="material-outlined" src="arrow_forward" size="22"></zn-icon>
           </div>
         </a>
       </div>

@@ -33,7 +33,7 @@ export class Page extends ZincElement
     if(this.querySelectorAll('[slot="nav"]').length > 0)
     {
       mainClass = "with-nav";
-      pageSide = html`
+      navigation = html`
         <div class="pageside">
           ${this._expander()}
           <div class="content">

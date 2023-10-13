@@ -49,12 +49,49 @@
   >
   </zn-header>
 
+  <zn-tabbed-panel>
+    <nav class="zn-nav" slot="nav">
+      <strong>Section Title</strong>
+      <ul>
+        <li><a nav-uri="page-xxx">Page One</a></li>
+        <li><a nav-uri="page-xyz">Page Two</a></li>
+      </ul>
+    </nav>
+    <app-space>
+      this is the default content
+    </app-space>
+  </zn-tabbed-panel>
+
+  <zn-split-pane>
+    <nav class="zn-nav" slot="left">
+      <strong>Section Title</strong>
+      <ul>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+      </ul>
+
+      <strong>Section Title</strong>
+      <ul>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+        <li><a href="#">Link Title</a></li>
+      </ul>
+    </nav>
+
+    <div slot="right">
+      fwelkhfewl;kh
+    </div>
+
+  </zn-split-pane>
+
   <zn-page caption="Overview">
+
     <div slot="side">
 
       <zn-panel>
-
-
         <kbd>EJD</kbd>
 
         <div class="zn-divide">
@@ -74,7 +111,6 @@
 
         </div>
       </zn-panel>
-
 
       <zn-panel caption="Customer Details">
         <zn-prop caption="First Name">Marko</zn-prop>
@@ -107,44 +143,6 @@
 
     </div>
 
-    <zn-tabbed-panel>
-      <nav class="zn-nav" slot="nav">
-        <strong>Section Title</strong>
-        <ul>
-          <li><a nav-uri="page-xxx">Page One</a></li>
-          <li><a nav-uri="page-xyz">Page Two</a></li>
-        </ul>
-      </nav>
-      <app-space>
-        this is the default content
-      </app-space>
-    </zn-tabbed-panel>
-
-    <zn-split-pane>
-      <nav class="zn-nav" slot="left">
-        <strong>Section Title</strong>
-        <ul>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-        </ul>
-
-        <strong>Section Title</strong>
-        <ul>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-          <li><a href="#">Link Title</a></li>
-        </ul>
-      </nav>
-
-      <div slot="right">
-        fwelkhfewl;kh
-      </div>
-
-    </zn-split-pane>
-
     <zn-cols layout="1 2 1">
       <zn-panel></zn-panel>
       <zn-panel>
@@ -161,9 +159,6 @@
       </zn-panel>
       <zn-panel></zn-panel>
     </zn-cols>
-
-    BREKJSD
-
 
     <zn-cols layout="2 2 1">
       <zn-panel caption="Managers">
@@ -572,7 +567,6 @@
       </zn-accordion>
     </zn-panel>
 
-
     <zn-panel>
       <zn-table>
         [
@@ -599,7 +593,6 @@
         ]
       </zn-table>
     </zn-panel>
-
 
     <zn-panel>
       <zn-cols layout="1,1,1,1">

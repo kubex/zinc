@@ -4,11 +4,6 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
 
-export type ButtonColor = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-export type ButtonSizes = 'small' | 'normal' | 'medium' | 'large';
-export type VerticalAlignments = 'start' | 'center' | 'end';
-export type IconPosition = 'left' | 'right';
-
 @customElement('zn-pagination')
 export class Pagination extends ZincElement
 {

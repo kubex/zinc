@@ -7,7 +7,7 @@
   flex-grow: 1;
   display: flex;
 
-  @include wc.container-query(smp) {
+  @include wc.container-query(ph) {
     > div.with-side #page-content {
       $w: wc.common-size(bar);
       max-width: calc(100% - $w);
@@ -31,7 +31,7 @@
     &.with-side {
       padding-top: wc.common-size(bar);
       flex-direction: column;
-      @include wc.container-query(smp) {
+      @include wc.container-query(ph) {
         padding-top: 0;
         flex-direction: column-reverse;
       }
@@ -43,7 +43,7 @@
 
     &.with-side, &.with-nav {
       display: flex;
-      @include wc.container-query(smp) {
+      @include wc.container-query(ph) {
         flex-direction: row;
       }
     }
@@ -59,7 +59,7 @@
     height: fit-content;
     max-width: 100%;
 
-    @include wc.container-query(smp) {
+    @include wc.container-query(ph) {
       flex-grow: 1;
     }
 
@@ -75,7 +75,7 @@
     width: 100%;
     overflow: visible;
 
-    @include wc.container-query(smp) {
+    @include wc.container-query(ph) {
       max-height: 100%;
       min-width: wc.common-size(bar);
       max-width: wc.common-size(bar);
@@ -143,7 +143,7 @@
         right: 0;
         bottom: 0;
 
-        @include wc.container-query(smp) {
+        @include wc.container-query(ph) {
           flex-direction: column;
           justify-content: start;
           height: 100%;
@@ -162,11 +162,11 @@
           padding-left: wc.spacing(md);
           display: none;
 
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             writing-mode: vertical-rl;
           }
 
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             padding-left: 0;
           }
 
@@ -182,7 +182,7 @@
           transition: all 500ms ease-in-out;
           rotate: 0;
 
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             margin-top: wc.spacing(md);
             margin-bottom: wc.spacing(md);
             rotate: 90deg;
@@ -217,7 +217,7 @@
       }
 
       &, &.expander {
-        @include wc.container-query(smp) {
+        @include wc.container-query(ph) {
           border-right-width: 1px;
           border-left-width: 0;
 
@@ -244,7 +244,7 @@
         top: wc.common-size(bar);
         background-color: rgb(var(--zn-body));
 
-        @include wc.container-query(smp) {
+        @include wc.container-query(ph) {
           max-width: wc.common-size(mpanel);
           min-width: wc.common-size(mpanel);
           top: 0;
@@ -252,7 +252,7 @@
       }
 
       > div.expander {
-        @include wc.container-query(smp) {
+        @include wc.container-query(ph) {
           left: auto;
           right: wc.common-size(mpanel);
         }
@@ -260,7 +260,7 @@
         zn-icon {
           rotate: 180deg;
 
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             rotate: -90deg;
           }
         }
@@ -272,7 +272,7 @@
 
           &.close {
             display: none;
-            @include wc.container-query(smp) {
+            @include wc.container-query(ph) {
               display: block;
             }
           }
@@ -280,7 +280,7 @@
           &.close-sm {
             display: block;
             font-weight: 500;
-            @include wc.container-query(smp) {
+            @include wc.container-query(ph) {
               display: none;
             }
           }
@@ -291,14 +291,14 @@
     > div.with-nav .pageside {
       div {
         &.expander {
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             left: wc.common-size(mpanel);
             right: auto;
 
             zn-icon {
               rotate: -180deg;
 
-              @include wc.container-query(smp) {
+              @include wc.container-query(ph) {
                 rotate: 90deg;
               }
             }
@@ -306,7 +306,7 @@
         }
 
         &.content {
-          @include wc.container-query(smp) {
+          @include wc.container-query(ph) {
             left: 0;
             right: auto;
           }

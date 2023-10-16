@@ -5,7 +5,6 @@
   flex-direction: row;
   flex-wrap: nowrap;
   width: 100%;
-  gap: wc.spacing(sm);
 
   &__left {
     flex-shrink: 1;
@@ -19,14 +18,18 @@
   &__icon {
     width: wc.spacing(lg);
     height: wc.spacing(lg);
-    background-color: rgb(var(--zn-primary));
+    background-color: rgb(var(--zn-input-bg));
+    border-width: 1px;
     border-radius: 100%;
   }
 
   &__line {
     min-height: 50px;
     width: 4px;
-    background-color: rgba(var(--zn-primary), 0.2);
+    border-width: 1px;
+    border-top: none;
+    border-bottom: none;
+    background-color: rgba(var(--zn-input-bg));
     flex-grow: 1;
   }
 
@@ -57,5 +60,21 @@
 :host([last]) {
   .vs__line {
     display: none;
+  }
+}
+
+:host([first]) {
+  .vs {
+    margin-top: 40px;
+  }
+}
+
+:host([active]) {
+  .vs__icon {
+    background-color: rgb(var(--zn-primary));
+  }
+
+  .vs__line {
+    background-color: rgb(var(--zn-primary));
   }
 }

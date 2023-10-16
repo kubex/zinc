@@ -1,0 +1,61 @@
+@use "../wc";
+
+.vs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  gap: wc.spacing(sm);
+
+  &__left {
+    flex-shrink: 1;
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 wc.spacing(sm);
+  }
+
+  &__icon {
+    width: wc.spacing(lg);
+    height: wc.spacing(lg);
+    background-color: rgb(var(--zn-primary));
+    border-radius: 100%;
+  }
+
+  &__line {
+    min-height: 50px;
+    width: 4px;
+    background-color: rgba(var(--zn-primary), 0.2);
+    flex-grow: 1;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    gap: wc.spacing(xs);
+    flex-grow: 1;
+    margin-bottom: 50px;
+  }
+
+  &__caption {
+    font-size: 16px;
+    color: rgb(var(--zn-text-heading));
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+
+  &__description {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: rgb(var(--zn-text));
+  }
+}
+
+:host([last]) {
+  .vs__line {
+    display: none;
+  }
+}

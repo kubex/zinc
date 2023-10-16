@@ -40,3 +40,4 @@ import './TabbedPanel';
 import './Pagination';
 import './ActionItem';
 import './InlineEdit';
+import './VerticalStepper';

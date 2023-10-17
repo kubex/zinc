@@ -30,6 +30,7 @@ $theme-colors: (
 
 // Light Theme
 $theme-light: (
+  'panel-opacity': 1,
   'text': hex-to-rgb(#7B7097),
   'text-heading': hex-to-rgb(#382768),
   'text-page-title': hex-to-rgb(#343434),
@@ -42,7 +43,6 @@ $theme-light: (
   'input-bg': hex-to-rgb(#F8F7FB),
   'input-bg-accent': hex-to-rgb(#EDEBF5),
   'bright-bg': hex-to-rgb(#ffffff),
-
   'light-text': hex-to-rgb(#7B7097),
   'dark-text': hex-to-rgb(#382768),
   'purple-text': hex-to-rgb(#6836F5),
@@ -50,21 +50,22 @@ $theme-light: (
 
 // Dark theme
 $theme-dark: (
-  'text': hex-to-rgb(#999999),
+  'body': hex-to-rgb(#1E0D4F),
+  'panel': hex-to-rgb(#FFFFFF),
+  'panel-opacity': 0.05,
+  'text': hex-to-rgb(#D5C9F4),
   'text-heading': hex-to-rgb(#E1E1E1),
   'text-page-title': hex-to-rgb(#E1E1E1),
   'text-panel-title': map.get($brand-colours-dark, 'primary'),
-  'body': hex-to-rgb(#121212),
-  'panel': hex-to-rgb(#1E1E1E),
-  'panel-highlight': hex-to-rgb(#2E2E2E),
-  'border-color': hex-to-rgb(#2E2E2E),
-  'input-bg': hex-to-rgb(#121212),
-  'input-bg-accent': hex-to-rgb(#121212),
+  'panel-highlight': hex-to-rgb(#ffffff),
+  'panel-highlight-opacity': 0.1,
+  'border-color': hex-to-rgb(#000000),
+  'input-bg': hex-to-rgb(#150E2C),
+  'input-bg-accent': hex-to-rgb(#150E2C),
   'bright-bg': hex-to-rgb(#e1e1e1),
-
   'light-text': hex-to-rgb(#ada3c0),
   'dark-text': hex-to-rgb(#c9c9c9),
-  'purple-text': map.get($brand-colours-dark, 'primary'),
+  'purple-text': hex-to-rgb(#7659C7),
 );
 
 @mixin spread-map($map: (), $pre: '') {
@@ -100,4 +101,8 @@ $theme-dark: (
 [t="dark"], .theme-dark {
   @include spread-map($theme-dark, #{$var-prefix});
   @include spread-map($brand-colours-dark, #{$var-prefix});
+
+  body {
+    background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);
+  }
 }

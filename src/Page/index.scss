@@ -94,13 +94,9 @@
 
     > div {
       position: absolute;
-      background: white;
       flex-grow: 1;
       overflow-y: auto;
 
-      @include wc.container-query(lg) {
-        background: rgb(var(--zn-body));
-      }
 
       &.content {
         @include wc.padding;
@@ -136,7 +132,7 @@
         border-bottom-width: 1px;
         height: wc.common-size(bar);
         width: 100%;
-        background-color: rgb(var(--zn-panel));
+        background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
         z-index: 20;
         top: 0;
         left: 0;
@@ -235,6 +231,10 @@
     > div .pageside {
       position: unset;
 
+      > div.expander, > div.content {
+        backdrop-filter: blur(40px);
+      }
+
       > div.content {
         display: flex;
         width: 100%;
@@ -242,7 +242,7 @@
         overflow-x: hidden;
         z-index: 20;
         top: wc.common-size(bar);
-        background-color: rgb(var(--zn-body));
+
 
         @include wc.container-query(ph) {
           max-width: wc.common-size(mpanel);

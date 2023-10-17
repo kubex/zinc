@@ -91,6 +91,14 @@
     display: table-row;
     border-bottom: none;
   }
+
+  .row-item {
+    border-top: none;
+
+    @include wc.container-query(md) {
+      border-top: 20px solid rgb(var(--zn-panel));
+    }
+  }
 }
 
 .sub {

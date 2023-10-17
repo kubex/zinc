@@ -170,28 +170,56 @@ export class OrderTable extends LitElement
 
   getSummary()
   {
-    console.log(this.modifiedData);
-    return html`
-      <div class="summary">
+    let tax = html``;
+    if(this.modifiedData['tax'])
+    {
+      tax = html`
         <div class="summary-item">
           <div class="summary-item-title">Tax</div>
           <div class="summary-item-value">${this.modifiedData['tax']}</div>
-        </div>
-        <div class="summary-divide"></div>
+        </div>`;
+    }
+
+    let total = html``;
+    if(this.modifiedData['total'])
+    {
+      total = html`
         <div class="summary-item">
           <div class="summary-item-title">Grand Total</div>
-          <div class="summary-item-value">${this.modifiedData['grand-total']}</div>
-        </div>
+          <div class="summary-item-value">${this.modifiedData['total']}</div>
+        </div>`;
+    }
+
+
+    let paid = html``;
+    if(this.modifiedData['paid'])
+    {
+      paid = html`
         <div class="summary-item">
           <div class="summary-item-title">Paid</div>
           <div class="summary-item-value">${this.modifiedData['paid']}</div>
-        </div>
+        </div>`;
+    }
 
+
+    let remaining = html``;
+    if(this.modifiedData['remaining'])
+    {
+      remaining = html`
         <div class="summary-item">
           <div class="summary-item-title">Remaining Balance</div>
-          <div class="summary-item-value">${this.modifiedData['remaining-balance']}</div>
-        </div>
+          <div class="summary-item-value">${this.modifiedData['remaining']}</div>
+        </div>`;
+    }
 
+    console.log(this.modifiedData);
+    return html`
+      <div class="summary">
+        ${tax}
+        <div class="summary-divide"></div>
+        ${total}
+        ${paid}
+        ${remaining}
       </div>
     `;
   }

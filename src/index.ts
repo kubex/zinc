@@ -41,3 +41,4 @@ import './Pagination';
 import './ActionItem';
 import './InlineEdit';
 import './VerticalStepper';
+import './OrderTable';

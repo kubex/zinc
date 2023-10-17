@@ -12,8 +12,18 @@
 
 <div id="source">
 
-  <zn-pagination page="10" total="101" limit="10"></zn-pagination>
+  <zn-page>
+    <div slot="side">
+      side
+    </div>
+    <zn-panel caption="Order Items">
+      <zn-order-table
+        data="{ &quot;headers&quot;: [ &quot;Product&quot;, &quot;Offer/Addon&quot;, &quot;Cycle&quot;, &quot;Price&quot; ], &quot;items&quot;: [ { &quot;caption&quot;: &quot;Total Adblock&quot;, &quot;summary&quot;: &quot;Professional&quot;, &quot;data&quot;: [ &quot;-&quot;, &quot;1 Year&quot;, &quot;$119.94&quot; ], &quot;sub&quot;: [ { &quot;caption&quot;: &quot;Discount&quot;, &quot;data&quot;: [ &quot;100% Discount&quot;, &quot;Lifetime&quot;, &quot;-$99.00&quot; ] }, { &quot;caption&quot;: &quot;Addon&quot;, &quot;data&quot;: [ &quot;VPN Booster Pro&quot;, &quot;1 Year&quot;, &quot;-$100.00&quot; ] } ] }, { &quot;caption&quot;: &quot;Total Adblock&quot;, &quot;summary&quot;: &quot;Professional&quot;, &quot;data&quot;: [ &quot;-&quot;, &quot;1 Year&quot;, &quot;$119.94&quot; ], &quot;sub&quot;: [ { &quot;caption&quot;: &quot;Discount&quot;, &quot;data&quot;: [ &quot;100% Discount&quot;, &quot;Lifetime&quot;, &quot;-$99.00&quot; ] }, { &quot;caption&quot;: &quot;Addon&quot;, &quot;data&quot;: [ &quot;VPN Booster Pro&quot;, &quot;1 Year&quot;, &quot;-$100.00&quot; ] } ] }, { &quot;caption&quot;: &quot;Total Adblock&quot;, &quot;summary&quot;: &quot;Professional&quot;, &quot;data&quot;: [ &quot;-&quot;, &quot;1 Year&quot;, &quot;$119.94&quot; ], &quot;sub&quot;: [ { &quot;caption&quot;: &quot;Discount&quot;, &quot;data&quot;: [ &quot;100% Discount&quot;, &quot;Lifetime&quot;, &quot;-$99.00&quot; ] }, { &quot;caption&quot;: &quot;Addon&quot;, &quot;data&quot;: [ &quot;VPN Booster Pro&quot;, &quot;1 Year&quot;, &quot;-$100.00&quot; ] } ] } ], &quot;Tax&quot;: &quot;$0.00&quot;, &quot;Grand Total&quot;: &quot;$119.00&quot;, &quot;Paid&quot;: &quot;$9.00&quot;, &quot;Remaining Balance&quot;: &quot;$10.00&quot; }">
+      </zn-order-table>
+    </zn-panel>
+  </zn-page>
 
+  <zn-pagination page="10" total="101" limit="10"></zn-pagination>
 
   <zn-panel caption="Action Item">
     <div class="zn-divide-y">
@@ -92,12 +102,18 @@
 
     <div slot="side">
       <zn-panel>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs" first="true" active></zn-vertical-stepper-item>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs" active></zn-vertical-stepper-item>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs" active></zn-vertical-stepper-item>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"></zn-vertical-stepper-item>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"></zn-vertical-stepper-item>
-        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs" last="true"></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"
+                                  first="true" active></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"
+                                  active></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"
+                                  active></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First"
+                                  description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First"
+                                  description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"></zn-vertical-stepper-item>
+        <zn-vertical-stepper-item caption="First" description="Monday 21st January 2023 @ 15:10 by Joe Bloggs"
+                                  last="true"></zn-vertical-stepper-item>
       </zn-panel>
 
       <zn-panel>

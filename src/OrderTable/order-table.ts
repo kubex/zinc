@@ -175,21 +175,21 @@ export class OrderTable extends LitElement
       <div class="summary">
         <div class="summary-item">
           <div class="summary-item-title">Tax</div>
-          <div class="summary-item-value">${this.modifiedData['Tax']}</div>
+          <div class="summary-item-value">${this.modifiedData['tax']}</div>
         </div>
         <div class="summary-divide"></div>
         <div class="summary-item">
           <div class="summary-item-title">Grand Total</div>
-          <div class="summary-item-value">${this.modifiedData['Grand Total']}</div>
+          <div class="summary-item-value">${this.modifiedData['grand-total']}</div>
         </div>
         <div class="summary-item">
           <div class="summary-item-title">Paid</div>
-          <div class="summary-item-value">${this.modifiedData['Paid']}</div>
+          <div class="summary-item-value">${this.modifiedData['paid']}</div>
         </div>
 
         <div class="summary-item">
           <div class="summary-item-title">Remaining Balance</div>
-          <div class="summary-item-value">${this.modifiedData['Remaining Balance']}</div>
+          <div class="summary-item-value">${this.modifiedData['remaining-balance']}</div>
         </div>
 
       </div>

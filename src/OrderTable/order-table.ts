@@ -13,10 +13,15 @@ export class OrderTable extends LitElement
   private isMobile = false;
   private modifiedData = null;
 
+  constructor()
+  {
+    super();
+    this.modifiedData = this.data;
+  }
+
 
   connectedCallback()
   {
-    super.connectedCallback();
     this.isMobile = window.innerWidth < 768;
 
     window.addEventListener('resize', () =>
@@ -32,12 +37,28 @@ export class OrderTable extends LitElement
         this.requestUpdate();
       }
     });
+
+    if(this.data === null || this.data === undefined)
+    {
+      if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
+      {
+        const data = this.childNodes[0];
+        try
+        {
+          this.data = JSON.parse(data.textContent);
+        }
+        catch(e)
+        { /* empty */
+        }
+      }
+    }
+
+    super.connectedCallback();
   }
 
   render()
   {
     this.modifiedData = this.data;
-
     if(this.isMobile)
     {
       return html`

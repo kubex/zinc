@@ -201,6 +201,16 @@ export class OrderTable extends LitElement
         </div>`;
     }
 
+    let discount = html``;
+    if(this.modifiedData['discount'])
+    {
+      discount = html`
+        <div class="summary-item">
+          <div class="summary-item-title">Discount</div>
+          <div class="summary-item-value">${this.modifiedData['discount']}</div>
+        </div>`;
+    }
+
     let total = html``;
     if(this.modifiedData['total'])
     {
@@ -238,6 +248,7 @@ export class OrderTable extends LitElement
       <div class="summary">
         ${tax}
         <div class="summary-divide"></div>
+        ${discount}
         ${total}
         ${paid}
         ${remaining}

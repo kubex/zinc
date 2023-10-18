@@ -1,5 +1,6 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss';
 
@@ -206,7 +207,7 @@ export class Table extends LitElement
           col = this.columnContent(col);
 
           rowHtml.push(html`
-            <td class="${cellClass}">${col}</td>`);
+            <td class="${cellClass}">${unsafeHTML(col)}</td>`);
         });
       }
 

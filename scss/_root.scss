@@ -92,6 +92,10 @@ $theme-dark: (
   // Default Opacities
   #{$var-prefix}bg-opacity: 1;
   #{$var-prefix}text-opacity: 1;
+
+
+  --base: 255, 255, 255;
+  --inverse-base: 0, 0, 0;
 }
 
 [t="light"], .theme-light {
@@ -101,6 +105,8 @@ $theme-dark: (
 [t="dark"], .theme-dark {
   @include spread-map($theme-dark, #{$var-prefix});
   @include spread-map($brand-colours-dark, #{$var-prefix});
+  --base: 0, 0, 0;
+  --inverse-base: 255, 255, 255;
 
   body {
     background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);

@@ -57,7 +57,7 @@
 }
 
 .row {
-  background-color: rgb(var(--zn-body));
+  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity, 1));
   margin-top: 20px;
 }
 
@@ -92,14 +92,6 @@
   @include wc.container-query(md) {
     display: table-row;
     border-bottom: none;
-  }
-
-  .row-item {
-    border-top: none;
-
-    @include wc.container-query(md) {
-      border-top: 20px solid rgb(var(--zn-panel));
-    }
   }
 }
 

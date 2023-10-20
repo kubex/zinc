@@ -68,6 +68,26 @@ $theme-dark: (
   'purple-text': hex-to-rgb(#7659C7),
 );
 
+// Dark theme
+$theme-flow: (
+  'body': hex-to-rgb(#111827),
+  'panel': hex-to-rgb(#374151),
+  'panel-opacity': 0.3,
+  'text': hex-to-rgb(#d7d7d7),
+  'text-heading': hex-to-rgb(#E1E1E1),
+  'text-page-title': hex-to-rgb(#E1E1E1),
+  'text-panel-title': map.get($brand-colours-dark, 'primary'),
+  'panel-highlight': hex-to-rgb(#ffffff),
+  'panel-highlight-opacity': 0.1,
+  'border-color': hex-to-rgb(#000000),
+  'input-bg': hex-to-rgb(#141c2d),
+  'input-bg-accent': hex-to-rgb(#150E2C),
+  'bright-bg': hex-to-rgb(#e1e1e1),
+  'light-text': hex-to-rgb(#ada3c0),
+  'dark-text': hex-to-rgb(#c9c9c9),
+  'purple-text': hex-to-rgb(#7659C7),
+);
+
 @mixin spread-map($map: (), $pre: '') {
   @if type-of($map) != 'map' {
     @error 'spread-map() only works with maps';
@@ -100,6 +120,10 @@ $theme-dark: (
 
 [t="light"], .theme-light {
   @include spread-map($theme-light, #{$var-prefix});
+}
+
+[t="flow"], .theme-flow {
+  @include spread-map($theme-flow, #{$var-prefix});
 }
 
 [t="dark"], .theme-dark {

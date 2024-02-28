@@ -50,7 +50,6 @@ $theme-light: (
 
 // Dark theme
 $theme-dark: (
-
   'body': hex-to-rgb(#111827),
   'panel': hex-to-rgb(#374151),
   'panel-opacity': 0.3,
@@ -128,6 +127,10 @@ $theme-flow: (
   @include spread-map($brand-colours-dark, #{$var-prefix});
   --base: 0, 0, 0;
   --inverse-base: 255, 255, 255;
+
+  body {
+    background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);
+  }
 }
 
 [t="dark"], .theme-dark {
@@ -135,8 +138,4 @@ $theme-flow: (
   @include spread-map($brand-colours-dark, #{$var-prefix});
   --base: 0, 0, 0;
   --inverse-base: 255, 255, 255;
-
-  body {
-    background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);
-  }
 }

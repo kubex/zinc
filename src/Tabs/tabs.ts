@@ -1,11 +1,15 @@
-import {html, LitElement} from "lit";
+import {html, LitElement, unsafeCSS} from "lit";
 import {customElement} from 'lit/decorators.js';
 import {TabPanel} from "./tab-panel";
+
+import styles from './tabs.scss';
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
 {
   private _panel: TabPanel;
+
+  static styles = unsafeCSS(styles);
 
   constructor()
   {

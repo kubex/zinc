@@ -1,7 +1,7 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement} from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './panel.scss';
 
 @customElement('zn-tab-panel')
 export class TabPanel extends LitElement

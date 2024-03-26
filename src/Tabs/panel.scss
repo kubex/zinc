@@ -1,0 +1,17 @@
+zn-tab-panel, :host {
+  height: 100%;
+}
+
+slot {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+::slotted(:not([selected])) {
+  display: none !important;
+}
+
+::slotted([selected]) {
+  height: 100%;
+}

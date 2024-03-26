@@ -2,6 +2,10 @@
 @use "../wc";
 @use "../../scss/mixins";
 
+:host([bordered]) #resizer:before {
+  background-color: rgb(var(--zn-border-color));
+}
+
 :host {
   display: flex;
   height: 100%;
@@ -27,6 +31,7 @@
   slot {
     overflow: auto;
   }
+
 
   #resizer {
     position: relative;

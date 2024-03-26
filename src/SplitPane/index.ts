@@ -1,1 +1,1 @@
-export {SplitPane} from './pane';
+export {SplitPane} from './split-pane';

@@ -1,8 +1,8 @@
-import {html, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import { ZincElement } from "../zinc";
 
 @customElement('zn-split-pane')
 export class SplitPane extends ZincElement
@@ -14,11 +14,12 @@ export class SplitPane extends ZincElement
   mouseUpHandler: null | EventListener = null;
   private maxPercent = 80;
 
-  @property({attribute: 'right-width', type: Number, reflect: true}) rightWidth = 50;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'right-width', type: Number, reflect: true }) rightWidth = 50;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({ attribute: 'bordered', type: Boolean, reflect: true }) border = false;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
 
   connectedCallback()
   {

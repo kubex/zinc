@@ -1,49 +1,47 @@
-import {html, LitElement, unsafeCSS} from "lit";
+import {html, LitElement} from "lit";
 import {customElement} from 'lit/decorators.js';
-
-import styles from './index.scss';
+import {TabPanel} from "./tab-panel";
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
 {
-  private _tabs: HTMLElement[];
-  private _panels: HTMLElement[];
-
-  static styles = unsafeCSS(styles);
+  private _panel: TabPanel;
 
   constructor()
   {
     super();
-    this._tabs = Array.from(this.querySelectorAll('[slot="tab"]'));
-    this._panels = Array.from(this.querySelectorAll('[slot="panel"]'));
-    this.selectTab(0);
-    console.log(this._tabs, this._panels);
+    this.querySelectorAll('zn-tab-panel').forEach((element) =>
+    {
+      this._panel = element as TabPanel;
+    });
+
+    if(this._panel == null)
+    {
+      console.error("No zn-tab-panel found in zn-tabs", this);
+    }
+
+
+    this.addEventListener('click', this._handleClick);
   }
 
-  selectTab(index)
-  {
-    this._tabs.forEach(tab => tab.removeAttribute('selected'));
-    this._tabs[index].setAttribute('selected', '');
-    this._panels.forEach(panel => panel.removeAttribute('selected'));
-    this._panels[index].setAttribute('selected', '');
-  }
 
-  handleSelect(e: PointerEvent)
+  _handleClick(event: MouseEvent)
   {
-    const index = this._tabs.indexOf(e.target as HTMLElement);
-    this.selectTab(index);
-  }
+    if(event.target instanceof HTMLElement)
+    {
+      const target = event.target as HTMLElement;
+      if(target.hasAttribute('tab'))
+      {
+        this._panel.selectTab(target.getAttribute('tab') || '');
+      }
+    }
+  };
+
 
   render()
   {
     return html`
-      <nav>
-        <h3>${this.title}</h3>
-        <div class="tabs__header">
-          <slot name="tab" @click="${(e) => this.handleSelect(e)}"></slot>
-        </div>
-      </nav>
-      <slot name="panel"></slot>
+      <slot></slot>
     `;
   }
 }

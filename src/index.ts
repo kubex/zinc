@@ -42,3 +42,4 @@ import './ActionItem';
 import './InlineEdit';
 import './VerticalStepper';
 import './OrderTable';
+import './Pane';

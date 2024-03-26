@@ -1,0 +1,31 @@
+@use "../wc";
+
+:host {
+  @include wc.scrollbars;
+  container-type: inline-size;
+  flex-grow: 1;
+  display: flex;
+  max-height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.pane__header {
+  background-color: white;
+  font-size: 20px;
+}
+
+.pane__content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-height: 100%;
+  overflow-y: scroll;
+}

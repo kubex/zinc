@@ -1,5 +1,5 @@
 import {html, LitElement, unsafeCSS} from "lit";
-import {customElement} from 'lit/decorators.js';
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './panel.scss';
 
@@ -7,7 +7,7 @@ import styles from './panel.scss';
 export class TabPanel extends LitElement
 {
   private _panels: Map<string, Element[]>;
-  private _current: string;
+  @property({attribute: 'active', type: String, reflect: true}) _current = null;
 
   static styles = unsafeCSS(styles);
 
@@ -25,7 +25,12 @@ export class TabPanel extends LitElement
       }
       this._panels.get(tabName).push(element);
     });
-    this.selectTab('');
+  }
+
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this.selectTab(this._current || '');
   }
 
   selectTab(tabName: string): boolean

@@ -12,16 +12,20 @@
   #left-pane, #right-pane {
     flex-grow: 1;
     flex-shrink: 1;
+    min-width: 10%;
   }
 
   #left-pane {
-    min-width: 10%;
+    max-width: calc(100% - var(--right-width, 0));
   }
 
   #right-pane {
     width: 100%;
-    min-width: 10%;
     max-width: var(--right-width, 50%);
+  }
+
+  slot {
+    overflow: auto;
   }
 
   #resizer {
@@ -65,6 +69,10 @@
 :host(.resizing) {
   cursor: col-resize;
   user-select: none;
+
+  #left-pane {
+    min-width: 10%;
+  }
 
   #resizer:before {
     background-color: rgb(var(--zn-blue));

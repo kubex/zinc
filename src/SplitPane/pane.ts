@@ -67,7 +67,6 @@ export class SplitPane extends ZincElement
   setWidth(w, apply)
   {
     w = Math.max(10, Math.min(90, w));
-
     this.rightWidth = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {

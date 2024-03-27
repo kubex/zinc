@@ -1,22 +1,25 @@
-import {html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import { html, LitElement, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-import styles from './user-message.scss';
+import styles from './index.scss';
 
 @customElement('zn-chat-message')
-export class UserMessage extends LitElement
+export class ChatMessage extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: String})
+  @property({ type: String })
   private sender = 'you';
 
-  @property({type: String})
+  @property({ type: String })
   private time = '';
+
+  @property({ type: String, attribute: 'customer-initiated' })
+  private customerInitiated = false;
 
   render()
   {
-    let self = this.sender === 'self' || this.sender === 'you';
+    const self = !this.customerInitiated;
 
     return html`
       <div class="wrapper ${self ? 'sender-self' : null}">
@@ -36,11 +39,11 @@ export class UserMessage extends LitElement
     // if not today, show date and time without seconds
     if(time.getDate() !== (new Date()).getDate())
     {
-      return `@ ${time.toLocaleDateString()} ${time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+      return `@ ${time.toLocaleDateString()} ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
     else
     {
-      return `@ ${time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+      return `@ ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
 
   }

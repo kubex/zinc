@@ -1,6 +1,6 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { TabPanel } from "./tab-panel";
 
 import styles from './tabs.scss';
 
@@ -8,17 +8,19 @@ import styles from './tabs.scss';
 export class Tabs extends LitElement
 {
   private _panel: TabPanel;
+  private _tabs: HTMLElement[];
   private storage: Storage;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
   constructor()
   {
     super();
+    this._tabs = Array.from(this.querySelectorAll('[tab]'));
     this.querySelectorAll('zn-tab-panel').forEach((element) =>
     {
       this._panel = element as TabPanel;
@@ -38,19 +40,22 @@ export class Tabs extends LitElement
     super.connectedCallback();
 
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
-    console.log(this._panel);
-    if(this._panel == null)
+    if(this._panel === null)
     {
       console.error("No zn-tab-panel found in zn-tabs", this);
       return;
     }
 
-    if(this.storeKey != "" && this.storeKey != null)
+    if(this.storeKey !== "" && this.storeKey !== null)
     {
-      let storedValue = this.storage.getItem('zntab:' + this.storeKey);
+      const storedValue = this.storage.getItem('zntab:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
+        const tab = this._tabs.find(tab => tab.getAttribute('tab') == storedValue);
         this._panel.setAttribute('active', storedValue);
+        this._tabs.forEach(tab => tab.style.backgroundColor = 'transparent');
+        tab.style.backgroundColor = 'rgb(var(--zn-panel))';
+
         if(this._panel instanceof TabPanel)
         {
           this._panel.selectTab(storedValue);
@@ -70,14 +75,16 @@ export class Tabs extends LitElement
         const tabName = target.getAttribute('tab') || '';
         this._panel.selectTab(tabName);
 
+        this._tabs.forEach(tab => tab.style.backgroundColor = 'transparent');
+        target.style.backgroundColor = 'rgb(var(--zn-panel))';
+
         if(this.storeKey != null && this.storeKey != "")
         {
           this.storage.setItem('zntab:' + this.storeKey, tabName);
         }
       }
     }
-  };
-
+  }
 
   render()
   {

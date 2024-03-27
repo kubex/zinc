@@ -1,5 +1,5 @@
-import {html, LitElement, unsafeCSS} from 'lit';
-import {customElement} from 'lit/decorators.js';
+import { html, LitElement, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './chat-message-window.scss';
 
@@ -7,6 +7,9 @@ import styles from './chat-message-window.scss';
 export class ChatMessageWindow extends LitElement
 {
   static styles = unsafeCSS(styles);
+
+  @property({ type: Boolean, attribute: 'push-to-top' })
+  private pushToTop = true;
 
   render()
   {

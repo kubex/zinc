@@ -50,7 +50,6 @@ export class Editor extends LitElement
 
         if(range.startContainer)
         {
-
           return {
             start: { node: range.startContainer, offset: range.startOffset },
             end: { node: range.endContainer, offset: range.endOffset },
@@ -69,7 +68,8 @@ export class Editor extends LitElement
       return normalizeNative(selection);
     };
 
-    document.addEventListener('selectionchange', (...args) => {
+    document.addEventListener('selectionchange', (...args) =>
+    {
       quill.selection.update();
     });
 

@@ -43,3 +43,5 @@ import './InlineEdit';
 import './VerticalStepper';
 import './OrderTable';
 import './Pane';
+import './Timer';
+import './Editor';

@@ -12,6 +12,7 @@ export class Tile extends LitElement
   @property({ attribute: 'right', type: Boolean, reflect: true }) right;
   @property({ attribute: 'data-uri', type: String, reflect: true }) dataUri;
   @property({ attribute: 'data-target', type: String, reflect: true }) dataTarget;
+  @property({ type: String }) centered = 'false';
 
   private menu;
 
@@ -95,6 +96,14 @@ export class Tile extends LitElement
 
     const status = this.querySelectorAll('[slot="status"]').length > 0 ? html`
       <slot name="status"></slot>` : null;
+
+    if(!this.description && !this.caption && !primary && !extended && !actions && !status)
+    {
+      return html`
+        <div class="wrap">
+          <slot></slot>
+        </div>`;
+    }
 
     return html`
       <div class="top">

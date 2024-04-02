@@ -12,7 +12,7 @@ export type IconPosition = 'left' | 'right';
 @customElement('zn-button')
 export class Button extends ZincElement
 {
-  @property({type: String}) variant: ButtonColor = 'primary';
+  @property({type: String}) color: ButtonColor = 'primary';
   @property({type: String}) size: ButtonSizes;
   @property({type: String}) verticalAlign: VerticalAlignments;
   @property({type: Boolean}) disabled: boolean = false;

@@ -11,6 +11,7 @@ export class EmptyState extends LitElement
   @property({type: String}) icon: string = '';
   @property({type: String}) caption: string = '';
   @property({type: String}) description: string = '';
+  @property({type: String}) type: 'error' | '' = '';
 
   render()
   {

@@ -15,16 +15,16 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ content, variant, size, verticalAlign, disabled, submit, grow, icon, iconPosition }) =>
+  render: ({ content, color, size, verticalAlign, disabled, submit, grow, icon, iconPosition }) =>
   {
     return html`
-      <zn-button variant="${variant}" size="${size}" verticalAlign="${verticalAlign}" disabled="${disabled}"
-                 submit="${submit}" grow="${grow}" icon="${icon}" iconPosition="${iconPosition}">${content}
+      <zn-button color="${color}" size="${size}" vertical-align="${verticalAlign}" disabled="${disabled}"
+                 submit="${submit}" grow="${grow}" icon="${icon}" icon-position="${iconPosition}">${content}
       </zn-button>`;
   },
   args: {
     content: 'This is a Button',
-    variant: 'primary',
+    color: 'primary',
     size: 'normal',
     verticalAlign: 'start',
     disabled: false,
@@ -34,7 +34,7 @@ export const Default: Story = {
     iconPosition: 'left',
   },
   argTypes: {
-    variant: {
+    color: {
       description: 'The variant of the button',
       options: ['primary', 'secondary', 'error', 'info', 'success', 'warning'],
       control: { type: 'select' },

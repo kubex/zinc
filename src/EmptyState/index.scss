@@ -9,6 +9,7 @@
   justify-content: center;
   gap: wc.spacing(xs);
   background-color: rgb(var(--zn-shadow));
+  padding: wc.spacing(sm);
 
   ::slotted(*) {
     display: flex;
@@ -23,5 +24,14 @@
 
   .description {
     text-align: center;
+  }
+}
+
+:host([type="error"]) {
+  background-color: rgba(var(--zn-color-error), .05);
+  border: dotted 1px rgb(var(--zn-color-error)) !important;
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-color-error));
   }
 }

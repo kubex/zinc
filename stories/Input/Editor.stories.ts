@@ -5,8 +5,8 @@ import '../../src/Editor';
 
 const meta: Meta = {
   component: 'zn-editor',
-  title: 'Components/Editor',
-  tags: ['components', 'editor'],
+  title: 'Input/Editor',
+  tags: ['input', 'editor'],
 };
 
 export default meta;

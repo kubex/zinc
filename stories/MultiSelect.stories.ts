@@ -6,7 +6,7 @@ import {html} from "lit";
 const meta: Meta = {
   component: 'zn-multi-select',
   title: 'Elements/MultiSelect',
-  tags: ['elements', 'multiselect', 'autodocs']
+  tags: ['elements', 'multiselect']
 };
 
 export default meta;

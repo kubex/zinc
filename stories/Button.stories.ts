@@ -5,7 +5,7 @@ import '../src/Button';
 const meta: Meta = {
   component: 'zn-button',
   title: 'Elements/Button',
-  tags: ['elements', 'button', 'autodocs'],
+  tags: ['elements', 'button'],
 };
 
 export default meta;

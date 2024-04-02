@@ -6,7 +6,7 @@ import '../src/Icon';
 const meta: Meta = {
   component: 'zn-header',
   title: 'Components/Header',
-  tags: ['components', 'header', 'autodocs'],
+  tags: ['components', 'header'],
 };
 
 export default meta;

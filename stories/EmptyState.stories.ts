@@ -6,7 +6,7 @@ import '../src/EmptyState';
 const meta: Meta = {
   component: 'zn-empty-state',
   title: 'Components/EmptyState',
-  tags: ['components', 'empty-state', 'autodocs'],
+  tags: ['components', 'empty-state'],
 };
 
 export default meta;

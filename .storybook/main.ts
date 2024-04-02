@@ -1,4 +1,4 @@
-import type {StorybookConfig} from "@storybook/web-components-vite";
+import type { StorybookConfig } from "@storybook/web-components-vite";
 
 const config: StorybookConfig = {
   stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|ts|tsx)"],
@@ -12,7 +12,7 @@ const config: StorybookConfig = {
     options: {},
   },
   docs: {
-    autodocs: "tag",
+    autodocs: true,
   },
   core: {
     disableTelemetry: true,

@@ -8,7 +8,7 @@ import '../src/Icon';
 const meta: Meta = {
   component: 'zn-tile',
   title: 'Components/Tile',
-  tags: ['components', 'tile', 'autodocs'],
+  tags: ['components', 'tile'],
 };
 
 export default meta;

@@ -6,7 +6,7 @@ import {html} from "lit";
 const meta: Meta = {
   component: 'zn-page',
   title: 'Components/Page',
-  tags: ['components', 'page', 'autodocs'],
+  tags: ['components', 'page'],
 }
 
 export default meta;

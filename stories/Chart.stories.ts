@@ -4,7 +4,7 @@ import {html} from "lit";
 export default {
   component: 'zn-chart',
   title: 'Components/Chart',
-  tags: ['components', 'chart', 'autodocs'],
+  tags: ['components', 'chart'],
 };
 
 const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]

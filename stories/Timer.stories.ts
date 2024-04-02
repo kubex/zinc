@@ -5,7 +5,7 @@ import '../src/Timer';
 const meta: Meta = {
   component: 'zn-timer',
   title: 'Elements/Timer',
-  tags: ['elements', 'timer', 'autodocs'],
+  tags: ['elements', 'timer'],
 };
 
 export default meta;

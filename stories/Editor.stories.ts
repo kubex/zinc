@@ -6,7 +6,7 @@ import '../src/Editor';
 const meta: Meta = {
   component: 'zn-editor',
   title: 'Components/Editor',
-  tags: ['components', 'editor', 'autodocs'],
+  tags: ['components', 'editor'],
 };
 
 export default meta;

@@ -29,7 +29,6 @@ import './FormElements/MultiSelect';
 import './FormElements/Toggle';
 import './ConfirmModal';
 import './Chat';
-import './ChatSlots';
 import './StatsTile';
 import './SplitPane';
 import './Collapsible';

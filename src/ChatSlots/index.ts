@@ -1,1 +1,0 @@
-export { ChatSlotFooter } from "./ChatSlotFooter";

@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../src/Icon';
-import '../src/EmptyState';
+import '../../src/Icon';
+import '../../src/EmptyState';
 
 const meta: Meta = {
   component: 'zn-empty-state',

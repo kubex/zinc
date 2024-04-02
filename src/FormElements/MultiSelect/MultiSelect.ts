@@ -8,7 +8,7 @@ export class MultiSelect extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: Boolean,}) visible = false;
+  @property({type: Boolean}) visible = false;
   @property({type: Array}) selectedItems = [];
 
   private _filteredList = [];

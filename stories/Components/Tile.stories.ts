@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 import { html } from "lit";
 
-import '../src/Tile';
-import '../src/Chip';
-import '../src/Icon';
+import '../../src/Tile';
+import '../../src/Chip';
+import '../../src/Icon';
 
 const meta: Meta = {
   component: 'zn-tile',

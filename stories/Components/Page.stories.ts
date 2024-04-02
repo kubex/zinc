@@ -1,6 +1,6 @@
 import {Meta, StoryObj} from "@storybook/web-components";
 
-import '../src/Page';
+import '../../src/Page';
 import {html} from "lit";
 
 const meta: Meta = {

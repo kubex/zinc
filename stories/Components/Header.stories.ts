@@ -1,8 +1,8 @@
 import { html } from "lit";
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../src/Header';
-import '../src/Button';
+import '../../src/Header';
+import '../../src/Button';
 
 const meta: Meta = {
   component: 'zn-header',

@@ -1,4 +1,4 @@
-import '../src/Chart';
+import '../../src/Chart';
 import {html} from "lit";
 
 export default {

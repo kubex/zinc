@@ -69,9 +69,7 @@ export class Tile extends LitElement
     const chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
       <slot name="chip"></slot>` : null;
     const top = this.querySelectorAll('[slot="top"]').length > 0 ? html`
-      <div class="top">
-        <slot name="top"></slot>
-      </div>` : null;
+      <slot name="top"></slot>` : null;
 
     this.menu = this.querySelectorAll('zn-menu');
 

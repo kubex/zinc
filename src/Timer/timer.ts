@@ -14,6 +14,9 @@ export class Timer extends LitElement
   @property({ type: String })
   private type = '';
 
+  @property({ type: Number })
+  private upperLimit = 0;
+
   private _getLastMessage()
   {
     const time = new Date(parseInt(this.timestamp) * 1000);
@@ -57,10 +60,17 @@ export class Timer extends LitElement
       this.requestUpdate();
     }, 1000);
 
+
+    return html`
+      <div class="last-message upper-limit-reached">
+        <span class="time">${timeString}</span>
+        <span class="last-message-indicator"></span>
+      </div>`;
+
+
     return html`
       <div class="last-message">
         <span class="time">${timeString}</span>
-        <span class="last-message-indicator"></span>
       </div>`;
   }
 

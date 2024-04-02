@@ -12,13 +12,14 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ timestamp, type }) =>
+  render: ({ timestamp, type, upperLimit }) =>
   {
-    return `<zn-timer timestamp="${timestamp}" type="${type}"></zn-timer>`;
+    return `<zn-timer timestamp="${timestamp}" type="${type}" upper-limit="${upperLimit}"></zn-timer>`;
   },
   args: {
     timestamp: '1711636361',
     type: 'success',
+    upperLimit: 1000000000000,
   },
   argTypes: {
     timestamp: {

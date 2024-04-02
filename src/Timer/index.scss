@@ -1,27 +1,27 @@
 @use "sass:map";
 @use "../wc";
 
-:host {
+zn-timer, :host {
   --timer-color: var(--zn-color-success);
+
+  .last-message {
+    color: rgb(var(--timer-color));
+
+    .time {
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    &-indicator {
+      display: inline-block;
+      background-color: rgb(var(--timer-color));
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+  }
 }
 
 :host([type="error"]) {
   --timer-color: var(--zn-color-error);
-}
-
-.last-message {
-  color: rgb(var(--timer-color));
-
-  .time {
-    font-size: 12px;
-    line-height: 15px;
-  }
-
-  &-indicator {
-    display: inline-block;
-    color: rgb(var(--timer-color));
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
 }

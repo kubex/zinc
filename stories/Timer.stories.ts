@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../../src/Timer';
+import '../src/Timer';
 
 const meta: Meta = {
   component: 'zn-timer',
   title: 'Elements/Timer',
-  tags: ['elements', 'timer'],
+  tags: ['elements', 'timer', 'autodocs'],
 };
 
 export default meta;

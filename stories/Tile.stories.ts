@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 import { html } from "lit";
 
-import '../../src/Tile';
-import '../../src/Chip';
-import '../../src/Icon';
+import '../src/Tile';
+import '../src/Chip';
+import '../src/Icon';
 
 const meta: Meta = {
   component: 'zn-tile',
-  title: 'Elements/Tile',
-  tags: ['elements', 'tile'],
+  title: 'Components/Tile',
+  tags: ['components', 'tile', 'autodocs'],
 };
 
 export default meta;

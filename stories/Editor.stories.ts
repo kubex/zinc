@@ -1,12 +1,12 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 import { html } from "lit";
 
-import '../../src/Editor';
+import '../src/Editor';
 
 const meta: Meta = {
   component: 'zn-editor',
-  title: 'Elements/Editor',
-  tags: ['elements', 'editor'],
+  title: 'Components/Editor',
+  tags: ['components', 'editor', 'autodocs'],
 };
 
 export default meta;

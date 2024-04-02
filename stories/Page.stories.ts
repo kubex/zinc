@@ -1,12 +1,12 @@
 import {Meta, StoryObj} from "@storybook/web-components";
 
-import '../../src/Page';
+import '../src/Page';
 import {html} from "lit";
 
 const meta: Meta = {
   component: 'zn-page',
-  title: 'Elements/Page',
-  tags: ['elements', 'page'],
+  title: 'Components/Page',
+  tags: ['components', 'page', 'autodocs'],
 }
 
 export default meta;

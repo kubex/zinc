@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../../src/Icon';
+import '../src/Icon';
 
 const meta: Meta = {
   component: 'zn-icon',
   title: 'Elements/Icon',
-  tags: ['elements', 'icon'],
+  tags: ['elements', 'icon', 'autodocs'],
 };
 
 export default meta;

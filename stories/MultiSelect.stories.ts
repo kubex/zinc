@@ -1,6 +1,6 @@
 import {Meta} from "@storybook/web-components";
 
-import '../../src/FormElements/MultiSelect';
+import '../src/FormElements/MultiSelect';
 import {html} from "lit";
 
 const meta: Meta = {

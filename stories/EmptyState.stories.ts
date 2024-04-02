@@ -1,12 +1,12 @@
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../../src/Icon';
-import '../../src/EmptyState';
+import '../src/Icon';
+import '../src/EmptyState';
 
 const meta: Meta = {
   component: 'zn-empty-state',
-  title: 'Elements/EmptyState',
-  tags: ['elements', 'empty-state'],
+  title: 'Components/EmptyState',
+  tags: ['components', 'empty-state', 'autodocs'],
 };
 
 export default meta;

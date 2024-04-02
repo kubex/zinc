@@ -12,7 +12,7 @@ export class Editor extends LitElement
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
-    const selector = this.shadowRoot.querySelector('#editor');
+    const selector = this.shadowRoot.querySelector('#editor') as HTMLElement;
     const quill = new Quill(selector, {
       modules: {
         toolbar: [
@@ -22,16 +22,15 @@ export class Editor extends LitElement
         ]
       },
       placeholder: 'Compose an epic...',
-      theme: 'snow'  // or 'bubble'
+      theme: 'snow',  // or 'bubble'
+
     });
 
     const normalizeNative = (nativeRange: any) =>
     {
       if(nativeRange)
       {
-
         const range = nativeRange;
-
         if(range.baseNode)
         {
           range.startContainer = nativeRange.baseNode;
@@ -63,9 +62,11 @@ export class Editor extends LitElement
 
     quill.selection.getNativeRange = () =>
     {
-      const dom = quill.root.getRootNode();
+      const dom = quill.root.getRootNode() as Document;
       const selection = dom.getSelection();
-      return normalizeNative(selection);
+      const range = normalizeNative(selection);
+
+      return range;
     };
 
     document.addEventListener('selectionchange', (...args) =>

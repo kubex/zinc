@@ -12,7 +12,7 @@ export class Editor extends LitElement
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
-    const selector = this.shadowRoot.querySelector('#editor') as HTMLElement;
+    const selector = this.shadowRoot.querySelector('#editor');
     const quill = new Quill(selector, {
       modules: {
         toolbar: [
@@ -63,7 +63,7 @@ export class Editor extends LitElement
 
     quill.selection.getNativeRange = () =>
     {
-      const dom = quill.root.getRootNode() as Document;
+      const dom = quill.root.getRootNode();
       const selection = dom.getSelection();
       return normalizeNative(selection);
     };

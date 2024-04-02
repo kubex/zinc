@@ -13,18 +13,33 @@ zn-tile, :host {
 }
 
 :host([padded]) {
-  padding: wc.spacing(sm);
+  .bottom {
+    padding: wc.spacing(md);
+  }
 }
 
 :host {
   container-type: inline-size;
   display: flex;
-  height: wc.common-size(tile);
+  min-height: wc.common-size(tile);
   width: 100%;
+  flex-direction: column;
   align-items: center;
   overflow: hidden;
+  flex-shrink: 0;
 
-  > div {
+  > .top {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: wc.spacing(sm);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+  }
+
+  > .bottom {
     width: 100%;
     height: 100%;
     display: flex;

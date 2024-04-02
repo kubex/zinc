@@ -1,17 +1,17 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {Menu} from "../Menu";
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { Menu } from "../Menu";
 
 import styles from './index.scss';
 
 @customElement('zn-tile')
 export class Tile extends LitElement
 {
-  @property({attribute: 'caption', type: String, reflect: true}) caption;
-  @property({attribute: 'description', type: String, reflect: true}) description;
-  @property({attribute: 'right', type: Boolean, reflect: true}) right;
-  @property({attribute: 'data-uri', type: String, reflect: true}) dataUri;
-  @property({attribute: 'data-target', type: String, reflect: true}) dataTarget;
+  @property({ attribute: 'caption', type: String, reflect: true }) caption;
+  @property({ attribute: 'description', type: String, reflect: true }) description;
+  @property({ attribute: 'right', type: Boolean, reflect: true }) right;
+  @property({ attribute: 'data-uri', type: String, reflect: true }) dataUri;
+  @property({ attribute: 'data-target', type: String, reflect: true }) dataTarget;
 
   private menu;
 
@@ -67,6 +67,10 @@ export class Tile extends LitElement
       <slot name="primary"></slot>` : null;
     const chip = this.querySelectorAll('[slot="chip"]').length > 0 ? html`
       <slot name="chip"></slot>` : null;
+    const top = this.querySelectorAll('[slot="top"]').length > 0 ? html`
+      <div class="top">
+        <slot name="top"></slot>
+      </div>` : null;
 
     this.menu = this.querySelectorAll('zn-menu');
 
@@ -93,7 +97,10 @@ export class Tile extends LitElement
       <slot name="status"></slot>` : null;
 
     return html`
-      <div>
+      <div class="top">
+        ${top}
+      </div>
+      <div class="bottom">
         ${primary}
         <div class="${summaryClass}">
           ${summary}

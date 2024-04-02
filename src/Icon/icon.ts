@@ -1,6 +1,6 @@
-import {html, LitElement, render, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {md5} from './md5';
+import { html, LitElement, render, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { md5 } from './md5';
 
 import styles from './index.scss';
 
@@ -39,12 +39,12 @@ type Color = keyof typeof colors;
 @customElement('zn-icon')
 export class Icon extends LitElement
 {
-  @property({type: String, reflect: true}) src = "";
-  @property({type: String, reflect: true}) alt = "";
-  @property({type: Number, reflect: true}) size = 24;
-  @property({type: String, reflect: true}) library = Library.None;
-  @property({type: Boolean, reflect: true}) round = false;
-  @property({type: String, reflect: true}) color: Color = null;
+  @property({ type: String, reflect: true }) src = "";
+  @property({ type: String, reflect: true }) alt = "";
+  @property({ type: Number, reflect: true }) size = 24;
+  @property({ type: String, reflect: true }) library = Library.None;
+  @property({ type: Boolean, reflect: true }) round = false;
+  @property({ type: String, reflect: true }) color: Color = null;
 
   gravatarOptions = "";
 
@@ -162,16 +162,19 @@ export class Icon extends LitElement
       case Library.Gravatar:
       case LibraryAlias.Gravatar:
         return html`<img
-           alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+          alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
       case Library.Libravatar:
         return html`<img
-           alt="${this.alt}" src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+          alt="${this.alt}"
+          src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
     }
 
     if(this.src != "")
     {
       return html`
-        <img src="${this.src}" alt="${this.alt}" class="${this.library}"/>`;
+        <div>
+          <img src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}" width="${this.size}"/>
+        </div>`;
     }
 
     return html`

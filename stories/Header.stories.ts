@@ -1,7 +1,8 @@
+import { html } from "lit";
 import { Meta, StoryObj } from "@storybook/web-components";
 
 import '../src/Header';
-import '../src/Icon';
+import '../src/Button';
 
 const meta: Meta = {
   component: 'zn-header',
@@ -13,22 +14,49 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  render: ({ caption, navigation, breadcrumb, fullWidth, transparent }) => html`
+    <zn-header caption="${caption}" .navigation="${navigation}" .breadcrumb="${breadcrumb}" ?fullWidth="${fullWidth}"
+               ?transparent="${transparent}">
+      <zn-button>Button</zn-button>
+    </zn-header>`,
   args: {
-    caption: 'This is an Empty State',
-    description: 'This is a description of the empty state',
-    icon: 'check',
+    caption: 'This is the caption',
+    navigation: [
+      {
+        "title": "Overview",
+        "path": "#",
+        "default": true
+      },
+      {
+        "title": "Details",
+        "path": "#"
+      },
+      {
+        "title": "History",
+        "path": "#"
+      },
+      {
+        "title": "Settings",
+        "path": "#"
+      }
+    ],
+    breadcrumb: [{
+      "title": "Home",
+      "path": "#"
+    }],
+    fullWidth: false,
+    transparent: false,
   },
-  argTypes: {
-    caption: {
-      description: 'The caption',
-    },
-    description: {
-      description: 'The description',
-    },
-    icon: {
-      description: 'The icon',
-      options: ['close', 'check'],
-      control: { type: 'select' },
-    }
-  }
+  argTypes: {}
+};
+
+export const Simple: Story = {
+  args: {
+    caption: 'This is the caption',
+    navigation: [],
+    breadcrumb: [],
+    fullWidth: false,
+    transparent: false,
+  },
+  argTypes: {}
 };

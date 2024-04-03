@@ -44,3 +44,4 @@ import './OrderTable';
 import './Pane';
 import './Timer';
 import './Editor';
+import './ChatSocket';

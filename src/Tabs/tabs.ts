@@ -52,15 +52,7 @@ export class Tabs extends LitElement
       const storedValue = this.storage.getItem('zntab:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        const tab = this._tabs.find(tab => tab.getAttribute('tab') == storedValue);
-        this._panel.setAttribute('active', storedValue);
-        this._tabs.forEach(tab => tab.style.backgroundColor = 'transparent');
-        tab.style.backgroundColor = 'rgb(var(--zn-panel))';
-
-        if(this._panel instanceof TabPanel)
-        {
-          this._panel.selectTab(storedValue);
-        }
+        this.setActiveTab(storedValue, false);
       }
     }
   }
@@ -85,21 +77,31 @@ export class Tabs extends LitElement
           this._panel.addPanel(tabId, tabNode);
         }
         target.setAttribute('tab', tabId);
+        document.dispatchEvent(new CustomEvent('zn-new-element', {
+          detail: {element: tabNode}
+        }));
       }
+
 
       if(target.hasAttribute('tab'))
       {
-        const tabName = target.getAttribute('tab') || '';
-        this._panel.selectTab(tabName);
-
-        this._tabs.forEach(tab => tab.style.backgroundColor = 'transparent');
-        target.style.backgroundColor = 'rgb(var(--zn-panel))';
-
-        if(this.storeKey != null && this.storeKey != "")
-        {
-          this.storage.setItem('zntab:' + this.storeKey, tabName);
-        }
+        this.setActiveTab(target.getAttribute('tab') || '', true);
       }
+    }
+  }
+
+  setActiveTab(tabName: string, store: boolean)
+  {
+    this._tabs.forEach(tab => tab.classList.toggle('zn-tab-active', tab.getAttribute('tab') === tabName));
+    if(this._panel instanceof TabPanel)
+    {
+      this._panel.selectTab(tabName);
+      this._panel.setAttribute('active', tabName);
+    }
+
+    if(store && this.storeKey != null && this.storeKey != "")
+    {
+      this.storage.setItem('zntab:' + this.storeKey, tabName);
     }
   }
 

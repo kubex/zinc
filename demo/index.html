@@ -14,7 +14,24 @@
 
   <zn-page>
     <div slot="side">
-      side
+
+      <zn-tabs>
+        <ul>
+          <li tab="">Close Tabs</li>
+          <li tab="tab-one">Tab One</li>
+          <li tab="tab-two">Tab Two</li>
+          <li tab-uri="/a/b">Tab Three</li>
+        </ul>
+        <div style="border: 1px dashed gray; padding: 5px;">
+          <zn-tab-panel>
+            <div>Default Tab</div>
+            <div id="tab-one" style="background: red; display: flex; ">Tab One</div>
+            <div id="tab-two">Tab Two</div>
+          </zn-tab-panel>
+        </div>
+      </zn-tabs>
+
+
     </div>
     <zn-panel caption="Order Items">
       <zn-order-table

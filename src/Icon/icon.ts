@@ -1,6 +1,6 @@
 import { html, LitElement, render, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
-import { md5 } from './md5';
+import { md5 } from '../md5';
 
 import styles from './index.scss';
 

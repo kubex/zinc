@@ -27,6 +27,12 @@ export class TabPanel extends LitElement
     });
   }
 
+  public addPanel(tabId: string, panel: Element)
+  {
+    this._panels.set(tabId, [panel]);
+    this.appendChild(panel);
+  }
+
   connectedCallback()
   {
     super.connectedCallback();

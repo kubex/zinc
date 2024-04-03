@@ -1,6 +1,7 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { TabPanel } from "./tab-panel";
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {TabPanel} from "./tab-panel";
+import {md5} from '../md5';
 
 import styles from './tabs.scss';
 
@@ -12,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -70,6 +71,22 @@ export class Tabs extends LitElement
     if(event.target instanceof HTMLElement)
     {
       const target = event.target as HTMLElement;
+      if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
+      {
+        const tabUri = target.getAttribute("tab-uri");
+        const tabId = "tab-" + md5(tabUri).substr(0, 8);
+        let tabNode = document.createElement('div');
+        tabNode.setAttribute("id", tabId);
+        tabNode.setAttribute('data-self-uri', tabUri);
+        tabNode.textContent = "Loading ...";
+        this._tabs.push(tabNode);
+        if(this._panel instanceof TabPanel)
+        {
+          this._panel.addPanel(tabId, tabNode);
+        }
+        target.setAttribute('tab', tabId);
+      }
+
       if(target.hasAttribute('tab'))
       {
         const tabName = target.getAttribute('tab') || '';

@@ -1,4 +1,4 @@
-export function md5(string)
+export function md5(string): string
 {
 
   function RotateLeft(lValue, iShiftBits)

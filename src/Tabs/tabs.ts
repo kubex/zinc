@@ -96,8 +96,11 @@ export class Tabs extends LitElement
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName);
-      this._panel.setAttribute('active', tabName);
     }
+
+    //Set on the element as a failsafe before TabPanel is loaded
+    //This must be done AFTER selectTab to avoid panel bugs
+    this._panel.setAttribute('active', tabName);
 
     if(store && this.storeKey != null && this.storeKey != "")
     {

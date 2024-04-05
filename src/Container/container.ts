@@ -167,7 +167,7 @@ export class Container extends ZincElement
     const fn = new Function('document', content);
     try
     {
-      fn(this.container);
+      fn(document);
     }
     catch(e)
     {

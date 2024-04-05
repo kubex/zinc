@@ -13,18 +13,13 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Default: Story = {
+
+const Template = {
   render: ({ caption, description, icon, type }) =>
   {
     return html`
       <zn-empty-state caption="${caption}" description="${description}" icon="${icon}"
                       type="${type}"></zn-empty-state>`;
-  },
-  args: {
-    caption: 'This is an Empty State',
-    description: 'This is a description of the empty state',
-    icon: 'check',
-    type: ''
   },
   argTypes: {
     type: {
@@ -44,3 +39,25 @@ export const Default: Story = {
     }
   }
 };
+
+export const Default: Story = {
+  args: {
+    caption: 'This is an Empty State',
+    description: 'This is a description of the empty state',
+    icon: 'check',
+    type: ''
+  },
+};
+
+Object.assign(Default, Template);
+
+export const Warning: Story = {
+  args: {
+    caption: 'This is a Warning',
+    description: 'This is a description of the warning',
+    icon: 'close',
+    type: 'error'
+  }
+};
+
+Object.assign(Warning, Template);

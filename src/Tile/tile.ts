@@ -106,8 +106,20 @@ export class Tile extends LitElement
 
     const summaryClass = extended == null ? 'summary' : 'summary extend';
 
+    let caption = html``;
+    if(this.dataUri && this.dataTarget)
+    {
+      caption = html`
+        <div class="caption" data-uri="${this.dataUri}" data-target="${this.dataTarget}">${this.caption}</div>`;
+    }
+    else
+    {
+      caption = html`
+        <div class="caption">${this.caption}</div>`;
+    }
+
     const summary = html`
-      <div class="caption" data-uri="${this.dataUri}" data-target="${this.dataTarget}">${this.caption}</div>
+      ${caption}
       <div class="description">${this.description}</div>`;
 
     const status = this.querySelectorAll('[slot="status"]').length > 0 ? html`

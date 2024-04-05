@@ -13,8 +13,21 @@ zn-tile, :host {
 }
 
 :host([padded]) {
-  .bottom, .wrap {
+  .bottom, .wrap, .top {
     padding: wc.spacing(xl) wc.spacing(lg);
+  }
+
+  .top {
+    padding-bottom: 0;
+
+    &:not(:empty) {
+      padding-top: wc.spacing(sm);
+      padding-bottom: wc.spacing(xs);
+    }
+  }
+
+  .bottom {
+    padding-top: 0;
   }
 }
 
@@ -46,8 +59,7 @@ zn-tile, :host {
     display: flex;
     justify-content: flex-end;
     gap: wc.spacing(sm);
-    position: absolute;
-    right: 10px;
+    padding-top: wc.spacing(sm);
   }
 
   > .bottom {
@@ -57,8 +69,8 @@ zn-tile, :host {
     align-items: center;
     overflow: hidden;
     flex-wrap: nowrap;
-    padding-top: wc.spacing(sm);
     padding-bottom: wc.spacing(sm);
+    padding-top: wc.spacing(sm);
     gap: wc.spacing(md);
 
     > * {

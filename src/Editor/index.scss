@@ -1,6 +1,7 @@
 @use "sass:map";
 @use "../../node_modules/quill/dist/quill.core.css";
 @use "../../node_modules/quill/dist/quill.snow.css" as snow;
+@use "../wc";
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -21,6 +22,8 @@
   flex-direction: column-reverse;
   background-color: rgb(var(--zn-body));
   border-radius: 10px;
+  margin: wc.spacing(lg) 0;
+  padding: wc.spacing(sm);
 
   .ql-container {
     border: none;
@@ -32,7 +35,8 @@
   }
 
   .ql-toolbar {
-    padding-top: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     border: 0 solid rgb(var(--zn-border-color));
     border-top-width: 1px;
     color: rgb(var(--zn-text-heading));

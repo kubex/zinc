@@ -10,6 +10,7 @@ export class Panel extends ZincElement
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'rows', type: Number, reflect: true}) rows;
   @property({attribute: 'navigation', type: Array}) navigation = [];
+  @property({attribute: 'border-bottom', type: Boolean}) borderBottom = false
 
   static styles = unsafeCSS(styles);
 

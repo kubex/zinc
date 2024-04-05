@@ -1,7 +1,7 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
-import {md5} from '../md5';
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { TabPanel } from "./tab-panel";
+import { md5 } from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -77,8 +77,8 @@ export class Tabs extends LitElement
           this._panel.addPanel(tabId, tabNode);
         }
         target.setAttribute('tab', tabId);
-        document.dispatchEvent(new CustomEvent('zn-new-element', {
-          detail: {element: tabNode}
+        document.dispatchEvent(new CustomEvent('zn-tb-active', {
+          detail: { element: tabNode }
         }));
       }
 
@@ -96,6 +96,10 @@ export class Tabs extends LitElement
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName);
+
+      document.dispatchEvent(new CustomEvent('zn-tb-active', {
+        detail: { element: this._panel.querySelector(`#${tabName}`) }
+      }));
     }
 
     //Set on the element as a failsafe before TabPanel is loaded

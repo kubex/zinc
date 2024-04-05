@@ -18,6 +18,24 @@ export class Tile extends LitElement
 
   static styles = unsafeCSS(styles);
 
+  constructor()
+  {
+    super();
+
+    document.addEventListener('zn-tb-active', (e: any) =>
+    {
+      if((e.detail && e.detail.element) && this.hasAttribute('tab') &&
+        (e.detail.element.id === this.getAttribute('tab')))
+      {
+        this.classList.add('active');
+      }
+      else
+      {
+        this.classList.remove('active');
+      }
+    });
+  }
+
   _handleActions(e)
   {
     const menu = this.menu[0];

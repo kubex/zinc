@@ -1,5 +1,5 @@
 import { html, LitElement, unsafeCSS } from "lit";
-import { customElement } from 'lit/decorators.js';
+import { customElement, query } from 'lit/decorators.js';
 import Quill from 'quill';
 
 import styles from './index.scss';
@@ -10,10 +10,12 @@ export class Editor extends LitElement
 {
   static styles = unsafeCSS(styles);
 
+  @query('#editor')
+  private editor: HTMLElement;
+
   protected firstUpdated(_changedProperties: PropertyValues)
   {
-    const selector = this.shadowRoot.querySelector('#editor') as HTMLElement;
-    const quill = new Quill(selector, {
+    const quill = new Quill(this.editor, {
       modules: {
         toolbar: [
           [{ header: [1, 2, false] }],
@@ -22,7 +24,8 @@ export class Editor extends LitElement
         ]
       },
       placeholder: 'Compose an epic...',
-      theme: 'snow',  // or 'bubble'
+      theme: 'snow',
+      bounds: this.editor
 
     });
 
@@ -79,9 +82,9 @@ export class Editor extends LitElement
   render()
   {
     return html`
-      <textarea name="content" id="editor">
+      <div id="editor">
         This is the content within the text area
-      </textarea>
+      </div>
     `;
   }
 }

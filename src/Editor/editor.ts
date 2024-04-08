@@ -60,13 +60,17 @@ export class Editor extends LitElement
       return null;
     };
 
+    quill.selection.hasFocus = function ()
+    {
+      const rootNode = quill.root.getRootNode() as Document;
+      return rootNode.activeElement === quill.root;
+    };
+
     quill.selection.getNativeRange = () =>
     {
       const dom = quill.root.getRootNode() as Document;
       const selection = dom.getSelection();
-      const range = normalizeNative(selection);
-
-      return range;
+      return normalizeNative(selection);
     };
 
     document.addEventListener('selectionchange', (...args) =>

@@ -82,9 +82,7 @@ export class Editor extends LitElement
   render()
   {
     return html`
-      <div id="editor">
-        This is the content within the text area
-      </div>
+      <div id="editor"></div>
     `;
   }
 }

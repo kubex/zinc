@@ -77,7 +77,7 @@ export class Tabs extends LitElement
           this._panel.addPanel(tabId, tabNode);
         }
         target.setAttribute('tab', tabId);
-        document.dispatchEvent(new CustomEvent('zn-tb-active', {
+        document.dispatchEvent(new CustomEvent('zn-new-element', {
           detail: { element: tabNode }
         }));
       }
@@ -92,12 +92,12 @@ export class Tabs extends LitElement
 
   setActiveTab(tabName: string, store: boolean)
   {
-    this._tabs.forEach(tab => tab.classList.toggle('zn-tab-active', tab.getAttribute('tab') === tabName));
+    this._tabs.forEach(tab => tab.classList.toggle('zn-new-element', tab.getAttribute('tab') === tabName));
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName);
 
-      document.dispatchEvent(new CustomEvent('zn-tb-active', {
+      document.dispatchEvent(new CustomEvent('zn-new-element', {
         detail: { element: this._panel.querySelector(`#${tabName}`) }
       }));
     }

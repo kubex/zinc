@@ -18,15 +18,12 @@ export class Editor extends LitElement
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
-          ['image', 'code-block', 'video']
+          ['bold', 'italic', 'underline']
         ]
       },
       placeholder: 'Compose an epic...',
       theme: 'snow',
       bounds: this.editor
-
     });
 
     const normalizeNative = (nativeRange: any) =>
@@ -82,7 +79,9 @@ export class Editor extends LitElement
   render()
   {
     return html`
-      <div id="editor"></div>
+      <div id="editor">
+        <p></p>
+      </div>
     `;
   }
 }

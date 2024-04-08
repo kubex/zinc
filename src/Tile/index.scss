@@ -191,6 +191,10 @@ zn-tile, :host {
 }
 
 
-:host(.active) {
+:host(.active), :host(.zn-tb-active) {
   background-color: rgba(var(--zn-panel));
+}
+
+:host([tab-uri]), :host([tab]) {
+  cursor: pointer;
 }

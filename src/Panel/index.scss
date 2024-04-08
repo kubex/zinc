@@ -142,9 +142,16 @@
   background-color: rgb(var(--zn-bright-bg));
 }
 
-:host([border-bottom=false]) > div {
-  .footer {
-    border: 0 !important;
-    padding-top: 0;
-  }
+:host([border='*']) > div .footer {
+  padding-top: 0;
+  border: 0 !important;
+}
+
+:host([border='top']) > div {
+  border-width: 0 !important;
+  border-top-width: 1px !important;
+}
+
+:host([rounded=false]) > div {
+  border-radius: 0;
 }

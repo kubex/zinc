@@ -1,16 +1,17 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import { ZincElement } from "../zinc";
 
 @customElement('zn-panel')
 export class Panel extends ZincElement
 {
-  @property({attribute: 'caption', type: String, reflect: true}) caption;
-  @property({attribute: 'rows', type: Number, reflect: true}) rows;
-  @property({attribute: 'navigation', type: Array}) navigation = [];
-  @property({attribute: 'border-bottom', type: Boolean}) borderBottom = false
+  @property({ attribute: 'caption', type: String, reflect: true }) caption;
+  @property({ attribute: 'rows', type: Number, reflect: true }) rows;
+  @property({ attribute: 'navigation', type: Array }) navigation = [];
+  @property({ attribute: 'border', type: Boolean }) border: 'top' | 'bottom' | 'left' | 'right' | 'all' = 'all';
+  @property({ attribute: 'rounded', type: Boolean }) rounded = true;
 
   static styles = unsafeCSS(styles);
 
@@ -103,7 +104,7 @@ export class Panel extends ZincElement
         <div class="body">
           <slot></slot>
         </div>
-           ${footer}
+        ${footer}
       </div>`;
   }
 

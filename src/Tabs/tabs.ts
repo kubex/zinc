@@ -1,7 +1,7 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
-import {md5} from '../md5';
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { TabPanel } from "./tab-panel";
+import { md5 } from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -22,6 +22,10 @@ export class Tabs extends LitElement
   {
     super();
     this._tabs = Array.from(this.querySelectorAll('[tab]'));
+    this.querySelectorAll('[tab-uri]').forEach(ele =>
+    {
+      this._tabs.push(ele as HTMLElement);
+    });
     this.querySelectorAll('zn-tab-panel').forEach((element) =>
     {
       this._panel = element as TabPanel;
@@ -88,11 +92,10 @@ export class Tabs extends LitElement
 
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement
   {
-    let tabNode = document.createElement('div');
+    const tabNode = document.createElement('div');
     tabNode.setAttribute("id", tabId);
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
-    this._tabs.push(tabNode);
     if(this._panel instanceof TabPanel)
     {
       this._panel.addPanel(tabId, tabNode);
@@ -104,7 +107,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode}
+      detail: { element: tabNode }
     }));
     return tabNode;
   }

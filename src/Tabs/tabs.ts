@@ -1,20 +1,20 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { TabPanel } from "./tab-panel";
-import { md5 } from '../md5';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {TabPanel} from "./tab-panel";
+import {md5} from '../md5';
 
 import styles from './tabs.scss';
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
 {
-  private _panel: TabPanel;
+  private _panel: TabPanel | HTMLElement;
   private _tabs: HTMLElement[];
   private storage: Storage;
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -52,11 +52,62 @@ export class Tabs extends LitElement
       const storedValue = this.storage.getItem('zntab:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
+        this._prepareTab(storedValue);
         this.setActiveTab(storedValue, false);
       }
     }
   }
 
+  _prepareTab(tabId: string)
+  {
+    for(let i = 0; i < this._tabs.length; i++)
+    {
+      if(this._tabs[i].getAttribute('tab') == tabId)
+      {
+        return;
+      }
+    }
+
+    const uriTabs = this.querySelectorAll("[tab-uri]");
+    for(let i = 0; i < uriTabs.length; i++)
+    {
+      const uri = uriTabs[i].getAttribute("tab-uri");
+      const eleTabId = this._uriToId(uri);
+      if(eleTabId == tabId)
+      {
+        this._createUriPanel(uriTabs[i], uri, eleTabId);
+        break;
+      }
+    }
+  }
+
+  _uriToId(tabUri: string): string
+  {
+    return "tab-" + md5(tabUri).substr(0, 8);
+  }
+
+  _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement
+  {
+    let tabNode = document.createElement('div');
+    tabNode.setAttribute("id", tabId);
+    tabNode.setAttribute('data-self-uri', tabUri);
+    tabNode.textContent = "Loading ...";
+    this._tabs.push(tabNode);
+    if(this._panel instanceof TabPanel)
+    {
+      this._panel.addPanel(tabId, tabNode);
+    }
+    else if(this._panel instanceof HTMLElement)
+    {
+      // Append the tab if the panel has not yet been constructed
+      this._panel.appendChild(tabNode);
+    }
+    tabEle.setAttribute('tab', tabId);
+    document.dispatchEvent(new CustomEvent('zn-new-element', {
+      detail: {element: tabNode}
+    }));
+    return tabNode;
+  }
 
   _handleClick(event: MouseEvent)
   {
@@ -66,23 +117,8 @@ export class Tabs extends LitElement
       if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
       {
         const tabUri = target.getAttribute("tab-uri");
-        const tabId = "tab-" + md5(tabUri).substr(0, 8);
-        let tabNode = document.createElement('div');
-        tabNode.setAttribute("id", tabId);
-        tabNode.setAttribute('data-self-uri', tabUri);
-        tabNode.textContent = "Loading ...";
-        this._tabs.push(tabNode);
-        if(this._panel instanceof TabPanel)
-        {
-          this._panel.addPanel(tabId, tabNode);
-        }
-        target.setAttribute('tab', tabId);
-        document.dispatchEvent(new CustomEvent('zn-new-element', {
-          detail: { element: tabNode }
-        }));
+        this._createUriPanel(target, tabUri, this._uriToId(tabUri));
       }
-
-
       if(target.hasAttribute('tab'))
       {
         this.setActiveTab(target.getAttribute('tab') || '', true);
@@ -92,14 +128,10 @@ export class Tabs extends LitElement
 
   setActiveTab(tabName: string, store: boolean)
   {
-    this._tabs.forEach(tab => tab.classList.toggle('zn-new-element', tab.getAttribute('tab') === tabName));
+    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName);
-
-      document.dispatchEvent(new CustomEvent('zn-new-element', {
-        detail: { element: this._panel.querySelector(`#${tabName}`) }
-      }));
     }
 
     //Set on the element as a failsafe before TabPanel is loaded

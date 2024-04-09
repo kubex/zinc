@@ -1,5 +1,5 @@
 import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 import styles from './index.scss';
 
@@ -8,15 +8,19 @@ export class ScrollContainer extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({ attribute: "scroll-bottom", type: Boolean })
-  scrollBottom = false;
+  constructor()
+  {
+    super();
+
+    this.addEventListener('scroll-to-bottom', () =>
+    {
+      // scroll all the way to the bottom of the container
+      this.scrollTop = this.scrollHeight;
+    });
+  }
 
   render()
   {
-
-    this.scrollTop = this.scrollBottom ? this.scrollHeight : 0;
-
-
     return html`
       <slot></slot>`;
   }

@@ -23,22 +23,11 @@
   #primary-pane, #secondary-pane {
     flex-grow: 1;
     flex-shrink: 1;
-    min-width: 15%;
-  }
-
-  #primary-pane {
-    max-width: calc(100% - var(--right-width, 0));
-  }
-
-  #secondary-pane {
-    width: 100%;
-    max-width: var(--right-width, 50%);
   }
 
   slot {
     overflow: auto;
   }
-
 
   #resizer {
     position: relative;
@@ -46,34 +35,98 @@
     &:after {
       content: "";
       position: absolute;
-      inset: 0 -10px;
-      width: 20px;
       z-index: 500;
     }
 
     &:before {
       content: "";
       display: block;
-      height: 100%;
-      width: 1px;
       position: absolute;
-      top: 0;
-      left: 50%;
       z-index: 1;
-      transform: translateX(-50%);
-
       transition: background-color 200ms ease-in-out;
     }
 
-    min-width: 1px;
-    padding: var(--zn-padding);
-
-    padding-top: 0;
-    padding-bottom: 0;
     cursor: col-resize;
+
+    padding: var(--zn-padding);
 
     &:hover:before {
       background-color: rgb(var(--zn-blue));
+    }
+  }
+}
+
+:host(:not([vertical])) {
+  #primary-pane, #secondary-pane {
+    min-width: 15%;
+  }
+
+  #primary-pane {
+    max-width: calc(100% - var(--secondary-size, 0));
+  }
+
+  #secondary-pane {
+    width: 100%;
+    max-width: var(--secondary-size, 50%);
+  }
+
+
+  #resizer {
+
+    min-width: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    &:after {
+      inset: 0 -10px;
+      width: 20px;
+    }
+
+
+    &:before {
+      height: 100%;
+      width: 1px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+:host([vertical]) {
+  flex-direction: column;
+
+  #primary-pane, #secondary-pane {
+    min-height: 15%;
+  }
+
+  #primary-pane {
+    max-height: calc(100% - var(--secondary-size, 0));
+  }
+
+  #secondary-pane {
+    height: 100%;
+    max-height: var(--secondary-size, 50%);
+  }
+
+  #resizer {
+
+    min-height: 1px;
+    padding-left: 0;
+    padding-right: 0;
+    cursor: row-resize;
+
+    &:after {
+      inset: -10px 0;
+      height: 20px;
+    }
+
+    &:before {
+      width: 100%;
+      height: 1px;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 }

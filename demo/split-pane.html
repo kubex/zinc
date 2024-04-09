@@ -23,52 +23,18 @@
 </head>
 <body t="light" style="overflow: auto">
 
+<zn-split-pane bordered>
+  <div slot="primary">
 
-<div>
-  <zn-panel>
-    <button onclick="document.body.setAttribute('t', 'dark')">Dark Theme</button>
-    <button onclick="document.body.setAttribute('t', 'light')">Light Theme</button>
-  </zn-panel>
-</div>
+    <zn-split-pane bordered vertical style="background: rgba(20,20,90,0.3)">
+      <div slot="primary">PRIMARY</div>
+      <div slot="secondary">SECONDARY</div>
+    </zn-split-pane>
 
-<div class="container">
-  <div class="wrapper">
-    <zn-chat-slot-container heading="Interactions" subHeading="Your Support Queue">
-      <div slot="active">
-        <zn-chat-slot heading="Mark Neale" content="I need help with zn password" lastMessage="1693907718"
-                      brand="protected"></zn-chat-slot>
-        <zn-chat-slot heading="Billy Bob" content="I need help with zn password" active></zn-chat-slot>
-        <zn-chat-slot heading="Billy Bob" content="I need help with zn password" accept></zn-chat-slot>
-      </div>
-      <div slot="queued">
 
-      </div>
-    </zn-chat-slot-container>
   </div>
-
-
-  <zn-pane>
-    <zn-header slot="header" caption="Mark Smith : Billing Enquiry">Total Time: 00:00:12</zn-header>
-    <zn-chat-message-window>
-      <zn-chat-message sender="Mike" time="1693920297">
-        Hello, I’ve tried to install total adblock and it has made a mess of my machine. I’m not sure what to do now.
-        I’ve pushed all the buttons and tried all this things. Can you help?
-      </zn-chat-message>
-      <zn-chat-message sender="you" time="1693920297">
-        Most technical issues can be resolved by accessing our Help Center at help.{{BRAND}}.com, you can also speak
-        to
-        one of our technical agents on live chat who will be more than happy to help resolve your problem.
-      </zn-chat-message>
-      <zn-chat-message sender="Mike" time="1693920563">
-        I don’t want to do that, I want to do this instead.
-      </zn-chat-message>
-    </zn-chat-message-window>
-
-    <zn-chat-response-window>
-      Message Mark @ ToDo Message component
-    </zn-chat-response-window>
-  </zn-pane>
-</div>
+  <div slot="secondary">SECONDARY</div>
+</zn-split-pane>
 
 <script src="../dist/zn.min.js"></script>
 </body>

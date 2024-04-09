@@ -14,9 +14,10 @@ export class SplitPane extends ZincElement
   mouseUpHandler: null | EventListener = null;
   private maxPercent = 80;
 
-  @property({attribute: 'secondary-width', type: Number, reflect: true}) secondaryWidth = 50;
+  @property({attribute: 'secondary-size', type: Number, reflect: true}) secondarySize = 50;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
+  @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
@@ -31,7 +32,7 @@ export class SplitPane extends ZincElement
       let storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        this.secondaryWidth = parseInt(storedValue);
+        this.secondarySize = parseInt(storedValue);
       }
     }
   }
@@ -44,18 +45,18 @@ export class SplitPane extends ZincElement
     }
 
     this.classList.add('resizing');
-    let initialWidth = this.getBoundingClientRect().width;
-    let pageLeft = this.getBoundingClientRect().left;
+    let initialSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+    let pageOffset = this.vertical ? this.getBoundingClientRect().top : this.getBoundingClientRect().left;
 
     this.mouseMoveHandler = function (e)
     {
-      let leftWidth = ((e.x - pageLeft) / initialWidth) * 100;
-      this.setWidth((100 - leftWidth), false);
+      let primarySize = (((this.vertical ? e.y : e.x) - pageOffset) / initialSize) * 100;
+      this.setSize((100 - primarySize), false);
     }.bind(this);
 
     this.mouseUpHandler = function (e)
     {
-      this.setWidth(this.secondaryWidth, true);
+      this.setSize(this.secondarySize, true);
       this.classList.remove('resizing');
       window.removeEventListener('mousemove', this.mouseMoveHandler);
       window.removeEventListener('mouseup', this.mouseUpHandler);
@@ -65,10 +66,10 @@ export class SplitPane extends ZincElement
     window.addEventListener('mouseup', this.mouseUpHandler);
   }
 
-  setWidth(w, apply)
+  setSize(w, apply)
   {
     w = Math.max(15, Math.min(85, w));
-    this.secondaryWidth = w;
+    this.secondarySize = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {
       this.storage.setItem('znsp:' + this.storeKey, w);
@@ -81,8 +82,8 @@ export class SplitPane extends ZincElement
     const resizeMargin = '5px';
     return html`
       <style>:host {
-        --right-width: ${this.secondaryWidth}%;
-        --resize-width: ${resizeWidth};
+        --secondary-size: ${this.secondarySize}%;
+        --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
       <div id="primary-pane">

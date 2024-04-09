@@ -1,8 +1,8 @@
-import { html, unsafeCSS } from "lit";
-import { customElement } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import { ZincElement } from "../zinc";
+import {ZincElement} from "../zinc";
 
 @customElement('zn-pane')
 export class Pane extends ZincElement
@@ -11,16 +11,12 @@ export class Pane extends ZincElement
 
   render()
   {
-    let header = null;
     let mainClass = "";
+    const header = this.querySelector('zn-header');
 
-    if(this.querySelectorAll('[slot="header"]').length > 0)
+    if(header)
     {
       mainClass = "with-header";
-      header = html`
-        <div class="pane__header">
-          <slot name="header"></slot>
-        </div>`;
     }
 
     return html`

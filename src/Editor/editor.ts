@@ -1,5 +1,5 @@
 import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import Quill from 'quill';
 
 import styles from './index.scss';
@@ -12,6 +12,28 @@ export class Editor extends LitElement
 
   @query('#editor')
   private editor: HTMLElement;
+
+  @query('#editorHtml')
+  private editorHtml: HTMLTextAreaElement;
+
+  @property({ attribute: 'name', type: String, reflect: true })
+  public name: string;
+
+  @property({ attribute: 'value', type: String, reflect: true })
+  public value: string;
+
+  private internals: ElementInternals;
+
+  constructor()
+  {
+    super();
+    this.internals = this.attachInternals();
+  }
+
+  static get formAssociated()
+  {
+    return true;
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
@@ -57,6 +79,8 @@ export class Editor extends LitElement
         }
       }
 
+      super.firstUpdated(_changedProperties);
+      this._updateInternals();
       return null;
     };
 
@@ -78,15 +102,24 @@ export class Editor extends LitElement
       quill.selection.update();
     });
 
+    quill.on('text-change', () =>
+    {
+      this.value = quill.root.innerHTML;
+      this._updateInternals();
+    });
   }
 
   render()
   {
     return html`
-      <div id="editor">
-        <p></p>
-      </div>
+      <div id="editor"></div>
     `;
+  }
+
+  _updateInternals()
+  {
+    this.internals.setFormValue(this.value);
+    this.internals.setValidity({});
   }
 }
 

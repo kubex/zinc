@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "../wc";
 
 :host {
@@ -12,9 +13,7 @@
   overflow-y: auto;
 }
 
-.pane__content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow-y: auto;
+
+:host([flex-end]) {
+  justify-content: flex-end;
 }

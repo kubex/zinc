@@ -14,7 +14,7 @@ export class SplitPane extends ZincElement
   mouseUpHandler: null | EventListener = null;
   private maxPercent = 80;
 
-  @property({attribute: 'right-width', type: Number, reflect: true}) rightWidth = 50;
+  @property({attribute: 'secondary-width', type: Number, reflect: true}) secondaryWidth = 50;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
 
@@ -31,7 +31,7 @@ export class SplitPane extends ZincElement
       let storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        this.rightWidth = parseInt(storedValue);
+        this.secondaryWidth = parseInt(storedValue);
       }
     }
   }
@@ -55,7 +55,7 @@ export class SplitPane extends ZincElement
 
     this.mouseUpHandler = function (e)
     {
-      this.setWidth(this.rightWidth, true);
+      this.setWidth(this.secondaryWidth, true);
       this.classList.remove('resizing');
       window.removeEventListener('mousemove', this.mouseMoveHandler);
       window.removeEventListener('mouseup', this.mouseUpHandler);
@@ -68,7 +68,7 @@ export class SplitPane extends ZincElement
   setWidth(w, apply)
   {
     w = Math.max(15, Math.min(85, w));
-    this.rightWidth = w;
+    this.secondaryWidth = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {
       this.storage.setItem('znsp:' + this.storeKey, w);
@@ -81,16 +81,16 @@ export class SplitPane extends ZincElement
     const resizeMargin = '5px';
     return html`
       <style>:host {
-        --right-width: ${this.rightWidth}%;
+        --right-width: ${this.secondaryWidth}%;
         --resize-width: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
-      <div id="left-pane">
-        <slot name="left"></slot>
+      <div id="primary-pane">
+        <slot name="primary"></slot>
       </div>
       <div @mousedown="${this.resize}" id="resizer"></div>
-      <div id="right-pane">
-        <slot name="right"></slot>
+      <div id="secondary-pane">
+        <slot name="secondary"></slot>
       </div>
     `;
   }

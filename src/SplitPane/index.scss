@@ -20,17 +20,17 @@
   min-width: 350px;
   container-type: inline-size;
 
-  #left-pane, #right-pane {
+  #primary-pane, #secondary-pane {
     flex-grow: 1;
     flex-shrink: 1;
     min-width: 15%;
   }
 
-  #left-pane {
+  #primary-pane {
     max-width: calc(100% - var(--right-width, 0));
   }
 
-  #right-pane {
+  #secondary-pane {
     width: 100%;
     max-width: var(--right-width, 50%);
   }
@@ -82,7 +82,7 @@
   cursor: col-resize;
   user-select: none;
 
-  #left-pane {
+  #primary-pane {
     min-width: 10%;
   }
 
@@ -90,7 +90,7 @@
     background-color: rgb(var(--zn-blue));
   }
 
-  #left-pane, #right-pane {
+  #primary-pane, #secondary-pane {
     pointer-events: none;
   }
 }

@@ -16,6 +16,9 @@ export class Editor extends LitElement
   @query('#editorHtml')
   private editorHtml: HTMLTextAreaElement;
 
+  @query('#toolbar-container')
+  private toolbarContainer: HTMLElement;
+
   @property({ attribute: 'name', type: String, reflect: true })
   public name: string;
 
@@ -37,15 +40,30 @@ export class Editor extends LitElement
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
+    const bindings = {
+      enter: {
+        key: 'Enter',
+        handler: (range, context) =>
+        {
+          const form = this.closest('form');
+          if(form)
+          {
+            form.requestSubmit();
+          }
+        }
+      }
+    };
+
     const quill = new Quill(this.editor, {
       modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline']
-        ]
+        toolbar: this.toolbarContainer,
+        keyboard: {
+          bindings: bindings
+        }
       },
       placeholder: 'Compose an epic...',
       theme: 'snow',
-      bounds: this.editor
+      bounds: this.editor,
     });
 
     const normalizeNative = (nativeRange: any) =>
@@ -107,12 +125,20 @@ export class Editor extends LitElement
       this.value = quill.root.innerHTML;
       this._updateInternals();
     });
+
   }
 
   render()
   {
     return html`
       <div id="editor"></div>
+      <div id="toolbar-container">
+        <div class="wrap">
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+        </div>
+        <slot name="actions"></slot>
+      </div>
     `;
   }
 

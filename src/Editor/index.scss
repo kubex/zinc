@@ -18,11 +18,11 @@
 
 :host {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   background-color: rgb(var(--zn-body));
   border-radius: 10px;
   margin: wc.spacing(lg) 0;
-  padding: wc.spacing(sm);
+  padding: wc.spacing(sm) wc.spacing(sm) 0;
 
   .ql-container {
     border: none;
@@ -45,9 +45,22 @@
     width: 100%;
     height: 150px;
     overflow-y: scroll;
+    color: rgb(var(--zn-text-body));
+    font-size: 15px;
   }
 
   #editor {
     padding: 0;
+  }
+
+  #toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 66px;
+
+    .wrap {
+      flex-grow: 1;
+    }
   }
 }

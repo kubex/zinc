@@ -155,19 +155,23 @@ export class Container extends ZincElement
       {
         this._evalScript(script);
       }
+      else if(script.matches('[document]'))
+      {
+        this._evalCode(script.innerHTML, "", document);
+      }
       else
       {
-        this._evalCode(script.innerHTML);
+        this._evalCode(script.innerHTML, "", this.container);
       }
     });
   }
 
-  protected _evalCode(content, src = '')
+  protected _evalCode(content, src = '', doc)
   {
     const fn = new Function('document', content);
     try
     {
-      fn(document);
+      fn(doc);
     }
     catch(e)
     {
@@ -179,7 +183,8 @@ export class Container extends ZincElement
   {
     fetch(script.getAttribute('src'))
       .then(response => response.text())
-      .then((body) => this._evalCode(body, script.getAttribute('src')))
+      .then((body) => this._evalCode(body, script.getAttribute('src'),
+        script.hasAttribute('document') ? document : this.container))
       .catch(e =>
       {
         console.error('failed to fetch script', e);

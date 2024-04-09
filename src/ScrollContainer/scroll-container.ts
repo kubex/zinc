@@ -14,15 +14,18 @@ export class ScrollContainer extends LitElement
 
     this.addEventListener('scroll-to-bottom', () =>
     {
-      // scroll all the way to the bottom of the container
-      this.scrollTop = this.scrollHeight;
+      setTimeout(() =>
+      {
+        this.scrollTop = this.scrollHeight;
+      }, 100);
     });
   }
 
   render()
   {
     return html`
-      <slot></slot>`;
+      <slot></slot>
+    `;
   }
 }
 

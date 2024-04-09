@@ -16,15 +16,13 @@ export class Pane extends ZincElement
 
     if(header)
     {
-      mainClass = "with-header";
+      this.classList.add("with-header");
     }
 
     return html`
-      <div class="pane ${mainClass}">
-        ${header}
-        <div class="pane__content">
-          <slot></slot>
-        </div>
+      ${header}
+      <div class="pane__content">
+        <slot></slot>
       </div>`;
   }
 }

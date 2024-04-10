@@ -125,7 +125,6 @@ export class Editor extends LitElement
       this.value = quill.root.innerHTML;
       this._updateInternals();
     });
-
   }
 
   render()

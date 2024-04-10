@@ -1,6 +1,7 @@
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 import Quill from 'quill';
+import DropdownModule from "./dropdown-module";
 
 import styles from './index.scss';
 import { PropertyValues } from "@lit/reactive-element";
@@ -25,12 +26,21 @@ export class Editor extends LitElement
   @property({ attribute: 'value', type: String, reflect: true })
   public value: string;
 
+  @property({ attribute: 'canned-responses', type: Array })
+  public cannedResponses: Array<any>;
+
   private internals: ElementInternals;
 
   constructor()
   {
     super();
     this.internals = this.attachInternals();
+  }
+
+  _updateInternals()
+  {
+    this.internals.setFormValue(this.value);
+    this.internals.setValidity({});
   }
 
   static get formAssociated()
@@ -51,14 +61,20 @@ export class Editor extends LitElement
             form.requestSubmit();
           }
         }
-      }
+      },
     };
 
+    Quill.register('modules/dropdownModule', DropdownModule as any);
+
+    console.log('CANNED RESPONSES', this.cannedResponses)
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: this.toolbarContainer,
         keyboard: {
           bindings: bindings
+        },
+        dropdownModule: {
+          cannedResponses: this.cannedResponses
         }
       },
       placeholder: 'Compose an epic...',
@@ -143,12 +159,4 @@ export class Editor extends LitElement
       </div>
     `;
   }
-
-  _updateInternals()
-  {
-    this.internals.setFormValue(this.value);
-    this.internals.setValidity({});
-  }
 }
-
-

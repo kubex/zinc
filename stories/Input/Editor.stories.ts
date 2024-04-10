@@ -13,7 +13,18 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ caption, description }) => html`
-    <zn-editor></zn-editor>`,
-  args: {},
+  render: ({ commands }) => html`
+    <zn-editor canned-responses="${JSON.stringify(commands)}"></zn-editor>`,
+  args: {
+    commands: [
+      {
+        title: 'Welcome',
+        content: 'Welcome to the editor'
+      },
+      {
+        title: 'Goodbye',
+        content: 'Goodbye from the editor'
+      }
+    ]
+  },
 };

@@ -21,10 +21,14 @@ export class Tabs extends LitElement
   constructor()
   {
     super();
-    this._tabs = Array.from(this.querySelectorAll('[tab]'));
+    this._tabs = Array();
+    this.querySelectorAll('[tab]').forEach(ele =>
+    {
+      this._addTab(ele as HTMLElement);
+    });
     this.querySelectorAll('[tab-uri]').forEach(ele =>
     {
-      this._tabs.push(ele as HTMLElement);
+      this._addTab(ele as HTMLElement);
     });
     this.querySelectorAll('zn-tab-panel').forEach((element) =>
     {
@@ -36,8 +40,12 @@ export class Tabs extends LitElement
       console.error("No zn-tab-panel found in zn-tabs", this);
       return;
     }
+  }
 
-    this.addEventListener('click', this._handleClick);
+  _addTab(tab: HTMLElement)
+  {
+    tab.addEventListener('click', this._handleClick.bind(this));
+    this._tabs.push(tab);
   }
 
   connectedCallback()
@@ -131,7 +139,7 @@ export class Tabs extends LitElement
 
   setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
-    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
+    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', (tab.getAttribute('tab') || '') === tabName));
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName, refresh);

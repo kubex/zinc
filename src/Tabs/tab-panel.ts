@@ -36,10 +36,10 @@ export class TabPanel extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
-    this.selectTab(this._current || '');
+    this.selectTab(this._current || '', false);
   }
 
-  selectTab(tabName: string): boolean
+  selectTab(tabName: string, refresh: boolean): boolean
   {
     if(!this._panels.has(tabName))
     {
@@ -61,6 +61,12 @@ export class TabPanel extends LitElement
     this._panels.get(tabName).forEach((element) =>
     {
       element.setAttribute('selected', '');
+      if(refresh)
+      {
+        document.dispatchEvent(new CustomEvent('zn-refresh-element', {
+          detail: {element: element}
+        }));
+      }
     });
 
     return true;

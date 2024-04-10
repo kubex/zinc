@@ -31,10 +31,14 @@
         color: rgb(var(--zn-text));
         display: block;
         font-weight: 500;
+        cursor: pointer;
 
-        &:hover {
-          color: rgb(var(--zn-purple-text));
+        &:hover, &.zn-tb-active {
           background: rgb(var(--zn-body));
+        }
+
+        &.zn-tb-active {
+          color: rgb(var(--zn-purple-text));
         }
       }
     }

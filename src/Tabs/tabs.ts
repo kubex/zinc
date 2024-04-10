@@ -1,7 +1,7 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { TabPanel } from "./tab-panel";
-import { md5 } from '../md5';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {TabPanel} from "./tab-panel";
+import {md5} from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -57,7 +57,7 @@ export class Tabs extends LitElement
       if(storedValue != null && storedValue != "")
       {
         this._prepareTab(storedValue);
-        this.setActiveTab(storedValue, false);
+        this.setActiveTab(storedValue, false, false);
       }
     }
   }
@@ -107,7 +107,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode }
+      detail: {element: tabNode}
     }));
     return tabNode;
   }
@@ -124,17 +124,17 @@ export class Tabs extends LitElement
       }
       if(target.hasAttribute('tab'))
       {
-        this.setActiveTab(target.getAttribute('tab') || '', true);
+        this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
       }
     }
   }
 
-  setActiveTab(tabName: string, store: boolean)
+  setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
     this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
     if(this._panel instanceof TabPanel)
     {
-      this._panel.selectTab(tabName);
+      this._panel.selectTab(tabName, refresh);
     }
 
     //Set on the element as a failsafe before TabPanel is loaded

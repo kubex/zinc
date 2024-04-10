@@ -139,7 +139,7 @@ export class Tabs extends LitElement
 
   setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
-    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', (tab.getAttribute('tab') || '') === tabName));
+    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
     if(this._panel instanceof TabPanel)
     {
       this._panel.selectTab(tabName, refresh);

@@ -131,12 +131,15 @@ export class Editor extends LitElement
   render()
   {
     return html`
-      <div id="editor"></div>
       <div id="toolbar-container">
         <div class="wrap">
           <button class="ql-bold"></button>
           <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
         </div>
+      </div>
+      <div id="editor"></div>
+      <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>
       </div>
     `;

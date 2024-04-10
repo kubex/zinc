@@ -29,7 +29,7 @@ export class SplitPane extends ZincElement
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
     if(this.storeKey != "" && this.storeKey != null)
     {
-      let storedValue = this.storage.getItem('znsp:' + this.storeKey);
+      const storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
         this.secondarySize = parseInt(storedValue);
@@ -45,12 +45,12 @@ export class SplitPane extends ZincElement
     }
 
     this.classList.add('resizing');
-    let initialSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
-    let pageOffset = this.vertical ? this.getBoundingClientRect().top : this.getBoundingClientRect().left;
+    const initialSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+    const pageOffset = this.vertical ? this.getBoundingClientRect().top : this.getBoundingClientRect().left;
 
     this.mouseMoveHandler = function (e)
     {
-      let primarySize = (((this.vertical ? e.y : e.x) - pageOffset) / initialSize) * 100;
+      const primarySize = (((this.vertical ? e.y : e.x) - pageOffset) / initialSize) * 100;
       this.setSize((100 - primarySize), false);
     }.bind(this);
 

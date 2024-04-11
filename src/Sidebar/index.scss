@@ -56,6 +56,12 @@
       @include wc.container-query(ph) {
         position: relative;
         inset: 0;
+        padding-left: 0;
+      }
+
+
+      @include wc.container-query(lg) {
+        padding-left: var(--zn-padding, 0);
       }
     }
 
@@ -201,7 +207,10 @@
 
 :host([distinct]) {
   #sidebar {
-    border-left-width: 1px;
+
+    @include wc.container-query(ph) {
+      border-left-width: 1px;
+    }
 
     #expander {
       border-left-width: 0;

@@ -240,8 +240,11 @@ class DropdownModule
 
     // Delete the forward slash and the command from the text
     const index = this._quill.getSelection()?.index;
+    const text = this._quill.getText();
+    const commandIndex = text.lastIndexOf('/', index);
+    const commandLength = index - commandIndex;
 
-    this._quill.deleteText(index - this._command.length - 1, this._command.length + 1);
+    this._quill.deleteText(commandIndex, commandLength);
 
     // insert the command content
     this._quill.insertText(this._quill.getSelection()?.index, command.content);

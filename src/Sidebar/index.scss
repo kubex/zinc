@@ -1,13 +1,16 @@
 @use "../wc";
 
 :host {
+  max-height: 100%;
+  overflow: hidden !important;
+
 
   .container {
-
     position: relative;
     display: flex;
     flex-direction: column-reverse;
     align-items: stretch;
+    max-height: 100%;
 
     @include wc.container-query(ph) {
       flex-direction: row;
@@ -23,6 +26,7 @@
   #primary-content {
     flex-grow: 1;
     min-height: 100px;
+    overflow-y: auto;
     @include wc.padding;
   }
 
@@ -32,6 +36,7 @@
     flex-shrink: 0;
     flex-direction: column;
     align-items: stretch;
+    overflow-y: auto;
     background: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
     @include wc.container-query(ph) {

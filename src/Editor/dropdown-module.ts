@@ -8,11 +8,13 @@ type DropdownModuleOptions = {
 type DropdownModuleCannedResponse = {
   title: string
   content: string;
+  labels?: string[];
 }
 
 class DropdownModule
 {
   private _quill: Quill;
+  private _dropdown: HTMLElement;
   private _dropdownOpen: boolean = false;
   private _command: string = '';
   private _commands: any = [];
@@ -61,7 +63,17 @@ class DropdownModule
       {
         e.preventDefault();
         e.stopImmediatePropagation();
-        this.triggerCommand(this._commands[this._selectedIndex]);
+
+        // trigger the command based on the selected index and if filters are applied
+        const commandElement = this._commandElements[this._selectedIndex];
+        const commandName = commandElement.getAttribute('data-command');
+
+        console.log('Selected index', this._selectedIndex);
+        console.log('Command Element', commandElement);
+        console.log('Command Name', commandName);
+
+        const command = this._commands.find(command => command.title === commandName);
+        this.triggerCommand(command);
       }
     });
   }
@@ -75,13 +87,21 @@ class DropdownModule
       // can select from.
       const text = this._quill.getText();
       const index = this._quill.getSelection()?.index;
-      const char = text.charAt(index - 1);
+      let char = text.charAt(index - 1);
+
+      if(index === 0)
+      {
+        char = text.charAt(index);
+      }
 
       // if there's no character before the forward slash, we will open the dropdown
       if(char === '/' && !this._dropdownOpen &&
         (text.charAt(index - 2) === ' '
           || text.charAt(index - 2) === '\n'
-          || text.charAt(index - 2) === ''))
+          || text.charAt(index - 2) === ''
+          || text.charAt(index - 2) === undefined
+          || index === 0
+        ))
       {
         this.openDropdown();
       }
@@ -114,8 +134,6 @@ class DropdownModule
     }
   }
 
-  private _dropdown: HTMLElement;
-
   openDropdown()
   {
     this._dropdownOpen = true;
@@ -136,6 +154,87 @@ class DropdownModule
   commandFilter(text: string)
   {
     this._command = text.split('/')[text.split('/').length - 1].trim();
+
+    // split command by commas, and remove any whitespace, anything before a comma is a label
+    const labels = this._command.split(',').map(label => label.trim());
+    const filteredText = labels[labels.length - 1];
+
+    // Remove existing commands
+    this._commandElements.forEach(element =>
+    {
+      this._dropdown.removeChild(element);
+    });
+
+    const filteredCommands: DropdownModuleCannedResponse[] = [];
+
+    // filter the commands based on the labels if they exist, else filter based on the text
+    if(labels.length > 1)
+    {
+      this._commands.forEach(command =>
+      {
+        if(command.labels)
+        {
+          labels.forEach(label =>
+          {
+            if(command.labels.includes(label))
+            {
+              filteredCommands.push(command);
+            }
+          });
+        }
+      });
+    }
+    else
+    {
+      filteredCommands.push(...this._commands);
+    }
+
+    const filteredTextCommands: DropdownModuleCannedResponse[] = [];
+
+    // filter the commands based on the text
+    filteredCommands.forEach(command =>
+    {
+      if(command.title.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
+      {
+        filteredTextCommands.push(command);
+      }
+
+      if(command.labels)
+      {
+        command.labels.forEach(label =>
+        {
+          console.log('Label', label);
+          console.log('Filtered Text', filteredText);
+          console.log('match', label.toLowerCase().includes(filteredText.toLowerCase()));
+          // dedupe
+          if(label.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
+          {
+            filteredTextCommands.push(command);
+          }
+        });
+      }
+    });
+
+
+    this._commandElements = filteredTextCommands.filter(command =>
+    {
+      return command.title.toLowerCase().includes(filteredText.toLowerCase());
+    }).map(command =>
+    {
+      return this.createCommandElement(command);
+    });
+
+    // add the filtered commands to the dropdown
+    this._commandElements.forEach(element =>
+    {
+      this._dropdown.appendChild(element);
+    });
+
+    if(filteredCommands.length !== 0)
+    {
+      this.moveCursor(0);
+      this.updateSelectedCommand();
+    }
   }
 
   createDropdown()
@@ -224,6 +323,7 @@ class DropdownModule
     commandElement.style.cursor = 'pointer';
     commandElement.style.borderBottom = '1px solid #f0f0f0';
     commandElement.textContent = command.title;
+    commandElement.setAttribute('data-command', command.title);
 
     commandElement.addEventListener('click', (e) =>
     {

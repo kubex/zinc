@@ -19,11 +19,13 @@ export const Default: Story = {
     commands: [
       {
         title: 'Welcome',
-        content: 'Welcome to the editor'
+        content: 'Welcome to the editor',
+        labels: ['greeting', 'action', 'welcome']
       },
       {
         title: 'Goodbye',
-        content: 'Goodbye from the editor'
+        content: 'Goodbye from the editor',
+        labels: ['farewell', 'action']
       }
     ]
   },

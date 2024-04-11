@@ -39,6 +39,12 @@ export class Toggle extends LitElement
     this.internals.ariaRequired = isRequired ? 'true' : 'false';
   }
 
+  _toggleBlur()
+  {
+    this._toggleValue();
+    this.blur();
+  }
+
   _toggleValue()
   {
     this._input.focus();
@@ -50,7 +56,7 @@ export class Toggle extends LitElement
   {
     super();
     this.internals = this.attachInternals();
-    this.addEventListener('click', this._toggleValue);
+    this.addEventListener('click', this._toggleBlur);
     this.addEventListener('keydown', (e) =>
     {
       if(e.key == ' ')

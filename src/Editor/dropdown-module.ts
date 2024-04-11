@@ -141,14 +141,16 @@ class DropdownModule
     this._selectedIndex = 0;
     this.updateSelectedCommand();
 
-    this._quill.container.appendChild(this._dropdown);
+    // add to the document out of shadow dom
+    this._quill.container.ownerDocument.body.appendChild(this._dropdown);
   }
 
   closeDropdown()
   {
     this._dropdownOpen = false;
     this._selectedIndex = 0;
-    this._quill.container.removeChild(this._dropdown);
+
+    this._quill.container.ownerDocument.body.removeChild(this._dropdown);
   }
 
   commandFilter(text: string)
@@ -258,12 +260,26 @@ class DropdownModule
   {
     const index = this._quill.getSelection()?.index;
     const bounds = this._quill.getBounds(index);
+    const editorBounds = this._quill.container.getBoundingClientRect();
+    const dom = this._quill.container.ownerDocument;
 
-    const dropdownTop = bounds.top + 15 + "px";
-    const dropdownLeft = bounds.left + 5 + "px";
+    let top = bounds.top + editorBounds.top + 20;
+    let left = bounds.left + editorBounds.left;
 
-    dropdown.style.top = dropdownTop;
-    dropdown.style.left = dropdownLeft;
+    // if the dropdown is at the bottom of the editor, we will move it up
+    if(top + dropdown.offsetHeight > dom.documentElement.clientHeight)
+    {
+      top = top - dropdown.offsetHeight - 40;
+    }
+
+    // if the dropdown is at the right of the editor, we will move it to the left
+    if(left + dropdown.offsetWidth > dom.documentElement.clientWidth)
+    {
+      left = left - dropdown.offsetWidth + 20;
+    }
+
+    dropdown.style.top = top + 'px';
+    dropdown.style.left = left + 'px';
   }
 
   addCommands(dropdown: HTMLElement = this._dropdown)

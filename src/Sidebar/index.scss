@@ -1,0 +1,210 @@
+@use "../wc";
+
+:host {
+
+  .container {
+
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    @include wc.container-query(ph) {
+      flex-direction: row;
+    }
+
+  }
+
+  #primary-content, #sidebar {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  #primary-content {
+    flex-grow: 1;
+    min-height: 100px;
+    @include wc.padding;
+  }
+
+  #sidebar {
+    width: 100%;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: rgba(var(--zn-panel), var(--zn-panel-opacity));
+
+    @include wc.container-query(ph) {
+      flex-direction: row;
+    }
+
+    #content {
+      @include wc.padding;
+
+      display: none;
+      overflow-y: auto;
+      background: rgba(var(--zn-panel), var(--zn-panel-opacity));
+
+
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: wc.common-size(bar);
+      bottom: 0;
+      flex-grow: 1;
+
+      @include wc.container-query(ph) {
+        position: relative;
+        inset: 0;
+      }
+    }
+
+    @include wc.container-query(ph) {
+      min-width: wc.common-size(bar);
+      max-width: wc.common-size(bar);
+    }
+
+    #expander {
+      cursor: pointer;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom-width: 1px;
+      height: wc.common-size(bar);
+      width: 100%;
+      background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      @include wc.container-query(ph) {
+        height: unset;
+        flex-direction: column;
+        justify-content: start;
+        min-width: wc.common-size(bar);
+        max-width: wc.common-size(bar);
+        width: wc.common-size(bar);
+        border-bottom-width: 0;
+        border-left-width: 1px;
+        padding-bottom: wc.common-size(bar);
+      }
+
+      @include wc.container-query(lg) {
+        display: none;
+      }
+
+      span {
+        writing-mode: horizontal-tb;
+        flex-grow: 1;
+        padding-left: wc.spacing(md);
+        display: none;
+
+        @include wc.container-query(ph) {
+          writing-mode: vertical-rl;
+        }
+
+        @include wc.container-query(ph) {
+          padding-left: 0;
+        }
+
+        &.open {
+          display: block;
+        }
+      }
+
+      zn-icon {
+        color: rgb(var(--zn-text));
+        margin-left: wc.spacing(md);
+        margin-right: wc.spacing(md);
+        transition: all 500ms ease-in-out;
+        rotate: 0;
+
+        @include wc.container-query(ph) {
+          margin-top: wc.spacing(md);
+          margin-bottom: wc.spacing(md);
+          rotate: 90deg;
+        }
+      }
+    }
+  }
+}
+
+:host([open]) {
+  #sidebar {
+    @include wc.container-query(ph) {
+      min-width: wc.common-size(mpanel);
+      max-width: wc.common-size(mpanel);
+      width: wc.common-size(mpanel);
+    }
+
+    #expander {
+      zn-icon {
+        rotate: -180deg;
+        @include wc.container-query(ph) {
+          rotate: -90deg;
+        }
+      }
+
+      &.open {
+        display: none;
+      }
+
+      &.close {
+        display: none;
+        @include wc.container-query(ph) {
+          display: block;
+        }
+      }
+
+      &.close-sm {
+        display: block;
+        font-weight: 500;
+        @include wc.container-query(ph) {
+          display: none;
+        }
+      }
+    }
+
+    #content {
+      display: block;
+    }
+  }
+}
+
+
+@include wc.container-query(lg) {
+  :host #sidebar {
+    min-width: wc.common-size(mpanel);
+    max-width: wc.common-size(mpanel);
+    width: wc.common-size(mpanel);
+
+    #content {
+      display: block;
+    }
+  }
+
+  :host(:not([distinct])) {
+    #sidebar {
+      background: transparent;
+
+      #content {
+        background: transparent;
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+:host([distinct]) {
+  #sidebar {
+    border-left-width: 1px;
+
+    #expander {
+      border-left-width: 0;
+    }
+  }
+}

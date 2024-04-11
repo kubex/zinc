@@ -31,6 +31,7 @@ import './ConfirmModal';
 import './Chat';
 import './StatsTile';
 import './SplitPane';
+import './Sidebar';
 import './Collapsible';
 import './EmptyState';
 import './ProgressBar';

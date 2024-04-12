@@ -55,7 +55,13 @@ export class SplitPane extends ZincElement
 
     this.mouseMoveHandler = function (e)
     {
-      const primarySize = (((this.vertical ? e.y : e.x) - pageOffset) / initialSize) * 100;
+      let offset = (this.vertical ? e.y : e.x);
+      if(e instanceof TouchEvent)
+      {
+        offset = (this.vertical ? e.touches[0].clientY : e.touches[0].clientX);
+      }
+
+      const primarySize = ((offset - pageOffset) / initialSize) * 100;
       this.setSize((100 - primarySize), false);
     }.bind(this);
 
@@ -63,9 +69,15 @@ export class SplitPane extends ZincElement
     {
       this.setSize(this.secondarySize, true);
       this.classList.remove('resizing');
+      window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
+
+      window.removeEventListener('touchend', this.mouseUpHandler);
       window.removeEventListener('mouseup', this.mouseUpHandler);
     }.bind(this);
+
+    window.addEventListener('touchmove', this.mouseMoveHandler);
+    window.addEventListener('touchend', this.mouseUpHandler);
 
     window.addEventListener('mousemove', this.mouseMoveHandler);
     window.addEventListener('mouseup', this.mouseUpHandler);
@@ -112,7 +124,7 @@ export class SplitPane extends ZincElement
       <div id="primary-pane">
         <slot name="primary"></slot>
       </div>
-      <div @mousedown="${this.resize}" id="resizer"></div>
+      <div @mousedown="${this.resize}" @touchstart="${this.resize}" id="resizer"></div>
       <div id="secondary-pane">
         <slot name="secondary"></slot>
       </div>

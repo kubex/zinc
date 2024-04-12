@@ -3,7 +3,7 @@
 
 @mixin media-query($min, $max: null) {
   @if $min and $max {
-    @media (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+    @media (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)-1}) {
       @content;
     }
   } @else if $min {
@@ -11,7 +11,7 @@
       @content;
     }
   } @else if $max {
-    @media (max-width: #{map.get(spacing.$container, $max)}) {
+    @media (max-width: #{map.get(spacing.$container, $max)-1}) {
       @content;
     }
   }
@@ -19,7 +19,7 @@
 
 @mixin container-query($min, $max: null) {
   @if $min and $max {
-    @container (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)}) {
+    @container (min-width: #{map.get(spacing.$container, $min)}) and (max-width: #{map.get(spacing.$container, $max)-1}) {
       @content;
     }
   } @else if $min {
@@ -27,7 +27,7 @@
       @content;
     }
   } @else if $max {
-    @container (max-width: #{map.get(spacing.$container, $max)}) {
+    @container (max-width: #{map.get(spacing.$container, $max)-1}) {
       @content;
     }
   }

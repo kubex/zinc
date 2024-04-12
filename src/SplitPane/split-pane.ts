@@ -19,6 +19,11 @@ export class SplitPane extends ZincElement
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
   @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
 
+  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Primary';
+  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Secondary';
+
+  @property({attribute: 'focus-pane', type: Number, reflect: true}) _focusPane = 0;
+
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
 
@@ -76,6 +81,16 @@ export class SplitPane extends ZincElement
     }
   }
 
+  _togglePane(e)
+  {
+    e.target.parentElement.querySelectorAll('li').forEach((el) =>
+    {
+      el.classList.remove('active');
+    });
+    e.target.classList.add('active');
+    this._focusPane = parseInt(e.target.getAttribute('idx'));
+  }
+
   protected render(): unknown
   {
     const resizeWidth = '2px';
@@ -86,6 +101,14 @@ export class SplitPane extends ZincElement
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>
+      <ul id="split-nav">
+        <li idx="0" class="${this._focusPane == 0 ? 'active' : ''}" @click="${this._togglePane}">
+          ${this.primaryCaption}
+        </li>
+        <li idx="1" class="${this._focusPane == 1 ? 'active' : ''}" @click="${this._togglePane}">
+          ${this.secondaryCaption}
+        </li>
+      </ul>
       <div id="primary-pane">
         <slot name="primary"></slot>
       </div>

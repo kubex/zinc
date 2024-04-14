@@ -1,14 +1,14 @@
-import {ZincElement} from "../zinc";
-import {html, unsafeCSS} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import { ZincElement } from "../zinc";
+import { html, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
 
 @customElement('zn-sidebar')
 export class Sidebar extends ZincElement
 {
-  @property({attribute: 'caption', type: String, reflect: true}) caption;
-  @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
+  @property({ attribute: 'caption', type: String, reflect: true }) caption;
+  @property({ attribute: 'open', type: Boolean, reflect: true }) open: boolean = false;
 
   static styles = unsafeCSS(styles);
 

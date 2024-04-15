@@ -278,6 +278,14 @@ class DropdownModule
 
   addCommands(dropdown: HTMLElement = this._dropdown)
   {
+    const header = document.createElement('div');
+    header.style.padding = '5px 10px 10px';
+    header.style.color = 'rgb(var(--zn-text-heading))';
+    header.style.borderBottom = '1px solid rgb(var(--zn-border-color))';
+
+    header.textContent = 'Canned Responses';
+    dropdown.appendChild(header);
+
     this._commands.forEach(command =>
     {
       this._commandElements.push(this.createCommandElement(command));
@@ -342,7 +350,7 @@ class DropdownModule
     commandWrapper.appendChild(commandLeft);
 
     const commandCommand = document.createElement('div');
-    commandCommand.textContent = '/ ' + (command.commmand ? command.commmand :
+    commandCommand.textContent = '/' + (command.commmand ? command.commmand :
       command.title.toLowerCase().replace(' ', '-'));
     commandCommand.style.color = 'rgb(var(--zn-text-heading))';
     commandLeft.appendChild(commandCommand);

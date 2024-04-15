@@ -3,6 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
+import {on} from "../on";
 
 @customElement('zn-split-pane')
 export class SplitPane extends ZincElement
@@ -12,9 +13,14 @@ export class SplitPane extends ZincElement
   private storage: Storage;
   mouseMoveHandler: null | EventListener = null;
   mouseUpHandler: null | EventListener = null;
-  private maxPercent = 80;
 
-  @property({attribute: 'min-primary-size', type: Number, reflect: true}) minimumPrimarySize = 15;
+  private currentPixelSize: number = 0;
+  private currentPercentSize: number = 0;
+  private currentContainerSize: number = 0;
+
+  @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
+  @property({attribute: 'secondary', type: Boolean, reflect: true}) storeSecondarySize = false;
+  @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
   @property({attribute: 'primary-size', type: Number, reflect: true}) primarySize = 50;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
@@ -32,12 +38,21 @@ export class SplitPane extends ZincElement
   {
     super.connectedCallback();
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
+    on(this, 'click', '[split-pane-focus]', (e) =>
+    {
+      e.preventDefault();
+      e.stopPropagation();
+      this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')));
+    });
   }
 
   firstUpdated(changedProperties)
   {
     super.firstUpdated(changedProperties);
-    this.applyStoredSize();
+    setTimeout(() =>
+    {
+      this.applyStoredSize();
+    }, 100);
   }
 
   applyStoredSize()
@@ -47,28 +62,45 @@ export class SplitPane extends ZincElement
       const storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        if(storedValue.indexOf(",") == -1)
+        this.currentContainerSize = (this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width);
+        const parts = storedValue.split(",");
+        if(parts.length != 3)
         {
-          this.primarySize = parseInt(storedValue);
+          return;
         }
-        else
+        const storedPixels = parseInt(parts[0]);
+        const storedPercent = parseInt(parts[1]);
+        const storedBasis = parseInt(parts[2]);
+
+        let setPixelSize = storedPixels;
+
+        if(this.storeSecondarySize)
         {
-          console.log(this.getBoundingClientRect());
-          const parts = storedValue.split(",");
-          let storedPrimary = parseInt(parts[0]);
-          let storedInitial = parseInt(parts[1]);
-          const currentSize = (this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width) || storedInitial;
-          console.log(storedPrimary, storedInitial, currentSize);
-          if(storedInitial < 300)
+          if(this.calculatePixels)
           {
-            storedInitial = currentSize;
+            setPixelSize = this.currentContainerSize - (storedBasis - storedPixels);
           }
-          storedPrimary = Math.round(storedPrimary * (storedInitial / currentSize));
-          console.log(storedPrimary, storedInitial, currentSize);
-          this.primarySize = storedPrimary;
+          else
+          {
+            setPixelSize = storedBasis * ((100 - storedPercent) / 100);
+          }
         }
+        else if(!this.calculatePixels)
+        {
+          setPixelSize = storedBasis * (storedPercent / 100);
+        }
+        this.setSize(setPixelSize);
       }
     }
+  }
+
+  sizeFromStored(storedValue: number, relativeSize: number)
+  {
+    if(this.calculatePixels)
+    {
+      return storedValue;
+    }
+    return storedValue * (relativeSize / 100);
   }
 
   resize(e)
@@ -79,7 +111,7 @@ export class SplitPane extends ZincElement
     }
 
     this.classList.add('resizing');
-    const initialSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+    this.currentContainerSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
     const pageOffset = this.vertical ? this.getBoundingClientRect().top : this.getBoundingClientRect().left;
 
     this.mouseMoveHandler = function (e)
@@ -89,14 +121,12 @@ export class SplitPane extends ZincElement
       {
         offset = (this.vertical ? e.touches[0].clientY : e.touches[0].clientX);
       }
-
-      const primarySize = ((offset - pageOffset) / initialSize) * 100;
-      this.setSize(primarySize, false, initialSize);
+      this.setSize(offset - pageOffset);
     }.bind(this);
 
     this.mouseUpHandler = function (e)
     {
-      this.setSize(this.primarySize, true, initialSize);
+      this.store();
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -112,24 +142,46 @@ export class SplitPane extends ZincElement
     window.addEventListener('mouseup', this.mouseUpHandler);
   }
 
-  setSize(w, apply, initialSize)
+  setSize(primaryPanelPixels: number)
   {
-    w = Math.round(Math.max(this.minimumPrimarySize, Math.min(100 - this.minimumPrimarySize, w)));
-    this.primarySize = w;
-    if(apply && this.storeKey != null && this.storeKey != "")
+    let pixelSize = primaryPanelPixels;
+    let percentSize = (primaryPanelPixels / this.currentContainerSize) * 100;
+
+    if(this.calculatePixels)
     {
-      this.storage.setItem('znsp:' + this.storeKey, w + "," + initialSize);
+      pixelSize = Math.max(this.minimumPaneSize, pixelSize);
+      this.primarySize = pixelSize;
+    }
+    else
+    {
+      percentSize = Math.max(this.minimumPaneSize, percentSize);
+      this.primarySize = percentSize;
+    }
+
+    this.currentPixelSize = pixelSize;
+    this.currentPercentSize = percentSize;
+  }
+
+  store()
+  {
+    if(this.storeKey != null && this.storeKey != "")
+    {
+      this.storage.setItem('znsp:' + this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
     }
   }
 
   _togglePane(e)
   {
-    e.target.parentElement.querySelectorAll('li').forEach((el) =>
+    this._setFocusPane(e.target.getAttribute('idx'));
+  }
+
+  _setFocusPane(idx: number)
+  {
+    this._focusPane = idx;
+    this.querySelectorAll('ul#split-nav li').forEach((el) =>
     {
-      el.classList.remove('active');
+      el.classList.toggle('active', parseInt(el.getAttribute('idx')) == idx);
     });
-    e.target.classList.add('active');
-    this._focusPane = parseInt(e.target.getAttribute('idx'));
   }
 
   protected render(): unknown
@@ -138,7 +190,8 @@ export class SplitPane extends ZincElement
     const resizeMargin = '5px';
     return html`
       <style>:host {
-        --primary-size: ${this.primarySize}%;
+        --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
+        --primary-size: ${this.primarySize}${this.calculatePixels ? 'px' : '%'};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>

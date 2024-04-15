@@ -130,12 +130,12 @@
   }
 
   #primary-pane {
-    max-width: calc(100% - var(--secondary-size, 0));
+    max-width: var(--primary-size, 50%);
   }
 
   #secondary-pane {
+    max-width: calc(100% - var(--primary-size, 0));
     width: 100%;
-    max-width: var(--secondary-size, 50%);
   }
 
 
@@ -186,12 +186,12 @@
   }
 
   #primary-pane {
-    max-height: calc(100% - var(--secondary-size, 0));
+    max-height: var(--primary-size, 50%);
   }
 
   #secondary-pane {
     height: 100%;
-    max-height: var(--secondary-size, 50%);
+    max-height: calc(100% - var(--primary-size, 0));
   }
 
   #resizer {

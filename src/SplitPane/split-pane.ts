@@ -14,7 +14,8 @@ export class SplitPane extends ZincElement
   mouseUpHandler: null | EventListener = null;
   private maxPercent = 80;
 
-  @property({attribute: 'secondary-size', type: Number, reflect: true}) secondarySize = 50;
+  @property({attribute: 'min-primary-size', type: Number, reflect: true}) minimumPrimarySize = 15;
+  @property({attribute: 'primary-size', type: Number, reflect: true}) primarySize = 50;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
   @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
@@ -37,7 +38,7 @@ export class SplitPane extends ZincElement
       const storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        this.secondarySize = parseInt(storedValue);
+        this.primarySize = parseInt(storedValue);
       }
     }
   }
@@ -62,12 +63,12 @@ export class SplitPane extends ZincElement
       }
 
       const primarySize = ((offset - pageOffset) / initialSize) * 100;
-      this.setSize((100 - primarySize), false);
+      this.setSize(primarySize, false);
     }.bind(this);
 
     this.mouseUpHandler = function (e)
     {
-      this.setSize(this.secondarySize, true);
+      this.setSize(this.primarySize, true);
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -85,8 +86,8 @@ export class SplitPane extends ZincElement
 
   setSize(w, apply)
   {
-    w = Math.max(15, Math.min(85, w));
-    this.secondarySize = w;
+    w = Math.round(Math.max(this.minimumPrimarySize, Math.min(100 - this.minimumPrimarySize, w)));
+    this.primarySize = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {
       this.storage.setItem('znsp:' + this.storeKey, w);
@@ -109,7 +110,7 @@ export class SplitPane extends ZincElement
     const resizeMargin = '5px';
     return html`
       <style>:host {
-        --secondary-size: ${this.secondarySize}%;
+        --primary-size: ${this.primarySize}%;
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>

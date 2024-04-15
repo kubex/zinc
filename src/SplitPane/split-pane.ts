@@ -38,7 +38,23 @@ export class SplitPane extends ZincElement
       const storedValue = this.storage.getItem('znsp:' + this.storeKey);
       if(storedValue != null && storedValue != "")
       {
-        this.primarySize = parseInt(storedValue);
+        if(storedValue.indexOf(",") == -1)
+        {
+          this.primarySize = parseInt(storedValue);
+        }
+        else
+        {
+          const parts = storedValue.split(",");
+          const currentSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
+          let storedPrimary = parseInt(parts[0]);
+          let storedInitial = parseInt(parts[1]);
+          if(storedInitial < 300)
+          {
+            storedInitial = currentSize;
+          }
+          storedPrimary = Math.round(storedPrimary * (storedInitial / currentSize));
+          this.primarySize = storedPrimary;
+        }
       }
     }
   }
@@ -63,12 +79,12 @@ export class SplitPane extends ZincElement
       }
 
       const primarySize = ((offset - pageOffset) / initialSize) * 100;
-      this.setSize(primarySize, false);
+      this.setSize(primarySize, false, initialSize);
     }.bind(this);
 
     this.mouseUpHandler = function (e)
     {
-      this.setSize(this.primarySize, true);
+      this.setSize(this.primarySize, true, initialSize);
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -84,13 +100,13 @@ export class SplitPane extends ZincElement
     window.addEventListener('mouseup', this.mouseUpHandler);
   }
 
-  setSize(w, apply)
+  setSize(w, apply, initialSize)
   {
     w = Math.round(Math.max(this.minimumPrimarySize, Math.min(100 - this.minimumPrimarySize, w)));
     this.primarySize = w;
     if(apply && this.storeKey != null && this.storeKey != "")
     {
-      this.storage.setItem('znsp:' + this.storeKey, w);
+      this.storage.setItem('znsp:' + this.storeKey, w + "," + initialSize);
     }
   }
 

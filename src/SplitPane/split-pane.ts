@@ -31,8 +31,17 @@ export class SplitPane extends ZincElement
   connectedCallback()
   {
     super.connectedCallback();
-
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
+  }
+
+  firstUpdated(changedProperties)
+  {
+    super.firstUpdated(changedProperties);
+    this.applyStoredSize();
+  }
+
+  applyStoredSize()
+  {
     if(this.storeKey != "" && this.storeKey != null)
     {
       const storedValue = this.storage.getItem('znsp:' + this.storeKey);
@@ -44,15 +53,18 @@ export class SplitPane extends ZincElement
         }
         else
         {
+          console.log(this.getBoundingClientRect());
           const parts = storedValue.split(",");
-          const currentSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
           let storedPrimary = parseInt(parts[0]);
           let storedInitial = parseInt(parts[1]);
+          const currentSize = (this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width) || storedInitial;
+          console.log(storedPrimary, storedInitial, currentSize);
           if(storedInitial < 300)
           {
             storedInitial = currentSize;
           }
           storedPrimary = Math.round(storedPrimary * (storedInitial / currentSize));
+          console.log(storedPrimary, storedInitial, currentSize);
           this.primarySize = storedPrimary;
         }
       }

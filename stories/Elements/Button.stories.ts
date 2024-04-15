@@ -18,8 +18,9 @@ export const Default: Story = {
   render: ({ content, color, size, verticalAlign, disabled, submit, grow, icon, iconPosition }) =>
   {
     return html`
-      <zn-button color="${color}" size="${size}" vertical-align="${verticalAlign}" disabled="${disabled}"
-                 submit="${submit}" grow="${grow}" icon="${icon}" icon-position="${iconPosition}">${content}
+      <zn-button color="${color}" size="${size}" vertical-align="${verticalAlign}" ${disabled ? 'disabled' : ''}
+                 ${submit ? 'submit' : ''} ${grow ? 'grow' : ''} icon="${icon}" icon-position="${iconPosition}">
+        ${content}
       </zn-button>`;
   },
   args: {
@@ -41,7 +42,7 @@ export const Default: Story = {
     },
     size: {
       description: 'The size of the button',
-      options: ['small', 'normal', 'medium', 'large'],
+      options: ['x-small', 'small', 'normal', 'medium', 'large'],
       control: { type: 'select' },
     },
     verticalAlign: {

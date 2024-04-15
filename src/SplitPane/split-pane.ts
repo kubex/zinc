@@ -21,7 +21,7 @@ export class SplitPane extends ZincElement
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) storeSecondarySize = false;
   @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
-  @property({attribute: 'primary-size', type: Number, reflect: true}) primarySize = 50;
+  @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
   @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
@@ -150,12 +150,12 @@ export class SplitPane extends ZincElement
     if(this.calculatePixels)
     {
       pixelSize = Math.max(this.minimumPaneSize, pixelSize);
-      this.primarySize = pixelSize;
+      this.initialSize = pixelSize;
     }
     else
     {
       percentSize = Math.max(this.minimumPaneSize, percentSize);
-      this.primarySize = percentSize;
+      this.initialSize = percentSize;
     }
 
     this.currentPixelSize = pixelSize;
@@ -191,7 +191,7 @@ export class SplitPane extends ZincElement
     return html`
       <style>:host {
         --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
-        --primary-size: ${this.primarySize}${this.calculatePixels ? 'px' : '%'};
+        --initial-size: ${this.initialSize}${this.calculatePixels ? 'px' : '%'};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};
       }</style>

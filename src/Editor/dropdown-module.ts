@@ -8,6 +8,7 @@ type DropdownModuleOptions = {
 type DropdownModuleCannedResponse = {
   title: string
   content: string;
+  commmand: string;
   labels?: string[];
 }
 
@@ -242,14 +243,14 @@ class DropdownModule
   createDropdown()
   {
     const dropdown = document.createElement('div');
+    dropdown.classList.add('canned-responses-dropdown');
     dropdown.style.position = 'absolute';
-    dropdown.style.width = '200px';
-    dropdown.style.height = '200px';
-    dropdown.style.backgroundColor = 'white';
-    dropdown.style.border = '1px solid black';
+    dropdown.style.backgroundColor = 'rgb(var(--zn-panel))';
+    dropdown.style.border = '1px solid rgb(var(--zn-border-color))';
     dropdown.style.zIndex = '1000';
+    dropdown.style.minHeight = '150px';
     dropdown.style.overflow = 'auto';
-    dropdown.style.padding = '10px';
+    dropdown.style.padding = '10px 0';
     dropdown.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
     dropdown.style.borderRadius = '5px';
 
@@ -258,34 +259,25 @@ class DropdownModule
 
   updateDropdownPosition(dropdown: HTMLElement = this._dropdown)
   {
-    const index = this._quill.getSelection()?.index;
-    const bounds = this._quill.getBounds(index);
     const editorBounds = this._quill.container.getBoundingClientRect();
-    const dom = this._quill.container.ownerDocument;
 
-    let top = bounds.top + editorBounds.top + 20;
-    let left = bounds.left + editorBounds.left;
+    // position bottom of the dropdown at the top of the editor
+    const top = (editorBounds.top + this._quill.container.scrollTop) - dropdown.offsetHeight;
 
-    // if the dropdown is at the bottom of the editor, we will move it up
-    if(top + dropdown.offsetHeight > dom.documentElement.clientHeight)
-    {
-      top = top - dropdown.offsetHeight - 40;
-    }
-
-    // if the dropdown is at the right of the editor, we will move it to the left
-    if(left + dropdown.offsetWidth > dom.documentElement.clientWidth)
-    {
-      left = left - dropdown.offsetWidth + 20;
-    }
+    // dropdown should be full width of the editor
+    const left = editorBounds.left;
+    const right = editorBounds.right;
+    const width = editorBounds.width;
 
     dropdown.style.top = top + 'px';
     dropdown.style.left = left + 'px';
+    dropdown.style.right = right + 'px';
+    dropdown.style.width = width + 'px';
+    dropdown.style.maxHeight = '200px';
   }
 
   addCommands(dropdown: HTMLElement = this._dropdown)
   {
-    dropdown.appendChild(document.createElement('div')).textContent = 'Canned Responses';
-
     this._commands.forEach(command =>
     {
       this._commandElements.push(this.createCommandElement(command));
@@ -319,7 +311,7 @@ class DropdownModule
 
   updateSelectedCommand()
   {
-    this._commandElements[this._selectedIndex].style.backgroundColor = 'blue';
+    this._commandElements[this._selectedIndex].style.backgroundColor = 'rgb(var(--zn-body))';
 
     // un style all the other commands
     this._commandElements.forEach((element, i) =>
@@ -334,20 +326,75 @@ class DropdownModule
 
   createCommandElement(command: DropdownModuleCannedResponse)
   {
-    const commandElement = document.createElement('div');
-    commandElement.style.padding = '5px';
-    commandElement.style.cursor = 'pointer';
-    commandElement.style.borderBottom = '1px solid #f0f0f0';
-    commandElement.textContent = command.title;
-    commandElement.setAttribute('data-command', command.title);
+    const commandWrapper = document.createElement('div');
+    commandWrapper.setAttribute('data-command', command.title);
+    commandWrapper.style.padding = '10px 20px';
+    commandWrapper.style.cursor = 'pointer';
+    commandWrapper.style.borderBottom = '1px solid rgb(var(--zn-border-color))';
+    commandWrapper.style.display = 'flex';
+    commandWrapper.style.alignItems = 'center';
+    commandWrapper.style.gap = '10px';
 
-    commandElement.addEventListener('click', (e) =>
+
+    const commandLeft = document.createElement('div');
+    commandLeft.style.width = '50%';
+    commandLeft.style.flexBasis = '50%';
+    commandWrapper.appendChild(commandLeft);
+
+    const commandCommand = document.createElement('div');
+    commandCommand.textContent = '/ ' + (command.commmand ? command.commmand :
+      command.title.toLowerCase().replace(' ', '-'));
+    commandCommand.style.color = 'rgb(var(--zn-text-heading))';
+    commandLeft.appendChild(commandCommand);
+
+    const commandLabels = document.createElement('div');
+    commandLabels.style.display = 'flex';
+    commandLabels.style.gap = '5px';
+    commandLabels.style.flexWrap = 'wrap';
+    commandLabels.style.paddingTop = '5px';
+    for(const label of command.labels || [])
+    {
+      const tag = this.createTagElement(label);
+      commandLabels.appendChild(tag);
+    }
+    commandLeft.appendChild(commandLabels);
+
+    const commandRight = document.createElement('div');
+    commandLeft.style.width = '50%';
+    commandLeft.style.flexBasis = '50%';
+    commandWrapper.appendChild(commandRight);
+
+    const commandTitle = document.createElement('div');
+    commandTitle.textContent = command.title;
+    commandRight.appendChild(commandTitle);
+
+    const commandSnippet = document.createElement('div');
+    commandSnippet.textContent = command.content.length > 50 ? command.content.substring(0, 50) + '...' : command.content;
+    commandRight.appendChild(commandSnippet);
+
+    commandWrapper.addEventListener('click', (e) =>
     {
       this._quill.focus();
       this.triggerCommand(command);
     });
 
-    return commandElement;
+    return commandWrapper;
+  }
+
+  createTagElement(tag: string)
+  {
+    const tagElement = document.createElement('div');
+    tagElement.textContent = '# ' + tag;
+
+    tagElement.style.backgroundColor = 'rgb(var(--zn-shadow))';
+    tagElement.style.color = 'rgb(var(--zn-text-body));';
+    tagElement.style.padding = '5px';
+    tagElement.style.borderRadius = '5px';
+    tagElement.style.fontSize = '12px';
+    tagElement.style.fontWeight = 'bold';
+
+
+    return tagElement;
   }
 
   triggerCommand(command: DropdownModuleCannedResponse)

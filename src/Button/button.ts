@@ -15,45 +15,39 @@ export class Button extends ZincElement
   @property({ type: String }) color: ButtonColor = 'primary';
   @property({ type: String }) size: ButtonSizes;
   @property({ type: String }) verticalAlign: VerticalAlignments;
-  @property({ type: Boolean }) submit: boolean = false;
 
   @property({ type: String }) content = '';
   @property({ type: String }) icon: string = '';
   @property({ type: String }) iconPosition: IconPosition = 'left';
   @property({ type: String }) iconSize: string = '24';
+  @property() type: 'button' | 'submit' | 'reset' = 'button';
 
   static styles = unsafeCSS(styles);
 
+  private handleClick()
+  {
+    if(this.type === 'submit')
+    {
+      const form = this.closest('form');
+      if(form)
+      {
+        form.requestSubmit();
+      }
+    }
+  }
+
   protected render(): unknown
   {
-    const typeAttribute = this.submit ? 'submit' : 'button';
     const icon = this.icon ? html`
       <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize}"></zn-icon>` : '';
 
-    if(this.icon)
-    {
-      if(this.iconPosition === 'left')
-      {
-        return html`
-          <button type="${typeAttribute}">
-            ${icon}
-            <slot></slot>
-          </button>`;
-      }
-      else
-      {
-        return html`
-          <button type="${typeAttribute}">
-            <slot></slot>
-            ${icon}
-          </button>`;
-      }
-    }
-
     return html`
-      <button type=${typeAttribute}>
+      <button type="${this.type}" @click="${this.handleClick}">
+        ${this.iconPosition === 'left' ? icon : ''}
         <slot></slot>
+        ${this.iconPosition === 'right' ? icon : ''}
       </button>`;
+
   }
 }
 

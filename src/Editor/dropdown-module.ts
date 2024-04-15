@@ -1,6 +1,5 @@
 import Quill from 'quill';
 
-
 type DropdownModuleOptions = {
   cannedResponses: DropdownModuleCannedResponse[];
 }

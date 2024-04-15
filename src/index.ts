@@ -46,3 +46,4 @@ import './Pane';
 import './Timer';
 import './Editor';
 import './ScrollContainer';
+import './ButtonGroup';

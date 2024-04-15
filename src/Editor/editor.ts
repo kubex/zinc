@@ -30,6 +30,7 @@ export class Editor extends LitElement
   public cannedResponses: Array<any>;
 
   private internals: ElementInternals;
+  private quillElement: Quill;
 
   constructor()
   {
@@ -60,6 +61,8 @@ export class Editor extends LitElement
           if(form)
           {
             form.requestSubmit();
+            // clear contents
+            this.quillElement.setText('');
           }
         }
       },
@@ -67,7 +70,7 @@ export class Editor extends LitElement
 
     Quill.register('modules/dropdownModule', DropdownModule as any);
 
-    console.log('CANNED RESPONSES', this.cannedResponses)
+    console.log('CANNED RESPONSES', this.cannedResponses);
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: this.toolbarContainer,
@@ -82,6 +85,8 @@ export class Editor extends LitElement
       theme: 'snow',
       bounds: this.editor,
     });
+
+    this.quillElement = quill;
 
     const normalizeNative = (nativeRange: any) =>
     {

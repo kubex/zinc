@@ -12,6 +12,20 @@ export class Sidebar extends ZincElement
 
   static styles = unsafeCSS(styles);
 
+  constructor()
+  {
+    super();
+
+    this.addEventListener('scroll-to-bottom', () =>
+    {
+      setTimeout(() =>
+      {
+        const container = this.shadowRoot.getElementById('primary-content');
+        container.scrollTop = container.scrollHeight;
+      }, 100);
+    });
+  }
+
   render()
   {
     return html`

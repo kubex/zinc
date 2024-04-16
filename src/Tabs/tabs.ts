@@ -1,7 +1,7 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
-import {md5} from '../md5';
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { TabPanel } from "./tab-panel";
+import { md5 } from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,15 +13,15 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
   constructor()
   {
     super();
-    this._tabs = Array();
+    this._tabs = [];
     this.querySelectorAll('[tab]').forEach(ele =>
     {
       this._addTab(ele as HTMLElement);
@@ -44,8 +44,8 @@ export class Tabs extends LitElement
 
   _addTab(tab: HTMLElement)
   {
-    tab.addEventListener('click', this._handleClick.bind(this));
     this._tabs.push(tab);
+    tab.addEventListener('click', this._handleClick.bind(this));
   }
 
   connectedCallback()
@@ -68,6 +68,8 @@ export class Tabs extends LitElement
         this.setActiveTab(storedValue, false, false);
       }
     }
+
+    this.observerDom();
   }
 
   _prepareTab(tabId: string)
@@ -115,7 +117,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode}
+      detail: { element: tabNode }
     }));
     return tabNode;
   }
@@ -155,11 +157,42 @@ export class Tabs extends LitElement
     }
   }
 
+  observerDom()
+  {
+    // observe the DOM for changes
+    const observer = new MutationObserver((mutations) =>
+    {
+      mutations.forEach((mutation) =>
+      {
+        if(mutation.type === 'childList')
+        {
+          this.querySelectorAll('[tab]').forEach(ele =>
+          {
+            this._addTab(ele as HTMLElement);
+          });
+          this.querySelectorAll('[tab-uri]').forEach(ele =>
+          {
+            this._addTab(ele as HTMLElement);
+          });
+          this.querySelectorAll('zn-tab-panel').forEach((element) =>
+          {
+            this._panel = element as TabPanel;
+          });
+        }
+      });
+    });
+
+    observer.observe(this, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+
   render()
   {
     return html`
-      <slot></slot>
-    `;
+      <slot></slot>`;
   }
 }
 

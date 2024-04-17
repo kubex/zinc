@@ -5,13 +5,16 @@
   display: none;
 }
 
+:host([grow]) {
+  flex-grow: 1;
+}
+
 :host {
   @include wc.scrollbars;
 
   --row-count: 1;
   overflow: visible;
   display: flex;
-  flex-grow: 1;
   max-width: 100%;
   min-height: 30px;
   z-index: 1;

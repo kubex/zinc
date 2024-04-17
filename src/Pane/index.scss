@@ -18,3 +18,10 @@
   flex-grow: 1;
   overflow-y: auto;
 }
+
+:host(:not([flush])) {
+  .pane__content {
+    @include wc.padding;
+    @include wc.gap;
+  }
+}

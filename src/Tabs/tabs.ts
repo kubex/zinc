@@ -1,7 +1,7 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { TabPanel } from "./tab-panel";
-import { md5 } from '../md5';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {TabPanel} from "./tab-panel";
+import {md5} from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -117,7 +117,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode }
+      detail: {element: tabNode}
     }));
     return tabNode;
   }
@@ -135,6 +135,8 @@ export class Tabs extends LitElement
       if(target.hasAttribute('tab'))
       {
         this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
+        event.preventDefault();
+        event.stopImmediatePropagation();
       }
     }
   }

@@ -1,9 +1,12 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { TabPanel } from "./tab-panel";
-import { md5 } from '../md5';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {TabPanel} from "./tab-panel";
+import {md5} from '../md5';
 
 import styles from './tabs.scss';
+import {on} from "../on";
+import {deepQuerySelectorAll} from "../query";
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
@@ -13,8 +16,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -22,19 +25,6 @@ export class Tabs extends LitElement
   {
     super();
     this._tabs = [];
-    this.querySelectorAll('[tab]').forEach(ele =>
-    {
-      this._addTab(ele as HTMLElement);
-    });
-    this.querySelectorAll('[tab-uri]').forEach(ele =>
-    {
-      this._addTab(ele as HTMLElement);
-    });
-    this.querySelectorAll('zn-tab-panel').forEach((element) =>
-    {
-      this._panel = element as TabPanel;
-    });
-
     if(this._panel == null)
     {
       console.error("No zn-tab-panel found in zn-tabs", this);
@@ -55,6 +45,7 @@ export class Tabs extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
+    this._registerTabs();
 
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
     if(this._panel === null)
@@ -63,17 +54,27 @@ export class Tabs extends LitElement
       return;
     }
 
-    if(this.storeKey !== "" && this.storeKey !== null)
-    {
-      const storedValue = this.storage.getItem('zntab:' + this.storeKey);
-      if(storedValue != null && storedValue != "")
-      {
-        this._prepareTab(storedValue);
-        this.setActiveTab(storedValue, false, false);
-      }
-    }
 
     this.observerDom();
+  }
+
+  firstUpdated(_changedProperties: PropertyValues)
+  {
+    super.firstUpdated(_changedProperties);
+    setTimeout(() =>
+    {
+      this._registerTabs();
+
+      if(this.storeKey !== "" && this.storeKey !== null)
+      {
+        const storedValue = this.storage.getItem('zntab:' + this.storeKey);
+        if(storedValue != null && storedValue != "")
+        {
+          this._prepareTab(storedValue);
+          this.setActiveTab(storedValue, false, false);
+        }
+      }
+    }, 100);
   }
 
   _prepareTab(tabId: string)
@@ -87,7 +88,7 @@ export class Tabs extends LitElement
         }
       }
 
-    const uriTabs = this.querySelectorAll("[tab-uri]");
+    const uriTabs = deepQuerySelectorAll("[tab-uri]", this);
     for(let i = 0; i < uriTabs.length; i++)
     {
       const uri = uriTabs[i].getAttribute("tab-uri");
@@ -122,16 +123,16 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode }
+      detail: {element: tabNode}
     }));
     return tabNode;
   }
 
-  _handleClick(event: MouseEvent)
+  _handleClick(event: PointerEvent)
   {
-    if(event.target instanceof HTMLElement)
+    const target = (event.selectedTarget ?? event.target) as HTMLElement;
+    if(target)
     {
-      const target = event.target as HTMLElement;
       if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
       {
         const tabUri = target.getAttribute("tab-uri");
@@ -171,18 +172,7 @@ export class Tabs extends LitElement
       {
         if(mutation.type === 'childList')
         {
-          this.querySelectorAll('[tab]').forEach(ele =>
-          {
-            this._addTab(ele as HTMLElement);
-          });
-          this.querySelectorAll('[tab-uri]').forEach(ele =>
-          {
-            this._addTab(ele as HTMLElement);
-          });
-          this.querySelectorAll('zn-tab-panel').forEach((element) =>
-          {
-            this._panel = element as TabPanel;
-          });
+          this._registerTabs();
         }
       });
     });
@@ -193,6 +183,21 @@ export class Tabs extends LitElement
     });
   }
 
+  _registerTabs()
+  {
+    deepQuerySelectorAll('[tab]', this).forEach(ele =>
+    {
+      this._addTab(ele as HTMLElement);
+    });
+    deepQuerySelectorAll('[tab-uri]', this).forEach(ele =>
+    {
+      this._addTab(ele as HTMLElement);
+    });
+    this.querySelectorAll('zn-tab-panel').forEach((element) =>
+    {
+      this._panel = element as TabPanel;
+    });
+  }
 
   render()
   {

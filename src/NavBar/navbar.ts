@@ -21,9 +21,7 @@ export class NavBar extends ZincElement
         {
           const activeClass = item.active ? 'active' : '';
           return html`
-            <li class="${activeClass}">
-              <a tab-uri="${item.path}">${item.title}</a>
-            </li>`;
+            <li class="${activeClass}" tab-uri="${item.path}">${item.title}</li>`;
         })}
       </ul>`;
   }

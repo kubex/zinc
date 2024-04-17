@@ -1,7 +1,7 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
-import {md5} from '../md5';
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { TabPanel } from "./tab-panel";
+import { md5 } from '../md5';
 
 import styles from './tabs.scss';
 
@@ -13,8 +13,8 @@ export class Tabs extends LitElement
   private storage: Storage;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
 
   static styles = unsafeCSS(styles);
 
@@ -44,6 +44,10 @@ export class Tabs extends LitElement
 
   _addTab(tab: HTMLElement)
   {
+    if(this._tabs.includes(tab))
+    {
+      return;
+    }
     this._tabs.push(tab);
     tab.addEventListener('click', this._handleClick.bind(this));
   }
@@ -75,12 +79,13 @@ export class Tabs extends LitElement
   _prepareTab(tabId: string)
   {
     for(let i = 0; i < this._tabs.length; i++)
-    {
-      if(this._tabs[i].getAttribute('tab') == tabId)
+      for(let i = 0; i < this._tabs.length; i++)
       {
-        return;
+        if(this._tabs[i].getAttribute('tab') == tabId)
+        {
+          return;
+        }
       }
-    }
 
     const uriTabs = this.querySelectorAll("[tab-uri]");
     for(let i = 0; i < uriTabs.length; i++)
@@ -117,7 +122,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode}
+      detail: { element: tabNode }
     }));
     return tabNode;
   }
@@ -135,8 +140,6 @@ export class Tabs extends LitElement
       if(target.hasAttribute('tab'))
       {
         this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
-        event.preventDefault();
-        event.stopImmediatePropagation();
       }
     }
   }

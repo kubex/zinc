@@ -15,6 +15,7 @@ import './Chip';
 import './Dialog';
 import './Table';
 import './Property';
+import './NavBar';
 import './Chart';
 import './SimpleChart';
 import './Note';

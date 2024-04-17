@@ -17,12 +17,14 @@ export class NavBar extends ZincElement
   {
     return html`
       <ul>
+        <slot></slot>
         ${this.navigation.map((item, index) =>
         {
           const activeClass = item.active ? 'active' : '';
           return html`
             <li class="${activeClass}" tab-uri="${item.path}">${item.title}</li>`;
         })}
+        <slot name="last"></slot>
       </ul>`;
   }
 }

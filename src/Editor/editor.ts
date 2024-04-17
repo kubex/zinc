@@ -66,14 +66,54 @@ export class Editor extends LitElement
           }
         }
       },
+      // clear formatting on paste
+      'remove-formatting': {
+        key: 'V',
+        shiftKey: true,
+        handler: (range, context) =>
+        {
+          const clipboard = context.event.clipboardData;
+          const text = clipboard.getData('text/plain');
+          const html = clipboard.getData('text/html');
+          const delta = this.quillElement.clipboard.convert({ html: html, text: text });
+          this.quillElement.setContents(delta, 'silent');
+          this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
+        }
+      }
     };
 
     Quill.register('modules/dropdownModule', DropdownModule as any);
 
-    console.log('CANNED RESPONSES', this.cannedResponses);
+    const icons = Quill.import("ui/icons");
+    icons["undo"] = `<svg viewbox="0 0 18 18">
+    <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
+    <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
+  </svg>`;
+    icons["redo"] = `<svg viewbox="0 0 18 18">
+    <polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon>
+    <path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path>
+  </svg>`;
+
     const quill = new Quill(this.editor, {
       modules: {
-        toolbar: this.toolbarContainer,
+        toolbar: {
+          container: [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['undo', 'redo'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+          ],
+          handlers: {
+            'redo': () =>
+            {
+              this.quillElement.history.redo();
+            },
+            'undo': () =>
+            {
+              this.quillElement.history.undo();
+            }
+          }
+        },
         keyboard: {
           bindings: bindings
         },
@@ -152,13 +192,6 @@ export class Editor extends LitElement
   render()
   {
     return html`
-      <div id="toolbar-container">
-        <div class="wrap">
-          <button class="ql-bold"></button>
-          <button class="ql-italic"></button>
-          <button class="ql-underline"></button>
-        </div>
-      </div>
       <div id="editor"></div>
       <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>

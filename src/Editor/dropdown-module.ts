@@ -21,7 +21,7 @@ class DropdownModule
   private _selectedIndex = 0;
   private _commandElements: HTMLElement[] = [];
 
-  constructor(quill, options: DropdownModuleOptions)
+  constructor(quill: Quill, options: DropdownModuleOptions)
   {
     this._quill = quill;
     if(options.cannedResponses)

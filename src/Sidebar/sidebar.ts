@@ -30,8 +30,10 @@ export class Sidebar extends ZincElement
   {
     return html`
       <div class="container">
-        <div id="primary-content">
-          <slot></slot>
+        <div class="relative">
+          <div id="primary-content">
+            <slot></slot>
+          </div>
         </div>
         <div id="sidebar">
           ${this._expander()}

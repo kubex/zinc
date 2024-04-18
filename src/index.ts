@@ -29,7 +29,6 @@ import './FormElements/DatePicker';
 import './FormElements/MultiSelect';
 import './FormElements/Toggle';
 import './ConfirmModal';
-import './Chat';
 import './StatsTile';
 import './SplitPane';
 import './Sidebar';

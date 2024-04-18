@@ -1,4 +1,4 @@
-@use "../../wc";
+@use "../wc";
 
 :host {
   cursor: pointer;
@@ -10,32 +10,37 @@
   flex-direction: column;
   align-items: flex-start;
   margin: 0 60px 0 0;
-
-  &.sender-self {
-    align-items: end;
-    margin: 0 0 0 60px;
-
-    .message {
-      background-color: rgba(var(--zn-primary), 0.1);
-    }
-  }
 }
 
 .message {
   margin-top: 10px;
-  padding: 15px 20px;
+  padding: 15px 15px;
   background-color: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
+  color: rgb(var(--zn-text-heading));
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
+  max-width: 85%;
   border-radius: 10px;
+
+  &:before {
+    position: absolute;
+    content: '';
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background-color: rgb(var(--zn-shadow));
+    border-radius: 10px;
+    z-index: -1;
+  }
 }
 
 .time {
   font-size: 12px;
   line-height: 15px;
-  margin: 10px 0;
+  margin: 5px 0;
   text-transform: capitalize;
 }
 

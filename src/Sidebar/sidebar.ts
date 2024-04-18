@@ -22,7 +22,7 @@ export class Sidebar extends ZincElement
       {
         const container = this.shadowRoot.getElementById('primary-content');
         container.scrollTop = container.scrollHeight;
-      }, 100);
+      }, 200);
     });
   }
 

@@ -15,28 +15,42 @@ export class TabPanel extends LitElement
   {
     super();
     this._panels = new Map<string, Element[]>();
+  }
 
-    this.querySelectorAll('*').forEach((element) =>
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this._loadPanels(this);
+    this.selectTab(this._current || '', false);
+  }
+
+  _loadPanels(ele)
+  {
+    ele.querySelectorAll('*').forEach((element) =>
     {
-      const tabName = element.getAttribute('id') || '';
-      if(!this._panels.has(tabName))
+      if(element instanceof HTMLSlotElement)
       {
-        this._panels.set(tabName, []);
+        element.assignedElements().forEach((ele) => this._addTab(ele));
+        return;
       }
-      this._panels.get(tabName).push(element);
+      this._addTab(element);
     });
+  }
+
+  _addTab(element: Element)
+  {
+    const tabName = element.getAttribute('id') || '';
+    if(!this._panels.has(tabName))
+    {
+      this._panels.set(tabName, []);
+    }
+    this._panels.get(tabName).push(element);
   }
 
   public addPanel(tabId: string, panel: Element)
   {
     this._panels.set(tabId, [panel]);
     this.appendChild(panel);
-  }
-
-  connectedCallback()
-  {
-    super.connectedCallback();
-    this.selectTab(this._current || '', false);
   }
 
   selectTab(tabName: string, refresh: boolean): boolean

@@ -19,17 +19,21 @@ export class Pane extends ZincElement
 
   render()
   {
-
     if(this._header)
     {
       this.classList.add("with-header");
+      console.log(this._header.offsetHeight, this._header.clientHeight, this._header.scrollHeight, this._header.getBoundingClientRect());
     }
 
     return html`
-      ${this._header}
-      <div class="pane__content">
-        <slot></slot>
-      </div>`;
+      <zn-tabs>
+        ${this._header}
+        <div class="pane__content">
+          <zn-tab-panel>
+            <slot></slot>
+          </zn-tab-panel>
+        </div>
+      </zn-tabs>`;
   }
 }
 

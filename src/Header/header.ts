@@ -9,41 +9,30 @@ export class Header extends ZincElement
 {
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
   @property({attribute: 'caption', type: String, reflect: true}) caption: String;
-  @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
 
+  private _hasNav: boolean;
+
   static styles = unsafeCSS(styles);
 
-  clickNav(e)
+  connectedCallback()
   {
-    e.target.closest('ul').querySelectorAll('li').forEach((item) =>
+    super.connectedCallback();
+    const nav = this.querySelector('zn-navbar');
+    if(nav)
     {
-      item.classList.remove('active');
-    });
-    e.target.closest('li').classList.add('active');
+      this._hasNav = true;
+      nav.setAttribute('baseless', '');
+    }
   }
 
   render()
   {
 
-    if(this.caption == "" && (!this?.navigation?.length) && (!this?.breadcrumb?.length))
+    if(this.caption == "" && (!this._hasNav) && (!this?.breadcrumb?.length))
     {
       return html``;
-    }
-
-    let nav: TemplateResult;
-    if(this?.navigation?.length)
-    {
-      nav = html`
-        ${this.navigation.map((item, index) =>
-        {
-          const activeClass = item.active ? 'active' : '';
-          return html`
-            <li class="${activeClass}">
-              <a @click="${this.clickNav}" href="${item.path}">${item.title}</a>
-            </li>`;
-        })}`;
     }
 
     let breadcrumb: TemplateResult;
@@ -73,13 +62,15 @@ export class Header extends ZincElement
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
-        <div class="width-container">
+        <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
           ${caption}
           <div class="actions">
             <slot></slot>
           </div>
-          <ul class="header-nav">${nav}</ul>
+        </div>
+        <div class="width-container ${this._hasNav ? 'jas' : 'navless'}">
+          <slot name="nav"></slot>
         </div>
       </div>
     `;

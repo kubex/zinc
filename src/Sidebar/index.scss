@@ -1,6 +1,7 @@
 @use "../wc";
 
 :host {
+  flex-grow: 1;
   max-height: 100%;
   overflow: hidden !important;
 
@@ -33,6 +34,9 @@
     min-height: 100px;
     overflow-y: auto;
     @include wc.padding;
+    display: flex;
+    flex-direction: column;
+    @include wc.gap;
   }
 
   #sidebar {
@@ -43,7 +47,6 @@
     align-items: stretch;
     overflow-y: auto;
     overflow-x: hidden;
-    background: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
     @include wc.container-query(ph) {
       flex-direction: row;
@@ -51,10 +54,11 @@
 
     #content {
       @include wc.padding;
+      background: rgb(var(--zn-body));
 
       display: none;
+      z-index: 5;
       overflow-y: auto;
-      background: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
 
       position: absolute;
@@ -67,7 +71,6 @@
       @include wc.container-query(ph) {
         position: relative;
         inset: 0;
-        padding-left: 0;
       }
 
 
@@ -218,13 +221,26 @@
 
 :host([distinct]) {
   #sidebar {
+    #content {
+      background: rgba(var(--zn-panel), var(--zn-panel-opacity));
+    }
 
     @include wc.container-query(ph) {
       border-left-width: 1px;
+    }
+
+    @include wc.container-query(zero, lg) {
+      #content {
+        padding-left: 0;
+      }
     }
 
     #expander {
       border-left-width: 0;
     }
   }
+}
+
+:host #sidebar #content slot {
+  @include wc.page-content;
 }

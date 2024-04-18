@@ -25,11 +25,6 @@ export class Tabs extends LitElement
   {
     super();
     this._tabs = [];
-    if(this._panel == null)
-    {
-      console.error("No zn-tab-panel found in zn-tabs", this);
-      return;
-    }
   }
 
   _addTab(tab: HTMLElement)
@@ -88,7 +83,7 @@ export class Tabs extends LitElement
         }
       }
 
-    const uriTabs = deepQuerySelectorAll("[tab-uri]", this);
+    const uriTabs = deepQuerySelectorAll("[tab-uri]", this, '');
     for(let i = 0; i < uriTabs.length; i++)
     {
       const uri = uriTabs[i].getAttribute("tab-uri");
@@ -130,6 +125,7 @@ export class Tabs extends LitElement
 
   _handleClick(event: PointerEvent)
   {
+    // ts-ignore
     const target = (event.selectedTarget ?? event.target) as HTMLElement;
     if(target)
     {

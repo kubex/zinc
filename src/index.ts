@@ -36,7 +36,7 @@ import './Collapsible';
 import './EmptyState';
 import './ProgressBar';
 import './Stepper';
-import './TabbedPanel';
+//import './TabbedPanel';
 import './Pagination';
 import './ActionItem';
 import './InlineEdit';

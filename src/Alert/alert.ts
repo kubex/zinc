@@ -1,8 +1,8 @@
-import {html, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import { ZincElement } from "../zinc";
 
 export type AlertLevel = '' | 'primary' | 'error' | 'info' | 'success' | 'warning';
 
@@ -11,10 +11,10 @@ export class Alert extends ZincElement
 {
 
   static styles = unsafeCSS(styles);
-  @property({type: String}) icon: string = '';
-  @property({type: String}) caption: string = '';
-  @property({type: Boolean}) collapse: boolean = false;
-  @property({type: String}) level: AlertLevel = '';
+  @property({ type: String }) icon: string = '';
+  @property({ type: String }) caption: string = '';
+  @property({ type: Boolean }) collapse: boolean = false;
+  @property({ type: String }) level: AlertLevel = '';
 
   render()
   {
@@ -38,13 +38,15 @@ export class Alert extends ZincElement
     const caption = this.caption ? html`<h6>${this.caption}</h6>` : '';
 
     return html`
-      ${icon}
-      <div class="content">
-        ${caption}
-        <slot></slot>
-      </div>
-      <div class="actions">
-        <slot name="actions"></slot>
+      <div class="wrapper">
+        ${icon}
+        <div class="content">
+          ${caption}
+          <slot></slot>
+        </div>
+        <div class="actions">
+          <slot name="actions"></slot>
+        </div>
       </div>`;
   }
 

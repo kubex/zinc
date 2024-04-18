@@ -49,3 +49,4 @@ import './Editor';
 import './ScrollContainer';
 import './ButtonGroup';
 import './AbsoluteContainer';
+import './ChatMessage';

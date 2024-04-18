@@ -1,5 +1,5 @@
 import {html, unsafeCSS} from "lit";
-import {customElement} from 'lit/decorators.js';
+import {property, customElement} from 'lit/decorators.js';
 
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
@@ -8,7 +8,7 @@ import {ZincElement} from "../zinc";
 export class Pane extends ZincElement
 {
   static styles = unsafeCSS(styles);
-
+  @property({attribute: 'without-tabs', type: Boolean}) _tabLess = false;
   protected _header: HTMLElement;
 
   connectedCallback()
@@ -22,7 +22,15 @@ export class Pane extends ZincElement
     if(this._header)
     {
       this.classList.add("with-header");
-      console.log(this._header.offsetHeight, this._header.clientHeight, this._header.scrollHeight, this._header.getBoundingClientRect());
+    }
+
+    if(this._tabLess)
+    {
+      return html`
+        ${this._header}
+        <div class="pane__content">
+          <slot></slot>
+        </div>`;
     }
 
     return html`

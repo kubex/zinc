@@ -1,11 +1,11 @@
-export function deepQuerySelectorAll(selector: string, element: Element): Element[]
+export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[]
 {
   const arr = [];
 
-  const traverser = node =>
+  const traverser = (node, sub: boolean) =>
   {
     // 1. decline all nodes that are not elements
-    if(node.nodeType !== Node.ELEMENT_NODE)
+    if(node.nodeType !== Node.ELEMENT_NODE || (sub && stopSelector && node.matches(stopSelector)))
     {
       return;
     }
@@ -22,7 +22,7 @@ export function deepQuerySelectorAll(selector: string, element: Element): Elemen
     {
       for(const child of children)
       {
-        traverser(child);
+        traverser(child, true);
       }
     }
 
@@ -33,12 +33,12 @@ export function deepQuerySelectorAll(selector: string, element: Element): Elemen
       const shadowChildren = shadowRoot.children;
       for(const shadowChild of shadowChildren)
       {
-        traverser(shadowChild);
+        traverser(shadowChild, true);
       }
     }
   };
 
-  traverser(element);
+  traverser(element, false);
 
   return arr;
 }

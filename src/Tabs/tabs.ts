@@ -185,11 +185,11 @@ export class Tabs extends LitElement
 
   _registerTabs()
   {
-    deepQuerySelectorAll('[tab]', this).forEach(ele =>
+    deepQuerySelectorAll('[tab]', this, 'zn-tab-panel').forEach(ele =>
     {
       this._addTab(ele as HTMLElement);
     });
-    deepQuerySelectorAll('[tab-uri]', this).forEach(ele =>
+    deepQuerySelectorAll('[tab-uri]', this, 'zn-tab-panel').forEach(ele =>
     {
       this._addTab(ele as HTMLElement);
     });

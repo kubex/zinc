@@ -9,20 +9,18 @@ export class ChatMessage extends LitElement
   static styles = unsafeCSS(styles);
 
   @property({ type: String })
-  private sender = 'you';
+  private sender = '';
 
   @property({ type: String })
   private time = '';
 
-  @property({ type: String, attribute: 'customer-initiated' })
-  private customerInitiated = false;
+  @property({ type: String })
+  private type = '';
 
   render()
   {
-    const self = !this.customerInitiated;
-
     return html`
-      <div class="wrapper ${self ? 'sender-self' : null}">
+      <div class="wrapper ${this.sender ? 'message-' + this.sender : ''}">
         <div class="message">
           <slot></slot>
         </div>

@@ -1,12 +1,12 @@
-import {CSSResultGroup, html, LitElement, unsafeCSS} from "lit";
-import {customElement, property, query} from 'lit/decorators.js';
+import { CSSResultGroup, html, LitElement, unsafeCSS } from "lit";
+import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './index.scss';
 
 @customElement('zn-dialog')
 export class Dialog extends LitElement
 {
-  @property({type: String, reflect: true}) trigger: string;
+  @property({ type: String, reflect: true }) trigger: string;
 
   @query('dialog', true)
   private _dialog: HTMLDialogElement;
@@ -21,6 +21,13 @@ export class Dialog extends LitElement
     super.connectedCallback();
     this.addEventListener('click', this._closeClickHandler.bind(this));
     this.shadowRoot.addEventListener('click', this._closeClickHandler.bind(this));
+
+    // Make sure the closer has a pointer cursor
+    const closer = this.querySelector('[dialog-closer]') as HTMLElement;
+    if(closer)
+    {
+      closer.style.cursor = 'pointer';
+    }
 
     if(this.trigger)
     {

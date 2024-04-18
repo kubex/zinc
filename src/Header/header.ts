@@ -3,28 +3,60 @@ import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../zinc";
 
 import styles from './index.scss';
+import {NavBar} from "../NavBar";
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-header')
 export class Header extends ZincElement
 {
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
   @property({attribute: 'caption', type: String, reflect: true}) caption: String;
+  @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
   @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
 
   private _hasNav: boolean;
+  private _navBar;
 
   static styles = unsafeCSS(styles);
 
-  connectedCallback()
+  protected firstUpdated(_changedProperties: PropertyValues)
   {
-    super.connectedCallback();
-    const nav = this.querySelector('zn-navbar');
-    if(nav)
+    super.firstUpdated(_changedProperties);
+    this._navBar = this.querySelector('zn-navbar');
+    this.updateNav();
+  }
+
+  updateNav()
+  {
+    if(!this._navBar && this.navigation && this.navigation.length > 0)
+    {
+      this._navBar = document.createElement('zn-navbar');
+      const nc = this.shadowRoot.querySelector('#nav-container');
+      if(nc)
+      {
+        nc.classList.remove('navless');
+        nc.appendChild(this._navBar);
+      }
+    }
+    if(this._navBar)
     {
       this._hasNav = true;
-      nav.setAttribute('baseless', '');
+      (this._navBar as NavBar).navigation = this.navigation;
+      this._navBar.setAttribute('baseless', '');
     }
+  }
+
+  protected updated(_changedProperties: PropertyValues)
+  {
+    super.updated(_changedProperties);
+    _changedProperties.forEach((oldValue, propName) =>
+    {
+      if(propName == 'navigation')
+      {
+        setTimeout(this.updateNav.bind(this), 100);
+      }
+    });
   }
 
   render()
@@ -69,7 +101,7 @@ export class Header extends ZincElement
             <slot></slot>
           </div>
         </div>
-        <div class="width-container ${this._hasNav ? 'jas' : 'navless'}">
+        <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
           <slot name="nav"></slot>
         </div>
       </div>

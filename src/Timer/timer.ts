@@ -21,55 +21,13 @@ export class Timer extends LitElement
   {
     const time = new Date(parseInt(this.timestamp) * 1000);
     const diff = (new Date()).getTime() - time.getTime();
+    const times = this._getTimes(diff);
 
 
-    const months = Math.floor(diff / 1000 / 60 / 60 / 24 / 30);
-    const weeks = Math.floor(diff / 1000 / 60 / 60 / 24 / 7);
-    const days = Math.floor(diff / 1000 / 60 / 60 / 24);
-    const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
-    const minutes = Math.floor(diff / 1000 / 60) % 60;
-    const seconds = Math.floor(diff / 1000) % 60;
-
-
-    // limit timer to always HH:MM or MM:SS or DD:HH
-    let displayMonths = months < 10 && months >= 0 ? `0${months}` : months;
-    let displayWeeks = weeks < 10 && weeks >= 0 ? `0${weeks}` : weeks;
-    let displayDays = days < 10 && days >= 0 ? `0${days}` : days;
-    let displayMinutes = minutes < 10 && minutes >= 0 ? `0${minutes}` : minutes;
-    let displaySeconds = seconds < 10 && seconds >= 0 ? `0${seconds}` : seconds;
-    let displayHours = hours < 10 && hours >= 0 ? `0${hours}` : hours;
-
-    displayMonths = months > 0 ? `${displayMonths}M` : 0;
-    displayWeeks = weeks > 0 ? `${displayWeeks}w` : 0;
-    displayDays = days > 0 ? `${displayDays}d` : 0;
-    displayHours = hours > 0 ? `${displayHours}` : 0;
-    displayMinutes = minutes > 0 ? `${displayMinutes}` : 0;
-    displaySeconds = seconds > 0 ? `${displaySeconds}` : 0;
-
-    const array = [displayMonths, displayWeeks, displayDays, displayHours, displayMinutes, displaySeconds];
-
-    let count = 0;
-    let prev = false;
-    const times = [];
-    array.forEach((item, _) =>
-    {
-      if(((item === 0 || item === '00') && !prev) || count === 2)
-      {
-        return;
-      }
-
-      times.push(item);
-      prev = true;
-      count++;
-    });
-
-
-    // increment every second
     setTimeout(() =>
     {
       this.requestUpdate();
     }, 1000);
-
 
     return html`
       <div class="last-message upper-limit-reached">
@@ -83,6 +41,51 @@ export class Timer extends LitElement
     return html`
       ${this._getLastMessage()}
     `;
+  }
+
+  private _getTimes(diff: number)
+  {
+    const months = Math.floor(diff / 1000 / 60 / 60 / 24 / 30);
+    const weeks = Math.floor(diff / 1000 / 60 / 60 / 24 / 7);
+    const days = Math.floor(diff / 1000 / 60 / 60 / 24);
+    const hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+    const minutes = Math.floor(diff / 1000 / 60) % 60;
+    const seconds = Math.floor(diff / 1000) % 60;
+
+    if(months > 0)
+    {
+      return [`${months} Month` + (months > 1 ? 's' : '')];
+    }
+
+    if(weeks > 0)
+    {
+      return [`${weeks} Week` + (weeks > 1 ? 's' : '')];
+    }
+
+    if(days > 0)
+    {
+      return [`${days} Day` + (days > 1 ? 's' : '')];
+    }
+
+    if(hours > 0)
+    {
+      if(minutes > 0)
+      {
+        return [`${hours}hr`, `${minutes}m`];
+      }
+
+      return [`${hours} Hour` + (hours > 1 ? 's' : '')];
+    }
+
+    if(minutes > 0)
+    {
+      if(seconds > 0)
+      {
+        return [`${minutes}`, `${seconds}`];
+      }
+
+      return [`${minutes} Minute` + (minutes > 1 ? 's' : '')];
+    }
   }
 }
 

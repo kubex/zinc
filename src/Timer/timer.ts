@@ -31,7 +31,7 @@ export class Timer extends LitElement
 
     return html`
       <div class="last-message upper-limit-reached">
-        <span class="time">${times.join(':')}</span>
+        <span class="time">${times}</span>
         <span class="last-message-indicator"></span>
       </div>`;
   }
@@ -43,7 +43,7 @@ export class Timer extends LitElement
     `;
   }
 
-  private _getTimes(diff: number)
+  private _getTimes(diff: number): string
   {
     const months = Math.floor(diff / 1000 / 60 / 60 / 24 / 30);
     const weeks = Math.floor(diff / 1000 / 60 / 60 / 24 / 7);
@@ -54,37 +54,37 @@ export class Timer extends LitElement
 
     if(months > 0)
     {
-      return [`${months} Month` + (months > 1 ? 's' : '')];
+      return `${months} Month` + (months > 1 ? 's' : '');
     }
 
     if(weeks > 0)
     {
-      return [`${weeks} Week` + (weeks > 1 ? 's' : '')];
+      return `${weeks} Week` + (weeks > 1 ? 's' : '');
     }
 
     if(days > 0)
     {
-      return [`${days} Day` + (days > 1 ? 's' : '')];
+      return `${days} Day` + (days > 1 ? 's' : '');
     }
 
     if(hours > 0)
     {
       if(minutes > 0)
       {
-        return [`${hours}hr`, `${minutes}m`];
+        return `${hours}hr ${minutes}m`;
       }
 
-      return [`${hours} Hour` + (hours > 1 ? 's' : '')];
+      return `${hours} Hour` + (hours > 1 ? 's' : '');
     }
 
     if(minutes > 0)
     {
       if(seconds > 0)
       {
-        return [`${minutes}`, `${seconds}`];
+        return `${minutes}m ${seconds}s`;
       }
 
-      return [`${minutes} Minute` + (minutes > 1 ? 's' : '')];
+      return `${minutes} Minute` + (minutes > 1 ? 's' : '');
     }
   }
 }

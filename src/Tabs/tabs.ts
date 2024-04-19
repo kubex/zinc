@@ -29,19 +29,22 @@ export class Tabs extends LitElement
     this._panels = new Map<string, Element[]>();
   }
 
-  connectedCallback()
+  async connectedCallback()
   {
     super.connectedCallback();
-    this._panel = this.querySelector('#content');
+    await this.updateComplete;
+    this._panel = this.shadowRoot.querySelector('#content');
     this.observerDom();
     this._registerTabs();
 
     this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
-    if(this._panel === null)
+    Array.from(this.children).forEach((element) =>
     {
-      console.error("No zn-tab-panel found in zn-tabs", this);
-      return;
-    }
+      if(element.slot == '')
+      {
+        this._panels.set(element.getAttribute('id') || '', [element]);
+      }
+    });
 
     this.observerDom();
   }
@@ -72,7 +75,11 @@ export class Tabs extends LitElement
           this.setActiveTab(storedValue, false, false);
         }
       }
-    }, 100);
+      else
+      {
+        this.setActiveTab(this._current, false, false);
+      }
+    }, 10);
   }
 
   _prepareTab(tabId: string)
@@ -114,6 +121,7 @@ export class Tabs extends LitElement
     {
       // Append the tab if the panel has not yet been constructed
       this._panel.appendChild(tabNode);
+      this._panels.set(tabId, [tabNode]);
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
@@ -150,7 +158,7 @@ export class Tabs extends LitElement
 
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
-    this._panel.setAttribute('active', tabName);
+
 
     if(store && this.storeKey != null && this.storeKey != "")
     {
@@ -160,6 +168,7 @@ export class Tabs extends LitElement
 
   selectTab(tabName: string, refresh: boolean): boolean
   {
+    console.log(this._panels);
     if(tabName && !this._panels.has(tabName))
     {
       return false;

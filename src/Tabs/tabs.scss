@@ -37,3 +37,17 @@
     @include wc.padding;
   }
 }
+
+#content {
+  slot {
+    display: contents;
+  }
+
+  ::slotted([selected]), > [selected] {
+    flex-grow: 1;
+  }
+
+  ::slotted(:not([selected])), > :not([selected]):not(slot) {
+    display: none !important;
+  }
+}

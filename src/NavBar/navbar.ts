@@ -2,6 +2,7 @@ import {html, TemplateResult, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../zinc";
 
+
 import styles from './index.scss';
 
 @customElement('zn-navbar')
@@ -30,8 +31,13 @@ export class NavBar extends ZincElement
         ${this.navigation.map((item, index) =>
         {
           const activeClass = item.active ? 'active' : '';
+          if(item.path != undefined)
+          {
+            return html`
+              <li class="${activeClass}" tab-uri="${item.path}">${item.title}</li>`;
+          }
           return html`
-            <li class="${activeClass}" tab-uri="${item.path}">${item.title}</li>`;
+            <li class="${activeClass}" tab="">${item.title}</li>`;
         })}
         ${this._postItems}
       </ul>`;

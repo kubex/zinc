@@ -107,11 +107,7 @@ export class Tabs extends LitElement
     tabNode.setAttribute("id", tabId);
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
-    if(this._panel instanceof TabPanel)
-    {
-      this._panel.addPanel(tabId, tabNode);
-    }
-    else if(this._panel instanceof HTMLElement)
+    if(this._panel instanceof HTMLElement)
     {
       // Append the tab if the panel has not yet been constructed
       this._panel.appendChild(tabNode);
@@ -136,7 +132,10 @@ export class Tabs extends LitElement
       }
       if(target.hasAttribute('tab'))
       {
-        this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
+        setTimeout(() =>
+        {
+          this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
+        }, 10);
       }
     }
   }

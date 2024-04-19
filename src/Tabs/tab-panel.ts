@@ -2,12 +2,13 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './panel.scss';
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-tab-panel')
 export class TabPanel extends LitElement
 {
   private _panels: Map<string, Element[]>;
-  @property({attribute: 'active', type: String, reflect: true}) _current = null;
+  @property({attribute: 'active', type: String, reflect: true}) _current = '';
 
   static styles = unsafeCSS(styles);
 
@@ -20,26 +21,47 @@ export class TabPanel extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
-    this._loadPanels(this);
+    if(this.children.length == 1 && this.children[0] instanceof HTMLSlotElement)
+    {
+      this.append(...this.children[0].assignedElements());
+      this.removeChild(this.children[0]);
+    }
+    this.observerDom();
+    Array.from(this.children).forEach((element) =>
+    {
+      this._addTab(element as Element);
+    });
     this.selectTab(this._current || '', false);
   }
 
-  _loadPanels(ele)
+
+  observerDom()
   {
-    ele.querySelectorAll('*').forEach((element) =>
+    // observe the DOM for changes
+    const observer = new MutationObserver((mutations) =>
     {
-      if(element instanceof HTMLSlotElement)
+      mutations.forEach((mutation) =>
       {
-        element.assignedElements().forEach((ele) => this._addTab(ele));
-        return;
-      }
-      this._addTab(element);
+        if(mutation.type === 'childList')
+        {
+          mutation.addedNodes.forEach((node) =>
+          {
+            if(node instanceof Element)
+            {
+              this._addTab(node);
+            }
+          });
+        }
+      });
     });
+
+    observer.observe(this, {childList: true});
   }
 
   _addTab(element: Element)
   {
     const tabName = element.getAttribute('id') || '';
+
     if(!this._panels.has(tabName))
     {
       this._panels.set(tabName, []);
@@ -47,41 +69,29 @@ export class TabPanel extends LitElement
     this._panels.get(tabName).push(element);
   }
 
-  public addPanel(tabId: string, panel: Element)
-  {
-    this._panels.set(tabId, [panel]);
-    this.appendChild(panel);
-  }
-
   selectTab(tabName: string, refresh: boolean): boolean
   {
-    if(!this._panels.has(tabName))
+    if(tabName && !this._panels.has(tabName))
     {
       return false;
     }
 
-    if(this._current !== null)
+    this._panels.forEach((elements, key) =>
     {
-      let eles = this._panels.get(this._current);
-      if(eles)
+      const isActive = key === tabName;
+      elements.forEach((element) =>
       {
-        eles.forEach((element) =>
+        element.toggleAttribute('selected', isActive);
+        if(refresh)
         {
-          element.removeAttribute('selected');
-        });
-      }
-    }
-    this._current = tabName;
-    this._panels.get(tabName).forEach((element) =>
-    {
-      element.setAttribute('selected', '');
-      if(refresh)
-      {
-        document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-          detail: {element: element}
-        }));
-      }
+          document.dispatchEvent(new CustomEvent('zn-refresh-element', {
+            detail: {element: element}
+          }));
+        }
+      });
     });
+
+    this._current = tabName;
 
     return true;
   }

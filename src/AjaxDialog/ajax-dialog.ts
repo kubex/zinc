@@ -35,12 +35,25 @@ export class AjaxDialog extends LitElement
     });
 
     this._content.innerHTML = content.join('');
+
+    const closers = this._content.querySelectorAll('[dialog-closer]');
+    closers.forEach((closer) =>
+    {
+      closer.addEventListener('click', this._closeDialog.bind(this));
+    });
+
     this._dialog.showModal();
   }
 
   _closeDialog(e)
   {
     e.preventDefault();
+
+    const closers = this._content.querySelectorAll('[dialog-closer]');
+    closers.forEach((closer) =>
+    {
+      closer.removeEventListener('click', this._closeDialog.bind(this));
+    });
 
     this._content.innerHTML = '';
     this._dialog.close();

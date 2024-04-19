@@ -14,7 +14,11 @@ export class Tabs extends LitElement
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[];
   @property({attribute: 'active', type: String, reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split;
   private storage: Storage;
+
+  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
@@ -228,6 +232,32 @@ export class Tabs extends LitElement
 
   render()
   {
+    if(this._split > 0)
+    {
+      let storeKey = this.storeKey;
+      if(storeKey)
+      {
+        storeKey = storeKey + "-split";
+      }
+      return html`
+        <slot name="top"></slot>
+        <div id="mid">
+          <zn-split-pane
+            primary-caption="${this.primaryCaption}"
+            secondary-caption="${this.secondaryCaption}"
+            store-key="${storeKey}"
+            pixels bordered
+            min-size="60" initial-size="${this._split}">
+            <slot slot="primary" name="left"></slot>
+            <div id="content" slot="secondary">
+              <slot></slot>
+            </div>
+            <slot name="right"></slot>
+          </zn-split-pane>
+        </div>
+        <slot name="bottom"></slot>
+      `;
+    }
     return html`
       <slot name="top"></slot>
       <div id="mid">

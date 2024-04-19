@@ -1,45 +1,55 @@
-import { html, unsafeCSS } from "lit";
-import { customElement } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import { ZincElement } from "../zinc";
-import { PropertyValues } from "@lit/reactive-element";
+import {ZincElement} from "../zinc";
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-absolute-container')
 export class AbsoluteContainer extends ZincElement
 {
   static styles = unsafeCSS(styles);
 
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this.observerDom();
+  }
+
+  resize()
+  {
+    let newSize = 0;
+    Array.from(this.children).forEach((child) =>
+    {
+      newSize += child.getBoundingClientRect().height;
+    });
+    this.style.minHeight = newSize + 'px';
+  }
+
+  observerDom()
+  {
+    // observe the DOM for changes
+    const observer = new MutationObserver((mutations) =>
+    {
+      this.resize();
+    });
+
+    observer.observe(this,
+      {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
+  }
+
   // the height of this element is set to the height of it's children (absolute positioned)
   // to push the content element down
-  updated(changedProperties: PropertyValues)
+
+  createRenderRoot()
   {
-    super.updated(changedProperties);
-
-    const children = this.children as HTMLCollectionOf<HTMLElement>;
-    const childrenArray = Array.from(children);
-    console.log('childrenArray', childrenArray);
-
-    setTimeout(() =>
-    {
-      const height = childrenArray.reduce((acc, child) =>
-      {
-        const rect = child.getBoundingClientRect();
-        console.log('rect', rect);
-        return acc + rect.height;
-      }, 0);
-
-      console.log('height', height);
-      this.style.height = `${height}px`;
-    }, 100);
+    return this;
   }
-
-  render()
-  {
-    return html`
-      <slot></slot>`;
-  }
-
 }
 
 

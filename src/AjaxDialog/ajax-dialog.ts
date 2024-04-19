@@ -49,7 +49,7 @@ export class AjaxDialog extends LitElement
   render()
   {
     return html`
-      <zn-button @click="${this._openDialog}">Open Dialog</zn-button>
+      <slot @click="${this._openDialog}"></slot>
       <dialog>
         <zn-button color="transparent" @click="${this._closeDialog}" icon="close" class="dialog-closer"></zn-button>
         <div id="content"></div>

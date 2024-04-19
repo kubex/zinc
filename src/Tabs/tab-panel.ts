@@ -21,16 +21,21 @@ export class TabPanel extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
-    if(this.children.length == 1 && this.children[0] instanceof HTMLSlotElement)
-    {
-      this.append(...this.children[0].assignedElements());
-      this.removeChild(this.children[0]);
-    }
-    this.observerDom();
     Array.from(this.children).forEach((element) =>
     {
-      this._addTab(element as Element);
+      if(element instanceof HTMLSlotElement)
+      {
+        element.assignedElements().forEach((subEle) =>
+        {
+          this._addTab(subEle as Element);
+        });
+      }
+      else
+      {
+        this._addTab(element as Element);
+      }
     });
+    this.observerDom();
     this.selectTab(this._current || '', false);
   }
 

@@ -8,7 +8,6 @@ import {ZincElement} from "../zinc";
 export class Pane extends ZincElement
 {
   static styles = unsafeCSS(styles);
-  @property({attribute: 'without-tabs', type: Boolean}) _tabLess = false;
   protected _header: HTMLElement;
 
   connectedCallback()
@@ -24,25 +23,13 @@ export class Pane extends ZincElement
       this.classList.add("with-header");
     }
 
-    if(this._tabLess)
-    {
-      return html`
-        ${this._header}
-        <div class="pane__content">
-          <slot></slot>
-        </div>`;
-    }
-
     return html`
-      <zn-tabs>
-        ${this._header}
-        <div class="pane__content">
-          <zn-tab-panel>
-            <slot></slot>
-          </zn-tab-panel>
-        </div>
-      </zn-tabs>`;
+      ${this._header}
+      <div class="pane__content">
+        <slot></slot>
+      </div>`;
   }
+
 }
 
 

@@ -1,18 +1,19 @@
 import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import {customElement, property, query} from 'lit/decorators.js';
 import {TabPanel} from "./tab-panel";
 import {md5} from '../md5';
 
 import styles from './tabs.scss';
-import {on} from "../on";
 import {deepQuerySelectorAll} from "../query";
 import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
 {
-  private _panel: TabPanel | HTMLElement;
+  private _panel: HTMLElement;
+  private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[];
+  @property({attribute: 'active', type: String, reflect: true}) _current = '';
   private storage: Storage;
 
   // session storage if not local
@@ -25,6 +26,24 @@ export class Tabs extends LitElement
   {
     super();
     this._tabs = [];
+    this._panels = new Map<string, Element[]>();
+  }
+
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this._panel = this.querySelector('#content');
+    this.observerDom();
+    this._registerTabs();
+
+    this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
+    if(this._panel === null)
+    {
+      console.error("No zn-tab-panel found in zn-tabs", this);
+      return;
+    }
+
+    this.observerDom();
   }
 
   _addTab(tab: HTMLElement)
@@ -35,22 +54,6 @@ export class Tabs extends LitElement
     }
     this._tabs.push(tab);
     tab.addEventListener('click', this._handleClick.bind(this));
-  }
-
-  connectedCallback()
-  {
-    super.connectedCallback();
-    this._registerTabs();
-
-    this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
-    if(this._panel === null)
-    {
-      console.error("No zn-tab-panel found in zn-tabs", this);
-      return;
-    }
-
-
-    this.observerDom();
   }
 
   firstUpdated(_changedProperties: PropertyValues)
@@ -143,10 +146,7 @@ export class Tabs extends LitElement
   setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
     this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
-    if(this._panel instanceof TabPanel)
-    {
-      this._panel.selectTab(tabName, refresh);
-    }
+    this.selectTab(tabName, refresh);
 
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
@@ -156,6 +156,33 @@ export class Tabs extends LitElement
     {
       this.storage.setItem('zntab:' + this.storeKey, tabName);
     }
+  }
+
+  selectTab(tabName: string, refresh: boolean): boolean
+  {
+    if(tabName && !this._panels.has(tabName))
+    {
+      return false;
+    }
+
+    this._panels.forEach((elements, key) =>
+    {
+      const isActive = key === tabName;
+      elements.forEach((element) =>
+      {
+        element.toggleAttribute('selected', isActive);
+        if(refresh)
+        {
+          document.dispatchEvent(new CustomEvent('zn-refresh-element', {
+            detail: {element: element}
+          }));
+        }
+      });
+    });
+
+    this._current = tabName;
+
+    return true;
   }
 
   observerDom()
@@ -180,24 +207,29 @@ export class Tabs extends LitElement
 
   _registerTabs()
   {
-    deepQuerySelectorAll('[tab]', this, 'zn-tab-panel').forEach(ele =>
+    deepQuerySelectorAll('[tab]', this, 'zn-tabs').forEach(ele =>
     {
       this._addTab(ele as HTMLElement);
     });
-    deepQuerySelectorAll('[tab-uri]', this, 'zn-tab-panel').forEach(ele =>
+    deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele =>
     {
       this._addTab(ele as HTMLElement);
-    });
-    this.querySelectorAll('zn-tab-panel').forEach((element) =>
-    {
-      this._panel = element as TabPanel;
     });
   }
 
   render()
   {
     return html`
-      <slot></slot>`;
+      <slot name="top"></slot>
+      <div id="mid">
+        <slot name="left"></slot>
+        <div id="content">
+          <slot></slot>
+        </div>
+        <slot name="right"></slot>
+      </div>
+      <slot name="bottom"></slot>
+    `;
   }
 }
 

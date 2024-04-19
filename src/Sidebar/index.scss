@@ -8,6 +8,7 @@
   .relative {
     position: relative;
     flex-grow: 1;
+    max-height: 100%;
   }
 
   .container {
@@ -32,12 +33,14 @@
   #primary-content {
     flex-grow: 1;
     min-height: 100px;
+    max-height: 100%;
     overflow-y: auto;
-    @include wc.padding;
     display: flex;
     flex-direction: column;
     @include wc.gap;
+    @include wc.padding;
   }
+
 
   #sidebar {
     width: 100%;
@@ -150,6 +153,12 @@
         }
       }
     }
+  }
+}
+
+:host([flush]) {
+  #primary-content {
+    padding: 0;
   }
 }
 

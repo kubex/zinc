@@ -8,8 +8,8 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin: 0 60px 0 0;
+  align-items: flex-end;
+  margin: 0 0 10px 60px;
 }
 
 .message {
@@ -43,5 +43,36 @@
   line-height: 15px;
   margin: 5px 0;
   text-transform: capitalize;
+}
+
+:host([action-type="connected.agent"]),
+:host([action-type="attachment.added"]) {
+  background: transparent;
+  border: none;
+  align-self: center;
+
+  .wrapper {
+    margin: 0;
+  }
+
+  .message {
+    background: transparent;
+    text-align: center;
+    border: none;
+    max-width: unset;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  .int-msg-d {
+    display: none;
+  }
+}
+
+:host([customer-initiated="1"]) .wrapper {
+  align-items: flex-start;
+  margin: 0 60px 10px 0;
 }
 

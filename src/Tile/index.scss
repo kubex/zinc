@@ -198,3 +198,23 @@ zn-tile, :host {
 :host([tab-uri]), :host([tab]) {
   cursor: pointer;
 }
+
+
+:host(.notification) {
+  animation: border-pulse 1s infinite;
+}
+
+
+@keyframes border-pulse {
+  0% {
+    background-color: rgba(var(--zn-primary), .05);
+  }
+
+  50% {
+    background-color: rgba(var(--zn-primary), .1);
+  }
+
+  100% {
+    background-color: rgba(var(--zn-primary), .05);
+  }
+}

@@ -36,6 +36,20 @@ export class Tile extends LitElement
     });
   }
 
+  // add click event to handle the menu
+  connectedCallback()
+  {
+    super.connectedCallback();
+    this.addEventListener('click', () =>
+    {
+      if(this.classList.contains('notification'))
+      {
+        this.classList.remove('notification');
+      }
+    });
+
+  }
+
   _handleActions(e)
   {
     const menu = this.menu[0];

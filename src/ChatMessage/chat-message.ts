@@ -102,7 +102,7 @@ export class ChatMessage extends LitElement
   private _getAuthor()
   {
     return html`<span class="int-msg-who">
-      ${this.sender ? this.sender : (this.customerInitiated === "0" ? 'Customer' : 'You')}
+      ${this.sender !== "" ? this.sender : (this.customerInitiated === "0" ? 'Customer' : 'You')}
     </span>`;
   }
 

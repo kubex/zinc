@@ -172,17 +172,21 @@ export class Tabs extends LitElement
 
   selectTab(tabName: string, refresh: boolean): boolean
   {
-    console.log(this._panels);
     if(tabName && !this._panels.has(tabName))
     {
       return false;
     }
 
+    let inSlot = true;
     this._panels.forEach((elements, key) =>
     {
       const isActive = key === tabName;
       elements.forEach((element) =>
       {
+        if(isActive && element.parentNode != this)
+        {
+          inSlot = false;
+        }
         element.toggleAttribute('selected', isActive);
         if(refresh)
         {
@@ -192,6 +196,8 @@ export class Tabs extends LitElement
         }
       });
     });
+
+    this._panel.classList.toggle('contents-slot', !inSlot);
 
     this._current = tabName;
 

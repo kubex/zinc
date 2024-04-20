@@ -22,30 +22,32 @@
 
 #content {
   flex: 1;
+  max-height: 100%;
+  min-height: 0;
+
+  @include wc.scrollbars;
+  display: flex;
+  flex: 1;
+  align-items: normal;
+  overflow: auto;
+  max-height: 100%;
+
 
   slot {
-    @include wc.scrollbars;
-    display: flex;
-    flex: 1;
-    align-items: start;
-    overflow: auto;
   }
 }
 
 :host(:not([flush])) {
   #content {
-      @include wc.padding;
-    /* slot {
-      @include wc.padding;
-    } */
+    @include wc.padding;
   }
 }
 
-#content {
-  slot {
-    display: contents;
-  }
+#content.contents-slot slot {
+  display: contents;
+}
 
+#content {
   ::slotted([selected]), > [selected] {
     flex-grow: 1;
   }

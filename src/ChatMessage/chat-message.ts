@@ -12,6 +12,7 @@ type ChatMessageActionType = ""
   | "multi.answer"
   | "transfer"
   | "ended"
+  | "note"
   | "error"
   | "customer.ended";
 
@@ -24,7 +25,7 @@ export class ChatMessage extends LitElement
   @property({ type: String }) sender = '';
   @property({ type: String }) message = '';
   @property({ type: String }) time = '';
-  @property({ type: String }) actionType: ChatMessageActionType = '';
+  @property({ type: String, attribute: 'action-type' }) actionType: ChatMessageActionType = '';
   @property({ type: String }) customerInitiated = "0";
 
   render()
@@ -32,6 +33,20 @@ export class ChatMessage extends LitElement
     if(!this._displayMessage())
     {
       return html``;
+    }
+
+    if(this.actionType === "note")
+    {
+      return html`
+        <div class="wrapper">
+          <div class="message note">
+            Note: ${this._prepareMessageContent()}
+          </div>
+          <div class="int-msg-d">
+            ${this._getAuthor()}
+            ${this._getTime()}
+          </div>
+        </div>`;
     }
 
     if(this.actionType === 'multi.answer')
@@ -53,7 +68,8 @@ export class ChatMessage extends LitElement
 
   private _displayMessage()
   {
-    const types = ["", 'connected.agent', 'attachment.added', "multi.answer", "transfer", "ended", "error", "customer.ended"];
+    const types = ["", 'connected.agent', 'attachment.added', "multi.answer", "transfer", "ended", "error",
+      "note", "customer.ended"];
     const type = types.indexOf(this.actionType);
 
     return type > -1;

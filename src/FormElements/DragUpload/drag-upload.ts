@@ -12,6 +12,26 @@ export class DragUpload extends LitElement
 
   static styles = unsafeCSS(styles);
 
+  private internals: ElementInternals;
+  private value: string;
+
+  constructor()
+  {
+    super();
+    this.internals = this.attachInternals();
+  }
+
+  _updateInternals()
+  {
+    this.internals.setFormValue(this.value);
+    this.internals.setValidity({});
+  }
+
+  static get formAssociated()
+  {
+    return true;
+  }
+
   getHumanTypes()
   {
     return this.types.split(',').map((type) =>
@@ -37,6 +57,7 @@ export class DragUpload extends LitElement
   handleUpload(e)
   {
     const file = e.target.files[0];
+    this.value = file;
     const reader = new FileReader();
     reader.onload = (e) =>
     {
@@ -70,6 +91,13 @@ export class DragUpload extends LitElement
       // show the upload button
       const upload = this.shadowRoot.querySelector("label[for='fileUpload']") as HTMLElement;
       upload.style.display = 'block';
+
+      // remove the submit button
+      const submit = this.shadowRoot.querySelector('zn-button[type="submit"]') as HTMLElement;
+      if(submit)
+      {
+        submit.remove();
+      }
     });
 
     info.appendChild(cancel);
@@ -77,5 +105,23 @@ export class DragUpload extends LitElement
     // hide the upload button
     const upload = this.shadowRoot.querySelector("label[for='fileUpload']") as HTMLElement;
     upload.style.display = 'none';
+
+    // add submit button
+    const submit = document.createElement('zn-button');
+    submit.setAttribute('icon', 'upload');
+    submit.setAttribute('color', 'primary');
+    submit.setAttribute('size', 'small');
+    submit.setAttribute('type', 'submit');
+
+    submit.addEventListener('click', () =>
+    {
+      const form = this.closest('form');
+      if(form)
+      {
+        form.requestSubmit();
+      }
+    });
+
+    upload.insertAdjacentElement('afterend', submit);
   }
 }

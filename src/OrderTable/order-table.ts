@@ -243,7 +243,6 @@ export class OrderTable extends LitElement
         </div>`;
     }
 
-    console.log(this.modifiedData);
     return html`
       <div class="summary">
         ${tax}

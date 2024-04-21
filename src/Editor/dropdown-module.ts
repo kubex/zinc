@@ -68,10 +68,6 @@ class DropdownModule
         const commandElement = this._commandElements[this._selectedIndex];
         const commandName = commandElement.getAttribute('data-command');
 
-        console.log('Selected index', this._selectedIndex);
-        console.log('Command Element', commandElement);
-        console.log('Command Name', commandName);
-
         const command = this._commands.find(command => command.title === commandName);
         this.triggerCommand(command);
       }
@@ -205,10 +201,6 @@ class DropdownModule
       {
         command.labels.forEach(label =>
         {
-          console.log('Label', label);
-          console.log('Filtered Text', filteredText);
-          console.log('match', label.toLowerCase().includes(filteredText.toLowerCase()));
-          // dedupe
           if(label.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
           {
             filteredTextCommands.push(command);

@@ -112,10 +112,8 @@ export class Panel extends ZincElement
   {
     this.selectedPanel = index;
     const panels = this.parentElement.querySelectorAll('[link]');
-    console.log(panels);
     panels.forEach((item, index) =>
     {
-      console.log(this.selectedPanel);
       if(index === this.selectedPanel)
       {
         item.classList.remove('hidden');

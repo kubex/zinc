@@ -122,7 +122,6 @@ export class MultiSelect extends LitElement
         const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
         if(input)
         {
-          console.log('input', input);
           input.value = '';
         }
       }

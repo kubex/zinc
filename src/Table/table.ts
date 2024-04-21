@@ -22,7 +22,7 @@ export class Table extends LitElement
 
   resizing()
   {
-    console.log("Doing a thing");
+   // TODO Resizing event
   }
 
   connectedCallback()

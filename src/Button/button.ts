@@ -38,8 +38,13 @@ export class Button extends ZincElement
 
   protected render(): unknown
   {
+    let iconColor = 'default';
+    if(this.color === 'transparent') {
+      iconColor = 'primary';
+    }
+
     const icon = this.icon ? html`
-      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize}"></zn-icon>` : '';
+      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize}" color="${iconColor}"></zn-icon>` : '';
 
     return html`
       <button type="${this.type}" @click="${this.handleClick}">

@@ -21,6 +21,17 @@
   gap: mixins.spacing(md);
 }
 
-.zn-gap-inner {
+.zn-gap-inner, .zn-gap-i {
   @include mixins.gap();
+}
+
+.zn-gap-ism {
+  @include mixins.gap();
+  --zn-gap: #{mixins.spacing(sm)};
+}
+
+
+.zn-gap-ixs {
+  @include mixins.gap();
+  --zn-gap: #{mixins.spacing(xs)};
 }

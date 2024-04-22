@@ -20,6 +20,7 @@ export const Default: Story = {
     checked: false,
     required: true,
     helpText: '',
+    triggerSubmit: false
   },
   argTypes: {
     size: {

@@ -45,6 +45,8 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   @property({ attribute: 'help-text' }) helpText = "";
 
+  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
+
 
   get validity()
   {
@@ -80,6 +82,10 @@ export class Toggle extends ZincElement implements ZincFormControl
   private handleClick()
   {
     this.checked = !this.checked;
+    if(this.triggerSubmit)
+    {
+      this.formControlController.submit(this.input);
+    }
   }
 
   private handleFocus()

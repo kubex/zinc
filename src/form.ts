@@ -2,7 +2,6 @@ import type { ReactiveController, ReactiveControllerHost } from "lit";
 import { ZincFormControl } from "./zinc-element";
 import { Button } from "./Button";
 
-
 export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>> = new WeakMap();
 
 const reportValidityOverloads: WeakMap<HTMLFormElement, () => boolean> = new WeakMap();

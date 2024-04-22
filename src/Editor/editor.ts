@@ -54,7 +54,7 @@ export class Editor extends LitElement
     const bindings = {
       enter: {
         key: 'Enter',
-        shiftKey: true,
+        shiftKey: false,
         handler: (range, context) =>
         {
           const form = this.closest('form');

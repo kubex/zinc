@@ -14,6 +14,7 @@ type ChatMessageActionType = ""
   | "ended"
   | "note"
   | "error"
+  | "message-sending"
   | "customer.ended";
 
 
@@ -33,6 +34,18 @@ export class ChatMessage extends LitElement
     if(!this._displayMessage())
     {
       return html``;
+    }
+
+    if(this.actionType === "message-sending") {
+      return html`
+        <div class="wrapper">
+          <div class="message sending">
+            ${this._prepareMessageContent()}
+          </div>
+          <div class="int-msg-d">
+            Sending...
+          </div>
+        </div>`;
     }
 
     if(this.actionType === "note")
@@ -69,7 +82,7 @@ export class ChatMessage extends LitElement
   private _displayMessage()
   {
     const types = ["", 'connected.agent', 'attachment.added', "multi.answer", "transfer", "ended", "error",
-      "note", "customer.ended"];
+      "note", "customer.ended", "message-sending"];
     const type = types.indexOf(this.actionType);
 
     return type > -1;
@@ -88,7 +101,6 @@ export class ChatMessage extends LitElement
     {
       return `@ ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
-
   }
 
   private _displayMultiAnswer()
@@ -128,5 +140,4 @@ export class ChatMessage extends LitElement
       ${this.time ? this._getSentTime() : null}
     </span>`;
   }
-
 }

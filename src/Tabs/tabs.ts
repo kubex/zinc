@@ -74,7 +74,7 @@ export class Tabs extends LitElement
 
 
       const storedValue = this._store.get(this.storeKey);
-      if(storedValue != null && storedValue != "")
+      if(storedValue != null)
       {
         this._prepareTab(storedValue);
         this.setActiveTab(storedValue, false, false);

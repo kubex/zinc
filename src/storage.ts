@@ -15,7 +15,7 @@ export class Store
 
   public get(key: string): null | string
   {
-    if(key === "")
+    if(!key || key.length < 1)
     {
       return null;
     }
@@ -44,7 +44,7 @@ export class Store
 
   public setWithTTL(key: string, value: string, ttl: number): void
   {
-    if(key === "")
+    if(!key || key.length < 1)
     {
       return;
     }

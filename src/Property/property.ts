@@ -22,7 +22,7 @@ export class Property extends LitElement
     if(this.icon)
     {
       icon = html`
-        <zn-icon library="${this.library}" src="${this.icon}"></zn-icon>`;
+        <zn-icon library="${this.library}" src="${this.icon}" size="20"></zn-icon>`;
     }
 
     const colspan = this.colspan ? this.colspan : 3;

@@ -37,7 +37,6 @@ export class Store
     let ttl = parseInt(parts[0]);
     if(ttl > 0 && ttl < Date.now())
     {
-      console.log("TTLed value", value, parts[0], ttl, parts[1]);
       return null;
     }
     return parts[1] || '';
@@ -76,7 +75,6 @@ export class Store
       if(key.startsWith(this.prefix))
       {
         let value = this.stripTtl(this.storage.getItem(key));
-        console.log(key, value);
         if(value === null) // Check for TTLed values
         {
           this.storage.removeItem(key);

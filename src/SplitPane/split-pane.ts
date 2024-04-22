@@ -4,6 +4,7 @@ import {customElement, property} from 'lit/decorators.js';
 import styles from './index.scss';
 import {ZincElement} from "../zinc";
 import {on} from "../on";
+import {Store} from "../storage";
 
 @customElement('zn-split-pane')
 export class SplitPane extends ZincElement
@@ -34,11 +35,13 @@ export class SplitPane extends ZincElement
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  protected _store: Store;
 
   connectedCallback()
   {
     super.connectedCallback();
-    this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znsp:", this.storeTtl);
     this.primaryFull = this.calculatePixels ? this.initialSize + 'px' : this.initialSize + '%';
     on(this, 'click', '[split-pane-focus]', (e) =>
     {
@@ -60,21 +63,19 @@ export class SplitPane extends ZincElement
     let applyPixels = this.preferSecondarySize ? this.currentContainerSize - this.initialSize : this.initialSize;
     let applyPercent = this.preferSecondarySize ? 100 - this.initialSize : this.initialSize;
 
-    if(this.storeKey != "" && this.storeKey != null)
+
+    const storedValue = this._store.get(this.storeKey);
+    if(storedValue != null)
     {
-      const storedValue = this.storage.getItem('znsp:' + this.storeKey);
-      if(storedValue != null && storedValue != "")
+      const parts = storedValue.split(",");
+      if(parts.length >= 3)
       {
-        const parts = storedValue.split(",");
-        if(parts.length >= 3)
+        applyPixels = parseInt(parts[0]);
+        applyPercent = parseInt(parts[1]);
+        const storedBasis = parseInt(parts[2]);
+        if(this.preferSecondarySize && this.calculatePixels)
         {
-          applyPixels = parseInt(parts[0]);
-          applyPercent = parseInt(parts[1]);
-          const storedBasis = parseInt(parts[2]);
-          if(this.preferSecondarySize && this.calculatePixels)
-          {
-            applyPixels = (this.currentContainerSize / storedBasis) * applyPixels;
-          }
+          applyPixels = (this.currentContainerSize / storedBasis) * applyPixels;
         }
       }
     }
@@ -104,7 +105,7 @@ export class SplitPane extends ZincElement
 
     this.mouseUpHandler = function (e)
     {
-      this.store();
+      this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);
       window.removeEventListener('mousemove', this.mouseMoveHandler);
@@ -138,14 +139,6 @@ export class SplitPane extends ZincElement
     this.currentPixelSize = pixelSize;
     this.currentPercentSize = percentSize;
     this.primaryFull = this.calculatePixels ? (this.currentPixelSize + 'px') : (this.currentPercentSize + '%');
-  }
-
-  store()
-  {
-    if(this.storeKey != null && this.storeKey != "")
-    {
-      this.storage.setItem('znsp:' + this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
-    }
   }
 
   _togglePane(e)

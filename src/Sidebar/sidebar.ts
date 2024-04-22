@@ -47,7 +47,14 @@ export class Sidebar extends ZincElement
   scrollBottom()
   {
     const container = this.shadowRoot.getElementById('primary-content');
-    container.scrollTop = container.scrollHeight;
+    if(container)
+    {
+      container.scrollTop = container.scrollHeight;
+    }
+    else
+    {
+      setTimeout(this.scrollBottom.bind(this), 10);
+    }
   }
 
   render()

@@ -1,7 +1,7 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
-import {TabPanel} from "./tab-panel";
 import {md5} from '../md5';
+import {Store} from '../storage';
 
 import styles from './tabs.scss';
 import {deepQuerySelectorAll} from "../query";
@@ -23,8 +23,10 @@ export class Tabs extends LitElement
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   static styles = unsafeCSS(styles);
+  protected _store: Store;
 
   constructor()
   {
@@ -41,7 +43,7 @@ export class Tabs extends LitElement
     this.observerDom();
     this._registerTabs();
 
-    this.storage = this.localStorage ? window.localStorage : window.sessionStorage;
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) =>
     {
       if(element.slot == '')
@@ -70,15 +72,13 @@ export class Tabs extends LitElement
     {
       this._registerTabs();
 
-      if(this.storeKey !== "" && this.storeKey !== null)
+
+      const storedValue = this._store.get(this.storeKey);
+      if(storedValue != null && storedValue != "")
       {
-        const storedValue = this.storage.getItem('zntab:' + this.storeKey);
-        if(storedValue != null && storedValue != "")
-        {
-          this._prepareTab(storedValue);
-          this.setActiveTab(storedValue, false, false);
-          return;
-        }
+        this._prepareTab(storedValue);
+        this.setActiveTab(storedValue, false, false);
+        return;
       }
       this.setActiveTab(this._current || '', false, false);
     }, 10);
@@ -161,10 +161,9 @@ export class Tabs extends LitElement
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
 
-
-    if(store && this.storeKey != null && this.storeKey != "")
+    if(store && this._store != null)
     {
-      this.storage.setItem('zntab:' + this.storeKey, tabName);
+      this._store.set(this.storeKey, tabName);
     }
   }
 

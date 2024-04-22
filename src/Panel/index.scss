@@ -19,7 +19,6 @@
 
   > div {
     position: relative;
-    padding: wc.spacing(md);
     border-width: 1px !important;
     display: flex;
     flex-direction: column;
@@ -44,47 +43,22 @@
     .header {
       display: flex;
       justify-items: center;
-      padding-bottom: wc.spacing(sm);
+      padding: wc.spacing(md) wc.spacing(md) 0;
 
       span {
         font-weight: 600;
         flex-grow: 1;
-        font-size: 18px;
+        font-size: 17px;
         color: rgba(var(--zn-text-panel-title), 100%);
       }
     }
 
-    div.nav {
-      display: flex;
-      // flex-grow: 1;
-
-      ul {
-        display: flex;
-        margin: wc.spacing(xs) 0 0;
-        padding: 0;
-        gap: wc.spacing(md);
-        border-bottom-width: 1px !important;
-        width: 100%;
-
-        li {
-          font-weight: 500;
-          padding-bottom: wc.spacing(xs);
-          border-bottom-width: 3px;
-          border-color: transparent !important;
-
-          &:hover, &.active {
-            color: rgb(var(--zn-primary)) !important;
-            border-color: rgb(var(--zn-primary)) !important;
-            cursor: pointer;
-          }
-        }
-      }
-    }
-
     .body {
+      border-radius: 10px;
       display: grid;
       overflow-y: auto;
       flex-grow: 1;
+      padding: wc.spacing(md);
 
       > :not([hidden]) ~ :not([hidden]) {
         border: 1px solid black !important;
@@ -92,12 +66,17 @@
 
     }
 
+    .body.ntp {
+      padding-top: 0;
+    }
+
     .footer {
+      font-size: 13px;
       display: block;
-      padding-top: wc.spacing(md);
-      border-top-width: 1px;
-      font-weight: 500;
-      // color: rgb(var(--zn-primary));
+      padding: wc.spacing(sm) wc.spacing(md);
+      background: rgb(var(--zn-panel-secondary));
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
 
     .header:empty, .footer:empty {
@@ -115,11 +94,27 @@
   }
 
   .header {
-    padding-top: wc.spacing(md);
+    padding: wc.spacing(md);
   }
 
   .footer {
     padding-bottom: wc.spacing(md);
+  }
+}
+
+:host([divide]) {
+
+  .body {
+    padding: 0;
+  }
+
+  ::slotted(*) {
+    padding: wc.spacing(md);
+    border-top: 1px solid rgb(var(--zn-border-color));
+  }
+
+  ::slotted(*:first-child) {
+    border-top: 0;
   }
 }
 
@@ -135,10 +130,6 @@
   width: 100%;
   border-width: 1px !important;
   min-width: 0;
-
-  & > div.nav {
-    display: none;
-  }
 }
 
 :host([bright]) > div {
@@ -157,4 +148,10 @@
 
 :host([rounded=false]) > div {
   border-radius: 0;
+
+  .footer {
+
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }

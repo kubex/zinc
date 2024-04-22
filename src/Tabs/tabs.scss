@@ -24,22 +24,24 @@
   flex: 1;
   max-height: 100%;
   min-height: 0;
+  @include wc.padding;
 
   @include wc.scrollbars;
   display: flex;
-  flex: 1;
   align-items: normal;
   overflow: auto;
-  max-height: 100%;
+}
 
-
-  slot {
+:host([flush]) {
+  #content {
+    padding: 0;
   }
 }
 
-:host(:not([flush])) {
+:host([flush-x]) {
   #content {
-    @include wc.padding;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 

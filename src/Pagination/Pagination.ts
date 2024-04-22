@@ -14,27 +14,10 @@ export class Pagination extends ZincElement
   @property({attribute: 'page', type: Number, reflect: true}) page: number = 1; // Current page
   @property({attribute: 'uri', type: String, reflect: true}) uri: string = ""; // Uri to call replacing #page# with page number
 
-  protected _gotoPage(page: number)
+  protected _createLink(page: number):string
   {
     if(page === this.page) return;
-
-    this.dispatchEvent(new CustomEvent('page-change', {detail: {page: page}}));
-
-    // go to url
-    const url = this.uri.replace('#page#', page.toString());
-    const link = document.createElement('a');
-    link.href = url;
-    link.click();
-  }
-
-  protected _prevPage()
-  {
-    return this._gotoPage(this.page - 1);
-  }
-
-  protected _nextPage()
-  {
-    return this._gotoPage(this.page + 1);
+    return this.uri.replace('#page#', page.toString());
   }
 
   protected _calculatePages()
@@ -49,23 +32,23 @@ export class Pagination extends ZincElement
     const prevButton = html`
       <div class="pagination__item">
         ${this.page > 1 ? html`
-          <button class="pagination__button pagination__button--prev" @click="${this._prevPage}">
+          <a class="pagination__button pagination__button--prev" href="${this._createLink(this.page - 1)}">
             Previous
-          </button>` : html`
-          <button class="pagination__button pagination__button--prev" disabled>
+          </a>` : html`
+          <span class="pagination__button pagination__button--prev pagination__button--disabled">
             Previous
-          </button>`}
+          </span>`}
       </div>`;
 
     const nextButton = html`
       <div class="pagination__item">
         ${this.page < numberOfPages ? html`
-          <button class="pagination__button pagination__button--next" @click="${this._nextPage}">
+          <a class="pagination__button pagination__button--next" href="${this._createLink(this.page + 1)}">
             Next
-          </button>` : html`
-          <button class="pagination__button pagination__button--next" disabled>
+          </a>` : html`
+          <span class="pagination__button pagination__button--next pagination__button--disabled">
             Next
-          </button>`}
+          </span>`}
       </div>`;
 
     let buttonStart = Math.max(1, this.page - 2);
@@ -88,11 +71,11 @@ export class Pagination extends ZincElement
     {
       pageButtons.push(html`
         <div class="pagination__item">
-          <button
+          <a
             class="pagination__button pagination__button--page ${this.page == i ? 'pagination__button--active' : ''}"
-            @click="${() => this._gotoPage(i)}">
+            href="${this._createLink(i)}">
             ${i}
-          </button>
+          </a>
         </div>`);
     }
 

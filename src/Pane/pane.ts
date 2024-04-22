@@ -2,7 +2,7 @@ import {html, unsafeCSS} from "lit";
 import {property, customElement} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import {ZincElement} from "../zinc-element";
 
 @customElement('zn-pane')
 export class Pane extends ZincElement

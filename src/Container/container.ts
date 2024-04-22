@@ -2,7 +2,7 @@ import {CSSResultGroup, html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc";
+import {ZincElement} from "../zinc-element";
 
 @customElement('app-container')
 export class Container extends ZincElement

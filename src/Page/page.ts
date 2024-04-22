@@ -1,4 +1,4 @@
-import {ZincElement} from "../zinc";
+import {ZincElement} from "../zinc-element";
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 

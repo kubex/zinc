@@ -12,9 +12,21 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: {
-    name: 'toggle',
-    required: false,
+    title: 'toggle',
+    name: '',
+    value: '',
+    size: 'small',
+    disabled: false,
     checked: false,
-    value: 'something-awesome',
+    required: true,
+    helpText: '',
   },
+  argTypes: {
+    size: {
+      options: ['small', 'medium', 'large'],
+      control: {
+        type: 'select',
+      },
+    },
+  }
 };

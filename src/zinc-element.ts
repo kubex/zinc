@@ -1,5 +1,5 @@
-import {LitElement} from 'lit';
-import {property} from 'lit/decorators.js';
+import { LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
 const screenSizes = {
   'sm': '360px',
@@ -12,7 +12,7 @@ const screenSizes = {
 
 export class ZincElement extends LitElement
 {
-  @property({type: String, attribute: 't', reflect: true})
+  @property({ type: String, attribute: 't', reflect: true })
   public t: string = '';
 
   containerSize(width)
@@ -71,3 +71,33 @@ export class ZincElement extends LitElement
   }
 }
 
+
+export interface ZincFormControl extends ZincElement
+{
+  // Form attributes
+  name: string;
+  value: string;
+  disabled?: boolean;
+  defaultValue?: string;
+  defaultChecked?: boolean;
+  form?: string;
+
+  // Validation attributes
+  pattern?: string;
+  min?: number | string | Date;
+  max?: number | string | Date;
+  step?: number | string;
+  required?: boolean;
+  minlength?: number;
+  maxlength?: number;
+
+  // Form Validation Properties
+  readonly validity: ValidityState;
+  readonly validationMessage: string;
+
+  // Form Validation methods
+  checkValidity: () => boolean;
+  getForm: () => HTMLFormElement | null;
+  reportValidity: () => boolean;
+  setCustomValidity: (message: string) => void;
+}

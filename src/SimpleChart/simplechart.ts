@@ -1,7 +1,7 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {Chart, ChartConfiguration, registerables} from "chart.js";
-import {ZincElement} from "../zinc";
+import {ZincElement} from "../zinc-element";
 
 import styles from './index.scss';
 

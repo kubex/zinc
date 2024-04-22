@@ -77,12 +77,10 @@ export class Tabs extends LitElement
         {
           this._prepareTab(storedValue);
           this.setActiveTab(storedValue, false, false);
+          return;
         }
       }
-      else
-      {
-        this.setActiveTab(this._current, false, false);
-      }
+      this.setActiveTab(this._current || '', false, false);
     }, 10);
   }
 

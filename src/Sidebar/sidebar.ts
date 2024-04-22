@@ -1,29 +1,53 @@
-import { ZincElement } from "../zinc";
-import { html, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import {ZincElement} from "../zinc";
+import {html, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-sidebar')
 export class Sidebar extends ZincElement
 {
-  @property({ attribute: 'caption', type: String, reflect: true }) caption;
-  @property({ attribute: 'open', type: Boolean, reflect: true }) open: boolean = false;
+  @property({attribute: 'caption', type: String, reflect: true}) caption;
+  @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
+  @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
 
   static styles = unsafeCSS(styles);
 
   constructor()
   {
     super();
-
     this.addEventListener('scroll-to-bottom', () =>
     {
-      setTimeout(() =>
-      {
-        const container = this.shadowRoot.getElementById('primary-content');
-        container.scrollTop = container.scrollHeight;
-      }, 200);
+      setTimeout(this.scrollBottom.bind(this), 200);
     });
+  }
+
+  connectedCallback()
+  {
+    super.connectedCallback();
+    if(this.startScrolled)
+    {
+      this.observerDom();
+      this.scrollBottom();
+    }
+  }
+
+  observerDom()
+  {
+    // observe the DOM for changes
+    const observer = new MutationObserver((mutations) =>
+    {
+      setTimeout(this.scrollBottom.bind(this), 10);
+    });
+
+    observer.observe(this, {childList: true, subtree: true});
+  }
+
+  scrollBottom()
+  {
+    const container = this.shadowRoot.getElementById('primary-content');
+    container.scrollTop = container.scrollHeight;
   }
 
   render()

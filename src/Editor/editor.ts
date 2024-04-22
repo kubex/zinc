@@ -107,6 +107,7 @@ export class Editor extends LitElement
             ['bold', 'italic', 'underline', 'strike'],
             ['undo', 'redo'],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+            ['link', 'image', 'video'],
             ['remove-formatting'],
           ],
           handlers: {

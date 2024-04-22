@@ -16,6 +16,12 @@ export class AbsoluteContainer extends ZincElement
     this.observerDom();
   }
 
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    super.firstUpdated(_changedProperties);
+    this.resize();
+  }
+
   resize()
   {
     let newSize = 0;

@@ -9,10 +9,21 @@
 
 :host {
   margin: wc.spacing(md) 0;
-  background-color: rgb(var(--zn-panel));
+  background-color: rgba(var(--zn-panel),0.8);
 }
 
 .wrapper {
+  position: relative;
+
+  &:before {
+    border-radius: 10px;
+    position: absolute;
+    content: '';
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(3px);
+  }
+
   padding: wc.spacing(sm) wc.spacing(md);
   border: 1px solid rgb(var(--zn-border-color)) !important;
   width: 100%;
@@ -96,8 +107,4 @@
 
   border-color: rgb(var(--zn-color-success)) !important;
   background: rgba(var(--zn-color-success), .05);
-}
-
-:host([t="dark"]) .wrapper, :host([t="dark"]) {
-  background-color: transparent;
 }

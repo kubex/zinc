@@ -25,7 +25,7 @@ export default {
   plugins: [
     resolve(), // tells Rollup how to find node_modules packages
     typescript(),
-    commonjs(),
+    commonjs({sourceMap: false}),
     // postcss for zn.min.css
     postcss({
       exclude: '**/src/**',

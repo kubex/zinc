@@ -3,14 +3,6 @@ import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
 import {ZincElement} from "../zinc-element";
-import {types} from "sass";
-import String = types.String;
-import String = types.String;
-import String = types.String;
-import String = types.String;
-import String = types.String;
-import String = types.String;
-import String = types.String;
 
 export type ButtonColor = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
 export type ButtonSizes = 'x-small' | 'small' | 'normal' | 'medium' | 'large';

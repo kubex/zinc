@@ -21,6 +21,8 @@ export class AjaxDialog extends LitElement
   {
     e.preventDefault();
 
+    console.log('open dialog');
+
     const request = new Pagelets.Request({ url: this.url, targetElement: this._content });
     const load = await Pagelets.load(request);
 

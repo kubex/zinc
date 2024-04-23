@@ -49,4 +49,4 @@ import './ScrollContainer';
 import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
-//import './AjaxDialog';
+import './AjaxDialog';

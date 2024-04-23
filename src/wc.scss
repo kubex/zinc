@@ -4,15 +4,16 @@
 @forward "../scss/variables/index";
 @forward "../scss/mixins/index";
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: rgb(var(--zn-border-color));
-}
 
 :host {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: rgb(var(--zn-border-color));
+  }
 }

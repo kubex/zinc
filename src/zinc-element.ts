@@ -1,5 +1,14 @@
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
+import {
+  EventTypeDoesNotRequireDetail,
+  EventTypeRequiresDetail,
+  EventTypesWithoutRequiredDetail,
+  EventTypesWithRequiredDetail,
+  GetCustomEventType,
+  ValidEventTypeMap,
+  ZincEventInit
+} from "./event";
 
 const screenSizes = {
   'sm': '360px',
@@ -14,6 +23,14 @@ export class ZincElement extends LitElement
 {
   @property({ type: String, attribute: 't', reflect: true })
   public t: string = '';
+
+  constructor()
+  {
+    super();
+
+    window.addEventListener('theme-change', this.updateTheme.bind(this));
+    this.updateTheme(null);
+  }
 
   containerSize(width)
   {
@@ -44,15 +61,7 @@ export class ZincElement extends LitElement
     }
   }
 
-  constructor()
-  {
-    super();
-
-    window.addEventListener('theme-change', this._updateTheme.bind(this));
-    this._updateTheme(null);
-  }
-
-  public _updateTheme(e)
+  updateTheme(e)
   {
     if(e == null)
     {
@@ -68,6 +77,23 @@ export class ZincElement extends LitElement
     {
       this.t = e.detail;
     }
+  }
+
+  emit<T extends string & keyof EventTypesWithoutRequiredDetail>(name: EventTypeDoesNotRequireDetail<T>, options?: ZincEventInit<T> | undefined): GetCustomEventType<T>;
+  emit<T extends string & keyof EventTypesWithRequiredDetail>(name: EventTypeRequiresDetail<T>, options?: ZincEventInit<T>): GetCustomEventType<T>;
+  emit<T extends string & keyof ValidEventTypeMap>(name: T, options?: ZincEventInit<T>): GetCustomEventType<T>
+  {
+    const event = new CustomEvent(name, {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      detail: {},
+      ...options
+    });
+
+    this.dispatchEvent(event);
+
+    return event as GetCustomEventType<T>;
   }
 }
 

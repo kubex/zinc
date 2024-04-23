@@ -1,15 +1,20 @@
-import { html, LitElement, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 import Quill from 'quill';
 import DropdownModule from "./dropdown-module";
 
-import styles from './index.scss';
 import { PropertyValues } from "@lit/reactive-element";
+import { ZincElement, ZincFormControl } from "../zinc-element";
+import { FormControlController } from "../form";
+
+import styles from './index.scss';
 
 @customElement('zn-editor')
-export class Editor extends LitElement
+export class Editor extends ZincElement implements ZincFormControl
 {
   static styles = unsafeCSS(styles);
+
+  private formControlController = new FormControlController(this, {});
 
   @query('#editor')
   private editor: HTMLElement;
@@ -20,37 +25,49 @@ export class Editor extends LitElement
   @query('#toolbar-container')
   private toolbarContainer: HTMLElement;
 
-  @property({ attribute: 'name', type: String, reflect: true })
-  public name: string;
-
-  @property({ attribute: 'value', type: String, reflect: true })
-  public value: string;
+  @property({ reflect: true }) name: string;
+  @property({ reflect: true }) value: string;
 
   @property({ attribute: 'canned-responses', type: Array })
   public cannedResponses: Array<any>;
 
-  private internals: ElementInternals;
   private quillElement: Quill;
 
-  constructor()
+  get validity(): ValidityState
   {
-    super();
-    this.internals = this.attachInternals();
+    return this.editorHtml.validity;
   }
 
-  _updateInternals()
+  get validationMessage(): string
   {
-    this.internals.setFormValue(this.value);
-    this.internals.setValidity({});
+    return this.editorHtml.validationMessage;
   }
 
-  static get formAssociated()
+  checkValidity(): boolean
   {
-    return true;
+    return this.editorHtml.checkValidity();
+  }
+
+  getForm(): HTMLFormElement | null
+  {
+    return this.formControlController.getForm();
+  }
+
+  reportValidity(): boolean
+  {
+    return this.editorHtml.reportValidity();
+  }
+
+  setCustomValidity(message: string): void
+  {
+    this.editorHtml.setCustomValidity(message);
+    this.formControlController.updateValidity();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
+    this.formControlController.updateValidity();
+
     const bindings = {
       enter: {
         key: 'Enter',
@@ -61,12 +78,11 @@ export class Editor extends LitElement
           if(form)
           {
             form.requestSubmit();
-            // clear contents
             this.quillElement.setText('');
+            this.emit('zc-submit', { detail: { value: this.value } });
           }
         }
       },
-      // clear formatting on paste
       'remove-formatting': {
         key: 'V',
         shiftKey: true,
@@ -85,19 +101,22 @@ export class Editor extends LitElement
     Quill.register('modules/dropdownModule', DropdownModule as any);
 
     const icons = Quill.import("ui/icons");
-    icons["undo"] = `<svg viewbox="0 0 18 18">
-    <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
-    <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
-  </svg>`;
-    icons["redo"] = `<svg viewbox="0 0 18 18">
-    <polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon>
-    <path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path>
-  </svg>`;
-    icons["remove-formatting"] = `<svg viewbox="0 0 18 18">
-    <rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect>
-    <line class="ql-stroke" x1="3" x2="15" y1="3" y2="15"></line>
-    <line class="ql-stroke" x1="3" x2="15" y1="15" y2="3"></line>
-  </svg>`;
+    icons["undo"] = html`
+      <svg viewbox="0 0 18 18">
+        <polygon class="ql-fill ql-stroke" points="6 10 4 12 2 10 6 10"></polygon>
+        <path class="ql-stroke" d="M8.09,13.91A4.6,4.6,0,0,0,9,14,5,5,0,1,0,4,9"></path>
+      </svg>`;
+    icons["redo"] = html`
+      <svg viewbox="0 0 18 18">
+        <polygon class="ql-fill ql-stroke" points="12 10 14 12 16 10 12 10"></polygon>
+        <path class="ql-stroke" d="M9.91,13.91A4.6,4.6,0,0,1,9,14a5,5,0,1,1,5-5"></path>
+      </svg>`;
+    icons["remove-formatting"] = html`
+      <svg viewbox="0 0 18 18">
+        <rect class="ql-stroke" height="12" width="12" x="3" y="3"></rect>
+        <line class="ql-stroke" x1="3" x2="15" y1="3" y2="15"></line>
+        <line class="ql-stroke" x1="3" x2="15" y1="15" y2="3"></line>
+      </svg>`;
 
     const quill = new Quill(this.editor, {
       modules: {
@@ -175,7 +194,6 @@ export class Editor extends LitElement
       }
 
       super.firstUpdated(_changedProperties);
-      this._updateInternals();
       return null;
     };
 
@@ -192,16 +210,19 @@ export class Editor extends LitElement
       return normalizeNative(selection);
     };
 
-    document.addEventListener('selectionchange', (...args) =>
-    {
-      quill.selection.update();
-    });
+    document.addEventListener('selectionchange', this._handleSelectionChange.bind(this));
+    quill.on('text-change', this._handleTextChange.bind(this));
+  }
 
-    quill.on('text-change', () =>
-    {
-      this.value = quill.root.innerHTML;
-      this._updateInternals();
-    });
+  _handleSelectionChange()
+  {
+    this.quillElement.selection.update();
+  }
+
+  _handleTextChange()
+  {
+    this.value = this.quillElement.root.innerHTML;
+    this.emit('zc-change');
   }
 
   render()

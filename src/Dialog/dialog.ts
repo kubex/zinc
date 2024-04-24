@@ -1,10 +1,11 @@
-import { CSSResultGroup, html, LitElement, unsafeCSS } from "lit";
+import { CSSResultGroup, html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './index.scss';
+import { ZincElement } from "../zinc-element";
 
 @customElement('zn-dialog')
-export class Dialog extends LitElement
+export class Dialog extends ZincElement
 {
   @property({ type: String, reflect: true }) trigger: string;
 
@@ -63,6 +64,7 @@ export class Dialog extends LitElement
 
   open()
   {
+    this.emit('zn-open', { detail: { element: this } });
     this._dialog.showModal();
   }
 

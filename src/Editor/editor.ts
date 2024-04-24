@@ -77,9 +77,9 @@ export class Editor extends ZincElement implements ZincFormControl
           const form = this.closest('form');
           if(form)
           {
+            this.emit('zn-submit', { detail: { value: this.value, element: this } });
             form.requestSubmit();
             this.quillElement.setText('');
-            this.emit('zn-submit', { detail: { value: this.value } });
           }
         }
       },

@@ -1,4 +1,4 @@
-export type ZincSubmitEvent = CustomEvent<{ value: string }>;
+export type ZincSubmitEvent = CustomEvent<{ value: string, element: HTMLElement }>;
 
 declare global
 {

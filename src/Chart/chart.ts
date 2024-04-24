@@ -10,7 +10,7 @@ import styles from './index.scss';
 export class ZincChart extends ZincElement
 {
   static styles = unsafeCSS(styles);
-  private myChart: Chart;
+  private produced: Chart;
 
   @property({attribute: 'datasets', type: Array, reflect: true}) public datasets;
   @property({attribute: 'labels', type: Array, reflect: true}) public labels;
@@ -30,10 +30,30 @@ export class ZincChart extends ZincElement
     };
   }
 
+  connectedCallback()
+  {
+    super.connectedCallback();
+    if(this.datasets === null || this.datasets === undefined)
+    {
+      if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
+      {
+        const data = this.childNodes[0];
+        try
+        {
+          this.datasets = JSON.parse(data.textContent);
+        }
+        catch(e)
+        { /* empty */
+          console.error(e);
+        }
+      }
+    }
+  }
+
   firstUpdated()
   {
-    const ctx = (this.renderRoot.querySelector('#myChart2') as HTMLCanvasElement).getContext('2d');
-
+    const ctx = (this.renderRoot.querySelector('#chat') as HTMLCanvasElement).getContext('2d');
+    console.log(this.datasets);
     const drawBackground = this.datasets.length <= 1;
     const config = {
       type: this.type,
@@ -84,7 +104,7 @@ export class ZincChart extends ZincElement
       plugins: [htmlLegendPlugin]
     };
 
-    this.myChart = new Chart(ctx, config as ChartConfiguration);
+    this.produced = new Chart(ctx, config as ChartConfiguration);
   }
 
   render()
@@ -93,7 +113,7 @@ export class ZincChart extends ZincElement
       <div>
         <div id="legend-container"></div>
         <div>
-          <canvas id="myChart2" style="min-height: 200px;"></canvas>
+          <canvas id="chat" style="min-height: 200px;"></canvas>
         </div>
       </div>
     `;

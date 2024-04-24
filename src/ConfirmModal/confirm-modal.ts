@@ -1,8 +1,8 @@
-import {CSSResultGroup, html, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import { CSSResultGroup, html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {Dialog} from "../Dialog";
+import { Dialog } from "../Dialog";
 
 @customElement('zn-confirm')
 export class ConfirmModal extends Dialog
@@ -12,13 +12,13 @@ export class ConfirmModal extends Dialog
     return [super.styles, unsafeCSS(styles)];
   }
 
-  @property({type: String, reflect: true}) caption: string = '';
-  @property({type: String, reflect: true}) content: string = '';
-  @property({type: String, reflect: true}) action: string = '';
-  @property({type: String, reflect: true}) method: string = 'post';
-  @property({type: String, reflect: true}) type: string = 'warning';
-  @property({type: String, reflect: true}) confirmText: string = "Confirm";
-  @property({type: String, reflect: true}) cancelText: string = "Cancel";
+  @property({ type: String, reflect: true }) caption: string = '';
+  @property({ type: String, reflect: true }) content: string = '';
+  @property({ type: String, reflect: true }) action: string = '';
+  @property({ type: String, reflect: true }) method: string = 'post';
+  @property({ type: String, reflect: true }) type: string = 'warning';
+  @property({ type: String, reflect: true }) confirmText: string = "Confirm";
+  @property({ type: String, reflect: true }) cancelText: string = "Cancel";
 
 
   getIcon()
@@ -65,6 +65,7 @@ export class ConfirmModal extends Dialog
     if(form)
     {
       form.requestSubmit();
+      this.close();
     }
   }
 }

@@ -1,5 +1,17 @@
 @use "../wc";
 
+:host([error]) {
+  --property-color: var(--zn-color-error);
+}
+
+:host([warning]) {
+  --property-color: var(--zn-color-warning);
+}
+
+:host([success]) {
+  --property-color: var(--zn-color-success);
+}
+
 :host {
   display: flex;
   flex-direction: column;
@@ -17,12 +29,13 @@
 
   dt {
     margin-right: 0;
-    color: rgb(var(--zn-text-heading));
+    color: rgb(var(--property-color, var(--zn-text-heading)));
   }
 
   dd {
     text-overflow: ellipsis;
     font-size: 90%;
+    color: rgb(var(--property-color, var(--zn-text-body)));
   }
 }
 
@@ -31,9 +44,16 @@
   justify-items: center;
   flex-grow: 1;
   width: 100%;
+  padding: wc.spacing(xs) 0;
+
+  dt, dd {
+    display: flex;
+    align-items: center;
+  }
 
   dt {
     margin-right: wc.spacing(sm);
+    gap: wc.spacing(sm);
   }
 
   dd {
@@ -41,6 +61,7 @@
     text-align: right;
     white-space: normal;
     font-size: 90%;
+    justify-content: end;
   }
 }
 

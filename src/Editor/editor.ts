@@ -210,9 +210,12 @@ export class Editor extends ZincElement implements ZincFormControl
       return normalizeNative(selection);
     };
 
+    this.emit('zc-element-added', { detail: { element: this.editor } });
+
     document.addEventListener('selectionchange', this._handleSelectionChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
   }
+
 
   _handleSelectionChange()
   {
@@ -229,6 +232,7 @@ export class Editor extends ZincElement implements ZincFormControl
   {
     return html`
       <div id="editor"></div>
+      <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">
         <slot name="actions"></slot>
       </div>

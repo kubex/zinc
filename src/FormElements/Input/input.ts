@@ -38,7 +38,7 @@ export class Input extends ZincElement implements ZincFormControl
     return this.input.validationMessage;
   }
 
-  protected connectedCallback()
+  connectedCallback()
   {
     this.input = this.querySelector('input') || this.querySelector('textarea') || this.querySelector('select');
     super.connectedCallback();

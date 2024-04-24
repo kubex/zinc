@@ -74,7 +74,7 @@ export class ZincChart extends ZincElement
           line: {
             borderWidth: 3,
             borderColor: 'rgb(60, 216, 187)',
-            backgroundColor: drawBackground ? 'rgba(60, 216, 187, 0.1)' : 'rgba(0, 0, 0, 0)',
+            backgroundColor: drawBackground ? 'rgba(60, 216, 187, 0.2)' : 'rgba(0, 0, 0, 0)',
             fill: drawBackground,
           }
         },

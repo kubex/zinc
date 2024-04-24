@@ -49,8 +49,6 @@ import './ScrollContainer';
 import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
-import './AjaxDialog';
-
 
 // Events
 export * from './Events/events';

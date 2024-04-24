@@ -2,7 +2,7 @@ import { ZincElement, ZincFormControl } from "../../zinc-element";
 import { FormControlController } from "../../form";
 
 import { html, unsafeCSS } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 import { PropertyValues } from "@lit/reactive-element";
 
@@ -15,7 +15,7 @@ export class Input extends ZincElement implements ZincFormControl
 
   private readonly formControlController = new FormControlController(this, {});
 
-  @query('input') input: HTMLInputElement;
+  private input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
   @property({ type: String, reflect: true }) for;
   @property({ type: String, reflect: true }) label;
@@ -36,6 +36,12 @@ export class Input extends ZincElement implements ZincFormControl
   get validationMessage()
   {
     return this.input.validationMessage;
+  }
+
+  protected connectedCallback()
+  {
+    this.input = this.querySelector('input') || this.querySelector('textarea') || this.querySelector('select');
+    super.connectedCallback();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues)

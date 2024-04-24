@@ -4,6 +4,6 @@ declare global
 {
   interface GlobalEventHandlersEventMap
   {
-    'zc-submit': ZincSubmitEvent;
+    'zn-submit': ZincSubmitEvent;
   }
 }

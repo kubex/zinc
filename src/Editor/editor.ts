@@ -79,7 +79,7 @@ export class Editor extends ZincElement implements ZincFormControl
           {
             form.requestSubmit();
             this.quillElement.setText('');
-            this.emit('zc-submit', { detail: { value: this.value } });
+            this.emit('zn-submit', { detail: { value: this.value } });
           }
         }
       },
@@ -210,7 +210,7 @@ export class Editor extends ZincElement implements ZincFormControl
       return normalizeNative(selection);
     };
 
-    this.emit('zc-element-added', { detail: { element: this.editor } });
+    this.emit('zn-element-added', { detail: { element: this.editor } });
 
     document.addEventListener('selectionchange', this._handleSelectionChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
@@ -225,7 +225,7 @@ export class Editor extends ZincElement implements ZincFormControl
   _handleTextChange()
   {
     this.value = this.quillElement.root.innerHTML;
-    this.emit('zc-change');
+    this.emit('zn-change');
   }
 
   render()

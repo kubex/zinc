@@ -4,6 +4,6 @@ declare global
 {
   interface GlobalEventHandlersEventMap
   {
-    'zc-change': ZincChangeEvent;
+    'zn-change': ZincChangeEvent;
   }
 }

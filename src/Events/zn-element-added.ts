@@ -4,6 +4,6 @@ declare global
 {
   interface GlobalEventHandlersEventMap
   {
-    'zc-element-added': ZincElementAddedEvent;
+    'zn-element-added': ZincElementAddedEvent;
   }
 }

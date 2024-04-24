@@ -1,3 +1,3 @@
-export type { ZincElementAddedEvent } from './zc-element-added';
-export type { ZincChangeEvent } from './zc-change';
-export type { ZincSubmitEvent } from './zc-submit';
+export type { ZincElementAddedEvent } from './zn-element-added';
+export type { ZincChangeEvent } from './zn-change';
+export type { ZincSubmitEvent } from './zn-submit';

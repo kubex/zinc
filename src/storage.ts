@@ -34,12 +34,12 @@ export class Store
     {
       return parts[0];
     }
-    let ttl = parseInt(parts[0]);
+    let ttl = parseInt(parts.shift());
     if(ttl > 0 && ttl < Date.now())
     {
       return null;
     }
-    return parts[1] || '';
+    return parts.join(",") || '';
   }
 
   public setWithTTL(key: string, value: string, ttl: number): void

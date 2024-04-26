@@ -1,11 +1,11 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { md5 } from '../md5';
-import { Store } from '../storage';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {md5} from '../md5';
+import {Store} from '../storage';
 
 import styles from './tabs.scss';
-import { deepQuerySelectorAll } from "../query";
-import { PropertyValues } from "@lit/reactive-element";
+import {deepQuerySelectorAll} from "../query";
+import {PropertyValues} from "@lit/reactive-element";
 
 @customElement('zn-tabs')
 export class Tabs extends LitElement
@@ -13,17 +13,18 @@ export class Tabs extends LitElement
   private _panel: HTMLElement;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[];
-  @property({ attribute: 'active', type: String, reflect: true }) _current = '';
-  @property({ attribute: 'split', type: Number, reflect: true }) _split;
+  @property({attribute: 'active', type: String, reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split;
+  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
   private storage: Storage;
 
-  @property({ attribute: 'primary-caption', type: String, reflect: true }) primaryCaption = 'Navigation';
-  @property({ attribute: 'secondary-caption', type: String, reflect: true }) secondaryCaption = 'Content';
+  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
 
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
-  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   static styles = unsafeCSS(styles);
   protected _store: Store;
@@ -127,7 +128,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode }
+      detail: {element: tabNode}
     }));
     return tabNode;
   }
@@ -188,7 +189,7 @@ export class Tabs extends LitElement
         if(refresh)
         {
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: { element: element }
+            detail: {element: element}
           }));
         }
       });
@@ -250,12 +251,13 @@ export class Tabs extends LitElement
             secondary-caption="${this.secondaryCaption}"
             store-key="${storeKey}"
             pixels bordered
-            min-size="60" initial-size="${this._split}">
-            <slot slot="primary" name="left"></slot>
-            <div id="content" slot="secondary">
-              <slot></slot>
-            </div>
-            <slot name="right"></slot>
+            min-size="${this._splitMin}"
+          " initial-size="${this._split}">
+          <slot slot="primary" name="left"></slot>
+          <div id="content" slot="secondary">
+            <slot></slot>
+          </div>
+          <slot name="right"></slot>
           </zn-split-pane>
         </div>
         <slot name="bottom"></slot>

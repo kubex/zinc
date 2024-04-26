@@ -122,10 +122,10 @@ export class Editor extends ZincElement implements ZincFormControl
       modules: {
         toolbar: {
           container: [
-            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+            /* [{'header': [1, 2, 3, 4, 5, 6, false]}], */
             ['bold', 'italic', 'underline', 'strike'],
             ['undo', 'redo'],
-            [{'list': 'ordered'}, {'list': 'bullet'}, {'list': 'check'}],
+            [{'list': 'ordered'}, {'list': 'bullet'}/* , {'list': 'check'} */],
             ['link', 'image', 'video'],
             ['remove-formatting'],
           ],

@@ -1,11 +1,11 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 import Quill from 'quill';
 import DropdownModule from "./dropdown-module";
 
-import { PropertyValues } from "@lit/reactive-element";
-import { ZincElement, ZincFormControl } from "../zinc-element";
-import { FormControlController } from "../form";
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement, ZincFormControl} from "../zinc-element";
+import {FormControlController} from "../form";
 
 import styles from './index.scss';
 
@@ -25,10 +25,10 @@ export class Editor extends ZincElement implements ZincFormControl
   @query('#toolbar-container')
   private toolbarContainer: HTMLElement;
 
-  @property({ reflect: true }) name: string;
-  @property({ reflect: true }) value: string;
+  @property({reflect: true}) name: string;
+  @property({reflect: true}) value: string;
 
-  @property({ attribute: 'canned-responses', type: Array })
+  @property({attribute: 'canned-responses', type: Array})
   public cannedResponses: Array<any>;
 
   private quillElement: Quill;
@@ -77,7 +77,7 @@ export class Editor extends ZincElement implements ZincFormControl
           const form = this.closest('form');
           if(form)
           {
-            this.emit('zn-submit', { detail: { value: this.value, element: this } });
+            this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();
             this.quillElement.setText('');
           }
@@ -91,7 +91,7 @@ export class Editor extends ZincElement implements ZincFormControl
           const clipboard = context.event.clipboardData;
           const text = clipboard.getData('text/plain');
           const html = clipboard.getData('text/html');
-          const delta = this.quillElement.clipboard.convert({ html: html, text: text });
+          const delta = this.quillElement.clipboard.convert({html: html, text: text});
           this.quillElement.setContents(delta, 'silent');
           this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
         }
@@ -122,10 +122,10 @@ export class Editor extends ZincElement implements ZincFormControl
       modules: {
         toolbar: {
           container: [
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             ['undo', 'redo'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+            [{'list': 'ordered'}, {'list': 'bullet'}, {'list': 'check'}],
             ['link', 'image', 'video'],
             ['remove-formatting'],
           ],
@@ -155,7 +155,7 @@ export class Editor extends ZincElement implements ZincFormControl
           cannedResponses: this.cannedResponses
         }
       },
-      placeholder: 'Compose an epic...',
+      placeholder: 'Compose your reply...',
       theme: 'snow',
       bounds: this.editor,
     });
@@ -186,8 +186,8 @@ export class Editor extends ZincElement implements ZincFormControl
         if(range.startContainer)
         {
           return {
-            start: { node: range.startContainer, offset: range.startOffset },
-            end: { node: range.endContainer, offset: range.endOffset },
+            start: {node: range.startContainer, offset: range.startOffset},
+            end: {node: range.endContainer, offset: range.endOffset},
             native: range
           };
         }
@@ -210,7 +210,7 @@ export class Editor extends ZincElement implements ZincFormControl
       return normalizeNative(selection);
     };
 
-    this.emit('zn-element-added', { detail: { element: this.editor } });
+    this.emit('zn-element-added', {detail: {element: this.editor}});
 
     document.addEventListener('selectionchange', this._handleSelectionChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));

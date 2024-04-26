@@ -35,6 +35,12 @@ export class ConfirmModal extends Dialog
     `;
   }
 
+  connectedCallback()
+  {
+    this.emit('zn-element-added', { detail: { element: this } });
+    super.connectedCallback();
+  }
+
   render()
   {
     const icon = this.getIcon();

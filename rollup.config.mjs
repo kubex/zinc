@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
+import summary from 'rollup-plugin-summary';
 
 // postcss
 import removeComments from 'postcss-discard-comments';
@@ -35,7 +36,7 @@ export default {
       plugins: [
         autoprefixer(),
         removeComments({removeAll: true})
-      ],
+      ]
     }),
     // postcss for components
     postcss({
@@ -47,8 +48,10 @@ export default {
       plugins: [
         autoprefixer(),
         removeComments({removeAll: true})
-      ],
+      ]
     }),
-    production && terser({format: {comments: false}}) // minify, but only in production
-  ]
+    production && terser({format: {comments: false}}), // minify, but only in production
+    summary()
+  ],
+  preserveEntrySignatures: false
 };

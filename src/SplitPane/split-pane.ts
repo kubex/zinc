@@ -1,10 +1,10 @@
-import {html, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {ZincElement} from "../zinc-element";
-import {on} from "../on";
-import {Store} from "../storage";
+import { ZincElement } from "../zinc-element";
+import { on } from "../on";
+import { Store } from "../storage";
 
 @customElement('zn-split-pane')
 export class SplitPane extends ZincElement
@@ -20,22 +20,22 @@ export class SplitPane extends ZincElement
   private currentContainerSize: number = 0;
   private primaryFull: string;
 
-  @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
-  @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
-  @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
-  @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
-  @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
-  @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
+  @property({ attribute: 'pixels', type: Boolean, reflect: true }) calculatePixels = false;
+  @property({ attribute: 'secondary', type: Boolean, reflect: true }) preferSecondarySize = false;
+  @property({ attribute: 'min-size', type: Number, reflect: true }) minimumPaneSize = 10;
+  @property({ attribute: 'initial-size', type: Number, reflect: true }) initialSize = 50;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({ attribute: 'bordered', type: Boolean, reflect: true }) border = false;
+  @property({ attribute: 'vertical', type: Boolean, reflect: true }) vertical = false;
 
-  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Primary';
-  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Secondary';
+  @property({ attribute: 'primary-caption', type: String, reflect: true }) primaryCaption = 'Primary';
+  @property({ attribute: 'secondary-caption', type: String, reflect: true }) secondaryCaption = 'Secondary';
 
-  @property({attribute: 'focus-pane', type: Number, reflect: true}) _focusPane = 0;
+  @property({ attribute: 'focus-pane', type: Number, reflect: true }) _focusPane = 0;
 
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
   protected _store: Store;
 
   connectedCallback()
@@ -53,8 +53,8 @@ export class SplitPane extends ZincElement
 
   firstUpdated(changedProperties)
   {
-    super.firstUpdated(changedProperties);
     setTimeout(this.applyStoredSize.bind(this), 100);
+    super.firstUpdated(changedProperties);
   }
 
   applyStoredSize()
@@ -105,6 +105,8 @@ export class SplitPane extends ZincElement
 
     this.mouseUpHandler = function (e)
     {
+      console.log('store size', this.currentPixelSize, this.currentPercentSize, this.currentContainerSize);
+      console.log('store key', this.storeKey);
       this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);

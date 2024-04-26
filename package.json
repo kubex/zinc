@@ -30,10 +30,10 @@
     "build-style-dictionary": "style-dictionary build --config ./style.config.js"
   },
   "dependencies": {
+    "@packaged-ui/pagelets": "^2.4.2",
     "air-datepicker": "^3.3.5",
     "chart.js": "^4.3.0",
-    "quill": "^2.0.0",
-    "@packaged-ui/pagelets": "^2.4.2"
+    "quill": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
@@ -60,9 +60,15 @@
     "postcss-discard-comments": "^6.0.0",
     "rollup": "^4.16.3",
     "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-summary": "^2.0.0",
     "sass": "^1.62.1",
     "storybook": "7.1.1",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
+  },
+  "overrides": {
+    "rollup-plugin-summary": {
+      "rollup": "^4.16.3"
+    }
   }
 }

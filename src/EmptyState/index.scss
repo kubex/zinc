@@ -37,12 +37,14 @@
     justify-content: center;
     gap: wc.spacing(xs);
     padding: wc.spacing(sm);
+    flex-grow: 1;
   }
 }
 
 :host([type="error"]) {
   background-color: rgba(var(--zn-color-error), .05);
   min-height: 100px;
+  padding: wc.spacing(xs);
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-color-error));

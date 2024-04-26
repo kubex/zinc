@@ -5,9 +5,14 @@ zn-timer, :host {
   --timer-color: var(--zn-color-success);
   pointer-events: none;
   white-space: nowrap;
+  display: inline-block;
 
   .last-message {
     color: rgb(var(--timer-color));
+
+    display: flex;
+    align-items: center;
+    gap: 5px;
 
     .time {
       font-size: 12px;
@@ -21,6 +26,12 @@ zn-timer, :host {
       height: 10px;
       border-radius: 50%;
     }
+  }
+}
+
+:host([flip]) {
+  .last-message {
+    flex-direction: row-reverse;
   }
 }
 

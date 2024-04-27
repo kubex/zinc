@@ -22,6 +22,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   @query('input[type="text"]') input: HTMLInputElement;
 
+  @property({ attribute: 'caption-size', reflect: true }) captionSize: 'small' | 'medium' | 'large' = 'medium';
   @property() value: string;
   @property() name: string;
   @property({ attribute: 'default-value' }) defaultValue: string;
@@ -114,7 +115,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         <div class="ai__right">
           ${!this.isEditing ?
             html`
-              <zn-button @click="${this._handleEditClick}" icon="pencil" icon-size="24" color="transparent">Edit
+              <zn-button @click="${this._handleEditClick}" color="transparent">Edit
               </zn-button>` :
             html`
               <zn-button type="submit" @click="${this._handleSubmitClick}" icon="check" icon-size="24"

@@ -14,7 +14,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   static styles = unsafeCSS(styles);
 
   private readonly formControlController = new FormControlController(this, {
-    defaultValue: (control: InlineEdit) => control.value
+    defaultValue: (control: InlineEdit) => control.defaultValue,
   });
 
   @state() private hasFocus = false;
@@ -24,8 +24,8 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   @property() value: string;
   @property() name: string;
-  @property({ attribute: 'caption', type: String, reflect: true }) caption: string = ""; // Caption
-
+  @property({ attribute: 'default-value' }) defaultValue: string;
+  @property() caption: string = ""; // Caption
 
   get validity(): ValidityState
   {
@@ -81,13 +81,15 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   private _handleSubmitClick()
   {
     this.isEditing = false;
+    this.getForm().submit();
   }
 
   private _handleCancelClick(e)
   {
     e.preventDefault();
-    this.value = this.input.defaultValue;
     this.isEditing = false;
+    this.value = this.defaultValue;
+    this.requestUpdate();
   }
 
 

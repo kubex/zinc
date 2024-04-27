@@ -22,9 +22,9 @@
     }
   }
 
+
   &.ai--editing {
     input[type="text"] {
-      margin-top: 5px;
       font-size: 12px;
       font-weight: 500;
       color: rgb(var(--zn-text));
@@ -33,7 +33,7 @@
     }
 
     .ai__right {
-      margin-top: 5px;
+      display: flex !important;
     }
   }
 
@@ -42,6 +42,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 5px;
     gap: 10px;
   }
 
@@ -72,7 +73,7 @@
     color: rgb(var(--zn-primary));
     font-weight: 500;
     cursor: pointer;
-    display: flex;
+    display: none;
     flex-direction: row;
     gap: 10px;
     align-items: center;
@@ -81,6 +82,17 @@
     zn-button::part(base) {
       padding: 0;
       font-size: 12px;
+      line-height: 0;
+    }
+
+    zn-button {
+      line-height: 0;
+    }
+  }
+
+  &:hover {
+    .ai__right {
+      display: flex !important;
     }
   }
 }

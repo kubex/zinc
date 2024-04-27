@@ -48,6 +48,7 @@ import './ScrollContainer';
 import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
+import './FormElements/Textarea';
 
 // Events
 export * from './Events/events';

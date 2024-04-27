@@ -19,7 +19,7 @@ export class Button extends ZincElement
   @property({type: String}) content = '';
   @property({type: String}) icon: string = '';
   @property({type: String}) iconPosition: IconPosition = 'left';
-  @property({type: String}) iconSize: string = '24';
+  @property({type: String, attribute: "icon-size"}) iconSize: string = '24';
   @property() type: 'button' | 'submit' | 'reset' = 'button';
 
   static styles = unsafeCSS(styles);
@@ -62,7 +62,7 @@ export class Button extends ZincElement
       <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize}" color="${iconColor}"></zn-icon>` : '';
 
     return html`
-      <button type="${this.type}" @click="${this.handleClick}">
+      <button part="base" type="${this.type}" @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot>${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}

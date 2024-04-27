@@ -214,6 +214,8 @@ export class FormControlController implements ReactiveController
       {
         event.formData.append(name, (value as string | number | boolean).toString());
       }
+
+      this.host.dispatchEvent(new CustomEvent('zn-formdata', { bubbles: true, composed: true }));
     }
   };
 

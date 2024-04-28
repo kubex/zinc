@@ -20,13 +20,16 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   @state() private hasFocus = false;
   @state() private isEditing = false;
 
-  @query('input[type="text"]') input: HTMLInputElement;
+  @query('.ai__input') input: HTMLInputElement | HTMLSelectElement;
 
   @property({ attribute: 'caption-size', reflect: true }) captionSize: 'small' | 'medium' | 'large' = 'medium';
   @property() value: string;
   @property() name: string;
   @property({ attribute: 'default-value' }) defaultValue: string;
   @property() caption: string = ""; // Caption
+
+  @property({ attribute: 'options', type: Object }) options: { [key: string]: string } = {};
+
 
   get validity(): ValidityState
   {
@@ -76,7 +79,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   private _handleInput(e: Event)
   {
-    this.value = (e.target as HTMLInputElement).value;
+    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
   }
 
   private _handleSubmitClick()
@@ -96,6 +99,25 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   protected render()
   {
+    console.log('options', this.options);
+
+    let input = html`<input type="text" class="ai__input" value="${this.value}"
+                            @click="${this._handleEditClick}"
+                            .disabled="${!this.isEditing}"
+                            @input="${this._handleInput}"
+                            @blur="${this._handleBlur}"/>`;
+
+    if(Object.keys(this.options).length > 0)
+    {
+      input = html`<select class="ai__input" @click="${this._handleEditClick}"
+                           .disabled="${!this.isEditing}"
+                           @input="${this._handleInput}"
+                           @blur="${this._handleBlur}">
+        ${Object.keys(this.options).map(key => html`
+          <option value="${key}" ?selected="${this.value == key}">${this.options[key]}</option>`)}
+      </select>`;
+    }
+
     return html`
       <div class="${classMap({
         'ai': true,
@@ -105,24 +127,20 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         <span class="ai__caption">${this.caption}</span>
         <div class="ai__wrapper">
           <div class="ai__left">
-            <input type="text" class="ai__input" value="${this.value}"
-                   @click="${this._handleEditClick}"
-                   .disabled="${!this.isEditing}"
-                   @input="${this._handleInput}"
-                   @blur="${this._handleBlur}"
+            ${input}
           </div>
-        </div>
-        <div class="ai__right">
-          ${!this.isEditing ?
-            html`
-              <zn-button @click="${this._handleEditClick}" color="transparent">Edit
-              </zn-button>` :
-            html`
-              <zn-button type="submit" @click="${this._handleSubmitClick}" icon="check" icon-size="24"
-                         color="transparent"></zn-button>
-              <zn-button type="button" @click="${this._handleCancelClick}" icon="close" icon-size="24"
-                         color="transparent"></zn-button>
-            `}
+          <div class="ai__right">
+            ${!this.isEditing ?
+              html`
+                <zn-button @click="${this._handleEditClick}" color="transparent">Edit
+                </zn-button>` :
+              html`
+                <zn-button type="submit" @click="${this._handleSubmitClick}" icon="check" icon-size="24"
+                           color="transparent"></zn-button>
+                <zn-button type="button" @click="${this._handleCancelClick}" icon="close" icon-size="24"
+                           color="transparent"></zn-button>
+              `}
+          </div>
         </div>
       </div>`;
   }

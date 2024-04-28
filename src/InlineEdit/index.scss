@@ -10,7 +10,7 @@
   flex-direction: column;
 
   &:not(.ai--editing) {
-    input[type="text"] {
+    .ai__input {
       appearance: none;
       background-color: transparent;
       border: none;
@@ -22,9 +22,14 @@
     }
   }
 
+  .ai__input {
+    height: unset;
+    opacity: 1;
+  }
+
 
   &.ai--editing {
-    input[type="text"] {
+    .ai__input {
       font-size: 12px;
       font-weight: 500;
       color: rgb(var(--zn-text));

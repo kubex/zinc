@@ -2,7 +2,6 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss';
-import {parseInt} from "lodash";
 
 @customElement('zn-cols')
 export class Columns extends LitElement

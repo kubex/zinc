@@ -91,7 +91,6 @@ export class ZincElement extends LitElement
       ...options
     });
 
-    console.log('emitting', event);
     this.dispatchEvent(event);
 
     return event as GetCustomEventType<T>;

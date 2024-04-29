@@ -105,8 +105,6 @@ export class SplitPane extends ZincElement
 
     this.mouseUpHandler = function (e)
     {
-      console.log('store size', this.currentPixelSize, this.currentPercentSize, this.currentContainerSize);
-      console.log('store key', this.storeKey);
       this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
       this.classList.remove('resizing');
       window.removeEventListener('touchmove', this.mouseMoveHandler);

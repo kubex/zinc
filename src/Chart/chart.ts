@@ -53,7 +53,6 @@ export class ZincChart extends ZincElement
   firstUpdated()
   {
     const ctx = (this.renderRoot.querySelector('#chat') as HTMLCanvasElement).getContext('2d');
-    console.log(this.datasets);
     const drawBackground = this.datasets.length <= 1;
     const config = {
       type: this.type,

@@ -75,6 +75,8 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   private _handleEditClick()
   {
     this.isEditing = true;
+    // Add event listener for esc key
+    this.addEventListener('keydown', this.escKeyHandler);
   }
 
   private _handleInput(e: Event)
@@ -96,11 +98,21 @@ export class InlineEdit extends ZincElement implements ZincFormControl
     this.requestUpdate();
   }
 
+  escKeyHandler(e: KeyboardEvent)
+  {
+    if(e.key === 'Escape')
+    {
+      console.log('esc key pressed');
+      this.isEditing = false;
+      this.value = this.defaultValue;
+
+      this.removeEventListener('keydown', this.escKeyHandler);
+    }
+  }
+
 
   protected render()
   {
-    console.log('options', this.options);
-
     let input = html`<input type="text" class="ai__input" value="${this.value}"
                             @click="${this._handleEditClick}"
                             .disabled="${!this.isEditing}"

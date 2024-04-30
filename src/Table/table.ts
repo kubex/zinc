@@ -3,6 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss';
+import {ifDefined} from "lit/directives/if-defined.js";
 
 @customElement('zn-table')
 export class Table extends LitElement
@@ -22,7 +23,7 @@ export class Table extends LitElement
 
   resizing()
   {
-   // TODO Resizing event
+    // TODO Resizing event
   }
 
   connectedCallback()
@@ -158,13 +159,14 @@ export class Table extends LitElement
 
       const actions = row.hasOwnProperty('actions') ? row['actions'] : [];
       const uri = row.hasOwnProperty('uri') ? row['uri'] : [];
+      const target = row.hasOwnProperty('target') ? row['target'] : [];
       let caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
 
       if(uri != "")
       {
-        caption = html`<a href="${uri}">${caption}</a>`;
+        caption = html`<a data-target="${ifDefined(target)}" href="${uri}">${caption}</a>`;
       }
 
       let iconHtml = html``;

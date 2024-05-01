@@ -1,1 +1,1 @@
-export {InlineEdit} from './InlineEdit';
+export {InlineEdit} from './inline-edit';

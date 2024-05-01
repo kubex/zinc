@@ -5,6 +5,16 @@
   display: none;
 }
 
+:host([tile]) {
+  min-width: wc.common-size(tile);
+  flex-basis: wc.common-size(tile);
+}
+
+:host([small]) {
+  min-width: wc.common-size(spanel);
+  flex-basis: wc.common-size(spanel);
+}
+
 :host {
   @include wc.scrollbars;
 
@@ -14,7 +24,8 @@
   display: flex;
   max-width: 100%;
   z-index: 1;
-  min-width: wc.common-size(spanel);
+  min-width: wc.common-size(mpanel);
+  flex-basis: wc.common-size(panel);
   position: relative;
 
   > div {
@@ -113,11 +124,11 @@
 
   ::slotted(*) {
     padding: wc.spacing(md);
-    border-top-width: 1px!important;
+    border-top-width: 1px !important;
   }
 
   ::slotted(*:first-child) {
-    border-top-width: 0!important;
+    border-top-width: 0 !important;
   }
 }
 

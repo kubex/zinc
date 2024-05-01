@@ -131,7 +131,7 @@ export class FormControlController implements ReactiveController
     }
 
     this.form.addEventListener('formdata', this.handleFormData);
-    this.form.addEventListener('submit', this.handleFormSubmit);
+    // this.form.addEventListener('submit', this.handleFormSubmit);
     this.form.addEventListener('reset', this.handleFormReset);
 
     // Overload the form's reportValidity() method so it looks at Shoelace form controls
@@ -192,7 +192,7 @@ export class FormControlController implements ReactiveController
 
     // For buttons, we only submit the value if they were the submitter. This is currently done in doAction() by
     // injecting the name/value on a temporary button, so we can just skip them here.
-    const isButton = this.host.tagName.toLowerCase() === 'sl-button';
+    const isButton = this.host.tagName.toLowerCase() === 'zn-button';
 
     if(
       this.host.isConnected &&
@@ -395,7 +395,7 @@ export class FormControlController implements ReactiveController
 
   emitInvalidEvent(originalInvalidEvent?: Event)
   {
-    const slInvalidEvent = new CustomEvent<Record<PropertyKey, never>>('sl-invalid', {
+    const znInvalidEvent = new CustomEvent<Record<PropertyKey, never>>('zn-invalid', {
       bubbles: false,
       composed: false,
       cancelable: true,
@@ -404,10 +404,10 @@ export class FormControlController implements ReactiveController
 
     if(!originalInvalidEvent)
     {
-      slInvalidEvent.preventDefault();
+      znInvalidEvent.preventDefault();
     }
 
-    if(!this.host.dispatchEvent(slInvalidEvent))
+    if(!this.host.dispatchEvent(znInvalidEvent))
     {
       originalInvalidEvent?.preventDefault();
     }

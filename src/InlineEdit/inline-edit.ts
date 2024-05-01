@@ -87,7 +87,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   private _handleSubmitClick()
   {
     this.isEditing = false;
-    this.getForm().submit();
+    this.formControlController.submit();
   }
 
   private _handleCancelClick(e)

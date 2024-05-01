@@ -48,7 +48,7 @@ export class Textarea extends ZincElement implements ZincFormControl
   firstUpdated()
   {
     this.formControlController.updateValidity();
-    this.getForm().addEventListener('zn-formdata', () =>
+    this.formControlController.getForm().addEventListener('zn-formdata', () =>
     {
       this.value = '';
     });

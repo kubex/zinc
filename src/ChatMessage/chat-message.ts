@@ -36,8 +36,7 @@ export class ChatMessage extends LitElement
       return html``;
     }
 
-    if(this.actionType === "message-sending")
-    {
+    if(this.actionType === "message-sending") {
       return html`
         <div class="wrapper">
           <div class="message sending">
@@ -122,6 +121,7 @@ export class ChatMessage extends LitElement
   {
     let content = cleanHTML(this.message);
 
+    content = content.replace(/(?:\r\n|\r|\n)/g, '<br>');
     content = content.replace(/\b(((https?|ftp|dict):\/\/|www\.)[^'">\s]+\.[^'">\s]+)(?=\s|$)(?!["<>])/g, '<a href="$1" target="_blank">$1</a>');
     content = unsafeHTML(content) as string;
     return content;

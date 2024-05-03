@@ -11,11 +11,13 @@ type DropdownModuleCannedResponse = {
   labels?: string[];
 }
 
+export let dropdownOpen: boolean = false;
+
 class DropdownModule
 {
   private _quill: Quill;
   private _dropdown: HTMLElement;
-  private _dropdownOpen: boolean = false;
+
   private _command: string = '';
   private _commands: any = [];
   private _selectedIndex = 0;
@@ -42,7 +44,7 @@ class DropdownModule
   {
     this._quill.keyboard.addBinding({ key: 'ArrowDown' }, (range, context) =>
     {
-      if(this._dropdownOpen)
+      if(dropdownOpen)
       {
         this.moveCursor(1);
       }
@@ -50,7 +52,7 @@ class DropdownModule
 
     this._quill.keyboard.addBinding({ key: 'ArrowUp' }, (range, context) =>
     {
-      if(this._dropdownOpen)
+      if(dropdownOpen)
       {
         this.moveCursor(-1);
       }
@@ -59,8 +61,9 @@ class DropdownModule
     // add enter key binding
     document.addEventListener('keydown', (e) =>
     {
-      if(e.key === 'Enter' && this._dropdownOpen)
+      if(e.key === 'Enter' && dropdownOpen)
       {
+        console.log('enter key pressed');
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -70,6 +73,10 @@ class DropdownModule
 
         const command = this._commands.find(command => command.title === commandName);
         this.triggerCommand(command);
+      }
+      else if(e.key === 'Escape' && dropdownOpen)
+      {
+        this.closeDropdown();
       }
     });
   }
@@ -91,7 +98,7 @@ class DropdownModule
       }
 
       // if there's no character before the forward slash, we will open the dropdown
-      if(char === '/' && !this._dropdownOpen &&
+      if(char === '/' && !dropdownOpen &&
         (text.charAt(index - 2) === ' '
           || text.charAt(index - 2) === '\n'
           || text.charAt(index - 2) === ''
@@ -104,7 +111,7 @@ class DropdownModule
 
       // if the user has typed a space or a new line, we will close the dropdown. and the dropdown
       // is open
-      if(this._dropdownOpen && (char === ' ' || char === '\n'))
+      if(dropdownOpen && (char === ' ' || char === '\n'))
       {
         this._selectedIndex = 0;
         this.closeDropdown();
@@ -112,7 +119,7 @@ class DropdownModule
 
       // if the dropdown is open, we will filter the commands based on the text that the user has typed
       // after the forward slash
-      if(this._dropdownOpen)
+      if(dropdownOpen)
       {
         this.commandFilter(text);
         this.updateDropdownPosition();
@@ -122,7 +129,7 @@ class DropdownModule
       // if the user clicks away from the dropdown, we will close the dropdown
       document.addEventListener('click', (e) =>
       {
-        if(this._dropdownOpen && e.target !== this._dropdown)
+        if(dropdownOpen && e.target !== this._dropdown)
         {
           this.closeDropdown();
         }
@@ -132,7 +139,7 @@ class DropdownModule
 
   openDropdown()
   {
-    this._dropdownOpen = true;
+    dropdownOpen = true;
     this.updateDropdownPosition();
     this._selectedIndex = 0;
     this.updateSelectedCommand();
@@ -143,7 +150,7 @@ class DropdownModule
 
   closeDropdown()
   {
-    this._dropdownOpen = false;
+    dropdownOpen = false;
     this._selectedIndex = 0;
 
     this._quill.container.ownerDocument.body.removeChild(this._dropdown);

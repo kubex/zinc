@@ -1,7 +1,7 @@
 import { html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 import Quill from 'quill';
-import DropdownModule from "./dropdown-module";
+import DropdownModule, { dropdownOpen } from "./dropdown-module";
 
 import { PropertyValues } from "@lit/reactive-element";
 import { ZincElement, ZincFormControl } from "../zinc-element";
@@ -75,7 +75,7 @@ export class Editor extends ZincElement implements ZincFormControl
         handler: (range, context) =>
         {
           const form = this.closest('form');
-          if(form)
+          if(form && !dropdownOpen && this.value.trim().length > 0)
           {
             this.emit('zn-submit', { detail: { value: this.value, element: this } });
             form.requestSubmit();

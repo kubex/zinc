@@ -7,7 +7,7 @@ type DropdownModuleOptions = {
 type DropdownModuleCannedResponse = {
   title: string
   content: string;
-  commmand: string;
+  command: string;
   labels?: string[];
 }
 
@@ -26,10 +26,17 @@ class DropdownModule
   constructor(quill: Quill, options: DropdownModuleOptions)
   {
     this._quill = quill;
+
     if(options.cannedResponses)
     {
       this._commands = options.cannedResponses;
     }
+
+    this._commands.push({
+      title: 'Cancel',
+      content: 'Cancel',
+      command: 'cancel'
+    });
 
     if(this._commands.length > 0)
     {
@@ -71,7 +78,14 @@ class DropdownModule
         const commandName = commandElement.getAttribute('data-command');
 
         const command = this._commands.find(command => command.title === commandName);
-        this.triggerCommand(command);
+        if(command.command === 'cancel')
+        {
+          this.closeDropdown();
+        }
+        else
+        {
+          this.triggerCommand(command);
+        }
       }
       else if(e.key === 'Escape' && dropdownOpen)
       {
@@ -316,7 +330,7 @@ class DropdownModule
 
   updateSelectedCommand()
   {
-    this._commandElements[this._selectedIndex].style.backgroundColor = 'rgb(var(--zn-body))';
+    this._commandElements[this._selectedIndex].style.backgroundColor = 'rgba(var(--zn-primary),  0.05)';
 
     // un style all the other commands
     this._commandElements.forEach((element, i) =>
@@ -331,6 +345,7 @@ class DropdownModule
 
   createCommandElement(command: DropdownModuleCannedResponse)
   {
+
     const commandWrapper = document.createElement('div');
     commandWrapper.setAttribute('data-command', command.title);
     commandWrapper.style.padding = '10px 20px';
@@ -346,8 +361,24 @@ class DropdownModule
     commandLeft.style.flexBasis = '50%';
     commandWrapper.appendChild(commandLeft);
 
+    if(command.command === 'cancel')
+    {
+      const commandCommand = document.createElement('div');
+      commandCommand.textContent = command.title;
+      commandCommand.style.color = 'rgb(var(--zn-text-heading))';
+      commandLeft.appendChild(commandCommand);
+
+      commandWrapper.addEventListener('click', (e) =>
+      {
+        this._quill.focus();
+        this.closeDropdown();
+      });
+
+      return commandWrapper;
+    }
+
     const commandCommand = document.createElement('div');
-    commandCommand.textContent = '/' + (command.commmand ? command.commmand :
+    commandCommand.textContent = '/' + (command.command ? command.command :
       command.title.toLowerCase().replace(' ', '-'));
     commandCommand.style.color = 'rgb(var(--zn-text-heading))';
     commandLeft.appendChild(commandCommand);

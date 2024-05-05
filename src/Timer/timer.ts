@@ -86,6 +86,8 @@ export class Timer extends LitElement
 
       return `${minutes} Minute` + (minutes > 1 ? 's' : '');
     }
+
+    return `${seconds} Second` + (seconds > 1 ? 's' : '');
   }
 }
 

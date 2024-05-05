@@ -61,9 +61,8 @@ class DropdownModule
     // add enter key binding
     document.addEventListener('keydown', (e) =>
     {
-      if(e.key === 'Enter' && dropdownOpen)
+      if((e.key === 'Enter' || e.key === 'Tab') && dropdownOpen)
       {
-        console.log('enter key pressed');
         e.preventDefault();
         e.stopImmediatePropagation();
 

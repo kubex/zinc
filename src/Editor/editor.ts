@@ -28,6 +28,7 @@ export class Editor extends ZincElement implements ZincFormControl
   @property({ reflect: true }) name: string;
   @property({ reflect: true }) value: string;
 
+  @property({ attribute: 'with-send', type: Boolean, reflect: true }) withSendButton: boolean = false;
   @property({ attribute: 'canned-responses', type: Array })
   public cannedResponses: Array<any>;
 
@@ -74,6 +75,11 @@ export class Editor extends ZincElement implements ZincFormControl
         shiftKey: false,
         handler: (range, context) =>
         {
+          if(this.withSendButton)
+          {
+            return;
+          }
+
           const form = this.closest('form');
           if(form && !dropdownOpen && this.value.trim().length > 0)
           {
@@ -217,12 +223,12 @@ export class Editor extends ZincElement implements ZincFormControl
   }
 
 
-  _handleSelectionChange()
+  private _handleSelectionChange()
   {
     this.quillElement.selection.update();
   }
 
-  _handleTextChange()
+  private _handleTextChange()
   {
     this.value = this.quillElement.root.innerHTML;
     this.emit('zn-change');

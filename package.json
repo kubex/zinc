@@ -6,13 +6,15 @@
   "repository": "git@github.com:kubex/zinc",
   "license": "MIT",
   "author": "",
+  "web-types": "./dist/web-types.json",
+  "customElements": "./dist/custom-elements.json",
   "contributors": [
     "Brooke Bryan <brooke@bajb,net>",
     "Tom Kay <oridan82@gmail.com>",
     "Kyle Essex <kyle.essex@hotmail.com>"
   ],
   "main": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "type": "module",
   "files": [
     "dist",
     "scss",
@@ -21,8 +23,10 @@
   "scripts": {
     "build": "run-s build:*",
     "build:rollup": "rollup -c",
+    "build:manifest": "cem analyze --litelement --outdir \"dist\"",
     "watch": "run-p watch:*",
     "watch:rollup": "rollup -c -w",
+    "watch:manifest": "npm run build:manifest -- --watch",
     "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
     "lint:eslint": "eslint 'src/**/*.ts'",
     "lint:lit-analyzer": "lit-analyzer src/**/*.ts",
@@ -37,6 +41,7 @@
     "quill": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.9.8",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
@@ -51,6 +56,7 @@
     "air-datepicker": "^3.3.5",
     "autoprefixer": "^10.4.14",
     "cssnano": "^6.0.1",
+    "custom-element-jet-brains-integration": "^1.4.4",
     "eslint": "^8.43.0",
     "eslint-plugin-storybook": "^0.6.13",
     "lit": "^2.7.6",

@@ -1,0 +1,82 @@
+@use "../../wc";
+
+:host {
+  --symbol-color: rgb(var(--zn-border-color));
+  --symbol-color-active: rgb(var(--zn-primary));
+  --symbol-size: 1.2rem;
+  --symbol-spacing: 4px;
+
+  display: inline-flex;
+}
+
+.rating {
+  position: relative;
+  display: inline-flex;
+  border-radius: var(--sl-border-radius-medium);
+  vertical-align: middle;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: var(--sl-focus-ring);
+    outline-offset: var(--sl-focus-ring-offset);
+  }
+
+  &__symbols {
+    display: inline-flex;
+    position: relative;
+    font-size: var(--symbol-size);
+    line-height: 0;
+    color: var(--symbol-color);
+    white-space: nowrap;
+    cursor: pointer;
+
+    > * {
+      padding: var(--symbol-spacing);
+    }
+  }
+
+  &__symbol--active,
+  &__partial--filled {
+    color: var(--symbol-color-active);
+  }
+
+  &__partial-symbol-container {
+    position: relative;
+  }
+
+  &__partial--filled {
+    position: absolute;
+    top: var(--symbol-spacing);
+    left: var(--symbol-spacing);
+  }
+
+  &__symbol {
+    transition: var(--sl-transition-fast) scale;
+    pointer-events: none;
+
+    &--hover {
+      scale: 1.2;
+    }
+  }
+
+  &--disabled &__symbols,
+  &--readonly &__symbols {
+    cursor: default;
+  }
+
+  &--disabled &__symbol--hover,
+  &--readonly &__symbol--hover {
+    scale: none;
+  }
+
+  &--disabled {
+    opacity: 0.5;
+  }
+
+  &--disabled .rating__symbols {
+    cursor: not-allowed;
+  }
+}

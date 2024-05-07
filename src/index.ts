@@ -48,6 +48,7 @@ import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
 import './FormElements/Textarea';
+import './FormElements/Rating';
 
 // Events
 export * from './Events/events';

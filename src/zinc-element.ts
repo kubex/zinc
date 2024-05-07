@@ -102,9 +102,9 @@ export interface ZincFormControl extends ZincElement
 {
   // Form attributes
   name: string;
-  value: string;
+  value: PropertyKey
   disabled?: boolean;
-  defaultValue?: string;
+  defaultValue?: PropertyKey;
   defaultChecked?: boolean;
   form?: string;
 

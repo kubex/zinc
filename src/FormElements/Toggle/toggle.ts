@@ -8,7 +8,7 @@ import { ZincElement, ZincFormControl } from "../../zinc-element";
 import { FormControlController } from "../../form";
 import { defaultValue } from "../../default-value";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-toggle')
 export class Toggle extends ZincElement implements ZincFormControl

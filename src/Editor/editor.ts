@@ -7,7 +7,7 @@ import { PropertyValues } from "@lit/reactive-element";
 import { ZincElement, ZincFormControl } from "../zinc-element";
 import { FormControlController } from "../form";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-editor')
 export class Editor extends ZincElement implements ZincFormControl

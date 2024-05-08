@@ -1,7 +1,7 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement} from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-note')
 export class Note extends LitElement

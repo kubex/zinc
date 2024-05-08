@@ -1,7 +1,7 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-progress-bar')
 export class ProgressBar extends LitElement

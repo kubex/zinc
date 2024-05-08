@@ -3,7 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {md5} from '../md5';
 import {Store} from '../storage';
 
-import styles from './tabs.scss';
+import styles from './index.scss?inline';
 import {deepQuerySelectorAll} from "../query";
 import {PropertyValues} from "@lit/reactive-element";
 

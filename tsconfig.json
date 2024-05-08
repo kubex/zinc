@@ -5,8 +5,23 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "Node",
     "lib": [
-      "DOM"
-    ]
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@@/*": [
+        "./*"
+      ]
+    },
+    "resolveJsonModule": true
   },
   "include": [
     "src"

@@ -6,7 +6,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import { PropertyValues } from "@lit/reactive-element";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-input')
 export class Input extends ZincElement implements ZincFormControl

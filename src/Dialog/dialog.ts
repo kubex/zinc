@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 import { ZincElement } from "../zinc-element";
 
 @customElement('zn-dialog')

@@ -1,7 +1,7 @@
 import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-vertical-stepper-item')
 export class VerticalStepperItem extends LitElement

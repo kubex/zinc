@@ -4,7 +4,7 @@ import AirDatepicker, {AirDatepickerOptions} from "air-datepicker";
 import localeEn from 'air-datepicker/locale/en';
 import {PropertyValues} from "@lit/reactive-element";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-datepicker')
 export class DatePicker extends LitElement

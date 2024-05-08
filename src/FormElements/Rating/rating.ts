@@ -6,7 +6,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { ZincElement } from "../../zinc-element";
 import { clamp } from "lodash";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-rating')
 export class Rating extends ZincElement

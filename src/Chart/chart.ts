@@ -4,7 +4,7 @@ import {Chart, ChartConfiguration, registerables} from 'chart.js';
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
 import {ZincElement} from "../zinc-element";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-chart')
 export class ZincChart extends ZincElement

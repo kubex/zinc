@@ -2,7 +2,7 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 import {ifDefined} from "lit/directives/if-defined.js";
 
 @customElement('zn-table')

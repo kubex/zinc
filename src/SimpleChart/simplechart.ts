@@ -3,7 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {Chart, ChartConfiguration, registerables} from "chart.js";
 import {ZincElement} from "../zinc-element";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-simplechart')
 export class SimpleChart extends ZincElement

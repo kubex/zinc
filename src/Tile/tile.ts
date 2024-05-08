@@ -2,7 +2,7 @@ import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 import { Menu } from "../Menu";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-tile')
 export class Tile extends LitElement

@@ -3,7 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../zinc-element";
 
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-navbar')
 export class NavBar extends ZincElement

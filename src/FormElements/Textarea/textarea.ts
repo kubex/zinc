@@ -5,7 +5,7 @@ import { html, unsafeCSS } from 'lit';
 import { live } from 'lit/directives/live.js';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 import { watch } from "../../watch";
 import { ifDefined } from "lit/directives/if-defined.js";
 

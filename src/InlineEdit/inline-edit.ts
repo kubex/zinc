@@ -6,7 +6,7 @@ import { FormControlController } from "../form";
 import { PropertyValues } from "@lit/reactive-element";
 import { classMap } from "lit/directives/class-map.js";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 
 @customElement('zn-inline-edit')
 export class InlineEdit extends ZincElement implements ZincFormControl

@@ -1,7 +1,7 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property, eventOptions} from 'lit/decorators.js';
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 import {ZincElement} from "../zinc-element";
 import {on} from "../on";
 import {Store} from "../storage";

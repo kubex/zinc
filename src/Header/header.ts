@@ -2,7 +2,7 @@ import {html, TemplateResult, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "../zinc-element";
 
-import styles from './index.scss';
+import styles from './index.scss?inline';
 import {NavBar} from "../NavBar";
 import {PropertyValues} from "@lit/reactive-element";
 

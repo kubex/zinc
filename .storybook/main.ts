@@ -5,8 +5,9 @@ const config: StorybookConfig = {
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@storybook/addon-styling",
+    "@storybook/addon-themes",
   ],
+  staticDirs: ["../src"],
   framework: {
     name: "@storybook/web-components-vite",
     options: {},

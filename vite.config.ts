@@ -13,8 +13,6 @@ const getPackageNameCamelCase = () =>
 };
 
 const fileName = {
-  es: `${getPackageName()}.min.es.js`,
-  cjs: `${getPackageName()}.min.cjs.js`,
   iife: `${getPackageName()}.min.js`,
 };
 

@@ -9,7 +9,9 @@ import {PropertyValues} from "@lit/reactive-element";
 @customElement('zn-header')
 export class Header extends ZincElement
 {
-  @property({attribute: 'full-location', type: String}) fullLocation: string;
+  @property({attribute: 'full-location', type: String, reflect: true}) fullLocation: string;
+  @property({attribute: 'entity-id', type: String, reflect: true}) entityId: string;
+  @property({attribute: 'entity-id-show', type: Boolean, reflect: true}) entityIdShow: boolean;
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
   @property({attribute: 'caption', type: String, reflect: true}) caption: String;
   @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
@@ -103,17 +105,23 @@ export class Header extends ZincElement
     if(this.fullLocation)
     {
       inNew = html`
-        <div class="new-window-launch">
-          <a href="${this.fullLocation}" target="_blank">
-            <zn-icon src="open_in_new"></zn-icon>
-          </a>
-        </div>`;
+        <a href="${this.fullLocation}" target="_blank">
+          <zn-icon src="open_in_new"></zn-icon>
+        </a>`;
+    }
+
+    let entityId: TemplateResult;
+    if(this.entityId)
+    {
+      entityId = html`
+        <zn-icon src="fingerprint" onclick="navigator.clipboard.writeText('${this.entityId}')"></zn-icon>
+        ${this.entityIdShow ? this.entityId : ''}`;
     }
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
-        ${inNew}
+        <div class="alt-overlay">${inNew}${entityId}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
           ${caption}

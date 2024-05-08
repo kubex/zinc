@@ -28,6 +28,11 @@ export default defineConfig({
       formats,
       fileName: format => fileName[format],
     },
+    terserOptions: {
+      format: {
+        comments: false
+      }
+    }
   },
   test: {},
   resolve: {

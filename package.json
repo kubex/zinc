@@ -19,9 +19,7 @@
     "src"
   ],
   "scripts": {
-    "build": "run-s build:*",
-    "build:src": "vite build",
-    "build:manifest": "cem analyze --litelement --outdir \"dist\"",
+    "build": "vite build",
     "watch": "vite build --watch",
     "test": "vitest",
     "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
@@ -38,7 +36,6 @@
     "quill": "^2.0.0-rc.5"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.10.2",
     "@storybook/addon-essentials": "^8.0.10",
     "@storybook/addon-links": "^8.0.10",
     "@storybook/addon-themes": "^8.0.10",
@@ -48,7 +45,6 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "air-datepicker": "^3.3.5",
     "autoprefixer": "^10.4.14",
-    "custom-element-jet-brains-integration": "^1.4.4",
     "eslint": "^8.43.0",
     "eslint-plugin-storybook": "^0.6.13",
     "lit": "^2.7.6",
@@ -60,12 +56,5 @@
     "typescript": "^5.2.2",
     "vitest": "^1.6.0",
     "vite": "^5.2.11"
-  },
-  "customElements": "./dist/custom-elements.json",
-  "overrides": {
-    "rollup-plugin-summary": {
-      "rollup": "^4.16.3"
-    }
-  },
-  "web-types": "./dist/web-types.json"
+  }
 }

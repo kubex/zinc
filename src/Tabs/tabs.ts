@@ -128,7 +128,7 @@ export class Tabs extends LitElement
     }
     tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode}
+      detail: {element: tabNode, source: tabEle}
     }));
     return tabNode;
   }

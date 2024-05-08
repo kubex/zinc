@@ -13,7 +13,6 @@ export class NavBar extends ZincElement
   private _postItems: NodeListOf<Element>;
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
-  @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean; // When the navbar is used outside of a header
 
   static styles = unsafeCSS(styles);
 

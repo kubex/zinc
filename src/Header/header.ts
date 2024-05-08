@@ -9,6 +9,7 @@ import {PropertyValues} from "@lit/reactive-element";
 @customElement('zn-header')
 export class Header extends ZincElement
 {
+  @property({attribute: 'full-location', type: String}) fullLocation: string;
   @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
   @property({attribute: 'caption', type: String, reflect: true}) caption: String;
   @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
@@ -19,6 +20,13 @@ export class Header extends ZincElement
   private _navBar;
 
   static styles = unsafeCSS(styles);
+
+  connectedCallback()
+  {
+    super.connectedCallback();
+    window.addEventListener('alt-press', () => this.classList.toggle('alt-pressed', true));
+    window.addEventListener('alt-up', () => this.classList.toggle('alt-pressed', false));
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
@@ -91,9 +99,21 @@ export class Header extends ZincElement
         <h1>${this.caption}</h1>`;
     }
 
+    let inNew: TemplateResult;
+    if(this.fullLocation)
+    {
+      inNew = html`
+        <div class="new-window-launch">
+          <a href="${this.fullLocation}" target="_blank">
+            <zn-icon src="open_in_new"></zn-icon>
+          </a>
+        </div>`;
+    }
+
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
+        ${inNew}
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
           ${caption}

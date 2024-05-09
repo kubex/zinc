@@ -32,6 +32,15 @@ export default defineConfig({
       format: {
         comments: false
       }
+    },
+    rollupOptions: {
+      output: {
+        assetFileNames: assetInfo =>
+        {
+          if(assetInfo.name === 'style.css') return 'zn.min.css';
+          return assetInfo.name;
+        }
+      }
     }
   },
   test: {},

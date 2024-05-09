@@ -243,6 +243,13 @@ export class Tabs extends LitElement
       {
         storeKey = storeKey + "-split";
       }
+
+      let contentSlot = 'secondary';
+      if(this.querySelectorAll('[slot="right"]').length > 0)
+      {
+        contentSlot = 'primary';
+      }
+
       return html`
         <slot name="top"></slot>
         <div id="mid">
@@ -254,10 +261,10 @@ export class Tabs extends LitElement
             min-size="${this._splitMin}"
           " initial-size="${this._split}">
           <slot slot="primary" name="left"></slot>
-          <div id="content" slot="secondary">
+          <div id="content" slot="${contentSlot}">
             <slot></slot>
           </div>
-          <slot name="right"></slot>
+          <slot slot="secondary" name="right"></slot>
           </zn-split-pane>
         </div>
         <slot name="bottom"></slot>

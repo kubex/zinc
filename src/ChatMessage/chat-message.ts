@@ -71,9 +71,9 @@ export class ChatMessage extends LitElement
         <div class="wrapper">
           <div class="message sending">
             ${this._prepareMessageContent()}
-          </div>
-          <div class="int-msg-d">
-            Sending...
+            <div class="int-msg-d">
+              Sending...
+            </div>
           </div>
         </div>`;
     }
@@ -86,11 +86,11 @@ export class ChatMessage extends LitElement
     return html`
       <div class="wrapper ${this.sender ? 'message-' + this.sender : ''}">
         <div class="message">
-          ${this._prepareMessageContent()}
-        </div>
-        <div class="int-msg-d">
           ${this._getAuthor()}
-          ${this._getTime()}
+          ${this._prepareMessageContent()}
+          <div class="int-msg-d">
+            ${this._getTime()}
+          </div>
         </div>
       </div>`;
   }
@@ -111,11 +111,11 @@ export class ChatMessage extends LitElement
     // if not today, show date and time without seconds
     if(time.getDate() !== (new Date()).getDate())
     {
-      return `@ ${time.toLocaleDateString()} ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      return `${time.toLocaleDateString()} ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
     else
     {
-      return `@ ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      return `${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     }
   }
 
@@ -124,11 +124,11 @@ export class ChatMessage extends LitElement
     return html`
       <div class="wrapper ${this.sender ? 'message-' + this.sender : ''}">
         <div class="message">
-          ${this._prepareMessageContent()}
-        </div>
-        <div class="int-msg-d">
           ${this._getAuthor()}
-          ${this._getTime()}
+          ${this._prepareMessageContent()}
+          <div class="int-msg-d">
+            ${this._getTime()}
+          </div>
         </div>
       </div>`;
   }

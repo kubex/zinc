@@ -9,11 +9,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin: 0 0 10px 60px;
+  margin: 10px 0 0 60px;
 }
 
+
 .message {
-  padding: 15px 15px;
+  gap: 5px;
+  margin-top: 2px;
+  padding: 10px 15px 23px 15px;
   background-color: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
   color: rgb(var(--zn-text-heading));
@@ -21,8 +24,13 @@
   font-size: 14px;
   line-height: 21px;
   max-width: 85%;
+  min-width: 170px; // Allow for date output
   border-radius: 10px;
   position: relative;
+
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 
   &:before {
     position: absolute;
@@ -37,11 +45,24 @@
   }
 }
 
+
+.int-msg-who {
+  font-weight: bold;
+  font-size: 11px;
+  margin: 0;
+  display: block;
+  width: 100%;
+  color: rgb(var(--zn-primary));
+}
+
 .int-msg-d {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 15px;
-  margin: 5px 0;
   text-transform: capitalize;
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  opacity: 0.5;
 }
 
 :host([action-type="connected.agent"]),
@@ -86,11 +107,16 @@
 }
 
 :host(.message-continued) {
-  .message {
-    margin-bottom: 0;
+  .wrapper {
+    margin-top: 0;
   }
 
-  .int-msg-d {
+  .message {
+    margin-bottom: 0;
+    padding-bottom: 10px;
+  }
+
+  .int-msg-who, .int-msg-d {
     display: none;
   }
 }

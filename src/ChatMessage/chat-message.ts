@@ -26,7 +26,37 @@ export class ChatMessage extends LitElement
   @property({ type: String }) message = '';
   @property({ type: String }) time = '';
   @property({ type: String, attribute: 'action-type' }) actionType: ChatMessageActionType = '';
-  @property({ type: String }) customerInitiated = "0";
+  @property({ type: String, reflect: true, attribute: 'customer-initiated' }) customerInitiated = "0";
+
+  connectedCallback()
+  {
+    let agentInitiated = false;
+    let customerInitiated = false;
+
+    if(!this.actionType)
+    {
+      if(this.customerInitiated === "false" || this.customerInitiated === "0" || !this.customerInitiated)
+      {
+        this?.classList?.add('agent-initiated');
+        agentInitiated = true;
+      }
+      else
+      {
+        this?.classList?.add('customer-initiated');
+        customerInitiated = true;
+      }
+    }
+
+    const previous = this.previousElementSibling as ChatMessage;
+    if(previous &&
+      (previous?.classList.contains('agent-initiated') && agentInitiated) ||
+      (previous?.classList.contains('customer-initiated') && customerInitiated))
+    {
+      previous?.classList.add('message-continued');
+    }
+
+    super.connectedCallback();
+  }
 
   render()
   {

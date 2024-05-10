@@ -13,7 +13,6 @@
 }
 
 .message {
-  margin-top: 10px;
   padding: 15px 15px;
   background-color: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
@@ -86,6 +85,12 @@
   }
 }
 
-:host(.message-continued) .int-msg-d {
-  display: none;
+:host(.message-continued) {
+  .message {
+    margin-bottom: 0;
+  }
+
+  .int-msg-d {
+    display: none;
+  }
 }

@@ -66,7 +66,8 @@
 }
 
 :host([action-type="connected.agent"]),
-:host([action-type="attachment.added"]) {
+:host([action-type="attachment.added"]),
+:host([action-type="transfer"]) {
   background: transparent;
   border: none;
   align-self: center;
@@ -87,9 +88,10 @@
     }
   }
 
-  .int-msg-who, .int-msg-d {
+  .int-msg-d, .int-msg-who {
     display: none;
   }
+
 }
 
 :host([customer-initiated="1"]) .wrapper,

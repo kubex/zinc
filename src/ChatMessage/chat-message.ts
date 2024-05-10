@@ -52,7 +52,7 @@ export class ChatMessage extends LitElement
       (previous?.classList.contains('agent-initiated') && agentInitiated) ||
       (previous?.classList.contains('customer-initiated') && customerInitiated))
     {
-      previous?.classList.add('message-continued');
+      this.classList.add('message-continued');
     }
 
     super.connectedCallback();
@@ -146,7 +146,7 @@ export class ChatMessage extends LitElement
   private _getAuthor()
   {
     return html`<span class="int-msg-who">
-      ${this.sender !== "" ? this.sender : (this.customerInitiated === "0" ? 'Customer' : 'You')}
+      ${this.sender !== "" ? this.sender : (this.customerInitiated === "1" ? 'Customer' : 'You')}
     </span>`;
   }
 

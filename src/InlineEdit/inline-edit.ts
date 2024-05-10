@@ -88,8 +88,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
     this.addEventListener('keydown', this.escKeyHandler);
   }
 
-  private _handleEditClick()
+  private _handleEditClick(e)
   {
+    e.preventDefault();
     this.isEditing = true;
     // Add event listener for esc key
     this.addEventListener('keydown', this.escKeyHandler);
@@ -100,8 +101,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
   }
 
-  private _handleSubmitClick()
+  private _handleSubmitClick(e)
   {
+    e.preventDefault();
     this.isEditing = false;
     this.formControlController.submit();
   }

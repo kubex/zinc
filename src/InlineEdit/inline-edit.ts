@@ -72,24 +72,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
     this.hasFocus = false;
   }
 
-  private _handleClick(e: Event)
-  {
-    if((e.target as HTMLElement).closest('zn-button'))
-    {
-      return;
-    }
-
-    this.isEditing = true;
-    if(this.isEditing)
-    {
-      this.input.focus();
-    }
-
-    this.addEventListener('keydown', this.escKeyHandler);
-  }
-
   private _handleEditClick(e)
   {
+    console.log('edit click');
     e.preventDefault();
     this.isEditing = true;
     // Add event listener for esc key
@@ -153,10 +138,10 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         'ai': true,
         'ai--editing': this.isEditing,
         'ai--focused': this.hasFocus
-      })}" @click="${this._handleClick}">
+      })}">
         <span class="ai__caption">${this.caption}</span>
         <div class="ai__wrapper">
-          <div class="ai__left">
+          <div class="ai__left" @click="${this._handleEditClick}">
             ${input}
           </div>
           <div class="ai__right">

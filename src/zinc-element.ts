@@ -1,5 +1,5 @@
-import {LitElement} from 'lit';
-import {property} from 'lit/decorators.js';
+import { LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 import {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -21,7 +21,7 @@ const screenSizes = {
 
 export class ZincElement extends LitElement
 {
-  @property({type: String, attribute: 't', reflect: true})
+  @property({ type: String, attribute: 't', reflect: true })
   public t: string = '';
 
   constructor()
@@ -86,7 +86,9 @@ export class ZincElement extends LitElement
       bubbles: true,
       cancelable: true,
       composed: true,
-      detail: {},
+      detail: {
+        element: this,
+      },
       ...options
     });
 

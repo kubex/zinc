@@ -1,8 +1,8 @@
 import { CSSResultGroup, html, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
+import { Dialog } from "../Dialog";
 
 import styles from './index.scss?inline';
-import { Dialog } from "../Dialog";
 
 @customElement('zn-confirm')
 export class ConfirmModal extends Dialog
@@ -14,8 +14,6 @@ export class ConfirmModal extends Dialog
 
   @property({ type: String, reflect: true }) caption: string = '';
   @property({ type: String, reflect: true }) content: string = '';
-  @property({ type: String, reflect: true }) action: string = '';
-  @property({ type: String, reflect: true }) method: string = 'post';
   @property({ type: String, reflect: true }) type: string = 'warning';
   @property({ type: String, reflect: true }) confirmText: string = "Confirm";
   @property({ type: String, reflect: true }) cancelText: string = "Cancel";

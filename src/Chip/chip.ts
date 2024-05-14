@@ -15,7 +15,9 @@ export class Chip extends LitElement
     return html`
       ${this.icon ? html`
         <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
-      <slot></slot>`;
+      <slot></slot>
+      <slot name="action"></slot>
+    `;
   }
 }
 

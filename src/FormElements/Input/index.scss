@@ -113,3 +113,10 @@ input {
   font-weight: 500;
 
 }
+
+:host([size="small"]) {
+  ::slotted(input) {
+    font-size: 12px !important;
+    padding: wc.spacing(xxs) !important;
+  }
+}

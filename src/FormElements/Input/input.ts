@@ -25,6 +25,8 @@ export class Input extends ZincElement implements ZincFormControl
   @property({ type: String, reflect: true }) prefix;
   @property({ type: String, reflect: true }) suffix;
 
+  @property({ type: String, reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+
   @property() name: string = "";
   @property() value: string;
 

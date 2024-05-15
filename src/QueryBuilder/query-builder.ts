@@ -42,12 +42,12 @@ export class QueryBuilder extends ZincElement
         'query-builder': true
       })}">
         <select class="add-rule" @change="${this._addRule}">
-          <option value="">Add Rule</option>
+          <option value="">Select Filter</option>
           ${this.filters.map(item => html`
             <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
         </select>
+        <zn-button @click="${this._handleClick}">Apply Filters</zn-button>
       </div>
-      <zn-button @click="${this._handleClick}">Apply Filters</zn-button>
     `;
   }
 

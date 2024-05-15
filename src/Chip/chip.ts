@@ -1,7 +1,7 @@
 import {html} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
-import {ZincSlotElement} from "@/ZincSlotElement";
+import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-chip')
 export class Chip extends ZincSlotElement

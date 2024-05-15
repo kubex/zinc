@@ -1,8 +1,12 @@
 import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
+import { ZincElement, ZincFormControl } from "@/zinc-element";
 
 import styles from './index.scss?inline';
-import { ZincElement } from "../zinc-element";
+import { classMap } from "lit/directives/class-map.js";
+import { types } from "sass";
+import { FormControlController } from "@/form";
+import String = types.String;
 
 export type ButtonColor = 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
 export type ButtonSizes = 'square' | 'x-small' | 'small' | 'normal' | 'medium' | 'large';
@@ -10,8 +14,14 @@ export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';
 
 @customElement('zn-button')
-export class Button extends ZincElement
+export class Button extends ZincElement implements ZincFormControl
 {
+  static styles = unsafeCSS(styles);
+
+  private readonly formControlController = new FormControlController(this);
+
+  @query('.button') button: HTMLButtonElement;
+
   @property({ type: String }) color: ButtonColor = 'primary';
   @property({ type: String }) size: ButtonSizes;
   @property({ type: String }) verticalAlign: VerticalAlignments;
@@ -22,8 +32,51 @@ export class Button extends ZincElement
   @property({ type: String, attribute: "icon-size" }) iconSize: string = '24';
   @property() type: 'button' | 'submit' | 'reset' = 'button';
 
-  static styles = unsafeCSS(styles);
+  @property() name: string;
+  @property() value: string;
 
+  @property() form: string;
+  @property({ attribute: 'formaction' }) formAction: string;
+  @property({ attribute: 'formenctype' }) formEnctype: 'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain';
+  @property({ attribute: 'formmethod' }) formMethod: 'post' | 'get';
+  @property({ attribute: 'formnovalidate', type: Boolean }) formNoValidate: boolean;
+  @property({ attribute: 'formtarget' }) formTarget: '_self' | '_blank' | '_parent' | '_top' | string;
+
+  get validity()
+  {
+    return (this.button as HTMLButtonElement).validity;
+  }
+
+  get validationMessage()
+  {
+    return (this.button as HTMLButtonElement).validationMessage;
+  }
+
+  firstUpdated()
+  {
+    this.formControlController.updateValidity();
+  }
+
+  checkValidity()
+  {
+    return (this.button as HTMLButtonElement).checkValidity();
+  }
+
+  getForm(): HTMLFormElement | null
+  {
+    return this.formControlController.getForm();
+  }
+
+  reportValidity()
+  {
+    return (this.button as HTMLButtonElement).reportValidity();
+  }
+
+  setCustomValidity(message: string)
+  {
+    (this.button as HTMLButtonElement).setCustomValidity(message);
+    this.formControlController.updateValidity();
+  }
 
   connectedCallback()
   {
@@ -62,7 +115,12 @@ export class Button extends ZincElement
       <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize}" color="${iconColor}"></zn-icon>` : '';
 
     return html`
-      <button part="base" type="${this.type}" @click="${this.handleClick}">
+      <button part="base"
+              class=${classMap({
+                'button': true,
+              })}
+              type=${this.type}
+              @click=${this.handleClick}>
         ${this.iconPosition === 'left' ? icon : ''}
         <slot>${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}

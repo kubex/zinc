@@ -1,10 +1,11 @@
-import { html, LitElement, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
+import { ZincElement } from "@/zinc-element";
 
 @customElement('zn-chip')
-export class Chip extends LitElement
+export class Chip extends ZincElement
 {
   static styles = unsafeCSS(styles);
 

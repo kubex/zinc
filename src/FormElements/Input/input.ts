@@ -80,7 +80,7 @@ export class Input extends ZincElement implements ZincFormControl
   render()
   {
     return html`
-      <label for="${this.for}">${this.label}</label>
+      ${this.label ? html`<label for="${this.for}">${this.label}</label>` : ''}
       ${this.summary}
       <div class="wrap">
         ${this.prefix ? html`<span @click="${this.handleClick}" class="prefix">${this.prefix}</span>` : ''}

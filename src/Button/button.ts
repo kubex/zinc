@@ -52,6 +52,19 @@ export class Button extends ZincElement implements ZincFormControl
     return (this.button as HTMLButtonElement).validationMessage;
   }
 
+  constructor()
+  {
+    super();
+    if(this.size === "x-small" || this.size === "square")
+    {
+      this.iconSize = "16";
+    }
+    else if(this.size === "small")
+    {
+      this.iconSize = '20';
+    }
+  }
+
   firstUpdated()
   {
     this.formControlController.updateValidity();
@@ -76,19 +89,6 @@ export class Button extends ZincElement implements ZincFormControl
   {
     (this.button as HTMLButtonElement).setCustomValidity(message);
     this.formControlController.updateValidity();
-  }
-
-  connectedCallback()
-  {
-    super.connectedCallback();
-    if(this.size == "x-small" || this.size == "square")
-    {
-      this.iconSize = "16";
-    }
-    else if(this.size == "small")
-    {
-      this.iconSize = "20";
-    }
   }
 
   private handleClick()

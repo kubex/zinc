@@ -27,6 +27,8 @@ import './FormElements/DragUpload';
 import './FormElements/DatePicker';
 import './FormElements/MultiSelect';
 import './FormElements/Toggle';
+import './FormElements/Textarea';
+import './FormElements/Rating';
 import './ConfirmModal';
 import './StatsTile';
 import './SplitPane';
@@ -47,8 +49,7 @@ import './ScrollContainer';
 import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
-import './FormElements/Textarea';
-import './FormElements/Rating';
+import './QueryBuilder';
 
 // Events
 export * from './Events/events';

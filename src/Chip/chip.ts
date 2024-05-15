@@ -1,23 +1,20 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import {html} from "lit";
+import {customElement, property} from 'lit/decorators.js';
 
-import styles from './index.scss?inline';
-import { ZincElement } from "@/zinc-element";
+import {ZincSlotElement} from "@/ZincSlotElement";
 
 @customElement('zn-chip')
-export class Chip extends ZincElement
+export class Chip extends ZincSlotElement
 {
-  static styles = unsafeCSS(styles);
-
-  @property({ type: String }) icon: string = '';
+  @property({type: String}) icon: string = '';
 
   render()
   {
     return html`
       ${this.icon ? html`
         <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
-      <slot></slot>
-      <slot name="action"></slot>
+      ${this.renderSlot('')}
+      ${this.renderSlot('action')}
     `;
   }
 }

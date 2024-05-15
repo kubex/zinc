@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../wc";
 
-:host {
+zn-chip {
   display: inline-flex;
   border-radius: 7px;
   padding: wc.spacing(xxs) wc.spacing(xs);
@@ -20,25 +20,25 @@
   border-color: rgb(var(--zn-primary)) !important;
 }
 
-:host([error]) {
+zn-chip[error] {
   color: rgb(var(--zn-color-error));
   border-color: rgb(var(--zn-color-error)) !important;
   background: rgba(var(--zn-color-error), .10);
 }
 
-:host([info]) {
+zn-chip[info] {
   color: rgb(var(--zn-color-info));
   border-color: rgb(var(--zn-color-info)) !important;
   background: rgba(var(--zn-color-info), .10);
 }
 
-:host([warning]) {
+zn-chip[warning] {
   color: rgb(var(--zn-color-warning));
   border-color: rgb(var(--zn-color-warning)) !important;
   background: rgba(var(--zn-color-warning), .10);
 }
 
-:host([success]) {
+zn-chip[success] {
   color: rgb(var(--zn-color-success));
   border-color: rgb(var(--zn-color-success)) !important;
   background: rgba(var(--zn-color-success), .10);

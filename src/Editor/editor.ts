@@ -2,10 +2,11 @@ import { html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 import Quill from 'quill';
 import DropdownModule, { dropdownOpen } from "./dropdown-module";
+import AttachmentModule from "./AttachmentHandler/attachment-module";
 
 import { PropertyValues } from "@lit/reactive-element";
-import { ZincElement, ZincFormControl } from "../zinc-element";
-import { FormControlController } from "../form";
+import { ZincElement, ZincFormControl } from "@/zinc-element";
+import { FormControlController } from "@/form";
 
 import styles from './index.scss?inline';
 
@@ -22,13 +23,12 @@ export class Editor extends ZincElement implements ZincFormControl
   @query('#editorHtml')
   private editorHtml: HTMLTextAreaElement;
 
-  @query('#toolbar-container')
-  private toolbarContainer: HTMLElement;
-
   @property({ reflect: true }) name: string;
   @property({ reflect: true }) value: string;
 
-  @property({ attribute: 'with-send', type: Boolean, reflect: true }) withSendButton: boolean = false;
+  @property({ attribute: 'interaction-type', type: String })
+  public interactionType: 'ticket' | 'chat';
+
   @property({ attribute: 'canned-responses', type: Array })
   public cannedResponses: Array<any>;
 
@@ -70,25 +70,6 @@ export class Editor extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
 
     const bindings = {
-      enter: {
-        key: 'Enter',
-        shiftKey: false,
-        handler: (range, context) =>
-        {
-          if(this.withSendButton)
-          {
-            return;
-          }
-
-          const form = this.closest('form');
-          if(form && !dropdownOpen && this.value.trim().length > 0)
-          {
-            this.emit('zn-submit', { detail: { value: this.value, element: this } });
-            form.requestSubmit();
-            this.quillElement.setText('');
-          }
-        }
-      },
       'remove-formatting': {
         key: 'V',
         shiftKey: true,
@@ -104,7 +85,26 @@ export class Editor extends ZincElement implements ZincFormControl
       }
     };
 
+    if(this.interactionType === 'chat')
+    {
+      bindings['enter'] = {
+        key: 'Enter',
+        shiftKey: false,
+        handler: () =>
+        {
+          const form = this.closest('form');
+          if(form && !dropdownOpen && this.value.trim().length > 0)
+          {
+            this.emit('zn-submit', { detail: { value: this.value, element: this } });
+            form.requestSubmit();
+            this.quillElement.setText('');
+          }
+        },
+      };
+    }
+
     Quill.register('modules/dropdownModule', DropdownModule as any);
+    Quill.register('modules/attachmentModule', AttachmentModule as any);
 
     const icons = Quill.import("ui/icons");
     icons["undo"] = `
@@ -124,17 +124,37 @@ export class Editor extends ZincElement implements ZincFormControl
         <line class="ql-stroke" x1="3" x2="15" y1="15" y2="3"></line>
       </svg>`;
 
+    if(this.interactionType === 'ticket')
+    {
+      // change image icon to a paperclip
+      icons["image"] = `
+      <svg viewBox="0 0 30.34 30.34">
+        <path d="M22.562 12.491s1.227-.933.293-1.866c-.934-.933-1.842.271-1.842.271l-9.389 9.391s-2.199 2.838-3.871 1.122c-1.67-1.718 1.121-3.872 1.121-3.872l12.311-12.31s2.873-3.165 5.574-.466c2.697 2.7-.477 5.579-.477 5.579L12.449 24.173s-4.426 5.113-8.523 1.015 1.066-8.474 1.066-8.474L15.494 6.209s1.176-.982.295-1.866c-.885-.883-1.865.295-1.865.295L1.873 16.689s-4.549 4.989.531 10.068c5.08 5.082 10.072.533 10.072.533l16.563-16.565s3.314-3.655-.637-7.608-7.607-.639-7.607-.639L6.543 16.728s-3.65 2.969-.338 6.279c3.312 3.314 6.227-.39 6.227-.39l10.13-10.126z"/>
+      </svg>`;
+    }
+
+    const attachmentInput = this.getForm().querySelector('input[name="attachments"]');
+
+    const container = [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['undo', 'redo'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ];
+    if(this.interactionType === 'ticket')
+    {
+      container.push(['link', 'image']);
+    }
+    else
+    {
+      container.push(['link', 'image', 'video']);
+    }
+
+    container.push(['remove-formatting']);
+
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
-          container: [
-            /* [{'header': [1, 2, 3, 4, 5, 6, false]}], */
-            ['bold', 'italic', 'underline', 'strike'],
-            ['undo', 'redo'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }/* , {'list': 'check'} */],
-            ['link', 'image', 'video'],
-            ['remove-formatting'],
-          ],
+          container,
           handlers: {
             'redo': () =>
             {
@@ -159,6 +179,37 @@ export class Editor extends ZincElement implements ZincFormControl
         },
         dropdownModule: {
           cannedResponses: this.cannedResponses
+        },
+        attachmentModule: {
+          attachmentInput: attachmentInput,
+          onFileUploaded: (node, { url }) =>
+          {
+            console.log('file uploaded', node, url);
+            window.onbeforeunload = () => null;
+          },
+          upload: file =>
+          {
+            window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
+            return new Promise((resolve, reject) =>
+            {
+              setTimeout(() =>
+              {
+                resolve('https://chargehive.com/_r/r/6162bf27e7a5/img/chargie.svg');
+              }, 100);
+
+              // const fd = new FormData();
+              // fd.append('upload_file', file);
+              // const xhr = new XMLHttpRequest();
+              // xhr.open('POST', '/upload', true);
+              // xhr.onload = () => {
+              //   if (xhr.status === 200) {
+              //     const response = JSON.parse(xhr.responseText);
+              //     resolve(response.file_path); // must resolve as a link to the file
+              //   }
+              // };
+              // xhr.send(fd);
+            });
+          }
         }
       },
       placeholder: 'Compose your reply...',

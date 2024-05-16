@@ -340,7 +340,6 @@ class DropdownModule
         element.style.backgroundColor = 'white';
       }
     });
-
   }
 
   createCommandElement(command: DropdownModuleCannedResponse)

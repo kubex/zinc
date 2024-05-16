@@ -66,8 +66,7 @@ export default class AttachmentModule
 
     this._options.upload(file).then(({ path, url, filename }) =>
     {
-      console.log('file uploaded');
-      this._updateAttachment(attachmentId, url, filename);
+      this._updateAttachment(attachmentId, url, path);
     }).catch(err =>
     {
       console.warn(err.message);
@@ -78,7 +77,6 @@ export default class AttachmentModule
 
   private _createAttachmentContainer()
   {
-    console.log('creating attachment container');
     const attachmentContainer = this._attachmentContainer;
     attachmentContainer.id = 'attachment-container';
     attachmentContainer.style.display = 'flex';
@@ -95,7 +93,6 @@ export default class AttachmentModule
 
   private _insertAttachment({ dataUrl, file, id }: { dataUrl: string, file: File, id: string })
   {
-    console.log('inserting attachment');
     this._attachmentContainer.appendChild(this._createAttachment(dataUrl, file, id));
   }
 
@@ -128,7 +125,6 @@ export default class AttachmentModule
         const data = value ? JSON.parse(value) : [];
         data.push(filename);
         attachments.value = JSON.stringify(data);
-        console.log('data', data);
       }
     }
   }

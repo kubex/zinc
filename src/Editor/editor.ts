@@ -188,7 +188,6 @@ export class Editor extends ZincElement implements ZincFormControl
           attachmentInput: attachmentInput,
           onFileUploaded: (node, { url }) =>
           {
-            console.log('file uploaded', node, url);
             window.onbeforeunload = () => null;
           },
           upload: (file: File) =>
@@ -196,13 +195,7 @@ export class Editor extends ZincElement implements ZincFormControl
             window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
             return new Promise((resolve, reject) =>
             {
-              setTimeout(() =>
-              {
-                resolve('https://chargehive.com/_r/r/6162bf27e7a5/img/chargie.svg');
-              }, 100);
-
               const fd = new FormData();
-              console.log('file', file);
               fd.append('filename', file.name);
               fd.append('size', file.size.toString());
               fd.append('mimeType', file.type);

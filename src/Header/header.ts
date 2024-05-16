@@ -17,6 +17,8 @@ export class Header extends ZincElement
   @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
   @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
+  @property({attribute: 'previous-path', type: String, reflect: true}) previousPath: string;
+  @property({attribute: 'previous-target', type: String, reflect: true}) previousTarget: string;
 
   private _hasNav: boolean;
   private _navBar;
@@ -110,6 +112,15 @@ export class Header extends ZincElement
         </a>`;
     }
 
+    let backButton: TemplateResult;
+    if(this.previousPath && this.previousPath.length > 0)
+    {
+      backButton = html`
+        <a href="${this.previousPath}" data-target="${this.previousTarget ? this.previousTarget : ''}">
+          <zn-icon src="arrow_back"></zn-icon>
+        </a>`;
+    }
+
     let entityId: TemplateResult;
     if(this.entityId)
     {
@@ -124,7 +135,10 @@ export class Header extends ZincElement
         <div class="alt-overlay">${inNew}${entityId}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
-          ${caption}
+          <div class="caption">
+            ${backButton}
+            ${caption}
+          </div>
           <div class="actions">
             <slot></slot>
           </div>

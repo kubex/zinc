@@ -1,8 +1,9 @@
-import { html } from "lit";
-import { Meta, StoryObj } from "@storybook/web-components";
+import {html} from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Header';
 import '../../src/Button';
+import '../../src/Icon';
 
 const meta: Meta = {
   component: 'zn-header',
@@ -14,8 +15,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ caption, navigation, breadcrumb, fullWidth, transparent }) => html`
+  render: ({caption, navigation, breadcrumb, fullWidth, transparent, previousPath}) => html`
     <zn-header caption="${caption}" .navigation="${navigation}" .breadcrumb="${breadcrumb}" ?fullWidth="${fullWidth}"
+               ?previousPath="${previousPath}"
                ?transparent="${transparent}">
       <zn-button>Button</zn-button>
     </zn-header>`,
@@ -46,6 +48,7 @@ export const Default: Story = {
     }],
     fullWidth: false,
     transparent: false,
+    previousPath: '',
   },
   argTypes: {}
 };
@@ -57,6 +60,7 @@ export const Simple: Story = {
     breadcrumb: [],
     fullWidth: false,
     transparent: false,
+    previousPath: "/fwe",
   },
   argTypes: {}
 };

@@ -27,7 +27,7 @@ export class Editor extends ZincElement implements ZincFormControl
   @property({ reflect: true }) value: string;
 
   @property({ attribute: 'interaction-type', type: String })
-  interactionType: 'ticket' | 'chat';
+  interactionType: 'ticket' | 'chat' = 'chat';
 
   @property({ attribute: 'canned-responses', type: Array })
   cannedResponses: Array<any>;
@@ -143,6 +143,7 @@ export class Editor extends ZincElement implements ZincFormControl
       ['undo', 'redo'],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     ];
+
     if(this.interactionType === 'ticket')
     {
       container.push(['link', 'image']);

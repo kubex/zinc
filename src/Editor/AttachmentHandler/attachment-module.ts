@@ -2,7 +2,7 @@ import Quill from 'quill';
 import Toolbar from "quill/modules/toolbar";
 
 type AttachmentModuleOptions = {
-  upload: (file: File) => Promise<string>;
+  upload: (file: File) => Promise<{ path, url, filename }>;
   onFileUploaded?: (node: HTMLElement, { url }: { url: string }) => void;
   attachmentInput?: HTMLInputElement;
 }
@@ -64,10 +64,10 @@ export default class AttachmentModule
       fileReader.readAsDataURL(file);
     }
 
-    this._options.upload(file).then(url =>
+    this._options.upload(file).then(({ path, url, filename }) =>
     {
       console.log('file uploaded');
-      this._updateAttachment(attachmentId, url);
+      this._updateAttachment(attachmentId, url, filename);
     }).catch(err =>
     {
       console.warn(err.message);
@@ -99,26 +99,34 @@ export default class AttachmentModule
     this._attachmentContainer.appendChild(this._createAttachment(dataUrl, file, id));
   }
 
-  private _updateAttachment(id: string, url: string)
+  private _updateAttachment(id: string, url: string, filename: string)
   {
     const element = this._quill.container.querySelector(`#${id}`) as HTMLAnchorElement;
     if(element)
     {
       element.setAttribute('href', url);
-      element.removeAttribute('id');
+      if(filename)
+      {
+        element.querySelector('.attachment-name').textContent = filename;
+      }
+      else
+      {
+        element.querySelector('.attachment-name').textContent = 'Error uploading file';
+      }
       if(typeof this._options.onFileUploaded === 'function')
       {
         this._options.onFileUploaded(element, { url });
       }
 
+
       // add the url to the hidden input
       const attachments = this._options.attachmentInput;
-      if(attachments)
+      if(attachments && filename)
       {
         // value should be an array of attachment names
         const value = attachments.value;
         const data = value ? JSON.parse(value) : [];
-        data.push(url);
+        data.push(filename);
         attachments.value = JSON.stringify(data);
         console.log('data', data);
       }
@@ -139,7 +147,11 @@ export default class AttachmentModule
     attachment.style.alignItems = 'center';
     attachment.style.gap = '5px';
 
-    attachment.textContent = file.name;
+    const p = document.createElement('p');
+    p.classList.add('attachment-name');
+    p.textContent = 'Uploading...';
+
+    attachment.appendChild(p);
 
     // add a remove button
     const removeButton = document.createElement('button');
@@ -157,6 +169,25 @@ export default class AttachmentModule
 
   private _removeAttachment(id: string)
   {
-    console.log('removing attachment');
+    const attachment = this._quill.container.querySelector(`#${id}`);
+    if(attachment)
+    {
+      attachment.remove();
+    }
+
+    // remove the attachment from the hidden input
+    const attachments = this._options.attachmentInput;
+    if(attachments)
+    {
+      // value should be an array of attachment names
+      const value = attachments.value;
+      const data = value ? JSON.parse(value) : [];
+      const index = data.indexOf(attachment.querySelector('.attachment-name').textContent);
+      if(index > -1)
+      {
+        data.splice(index, 1);
+        attachments.value = JSON.stringify(data);
+      }
+    }
   }
 }

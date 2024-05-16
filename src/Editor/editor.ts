@@ -27,10 +27,13 @@ export class Editor extends ZincElement implements ZincFormControl
   @property({ reflect: true }) value: string;
 
   @property({ attribute: 'interaction-type', type: String })
-  public interactionType: 'ticket' | 'chat';
+  interactionType: 'ticket' | 'chat';
 
   @property({ attribute: 'canned-responses', type: Array })
-  public cannedResponses: Array<any>;
+  cannedResponses: Array<any>;
+
+  @property({ attribute: 'attachment-url', type: String })
+  uploadAttachmentUrl: string;
 
   private quillElement: Quill;
 
@@ -187,7 +190,7 @@ export class Editor extends ZincElement implements ZincFormControl
             console.log('file uploaded', node, url);
             window.onbeforeunload = () => null;
           },
-          upload: file =>
+          upload: (file: File) =>
           {
             window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
             return new Promise((resolve, reject) =>
@@ -197,19 +200,25 @@ export class Editor extends ZincElement implements ZincFormControl
                 resolve('https://chargehive.com/_r/r/6162bf27e7a5/img/chargie.svg');
               }, 100);
 
-              // const fd = new FormData();
-              // fd.append('upload_file', file);
-              // const xhr = new XMLHttpRequest();
-              // xhr.open('POST', '/upload', true);
-              // xhr.onload = () => {
-              //   if (xhr.status === 200) {
-              //     const response = JSON.parse(xhr.responseText);
-              //     resolve(response.file_path); // must resolve as a link to the file
-              //   }
-              // };
-              // xhr.send(fd);
+              const fd = new FormData();
+              console.log('file', file);
+              fd.append('filename', file.name);
+              fd.append('size', file.size.toString());
+              fd.append('mimeType', file.type);
+
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', this.uploadAttachmentUrl, true);
+              xhr.onload = () =>
+              {
+                if(xhr.status === 200)
+                {
+                  const response = JSON.parse(xhr.responseText);
+                  resolve({ path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename });
+                }
+              };
+              xhr.send(fd);
             });
-          }
+          },
         }
       },
       placeholder: 'Compose your reply...',

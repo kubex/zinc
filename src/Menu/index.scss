@@ -8,7 +8,7 @@
   border-radius: 5px;
   border-width: 1px !important;
   width: wc.common-size(spanel);
-  background-color:rgba(var(--zn-panel), var(--zn-panel-opacity));
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
   gap: wc.spacing(md);
 
   li {
@@ -16,7 +16,7 @@
     border-bottom-width: 1px;
     padding: wc.spacing(xs);
 
-    a {
+    a, span {
       display: block;
 
       &:hover {
@@ -28,6 +28,10 @@
   li:last-child {
     border-bottom-width: 0;
   }
+}
+
+:host([hidden]) {
+  display: none;
 }
 
 .zn-menu--overlay {

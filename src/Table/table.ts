@@ -146,7 +146,6 @@ export class Table extends LitElement
   {
     const rows = [];
 
-
     this.rows.forEach((row, rk) =>
     {
       const rowHtml = [];
@@ -177,11 +176,12 @@ export class Table extends LitElement
           <zn-icon round size="${iconSize}" src="${icon}"></zn-icon>`;
       }
       let actionsHtml = html``;
-      if(actions.length > 0)
+      if(actions && actions.length > 0)
       {
         actionsHtml = html`
           <div class="actions">
-            <zn-icon src="more_vert"></zn-icon>
+            <zn-icon src="more_vert" @click="${this._handleMenu}"></zn-icon>
+            <zn-menu actions="${JSON.stringify(actions)}" hidden></zn-menu>
           </div>`;
       }
 
@@ -227,6 +227,11 @@ export class Table extends LitElement
       <tbody>
       ${rows}
       </tbody>`;
+  }
+
+  _handleMenu(e)
+  {
+    e.target.closest('.actions').querySelector('zn-menu').toggleAttribute('hidden');
   }
 
   columnContent(col)

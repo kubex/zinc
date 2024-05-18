@@ -8,19 +8,27 @@
   <title>Document</title>
   <link rel="stylesheet" href="../dist/zn.min.css">
 </head>
-<body t="light" style="overflow: auto;padding: 50px;background: red;">
+<body t="light" style="overflow: auto;padding: 50px;background: lightblue;">
 
 
 <zn-tabs split="320" store-key="testing">
-  <zn-header slot="left" caption="Header Text"
-             breadcrumb='[{"title": "Home", "path": "#"}, {"title": "Customers", "path": "#"}, {"title": "Marko Frederik Hanslanderbutterzlut", "path": "#"}]'>
-    <p>Action Text Here</p>
-    <zn-navbar slot="nav">
-      <li tab="tab1">One</li>
-      <li tab="tab2">Two</li>
-      <li tab="">Three</li>
-    </zn-navbar>
-  </zn-header>
+
+
+  <zn-navbar slot="top" icon-bar>
+    <li tab="tab1">
+      <zn-icon src="lightbulb"></zn-icon>
+      One
+    </li>
+    <li tab="tab2">
+      <zn-icon src="favorite_border"></zn-icon>
+      Two
+    </li>
+    <li tab="">
+      <zn-icon src="account_balance"></zn-icon>
+      Three
+    </li>
+  </zn-navbar>
+
   <div id="tab1">TAB ONE</div>
   <div id="tab2">TAB TWO</div>
 

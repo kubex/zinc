@@ -13,6 +13,7 @@ export class NavBar extends ZincElement
   private _postItems: NodeListOf<Element>;
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
+  @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
 
   static styles = unsafeCSS(styles);
 
@@ -31,13 +32,21 @@ export class NavBar extends ZincElement
         ${this.navigation.map((item, index) =>
         {
           const activeClass = item.active ? 'active' : '';
+
+          let content = html`${item.title}`;
+          if(item.icon != undefined)
+          {
+            content = html`
+              <zn-icon src="${item.icon}">${content}`;
+          }
+
           if(item.path != undefined)
           {
             return html`
-              <li class="${activeClass}" tab-uri="${item.path}">${item.title}</li>`;
+              <li class="${activeClass}" tab-uri="${item.path}">${content}</li>`;
           }
           return html`
-            <li class="${activeClass}" tab="">${item.title}</li>`;
+            <li class="${activeClass}" tab="">${content}</li>`;
         })}
         ${this._postItems}
       </ul>`;

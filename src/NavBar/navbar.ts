@@ -34,7 +34,7 @@ export class NavBar extends ZincElement
           const activeClass = item.active ? 'active' : '';
 
           let content = html`${item.title}`;
-          if(item.icon != undefined)
+          if(item.icon != undefined && item.icon != '')
           {
             content = html`
               <zn-icon src="${item.icon}"></zn-icon>${content}`;

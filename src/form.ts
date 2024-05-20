@@ -131,7 +131,7 @@ export class FormControlController implements ReactiveController
     }
 
     this.form.addEventListener('formdata', this.handleFormData);
-    // this.form.addEventListener('submit', this.handleFormSubmit);
+    this.form.addEventListener('submit', this.handleFormSubmit);
     this.form.addEventListener('reset', this.handleFormReset);
 
     // Overload the form's reportValidity() method so it looks at Shoelace form controls
@@ -335,7 +335,7 @@ export class FormControlController implements ReactiveController
       // Pass name, value, and form attributes through to the temporary button
       if(submitter)
       {
-        if(!(submitter instanceof Button)) // TODO - Button needs to implement value and name
+        if(!(submitter instanceof Button))
         {
           button.name = submitter.name;
           button.value = submitter.value;
@@ -345,6 +345,7 @@ export class FormControlController implements ReactiveController
         {
           if(submitter.hasAttribute(attr))
           {
+            console.log('form submitter', attr, submitter.getAttribute(attr));
             button.setAttribute(attr, submitter.getAttribute(attr)!);
           }
         });

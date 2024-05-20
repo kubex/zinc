@@ -73,7 +73,6 @@ export class Tabs extends LitElement
     {
       this._registerTabs();
 
-
       const storedValue = this._store.get(this.storeKey);
       if(storedValue != null)
       {
@@ -81,7 +80,19 @@ export class Tabs extends LitElement
         this.setActiveTab(storedValue, false, false);
         return;
       }
-      this.setActiveTab(this._current || '', false, false);
+
+      const defaultTab = this._current || '';
+      if(!this._panels.has(defaultTab) && this._tabs.length > 0)
+      {
+        let tabUri = this._tabs[0].getAttribute('tab-uri');
+        if(tabUri)
+        {
+          this.clickTab(this._tabs[0], false);
+          return;
+        }
+      }
+
+      this.setActiveTab(defaultTab, false, false);
     }, 10);
   }
 
@@ -139,18 +150,23 @@ export class Tabs extends LitElement
     const target = (event.relatedTarget ?? event.target) as HTMLElement;
     if(target)
     {
-      if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
+      this.clickTab(target, event.altKey);
+    }
+  }
+
+  clickTab(target: HTMLElement, refresh: boolean)
+  {
+    if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
+    {
+      const tabUri = target.getAttribute("tab-uri");
+      this._createUriPanel(target, tabUri, this._uriToId(tabUri));
+    }
+    if(target.hasAttribute('tab'))
+    {
+      setTimeout(() =>
       {
-        const tabUri = target.getAttribute("tab-uri");
-        this._createUriPanel(target, tabUri, this._uriToId(tabUri));
-      }
-      if(target.hasAttribute('tab'))
-      {
-        setTimeout(() =>
-        {
-          this.setActiveTab(target.getAttribute('tab') || '', true, event.altKey);
-        }, 10);
-      }
+        this.setActiveTab(target.getAttribute('tab') || '', true, refresh);
+      }, 10);
     }
   }
 

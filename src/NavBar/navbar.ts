@@ -14,6 +14,7 @@ export class NavBar extends ZincElement
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
+  @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
 
   static styles = unsafeCSS(styles);
 
@@ -26,6 +27,12 @@ export class NavBar extends ZincElement
 
   render()
   {
+    let itemCount = this.navigation.length + this._preItems.length + this._postItems.length;
+    if(itemCount < 2 && this.hideOne)
+    {
+      this.style.display = 'none';
+    }
+
     return html`
       <ul>
         ${this._preItems}

@@ -5,6 +5,8 @@ import styles from './index.scss?inline';
 import { ZincElement, ZincFormControl } from "@/zinc-element";
 import { FormControlController } from "@/form";
 import { PropertyValues } from "@lit/reactive-element";
+import { watch } from "@/watch";
+import { defaultValue } from "@/default-value";
 
 @customElement('zn-checkbox')
 export class Checkbox extends ZincElement implements ZincFormControl
@@ -17,11 +19,16 @@ export class Checkbox extends ZincElement implements ZincFormControl
   @property() name: string = "";
   @property() value: string;
 
-  @query('input')
-  private input: HTMLInputElement;
+  @property({ type: Boolean, reflect: true }) checked = false;
+  @defaultValue('checked') defaultChecked = false;
 
-  private readonly formControlController = new FormControlController(this, {});
+  @query('input[type="checkbox"]') input: HTMLInputElement;
 
+  private readonly formControlController = new FormControlController(this, {
+    value: (control: Checkbox) => (control.checked ? control.value || 'on' : undefined),
+    defaultValue: (control: Checkbox) => control.defaultChecked,
+    setValue: (control: Checkbox, checked: boolean) => (control.checked = checked)
+  });
 
   get validity()
   {
@@ -36,6 +43,11 @@ export class Checkbox extends ZincElement implements ZincFormControl
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     return this.formControlController.updateValidity();
+  }
+
+  private handleClick()
+  {
+    this.checked = !this.checked;
   }
 
   checkValidity(): boolean
@@ -59,26 +71,29 @@ export class Checkbox extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
   }
 
-  toggle(e)
+  @watch(['checked'], { waitUntilFirstUpdate: true })
+  handleStateChange()
   {
-    if(e.target.tagName === 'INPUT') return;
-    this.input.click();
-    this.input.focus();
+    this.input.checked = this.checked; // force a sync update
     this.formControlController.updateValidity();
   }
 
   render()
   {
     return html`
-      <div class="checkbox__wrapper" @click="${this.toggle}">
-        <div class="checkbox__input-wrapper">
-          <input type="checkbox" name="${this.name}">
-        </div>
-        <div class="checkbox__label-wrapper">
-          <label for="${this.name}">${this.title}
+      <div class="checkbox__wrapper">
+        <label>
+          <div class="checkbox__input-wrapper">
+            <input type="checkbox"
+                   name="${this.name}"
+                   .checked=${this.checked}
+                   @click=${this.handleClick}/>
+          </div>
+          <div class="checkbox__label-wrapper">
+            ${this.title}
             <p>${this.description}</p>
-          </label>
-        </div>
+          </div>
+        </label>
       </div>`;
   }
 }

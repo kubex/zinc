@@ -59,8 +59,9 @@ export class Checkbox extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
   }
 
-  toggle()
+  toggle(e)
   {
+    if(e.target.tagName === 'INPUT') return;
     this.input.click();
     this.input.focus();
     this.formControlController.updateValidity();

@@ -2,6 +2,12 @@
   border-top: 1px solid rgb(var(--zn-border-color));
 }
 
+.zn-divide > div:empty + div:not(:first-child) {
+  /** Support Empty Divs only - custom elements can be empty and have content **/
+  border-top: 0;
+}
+
+
 .zn-divide {
   display: flex;
   flex-direction: column;
@@ -12,6 +18,6 @@
   flex-direction: row;
 }
 
-.zn-divide-y > *:not(:first-child) {
+.zn-divide-y > *:not(:first-child):not(:empty) {
   border-left: 1px solid rgb(var(--zn-border-color));
 }

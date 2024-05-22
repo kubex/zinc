@@ -3,12 +3,17 @@ import { customElement, property } from 'lit/decorators.js';
 import { Menu } from "../Menu";
 
 import styles from './index.scss?inline';
+import { classMap } from "lit/directives/class-map.js";
 
 @customElement('zn-tile')
 export class Tile extends LitElement
 {
   @property({ attribute: 'caption', type: String, reflect: true }) caption;
   @property({ attribute: 'description', type: String, reflect: true }) description;
+  @property({ attribute: 'sub-caption', type: String, reflect: true }) subCaption;
+  @property({ attribute: 'sub-description', type: String, reflect: true }) subDescription;
+
+
   @property({ attribute: 'right', type: Boolean, reflect: true }) right;
   @property({ attribute: 'data-uri', type: String, reflect: true }) dataUri;
   @property({ attribute: 'data-target', type: String, reflect: true }) dataTarget;
@@ -136,6 +141,16 @@ export class Tile extends LitElement
       ${caption}
       <div class="description">${this.description}</div>`;
 
+    let subSummary = html``;
+    if(this.subCaption || this.subDescription)
+    {
+      subSummary = html`
+        <div class="sub-summary">
+          <div class="caption">${this.subCaption}</div>
+          <div class="description">${this.subDescription}</div>
+        </div>`;
+    }
+
     const status = this.querySelectorAll('[slot="status"]').length > 0 ? html`
       <slot name="status"></slot>` : null;
 
@@ -151,11 +166,15 @@ export class Tile extends LitElement
       <div class="top">
         ${top}
       </div>
-      <div class="bottom">
+      <div class="${classMap({
+        bottom: true,
+        'bottom--with-sub-summary': this.subCaption || this.subDescription,
+      })}">
         ${primary}
         <div class="${summaryClass}">
           ${summary}
         </div>
+        ${subSummary}
         ${extended}
         ${actions}
         ${status}

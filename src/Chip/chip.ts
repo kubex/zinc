@@ -7,6 +7,7 @@ import {ZincSlotElement} from "@/zinc-slot-element";
 export class Chip extends ZincSlotElement
 {
   @property({type: String}) icon: string = '';
+  @property({type: String}) type: string = '';
 
   render()
   {

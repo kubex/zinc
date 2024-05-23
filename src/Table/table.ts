@@ -1,22 +1,22 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss?inline';
-import {ifDefined} from "lit/directives/if-defined.js";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { ZincElement } from "@/zinc-element";
+import { classMap } from "lit/directives/class-map.js";
 
 @customElement('zn-table')
-export class Table extends LitElement
+export class Table extends ZincElement
 {
-  @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
-  @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
-  @property({attribute: 'selectable', type: Boolean, reflect: true}) selectable: boolean = false;
-  @property({attribute: 'borders', type: Boolean, reflect: true}) borders: boolean = false;
-  @property({attribute: 'cborders', type: Boolean, reflect: true}) cborders: boolean = false;
-  @property({attribute: 'data', type: Object, reflect: true}) data: Object;
+  @property({ attribute: 'fixed-first', type: Boolean, reflect: true }) fixedFirst: boolean = false;
+  @property({ attribute: 'headless', type: Boolean, reflect: true }) headless: boolean = false;
+  @property({ attribute: 'data', type: Object, reflect: true }) data: Object;
 
   private columns = [];
   private columnDisplay = [];
+  private wideColumn = [];
   private rows = [];
 
   static styles = unsafeCSS(styles);
@@ -56,10 +56,11 @@ export class Table extends LitElement
         {
           if(typeof col == 'string')
           {
-            col = {name: col};
+            col = { name: col };
           }
           this.columns.push(col.hasOwnProperty('name') ? col['name'] : '');
           this.columnDisplay.push(col.hasOwnProperty('display') ? col['display'] : '');
+          this.wideColumn.push(col.hasOwnProperty('wide') ? col['wide'] : '');
         });
       }
       if(this.data.hasOwnProperty('items') && this.data['items'] != null)
@@ -74,13 +75,13 @@ export class Table extends LitElement
         {
           for(const column in this.data[row])
           {
-            let colName = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+            const colName = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
             if(!this.columns.includes(colName))
             {
               this.columns.push(colName);
             }
           }
-          this.rows.push({data: Object.values(this.data[row])});
+          this.rows.push({ data: Object.values(this.data[row]) });
         }
       }
     }
@@ -91,12 +92,10 @@ export class Table extends LitElement
   render()
   {
     return html`
-      <div>
-        <table>
-          ${this.tableHead()}
-          ${this.tableBody()}
-        </table>
-      </div>
+      <table class="table">
+        ${this.tableHead()}
+        ${this.tableBody()}
+      </table>
     `;
   }
 
@@ -131,8 +130,9 @@ export class Table extends LitElement
         {
           cellClass = "hidden " + minDisplay + ":table-cell";
         }
+
         headers.push(html`
-          <th class="${cellClass}">${col}</th>`);
+          <th class="${classMap({ cellClass, 'wide-column': this.wideColumn[k] })}">${col}</th>`);
       }
     });
 
@@ -171,7 +171,7 @@ export class Table extends LitElement
       let iconHtml = html``;
       if(icon != '')
       {
-        let iconSize = summary == '' ? 20 : 40;
+        const iconSize = summary == '' ? 20 : 40;
         iconHtml = html`
           <zn-icon round size="${iconSize}" src="${icon}"></zn-icon>`;
       }
@@ -213,20 +213,12 @@ export class Table extends LitElement
         });
       }
 
-      let rowClass = "";
-      if(summary != '')
-      {
-        rowClass = "with-summary";
-      }
-
       rows.push(html`
-        <tr class="${rowClass}">${rowHtml}</tr>`);
+        <tr>${rowHtml}</tr>`);
     });
 
     return html`
-      <tbody>
-      ${rows}
-      </tbody>`;
+      <tbody>${rows}</tbody>`;
   }
 
   _handleMenu(e)

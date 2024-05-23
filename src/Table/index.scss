@@ -47,6 +47,9 @@
     height: 80px;
   }
 
+  th.wide-column {
+    width: 60%;
+  }
 
   td.capcol {
     width: 60%;
@@ -101,11 +104,14 @@
     padding-left: var(--capcol-width);
   }
 
+  tbody tr:nth-of-type(odd) td.capcol {
+    background-color: rgba(var(--zn-body));
+  }
+
   thead th:first-of-type, td.capcol {
     position: absolute;
     left: 0;
     top: auto;
-    //background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
     min-width: var(--capcol-width);
     max-width: var(--capcol-width);

@@ -209,7 +209,7 @@ export class Table extends ZincElement
           col = this.columnContent(col);
 
           rowHtml.push(html`
-            <td class="${cellClass}">${unsafeHTML(col)}</td>`);
+            <td class="${cellClass}">${typeof col == 'string' ? unsafeHTML(col) : col}</td>`);
         });
       }
 
@@ -228,29 +228,30 @@ export class Table extends ZincElement
 
   columnContent(col)
   {
-    col = String(col).trim();
-    if(col.length > 4 && col[0] == '{')
+    if(typeof col !== 'object')
     {
-      const colJson = JSON.parse(col);
-      if(colJson.hasOwnProperty('chip'))
-      {
-        let chipState = "";
-        if(colJson.hasOwnProperty('state'))
-        {
-          chipState = colJson['state'];
-        }
-        col = html`
-          <zn-chip ${chipState}>${colJson['chip']}</zn-chip>`;
-      }
-      else if(colJson.hasOwnProperty('href'))
-      {
-        const url = colJson['href'];
-        const text = colJson.hasOwnProperty('text') ? colJson['text'] : url;
-        const target = colJson.hasOwnProperty('target') ? colJson['target'] : '';
-        col = html`
-          <a href="${url}" data-target="${target}">${text}</a>`;
-      }
+      return col;
     }
+
+    if(col.hasOwnProperty('chip'))
+    {
+      let chipState = "";
+      if(col.hasOwnProperty('state'))
+      {
+        chipState = col['state'];
+      }
+      col = html`
+        <zn-chip ${chipState}>${col['chip']}</zn-chip>`;
+    }
+    else if(col.hasOwnProperty('href'))
+    {
+      const url = col['href'];
+      const text = col.hasOwnProperty('text') ? col['text'] : url;
+      const target = col.hasOwnProperty('target') ? col['target'] : '';
+      col = html`
+        <a href="${url}" data-target="${target}">${text}</a>`;
+    }
+
     return col;
   }
 }

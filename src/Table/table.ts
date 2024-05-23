@@ -142,6 +142,14 @@ export class Table extends ZincElement
       </thead>`;
   }
 
+  public menuClick(e)
+  {
+    const menu = e.target.closest('.actions').querySelector('zn-menu');
+
+    menu.style.top = e.clientY + 'px';
+    menu.style.left = e.clientX + 'px';
+  }
+
   tableBody()
   {
     const rows = [];
@@ -178,10 +186,13 @@ export class Table extends ZincElement
       let actionsHtml = html``;
       if(actions && actions.length > 0)
       {
+        let id = "actions-" + rk;
         actionsHtml = html`
           <div class="actions">
-            <zn-icon src="more_vert" @click="${this._handleMenu}"></zn-icon>
-            <zn-menu actions="${JSON.stringify(actions)}" hidden></zn-menu>
+            <zn-menu anchor="${id}-btn" popover id="${id}" actions="${JSON.stringify(actions)}"></zn-menu>
+            <button popovertarget="${id}" @click="${this.menuClick}" id="${id}-btn">
+              <zn-icon popovertarget="${id}" src="more_vert"></zn-icon>
+            </button>
           </div>`;
       }
 

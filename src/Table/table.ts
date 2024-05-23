@@ -91,10 +91,12 @@ export class Table extends ZincElement
   render()
   {
     return html`
-      <table class="table">
-        ${this.tableHead()}
-        ${this.tableBody()}
-      </table>
+      <div>
+        <table class="table">
+          ${this.tableHead()}
+          ${this.tableBody()}
+        </table>
+      </div>
     `;
   }
 

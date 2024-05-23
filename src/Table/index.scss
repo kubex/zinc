@@ -6,7 +6,6 @@
   max-width: 100%;
   width: 100%;
   overflow: hidden;
-  overflow-x: auto;
   position: relative;
 
   @include wc.scrollbars;
@@ -102,8 +101,8 @@
 :host([fixed-first]) {
   --capcol-width: 250px;
 
-  .table {
-    margin-left: var(--capcol-width);
+  table {
+    padding-left: var(--capcol-width);
   }
 
   tbody tr:nth-of-type(even) td.capcol {

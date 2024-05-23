@@ -5,7 +5,6 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import styles from './index.scss?inline';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ZincElement } from "@/zinc-element";
-import { classMap } from "lit/directives/class-map.js";
 
 @customElement('zn-table')
 export class Table extends ZincElement
@@ -131,8 +130,13 @@ export class Table extends ZincElement
           cellClass = "hidden " + minDisplay + ":table-cell";
         }
 
+        if(this.wideColumn[k])
+        {
+          cellClass += " wide-column";
+        }
+
         headers.push(html`
-          <th class="${classMap({ cellClass, 'wide-column': this.wideColumn[k] })}">${col}</th>`);
+          <th class="${cellClass}">${col}</th>`);
       }
     });
 
@@ -251,7 +255,8 @@ export class Table extends ZincElement
       {
         chipState = col['state'];
       }
-      col = html`<zn-chip .type="${chipState}">${col['chip']}</zn-chip>`;
+      col = html`
+        <zn-chip .type="${chipState}">${col['chip']}</zn-chip>`;
     }
     else if(col.hasOwnProperty('href'))
     {

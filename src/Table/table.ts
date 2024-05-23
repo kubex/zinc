@@ -240,8 +240,7 @@ export class Table extends ZincElement
       {
         chipState = col['state'];
       }
-      col = html`
-        <zn-chip ${chipState}>${col['chip']}</zn-chip>`;
+      col = html`<zn-chip .type="${chipState}">${col['chip']}</zn-chip>`;
     }
     else if(col.hasOwnProperty('href'))
     {

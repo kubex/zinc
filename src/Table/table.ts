@@ -125,7 +125,7 @@ export class Table extends ZincElement
       else
       {
         let cellClass = "";
-        if(minDisplay != "")
+        if(minDisplay != "" && minDisplay != undefined)
         {
           cellClass = "hidden " + minDisplay + ":table-cell";
         }
@@ -190,7 +190,7 @@ export class Table extends ZincElement
       let actionsHtml = html``;
       if(actions && actions.length > 0)
       {
-        let id = "actions-" + rk;
+        const id = "actions-" + rk;
         actionsHtml = html`
           <div class="actions">
             <zn-menu anchor="${id}-btn" popover id="${id}" actions="${JSON.stringify(actions)}"></zn-menu>
@@ -217,7 +217,7 @@ export class Table extends ZincElement
         {
           const minDisplay = this.columnDisplay[ck + 1];
           let cellClass = "";
-          if(minDisplay != "")
+          if(minDisplay != "" && minDisplay != undefined)
           {
             cellClass = "hidden " + minDisplay + ":table-cell";
           }

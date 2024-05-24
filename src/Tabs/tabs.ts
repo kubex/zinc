@@ -122,7 +122,7 @@ export class Tabs extends LitElement
 
   _uriToId(tabUri: string): string
   {
-    return "tab-" + md5(tabUri).substr(0, 8);
+    return "tab-" + md5(tabUri).substr(0, 8) + "-" + Math.floor(Math.random() * 1000000);
   }
 
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement

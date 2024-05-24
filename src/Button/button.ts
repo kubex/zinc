@@ -28,7 +28,7 @@ export class Button extends ZincElement implements ZincFormControl
 
   @property({ type: String }) content = '';
   @property({ type: String }) icon: string = '';
-  @property({ type: String }) iconPosition: IconPosition = 'left';
+  @property({ type: String, attribute: "icon-position" }) iconPosition: IconPosition = 'left';
   @property({ type: String, attribute: "icon-size" }) iconSize: string = '24';
   @property() type: 'button' | 'submit' | 'reset' = 'button';
 

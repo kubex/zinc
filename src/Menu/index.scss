@@ -5,6 +5,9 @@
   padding: 0;
   overflow: hidden;
   border-width: 1px !important;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  background-color: rgba(var(--zn-panel), 0.93);
+  backdrop-filter: blur(3px);
 }
 
 :host > div {
@@ -13,7 +16,7 @@
   flex-grow: 1;
   padding: 0;
   width: wc.common-size(spanel);
-  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  background: transparent;
   gap: wc.spacing(md);
 
   li {

@@ -1,11 +1,17 @@
 @use "../wc";
 
+:host {
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+
 :host > div {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: wc.spacing(sm);
-  border-radius: 5px;
+  padding: 0;
+  border-radius: 10px;
   border-width: 1px !important;
   width: wc.common-size(spanel);
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
@@ -14,13 +20,26 @@
   li {
     display: block;
     border-bottom-width: 1px;
-    padding: wc.spacing(xs);
+    overflow: hidden;
+
+    &:first-child {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
 
     a, span {
       display: block;
+      padding: wc.spacing(sm);
 
       &:hover {
         cursor: pointer;
+        background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+        color: rgb(var(--zn-primary));
       }
     }
   }

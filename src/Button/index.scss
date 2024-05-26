@@ -3,17 +3,29 @@
 
 :host {
   display: inline-block;
+  position: relative;
+  width: auto;
+  cursor: pointer;
+}
 
-  button {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 18px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-    padding: 7px 15px;
-    border-radius: 6px;
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-weight: 600;
+  text-decoration: none;
+  user-select: none;
+  vertical-align: middle;
+  padding: 0;
+  cursor: inherit;
+}
+
+.button--with-icon:not(.button--with-content) {
+  padding: 6px !important;
+
+  zn-icon {
+    --icon-size: 22px !important;
   }
 }
 
@@ -128,24 +140,48 @@
   }
 }
 
-:host([size="square"]) button {
+:host([size="square"]) .button {
   padding: 5px;
   font-size: 12px;
 }
 
 
-:host([size="x-small"]) button {
+:host([size="x-small"]) .button {
   padding: 2px 7px;
   font-size: 12px;
+
+  &.button--with-icon:not(.button--with-content) {
+    padding: 2px !important;
+
+    zn-icon {
+      --icon-size: 18px !important;
+    }
+  }
 }
 
-:host([size="small"]) button {
+:host([size="small"]) .button {
   padding: 4px 14px;
   font-size: 12px;
+
+  &.button--with-icon:not(.button--with-content) {
+    padding: 4px !important;
+
+    zn-icon {
+      --icon-size: 18px !important;
+    }
+  }
 }
 
-:host([size="medium"]) button {
+:host([size="medium"]) .button {
   padding: 14px 20px;
+
+  &.button--with-icon:not(.button--with-content) {
+    padding: 11px !important;
+
+    zn-icon {
+      --icon-size: 26px !important;
+    }
+  }
 }
 
 :host([size="large"]) button {
@@ -154,6 +190,14 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 20px;
+
+  &.button--with-icon:not(.button--with-content) {
+    padding: 10px !important;
+
+    zn-icon {
+      --icon-size: 30px !important;
+    }
+  }
 }
 
 :host([vertical-align="center"]) {

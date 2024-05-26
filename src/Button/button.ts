@@ -111,11 +111,13 @@ export class Button extends ZincElement implements ZincFormControl
       <button part="base"
               class=${classMap({
                 'button': true,
+                'button--with-icon': this.icon,
+                'button--with-content': this.content,
               })}
               type=${this.type}
               @click=${this.handleClick}>
         ${this.iconPosition === 'left' ? icon : ''}
-        <slot>${this.content}</slot>
+        <slot part="label" class="button__label">${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}
       </button>`;
 

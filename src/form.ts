@@ -1,6 +1,6 @@
-import type { ReactiveController, ReactiveControllerHost } from "lit";
-import { ZincFormControl } from "./zinc-element";
-import { Button } from "./Button";
+import type {ReactiveController, ReactiveControllerHost} from "lit";
+import {ZincFormControl} from "./zinc-element";
+import {Button} from "./Button";
 
 export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>> = new WeakMap();
 
@@ -215,7 +215,7 @@ export class FormControlController implements ReactiveController
         event.formData.append(name, (value as string | number | boolean).toString());
       }
 
-      this.host.dispatchEvent(new CustomEvent('zn-formdata', { bubbles: true, composed: true }));
+      this.host.dispatchEvent(new CustomEvent('zn-formdata', {bubbles: true, composed: true}));
     }
   };
 
@@ -268,17 +268,13 @@ export class FormControlController implements ReactiveController
     if(this.form && !this.form.noValidate)
     {
       const elements: NodeListOf<HTMLInputElement> = this.form.querySelectorAll<HTMLInputElement>('*');
-
-      elements.forEach(element =>
+      for(const element of elements)
       {
-        if(typeof element.checkValidity === 'function')
+        if(typeof element.checkValidity === 'function' && !element.checkValidity())
         {
-          if(!element.checkValidity())
-          {
-            return false;
-          }
+          return false;
         }
-      });
+      }
     }
 
     return true;
@@ -289,17 +285,13 @@ export class FormControlController implements ReactiveController
     if(this.form && !this.form.noValidate)
     {
       const elements: NodeListOf<HTMLInputElement> = this.form.querySelectorAll<HTMLInputElement>('*');
-
-      elements.forEach(element =>
+      for(const element of elements)
       {
-        if(typeof element.reportValidity === 'function')
+        if(typeof element.reportValidity === 'function' && !element.reportValidity())
         {
-          if(!element.reportValidity())
-          {
-            return false;
-          }
+          return false;
         }
-      });
+      }
     }
 
     return true;

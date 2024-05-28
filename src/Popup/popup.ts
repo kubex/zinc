@@ -549,10 +549,15 @@ export class Popup extends ZincElement
     }
   };
 
+  private handleAnchorClick()
+  {
+    this.active = !this.active;
+  }
+
   render()
   {
     return html`
-      <slot name="anchor" @slotchange=${this.handleAnchorChange}></slot>
+      <slot name="anchor" @slotchange=${this.handleAnchorChange} @click=${this.handleAnchorClick}></slot>
 
       <span
         part="hover-bridge"

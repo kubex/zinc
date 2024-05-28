@@ -29,7 +29,7 @@ export class Menu extends LitElement
         <ul>
           ${this.actions.map((item) =>
           {
-            let liClass = item.style ? item.style : 'def';
+            const liClass = item.style ? item.style : 'def';
             if(item.confirm)
             {
               return html`

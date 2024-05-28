@@ -1,0 +1,52 @@
+:host {
+  --arrow-color: rgb(var(--zn-primary));
+  --arrow-size: 6px;
+  --arrow-size-diagonal: calc(var(--arrow-size) * 0.7071);
+  --arrow-padding-offset: calc(var(--arrow-size-diagonal) - var(--arrow-size));
+
+  display: contents;
+}
+
+.popup {
+  position: absolute;
+  isolation: isolate;
+  max-width: var(--auto-size-available-width, none);
+  max-height: var(--auto-size-available-height, none);
+
+  &--fixed {
+    position: fixed;
+  }
+
+  &:not(&--active) {
+    display: none;
+  }
+
+  &__arrow {
+    position: absolute;
+    width: calc(var(--arrow-size-diagonal) * 2);
+    height: calc(var(--arrow-size-diagonal) * 2);
+    rotate: 45deg;
+    background: var(--arrow-color);
+    z-index: -1;
+  }
+
+  /* Hover bridge */
+  &-hover-bridge:not(&-hover-bridge--visible) {
+    display: none;
+  }
+
+  &-hover-bridge {
+    position: fixed;
+    z-index: calc(var(--sl-z-index-dropdown) - 1);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    clip-path: polygon(
+        var(--hover-bridge-top-left-x, 0) var(--hover-bridge-top-left-y, 0),
+        var(--hover-bridge-top-right-x, 0) var(--hover-bridge-top-right-y, 0),
+        var(--hover-bridge-bottom-right-x, 0) var(--hover-bridge-bottom-right-y, 0),
+        var(--hover-bridge-bottom-left-x, 0) var(--hover-bridge-bottom-left-y, 0)
+    );
+  }
+}

@@ -92,17 +92,25 @@
 
 // Effects
 
-.act-vanish {
-  transition: opacity 1s, height 1s, padding 1s, margin 1s;
-  opacity: 1;
+@keyframes act-vanish {
+  from {
+    transform: scale(1);
+    opacity: 1;
+    max-height: 100%;
+  }
+
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+    max-height: 0;
+  }
 }
 
-.act-vanish.act-vanish--progress {
+.act-vanish {
+  animation: ease-in act-vanish 600ms forwards;
+  transform-origin: top center;
   background-color: rgba(var(--zn-color-error), 0.3);
-  opacity: 0;
-  padding: 0;
-  margin: 0;
-  height: 0 !important;
+  display: block;
   overflow: hidden;
 }
 

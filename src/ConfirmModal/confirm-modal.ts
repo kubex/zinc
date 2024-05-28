@@ -1,6 +1,6 @@
-import { CSSResultGroup, html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { Dialog } from "../Dialog";
+import {CSSResultGroup, html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {Dialog} from "../Dialog";
 
 import styles from './index.scss?inline';
 
@@ -12,11 +12,11 @@ export class ConfirmModal extends Dialog
     return [super.styles, unsafeCSS(styles)];
   }
 
-  @property({ type: String, reflect: true }) caption: string = '';
-  @property({ type: String, reflect: true }) content: string = '';
-  @property({ type: String, reflect: true }) type: string = 'warning';
-  @property({ type: String, reflect: true }) confirmText: string = "Confirm";
-  @property({ type: String, reflect: true }) cancelText: string = "Cancel";
+  @property({type: String, reflect: true}) caption: string = '';
+  @property({type: String, reflect: true}) content: string = '';
+  @property({type: String, reflect: true}) type: string = 'warning';
+  @property({type: String, reflect: true}) confirmText: string = "Confirm";
+  @property({type: String, reflect: true}) cancelText: string = "Cancel";
 
 
   getIcon()
@@ -35,7 +35,7 @@ export class ConfirmModal extends Dialog
 
   connectedCallback()
   {
-    this.emit('zn-element-added', { detail: { element: this } });
+    this.emit('zn-element-added', {detail: {element: this}});
     super.connectedCallback();
   }
 
@@ -66,7 +66,7 @@ export class ConfirmModal extends Dialog
   {
     // get the form from the slot
     const form = this.querySelector('form');
-    if(form)
+    if(form && form.reportValidity())
     {
       form.requestSubmit();
       this.close();

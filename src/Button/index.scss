@@ -145,6 +145,18 @@
   font-size: 12px;
 }
 
+:host([size="normal"]) .button {
+  padding: 7px 15px;
+
+  &.button--with-icon:not(.button--with-content) {
+    padding: 8px !important;
+
+    zn-icon {
+      --icon-size: 19px !important;
+    }
+  }
+}
+
 
 :host([size="x-small"]) .button {
   padding: 2px 7px;

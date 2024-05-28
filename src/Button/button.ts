@@ -22,8 +22,8 @@ export class Button extends ZincElement implements ZincFormControl
 
   @query('.button') button: HTMLButtonElement;
 
-  @property({ type: String }) color: ButtonColor = 'primary';
-  @property({ type: String }) size: ButtonSizes;
+  @property({ type: String, reflect: true }) color: ButtonColor = 'primary';
+  @property({ type: String, reflect: true }) size: ButtonSizes = 'normal';
   @property({ type: String }) verticalAlign: VerticalAlignments;
 
   @property({ type: String }) content = '';

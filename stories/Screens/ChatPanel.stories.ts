@@ -4,7 +4,6 @@ import { Meta, StoryObj } from "@storybook/web-components";
 import '../../src/Header';
 import '../../src/Panel';
 import '../../src/Timer';
-import '../../src/Chat';
 import '../../src/Editor';
 
 const meta: Meta = {

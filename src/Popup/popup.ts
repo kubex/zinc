@@ -3,6 +3,7 @@ import { html, unsafeCSS } from "lit";
 import { classMap } from 'lit/directives/class-map.js';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ZincElement } from "@/zinc-element";
+import { offsetParent } from 'composed-offset-position';
 import { arrow, autoUpdate, computePosition, flip, offset, platform, shift, size } from '@floating-ui/dom';
 
 import styles from './index.scss?inline';
@@ -70,7 +71,7 @@ export class Popup extends ZincElement
    * Determines how the popup is positioned. The `absolute` strategy works well in most cases, but if overflow is
    * clipped, using a `fixed` position strategy can often workaround it.
    */
-  @property({ reflect: true }) strategy: 'absolute' | 'fixed' = 'absolute';
+  @property({ reflect: true }) strategy: 'absolute' | 'fixed' = 'fixed';
 
   /** The distance in pixels from which to offset the panel away from its anchor. */
   @property({ type: Number }) distance = 0;
@@ -395,12 +396,18 @@ export class Popup extends ZincElement
       );
     }
 
+    const getOffsetParent =
+      this.strategy === 'absolute'
+        ? (element: Element) => platform.getOffsetParent(element, offsetParent)
+        : platform.getOffsetParent;
+
     computePosition(this.anchorEl, this.popup, {
       placement: this.placement,
       middleware,
       strategy: this.strategy,
       platform: {
-        ...platform
+        ...platform,
+        getOffsetParent
       }
     }).then(({ x, y, middlewareData, placement }) =>
     {

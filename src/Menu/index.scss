@@ -1,14 +1,6 @@
 @use "../wc";
 
 :host {
-  display: contents;
-}
-
-:host([hidden]) {
-  display: none;
-}
-
-.menu {
   border-radius: 5px;
   padding: 0;
   overflow: hidden;
@@ -18,12 +10,17 @@
   backdrop-filter: blur(3px);
 }
 
+:host([hidden]) {
+  display: none;
+}
+
 :host > div {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   padding: 0;
   width: wc.common-size(spanel);
+  background: transparent;
   gap: wc.spacing(md);
 
   li {

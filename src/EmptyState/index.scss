@@ -8,7 +8,6 @@
   align-items: center;
   justify-content: center;
   gap: wc.spacing(xs);
-  background-color: rgb(var(--zn-shadow));
   padding: wc.spacing(md);
 
   ::slotted(*) {
@@ -52,5 +51,20 @@
 
   .error {
     border: dashed 1px rgb(var(--zn-color-error)) !important;
+  }
+}
+
+
+:host([type="info"]) {
+  background-color: rgba(var(--zn-color-info), .05);
+  min-height: 100px;
+  padding: wc.spacing(xs);
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-color-info));
+  }
+
+  .info {
+    border: dashed 1px rgb(var(--zn-color-info)) !important;
   }
 }

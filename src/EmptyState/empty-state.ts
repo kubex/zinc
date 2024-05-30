@@ -2,6 +2,7 @@ import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
+import { classMap } from "lit/directives/class-map.js";
 
 @customElement('zn-empty-state')
 export class EmptyState extends LitElement
@@ -11,20 +12,14 @@ export class EmptyState extends LitElement
   @property({ type: String }) icon: string = '';
   @property({ type: String }) caption: string = '';
   @property({ type: String }) description: string = '';
-  @property({ type: String }) type: 'error' | '' = '';
+  @property({ type: String }) type: 'error' | 'info' | 'primary' | '' = '';
 
   render()
   {
-    let iconColor = '';
-    if(this.type === 'error')
-    {
-      iconColor = 'error';
-    }
-
     const content = html`
       ${this.icon
         ? html`
-          <zn-icon src="${this.icon}" size="48" color="${iconColor}"></zn-icon>`
+          <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}" library="mir"></zn-icon>`
         : ''}
       ${this.caption
         ? html`
@@ -36,10 +31,13 @@ export class EmptyState extends LitElement
         : ''}
       <slot></slot>`;
 
-    if(this.type === 'error')
+    if(this.type)
     {
       return html`
-        <div class="wrapper ${this.type}">
+        <div class="${classMap({
+          'wrapper': true,
+          [this.type]: true
+        })}">
           ${content}
         </div>`;
     }

@@ -15,6 +15,7 @@ export class Tabs extends ZincElement
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
+  private _knownUri: Map<string, string> = new Map<string, string>();
 
   @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
 
@@ -140,6 +141,17 @@ export class Tabs extends ZincElement
 
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement
   {
+    if(!tabEle.hasAttribute('tab'))
+    {
+      tabEle.setAttribute('tab', tabId);
+      tabEle.classList.toggle('zn-tb-active', this._current == tabId);
+    }
+
+    if(!this._knownUri.has(tabUri))
+    {
+      this._knownUri.set(tabUri, tabId);
+    }
+
     if(this._panels.has(tabId))
     {
       return this._panels.get(tabId)[0] as HTMLDivElement;
@@ -155,7 +167,6 @@ export class Tabs extends ZincElement
       this._panel.appendChild(tabNode);
       this._panels.set(tabId, [tabNode]);
     }
-    tabEle.setAttribute('tab', tabId);
     document.dispatchEvent(new CustomEvent('zn-new-element', {
       detail: {element: tabNode, source: tabEle}
     }));
@@ -179,19 +190,52 @@ export class Tabs extends ZincElement
       const tabUri = target.getAttribute("tab-uri");
       this._createUriPanel(target, tabUri, this._uriToId(tabUri));
     }
+
     if(target.hasAttribute('tab'))
     {
       setTimeout(() =>
       {
-        this.setActiveTab(target.getAttribute('tab') || '', true, refresh);
+        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));
       }, 10);
     }
   }
 
-  setActiveTab(tabName: string, store: boolean, refresh: boolean)
+  getRefTab(target: HTMLElement)
   {
-    this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
-    this._actions.forEach(action => action.classList.toggle('zn-tb-active', action.getAttribute('ref-tab') === tabName));
+    let parent: Element = target;
+    while (parent)
+    {
+      if(parent == this)
+      {
+        return null;
+      }
+      if(parent.hasAttribute('ref-tab'))
+      {
+        return parent.getAttribute('ref-tab');
+      }
+      // @ts-ignore
+      parent = parent?.parentElement || parent?.getRootNode()?.host;
+    }
+    return null;
+  }
+
+  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string = null)
+  {
+    this._tabs.forEach(tab =>
+    {
+      if(tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri')))
+      {
+        tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri')));
+      }
+
+      let setActive = tabName == tab.getAttribute('tab');
+      if(!setActive && refTab && !this.getRefTab(tab))
+      {
+        setActive = refTab == tab.getAttribute('tab');
+      }
+      tab.classList.toggle('zn-tb-active', setActive);
+    });
+    this._actions.forEach(action => action.classList.toggle('zn-tb-active', action.getAttribute('ref-tab') === (refTab || tabName)));
     this.selectTab(tabName, refresh);
 
     //Set on the element as a failsafe before TabPanel is loaded

@@ -95,7 +95,6 @@ export class Button extends ZincElement implements ZincFormControl
       'large': '30'
     };
 
-    console.log(this.size, defaultSizes[this.size]);
     const iconSize = this.iconSize !== undefined ? this.iconSize : defaultSizes[this.size];
 
     const icon = this.icon ? html`

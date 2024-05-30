@@ -50,6 +50,7 @@ import './ButtonGroup';
 import './AbsoluteContainer';
 import './ChatMessage';
 import './QueryBuilder';
+import './Spacer';
 import './Popup';
 
 // Events

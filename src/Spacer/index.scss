@@ -1,0 +1,26 @@
+@use "sass:map";
+@use "../wc";
+@use "../../scss/mixins";
+
+zn-sp {
+  @include mixins.gap();
+  @include mixins.padding();
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+zn-sp[flush] {
+  padding: 0;
+}
+
+zn-sp[flush-y] {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+zn-sp[flush-x] {
+  padding-left: 0;
+  padding-right: 0;
+}

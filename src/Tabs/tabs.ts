@@ -128,7 +128,7 @@ export class Tabs extends ZincElement
       if(eleTabId == tabId)
       {
         this._createUriPanel(uriTabs[i], uri, eleTabId);
-        break;
+        // do not break, as multiple tabs can have the same uri
       }
     }
   }
@@ -140,6 +140,11 @@ export class Tabs extends ZincElement
 
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement
   {
+    if(this._panels.has(tabId))
+    {
+      return this._panels.get(tabId)[0] as HTMLDivElement;
+    }
+
     const tabNode = document.createElement('div');
     tabNode.setAttribute("id", tabId);
     tabNode.setAttribute('data-self-uri', tabUri);
@@ -186,11 +191,7 @@ export class Tabs extends ZincElement
   setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
     this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
-    this._actions.forEach(action =>
-    {
-      console.log(tabName, action.getAttribute('tab'));
-      action.classList.toggle('zn-tb-active', action.getAttribute('tab') === tabName);
-    });
+    this._actions.forEach(action => action.classList.toggle('zn-tb-active', action.getAttribute('ref-tab') === tabName));
     this.selectTab(tabName, refresh);
 
     //Set on the element as a failsafe before TabPanel is loaded
@@ -264,15 +265,16 @@ export class Tabs extends ZincElement
     });
     deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele =>
     {
-      if(ele.slot == 'actions' && !ele.hasAttribute('tab'))
+      this._addTab(ele as HTMLElement);
+    });
+
+    deepQuerySelectorAll('[ref-tab-uri]', this, 'zn-tabs').forEach(ele =>
+    {
+      if(!ele.hasAttribute('ref-tab'))
       {
-        ele.setAttribute('tab', this._uriToId(ele.getAttribute('tab-uri')));
-        ele.removeAttribute('tab-uri');
+        ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')));
+        ele.removeAttribute('ref-tab-uri');
         this._actions.push(ele as HTMLElement);
-      }
-      else
-      {
-        this._addTab(ele as HTMLElement);
       }
     });
   }

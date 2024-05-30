@@ -43,8 +43,9 @@ export class Panel extends ZincElement
     }
 
     let header;
-    if(actionItems || this.caption)
+    if(actionItems || this.caption || this.firstChild?.nodeName == 'ZN-TABS')
     {
+      // zn-tabs uses the header as top-padding
       header = html`
         <div class="header">
           <span>${this.caption}</span>

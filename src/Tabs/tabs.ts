@@ -49,7 +49,7 @@ export class Tabs extends ZincElement
 
     if(this.masterId == '')
     {
-      this.masterId = Math.floor(Math.random() * 1000000).toString();
+      this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
 
     await this.updateComplete;

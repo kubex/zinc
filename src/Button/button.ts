@@ -89,7 +89,7 @@ export class Button extends ZincElement implements ZincFormControl
   protected render(): unknown
   {
     const defaultSizes = {
-      'x-small': '16',
+      'x-small': '14',
       'small': '18',
       'medium': '20',
       'large': '30'

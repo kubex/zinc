@@ -6,13 +6,17 @@ import {Store} from '../storage';
 import styles from './index.scss?inline';
 import {deepQuerySelectorAll} from "../query";
 import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement} from "@/zinc-element";
 
 @customElement('zn-tabs')
-export class Tabs extends LitElement
+export class Tabs extends ZincElement
 {
   private _panel: HTMLElement;
   private _panels: Map<string, Element[]>;
-  private _tabs: HTMLElement[];
+  private _tabs: HTMLElement[] = [];
+  private _actions: HTMLElement[] = [];
+
+  @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
 
   @property({attribute: 'caption', type: String, reflect: true}) caption = '';
   @property({attribute: 'header', type: String, reflect: true}) header = '';
@@ -36,13 +40,18 @@ export class Tabs extends LitElement
   constructor()
   {
     super();
-    this._tabs = [];
     this._panels = new Map<string, Element[]>();
   }
 
   async connectedCallback()
   {
     super.connectedCallback();
+
+    if(this.masterId == '')
+    {
+      this.masterId = Math.floor(Math.random() * 1000000).toString();
+    }
+
     await this.updateComplete;
     this._panel = this.shadowRoot.querySelector('#content');
     this.observerDom();
@@ -126,7 +135,7 @@ export class Tabs extends LitElement
 
   _uriToId(tabUri: string): string
   {
-    return "tab-" + md5(tabUri).substr(0, 8) + "-" + Math.floor(Math.random() * 1000000);
+    return "tab-" + md5(tabUri).substr(0, 8) + "-" + this.masterId;
   }
 
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement
@@ -177,6 +186,11 @@ export class Tabs extends LitElement
   setActiveTab(tabName: string, store: boolean, refresh: boolean)
   {
     this._tabs.forEach(tab => tab.classList.toggle('zn-tb-active', tab.getAttribute('tab') === tabName));
+    this._actions.forEach(action =>
+    {
+      console.log(tabName, action.getAttribute('tab'));
+      action.classList.toggle('zn-tb-active', action.getAttribute('tab') === tabName);
+    });
     this.selectTab(tabName, refresh);
 
     //Set on the element as a failsafe before TabPanel is loaded
@@ -250,7 +264,16 @@ export class Tabs extends LitElement
     });
     deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele =>
     {
-      this._addTab(ele as HTMLElement);
+      if(ele.slot == 'actions' && !ele.hasAttribute('tab'))
+      {
+        ele.setAttribute('tab', this._uriToId(ele.getAttribute('tab-uri')));
+        ele.removeAttribute('tab-uri');
+        this._actions.push(ele as HTMLElement);
+      }
+      else
+      {
+        this._addTab(ele as HTMLElement);
+      }
     });
   }
 

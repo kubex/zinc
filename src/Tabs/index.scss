@@ -63,14 +63,16 @@
 
   #header {
     display: flex;
+    padding: 0 15px;
+    gap: 15px;
+
+    #actions ::slotted(*:not(.zn-tb-active)) {
+      display: none;
+    }
 
     h1, h2 {
       flex-grow: 1;
     }
-  }
-
-  h1, h2 {
-    padding: 15px 15px 0 15px;
   }
 
   h1 {

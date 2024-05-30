@@ -58,3 +58,25 @@
     display: none !important;
   }
 }
+
+:host {
+  h1 {
+    font-size: 18px;
+    line-height: 35px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media screen and (min-width: wc.container-width(lg)) {
+      font-size: 20px;
+    }
+
+    color: rgb(var(--zn-text-page-title));
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 17px;
+    color: rgba(var(--zn-text-panel-title), 100%);
+  }
+}

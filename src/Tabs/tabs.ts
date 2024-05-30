@@ -13,6 +13,10 @@ export class Tabs extends LitElement
   private _panel: HTMLElement;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[];
+
+  @property({attribute: 'caption', type: String, reflect: true}) caption = '';
+  @property({attribute: 'header', type: String, reflect: true}) header = '';
+
   @property({attribute: 'active', type: String, reflect: true}) _current = '';
   @property({attribute: 'split', type: Number, reflect: true}) _split;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
@@ -286,7 +290,15 @@ export class Tabs extends LitElement
         <slot name="bottom"></slot>
       `;
     }
+
     return html`
+      <div id="header">
+        ${this.header ? html`<h1>${this.header}</h1>` : ''}
+        ${this.caption ? html`<h2>${this.caption}</h2>` : ''}
+        <div id="actions">
+          <slot name="actions"></slot>
+        </div>
+      </div>
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>

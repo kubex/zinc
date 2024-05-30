@@ -7,7 +7,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { FormControlController } from "@/form";
 import { HasSlotController } from "@/slot";
 
-export type ButtonColor = 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
+export type ButtonColor = 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
 export type ButtonSizes = 'x-small' | 'small' | 'medium' | 'large';
 export type VerticalAlignments = 'start' | 'center' | 'end';
 export type IconPosition = 'left' | 'right';
@@ -112,6 +112,7 @@ export class Button extends ZincElement implements ZincFormControl
                 'button--success': this.color === 'success',
                 'button--warning': this.color === 'warning',
                 'button--transparent': this.color === 'transparent',
+                'button--star': this.color === 'star',
                 'button--x-small': this.size === 'x-small',
                 'button--small': this.size === 'small',
                 'button--medium': this.size === 'medium',

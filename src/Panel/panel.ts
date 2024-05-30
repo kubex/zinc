@@ -10,22 +10,24 @@ export class Panel extends ZincElement
 {
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'rows', type: Number, reflect: true}) rows;
+  @property({attribute: 'tabbed', type: Boolean, reflect: true}) tabbed;
 
   static styles = unsafeCSS(styles);
-
-  private selectedPanel: Number = 0;
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
-    const tabs = this.querySelector('zn-tabs');
-    if(tabs)
+    if(!this.tabbed)
     {
-      tabs.setAttribute('flush-x', '');
-      const body = this.shadowRoot.querySelector('.body');
-      if(body)
+      const tabs = this.querySelector('zn-tabs');
+      if(tabs)
       {
-        body.classList.toggle('ntp', true);
+        tabs.setAttribute('flush-x', '');
+        const body = this.shadowRoot.querySelector('.body');
+        if(body)
+        {
+          body.classList.toggle('ntp', true);
+        }
       }
     }
   }

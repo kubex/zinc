@@ -31,6 +31,8 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   @property() value: string;
 
+  @property({attribute: 'fallback-value'}) fallbackValue: string;
+
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({ type: Boolean, reflect: true }) disabled: boolean = false;
@@ -150,10 +152,15 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   render()
   {
+    let fallback = html``;
+    if(this.fallbackValue)
+    {
+      fallback = html`<input type="hidden" name=${this.name} value=${this.fallbackValue}/>`;
+    }
+
     return html`
-      <label part="base" class="${classMap({
-        'switch': true,
-      })}">
+      <label part="base" class="${classMap({'switch': true})}">
+        ${fallback}
         <input
           class="switch__input"
           type="checkbox"

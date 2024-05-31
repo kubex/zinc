@@ -1,17 +1,21 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss?inline';
-import { ifDefined } from "lit/directives/if-defined.js";
-import { ZincElement } from "@/zinc-element";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {ZincElement} from "@/zinc-element";
+import {PropertyValues} from "@lit/reactive-element";
+import {Element} from "chart.js";
+import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-table')
-export class Table extends ZincElement
+export class Table extends ZincSlotElement
 {
-  @property({ attribute: 'fixed-first', type: Boolean, reflect: true }) fixedFirst: boolean = false;
-  @property({ attribute: 'headless', type: Boolean, reflect: true }) headless: boolean = false;
-  @property({ attribute: 'data', type: Object, reflect: true }) data: Object;
+  @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
+  @property({attribute: 'has-actions', type: Boolean, reflect: true}) hasActions: boolean = false;
+  @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
+  @property({attribute: 'data', type: Object, reflect: true}) data: Object;
 
   private columns = [];
   private columnDisplay = [];
@@ -40,6 +44,7 @@ export class Table extends ZincElement
         try
         {
           this.data = JSON.parse(data.textContent);
+          this.innerText = '';
         }
         catch(e)
         { /* empty */
@@ -55,7 +60,7 @@ export class Table extends ZincElement
         {
           if(typeof col == 'string')
           {
-            col = { name: col };
+            col = {name: col};
           }
           this.columns.push(col.hasOwnProperty('name') ? col['name'] : '');
           this.columnDisplay.push(col.hasOwnProperty('display') ? col['display'] : '');
@@ -80,12 +85,33 @@ export class Table extends ZincElement
               this.columns.push(colName);
             }
           }
-          this.rows.push({ data: Object.values(this.data[row]) });
+          this.rows.push({data: Object.values(this.data[row])});
         }
       }
     }
 
     return super.connectedCallback();
+  }
+
+  protected updated(_changedProperties: PropertyValues)
+  {
+    super.updated(_changedProperties);
+    setTimeout(() =>
+    {
+      let maxWidth = 0;
+      this.querySelectorAll('td.capcol > div').forEach(td =>
+      {
+        if(td.scrollWidth > maxWidth)
+        {
+          maxWidth = td.scrollWidth;
+        }
+      });
+      if(maxWidth > 220)
+      {
+        // Add 30px for padding
+        this.style.setProperty('--capcol-width', (maxWidth + 30) + 'px');
+      }
+    }, 100);
   }
 
   render()
@@ -151,15 +177,14 @@ export class Table extends ZincElement
   public menuClick(e)
   {
     const menu = e.target.closest('.actions').querySelector('zn-menu');
-
-    menu.style.top = e.clientY + 'px';
-    menu.style.left = e.clientX + 'px';
+    menu.style.top = (e.clientY - this.clientTop) + 'px';
+    menu.style.left = (e.clientX - this.clientLeft) + 'px';
   }
 
   tableBody()
   {
     const rows = [];
-
+    this.hasActions = false;
     this.rows.forEach((row, rk) =>
     {
       const rowHtml = [];
@@ -177,6 +202,8 @@ export class Table extends ZincElement
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
 
+      this.hasActions = this.hasActions || (actions && actions.length > 0);
+
       if(uri != "")
       {
         caption = html`<a data-target="${ifDefined(target)}" href="${uri}">${caption}</a>`;
@@ -189,7 +216,8 @@ export class Table extends ZincElement
         iconHtml = html`
           <zn-icon round size="${iconSize}" src="${icon}"></zn-icon>`;
       }
-      let actionsHtml = html``;
+      let actionsHtml = html`
+        <div class="actions"></div>`;
       if(actions && actions.length > 0)
       {
         const id = "actions-" + rk;

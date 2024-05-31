@@ -2,7 +2,7 @@
 @use "../../scss/shared/table";
 @use "../Chip/index";
 
-:host {
+zn-table {
   max-width: 100%;
   width: 100%;
   overflow: hidden;
@@ -62,6 +62,18 @@
   td.capcol {
     width: 60%;
 
+    .actions:empty {
+      display: none;
+    }
+
+    .actions button {
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: transparent;
+      color: rgb(var(--zn-text));
+    }
+
     & > div {
       display: flex;
       column-gap: wc.spacing(md);
@@ -105,7 +117,15 @@
   }
 }
 
-:host([fixed-first]) {
+zn-table[has-actions] {
+  td.capcol .actions {
+    display: flex;
+    min-width: 25px;
+    max-width: 25px;
+  }
+}
+
+zn-table[fixed-first] {
   --capcol-width: 250px;
 
   table {
@@ -120,6 +140,7 @@
     position: absolute;
     left: 0;
     top: auto;
+    overflow: hidden;
 
     background-color: rgba(var(--zn-panel));
     min-width: var(--capcol-width);
@@ -129,7 +150,7 @@
 
 }
 
-:host([borders]) {
+zn-table[borders] {
 
   tr, td {
     margin: 0;
@@ -152,13 +173,13 @@
   }
 }
 
-:host([cborders]) {
+zn-table[cborders] {
   tbody tr td {
     border-left-width: 1px !important;
   }
 }
 
-:host([fixed]) {
+zn-table[fixed] {
   table {
     table-layout: fixed;
   }

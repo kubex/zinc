@@ -85,9 +85,14 @@ export class Checkbox extends ZincElement implements ZincFormControl
         <label>
           <div class="checkbox__input-wrapper">
             <input type="checkbox"
+                   class="checkbox__input"
                    name="${this.name}"
                    .checked=${this.checked}
-                   @click=${this.handleClick}/>
+                   @click=${this.handleClick} />
+            <span class="checkbox__control">
+              ${this.checked ? html`
+                <zn-icon src="check" class="checkbox__check-icon" size="12"></zn-icon>` : ''}
+            </span>
           </div>
           <div class="checkbox__label-wrapper">
             ${this.title}

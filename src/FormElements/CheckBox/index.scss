@@ -25,6 +25,38 @@ label {
   align-items: center;
 }
 
+.checkbox__input {
+  position: absolute;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.checkbox__control {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 2px;
+  background-color: rgb(var(--zn-background));
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox__input:checked + .checkbox__control {
+  background-color: rgb(var(--zn-primary));
+  border-color: rgb(var(--zn-primary));
+}
+
+.checkbox__check-icon {
+  display: inline-flex;
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
 .checkbox__label-wrapper {
   margin-left: wc.spacing(sm);
   font-size: 90%;

@@ -83,7 +83,10 @@ export class Button extends ZincElement implements ZincFormControl
 
   private handleClick()
   {
-    this.formControlController.submit(this);
+    if(this.type === 'submit')
+    {
+      this.formControlController.submit(this);
+    }
   }
 
   protected render(): unknown

@@ -45,7 +45,6 @@ export class ConfirmModal extends Dialog
 
     return html`
       <dialog class="type-${this.type}">
-
         <div id="content"> <!-- default dialog close button -->
           ${icon}
           <h2 class="title">${this.caption}</h2>

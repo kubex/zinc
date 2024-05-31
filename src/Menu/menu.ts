@@ -1,13 +1,13 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-menu')
 export class Menu extends LitElement
 {
-  @property({ attribute: 'actions', type: Array }) actions = [];
+  @property({attribute: 'actions', type: Array}) actions = [];
 
   public closer;
 
@@ -15,6 +15,10 @@ export class Menu extends LitElement
 
   _handleAction(e)
   {
+    if(this.hasAttribute('popover'))
+    {
+      this.hidePopover();
+    }
     if(this.closer)
     {
       this.closer();
@@ -56,6 +60,6 @@ export class Menu extends LitElement
     }
 
     return html`
-      <div class="${classMap({ 'menu': true })}">${menu}</div>`;
+      <div class="${classMap({'menu': true})}">${menu}</div>`;
   }
 }

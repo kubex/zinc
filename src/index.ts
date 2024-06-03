@@ -52,6 +52,7 @@ import './ChatMessage';
 import './QueryBuilder';
 import './Spacer';
 import './Popup';
+import './Tooltip';
 
 // Events
 export * from './Events/events';

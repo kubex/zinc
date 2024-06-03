@@ -1,9 +1,11 @@
-import { ZincElement } from "@/zinc-element";
+import { ZincElement, ZincFormControl } from "@/zinc-element";
 import { html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
 import { classMap } from "lit/directives/class-map.js";
+import { FormControlController } from "@/form";
+import { PropertyValues } from "@lit/reactive-element";
 
 export type QueryBuilderData = Array<QueryBuilderItem>;
 
@@ -24,16 +26,39 @@ export type CreatedRule = {
 }
 
 @customElement('zn-query-builder')
-export class QueryBuilder extends ZincElement
+export class QueryBuilder extends ZincElement implements ZincFormControl
 {
   static styles = unsafeCSS(styles);
 
+  private _selectedRules: Map<string, CreatedRule> = new Map<string, CreatedRule>();
+  private _formController: FormControlController = new FormControlController(this, {});
+
   @query('.query-builder') container: HTMLDivElement;
   @query('.add-rule') addRule: HTMLSelectElement;
+  @query('input') input: HTMLInputElement;
 
   @property({ type: Array }) filters: QueryBuilderData = [];
 
-  private _selectedRules: Map<string, CreatedRule> = new Map<string, CreatedRule>();
+
+  @property() name: string;
+  @property() value: PropertyKey;
+
+  get validationMessage(): string
+  {
+    return '';
+  }
+
+  get validity(): ValidityState
+  {
+    return this.input.validity;
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    super.firstUpdated(_changedProperties);
+    this._handleChange();
+    this._formController.updateValidity();
+  }
 
   render()
   {
@@ -46,12 +71,12 @@ export class QueryBuilder extends ZincElement
           ${this.filters.map(item => html`
             <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
         </select>
-        <zn-button @click="${this._handleClick}">Apply Filters</zn-button>
+        <input name="${this.name}" value="${this.value}" type="hidden">
       </div>
     `;
   }
 
-  private _handleClick(event: Event)
+  private _handleChange()
   {
     const data = [];
     [...this._selectedRules].forEach(([key, value]) =>
@@ -63,9 +88,8 @@ export class QueryBuilder extends ZincElement
       });
     });
 
-    const encoded = btoa(JSON.stringify(data));
-    // we need to submit this somewhere
-    console.log('submitting, ', encoded);
+    this.value = btoa(JSON.stringify(data));
+    console.log(this.value);
   }
 
   private _addRule(event: Event)
@@ -154,6 +178,7 @@ export class QueryBuilder extends ZincElement
 
     this.container.insertBefore(row, this.addRule);
     this.addRule.value = '';
+    this._handleChange();
   }
 
   private _updateOperatorValue(id: string, event: Event)
@@ -193,6 +218,27 @@ export class QueryBuilder extends ZincElement
     const button = event.target as HTMLButtonElement;
     button.parentElement.remove();
     console.log(this._selectedRules);
+  }
+
+  checkValidity(): boolean
+  {
+    return this.input.checkValidity();
+  }
+
+  getForm(): HTMLFormElement | null
+  {
+    return this._formController.getForm();
+  }
+
+  reportValidity(): boolean
+  {
+    return this.input.reportValidity();
+  }
+
+  setCustomValidity(message: string): void
+  {
+    this.input.setCustomValidity(message);
+    this._formController.updateValidity();
   }
 }
 

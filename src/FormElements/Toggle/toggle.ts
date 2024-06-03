@@ -31,7 +31,7 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   @property() value: string;
 
-  @property({attribute: 'fallback-value'}) fallbackValue: string;
+  @property({attribute: 'fallback'}) fallbackValue: string = '';
 
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
@@ -153,7 +153,7 @@ export class Toggle extends ZincElement implements ZincFormControl
   render()
   {
     let fallback = html``;
-    if(this.fallbackValue)
+    if(this.fallbackValue !== '')
     {
       fallback = html`<input type="hidden" name=${this.name} value=${this.fallbackValue}/>`;
     }

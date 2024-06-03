@@ -125,6 +125,12 @@ $theme-flow: (
   --inverse-base: 0, 0, 0;
 }
 
+@each $key, $value in $theme-colors {
+  .zn-#{$key} {
+    color: rgb($value...);
+  }
+}
+
 [t="light"], .theme-light {
   @include spread-map($theme-light, #{$var-prefix});
 }

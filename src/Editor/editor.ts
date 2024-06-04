@@ -106,6 +106,7 @@ export class Editor extends ZincElement implements ZincFormControl
       };
     }
 
+    Quill.debug('error');
     Quill.register('modules/dropdownModule', DropdownModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
 

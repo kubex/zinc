@@ -1,24 +1,25 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { classMap } from "lit/directives/class-map.js";
-import { PropertyValues } from "@lit/reactive-element";
-import { Popup } from "@/Popup";
-import { watch } from "@/watch";
+import {classMap} from "lit/directives/class-map.js";
+import {PropertyValues} from "@lit/reactive-element";
+import {Popup} from "@/Popup";
+import {watch} from "@/watch";
+import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-tooltip')
-export class Tooltip extends LitElement
+export class Tooltip extends ZincSlotElement
 {
   static styles = unsafeCSS(styles);
 
   private hoverTimeout: number;
 
-  @property({ type: Boolean, reflect: true }) open = false;
+  @property({type: Boolean, reflect: true}) open = false;
 
-  @property() caption = '';
+  @property({attribute: 'caption', type: String, reflect: true}) caption;
 
-  @property({ reflect: true }) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
+  @property({reflect: true}) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
 
   @query('.tooltip__body') body: HTMLElement;
 
@@ -72,7 +73,7 @@ export class Tooltip extends LitElement
   }
 
 
-  @watch('open', { waitUntilFirstUpdate: true })
+  @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange()
   {
     if(this.open)
@@ -116,9 +117,10 @@ export class Tooltip extends LitElement
         shift
         arrow
         hover-bridge>
-        <slot slot="anchor"></slot>
+        <div slot="anchor">${this.renderSlot('')}</div>
         <div part="body" id="tooltip" class="tooltip__body">
-          <slot name="caption">${this.caption}</slot>
+          ${this.caption}
+          ${this.renderSlot('content')}
         </div>
       </zn-popup>`;
   }

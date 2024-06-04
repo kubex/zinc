@@ -35,7 +35,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
   @query('.query-builder') container: HTMLDivElement;
   @query('.add-rule') addRule: HTMLSelectElement;
-  @query('input') input: HTMLInputElement;
+  @query('input#main-input') input: HTMLInputElement;
 
   @property({ type: Array }) filters: QueryBuilderData = [];
 
@@ -71,7 +71,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           ${this.filters.map(item => html`
             <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
         </select>
-        <input name="${this.name}" value="${this.value}" type="hidden">
+        <input id="main-input" name="${this.name}" value="${this.value}" type="hidden">
       </div>
     `;
   }
@@ -79,10 +79,11 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   private _handleChange()
   {
     const data = [];
+    console.log(this._selectedRules);
     [...this._selectedRules].forEach(([key, value]) =>
     {
       data.push({
-        key: value.name,
+        key: value.id,
         comparator: value.operator,
         value: value.value
       });
@@ -201,6 +202,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     filter.value = input.value;
 
     this._selectedRules.set(id, filter);
+    this._handleChange();
   }
 
   private _changeRule(id: string, event: Event)
@@ -217,7 +219,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this._selectedRules.delete(id);
     const button = event.target as HTMLButtonElement;
     button.parentElement.remove();
-    console.log(this._selectedRules);
+    this._handleChange();
   }
 
   checkValidity(): boolean

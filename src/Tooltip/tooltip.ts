@@ -1,8 +1,11 @@
 import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
 import { classMap } from "lit/directives/class-map.js";
+import { PropertyValues } from "@lit/reactive-element";
+import { Popup } from "@/Popup";
+import { watch } from "@/watch";
 
 @customElement('zn-tooltip')
 export class Tooltip extends LitElement
@@ -11,19 +14,36 @@ export class Tooltip extends LitElement
 
   private hoverTimeout: number;
 
-  private open: boolean = false;
+  @property({ type: Boolean, reflect: true }) open = false;
 
   @property() content = '';
+
+  @property({ reflect: true }) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
+
+  @query('.tooltip__body') body: HTMLElement;
+
+  @query('zn-popup') popup: Popup;
 
   constructor()
   {
     super();
     this.addEventListener('mouseover', this.handleMouseOver);
+    this.addEventListener('mouseout', this.handleMouseOut);
   }
 
   disconnectedCallback()
   {
     super.disconnectedCallback();
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    if(this.open)
+    {
+      this.body.hidden = false;
+      this.popup.active = true;
+      this.popup.reposition();
+    }
   }
 
   // add click event to handle the menu
@@ -42,17 +62,43 @@ export class Tooltip extends LitElement
   private handleMouseOver(e)
   {
     clearTimeout(this.hoverTimeout);
-    this.hoverTimeout = window.setTimeout(() => this.show(), 200);
+    this.hoverTimeout = window.setTimeout(() => this.show(), 0);
   }
 
-  private show()
+  private handleMouseOut(e)
+  {
+    clearTimeout(this.hoverTimeout);
+    this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
+  }
+
+
+  @watch('open', { waitUntilFirstUpdate: true })
+  handleOpenChange()
   {
     if(this.open)
     {
-      return undefined;
+      console.log('open');
+      this.popup.active = true;
+      this.popup.reposition();
+      this.body.hidden = false;
     }
+    else
+    {
+      this.popup.active = false;
+      this.body.hidden = true;
+    }
+  }
 
-    this.open = true;
+  show()
+  {
+    console.log('show');
+    return this.open = true;
+  }
+
+  hide()
+  {
+    console.log('hide');
+    return this.open = false;
   }
 
   render()
@@ -63,9 +109,17 @@ export class Tooltip extends LitElement
           'tooltip': true,
           'tooltip--open': this.open
         })}"
-        open>
-        <slot></slot>
-        <slot name="content">${this.content}</slot>
+        strategy="fixed"
+        distance="6"
+        placement="${this.placement}"
+        flip
+        shift
+        arrow
+        hover-bridge>
+        <slot slot="anchor"></slot>
+        <div part="body" id="tooltip" class="tooltip__body">
+          <slot name="content">${this.content}</slot>
+        </div>
       </zn-popup>`;
   }
 }

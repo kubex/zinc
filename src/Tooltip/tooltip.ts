@@ -16,7 +16,7 @@ export class Tooltip extends LitElement
 
   @property({ type: Boolean, reflect: true }) open = false;
 
-  @property() content = '';
+  @property() caption = '';
 
   @property({ reflect: true }) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
 
@@ -118,7 +118,7 @@ export class Tooltip extends LitElement
         hover-bridge>
         <slot slot="anchor"></slot>
         <div part="body" id="tooltip" class="tooltip__body">
-          <slot name="content">${this.content}</slot>
+          <slot name="caption">${this.caption}</slot>
         </div>
       </zn-popup>`;
   }

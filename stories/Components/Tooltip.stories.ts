@@ -19,7 +19,7 @@ export const Default: Story = {
   render: () =>
   {
     return html`
-      <zn-tooltip content="Hover Me!">
+      <zn-tooltip caption="Hover Me!">
         <zn-button>Awesome!</zn-button>
       </zn-tooltip>
     `;

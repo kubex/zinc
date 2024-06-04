@@ -37,6 +37,7 @@ export class Tabs extends ZincElement
 
   static styles = unsafeCSS(styles);
   protected _store: Store;
+  protected _activeClicks = 0;
 
   constructor()
   {
@@ -254,6 +255,21 @@ export class Tabs extends ZincElement
       return false;
     }
 
+    // Multi click on an active tab will refresh the tab
+    if(this._current == tabName)
+    {
+      this._activeClicks++;
+      if(this._activeClicks > 2)
+      {
+        refresh = true;
+        this._activeClicks = 0;
+      }
+    }
+    else
+    {
+      this._activeClicks = 0;
+    }
+
     let inSlot = true;
     this._panels.forEach((elements, key) =>
     {
@@ -265,7 +281,7 @@ export class Tabs extends ZincElement
           inSlot = false;
         }
         element.toggleAttribute('selected', isActive);
-        if(refresh)
+        if(isActive && refresh)
         {
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
             detail: {element: element}

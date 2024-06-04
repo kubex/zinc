@@ -1,6 +1,7 @@
 import {CSSResultGroup, html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 import {Dialog} from "../Dialog";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 import styles from './index.scss?inline';
 
@@ -47,8 +48,8 @@ export class ConfirmModal extends Dialog
       <dialog class="type-${this.type}">
         <div id="content"> <!-- default dialog close button -->
           ${icon}
-          <h2 class="title">${this.caption}</h2>
-          <p>${this.content}</p>
+          <h2 class="title">${unsafeHTML(this.caption)}</h2>
+          <p>${unsafeHTML(this.content)}</p>
           <slot></slot>
           <div class="button-group">
             <button type="button" class="button--secondary" dialog-closer>${this.cancelText}</button>

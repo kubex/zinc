@@ -78,6 +78,7 @@ export class Tabs extends ZincElement
       return;
     }
     this._tabs.push(tab);
+    tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
     tab.addEventListener('click', this._handleClick.bind(this));
   }
 
@@ -184,13 +185,18 @@ export class Tabs extends ZincElement
     }
   }
 
-  clickTab(target: HTMLElement, refresh: boolean)
+  fetchUriTab(target: HTMLElement)
   {
     if(!target.hasAttribute('tab') && target.hasAttribute('tab-uri'))
     {
       const tabUri = target.getAttribute("tab-uri");
       this._createUriPanel(target, tabUri, this._uriToId(tabUri));
     }
+  }
+
+  clickTab(target: HTMLElement, refresh: boolean)
+  {
+    this.fetchUriTab(target);
 
     if(target.hasAttribute('tab'))
     {

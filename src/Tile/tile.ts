@@ -163,7 +163,10 @@ export class Tile extends LitElement
     }
 
     return html`
-      <div class="top">
+      <div class="${classMap({
+        'tile__top': true,
+        "tile__top--centered": this.centered
+      })}">
         ${top}
       </div>
       <div class="${classMap({

@@ -1,6 +1,6 @@
 import {CSSResultGroup, html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
-import {Dialog} from "../Dialog";
+import {Dialog} from "@/Dialog";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 import styles from './index.scss?inline';

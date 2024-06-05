@@ -116,6 +116,7 @@ export class Tooltip extends ZincSlotElement
         flip
         shift
         arrow
+        flip-fallback-placements="top left"
         hover-bridge>
         <div slot="anchor">${this.renderSlot('')}</div>
         <div part="body" id="tooltip" class="tooltip__body">

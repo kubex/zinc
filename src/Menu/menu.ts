@@ -49,7 +49,8 @@ export class Menu extends LitElement
             if(item.confirm)
             {
               return html`
-                <zn-confirm trigger="${item.confirm.trigger}" caption="${item.confirm.caption}"
+                <zn-confirm trigger="${item.confirm.trigger}" type="${item.confirm.type || ''}"
+                            caption="${item.confirm.caption}"
                             content="${item.confirm.content}" action="${item.confirm.action}"></zn-confirm>
                 <li class="${liClass}"><span @click="${this._handleConfirm.bind(this, item.confirm.trigger)}"
                                              id="${item.confirm.trigger}">${item.title}</span></li>`;

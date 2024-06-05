@@ -2,18 +2,26 @@
 @use "../../scss/shared/button";
 
 :host {
-  dialog.type-warning zn-icon {
-    --icon-color: 60, 161, 216;
-  }
+  --confirm-color: var(--zn-primary);
+}
 
-  dialog.type-success zn-icon {
-    --icon-color: 60, 216, 187;
-  }
+:host([type=error]) {
+  --confirm-color: var(--zn-color-error);
+}
 
-  dialog.type-error zn-icon {
-    --icon-color: 237, 84, 109;
-  }
+:host([type=warning]) {
+  --confirm-color: var(--zn-color-warning);
+}
 
+:host([type=info]) {
+  --confirm-color: var(--zn-color-info);
+}
+
+:host([type=success]) {
+  --confirm-color: var(--zn-color-success);
+}
+
+:host {
   div#content {
     .title {
       font-size: 18px;
@@ -48,25 +56,24 @@
 
       button.button--secondary {
         background-color: #F3EFFF;
-        color: rgb(var(--zn-primary));
+        color: rgb(var(--confirm-color));
       }
     }
 
     zn-icon {
-      --icon-color: var(--zn-primary);
       padding: 15px;
       position: relative;
       overflow: initial;
       border-radius: 50%;
-      border: 3px solid rgb(var(--icon-color));
-      color: rgb(var(--icon-color));
+      border: 3px solid rgb(var(--confirm-color));
+      color: rgb(var(--confirm-color));
       margin-bottom: 33px;
       margin-top: 13px;
 
       &:before {
         content: '';
         position: absolute;
-        background-color: rgba(var(--icon-color), 20%);
+        background-color: rgba(var(--confirm-color, 0, 0, 0), 20%);
         top: -13px;
         left: -13px;
         right: -13px;

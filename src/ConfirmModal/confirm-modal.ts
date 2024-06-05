@@ -31,7 +31,7 @@ export class ConfirmModal extends Dialog
     };
 
     return html`
-      <zn-icon slot="primary" src="${src[this.type]}" size="24"></zn-icon>
+      <zn-icon slot="primary" color="${this.type}" src="${src[this.type]}" size="24"></zn-icon>
     `;
   }
 
@@ -53,8 +53,8 @@ export class ConfirmModal extends Dialog
           <p>${unsafeHTML(this.content)}</p>
           <slot></slot>
           <div class="button-group">
-            <button type="button" class="button--secondary" dialog-closer>${this.cancelText}</button>
-            <button @click="${this.submitDialog}"> ${this.confirmText}</button>
+            <zn-button class="grow" outline color="${this.type}" dialog-closer>${this.cancelText}</zn-button>
+            <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
           </div>
         </div>
         <div class="done">

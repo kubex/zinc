@@ -53,6 +53,9 @@ export class Button extends ZincElement implements ZincFormControl
   @property({ attribute: 'data-target' }) dataTarget: 'modal' | 'slide' | string;
   @property() rel: string = 'noreferrer noopener';
 
+  // Tooltip Specific
+  @property() tooltip: string;
+
   get validity()
   {
     return (this.button as HTMLButtonElement).validity;
@@ -119,7 +122,7 @@ export class Button extends ZincElement implements ZincFormControl
 
     const tag = isLink ? literal`a` : literal`button`;
 
-    return html`
+    let content = html`
       <${tag}
         part="base"
         class=${classMap({
@@ -155,6 +158,15 @@ export class Button extends ZincElement implements ZincFormControl
         ${this.iconPosition === 'right' ? icon : ''}
       </${tag}>`;
 
+    if(this.tooltip !== undefined)
+    {
+      content = html`
+        <zn-tooltip placement="top" caption="${this.tooltip}">
+          ${content}
+        </zn-tooltip>`;
+    }
+
+    return content;
   }
 }
 

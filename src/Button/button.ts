@@ -1,11 +1,13 @@
-import { html, unsafeCSS } from "lit";
+import { unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 import { ZincElement, ZincFormControl } from "@/zinc-element";
-
-import styles from './index.scss?inline';
+import { html, literal } from "lit/static-html.js";
 import { classMap } from "lit/directives/class-map.js";
 import { FormControlController } from "@/form";
 import { HasSlotController } from "@/slot";
+
+import styles from './index.scss?inline';
+import { ifDefined } from "lit/directives/if-defined.js";
 
 export type ButtonColor = 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
 export type ButtonSizes = 'content' | 'x-small' | 'small' | 'medium' | 'large';
@@ -44,6 +46,12 @@ export class Button extends ZincElement implements ZincFormControl
   @property({ attribute: 'formmethod' }) formMethod: 'post' | 'get';
   @property({ attribute: 'formnovalidate', type: Boolean }) formNoValidate: boolean;
   @property({ attribute: 'formtarget' }) formTarget: '_self' | '_blank' | '_parent' | '_top' | string;
+
+  // Link Specific
+  @property() href: string;
+  @property() target: '_self' | '_blank' | '_parent' | '_top' | string;
+  @property({ attribute: 'data-target' }) dataTarget: 'modal' | 'slide' | string;
+  @property() rel: string = 'noreferrer noopener';
 
   get validity()
   {
@@ -89,8 +97,14 @@ export class Button extends ZincElement implements ZincFormControl
     }
   }
 
+  private _isLink()
+  {
+    return this.href !== undefined;
+  }
+
   protected render(): unknown
   {
+    const isLink = this._isLink();
     const defaultSizes = {
       'x-small': '14',
       'small': '18',
@@ -103,36 +117,43 @@ export class Button extends ZincElement implements ZincFormControl
     const icon = this.icon ? html`
       <zn-icon src="${this.icon}" id="xy2" size="${iconSize}"></zn-icon>` : '';
 
+    const tag = isLink ? literal`a` : literal`button`;
 
     return html`
-      <button part="base"
-              class=${classMap({
-                'button': true,
-                'button--default': this.color === 'default',
-                'button--secondary': this.color === 'secondary',
-                'button--error': this.color === 'error',
-                'button--info': this.color === 'info',
-                'button--success': this.color === 'success',
-                'button--warning': this.color === 'warning',
-                'button--transparent': this.color === 'transparent',
-                'button--star': this.color === 'star',
-                'button--content': this.size === 'content',
-                'button--x-small': this.size === 'x-small',
-                'button--small': this.size === 'small',
-                'button--medium': this.size === 'medium',
-                'button--large': this.size === 'large',
-                'button--outline': this.outline,
-                'button--standard': !this.outline,
-                'button--disabled': this.disabled,
-                'button--with-icon': this.icon,
-                'button--with-content': this.hasSlotController.test('[default]') || this.content,
-              })}
-              .type=${this.type}
-              @click=${this.handleClick}>
+      <${tag}
+        part="base"
+        class=${classMap({
+          'button': true,
+          'button--default': this.color === 'default',
+          'button--secondary': this.color === 'secondary',
+          'button--error': this.color === 'error',
+          'button--info': this.color === 'info',
+          'button--success': this.color === 'success',
+          'button--warning': this.color === 'warning',
+          'button--transparent': this.color === 'transparent',
+          'button--star': this.color === 'star',
+          'button--content': this.size === 'content',
+          'button--x-small': this.size === 'x-small',
+          'button--small': this.size === 'small',
+          'button--medium': this.size === 'medium',
+          'button--large': this.size === 'large',
+          'button--outline': this.outline,
+          'button--standard': !this.outline,
+          'button--disabled': this.disabled,
+          'button--with-icon': this.icon,
+          'button--with-content': this.hasSlotController.test('[default]') || this.content,
+        })}
+        .type=${this.type}
+        href=${ifDefined(this.href)}
+        target=${ifDefined(isLink ? this.target : undefined)}
+        data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
+        rel=${ifDefined(isLink ? this.rel : undefined)}
+        @click=${this.handleClick}
+      >
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label" class="button__label">${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}
-      </button>`;
+      </${tag}>`;
 
   }
 }

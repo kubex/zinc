@@ -1,12 +1,12 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property, query} from 'lit/decorators.js';
+import { html, unsafeCSS } from "lit";
+import { customElement, property, query } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import {classMap} from "lit/directives/class-map.js";
-import {PropertyValues} from "@lit/reactive-element";
-import {Popup} from "@/Popup";
-import {watch} from "@/watch";
-import {ZincSlotElement} from "@/zinc-slot-element";
+import { classMap } from "lit/directives/class-map.js";
+import { PropertyValues } from "@lit/reactive-element";
+import { Popup } from "@/Popup";
+import { watch } from "@/watch";
+import { ZincSlotElement } from "@/zinc-slot-element";
 
 @customElement('zn-tooltip')
 export class Tooltip extends ZincSlotElement
@@ -15,11 +15,11 @@ export class Tooltip extends ZincSlotElement
 
   private hoverTimeout: number;
 
-  @property({type: Boolean, reflect: true}) open = false;
+  @property({ type: Boolean, reflect: true }) open = false;
 
-  @property({attribute: 'caption', type: String, reflect: true}) caption;
+  @property({ attribute: 'caption', type: String, reflect: true }) caption;
 
-  @property({reflect: true}) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
+  @property({ reflect: true }) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
 
   @query('.tooltip__body') body: HTMLElement;
 
@@ -73,12 +73,11 @@ export class Tooltip extends ZincSlotElement
   }
 
 
-  @watch('open', {waitUntilFirstUpdate: true})
+  @watch('open', { waitUntilFirstUpdate: true })
   handleOpenChange()
   {
     if(this.open)
     {
-      console.log('open');
       this.popup.active = true;
       this.popup.reposition();
       this.body.hidden = false;
@@ -92,13 +91,11 @@ export class Tooltip extends ZincSlotElement
 
   show()
   {
-    console.log('show');
     return this.open = true;
   }
 
   hide()
   {
-    console.log('hide');
     return this.open = false;
   }
 

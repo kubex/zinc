@@ -73,6 +73,9 @@ export class ConfirmModal extends Dialog
       form.action = this.action;
       form.method = 'POST';
       this.appendChild(form);
+      document.dispatchEvent(new CustomEvent('zn-register-element', {
+        detail: {element: form}
+      }));
     }
 
     if(form && form.reportValidity())

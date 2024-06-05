@@ -61,6 +61,7 @@ export class Button extends ZincElement implements ZincFormControl
     return (this.button as HTMLButtonElement).validity;
   }
 
+
   get validationMessage()
   {
     return (this.button as HTMLButtonElement).validationMessage;
@@ -69,6 +70,18 @@ export class Button extends ZincElement implements ZincFormControl
   firstUpdated()
   {
     this.formControlController.updateValidity();
+
+    if(this.type === 'submit')
+    {
+      this.addEventListener('keydown', (e) =>
+      {
+        if(e.key === 'Enter')
+        {
+          e.preventDefault();
+          this.formControlController.submit(this);
+        }
+      });
+    }
   }
 
   checkValidity()

@@ -1,13 +1,13 @@
-import { CSSResultGroup, html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {CSSResultGroup, html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { ZincElement } from "../zinc-element";
+import {ZincElement} from "../zinc-element";
 
 @customElement('zn-dialog')
 export class Dialog extends ZincElement
 {
-  @property({ type: String, reflect: true }) trigger: string;
+  @property({type: String, reflect: true}) trigger: string;
 
   @query('dialog', true)
   private _dialog: HTMLDialogElement;
@@ -56,22 +56,23 @@ export class Dialog extends ZincElement
     this.open();
   }
 
-  protected _closeDialog(e)
+  protected _closeDialog(e = null)
   {
-    e.stopPropagation();
+    e?.stopPropagation();
     this._dialog.close();
+    this.emit('zn-close', {detail: {element: this}});
   }
 
   open()
   {
-    this.emit('zn-open', { detail: { element: this } });
+    this.emit('zn-open', {detail: {element: this}});
     this._dialog.showModal();
   }
 
   close()
   {
-    this._dialog.close();
     this._dialog.classList.remove('closing');
+    this._closeDialog();
   }
 
   successCloseDialog()

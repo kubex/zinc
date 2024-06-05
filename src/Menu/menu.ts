@@ -3,6 +3,7 @@ import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
 import {classMap} from "lit/directives/class-map.js";
+import {ConfirmModal} from "@/ConfirmModal";
 
 @customElement('zn-menu')
 export class Menu extends LitElement
@@ -25,6 +26,16 @@ export class Menu extends LitElement
     }
   }
 
+  _handleConfirm(triggerId: string, e)
+  {
+    const confirm = this.shadowRoot.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ConfirmModal;
+    if(confirm)
+    {
+      confirm.addEventListener('zn-close', (e) => this._handleAction(e));
+      confirm.open();
+    }
+  }
+
   render()
   {
     let menu = html``;
@@ -40,7 +51,8 @@ export class Menu extends LitElement
               return html`
                 <zn-confirm trigger="${item.confirm.trigger}" caption="${item.confirm.caption}"
                             content="${item.confirm.content}" action="${item.confirm.action}"></zn-confirm>
-                <li class="${liClass}"><span id="${item.confirm.trigger}">${item.title}</span></li>`;
+                <li class="${liClass}"><span @click="${this._handleConfirm.bind(this, item.confirm.trigger)}"
+                                             id="${item.confirm.trigger}">${item.title}</span></li>`;
             }
             else if(item.target && item.path)
             {

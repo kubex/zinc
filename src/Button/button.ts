@@ -3,7 +3,7 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { ZincElement, ZincFormControl } from "@/zinc-element";
 import { html, literal } from "lit/static-html.js";
 import { classMap } from "lit/directives/class-map.js";
-import { FormControlController } from "@/form";
+import { FormControlController, validValidityState } from "@/form";
 import { HasSlotController } from "@/slot";
 
 import styles from './index.scss?inline';
@@ -58,23 +58,41 @@ export class Button extends ZincElement implements ZincFormControl
 
   get validity()
   {
-    return (this.button as HTMLButtonElement).validity;
+    if(this._isButton() && this.button)
+    {
+      return (this.button as HTMLButtonElement).validity;
+    }
+
+    return validValidityState;
   }
 
 
   get validationMessage()
   {
-    return (this.button as HTMLButtonElement).validationMessage;
+    if(this._isButton())
+    {
+      return (this.button as HTMLButtonElement).validationMessage;
+    }
+
+    return '';
   }
 
   firstUpdated()
   {
-    this.formControlController.updateValidity();
+    if(this._isButton())
+    {
+      this.formControlController.updateValidity();
+    }
   }
 
   checkValidity()
   {
-    return (this.button as HTMLButtonElement).checkValidity();
+    if(this._isButton())
+    {
+      return (this.button as HTMLButtonElement).checkValidity();
+    }
+
+    return true;
   }
 
   getForm(): HTMLFormElement | null
@@ -84,13 +102,21 @@ export class Button extends ZincElement implements ZincFormControl
 
   reportValidity()
   {
-    return (this.button as HTMLButtonElement).reportValidity();
+    if(this._isButton())
+    {
+      return (this.button as HTMLButtonElement).reportValidity();
+    }
+
+    return true;
   }
 
   setCustomValidity(message: string)
   {
-    (this.button as HTMLButtonElement).setCustomValidity(message);
-    this.formControlController.updateValidity();
+    if(this._isButton())
+    {
+      (this.button as HTMLButtonElement).setCustomValidity(message);
+      this.formControlController.updateValidity();
+    }
   }
 
   private handleClick()
@@ -104,6 +130,11 @@ export class Button extends ZincElement implements ZincFormControl
   private _isLink()
   {
     return this.href !== undefined;
+  }
+
+  private _isButton()
+  {
+    return !this._isLink();
   }
 
   protected render(): unknown

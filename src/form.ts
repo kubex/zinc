@@ -1,6 +1,6 @@
-import type {ReactiveController, ReactiveControllerHost} from "lit";
-import {ZincFormControl} from "./zinc-element";
-import {Button} from "./Button";
+import type { ReactiveController, ReactiveControllerHost } from "lit";
+import { ZincFormControl } from "./zinc-element";
+import { Button } from "./Button";
 
 export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>> = new WeakMap();
 
@@ -215,7 +215,7 @@ export class FormControlController implements ReactiveController
         event.formData.append(name, (value as string | number | boolean).toString());
       }
 
-      this.host.dispatchEvent(new CustomEvent('zn-formdata', {bubbles: true, composed: true}));
+      this.host.dispatchEvent(new CustomEvent('zn-formdata', { bubbles: true, composed: true }));
     }
   };
 
@@ -406,3 +406,17 @@ export class FormControlController implements ReactiveController
     }
   }
 }
+
+export const validValidityState: ValidityState = Object.freeze({
+  badInput: false,
+  customError: false,
+  patternMismatch: false,
+  rangeOverflow: false,
+  rangeUnderflow: false,
+  stepMismatch: false,
+  tooLong: false,
+  tooShort: false,
+  typeMismatch: false,
+  valid: true,
+  valueMissing: false
+});

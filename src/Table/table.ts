@@ -201,6 +201,7 @@ export class Table extends ZincSlotElement
       let caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
+      const id = row.hasOwnProperty('id') ? row['id'] : '';
 
       this.hasActions = this.hasActions || (actions && actions.length > 0);
 
@@ -259,7 +260,7 @@ export class Table extends ZincSlotElement
       }
 
       rows.push(html`
-        <tr>${rowHtml}</tr>`);
+        <tr .id="${id}">${rowHtml}</tr>`);
     });
 
     return html`

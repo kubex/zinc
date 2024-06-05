@@ -15,6 +15,7 @@ export class ConfirmModal extends Dialog
 
   @property({type: String, reflect: true}) caption: string = '';
   @property({type: String, reflect: true}) content: string = '';
+  @property({type: String, reflect: true}) action: string = '';
   @property({type: String, reflect: true}) type: string = 'warning';
   @property({type: String, reflect: true}) confirmText: string = "Confirm";
   @property({type: String, reflect: true}) cancelText: string = "Cancel";
@@ -30,7 +31,7 @@ export class ConfirmModal extends Dialog
     };
 
     return html`
-      <zn-icon slot="primary" src=${src[this.type]} size="24"></zn-icon>
+      <zn-icon slot="primary" src="${src[this.type]}" size="24"></zn-icon>
     `;
   }
 
@@ -47,7 +48,7 @@ export class ConfirmModal extends Dialog
     return html`
       <dialog class="type-${this.type}">
         <div id="content"> <!-- default dialog close button -->
-          ${icon}
+                           ${icon}
           <h2 class="title">${unsafeHTML(this.caption)}</h2>
           <p>${unsafeHTML(this.content)}</p>
           <slot></slot>
@@ -65,7 +66,15 @@ export class ConfirmModal extends Dialog
   submitDialog()
   {
     // get the form from the slot
-    const form = this.querySelector('form');
+    let form = this.querySelector('form');
+    if(!form && this.action)
+    {
+      form = document.createElement('form') as HTMLFormElement;
+      form.action = this.action;
+      form.method = 'POST';
+      this.appendChild(form);
+    }
+
     if(form && form.reportValidity())
     {
       form.requestSubmit();

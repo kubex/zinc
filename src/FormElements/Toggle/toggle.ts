@@ -31,7 +31,7 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   @property() value: string;
 
-  @property({attribute: 'fallback'}) fallbackValue: string = '';
+  @property({ attribute: 'fallback' }) fallbackValue: string = '';
 
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
@@ -48,6 +48,10 @@ export class Toggle extends ZincElement implements ZincFormControl
   @property({ attribute: 'help-text' }) helpText = "";
 
   @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
+
+  @property() onText: string = '';
+
+  @property() offText: string = '';
 
 
   get validity()
@@ -159,7 +163,7 @@ export class Toggle extends ZincElement implements ZincFormControl
     }
 
     return html`
-      <label part="base" class="${classMap({'switch': true})}">
+      <label part="base" class="${classMap({ 'switch': true })}">
         ${fallback}
         <input
           class="switch__input"

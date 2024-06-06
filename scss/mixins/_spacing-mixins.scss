@@ -51,6 +51,25 @@
   gap: var(--zn-gap, 0);
 }
 
+
+@mixin gap-sm {
+  --zn-gap: #{spacing(xs)};
+  /* --zn-gap: #{spacing(xxs)};
+  @include container-query(smp) {
+    --zn-gap: #{spacing(md)};
+  }
+
+  @include container-query(md) {
+    --zn-gap: #{spacing(md)};
+  }
+
+  @include container-query(lg) {
+    --zn-gap: #{spacing(lg)};
+  }
+ */
+  gap: var(--zn-gap, 0);
+}
+
 @mixin padding {
   --zn-padding: #{spacing(md)};
   /* --zn-padding: #{spacing(xs)};

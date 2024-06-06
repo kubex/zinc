@@ -8,6 +8,7 @@ import {PropertyValues} from "@lit/reactive-element";
 @customElement('zn-panel')
 export class Panel extends ZincElement
 {
+  @property({attribute: 'basis-px', type: Number, reflect: true}) basis;
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'rows', type: Number, reflect: true}) rows;
   @property({attribute: 'tabbed', type: Boolean, reflect: true}) tabbed;
@@ -34,6 +35,11 @@ export class Panel extends ZincElement
 
   protected render(): unknown
   {
+    if(this.basis > 0)
+    {
+      this.style.flexBasis = this.basis + 'px';
+    }
+
     const footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
     const actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
 

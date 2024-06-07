@@ -112,7 +112,7 @@ export class Icon extends LitElement
         this.src = md5(this.src);
       }
     }
-    else if(this.library == "" && !this.src.includes('/'))
+    else if(this.library == "" && !this.src.includes('/') && this.src)
     {
       this.library = Library.MaterialOutlined;
     }
@@ -146,25 +146,27 @@ export class Icon extends LitElement
     {
       case Library.Material:
       case LibraryAlias.Material:
-        return html`<i class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon" class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialOutlined:
       case LibraryAlias.MaterialOutlined:
-        return html`<i class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon"  class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialRound:
       case LibraryAlias.MaterialRound:
-        return html`<i class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon"  class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialSharp:
       case LibraryAlias.MaterialSharp:
-        return html`<i class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon"  class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialTwoTone:
       case LibraryAlias.MaterialTwoTone:
-        return html`<i class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon" class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.Gravatar:
       case LibraryAlias.Gravatar:
         return html`<img
+          part="icon"
           alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
       case Library.Libravatar:
         return html`<img
+          part="icon"
           alt="${this.alt}"
           src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
     }
@@ -173,7 +175,8 @@ export class Icon extends LitElement
     {
       return html`
         <div>
-          <img src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}" width="${this.size}"/>
+          <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
+               width="${this.size}"/>
         </div>`;
     }
 

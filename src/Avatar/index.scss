@@ -1,0 +1,36 @@
+@use "../wc";
+
+:host {
+  display: contents;
+
+  --avatar-background-color: var(--zn-primary);
+}
+
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(var(--avatar-background-color), 0.5);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  zn-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+
+    &::part(icon) {
+      color: rgb(var(--zn-text-heading));
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__text {
+    font-size: 16px;
+    color: rgb(var(--zn-text-heading));
+    font-weight: 600;
+  }
+}

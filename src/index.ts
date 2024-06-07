@@ -2,6 +2,7 @@
 import '../scss/boot.scss';
 
 import './Accordion';
+import './Avatar';
 import './Button';
 import './Page';
 import './Icon';

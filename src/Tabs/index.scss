@@ -32,6 +32,16 @@
   overflow: auto;
 }
 
+:host([no-scroll]) {
+  #content {
+    overflow: hidden;
+
+    > div {
+      max-height: 100%;
+    }
+  }
+}
+
 :host([flush]) {
   #content {
     padding: 0;

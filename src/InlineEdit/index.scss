@@ -28,8 +28,7 @@
     opacity: 1;
   }
 
-
-  &.ai--editing {
+  &--editing {
     .ai__input {
       font-size: 12px;
       font-weight: 500;
@@ -40,6 +39,12 @@
 
     .ai__right {
       display: flex !important;
+    }
+  }
+
+  &--disabled {
+    .ai__right {
+      display: none !important;
     }
   }
 
@@ -65,6 +70,10 @@
     line-height: 20px;
     font-weight: 600;
     width: 100%;
+  }
+
+  &__caption:not(.ai--disabled) {
+    cursor: pointer;
   }
 
   &__description {
@@ -96,7 +105,7 @@
     }
   }
 
-  &:hover {
+  &:hover:not(.ai--disabled) {
     .ai__right {
       display: flex !important;
     }

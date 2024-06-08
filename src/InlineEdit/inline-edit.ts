@@ -1,8 +1,7 @@
 import { html, unsafeCSS } from "lit";
 import { customElement, property, query, state } from 'lit/decorators.js';
-
-import { ZincElement, ZincFormControl } from "../zinc-element";
-import { FormControlController } from "../form";
+import { ZincElement, ZincFormControl } from "@/zinc-element";
+import { FormControlController } from "@/form";
 import { PropertyValues } from "@lit/reactive-element";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -27,6 +26,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   @property() name: string;
   @property({ attribute: 'default-value' }) defaultValue: string;
   @property() caption: string = ""; // Caption
+  @property({ type: Boolean }) disabled: boolean = false;
 
   @property({ attribute: 'options', type: Object }) options: { [key: string]: string } = {};
 
@@ -65,6 +65,12 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   {
     super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
+
+    // If we don't have a default value, set the value to the default value
+    if(!this.defaultValue)
+    {
+      this.defaultValue = this.value;
+    }
   }
 
   private _handleBlur()
@@ -74,7 +80,11 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   private _handleEditClick(e)
   {
-    console.log('edit click');
+    if(this.disabled)
+    {
+      return;
+    }
+
     e.preventDefault();
     this.isEditing = true;
     // Add event listener for esc key
@@ -105,7 +115,6 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   {
     if(e.key === 'Escape')
     {
-      console.log('esc key pressed');
       this.isEditing = false;
       this.value = this.defaultValue;
 
@@ -117,14 +126,13 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   protected render()
   {
     let input = html`<input type="text" class="ai__input" value="${this.value}"
-                            @click="${this._handleEditClick}"
                             .disabled="${!this.isEditing}"
                             @input="${this._handleInput}"
                             @blur="${this._handleBlur}"/>`;
 
     if(Object.keys(this.options).length > 0)
     {
-      input = html`<select class="ai__input" @click="${this._handleEditClick}"
+      input = html`<select class="ai__input"
                            .disabled="${!this.isEditing}"
                            @input="${this._handleInput}"
                            @blur="${this._handleBlur}">
@@ -137,9 +145,10 @@ export class InlineEdit extends ZincElement implements ZincFormControl
       <div class="${classMap({
         'ai': true,
         'ai--editing': this.isEditing,
-        'ai--focused': this.hasFocus
+        'ai--focused': this.hasFocus,
+        'ai--disabled': this.disabled,
       })}">
-        <span class="ai__caption">${this.caption}</span>
+        <span class="ai__caption" @click="${this._handleEditClick}">${this.caption}</span>
         <div class="ai__wrapper">
           <div class="ai__left" @click="${this._handleEditClick}">
             ${input}

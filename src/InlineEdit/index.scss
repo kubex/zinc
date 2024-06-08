@@ -62,6 +62,10 @@
     flex-direction: column;
     gap: 0 10px;
     flex-grow: 1;
+
+    &:not(.ai--disabled) {
+      cursor: pointer;
+    }
   }
 
   &__caption {
@@ -70,11 +74,12 @@
     line-height: 20px;
     font-weight: 600;
     width: 100%;
+
+    &:not(.ai--disabled) {
+      cursor: pointer;
+    }
   }
 
-  &__caption:not(.ai--disabled) {
-    cursor: pointer;
-  }
 
   &__description {
     font-size: 12px;

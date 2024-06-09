@@ -69,7 +69,7 @@ export class Button extends ZincElement implements ZincFormControl
 
   get validationMessage()
   {
-    if(this._isButton())
+    if(this._isButton() && this.button)
     {
       return (this.button as HTMLButtonElement).validationMessage;
     }
@@ -87,7 +87,7 @@ export class Button extends ZincElement implements ZincFormControl
 
   checkValidity()
   {
-    if(this._isButton())
+    if(this._isButton() && this.button)
     {
       return (this.button as HTMLButtonElement).checkValidity();
     }
@@ -102,7 +102,7 @@ export class Button extends ZincElement implements ZincFormControl
 
   reportValidity()
   {
-    if(this._isButton())
+    if(this._isButton() && this.button)
     {
       return (this.button as HTMLButtonElement).reportValidity();
     }

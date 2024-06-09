@@ -1,5 +1,5 @@
 import { ZincElement, ZincFormControl } from "../../zinc-element";
-import { FormControlController } from "../../form";
+import { FormControlController, validValidityState } from "../../form";
 
 import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -32,6 +32,10 @@ export class Input extends ZincElement implements ZincFormControl
 
   get validity()
   {
+    if(!this.input)
+    {
+      return validValidityState;
+    }
     return this.input.validity;
   }
 

@@ -137,7 +137,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
                            @input="${this._handleInput}"
                            @blur="${this._handleBlur}">
         ${Object.keys(this.options).map(key => html`
-          <option value="${key}" ?selected="${this.value == key}">${this.options[key]}</option>`)}
+          <option value="${key}" ?selected="${this.value == key || this.value == this.options[key]}">
+            ${this.options[key]}
+          </option>`)}
       </select>`;
     }
 

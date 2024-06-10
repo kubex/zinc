@@ -57,6 +57,10 @@ export class Input extends ZincElement implements ZincFormControl
 
   checkValidity(): boolean
   {
+    if(!this.input)
+    {
+      return true;
+    }
     return this.input.checkValidity();
   }
 
@@ -67,12 +71,20 @@ export class Input extends ZincElement implements ZincFormControl
 
   reportValidity(): boolean
   {
+    if(!this.input)
+    {
+      return true;
+    }
+
     return this.input.reportValidity();
   }
 
   setCustomValidity(message: string): void
   {
-    this.input.setCustomValidity(message);
+    if(this.input)
+    {
+      this.input.setCustomValidity(message);
+    }
     this.formControlController.updateValidity();
   }
 

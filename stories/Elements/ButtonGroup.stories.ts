@@ -22,9 +22,9 @@ export const Default: Story = {
     return html`
       <zn-button-group direction="${direction}">
         ${buttons.map((button) => html`
-          <zn-button color="${button.color}" size="${button.size}" vertical-align="${button.verticalAlign}"
-                     disabled="${button.disabled}" submit="${button.submit}" grow="${button.grow}"
-                     icon="${button.icon}" icon-position="${button.iconPosition}">${button.content}
+          <zn-button color="${button.color}" .size="${button.size}" .vertical-align="${button.verticalAlign}"
+                     .disabled="${button.disabled}" .submit="${button.submit}" .grow="${button.grow}"
+                     .icon="${button.icon}" .icon-position="${button.iconPosition}">${button.content}
           </zn-button>`)}
       </zn-button-group>`;
   },

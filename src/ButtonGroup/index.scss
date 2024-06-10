@@ -5,14 +5,15 @@
 .button-group {
   display: flex;
   flex-wrap: nowrap;
-  gap: 5px;
 }
 
-:host([direction="vertical"]), zn-button-group[direction="vertical"] {
+:host([direction="vertical"]),
+zn-button-group[direction="vertical"] {
   width: 100%;
 
   .button-group {
     flex-direction: column;
+    gap: 10px;
   }
 
   ::slotted(*) {

@@ -22,7 +22,6 @@ export class ButtonGroup extends ZincElement
     }
 
     let slottedElements = [...this.defaultSlot.assignedElements({ flatten: true })] as HTMLElement[];
-    console.log(slottedElements);
 
     slottedElements = slottedElements.filter(el => el.tagName === 'ZN-BUTTON');
     slottedElements.forEach(el =>

@@ -71,7 +71,6 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   public handleChange(e)
   {
     this.formControlController.updateValidity();
-    console.log('linked select changed', e);
   }
 
   render()

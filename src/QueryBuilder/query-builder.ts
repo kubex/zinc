@@ -79,7 +79,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   private _handleChange()
   {
     const data = [];
-    console.log(this._selectedRules);
     [...this._selectedRules].forEach(([key, value]) =>
     {
       data.push({
@@ -90,7 +89,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     });
 
     this.value = btoa(JSON.stringify(data));
-    console.log(this.value);
   }
 
   private _addRule(event: Event)

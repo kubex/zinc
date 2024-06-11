@@ -150,7 +150,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         'ai--focused': this.hasFocus,
         'ai--disabled': this.disabled,
       })}">
-        <span class="ai__caption" @click="${this._handleEditClick}">${this.caption}</span>
+        <span class="ai__caption" @click="${this._handleEditClick}">
+          ${this.caption}
+        </span>
         <div class="ai__wrapper">
           <div class="ai__left" @click="${this._handleEditClick}">
             ${input}
@@ -158,8 +160,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
           <div class="ai__right">
             ${!this.isEditing ?
               html`
-                <zn-button @click="${this._handleEditClick}" color="transparent">Edit
-                </zn-button>` :
+                <zn-button @click="${this._handleEditClick}" src="edit" color="transparent">Edit</zn-button>` :
               html`
                 <zn-button type="submit" @click="${this._handleSubmitClick}" icon="check" icon-size="24"
                            color="transparent"></zn-button>

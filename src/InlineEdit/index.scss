@@ -62,8 +62,10 @@
     flex-direction: column;
     gap: 0 10px;
     flex-grow: 1;
+  }
 
-    &:not(.ai--disabled) {
+  &:not(.ai--disabled) {
+    .ai__left, .ai__caption {
       cursor: pointer;
     }
   }
@@ -74,10 +76,6 @@
     line-height: 20px;
     font-weight: 600;
     width: 100%;
-
-    &:not(.ai--disabled) {
-      cursor: pointer;
-    }
   }
 
 
@@ -93,7 +91,6 @@
     color: rgb(var(--zn-primary));
     font-weight: 500;
     cursor: pointer;
-    display: none;
     flex-direction: row;
     gap: 10px;
     align-items: center;

@@ -337,7 +337,6 @@ export class FormControlController implements ReactiveController
         {
           if(submitter.hasAttribute(attr))
           {
-            console.log('form submitter', attr, submitter.getAttribute(attr));
             button.setAttribute(attr, submitter.getAttribute(attr)!);
           }
         });

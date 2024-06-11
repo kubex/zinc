@@ -24,18 +24,19 @@ export class Button extends ZincElement implements ZincFormControl
 
   @query('.button') button: HTMLButtonElement;
 
-  @property({ type: String, reflect: true }) color: ButtonColor = 'default';
-  @property({ type: String, reflect: true }) size: ButtonSizes = 'medium';
-  @property({ type: Boolean, reflect: true }) outline = false;
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({}) color: ButtonColor = 'default';
+  @property({}) size: ButtonSizes = 'medium';
+  @property({ type: Boolean }) outline = false;
+  @property({ type: Boolean }) disabled = false;
+  @property({ type: Boolean }) grow = false;
 
-  @property({ type: String }) verticalAlign: VerticalAlignments;
+  @property() verticalAlign: VerticalAlignments;
 
   @property() content = '';
   @property() icon: string = '';
   @property({ attribute: "icon-position" }) iconPosition: IconPosition = 'left';
   @property({ attribute: "icon-size" }) iconSize: string;
-  @property({ reflect: true }) type: 'button' | 'submit' | 'reset';
+  @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;
   @property() value: string;
@@ -173,6 +174,7 @@ export class Button extends ZincElement implements ZincFormControl
           'button--medium': this.size === 'medium',
           'button--large': this.size === 'large',
           'button--outline': this.outline,
+          'button--grow': this.grow,
           'button--standard': !this.outline,
           'button--disabled': this.disabled,
           'button--with-icon': this.icon,

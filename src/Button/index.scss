@@ -216,6 +216,10 @@
   font-size: 12px;
 }
 
+.button--grow {
+  width: 100%;
+}
+
 .button--small {
   padding: 4px 14px;
 }
@@ -332,6 +336,9 @@
   }
 }
 
+:host([data-zn-button-group__button]) {
+  flex-grow: 1;
+}
 
 :host([data-zn-button-group__button--inner]) .button {
   border-radius: 0 !important;
@@ -339,8 +346,10 @@
 
 :host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
   border-radius: 5px 0 0 5px !important;
+  border-right: 0 !important;
 }
 
 :host([data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
   border-radius: 0 5px 5px 0 !important;
+  border-left: 0 !important;
 }

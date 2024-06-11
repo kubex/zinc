@@ -3,12 +3,13 @@ import { customElement, property, query } from 'lit/decorators.js';
 import { ZincElement } from "@/zinc-element";
 
 import styles from './index.scss?inline';
+import { classMap } from "lit/directives/class-map.js";
 
 @customElement('zn-button-group')
 export class ButtonGroup extends ZincElement
 {
-  @property({ type: String }) direction: 'horizontal' | 'vertical' = 'horizontal';
-  @property() m;
+  @property({}) direction: 'horizontal' | 'vertical' = 'horizontal';
+  @property({ type: Boolean }) grow = false;
 
   static styles = unsafeCSS(styles);
 
@@ -43,7 +44,7 @@ export class ButtonGroup extends ZincElement
   {
     return html`
       <div part="base"
-           class="button-group"
+           class="${classMap({ 'button-group': true, 'button-group--grow': this.grow })}"
            role="group">
         <slot @slotchange=${this.handleSlotChange}></slot>
       </div>`;

@@ -342,6 +342,20 @@
 
 :host([data-zn-button-group__button--inner]) .button {
   border-radius: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+:host([data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
+  .button:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    bottom: 0;
+    border-left: solid 1px rgba(182, 182, 182, 0.33);
+    mix-blend-mode: multiply;
+  }
 }
 
 :host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {

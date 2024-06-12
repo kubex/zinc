@@ -234,6 +234,7 @@ export class Tabs extends ZincElement
 
   setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string = null)
   {
+    let hasActive = false;
     this._tabs.forEach(tab =>
     {
       if(tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri')))
@@ -246,8 +247,13 @@ export class Tabs extends ZincElement
       {
         setActive = refTab == tab.getAttribute('tab');
       }
+      hasActive = hasActive || setActive;
       tab.classList.toggle('zn-tb-active', setActive);
     });
+    if(!hasActive && this._tabs.length > 0)
+    {
+      this._tabs[0].classList.toggle('zn-tb-active', true);
+    }
     this._actions.forEach(action => action.classList.toggle('zn-tb-active', action.getAttribute('ref-tab') === (refTab || tabName)));
     this.selectTab(tabName, refresh);
 

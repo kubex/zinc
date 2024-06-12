@@ -8,7 +8,7 @@ export class Store
   {
     this.storage = storage;
     this.prefix = prefix;
-    this.ttl = ttl;
+    this.ttl = ttl * 1000;
     //TODO: Improve this to run once per prefix
     this.cleanup();
   }
@@ -48,7 +48,7 @@ export class Store
     {
       return;
     }
-    ttl = ttl > 0 ? Date.now() + ttl : 0;
+    ttl = ttl > 0 ? Date.now() + (ttl * 1000) : 0;
     this.storage.setItem(this.prefix + key, ttl + "," + value);
   }
 

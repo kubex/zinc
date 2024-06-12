@@ -59,6 +59,12 @@ export class Tabs extends ZincElement
     this.observerDom();
     this._registerTabs();
 
+    if(this.storeKey && this.storeTtl == 0)
+    {
+      // Default tab storage to 5 minutes
+      this.storeTtl = 300;
+    }
+
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) =>
     {

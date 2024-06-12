@@ -9,6 +9,7 @@ export type InputType = 'text' | 'number';
 export class Property extends LitElement
 {
   @property({attribute: 'caption', type: String, reflect: true}) caption;
+  @property({attribute: 'sub', type: String, reflect: true}) subCaption;
   @property({attribute: 'icon', type: String, reflect: true}) icon;
   @property({attribute: 'library', type: String, reflect: true}) library = "material-outlined";
   @property({attribute: 'inline', type: Boolean, reflect: true}) inline;
@@ -24,6 +25,12 @@ export class Property extends LitElement
       icon = html`
         <zn-icon library="${this.library}" src="${this.icon}" size="20"></zn-icon>`;
     }
+    let subCaption = null;
+    if(this.subCaption)
+    {
+      subCaption = html`
+        <small>${this.subCaption}</small>`;
+    }
 
     const colspan = this.colspan ? this.colspan : 3;
 
@@ -31,7 +38,7 @@ export class Property extends LitElement
       <style>:host {
         --colspan: ${colspan};
       }</style>
-      <dt>${icon}${this.caption}</dt>
+      <dt>${icon}${this.caption}${subCaption}</dt>
       <dd>
         <slot></slot>
       </dd>`;

@@ -34,6 +34,7 @@ export class ButtonGroup extends ZincElement
       {
         button.toggleAttribute('data-zn-button-group__button', true);
         button.toggleAttribute('data-zn-button-group__button--first', index === 0);
+        button.toggleAttribute('data-zn-button-group__button--grow', this.grow);
         button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
         button.toggleAttribute('data-zn-button-group__button--last', index === slottedElements.length - 1);
       }
@@ -44,7 +45,10 @@ export class ButtonGroup extends ZincElement
   {
     return html`
       <div part="base"
-           class="${classMap({ 'button-group': true, 'button-group--grow': this.grow })}"
+           class="${classMap({
+             'button-group': true,
+             'button-group--grow': this.grow
+           })}"
            role="group">
         <slot @slotchange=${this.handleSlotChange}></slot>
       </div>`;

@@ -23,8 +23,8 @@ export class Editor extends ZincElement implements ZincFormControl
   @query('#editorHtml')
   private editorHtml: HTMLTextAreaElement;
 
-  @property({ reflect: true }) name: string;
-  @property({ reflect: true }) value: string;
+  @property() name: string;
+  @property() value: string;
 
   @property({ attribute: 'interaction-type', type: String })
   interactionType: 'ticket' | 'chat' = 'chat';
@@ -257,6 +257,9 @@ export class Editor extends ZincElement implements ZincFormControl
       super.firstUpdated(_changedProperties);
       return null;
     };
+
+    const html = quill.clipboard.convert({ html: this.value });
+    quill.setContents(html, Quill.sources.SILENT);
 
     quill.selection.hasFocus = function ()
     {

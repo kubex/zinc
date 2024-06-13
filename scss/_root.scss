@@ -137,6 +137,10 @@ $theme-flow: (
 
 [t="light"], .theme-light {
   @include spread-map($theme-light, #{$var-prefix});
+
+  .zn-primary {
+    color: #6836F5;
+  }
 }
 
 [t="flow"], .theme-flow {
@@ -148,6 +152,10 @@ $theme-flow: (
   body {
     background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);
   }
+
+  .zn-primary {
+    color: #8967ef !important;
+  }
 }
 
 [t="dark"], .theme-dark {
@@ -155,4 +163,8 @@ $theme-flow: (
   @include spread-map($brand-colours-dark, #{$var-prefix});
   --base: 0, 0, 0;
   --inverse-base: 255, 255, 255;
+
+  .zn-primary {
+    color: #8967ef !important;
+  }
 }

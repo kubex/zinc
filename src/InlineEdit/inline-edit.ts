@@ -66,6 +66,11 @@ export class InlineEdit extends ZincElement implements ZincFormControl
     super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
 
+    if(this.options && Object.keys(this.options).length > 0)
+    {
+      this.value = Object.keys(this.options).find(key => this.options[key] === this.value) || this.value;
+    }
+
     // If we don't have a default value, set the value to the default value
     if(!this.defaultValue)
     {

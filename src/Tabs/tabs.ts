@@ -30,12 +30,14 @@ export class Tabs extends ZincElement
   @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
   @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
 
+  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   static styles = unsafeCSS(styles);
+  protected preload = true;
   protected _store: Store;
   protected _activeClicks = 0;
 
@@ -53,6 +55,8 @@ export class Tabs extends ZincElement
     {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
+
+    this.preload = !this.noPreload;
 
     await this.updateComplete;
     this._panel = this.shadowRoot.querySelector('#content');
@@ -84,7 +88,10 @@ export class Tabs extends ZincElement
       return;
     }
     this._tabs.push(tab);
-    tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
+    if(this.preload)
+    {
+      tab.addEventListener('mouseover', this.fetchUriTab.bind(this, tab));
+    }
     tab.addEventListener('click', this._handleClick.bind(this));
   }
 

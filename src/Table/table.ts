@@ -1,19 +1,19 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss?inline';
-import { ifDefined } from "lit/directives/if-defined.js";
-import { PropertyValues } from "@lit/reactive-element";
-import { ZincSlotElement } from "@/zinc-slot-element";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-table')
 export class Table extends ZincSlotElement
 {
-  @property({ attribute: 'fixed-first', type: Boolean, reflect: true }) fixedFirst: boolean = false;
-  @property({ attribute: 'has-actions', type: Boolean, reflect: true }) hasActions: boolean = false;
-  @property({ attribute: 'headless', type: Boolean, reflect: true }) headless: boolean = false;
-  @property({ attribute: 'data', type: Object, reflect: true }) data: Object;
+  @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
+  @property({attribute: 'has-actions', type: Boolean, reflect: true}) hasActions: boolean = false;
+  @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
+  @property({attribute: 'data', type: Object, reflect: true}) data: Object;
 
   private columns = [];
   private columnDisplay = [];
@@ -58,7 +58,7 @@ export class Table extends ZincSlotElement
         {
           if(typeof col == 'string')
           {
-            col = { name: col };
+            col = {name: col};
           }
           this.columns.push(col.hasOwnProperty('name') ? col['name'] : '');
           this.columnDisplay.push(col.hasOwnProperty('display') ? col['display'] : '');
@@ -83,7 +83,7 @@ export class Table extends ZincSlotElement
               this.columns.push(colName);
             }
           }
-          this.rows.push({ data: Object.values(this.data[row]) });
+          this.rows.push({data: Object.values(this.data[row])});
         }
       }
     }
@@ -200,6 +200,7 @@ export class Table extends ZincSlotElement
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
       const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
       const id = row.hasOwnProperty('id') ? row['id'] : '';
+      const color = row.hasOwnProperty('color') ? row['color'] : '';
 
       this.hasActions = this.hasActions || (actions && actions.length > 0);
 
@@ -258,7 +259,7 @@ export class Table extends ZincSlotElement
       }
 
       rows.push(html`
-        <tr .id="${id}">${rowHtml}</tr>`);
+        <tr .id="${id}" .colour="${color}">${rowHtml}</tr>`);
     });
 
     return html`

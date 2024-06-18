@@ -148,7 +148,9 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     if(filter.options)
     {
       input = document.createElement('select');
-      filter.options.forEach(item =>
+      let options = filter.options as Array<string>;
+      options = Object.keys(options).map(key => options[key]);
+      options.forEach(item =>
       {
         const option = document.createElement('option');
         option.value = item;

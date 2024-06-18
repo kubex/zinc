@@ -1,12 +1,12 @@
-import {html, LitElement, unsafeCSS} from "lit";
-import {customElement, property} from 'lit/decorators.js';
-import {md5} from '../md5';
-import {Store} from '../storage';
+import { html, unsafeCSS } from "lit";
+import { customElement, property } from 'lit/decorators.js';
+import { md5 } from '../md5';
+import { Store } from '../storage';
 
 import styles from './index.scss?inline';
-import {deepQuerySelectorAll} from "../query";
-import {PropertyValues} from "@lit/reactive-element";
-import {ZincElement} from "@/zinc-element";
+import { deepQuerySelectorAll } from "../query";
+import { PropertyValues } from "@lit/reactive-element";
+import { ZincElement } from "@/zinc-element";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement
@@ -17,24 +17,24 @@ export class Tabs extends ZincElement
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
 
-  @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
+  @property({ attribute: 'master-id', type: String, reflect: true }) masterId = '';
 
-  @property({attribute: 'caption', type: String, reflect: true}) caption = '';
-  @property({attribute: 'header', type: String, reflect: true}) header = '';
+  @property({ attribute: 'caption', type: String, reflect: true }) caption = '';
+  @property({ attribute: 'header', type: String, reflect: true }) header = '';
 
-  @property({attribute: 'active', type: String, reflect: true}) _current = '';
-  @property({attribute: 'split', type: Number, reflect: true}) _split;
-  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
+  @property({ attribute: 'active', type: String, reflect: true }) _current = '';
+  @property({ attribute: 'split', type: Number, reflect: true }) _split;
+  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
   private storage: Storage;
 
-  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
-  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
+  @property({ attribute: 'primary-caption', type: String, reflect: true }) primaryCaption = 'Navigation';
+  @property({ attribute: 'secondary-caption', type: String, reflect: true }) secondaryCaption = 'Content';
 
-  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
+  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
+  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
 
   static styles = unsafeCSS(styles);
   protected preload = true;
@@ -56,7 +56,7 @@ export class Tabs extends ZincElement
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
 
-    this.preload = !this.noPreload;
+    this.preload = !this.noPrefetch;
 
     await this.updateComplete;
     this._panel = this.shadowRoot.querySelector('#content');
@@ -183,7 +183,7 @@ export class Tabs extends ZincElement
       this._panels.set(tabId, [tabNode]);
     }
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode, source: tabEle}
+      detail: { element: tabNode, source: tabEle }
     }));
     return tabNode;
   }
@@ -309,7 +309,7 @@ export class Tabs extends ZincElement
         if(isActive && refresh)
         {
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: {element: element}
+            detail: { element: element }
           }));
         }
       });

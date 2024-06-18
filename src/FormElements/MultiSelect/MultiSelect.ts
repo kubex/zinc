@@ -1,10 +1,13 @@
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
+import { ZincElement, ZincFormControl } from "@/zinc-element";
+import { FormControlController, validValidityState } from "@/form";
+import { PropertyValues } from "@lit/reactive-element";
 
 @customElement('zn-multi-select')
-export class MultiSelect extends LitElement
+export class MultiSelect extends ZincElement implements ZincFormControl
 {
   static styles = unsafeCSS(styles);
 
@@ -12,15 +15,50 @@ export class MultiSelect extends LitElement
   @property({ type: Array, attribute: 'selected-items' }) selectedItems = [];
   @property({ type: Array }) data = [];
 
-  private _filteredList = [];
-  private _data = [];
+  @property() name: string = "";
+  @property() value: string;
+
+
   private _scrollPosition = 0;
 
-  constructor()
+  private readonly formControlController = new FormControlController(this, {
+    value: (control: MultiSelect) => control.selectedItems.join(','),
+  });
+
+  get validity()
   {
-    super();
-    this._data = this.data;
-    this._filteredList = this._data;
+    return validValidityState;
+  }
+
+  get validationMessage()
+  {
+    return '';
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    super.firstUpdated(_changedProperties);
+    this.formControlController.updateValidity();
+  }
+
+  checkValidity(): boolean
+  {
+    return true;
+  }
+
+  getForm(): HTMLFormElement | null
+  {
+    return this.formControlController.getForm();
+  }
+
+  reportValidity(): boolean
+  {
+    return true;
+  }
+
+  setCustomValidity(message: string): void
+  {
+    this.formControlController.updateValidity();
   }
 
   render()
@@ -37,11 +75,6 @@ export class MultiSelect extends LitElement
 
     return html`
       <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
-        <select name="" id="" multiple class="hidden">
-          ${options.map((item) => html`
-            <option value="${item}">${this.data[item]}</option>`)}
-        </select>
-
         <span class="multi-select__selection" role="combobox" aria-haspopup="true"
               aria-expanded="${this.visible}" tabindex="-1" aria-disabled="false">
           <span class="container">
@@ -103,8 +136,6 @@ export class MultiSelect extends LitElement
       return;
     }
 
-    const text = e.target.value.toLowerCase();
-    this._filteredList = this._data.filter((item) => item.toLowerCase().includes(text));
     this.requestUpdate();
   }
 
@@ -126,8 +157,11 @@ export class MultiSelect extends LitElement
     }
 
     this.selectedItems.push(item);
-    this.dispatchEvent(new CustomEvent('multi-select-add-item', { detail: { item } }));
+    console.log('selectedItems', this.selectedItems);
 
+    this.value = this.selectedItems.join(',');
+    this.dispatchEvent(new CustomEvent('multi-select-add-item', { detail: { item } }));
+    this.dispatchEvent(new CustomEvent('change', { detail: { value: this.value } }));
     this.requestUpdate();
   }
 
@@ -141,16 +175,12 @@ export class MultiSelect extends LitElement
     }
 
     this.selectedItems = this.selectedItems.filter((i) => i !== item);
+    console.log('removeSelectedItem', item);
+    console.log('selectedItems', this.selectedItems);
+
+    this.value = this.selectedItems.join(',');
     this.dispatchEvent(new CustomEvent('multi-select-remove-item', { detail: { item } }));
-
-    // trigger a re-render
+    this.dispatchEvent(new CustomEvent('change', { detail: { value: this.value } }));
     this.requestUpdate();
-  }
-
-  // on request update make sure the select is updated with the selected items
-  updated()
-  {
-    const select: HTMLSelectElement = this.shadowRoot.querySelector('select');
-    select.value = this.selectedItems.join(',');
   }
 }

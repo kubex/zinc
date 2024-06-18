@@ -277,6 +277,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.classList.add('query-builder__value');
           newInput.setAttribute('name', 'value');
           newInput.setAttribute('label', 'Value');
+          newInput.addEventListener('change', (e: Event) => this.updateInValue(uniqueId, e));
           newInput.setAttribute('data', JSON.stringify(filter.options));
           console.log(newInput);
           parent.appendChild(newInput);
@@ -353,6 +354,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       input.setAttribute('name', 'value');
       input.setAttribute('label', 'Value');
       input.setAttribute('selectedItems', JSON.stringify(filter.options));
+      input.addEventListener('change', (e: Event) => this.updateInValue(uniqueId, e));
     }
     else
     {
@@ -430,6 +432,21 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     filter.value = value;
     this._selectedRules.set(id, filter);
     this._handleChange();
+  }
+
+  private updateInValue(id: string, event: Event)
+  {
+    const filter = this._selectedRules.get(id);
+    if(!filter) return;
+
+    const input = event.target as MultiSelect;
+    const inputValue = input.value;
+    // @ts-expect-error value does exists, it's been annoying
+    filter.value = inputValue.split(',');
+
+    this._selectedRules.set(id, filter);
+    this._handleChange();
+
   }
 
   private _changeRule(id: string, event: Event)

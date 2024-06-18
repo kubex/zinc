@@ -1,5 +1,5 @@
-import {html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import { html, LitElement, unsafeCSS } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
 
@@ -8,8 +8,9 @@ export class MultiSelect extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: Boolean}) visible = false;
-  @property({type: Array}) selectedItems = [];
+  @property({ type: Boolean }) visible = false;
+  @property({ type: Array, attribute: 'selected-items' }) selectedItems = [];
+  @property({ type: Array, attribute: '' }) data = [];
 
   private _filteredList = [];
   private _data = [];
@@ -18,27 +19,8 @@ export class MultiSelect extends LitElement
   constructor()
   {
     super();
-    this._data = this.getData();
+    this._data = this.data;
     this._filteredList = this._data;
-  }
-
-
-  // This will benefit from adding the ability to use ajax to fetch data, or passing it via a property
-  getData()
-  {
-    // return some example data for now
-    return [
-      'South Africa',
-      'United Kingdom',
-      'United States',
-      'France',
-      'Germany',
-      'Spain',
-      'Italy',
-      'China',
-      'Japan',
-      'Australia',
-    ];
   }
 
   render()
@@ -50,11 +32,14 @@ export class MultiSelect extends LitElement
       dropdown.scrollTop = this._scrollPosition;
     }
 
+    const options = Object.keys(this.data);
+    console.log('options', options);
+
     return html`
       <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e, true)}">
         <select name="" id="" multiple class="hidden">
-          ${this._data.map((item) => html`
-            <option value="${item}">${item}</option>`)}
+          ${options.map((item) => html`
+            <option value="${item}">${this.data[item]}</option>`)}
         </select>
 
         <span class="multi-select__selection" role="combobox" aria-haspopup="true"
@@ -74,7 +59,8 @@ export class MultiSelect extends LitElement
               </li>`)}
           </ul>
           </span>
-          <span class="opener"><svg xmlns="http://www.w3.org/2000/svg" width="12px" viewBox="0 0 12 8"><path fill="#7B7097" d="m6 7.4-6-6L1.4 0 6 4.6 10.6 0 12 1.4z"/></svg></span>
+          <span class="opener"><svg xmlns="http://www.w3.org/2000/svg" width="12px" viewBox="0 0 12 8"><path
+            fill="#7B7097" d="m6 7.4-6-6L1.4 0 6 4.6 10.6 0 12 1.4z"/></svg></span>
         </span>
       </div>
 
@@ -87,12 +73,12 @@ export class MultiSelect extends LitElement
                    @keyup="${e => this.filter(e)}"/>
           </div>
           <ul role="listbox" aria-multiselectable="true" aria-expanded="${this.visible}" aria-hidden="false">
-            ${this._filteredList && this._filteredList.length === 0 ? html`
+            ${options && options.length === 0 ? html`
               <div class="multi-select__placeholder" style="padding-left: 10px">No Results Found...
-              </div>` : this._filteredList.map((item) => html`
+              </div>` : options.map((item) => html`
               <li aria-selected="${this.isItemSelected(item)}"
                   class="multi-select__dropdown__item ${this.isItemSelected(item) ? 'multi-select__dropdown__item--selected' : ''}"
-                  @click="${e => this.addSelectedItem(e, item)}">${item}
+                  @click="${e => this.addSelectedItem(e, item)}">${this.data[item]}
               </li>`)}
           </ul>
         </div>` : null}
@@ -116,7 +102,7 @@ export class MultiSelect extends LitElement
       if(!this.contains(node))
       {
         this.visible = false;
-        this.dispatchEvent(new CustomEvent('multi-select-toggle', {detail: {visible: this.visible}}));
+        this.dispatchEvent(new CustomEvent('multi-select-toggle', { detail: { visible: this.visible } }));
         this._filteredList = this._data;
         this._scrollPosition = 0;
         const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
@@ -150,7 +136,7 @@ export class MultiSelect extends LitElement
   {
     e.preventDefault();
     this.visible = force ? force : !this.visible;
-    this.dispatchEvent(new CustomEvent('multi-select-toggle', {detail: {visible: this.visible}}));
+    this.dispatchEvent(new CustomEvent('multi-select-toggle', { detail: { visible: this.visible } }));
   }
 
   // On click of an option add it to the selected items
@@ -164,7 +150,7 @@ export class MultiSelect extends LitElement
     }
 
     this.selectedItems.push(item);
-    this.dispatchEvent(new CustomEvent('multi-select-add-item', {detail: {item}}));
+    this.dispatchEvent(new CustomEvent('multi-select-add-item', { detail: { item } }));
 
     this.requestUpdate();
   }
@@ -179,7 +165,7 @@ export class MultiSelect extends LitElement
     }
 
     this.selectedItems = this.selectedItems.filter((i) => i !== item);
-    this.dispatchEvent(new CustomEvent('multi-select-remove-item', {detail: {item}}));
+    this.dispatchEvent(new CustomEvent('multi-select-remove-item', { detail: { item } }));
 
     // trigger a re-render
     this.requestUpdate();

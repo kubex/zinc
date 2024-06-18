@@ -6,6 +6,7 @@ import styles from './index.scss?inline';
 import { classMap } from "lit/directives/class-map.js";
 import { FormControlController } from "@/form";
 import { PropertyValues } from "@lit/reactive-element";
+import { MultiSelect } from "@/FormElements/MultiSelect";
 
 export type QueryBuilderData = Array<QueryBuilderItem>;
 
@@ -21,6 +22,7 @@ export type QueryBuilderOperators = 'eq' |
   'neq' |
   'before' |
   'after' |
+  'in' |
   'matchphrasepre' |
   'nmatchphrasepre' |
   'matchphrase' |
@@ -165,6 +167,9 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         case 'after':
           option.text = 'Was After';
           break;
+        case 'in':
+          option.text = 'In';
+          break;
         case 'matchphrasepre':
           option.text = 'Match Phrase Prefix';
           break;
@@ -224,18 +229,20 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       comparator.setAttribute('disabled', 'disabled');
     }
 
+    const previousOperator = selectedComparator;
     if(filter.type === 'date')
     {
       // we need to re render the filter options if the selected value is lt or gt
       comparator.addEventListener('change', (e: Event) =>
       {
         const select = e.target as HTMLSelectElement;
+        const input = row.querySelector('.query-builder__value');
+        const parent = input.parentElement;
+        const filter = this._selectedRules.get(uniqueId);
+        parent.removeChild(input);
+
         if(select.value === 'before' || select.value === 'after')
         {
-          const input = row.querySelector('.query-builder__value');
-          const parent = input.parentElement;
-          parent.removeChild(input);
-          const filter = this._selectedRules.get(uniqueId);
           const newInput = this._getDateInput(uniqueId, filter.value);
           newInput.setAttribute('type', 'number');
           newInput.setAttribute('name', 'value');
@@ -243,6 +250,38 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           parent.appendChild(newInput);
         }
         else
+        {
+          const newInput = document.createElement('input');
+          newInput.classList.add('query-builder__value');
+          newInput.value = filter.value;
+          this._updateValue(uniqueId, { target: newInput });
+          newInput.setAttribute('type', 'number');
+          newInput.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+          parent.appendChild(newInput);
+        }
+      });
+    }
+    else
+    {
+      comparator.addEventListener('change', (e: Event) =>
+      {
+        // if selected comparator is in
+        const selectedComparator = (e.target as HTMLSelectElement).value;
+        if(selectedComparator !== previousOperator && selectedComparator === 'in')
+        {
+          const input = row.querySelector('.query-builder__value');
+          const parent = input.parentElement;
+          parent.removeChild(input);
+
+          const newInput = document.createElement('zn-multi-select');
+          newInput.classList.add('query-builder__value');
+          newInput.setAttribute('name', 'value');
+          newInput.setAttribute('label', 'Value');
+          newInput.setAttribute('selectedItems', JSON.stringify(filter.options));
+          console.log(newInput);
+          parent.appendChild(newInput);
+        }
+        else if(selectedComparator !== previousOperator)
         {
           const input = row.querySelector('.query-builder__value');
           const parent = input.parentElement;
@@ -262,7 +301,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     row.appendChild(comparator);
 
-    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement;
+    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement | MultiSelect;
     if(filter.options)
     {
       input = document.createElement('select');
@@ -308,6 +347,13 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
       }
     }
+    else if(selectedComparator === 'in')
+    {
+      input = document.createElement('zn-multi-select') as MultiSelect;
+      input.setAttribute('name', 'value');
+      input.setAttribute('label', 'Value');
+      input.setAttribute('selectedItems', JSON.stringify(filter.options));
+    }
     else
     {
       input = document.createElement('input');
@@ -343,7 +389,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     const select = event.target as HTMLSelectElement;
     filter.operator = select.value as QueryBuilderOperators;
-    console.log('filter', filter);
 
     this._selectedRules.set(id, filter);
     this._handleChange();
@@ -392,7 +437,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     // remove the element from the dom
     const button = event.target as HTMLSelectElement;
     button.parentElement.remove();
-    // recreate the elemnent based on the selected value;
+    // recreate the element based on the selected value;
     this._addRule(event);
   }
 
@@ -443,36 +488,38 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     const dropdown = document.createElement('select');
     dropdown.setAttribute('name', 'date');
     dropdown.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
-    const minutes = document.createElement('option');
-    minutes.value = '1';
-    minutes.text = 'Minutes';
-    dropdown.appendChild(minutes);
-    const hours = document.createElement('option');
-    hours.value = '60';
-    hours.text = 'Hours';
-    dropdown.appendChild(hours);
-    const days = document.createElement('option');
-    days.value = '1440';
-    days.text = 'Days';
-    dropdown.appendChild(days);
-    const weeks = document.createElement('option');
-    weeks.value = '10080';
-    weeks.text = 'Weeks';
-    dropdown.appendChild(weeks);
+
+    const options = {
+      '1': 'Minutes',
+      '60': 'Hours',
+      '1440': 'Days',
+      '10080': 'Weeks'
+    };
+    Object.keys(options).forEach(item =>
+    {
+      const option = document.createElement('option');
+      option.value = item;
+      option.text = options[item];
+      dropdown.appendChild(option);
+    });
 
     // dropdown ago or from now
     const ago = document.createElement('select');
     ago.setAttribute('name', 'ago');
     ago.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
-    const from = document.createElement('option');
-    from.value = '-1';
-    from.text = 'From Now';
 
-    const to = document.createElement('option');
-    to.value = '1';
-    to.text = 'Ago';
-    ago.appendChild(from);
-    ago.appendChild(to);
+    const agoOptions = {
+      '-1': 'From Now',
+      '1': 'Ago'
+    };
+
+    Object.keys(agoOptions).forEach(item =>
+    {
+      const option = document.createElement('option');
+      option.value = item;
+      option.text = agoOptions[item];
+      ago.appendChild(option);
+    });
 
     input.appendChild(number);
     input.appendChild(dropdown);

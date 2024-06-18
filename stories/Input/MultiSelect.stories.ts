@@ -13,15 +13,20 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ visible, selectedItems }) =>
+  render: ({ visible, selectedItems, data }) =>
   {
     return html`
       <div style="height: 300px; transform: translateZ(0);">
-        <zn-multi-select .visible=${visible} .selectedItems=${selectedItems}></zn-multi-select>
+        <zn-multi-select .visible=${visible} .selectedItems=${selectedItems} .data=${data}></zn-multi-select>
       </div>`;
   },
   args: {
     visible: false,
-    selectedItems: ['United Kingdom'],
+    selectedItems: ['us', 'uk'],
+    data: {
+      'us': 'United States',
+      'uk': 'United Kingdom',
+      'ca': 'Canada',
+    }
   },
 };

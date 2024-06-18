@@ -154,6 +154,43 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     {
       comparator.setAttribute('disabled', 'disabled');
     }
+
+    if(filter.type === 'date')
+    {
+      // we need to re render the filter options if the selected value is lt or gt
+      comparator.addEventListener('change', (e: Event) =>
+      {
+        const select = e.target as HTMLSelectElement;
+        if(select.value === 'lt' || select.value === 'gt')
+        {
+          const input = row.querySelector('.query-builder__value');
+          const parent = input.parentElement;
+          parent.removeChild(input);
+          const filter = this._selectedRules.get(uniqueId);
+          const newInput = this._getDateInput(uniqueId, filter.value);
+          newInput.setAttribute('type', 'number');
+          newInput.setAttribute('name', 'value');
+          newInput.classList.add('query-builder__value');
+          parent.appendChild(newInput);
+        }
+        else
+        {
+          const input = row.querySelector('.query-builder__value');
+          const parent = input.parentElement;
+          const filter = this._selectedRules.get(uniqueId);
+          parent.removeChild(input);
+
+          const newInput = document.createElement('input');
+          newInput.classList.add('query-builder__value');
+          newInput.value = filter.value;
+          this._updateValue(uniqueId, { target: newInput });
+          newInput.setAttribute('type', 'number');
+          newInput.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+          parent.appendChild(newInput);
+        }
+      });
+    }
+
     row.appendChild(comparator);
 
     let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement;
@@ -185,7 +222,16 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
     else if(filter.type === 'date')
     {
-      input = this._getDateInput(uniqueId);
+      if(selectedComparator === 'lt' || selectedComparator === 'gt')
+      {
+        input = this._getDateInput(uniqueId, null);
+      }
+      else
+      {
+        input = document.createElement('input');
+        input.setAttribute('type', 'number');
+        input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+      }
     }
     else
     {
@@ -195,7 +241,10 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
 
     input.classList.add('query-builder__value');
-    row.appendChild(input);
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('query-builder__wrapper');
+    wrapper.appendChild(input);
+    row.appendChild(wrapper);
 
     const remove = document.createElement('zn-button');
     remove.setAttribute('icon', 'delete');
@@ -222,7 +271,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this._selectedRules.set(id, filter);
   }
 
-  private _updateValue(id: string, event: Event)
+  private _updateValue(id: string, event: Event | { target: HTMLSelectElement | HTMLInputElement | HTMLDivElement })
   {
     const filter = this._selectedRules.get(id);
     if(!filter) return;
@@ -255,7 +304,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       value = '-' + value;
     }
 
-    console.log(value);
     filter.value = value;
     this._selectedRules.set(id, filter);
     this._handleChange();
@@ -300,7 +348,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   }
 
 
-  protected _getDateInput(uniqueId: string): HTMLDivElement | HTMLInputElement | HTMLSelectElement
+  protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | HTMLSelectElement
   {
     // split into group
     const input = document.createElement('div');
@@ -310,6 +358,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     const number = document.createElement('input');
     number.setAttribute('type', 'number');
     number.setAttribute('name', 'number');
+    number.value = value ? value : '';
     number.addEventListener('input', (e: Event) => this._updateDateValue(uniqueId, e));
 
     // dropdown for minutes, hours, days, weeks

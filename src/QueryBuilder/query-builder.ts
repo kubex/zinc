@@ -12,6 +12,7 @@ export type QueryBuilderData = Array<QueryBuilderItem>;
 export type QueryBuilderItem = {
   id: string,
   name: string,
+  type?: string,
   options: Array<string> | null,
   operators: Array<QueryBuilderOperators>
 }
@@ -142,6 +143,10 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     });
     comparator.addEventListener('change', (e: Event) => this._updateOperatorValue(uniqueId, e));
     comparator.classList.add('query-builder__comparator');
+    if(comparator.options.length === 1)
+    {
+      comparator.setAttribute('disabled', 'disabled');
+    }
     row.appendChild(comparator);
 
     let input: HTMLSelectElement | HTMLInputElement;
@@ -157,6 +162,19 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         option.text = item;
         input.appendChild(option);
       });
+      input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
+    }
+    else if(filter.type === 'bool' || filter.type === 'boolean')
+    {
+      input = document.createElement('select');
+      const option1 = document.createElement('option');
+      option1.value = '1';
+      option1.text = 'True';
+      input.appendChild(option1);
+      const option2 = document.createElement('option');
+      option2.value = '0';
+      option2.text = 'False';
+      input.appendChild(option2);
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     }
     else

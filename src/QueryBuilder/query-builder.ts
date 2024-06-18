@@ -277,7 +277,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.classList.add('query-builder__value');
           newInput.setAttribute('name', 'value');
           newInput.setAttribute('label', 'Value');
-          newInput.setAttribute('selectedItems', JSON.stringify(filter.options));
+          newInput.setAttribute('data', JSON.stringify(filter.options));
           console.log(newInput);
           parent.appendChild(newInput);
         }

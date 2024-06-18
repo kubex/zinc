@@ -10,7 +10,7 @@ export class MultiSelect extends LitElement
 
   @property({ type: Boolean }) visible = false;
   @property({ type: Array, attribute: 'selected-items' }) selectedItems = [];
-  @property({ type: Array, attribute: '' }) data = [];
+  @property({ type: Array }) data = [];
 
   private _filteredList = [];
   private _data = [];
@@ -36,7 +36,7 @@ export class MultiSelect extends LitElement
     console.log('options', options);
 
     return html`
-      <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e, true)}">
+      <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
         <select name="" id="" multiple class="hidden">
           ${options.map((item) => html`
             <option value="${item}">${this.data[item]}</option>`)}
@@ -55,7 +55,7 @@ export class MultiSelect extends LitElement
                     fill="none" d="M0 0h24v24H0z"/><path fill="currentColor"
                                                          d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
                 </span>
-                ${item}
+                ${this.data[item]}
               </li>`)}
           </ul>
           </span>
@@ -91,29 +91,6 @@ export class MultiSelect extends LitElement
     return this.selectedItems.includes(item);
   }
 
-
-  // When the element is connected add the click event that will close the dropdown on click away
-  connectedCallback()
-  {
-    super.connectedCallback();
-    document.addEventListener('click', (e: MouseEvent) =>
-    {
-      const node = e.target as HTMLElement;
-      if(!this.contains(node))
-      {
-        this.visible = false;
-        this.dispatchEvent(new CustomEvent('multi-select-toggle', { detail: { visible: this.visible } }));
-        this._filteredList = this._data;
-        this._scrollPosition = 0;
-        const input = this.shadowRoot.querySelector('.multi-select__filter input') as HTMLInputElement | null;
-        if(input)
-        {
-          input.value = '';
-        }
-      }
-    });
-  }
-
   // Filter the options based on the text in the text area
   filter(e)
   {
@@ -132,17 +109,16 @@ export class MultiSelect extends LitElement
   }
 
   // On click of the text area toggle the dropdown
-  toggle(e, force = false)
+  toggle(e)
   {
     e.preventDefault();
-    this.visible = force ? force : !this.visible;
+    this.visible = !this.visible;
     this.dispatchEvent(new CustomEvent('multi-select-toggle', { detail: { visible: this.visible } }));
   }
 
   // On click of an option add it to the selected items
   addSelectedItem(e, item)
   {
-
     // if the item is already selected remove it
     if(this.selectedItems.includes(item))
     {

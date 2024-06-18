@@ -23,7 +23,8 @@ export const Default: Story = {
       {
         id: '1',
         name: 'name',
-        operators: ['eq', 'neq']
+        type: 'date',
+        operators: ['eq', 'lt', 'gt']
       },
       {
         id: '2',

@@ -12,12 +12,12 @@ export type QueryBuilderData = Array<QueryBuilderItem>;
 export type QueryBuilderItem = {
   id: string,
   name: string,
-  type?: string,
+  type?: 'bool' | 'boolean' | 'date',
   options?: Object,
   operators: Array<QueryBuilderOperators>
 }
 
-export type QueryBuilderOperators = 'eq' | 'neq';
+export type QueryBuilderOperators = 'eq' | 'neq' | 'lt' | 'gt';
 
 export type CreatedRule = {
   id: string,
@@ -126,6 +126,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     row.appendChild(select);
 
     const comparator = document.createElement('select');
+    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : 'eq';
     filter.operators.forEach(item =>
     {
       const option = document.createElement('option');
@@ -138,6 +139,12 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         case 'neq':
           option.text = 'Not Equals';
           break;
+        case 'lt':
+          option.text = 'Less Than';
+          break;
+        case 'gt':
+          option.text = 'Greater Than';
+          break;
       }
       comparator.appendChild(option);
     });
@@ -149,7 +156,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
     row.appendChild(comparator);
 
-    let input: HTMLSelectElement | HTMLInputElement;
+    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement;
     if(filter.options)
     {
       input = document.createElement('select');
@@ -176,12 +183,17 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       input.appendChild(option2);
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     }
+    else if(filter.type === 'date')
+    {
+      input = this._getDateInput(uniqueId);
+    }
     else
     {
       input = document.createElement('input');
       input.setAttribute('type', 'text');
       input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
     }
+
     input.classList.add('query-builder__value');
     row.appendChild(input);
 
@@ -222,6 +234,33 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this._handleChange();
   }
 
+  private _updateDateValue(id: string, event: Event)
+  {
+    const filter = this._selectedRules.get(id);
+    if(!filter) return;
+
+    const parent = (event.target as HTMLElement).parentElement;
+    const number = parent.querySelector('input[name="number"]') as HTMLInputElement;
+    const date = parent.querySelector('select[name="date"]') as HTMLSelectElement;
+    const ago = parent.querySelector('select[name="ago"]') as HTMLSelectElement;
+
+    let value = number.value;
+    if(date.value !== '1')
+    {
+      value = (parseInt(number.value) * parseInt(date.value)).toString();
+    }
+
+    if(ago.value === '1')
+    {
+      value = '-' + value;
+    }
+
+    console.log(value);
+    filter.value = value;
+    this._selectedRules.set(id, filter);
+    this._handleChange();
+  }
+
   private _changeRule(id: string, event: Event)
   {
     // remove the element from the dom
@@ -258,6 +297,61 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   {
     this.input.setCustomValidity(message);
     this._formController.updateValidity();
+  }
+
+
+  protected _getDateInput(uniqueId: string): HTMLDivElement | HTMLInputElement | HTMLSelectElement
+  {
+    // split into group
+    const input = document.createElement('div');
+    input.classList.add('query-builder__date');
+
+    // number input
+    const number = document.createElement('input');
+    number.setAttribute('type', 'number');
+    number.setAttribute('name', 'number');
+    number.addEventListener('input', (e: Event) => this._updateDateValue(uniqueId, e));
+
+    // dropdown for minutes, hours, days, weeks
+    const dropdown = document.createElement('select');
+    dropdown.setAttribute('name', 'date');
+    dropdown.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
+    const minutes = document.createElement('option');
+    minutes.value = '1';
+    minutes.text = 'Minutes';
+    dropdown.appendChild(minutes);
+    const hours = document.createElement('option');
+    hours.value = '60';
+    hours.text = 'Hours';
+    dropdown.appendChild(hours);
+    const days = document.createElement('option');
+    days.value = '1440';
+    days.text = 'Days';
+    dropdown.appendChild(days);
+    const weeks = document.createElement('option');
+    weeks.value = '10080';
+    weeks.text = 'Weeks';
+    dropdown.appendChild(weeks);
+
+    // dropdown ago or from now
+    const ago = document.createElement('select');
+    ago.setAttribute('name', 'ago');
+    ago.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
+    const from = document.createElement('option');
+    from.value = '-1';
+    from.text = 'From Now';
+
+    const to = document.createElement('option');
+    to.value = '1';
+    to.text = 'To Now';
+    ago.appendChild(from);
+    ago.appendChild(to);
+
+    input.appendChild(number);
+    input.appendChild(dropdown);
+    input.appendChild(ago);
+
+    return input;
   }
 }
 

@@ -12,12 +12,32 @@ export type QueryBuilderData = Array<QueryBuilderItem>;
 export type QueryBuilderItem = {
   id: string,
   name: string,
-  type?: 'bool' | 'boolean' | 'date',
+  type?: 'bool' | 'boolean' | 'date' | 'number';
   options?: Object,
   operators: Array<QueryBuilderOperators>
 }
 
-export type QueryBuilderOperators = 'eq' | 'neq' | 'before' | 'after';
+export type QueryBuilderOperators = 'eq' |
+  'neq' |
+  'before' |
+  'after' |
+  'matchphrasepre' |
+  'nmatchphrasepre' |
+  'matchphrase' |
+  'nmatchphrase' |
+  'match' |
+  'nmatch' |
+  'starts' |
+  'nstarts' |
+  'wild' |
+  'nwild' |
+  'fuzzy' |
+  'nfuzzy' |
+  'gte' |
+  'gt' |
+  'lt' |
+  'lte';
+
 
 export type CreatedRule = {
   id: string,
@@ -145,6 +165,55 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         case 'after':
           option.text = 'Was After';
           break;
+        case 'matchphrasepre':
+          option.text = 'Match Phrase Prefix';
+          break;
+        case 'nmatchphrasepre':
+          option.text = 'Does Not Match Phrase Prefix';
+          break;
+        case 'matchphrase':
+          option.text = 'Match Phrase';
+          break;
+        case 'nmatchphrase':
+          option.text = 'Does Not Match Phrase';
+          break;
+        case 'match':
+          option.text = 'Match';
+          break;
+        case 'nmatch':
+          option.text = 'Does Not Match';
+          break;
+        case 'starts':
+          option.text = 'Starts With';
+          break;
+        case 'nstarts':
+          option.text = 'Does Not Start With';
+          break;
+        case 'wild':
+          option.text = 'Wildcard Match';
+          break;
+        case 'nwild':
+          option.text = 'Does Not Match Wildcard';
+          break;
+        case 'fuzzy':
+          option.text = 'Fuzzy Match With';
+          break;
+        case 'nfuzzy':
+          option.text = 'Does Not Match Fuzzy With';
+          break;
+        case 'gte':
+          option.text = 'Greater Than or Equals';
+          break;
+        case 'gt':
+          option.text = 'Greater Than';
+          break;
+        case 'lt':
+          option.text = 'Less Than';
+          break;
+        case 'lte':
+          option.text = 'Less Than or Equals';
+          break;
+
       }
       comparator.appendChild(option);
     });
@@ -220,6 +289,12 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       input.appendChild(option2);
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     }
+    else if(filter.type === 'number')
+    {
+      input = document.createElement('input');
+      input.setAttribute('type', 'number');
+      input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+    }
     else if(filter.type === 'date')
     {
       if(selectedComparator === 'before' || selectedComparator === 'after')
@@ -265,10 +340,13 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     const filter = this._selectedRules.get(id);
     if(!filter) return;
 
+
     const select = event.target as HTMLSelectElement;
     filter.operator = select.value as QueryBuilderOperators;
+    console.log('filter', filter);
 
     this._selectedRules.set(id, filter);
+    this._handleChange();
   }
 
   private _updateValue(id: string, event: Event | { target: HTMLSelectElement | HTMLInputElement | HTMLDivElement })

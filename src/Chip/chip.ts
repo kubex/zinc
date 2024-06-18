@@ -7,7 +7,7 @@ import {ZincSlotElement} from "@/zinc-slot-element";
 export class Chip extends ZincSlotElement
 {
   @property({type: String}) icon: string = '';
-  @property({type: String}) type: string = '';
+  @property({type: String}) type: string = ''; // Just used in CSS
 
   render()
   {
@@ -19,5 +19,3 @@ export class Chip extends ZincSlotElement
     `;
   }
 }
-
-

@@ -17,7 +17,7 @@ export type QueryBuilderItem = {
   operators: Array<QueryBuilderOperators>
 }
 
-export type QueryBuilderOperators = 'eq' | 'neq' | 'lt' | 'gt';
+export type QueryBuilderOperators = 'eq' | 'neq' | 'before' | 'after';
 
 export type CreatedRule = {
   id: string,
@@ -139,10 +139,10 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         case 'neq':
           option.text = 'Not Equals';
           break;
-        case 'lt':
+        case 'before':
           option.text = 'Less Than';
           break;
-        case 'gt':
+        case 'after':
           option.text = 'Greater Than';
           break;
       }
@@ -161,7 +161,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       comparator.addEventListener('change', (e: Event) =>
       {
         const select = e.target as HTMLSelectElement;
-        if(select.value === 'lt' || select.value === 'gt')
+        if(select.value === 'before' || select.value === 'after')
         {
           const input = row.querySelector('.query-builder__value');
           const parent = input.parentElement;
@@ -222,7 +222,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
     else if(filter.type === 'date')
     {
-      if(selectedComparator === 'lt' || selectedComparator === 'gt')
+      if(selectedComparator === 'before' || selectedComparator === 'after')
       {
         input = this._getDateInput(uniqueId, null);
       }

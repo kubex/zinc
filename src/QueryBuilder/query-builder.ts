@@ -13,7 +13,7 @@ export type QueryBuilderItem = {
   id: string,
   name: string,
   type?: string,
-  options: Array<string> | null,
+  options?: Object,
   operators: Array<QueryBuilderOperators>
 }
 
@@ -153,13 +153,12 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     if(filter.options)
     {
       input = document.createElement('select');
-      let options = filter.options as Array<string>;
-      options = Object.keys(options).map(key => options[key]);
+      const options = Object.keys(filter.options);
       options.forEach(item =>
       {
         const option = document.createElement('option');
         option.value = item;
-        option.text = item;
+        option.text = filter.options[item];
         input.appendChild(option);
       });
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));

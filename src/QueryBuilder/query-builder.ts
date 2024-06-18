@@ -140,10 +140,10 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           option.text = 'Not Equals';
           break;
         case 'before':
-          option.text = 'Less Than';
+          option.text = 'Was Before';
           break;
         case 'after':
-          option.text = 'Greater Than';
+          option.text = 'Was After';
           break;
       }
       comparator.appendChild(option);
@@ -392,7 +392,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     const to = document.createElement('option');
     to.value = '1';
-    to.text = 'To Now';
+    to.text = 'Ago';
     ago.appendChild(from);
     ago.appendChild(to);
 

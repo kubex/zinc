@@ -294,7 +294,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.classList.add('query-builder__value');
 
           const options = this.filters.find(item => item.id === filter.id).options;
-
           Object.keys(options).forEach(item =>
           {
             const option = document.createElement('option');
@@ -324,6 +323,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         option.text = filter.options[item];
         input.appendChild(option);
       });
+      this._updateValue(uniqueId, { target: input });
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     }
     else if(filter.type === 'bool' || filter.type === 'boolean')
@@ -465,6 +465,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     const button = event.target as HTMLSelectElement;
     button.parentElement.remove();
     // recreate the element based on the selected value;
+    this._removeRule(id, event);
     this._addRule(event);
   }
 

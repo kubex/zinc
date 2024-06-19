@@ -202,8 +202,6 @@ export class Table extends ZincSlotElement
       const id = row.hasOwnProperty('id') ? row['id'] : '';
       const color = row.hasOwnProperty('color') ? row['color'] : '';
 
-      console.log(color);
-
       this.hasActions = this.hasActions || (actions && actions.length > 0);
 
       if(uri != "")

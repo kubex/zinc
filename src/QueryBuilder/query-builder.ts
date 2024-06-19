@@ -2,11 +2,12 @@ import { ZincElement, ZincFormControl } from "@/zinc-element";
 import { html, unsafeCSS } from "lit";
 import { customElement, property, query } from 'lit/decorators.js';
 
-import styles from './index.scss?inline';
 import { classMap } from "lit/directives/class-map.js";
 import { FormControlController } from "@/form";
 import { PropertyValues } from "@lit/reactive-element";
 import { MultiSelect } from "@/FormElements/MultiSelect";
+
+import styles from './index.scss?inline';
 
 export type QueryBuilderData = Array<QueryBuilderItem>;
 
@@ -39,7 +40,6 @@ export type QueryBuilderOperators = 'eq' |
   'gt' |
   'lt' |
   'lte';
-
 
 export type CreatedRule = {
   id: string,
@@ -289,12 +289,22 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           const filter = this._selectedRules.get(uniqueId);
           parent.removeChild(input);
 
-          const newInput = document.createElement('input');
+
+          const newInput = document.createElement('select');
           newInput.classList.add('query-builder__value');
-          newInput.value = filter.value;
+
+          const options = this.filters.find(item => item.id === filter.id).options;
+
+          Object.keys(options).forEach(item =>
+          {
+            const option = document.createElement('option');
+            option.value = item;
+            option.text = options[item];
+            newInput.appendChild(option);
+          });
           this._updateValue(uniqueId, { target: newInput });
-          newInput.setAttribute('type', 'number');
-          newInput.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+          newInput.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
+
           parent.appendChild(newInput);
         }
       });

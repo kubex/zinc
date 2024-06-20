@@ -45,26 +45,29 @@ export class Menu extends LitElement
         <ul>
           ${this.actions.map((item) =>
           {
-            const liClass = item.style ? item.style : 'def';
-            if(item.confirm)
+            if(item)
             {
-              return html`
-                <zn-confirm trigger="${item.confirm.trigger}" type="${item.confirm.type || ''}"
-                            caption="${item.confirm.caption}"
-                            content="${item.confirm.content}" action="${item.confirm.action}"></zn-confirm>
-                <li class="${liClass}"><span @click="${this._handleConfirm.bind(this, item.confirm.trigger)}"
-                                             id="${item.confirm.trigger}">${item.title}</span></li>`;
-            }
-            else if(item.target && item.path)
-            {
-              return html`
-                <li class="${liClass}"><a @click="${this._handleAction}" href="${item.path}"
-                                          data-target="${item.target}">${item.title}</a></li>`;
-            }
-            else if(item.path)
-            {
-              return html`
-                <li class="${liClass}"><a @click="${this._handleAction}" href="${item.path}">${item.title}</a></li>`;
+              const liClass = item.style ? item.style : 'def';
+              if(item.confirm)
+              {
+                return html`
+                  <zn-confirm trigger="${item.confirm.trigger}" type="${item.confirm.type || ''}"
+                              caption="${item.confirm.caption}"
+                              content="${item.confirm.content}" action="${item.confirm.action}"></zn-confirm>
+                  <li class="${liClass}"><span @click="${this._handleConfirm.bind(this, item.confirm.trigger)}"
+                                               id="${item.confirm.trigger}">${item.title}</span></li>`;
+              }
+              else if(item.target && item.path)
+              {
+                return html`
+                  <li class="${liClass}"><a @click="${this._handleAction}" href="${item.path}"
+                                            data-target="${item.target}">${item.title}</a></li>`;
+              }
+              else if(item.path)
+              {
+                return html`
+                  <li class="${liClass}"><a @click="${this._handleAction}" href="${item.path}">${item.title}</a></li>`;
+              }
             }
             return null;
           })}

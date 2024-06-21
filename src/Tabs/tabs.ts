@@ -1,12 +1,12 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { md5 } from '../md5';
-import { Store } from '../storage';
+import {html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {md5} from '../md5';
+import {Store} from '../storage';
 
 import styles from './index.scss?inline';
-import { deepQuerySelectorAll } from "../query";
-import { PropertyValues } from "@lit/reactive-element";
-import { ZincElement } from "@/zinc-element";
+import {deepQuerySelectorAll} from "../query";
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement} from "@/zinc-element";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement
@@ -17,24 +17,24 @@ export class Tabs extends ZincElement
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
 
-  @property({ attribute: 'master-id', type: String, reflect: true }) masterId = '';
+  @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
 
-  @property({ attribute: 'caption', type: String, reflect: true }) caption = '';
-  @property({ attribute: 'header', type: String, reflect: true }) header = '';
+  @property({attribute: 'caption', type: String, reflect: true}) caption = '';
+  @property({attribute: 'header', type: String, reflect: true}) header = '';
 
-  @property({ attribute: 'active', type: String, reflect: true }) _current = '';
-  @property({ attribute: 'split', type: Number, reflect: true }) _split;
-  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
+  @property({attribute: 'active', type: String, reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split;
+  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
   private storage: Storage;
 
-  @property({ attribute: 'primary-caption', type: String, reflect: true }) primaryCaption = 'Navigation';
-  @property({ attribute: 'secondary-caption', type: String, reflect: true }) secondaryCaption = 'Content';
+  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
 
-  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
+  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage;
-  @property({ attribute: 'store-key', type: String, reflect: true }) storeKey = null;
-  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   static styles = unsafeCSS(styles);
   protected preload = true;
@@ -79,6 +79,15 @@ export class Tabs extends ZincElement
     });
 
     this.observerDom();
+  }
+
+  _addPanel(panel: HTMLElement)
+  {
+    if(this._panels.has(panel.getAttribute('id')))
+    {
+      return;
+    }
+    this._panels.set(panel.getAttribute('id'), [panel]);
   }
 
   _addTab(tab: HTMLElement)
@@ -183,7 +192,7 @@ export class Tabs extends ZincElement
       this._panels.set(tabId, [tabNode]);
     }
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode, source: tabEle }
+      detail: {element: tabNode, source: tabEle}
     }));
     return tabNode;
   }
@@ -309,7 +318,7 @@ export class Tabs extends ZincElement
         if(isActive && refresh)
         {
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: { element: element }
+            detail: {element: element}
           }));
         }
       });
@@ -331,7 +340,21 @@ export class Tabs extends ZincElement
       {
         if(mutation.type === 'childList')
         {
-          this._registerTabs();
+          if(mutation.addedNodes.length > 0)
+          {
+            this._registerTabs();
+          }
+          if(mutation.removedNodes.length > 0)
+          {
+            for(let i = 0; i < mutation.removedNodes.length; i++)
+            {
+              const node = mutation.removedNodes[i] as HTMLElement;
+              if(node.id)
+              {
+                this.removeTabAndPanel(node.id);
+              }
+            }
+          }
         }
       });
     });
@@ -340,6 +363,26 @@ export class Tabs extends ZincElement
       childList: true,
       subtree: true
     });
+  }
+
+  removeTabAndPanel(tabId: string)
+  {
+    if(this._panels.has(tabId))
+    {
+      this._panels.delete(tabId);
+    }
+    for(let j = 0; j < this._tabs.length; j++)
+    {
+      if(this._tabs[j].getAttribute('tab') == tabId)
+      {
+        this._tabs[j].remove();
+        this._tabs.splice(j, 1);
+      }
+    }
+    if(this._current == tabId)
+    {
+      this.setActiveTab('', true, false);
+    }
   }
 
   _registerTabs()

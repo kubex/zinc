@@ -61,6 +61,11 @@
     border-bottom: 1px solid rgb(var(--zn-border-color));
 
     li {
+
+      .closer {
+        display: none;
+      }
+
       user-select: none;
       font-weight: 500;
       padding: 10px 0;
@@ -104,6 +109,22 @@
         right: -8px;
       }
     }
+
+
+    li[closable] {
+
+      .closer {
+        display: block;
+        margin-left: 10px;
+        pointer-events: all;
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
   }
 }
 

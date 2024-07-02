@@ -152,18 +152,14 @@ zn-table[has-actions] {
 zn-table[fixed-first] {
   --capcol-width: 250px;
 
-  table {
-    padding-left: var(--capcol-width);
-  }
-
   tbody tr:nth-of-type(even) td.capcol {
     background-color: rgba(var(--zn-body));
   }
 
-  thead th:first-of-type, td.capcol {
-    position: absolute;
+  thead th:first-of-type, tbody tr td:first-of-type {
+    position: sticky;
     left: 0;
-    top: auto;
+    top: 0;
     overflow: hidden;
 
     background-color: rgba(var(--zn-panel));
@@ -171,7 +167,6 @@ zn-table[fixed-first] {
     max-width: var(--capcol-width);
     border-right: 1px solid rgb(var(--zn-border-color));
   }
-
 }
 
 zn-table[borders] {

@@ -4,7 +4,6 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 import styles from './index.scss?inline';
 import {ifDefined} from "lit/directives/if-defined.js";
-import {PropertyValues} from "@lit/reactive-element";
 import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-table')
@@ -89,27 +88,6 @@ export class Table extends ZincSlotElement
     }
 
     return super.connectedCallback();
-  }
-
-  protected updated(_changedProperties: PropertyValues)
-  {
-    super.updated(_changedProperties);
-    setTimeout(() =>
-    {
-      let maxWidth = 0;
-      this.querySelectorAll('td.capcol > div').forEach(td =>
-      {
-        if(td.scrollWidth > maxWidth)
-        {
-          maxWidth = td.scrollWidth;
-        }
-      });
-      if(maxWidth > 220)
-      {
-        // Add 30px for padding
-        this.style.setProperty('--capcol-width', (maxWidth + 30) + 'px');
-      }
-    }, 100);
   }
 
   render()

@@ -84,7 +84,6 @@ zn-table {
   }
 
   td.capcol {
-    width: 60%;
 
     .actions:empty {
       display: none;
@@ -156,7 +155,7 @@ zn-table[fixed-first] {
     background-color: rgba(var(--zn-body));
   }
 
-  thead th:first-of-type, tbody tr td:first-of-type {
+  thead th:first-of-type, td.capcol {
     position: sticky;
     left: 0;
     top: 0;
@@ -167,6 +166,7 @@ zn-table[fixed-first] {
     max-width: var(--capcol-width);
     border-right: 1px solid rgb(var(--zn-border-color));
   }
+
 }
 
 zn-table[borders] {

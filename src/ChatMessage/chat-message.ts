@@ -1,9 +1,9 @@
-import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import {html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { cleanHTML } from "./clean-message";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import {cleanHTML} from "./clean-message";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 
 type ChatMessageActionType = ""
@@ -24,11 +24,11 @@ export class ChatMessage extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({ type: String }) sender = '';
-  @property({ type: String }) message = '';
-  @property({ type: String }) time = '';
-  @property({ type: String, attribute: 'action-type' }) actionType: ChatMessageActionType = '';
-  @property({ type: String, reflect: true, attribute: 'customer-initiated' }) customerInitiated = "0";
+  @property({type: String}) sender = '';
+  @property({type: String}) message = '';
+  @property({type: String}) time = '';
+  @property({type: String, attribute: 'action-type'}) actionType: ChatMessageActionType = '';
+  @property({type: String, reflect: true, attribute: 'customer-initiated'}) customerInitiated = "0";
 
   connectedCallback()
   {
@@ -50,9 +50,11 @@ export class ChatMessage extends LitElement
     }
 
     const previous = this.previousElementSibling as ChatMessage;
-    if(previous &&
-      (previous?.classList.contains('agent-initiated') && agentInitiated) ||
-      (previous?.classList.contains('customer-initiated') && customerInitiated))
+    const inTime = parseInt(this.time) - parseInt(previous?.time);
+
+    if(previous && inTime < 60 &&
+      ((previous?.classList.contains('agent-initiated') && agentInitiated) ||
+        (previous?.classList.contains('customer-initiated') && customerInitiated)))
     {
       this.classList.add('message-continued');
     }
@@ -113,11 +115,11 @@ export class ChatMessage extends LitElement
     // if not today, show date and time without seconds
     if(time.getDate() !== (new Date()).getDate())
     {
-      return `${time.toLocaleDateString()} ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      return `${time.toLocaleDateString()} ${time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
     }
     else
     {
-      return `${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      return `${time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
     }
   }
 

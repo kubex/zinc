@@ -14,7 +14,9 @@ type ChatMessageActionType = ""
   | "ended"
   | "error"
   | "message-sending"
-  | "customer.ended";
+  | "customer.ended"
+  | "customer.connected"
+  | "customer.disconnected";
 
 
 @customElement('zn-chat-message')
@@ -98,7 +100,7 @@ export class ChatMessage extends LitElement
   private _displayMessage()
   {
     const types = ["", 'connected.agent', 'attachment.added', "multi.answer", "transfer", "ended", "error",
-      "customer.ended", "message-sending"];
+      "customer.ended", "message-sending", "customer.connected", "customer.disconnected"];
     const type = types.indexOf(this.actionType);
 
     return type > -1;

@@ -1,12 +1,12 @@
-import { html, unsafeCSS } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, unsafeCSS} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { FormControlController } from "@/form";
-import { PropertyValues } from "@lit/reactive-element";
-import { watch } from "@/watch";
-import { defaultValue } from "@/default-value";
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {FormControlController} from "@/form";
+import {PropertyValues} from "@lit/reactive-element";
+import {watch} from "@/watch";
+import {defaultValue} from "@/default-value";
 
 @customElement('zn-checkbox')
 export class Checkbox extends ZincElement implements ZincFormControl
@@ -19,7 +19,7 @@ export class Checkbox extends ZincElement implements ZincFormControl
   @property() name: string = "";
   @property() value: string;
 
-  @property({ type: Boolean, reflect: true }) checked = false;
+  @property({type: Boolean, reflect: true}) checked = false;
   @defaultValue('checked') defaultChecked = false;
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
@@ -48,6 +48,7 @@ export class Checkbox extends ZincElement implements ZincFormControl
   private handleClick()
   {
     this.checked = !this.checked;
+    this.emit('zn-change');
   }
 
   checkValidity(): boolean
@@ -71,7 +72,7 @@ export class Checkbox extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
   }
 
-  @watch(['checked'], { waitUntilFirstUpdate: true })
+  @watch(['checked'], {waitUntilFirstUpdate: true})
   handleStateChange()
   {
     this.input.checked = this.checked; // force a sync update
@@ -88,7 +89,7 @@ export class Checkbox extends ZincElement implements ZincFormControl
                    class="checkbox__input"
                    name="${this.name}"
                    .checked=${this.checked}
-                   @click=${this.handleClick} />
+                   @click=${this.handleClick}/>
             <span class="checkbox__control">
               ${this.checked ? html`
                 <zn-icon src="check" class="checkbox__check-icon" size="12"></zn-icon>` : ''}

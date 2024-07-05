@@ -66,6 +66,8 @@
 }
 
 :host([action-type="connected.agent"]),
+:host([action-type="customer.connected"]),
+:host([action-type="customer.disconnected"]),
 :host([action-type="attachment.added"]),
 :host([action-type="transfer"]) {
   background: transparent;
@@ -82,6 +84,7 @@
     text-align: center;
     border: none;
     max-width: unset;
+    padding-bottom: 5px;
 
     &:before {
       display: none;

@@ -32,7 +32,7 @@ export class Timer extends LitElement
     return html`
       <div class="last-message upper-limit-reached">
         <span class="time">${times}</span>
-        <span class="last-message-indicator"></span>
+        <span class="last-message-indicator" part="indicator"></span>
       </div>`;
   }
 

@@ -22,9 +22,9 @@ export const Default: Story = {
     filters: [
       {
         id: '1',
-        name: 'name',
+        name: 'DOB',
         type: 'date',
-        operators: ['eq', 'lt', 'gt']
+        operators: ['before', 'after', 'gt', 'lt']
       },
       {
         id: '2',

@@ -255,7 +255,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.classList.add('query-builder__value');
           newInput.value = filter.value;
           this._updateValue(uniqueId, { target: newInput });
-          newInput.setAttribute('type', 'number');
+          newInput.setAttribute('type', 'date');
           newInput.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
           parent.appendChild(newInput);
         }

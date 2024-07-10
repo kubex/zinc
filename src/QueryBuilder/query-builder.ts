@@ -354,7 +354,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       else
       {
         input = document.createElement('input');
-        input.setAttribute('type', 'number');
+        input.setAttribute('type', 'date');
         input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
       }
     }

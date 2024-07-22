@@ -252,7 +252,7 @@ export class Table extends ZincSlotElement
 
   columnContent(col)
   {
-    if(typeof col !== 'object')
+    if(typeof col !== 'object' || col === null)
     {
       return col;
     }

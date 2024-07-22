@@ -7,6 +7,7 @@ import styles from './index.scss?inline';
 import {deepQuerySelectorAll} from "../query";
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement} from "@/zinc-element";
+import {NavBar} from "@/NavBar";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement
@@ -18,6 +19,7 @@ export class Tabs extends ZincElement
   private _knownUri: Map<string, string> = new Map<string, string>();
 
   @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
+  @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
   @property({attribute: 'caption', type: String, reflect: true}) caption = '';
   @property({attribute: 'header', type: String, reflect: true}) header = '';
@@ -69,12 +71,14 @@ export class Tabs extends ZincElement
       this.storeTtl = 300;
     }
 
+    const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
+
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) =>
     {
       if(element.slot == '')
       {
-        this._panels.set(element.getAttribute('id') || '', [element]);
+        this._panels.set(element.getAttribute('id') || defaultID, [element]);
       }
     });
 
@@ -168,7 +172,7 @@ export class Tabs extends ZincElement
     if(!tabEle.hasAttribute('tab'))
     {
       tabEle.setAttribute('tab', tabId);
-      tabEle.classList.toggle('zn-tb-active', this._current == tabId);
+      this._setTabEleActive(tabEle, this._current == tabId);
     }
 
     if(!this._knownUri.has(tabUri))
@@ -264,13 +268,13 @@ export class Tabs extends ZincElement
         setActive = refTab == tab.getAttribute('tab');
       }
       hasActive = hasActive || setActive;
-      tab.classList.toggle('zn-tb-active', setActive);
+      this._setTabEleActive(tab, setActive);
     });
     if(!hasActive && this._tabs.length > 0)
     {
-      this._tabs[0].classList.toggle('zn-tb-active', true);
+      this._setTabEleActive(this._tabs[0], true);
     }
-    this._actions.forEach(action => action.classList.toggle('zn-tb-active', action.getAttribute('ref-tab') === (refTab || tabName)));
+    this._actions.forEach(action => this._setTabEleActive(action, action.getAttribute('ref-tab') === (refTab || tabName)));
     this.selectTab(tabName, refresh);
 
     //Set on the element as a failsafe before TabPanel is loaded
@@ -280,6 +284,12 @@ export class Tabs extends ZincElement
     {
       this._store.set(this.storeKey, tabName);
     }
+  }
+
+  _setTabEleActive(ele, active: boolean)
+  {
+    ele.classList.toggle('zn-tb-active', active);
+    ele.classList.toggle('active', active);
   }
 
   selectTab(tabName: string, refresh: boolean): boolean

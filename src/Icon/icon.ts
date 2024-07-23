@@ -1,6 +1,6 @@
-import { html, LitElement, render, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { md5 } from '../md5';
+import {html, LitElement, render, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {md5} from '@/md5';
 
 import styles from './index.scss?inline';
 
@@ -11,6 +11,7 @@ const Library = {
   MaterialRound: "material-round",
   MaterialSharp: "material-sharp",
   MaterialTwoTone: "material-two-tone",
+  MaterialSymbolOutlined: "material-symbols-outlined",
   Gravatar: "gravatar",
   Libravatar: "libravatar"
 };
@@ -21,6 +22,8 @@ const LibraryAlias = {
   MaterialRound: "mir",
   MaterialSharp: "mis",
   MaterialTwoTone: "mit",
+  MaterialSymbolOutlined: "mis",
+
   Gravatar: "grav",
 };
 
@@ -39,12 +42,12 @@ type Color = keyof typeof colors;
 @customElement('zn-icon')
 export class Icon extends LitElement
 {
-  @property({ type: String, reflect: true }) src = "";
-  @property({ type: String, reflect: true }) alt = "";
-  @property({ type: Number, reflect: true }) size = 24;
-  @property({ type: String, reflect: true }) library = Library.None;
-  @property({ type: Boolean, reflect: true }) round = false;
-  @property({ type: String, reflect: true }) color: Color = null;
+  @property({type: String, reflect: true}) src = "";
+  @property({type: String, reflect: true}) alt = "";
+  @property({type: Number, reflect: true}) size = 24;
+  @property({type: String, reflect: true}) library = Library.None;
+  @property({type: Boolean, reflect: true}) round = false;
+  @property({type: String, reflect: true}) color: Color = null;
 
   gravatarOptions = "";
 
@@ -57,7 +60,7 @@ export class Icon extends LitElement
     //Register the material design icon packs
     render(html`
       <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
 
     if(this.src.includes(':') && !this.src.includes(':/'))
@@ -114,7 +117,7 @@ export class Icon extends LitElement
     }
     else if(this.library == "" && !this.src.includes('/') && this.src)
     {
-      this.library = Library.MaterialOutlined;
+      this.library = Library.MaterialSymbolOutlined;
     }
     this.ravatarOptions();
   }
@@ -149,16 +152,19 @@ export class Icon extends LitElement
         return html`<i part="icon" class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialOutlined:
       case LibraryAlias.MaterialOutlined:
-        return html`<i part="icon"  class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon" class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialRound:
       case LibraryAlias.MaterialRound:
-        return html`<i part="icon"  class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon" class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialSharp:
       case LibraryAlias.MaterialSharp:
-        return html`<i part="icon"  class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
+        return html`<i part="icon" class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.MaterialTwoTone:
       case LibraryAlias.MaterialTwoTone:
         return html`<i part="icon" class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
+      case Library.MaterialSymbolOutlined:
+      case LibraryAlias.MaterialSymbolOutlined:
+        return html`<i part="icon" class="mi mi--symbol-outlined" style="--icon-color: ${color}">${this.src}</i>`;
       case Library.Gravatar:
       case LibraryAlias.Gravatar:
         return html`<img

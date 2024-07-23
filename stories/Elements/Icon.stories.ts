@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/web-components";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Icon';
 
@@ -23,12 +23,12 @@ export const Default: Story = {
     color: {
       description: 'The color',
       options: ['primary', 'accent', 'info', 'warning', 'error', 'success'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     },
     library: {
       description: 'The library',
-      options: ['material', 'material-outlined', 'material-round', 'material-sharp', 'material-two-tone', 'gravatar', 'libravatar'],
-      control: { type: 'select' },
+      options: ['material', 'material-outlined', 'material-round', 'material-sharp', 'material-two-tone', 'material-symbols-outlined', 'gravatar', 'libravatar'],
+      control: {type: 'select'},
     },
   }
 };

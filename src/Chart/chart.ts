@@ -109,9 +109,9 @@ export class ZincChart extends ZincElement
   render()
   {
     return html`
-      <div>
+      <div class="chart">
         <div id="legend-container"></div>
-        <div>
+        <div class="chart__container">
           <canvas id="chat" style="min-height: 200px;"></canvas>
         </div>
       </div>

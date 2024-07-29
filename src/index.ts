@@ -55,6 +55,7 @@ import './Spacer';
 import './Popup';
 import './Tooltip';
 import './ChartStats';
+import './ProgressTile';
 
 // Events
 export * from './Events/events';

@@ -1,0 +1,76 @@
+@use "../wc";
+
+:host {
+  display: contents;
+}
+
+.tile {
+  display: flex;
+  min-height: wc.common-size(tile);
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  border-color: rgb(var(--zn-border-color));
+
+  &__avatar {
+    display: flex;
+    flex-shrink: 0;
+    margin-right: wc.spacing(md);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  &__caption {
+    flex-grow: 1;
+    margin-right: auto;
+  }
+
+  &__time {
+    margin-left: wc.spacing(md);
+    color: rgb(var(--color));
+  }
+
+  &__progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    margin-top: 8px;
+    height: 10px;
+  }
+
+  // inside progress bar
+  &__progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(var(--color), 0.2);
+    position: absolute;
+    overflow: hidden;
+    top: 2px;
+    left: 0;
+  }
+
+  &__progress {
+    height: 8px;
+    background-color: rgb(var(--color));
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

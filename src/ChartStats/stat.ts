@@ -5,6 +5,8 @@ import styles from './index.scss?inline';
 import {ZincElement} from "@/zinc-element";
 import {classMap} from "lit/directives/class-map.js";
 
+import '../ApexChart';
+
 @customElement('zn-chart-stat')
 export class ChartStat extends ZincElement
 {

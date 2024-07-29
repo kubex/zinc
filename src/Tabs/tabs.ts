@@ -1,13 +1,12 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
-import {md5} from '../md5';
-import {Store} from '../storage';
+import {md5} from '@/md5';
+import {Store} from '@/storage';
 
 import styles from './index.scss?inline';
-import {deepQuerySelectorAll} from "../query";
+import {deepQuerySelectorAll} from "@/query";
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement} from "@/zinc-element";
-import {NavBar} from "@/NavBar";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement

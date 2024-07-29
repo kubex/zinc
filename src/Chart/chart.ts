@@ -2,7 +2,7 @@ import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {Chart, ChartConfiguration, registerables} from 'chart.js';
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
-import {ZincElement} from "../zinc-element";
+import {ZincElement} from "@/zinc-element";
 
 import styles from './index.scss?inline';
 

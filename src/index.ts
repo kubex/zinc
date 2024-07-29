@@ -54,6 +54,7 @@ import './QueryBuilder';
 import './Spacer';
 import './Popup';
 import './Tooltip';
+import './ChartStats';
 
 // Events
 export * from './Events/events';

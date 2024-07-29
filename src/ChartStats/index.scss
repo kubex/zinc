@@ -1,0 +1,59 @@
+@use "../wc";
+
+:host {
+  display: contents;
+}
+
+.stat-tile {
+
+  .caption {
+    color: rgb(var(--zn-primary))
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    gap: wc.spacing(md);
+  }
+
+  .left {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right {
+    flex-basis: 50%;
+  }
+
+  .amount {
+    color: rgb(var(--zn-text-heading));
+    font-weight: 600;
+    padding: wc.spacing(sm) 0;
+    font-size: 36px;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  .bottom {
+    color: rgb(var(--zn-text-body));
+    font-weight: 400;
+    padding-top: wc.spacing(sm);
+    font-size: 12px;
+  }
+
+  .diff {
+    .positive {
+      color: rgb(var(--zn-color-success));
+    }
+
+    .negative {
+      color: rgb(var(--zn-color-error));
+    }
+
+    .neutral {
+      color: rgb(var(--zn-color-warning));
+    }
+  }
+}

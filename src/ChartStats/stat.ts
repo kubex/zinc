@@ -36,7 +36,7 @@ export class ChartStat extends ZincElement
               <p class="description">${this.description}</p>
             </div>
             <p class="amount">${this.getDisplayAmount()}</p>
-            <p class="bottom">Poor Utilisation, do better</p>
+            <p class="bottom"></p>
           </div>
           <div class="right">
             <zn-apex-chart slot="right" type="radialBar" amount="${this.amount}"></zn-apex-chart>

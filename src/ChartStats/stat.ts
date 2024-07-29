@@ -10,10 +10,11 @@ export class ChartStat extends ZincElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: String}) caption = '';
-  @property({type: String}) description = '';
-  @property({type: String}) amount = '0';
-  @property({type: String}) type = 'percent';
+  @property() caption = '';
+  @property() description = '';
+  @property() amount = '0';
+  @property() type = 'percent';
+  @property() chart = 'true';
 
 
   private getDisplayAmount()
@@ -39,7 +40,8 @@ export class ChartStat extends ZincElement
             <p class="bottom"></p>
           </div>
           <div class="right">
-            <zn-apex-chart slot="right" type="radialBar" amount="${this.amount}"></zn-apex-chart>
+            ${this.chart !== 'false' ? html`
+              <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>` : ''}
           </div>
         </div>
       </div>

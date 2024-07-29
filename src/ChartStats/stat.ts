@@ -14,7 +14,7 @@ export class ChartStat extends ZincElement
   @property() description = '';
   @property() amount = '0';
   @property() type = 'percent';
-  @property() chart = 'true';
+  @property({type: Boolean, attribute: 'hide-chart'}) hideChart = false;
 
 
   private getDisplayAmount()
@@ -40,7 +40,7 @@ export class ChartStat extends ZincElement
             <p class="bottom"></p>
           </div>
           <div class="right">
-            ${this.chart !== 'false' ? html`
+            ${!this.hideChart ? html`
               <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>` : ''}
           </div>
         </div>

@@ -24,7 +24,8 @@ export const Default: Story = {
           <zn-chart-stat caption="Hover Me!" description="Last 30 Days" amount="100" type="percent"></zn-chart-stat>
         </zn-panel>
         <zn-panel>
-          <zn-chart-stat caption="Hover Me!" description="Last 30 Days" amount="75" type="percent" chart="false"></zn-chart-stat>
+          <zn-chart-stat caption="Hover Me!" description="Last 30 Days" amount="75" type="percent"
+                         hide-chart></zn-chart-stat>
         </zn-panel>
         <zn-panel>
           <zn-chart-stat caption="Hover Me!" description="Last 30 Days" amount="60" type="percent"></zn-chart-stat>

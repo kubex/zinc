@@ -15,6 +15,7 @@ export class NavBar extends ZincElement
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
+  @property({type: Boolean}) stacked: boolean;
 
   static styles = unsafeCSS(styles);
 

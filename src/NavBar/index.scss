@@ -6,6 +6,34 @@
   }
 }
 
+:host([stacked]) {
+  ul {
+    flex-direction: column;
+    gap: 0;
+    border-bottom: none;
+  }
+
+  li {
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+
+    &.active:before, &.zn-tb-active:before {
+      display: none;
+    }
+  }
+}
+
+:host([stacked][slot="left"]) {
+  ul {
+    padding-right: wc.spacing(md);
+  }
+}
+
+:host([stacked][slot="right"]) {
+  ul {
+    padding-left: wc.spacing(md);
+  }
+}
+
 :host([icon-bar]) {
 
   ul {

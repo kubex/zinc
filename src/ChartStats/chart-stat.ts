@@ -25,6 +25,20 @@ export class ChartStat extends ZincElement
     {
       return `${this.amount}%`;
     }
+
+    if(this.type === 'time')
+    {
+      const seconds = parseInt(this.amount);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+
+      if(hours <= 0)
+      {
+        return [minutes % 60, seconds % 60].map(v => v.toString().padStart(2, '0')).join(':') + 's';
+      }
+
+      return [hours, minutes % 60, seconds % 60].map(v => v.toString().padStart(2, '0')).join(':') + 's';
+    }
     return this.amount;
   }
 
@@ -41,10 +55,11 @@ export class ChartStat extends ZincElement
             <p class="amount">${this.getDisplayAmount()}</p>
             <p class="bottom"></p>
           </div>
-          <div class="right">
             ${!this.hideChart ? html`
-              <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>` : ''}
-          </div>
+              <div class="right">
+                <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>
+              </div>
+            ` : ''}
         </div>
       </div>
     `;

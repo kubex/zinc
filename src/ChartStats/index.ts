@@ -1,1 +1,1 @@
-export {ChartStat} from './stat';
+export {ChartStat} from './chart-stat';

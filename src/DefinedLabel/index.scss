@@ -1,0 +1,27 @@
+@use "../wc";
+@use "../../scss/shared/form-elements";
+
+:host {
+  display: contents;
+}
+
+.defined-label {
+
+  .input__control, .input__control-value {
+    background-color: rgb(var(--zn-panel));
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: wc.spacing(sm);
+    width: 100%;
+    margin-top: wc.spacing(sm);
+  }
+
+  &__left {
+    flex-grow: 1;
+  }
+
+}

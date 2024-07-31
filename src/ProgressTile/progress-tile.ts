@@ -10,7 +10,7 @@ export class ProgressTile extends LitElement
   static styles = unsafeCSS(styles);
 
   @property({attribute: 'start', reflect: true, type: Number}) start: number;
-  @property({attribute: 'max-time', reflect: true, type: Number}) maxTime: number;
+  @property({attribute: 'hold-time', reflect: true, type: Number}) holdTime: number;
   @property({attribute: 'status-icon'}) statusIcon: string;
   @property() caption: string;
   @property() avatar: string;
@@ -21,11 +21,6 @@ export class ProgressTile extends LitElement
   connectedCallback()
   {
     super.connectedCallback();
-    if(!this.maxTime || this.maxTime < this._now)
-    {
-      this.maxTime = this._now + (60 * 30);
-    }
-
     // request an update every second
     if(!this._timer)
     {
@@ -39,17 +34,17 @@ export class ProgressTile extends LitElement
 
   private _getProgressBarValue()
   {
-    console.log(this._now, this.start, this.maxTime);
-    const diff = this._now - this.start;
-    const total = this.maxTime - this.start;
-    return `${(diff / total) * 100}%`;
+    const max = 60 * 5;
+    const current = this.holdTime;
+
+    const diff = max - current;
+    const percent = (diff / max) * 100;
+    return percent;
   }
 
   private getColor()
   {
-    const diff = this._now - this.start;
-    const total = this.maxTime - this.start;
-    const percent = (diff / total) * 100;
+    const percent = this._getProgressBarValue();
 
     if(percent < 33)
     {
@@ -79,6 +74,21 @@ export class ProgressTile extends LitElement
     return [hours, minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
   }
 
+  private _humanHoldTime()
+  {
+    const diff = this.holdTime;
+    const hours = Math.floor(diff / 3600);
+    const minutes = Math.floor((diff % 3600) / 60);
+    const seconds = Math.floor(diff % 60);
+
+    if(hours <= 0)
+    {
+      return [minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
+    }
+
+    return [hours, minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
+  }
+
   render()
   {
     return html`
@@ -90,13 +100,13 @@ export class ProgressTile extends LitElement
           <div class="tile__content">
             <div class="tile__caption">${this.caption}</div>
             <div class="tile__spacer"></div>
-            <div class="tile__time">${this._humanTime()}</div>
+            <div class="tile__time">${this._humanTime()} (${this._humanHoldTime()})</div>
             ${this.statusIcon ? html`
               <zn-icon class="tile__status-icon" src="${this.statusIcon}"></zn-icon>` : ''}
           </div>
           <div class="tile__progress-container">
             <div class="tile__progress-bar"></div>
-            <div class="tile__progress" style="width: ${this._getProgressBarValue()}"></div>
+            <div class="tile__progress" style="width: ${this._getProgressBarValue() + '%'}"></div>
           </div>
         </div>
       </div>`;

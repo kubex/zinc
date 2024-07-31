@@ -56,6 +56,7 @@ import './Popup';
 import './Tooltip';
 import './ChartStats';
 import './ProgressTile';
+import './DefinedLabel';
 
 // Events
 export * from './Events/events';

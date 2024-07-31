@@ -23,8 +23,9 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   @property() value: string = '';
   @property() inputValue: string = '';
-  @property() name: string;
+  @property() name: string = 'label';
   @property() title: string;
+  @property({type: Boolean}) disabled: boolean = false;
   @property({type: Array, attribute: 'predefined-labels'}) predefinedLabels = [];
 
   get validationMessage()

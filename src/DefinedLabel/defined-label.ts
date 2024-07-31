@@ -104,11 +104,8 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
     {
       this.predefinedLabels.forEach((label) =>
       {
-        // filter based on input value
-        console.log('value', this.value);
         if(this.value && !label.toLowerCase().includes(this.value.toLowerCase()))
         {
-          console.log('skipping', label);
           return;
         }
         predefinedLabels = html`

@@ -150,7 +150,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
           <div class="defined-label__container">
             <div class="defined-label__left">
               <p><small>Add Custom Label</small></p>
-              ${this.value}${this.inputValue ? `:${this.inputValue}` : ''}
+              ${this.value}
             </div>
             <div class="defined-label__right">
               <input

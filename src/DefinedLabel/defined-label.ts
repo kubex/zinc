@@ -73,22 +73,26 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   private handleChange()
   {
+    this.input.value = this.input.value.toLowerCase();
     this.value = this.input.value;
   }
 
   private handleInput()
   {
+    this.input.value = this.input.value.toLowerCase();
     this.value = this.input.value;
     this.formControlController.updateValidity();
   }
 
   private handleInputValueChange()
   {
+    this.valueInput.value = this.valueInput.value.toLowerCase();
     this.inputValue = this.valueInput.value;
   }
 
   private handleInputValueInput()
   {
+    this.valueInput.value = this.valueInput.value.toLowerCase();
     this.inputValue = this.valueInput.value;
   }
 

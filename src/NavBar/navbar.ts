@@ -100,8 +100,8 @@ export class NavBar extends ZincElement
       this.style.display = 'none';
     }
 
-    let dropdown = html``;
-    if(this.dropdown.length > 0)
+    let dropdown = null;
+    if(this.dropdown && this.dropdown.length > 0)
     {
       dropdown = html`
         <button popovertarget="dropdown">
@@ -130,7 +130,7 @@ export class NavBar extends ZincElement
           return html`
             <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
         })}
-        <li id="dropdown-item">${dropdown}</li>
+        ${dropdown ? html`<li id="dropdown-item">${dropdown}</li>` : ''}
         ${this._postItems}
       </ul>`;
   }

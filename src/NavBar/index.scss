@@ -110,7 +110,8 @@
         pointer-events: none;
       }
 
-      &::before {
+
+      &::before:not(#dropdown-item) {
         content: '';
         left: 50%;
         right: 50%;
@@ -134,6 +135,21 @@
       &.active::before, &.zn-tb-active::before {
         left: -8px;
         right: -8px;
+      }
+
+      &#dropdown-item:hover::before {
+        content: '';
+        left: 50%;
+        right: 50%;
+        bottom: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translateY(-50%) translateX(-50%);
+        background-color: rgba(var(--zn-primary), 0.2);
+        border-radius: 50%;
+        height: wc.spacing(lg);
+        width: wc.spacing(lg);
+        pointer-events: none;
       }
     }
 
@@ -194,8 +210,8 @@ button[popovertarget] {
       }
     }
 
-    &:hover::before:not(.active),
-    &::before:not(.active) {
+    &:hover::before,
+    &::before:not(.active):not(#dropdown-item) {
       display: none;
     }
 

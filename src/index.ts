@@ -54,7 +54,6 @@ import './QueryBuilder';
 import './Spacer';
 import './Popup';
 import './Tooltip';
-import './ChartStats';
 import './ProgressTile';
 import './DefinedLabel';
 

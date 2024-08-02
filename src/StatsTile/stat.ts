@@ -1,19 +1,24 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './index.scss?inline';
-import {ZincElement} from "../zinc-element";
+import {ZincElement} from "@/zinc-element";
+
+import '../ApexChart';
 
 @customElement('zn-stat')
 export class Stat extends ZincElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: String}) caption = '';
-  @property({type: String}) description = '';
-  @property({type: String}) amount = '0';
-  @property({type: String}) previous = '0';
-  @property({type: String}) currency = '';
+  @property() caption = '';
+  @property() description = '';
+  @property() amount = '0';
+  @property() type = 'percent';
+  @property() previous = '0';
+  @property() currency = '';
+  @property({type: Boolean, attribute: 'hide-chart'}) hideChart = false;
   @property({type: Boolean, attribute: 'show-delta'}) showDelta = false;
 
   calcPercentageDifference()
@@ -40,9 +45,35 @@ export class Stat extends ZincElement
     return `${currency}${amount.toFixed(2)}`;
   }
 
-  render()
+  private getDisplayAmount()
   {
-    let diffDisplay = null;
+    if(this.currency !== '')
+    {
+      return this.getCurrentAmount();
+    }
+    if(this.type === 'percent')
+    {
+      return `${this.amount}%`;
+    }
+
+    if(this.type === 'time')
+    {
+      const seconds = parseInt(this.amount);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+
+      if(hours <= 0)
+      {
+        return [minutes % 60, seconds % 60].map(v => v.toString().padStart(2, '0')).join(':') + 's';
+      }
+
+      return [hours, minutes % 60, seconds % 60].map(v => v.toString().padStart(2, '0')).join(':') + 's';
+    }
+    return this.amount;
+  }
+
+  diffText()
+  {
     if(this.showDelta)
     {
       const diff = this.calcPercentageDifference();
@@ -60,16 +91,31 @@ export class Stat extends ZincElement
         diffIcon = '-';
       }
 
-      diffDisplay = html`<p class="diff "><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period
-      </p>`;
+      return html`<p class="diff "><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period</p>`;
     }
 
+    return null;
+  }
+
+  render()
+  {
     return html`
-      <div>
-        <h3 class="caption">${this.caption}</h3>
-        <p class="description">${this.description}</p>
-        <p class="amount">${this.getCurrentAmount()}</p>
-        ${diffDisplay}
+      <div class="${classMap({'stat-tile': true})}">
+        <div class="container">
+          <div class="left">
+            <div>
+              <h3 class="caption">${this.caption}</h3>
+              <p class="description">${this.description}</p>
+            </div>
+            <p class="amount">${this.getDisplayAmount()}</p>
+            <p class="bottom">${this.diffText()}</p>
+          </div>
+          ${!this.hideChart ? html`
+            <div class="right">
+              <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>
+            </div>
+          ` : ''}
+        </div>
       </div>
     `;
   }

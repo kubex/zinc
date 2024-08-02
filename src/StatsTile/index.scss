@@ -1,15 +1,47 @@
 @use "../wc";
 
-zn-stats-tile, :host {
+:host {
+  display: contents;
+}
+
+.stat-tile {
+
+  .caption {
+    color: rgb(var(--zn-primary))
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    gap: wc.spacing(md);
+    height: 100%;
+  }
+
+  .left {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right {
+    flex-basis: 50%;
+  }
+
   .amount {
     color: rgb(var(--zn-text-heading));
     font-weight: 600;
     padding: wc.spacing(sm) 0;
-    font-size: 25px;
+    font-size: 36px;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
   }
 
-  .caption {
-    color: rgb(var(--zn-primary))
+  .bottom {
+    color: rgb(var(--zn-text-body));
+    font-weight: 400;
+    padding-top: wc.spacing(sm);
+    font-size: 12px;
   }
 
   .diff {

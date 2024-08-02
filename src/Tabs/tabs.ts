@@ -7,6 +7,7 @@ import styles from './index.scss?inline';
 import {deepQuerySelectorAll} from "@/query";
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement} from "@/zinc-element";
+import {ZincMenuSelectEvent} from "@/Events/zn-menu-select";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement
@@ -107,6 +108,11 @@ export class Tabs extends ZincElement
     tab.addEventListener('click', this._handleClick.bind(this));
   }
 
+  public reRegisterTabs()
+  {
+    this._registerTabs();
+  }
+
   firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
@@ -135,6 +141,14 @@ export class Tabs extends ZincElement
 
       this.setActiveTab(defaultTab, false, false);
     }, 10);
+
+    this.addEventListener('zn-menu-select', (e: ZincMenuSelectEvent) =>
+    {
+      setTimeout(() =>
+      {
+        this.reRegisterTabs();
+      }, 200);
+    }, {passive: true});
   }
 
   _prepareTab(tabId: string)

@@ -5,6 +5,8 @@ import "../Popup";
 
 import styles from './index.scss?inline';
 import {PropertyValues} from "@lit/reactive-element";
+import {classMap} from "lit/directives/class-map.js";
+import {ZincMenuSelectEvent} from "@/Events/zn-menu-select";
 
 @customElement('zn-navbar')
 export class NavBar extends ZincElement
@@ -20,6 +22,7 @@ export class NavBar extends ZincElement
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
+  private _openedTabs: string[] = [];
 
   connectedCallback()
   {
@@ -30,7 +33,23 @@ export class NavBar extends ZincElement
 
   public addItem(item)
   {
-    return this.shadowRoot.querySelector('ul').appendChild(item);
+    if(this._openedTabs.includes(item.getAttribute('tab-uri')))
+    {
+      return;
+    }
+    this._openedTabs.push(item.getAttribute('tab-uri'));
+    const ul = this.shadowRoot.querySelector('ul');
+    const dropdown = this.shadowRoot.querySelector('li[id="dropdown-item"]');
+    return dropdown ? ul.insertBefore(item, dropdown) : ul.appendChild(item);
+  }
+
+  public removeItem(name: string)
+  {
+    const item = this.shadowRoot.querySelector(`li[tab-uri="${name}"]`);
+    if(item)
+    {
+      item.remove();
+    }
   }
 
   private handlePosition(e)
@@ -49,6 +68,23 @@ export class NavBar extends ZincElement
     {
       const element = this.shadowRoot.querySelector('[popover]');
       element.addEventListener('toggle', this.handlePosition.bind(this));
+
+      const menu = this.shadowRoot.querySelector('zn-menu');
+      if(menu)
+      {
+        menu.addEventListener('zn-menu-select', (e: ZincMenuSelectEvent) =>
+        {
+          const element = e.detail.element;
+          if(element.hasAttribute('data-path'))
+          {
+            const li = document.createElement('li');
+            li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path'));
+            li.innerText = (e.detail.element as HTMLElement).innerText;
+            this.addItem(li);
+            li.click();
+          }
+        });
+      }
     }
   }
 
@@ -68,35 +104,33 @@ export class NavBar extends ZincElement
     if(this.dropdown.length > 0)
     {
       dropdown = html`
-        <button popovertarget="dropdown">+</button>
+        <button popovertarget="dropdown">
+          <zn-icon src="add" size="18"></zn-icon>
+        </button>
         <zn-menu popover id="dropdown" actions="${JSON.stringify(this.dropdown)}"></zn-menu>
       `;
-
     }
 
     return html`
       <ul>
         ${this._preItems}
-        ${this.navigation.map((item, index) =>
+        ${this.navigation.map((item) =>
         {
-          const activeClass = item.active ? 'active' : '';
-
           let content = html`${item.title}`;
           if(item.icon != undefined && item.icon != '')
           {
             content = html`
               <zn-icon src="${item.icon}"></zn-icon>${content}`;
           }
-
           if(item.path != undefined)
           {
             return html`
-              <li class="${activeClass}" tab-uri="${item.path}">${content}</li>`;
+              <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
           }
           return html`
-            <li class="${activeClass}" tab="">${content}</li>`;
+            <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
         })}
-        <li>${dropdown}</li>
+        <li id="dropdown-item">${dropdown}</li>
         ${this._postItems}
       </ul>`;
   }

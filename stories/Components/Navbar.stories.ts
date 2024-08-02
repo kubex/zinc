@@ -5,6 +5,7 @@ import '../../src/NavBar';
 import '../../src/Popup';
 import '../../src/Button';
 import '../../src/Icon';
+import '../../src/Menu';
 
 const meta: Meta = {
   component: 'zn-navbar',
@@ -45,27 +46,32 @@ export const Default: Story = {
 
 
 export const Dropdown: Story = {
-  render: ({baseless, dropdown}) => html`
-    <zn-navbar .dropdown="${dropdown}" ?baseless="${baseless}"></zn-navbar>`,
+  render: ({dropdown}) => html`
+    <zn-navbar .dropdown="${dropdown}">
+      <li tab>Customer</li>
+      <li tab="cancellation">Cancellation</li>
+    </zn-navbar>`,
   args: {
-    baseless: false,
     dropdown: [
       {
         "title": "Overview",
-        "path": "#",
-        "default": true
+        "type": "dropdown",
+        "path": "#overview",
       },
       {
         "title": "Details",
-        "path": "#"
+        "type": "dropdown",
+        "path": "#details",
       },
       {
         "title": "History",
-        "path": "#"
+        "type": "dropdown",
+        "path": "#history",
       },
       {
         "title": "Settings",
-        "path": "#"
+        "type": "dropdown",
+        "path": "#settings",
       }
     ],
   },

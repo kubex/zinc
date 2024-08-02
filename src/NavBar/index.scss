@@ -172,3 +172,29 @@
     }
   }
 }
+
+button[popovertarget] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host([highlight]) {
+  ul {
+    gap: 0;
+  }
+
+  li {
+    padding-left: wc.spacing(md);
+    padding-right: wc.spacing(md);
+
+    &.active:before {
+      left: 0;
+      right: 0;
+    }
+  }
+
+  .active {
+    background-color: rgb(var(--zn-panel));
+  }
+}

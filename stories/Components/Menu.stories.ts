@@ -52,7 +52,7 @@ export const Popup: Story = {
       },
       {
         "title": "Settings",
-        "path": "/settings"
+        "path": "#settings"
       }
     ],
   }

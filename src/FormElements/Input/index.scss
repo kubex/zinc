@@ -1,24 +1,20 @@
 @use '../../wc';
 @use "../../../scss/shared/form-elements";
 
-
-:host([prefix]) {
-  .wrap {
-    border: 1px solid rgb(var(--zn-border-color));
-  }
-
-  ::slotted(input) {
-    border: 0 !important;
-  }
-}
-
 :host, zn-input {
   display: inline-block;
   width: 100%;
 
+  ::slotted(input),
+  ::slotted(select),
+  ::slotted(textarea) {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
   .wrap {
     background-color: rgb(var(--zn-input-bg));
-    border: 0 solid transparent;
+    border: 1px solid rgb(var(--zn-border-color));
     border-radius: 5px;
     overflow: hidden;
     cursor: text;

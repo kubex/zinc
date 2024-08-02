@@ -132,7 +132,6 @@
       }
 
       &.active::before, &.zn-tb-active::before {
-        // TODO Active Before colors
         left: -8px;
         right: -8px;
       }
@@ -193,6 +192,11 @@ button[popovertarget] {
       &.active {
         border-left: none;
       }
+    }
+
+    &:hover::before:not(.active),
+    &::before:not(.active) {
+      display: none;
     }
 
     &.active {

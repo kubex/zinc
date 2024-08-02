@@ -18,7 +18,7 @@ export class Stat extends ZincElement
   @property() type = 'percent';
   @property() previous = '0';
   @property() currency = '';
-  @property({type: Boolean, attribute: 'hide-chart'}) hideChart = false;
+  @property({type: Boolean, attribute: 'show-chart'}) showChart = false;
   @property({type: Boolean, attribute: 'show-delta'}) showDelta = false;
 
   calcPercentageDifference()
@@ -110,7 +110,7 @@ export class Stat extends ZincElement
             <p class="amount">${this.getDisplayAmount()}</p>
             <p class="bottom">${this.diffText()}</p>
           </div>
-          ${!this.hideChart ? html`
+          ${this.showChart ? html`
             <div class="right">
               <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>
             </div>

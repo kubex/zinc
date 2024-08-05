@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
+import {html} from "lit";
 
 import '../../src/Panel';
 import '../../src/Button';
@@ -16,7 +16,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ caption, navigation }) => html`
+  render: ({caption, navigation}) => html`
     <zn-panel caption="${caption}" navigation="${JSON.stringify(navigation)}">
       <zn-button slot="actions" content="This is an Action"></zn-button>
       This is the content of the panel
@@ -38,7 +38,7 @@ export const Default: Story = {
 };
 
 export const TabbedPanel: Story = {
-  render: ({ caption }) => html`
+  render: ({caption}) => html`
     <zn-panel caption="${caption}">
       <zn-button slot="actions" content="This is an Action"></zn-button>
       <div link="Home">
@@ -61,7 +61,7 @@ export const TabbedPanel: Story = {
 };
 
 export const ChatPanel: Story = {
-  render: ({ navigation, borderBottom }) => html`
+  render: ({navigation, borderBottom}) => html`
     <zn-panel navigation="${JSON.stringify(navigation)}" border-bottom="${borderBottom}">
       <zn-editor></zn-editor>
       <div slot="footer">Footer</div>

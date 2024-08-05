@@ -1,10 +1,7 @@
 import { html } from "lit";
 import { Meta, StoryObj } from "@storybook/web-components";
 
-import '../../src/Panel';
-import '../../src/Tile';
-import '../../src/Chip';
-import '../../src/Icon';
+import '../../src/index';
 
 const meta: Meta = {
   title: 'Screens/PanelTile',
@@ -71,3 +68,31 @@ export const PaymentMethods: Story = {
       </zn-panel>`;
   }
 };
+
+export const Error: Story = {
+  render: () => html`
+    <zn-panel caption="Instrument Search" t="light">
+      <p>Search for a payment instruments submissions.</p>
+      <form>
+        <zn-cols layout="1" mc="1">
+          <zn-input label="Instrument ID" class="zn-col-1" t="light" size="medium" data-optional="" data-valid="">
+            <input type="text" name="instrument_id">
+          </zn-input>
+          <zn-input label="Billing Profile ID" advice="Something useful" class="zn-col-1" t="light" size="medium"
+                    data-optional="" data-valid="">
+            <input type="text" name="bpid">
+          </zn-input>
+          <zn-input label="Instrument ID" class="zn-col-1" t="light" size="medium" data-optional="" data-valid="">
+            <input type="text" name="instrument_id">
+          </zn-input>
+          <zn-input label="Billing Profile ID" advice="Something useful" class="zn-col-1" t="light" size="medium"
+                    data-optional="" data-valid="">
+            <input type="text" name="bpid">
+          </zn-input>
+        </zn-cols>
+        <zn-button t="light" data-optional="" data-valid="">Submit</zn-button>
+      </form>
+    </zn-panel>
+  `,
+};
+

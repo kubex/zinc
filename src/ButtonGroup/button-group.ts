@@ -1,15 +1,16 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
-import { ZincElement } from "@/zinc-element";
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
+import {ZincElement} from "@/zinc-element";
 
 import styles from './index.scss?inline';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-button-group')
 export class ButtonGroup extends ZincElement
 {
   @property({}) direction: 'horizontal' | 'vertical' = 'horizontal';
-  @property({ type: Boolean }) grow = false;
+  @property({type: Boolean}) grow = false;
+  @property({type: Boolean}) wrap = false;
 
   static styles = unsafeCSS(styles);
 
@@ -22,7 +23,7 @@ export class ButtonGroup extends ZincElement
       return;
     }
 
-    let slottedElements = [...this.defaultSlot.assignedElements({ flatten: true })] as HTMLElement[];
+    let slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
     slottedElements = slottedElements.filter(el => el.tagName === 'ZN-BUTTON');
     slottedElements.forEach(el =>
@@ -47,7 +48,8 @@ export class ButtonGroup extends ZincElement
       <div part="base"
            class="${classMap({
              'button-group': true,
-             'button-group--grow': this.grow
+             'button-group--grow': this.grow,
+             'button-group--wrap': this.wrap
            })}"
            role="group">
         <slot @slotchange=${this.handleSlotChange}></slot>

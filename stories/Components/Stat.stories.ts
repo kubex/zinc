@@ -16,12 +16,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({caption, currency, showChart, showDelta, description, amount, previous}) =>
+  render: ({caption, currency, showChart, showDelta, description, amount, previous, type}) =>
   {
     return html`
       <zn-stat caption="${caption}" currency="${currency}" description="${description}" amount="${amount}"
-               type="percent" .showChart="${showChart}" .showDelta="${showDelta}"
-               previous="${previous}"></zn-stat>
+               type="${type}" .showChart="${showChart}" .showDelta="${showDelta}"
+               previous="${previous}" ></zn-stat>
     `;
   },
   args: {
@@ -29,6 +29,7 @@ export const Default: Story = {
     description: 'Last 30 Days',
     amount: 100,
     previous: 50,
+    type: 'percent',
     currency: '$',
     showChart: false,
     showDelta: false,

@@ -91,7 +91,7 @@ export class Stat extends ZincElement
         diffIcon = '-';
       }
 
-      return html`<p class="diff "><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period</p>`;
+      return html`<p class="diff"><span class="${diffClass}">${diffIcon}${diff}%</span> on Previous Period</p>`;
     }
 
     return null;

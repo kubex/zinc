@@ -130,7 +130,10 @@ export class NavBar extends ZincElement
           return html`
             <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
         })}
-        ${dropdown ? html`<li id="dropdown-item">${dropdown}</li>` : ''}
+        ${dropdown ? html`
+          <li id="dropdown-item">
+            <div class="dropdown-wrap">${dropdown}</div>
+          </li>` : ''}
         ${this._postItems}
       </ul>`;
   }

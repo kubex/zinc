@@ -416,6 +416,12 @@ export class Tabs extends ZincElement
     });
     deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele =>
     {
+      if(ele.getAttribute('tab-uri') === "")
+      {
+        ele.setAttribute('tab', "");
+        ele.removeAttribute('tab-uri');
+      }
+
       this._addTab(ele as HTMLElement);
     });
 

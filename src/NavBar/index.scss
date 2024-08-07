@@ -83,9 +83,9 @@
 
 :host {
   display: block;
+  overflow: auto;
 
   ul {
-    overflow: hidden;
     display: flex;
     flex-basis: 100%;
     gap: 30px;
@@ -127,6 +127,7 @@
           justify-content: center;
           align-items: center;
           position: relative;
+          border-right: none;
         }
       }
 
@@ -264,9 +265,7 @@ button[popovertarget] {
     }
 
     &#dropdown-item {
-      .dropdown-wrap {
-        border-right: 1px solid rgb(var(--zn-border-color));
-      }
+      border-right: 0;
     }
   }
 }

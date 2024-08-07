@@ -34,6 +34,7 @@ export class Button extends ZincElement implements ZincFormControl
 
   @property() content = '';
   @property() icon: string = '';
+  @property() gaid: string = '';
   @property({ attribute: "icon-position" }) iconPosition: IconPosition = 'left';
   @property({ attribute: "icon-size" }) iconSize: string;
   @property() type: 'button' | 'submit' | 'reset';
@@ -185,6 +186,7 @@ export class Button extends ZincElement implements ZincFormControl
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}
+        gaid=${ifDefined(this.gaid)}
         @click=${this.handleClick}
       >
         ${this.iconPosition === 'left' ? icon : ''}

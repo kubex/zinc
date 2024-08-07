@@ -81,7 +81,10 @@ export class NavBar extends ZincElement
             li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path'));
             li.innerText = (e.detail.element as HTMLElement).innerText;
             this.addItem(li);
-            li.click();
+            setTimeout(() =>
+            {
+              li.click();
+            }, 300);
           }
         });
       }

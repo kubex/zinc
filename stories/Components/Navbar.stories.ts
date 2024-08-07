@@ -43,37 +43,3 @@ export const Default: Story = {
   },
   argTypes: {}
 };
-
-
-export const Dropdown: Story = {
-  render: ({dropdown}) => html`
-    <zn-navbar .dropdown="${dropdown}">
-      <li tab>Customer</li>
-      <li tab="cancellation">Cancellation</li>
-    </zn-navbar>`,
-  args: {
-    dropdown: [
-      {
-        "title": "Overview",
-        "type": "dropdown",
-        "path": "#overview",
-      },
-      {
-        "title": "Details",
-        "type": "dropdown",
-        "path": "#details",
-      },
-      {
-        "title": "History",
-        "type": "dropdown",
-        "path": "#history",
-      },
-      {
-        "title": "Settings",
-        "type": "dropdown",
-        "path": "#settings",
-      }
-    ],
-  },
-  argTypes: {}
-};

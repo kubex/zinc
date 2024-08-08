@@ -30,8 +30,9 @@
   .amount {
     color: rgb(var(--zn-text-heading));
     font-weight: 600;
-    padding: wc.spacing(sm) 0;
+    padding-top: wc.spacing(sm);
     font-size: 36px;
+    line-height: 36px;
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -42,6 +43,10 @@
     font-weight: 400;
     padding-top: wc.spacing(sm);
     font-size: 12px;
+
+    &:empty {
+      display: none;
+    }
   }
 
   .diff {

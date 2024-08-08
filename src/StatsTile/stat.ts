@@ -15,7 +15,7 @@ export class Stat extends ZincElement
   @property() caption = '';
   @property() description = '';
   @property() amount = '0';
-  @property() type = 'percent';
+  @property() type = 'number';
   @property() previous = '0';
   @property() currency = '';
   @property({type: Boolean, attribute: 'show-chart'}) showChart = false;

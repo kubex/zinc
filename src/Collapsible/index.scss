@@ -18,18 +18,14 @@
   }
 }
 
-:host([panel]) {
+:host([panel]), :host([nested-panel]) {
 
   .caption {
-
     font-size: 13px;
     font-weight: 600;
-    padding: 15px 5px;
     text-transform: uppercase;
     position: relative;
     cursor: pointer;
-    letter-spacing: 0.93px;
-    color: rgb(var(--zn-text-panel-title));
 
     &:before {
 
@@ -48,8 +44,32 @@
     }
   }
 
+}
+
+:host([panel]) {
+  .caption {
+    padding: 15px 5px;
+    color: rgb(var(--zn-text-panel-title));
+    letter-spacing: 0.93px;
+  }
+
+
   .content {
     padding: 0 5px 5px 5px;
+  }
+}
+
+
+:host([nested-panel]) {
+  .caption {
+    padding: 12px 0;
+    color: rgb(var(--zn-text-heading));
+    border-bottom-width: 1px !important;
+  }
+
+
+  .content {
+    padding: 5px 0;
   }
 }
 

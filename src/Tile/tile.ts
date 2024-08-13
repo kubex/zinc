@@ -1,23 +1,23 @@
-import { html, LitElement, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
-import { Menu } from "../Menu";
+import {html, LitElement, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {Menu} from "@/Menu";
 
 import styles from './index.scss?inline';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-tile')
 export class Tile extends LitElement
 {
-  @property({ attribute: 'caption', type: String, reflect: true }) caption;
-  @property({ attribute: 'description', type: String, reflect: true }) description;
-  @property({ attribute: 'sub-caption', type: String, reflect: true }) subCaption;
-  @property({ attribute: 'sub-description', type: String, reflect: true }) subDescription;
+  @property({attribute: 'caption', type: String, reflect: true}) caption;
+  @property({attribute: 'description', type: String, reflect: true}) description;
+  @property({attribute: 'sub-caption', type: String, reflect: true}) subCaption;
+  @property({attribute: 'sub-description', type: String, reflect: true}) subDescription;
 
 
-  @property({ attribute: 'right', type: Boolean, reflect: true }) right;
-  @property({ attribute: 'data-uri', type: String, reflect: true }) dataUri;
-  @property({ attribute: 'data-target', type: String, reflect: true }) dataTarget;
-  @property({ type: String }) centered = 'false';
+  @property({attribute: 'right', type: Boolean, reflect: true}) right;
+  @property({attribute: 'data-uri', type: String, reflect: true}) dataUri;
+  @property({attribute: 'data-target', type: String, reflect: true}) dataTarget;
+  @property({type: Boolean}) centered = false;
 
   private menu;
 

@@ -1,12 +1,12 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 import Quill from 'quill';
-import DropdownModule, { dropdownOpen } from "./dropdown-module";
+import DropdownModule, {dropdownOpen} from "./dropdown-module";
 import AttachmentModule from "./AttachmentHandler/attachment-module";
 
-import { PropertyValues } from "@lit/reactive-element";
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { FormControlController } from "@/form";
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {FormControlController} from "@/form";
 
 import styles from './index.scss?inline';
 
@@ -26,13 +26,13 @@ export class Editor extends ZincElement implements ZincFormControl
   @property() name: string;
   @property() value: string;
 
-  @property({ attribute: 'interaction-type', type: String })
+  @property({attribute: 'interaction-type', type: String})
   interactionType: 'ticket' | 'chat' = 'chat';
 
-  @property({ attribute: 'canned-responses', type: Array })
+  @property({attribute: 'canned-responses', type: Array})
   cannedResponses: Array<any>;
 
-  @property({ attribute: 'attachment-url', type: String })
+  @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
   private quillElement: Quill;
@@ -81,7 +81,7 @@ export class Editor extends ZincElement implements ZincFormControl
           const clipboard = context.event.clipboardData;
           const text = clipboard.getData('text/plain');
           const html = clipboard.getData('text/html');
-          const delta = this.quillElement.clipboard.convert({ html: html, text: text });
+          const delta = this.quillElement.clipboard.convert({html: html, text: text});
           this.quillElement.setContents(delta, 'silent');
           this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
         }
@@ -98,7 +98,7 @@ export class Editor extends ZincElement implements ZincFormControl
           const form = this.closest('form');
           if(form && !dropdownOpen && this.value.trim().length > 0)
           {
-            this.emit('zn-submit', { detail: { value: this.value, element: this } });
+            this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();
             this.quillElement.setText('');
           }
@@ -142,7 +142,7 @@ export class Editor extends ZincElement implements ZincFormControl
     const container = [
       ['bold', 'italic', 'underline', 'strike'],
       ['undo', 'redo'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
     ];
 
     if(this.interactionType === 'ticket')
@@ -187,7 +187,7 @@ export class Editor extends ZincElement implements ZincFormControl
         },
         attachmentModule: {
           attachmentInput: attachmentInput,
-          onFileUploaded: (node, { url }) =>
+          onFileUploaded: (node, {url}) =>
           {
             window.onbeforeunload = () => null;
           },
@@ -208,7 +208,7 @@ export class Editor extends ZincElement implements ZincFormControl
                 if(xhr.status === 200)
                 {
                   const response = JSON.parse(xhr.responseText);
-                  resolve({ path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename });
+                  resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
                 }
               };
               xhr.send(fd);
@@ -247,8 +247,8 @@ export class Editor extends ZincElement implements ZincFormControl
         if(range.startContainer)
         {
           return {
-            start: { node: range.startContainer, offset: range.startOffset },
-            end: { node: range.endContainer, offset: range.endOffset },
+            start: {node: range.startContainer, offset: range.startOffset},
+            end: {node: range.endContainer, offset: range.endOffset},
             native: range
           };
         }
@@ -258,7 +258,7 @@ export class Editor extends ZincElement implements ZincFormControl
       return null;
     };
 
-    const html = quill.clipboard.convert({ html: this.value });
+    const html = quill.clipboard.convert({html: this.value});
     quill.setContents(html, Quill.sources.SILENT);
 
     quill.selection.hasFocus = function ()
@@ -274,10 +274,24 @@ export class Editor extends ZincElement implements ZincFormControl
       return normalizeNative(selection);
     };
 
-    this.emit('zn-element-added', { detail: { element: this.editor } });
+    this.emit('zn-element-added', {detail: {element: this.editor}});
 
     document.addEventListener('selectionchange', this._handleSelectionChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
+
+    const toolbar = quill.container.previousSibling as HTMLElement;
+    toolbar.querySelector('button.ql-bold').setAttribute('title', 'Bold');
+    toolbar.querySelector('button.ql-italic').setAttribute('title', 'Italic');
+    toolbar.querySelector('button.ql-underline').setAttribute('title', 'Underline');
+    toolbar.querySelector('button.ql-strike').setAttribute('title', 'Strikethrough');
+    toolbar.querySelector('button.ql-undo').setAttribute('title', 'Undo');
+    toolbar.querySelector('button.ql-redo').setAttribute('title', 'Redo');
+    toolbar.querySelector('button.ql-redo').setAttribute('title', 'Redo');
+    toolbar.querySelector('button.ql-list[value="ordered"]').setAttribute('title', 'Ordered List');
+    toolbar.querySelector('button.ql-list[value="bullet"]').setAttribute('title', 'Bullet List');
+    toolbar.querySelector('button.ql-link').setAttribute('title', 'Link');
+    toolbar.querySelector('button.ql-image').setAttribute('title', 'Image');
+    toolbar.querySelector('button.ql-remove-formatting').setAttribute('title', 'Remove Formatting');
   }
 
 

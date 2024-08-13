@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
+import {html} from "lit";
 
 import '../../src/Editor';
 
@@ -13,20 +13,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ commands }) => html`
-    <zn-editor canned-responses="${JSON.stringify(commands)}"></zn-editor>`,
-  args: {
-    commands: [
-      {
-        title: 'Welcome',
-        content: 'Welcome to the editor',
-        labels: ['greeting', 'action', 'welcome']
-      },
-      {
-        title: 'Goodbye',
-        content: 'Goodbye from the editor',
-        labels: ['farewell', 'action']
-      }
-    ]
-  },
+  render: () => html`
+    <form>
+      <zn-editor attachment-url="#" interaction-type="ticket">Editor</zn-editor>
+      <input type="text" name="attachments" id="attachments" style="display: none">
+    </form>`,
+  args: {},
 };

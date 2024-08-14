@@ -7,7 +7,6 @@ import {ConfirmModal} from "@/ConfirmModal";
 import {ZincElement} from "@/zinc-element";
 import {ifDefined} from "lit/directives/if-defined.js";
 
-
 type NavItem = {
   title: string;
   type: string;
@@ -82,17 +81,20 @@ export class Menu extends ZincElement
             }
             else
             {
-              if(item.type !== 'dropdown') {
+              if(item.type !== 'dropdown')
+              {
                 return html`
                   <li class="${liClass}">
                     <a @click="${this._handleAction}" href="${item.path}"
                        data-target="${ifDefined(item.target)}">${item.title}</a>
                   </li>`;
-              } else {
+              }
+              else
+              {
                 return html`
                   <li class="${liClass}">
                     <span @click="${this._handleAction}" data-path="${ifDefined(item.path)}">${item.title}</span>
-                  </li>`; 
+                  </li>`;
               }
             }
           })}

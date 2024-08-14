@@ -1,124 +1,241 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { classMap } from "lit/directives/class-map.js";
-import { PropertyValues } from "@lit/reactive-element";
-import { Popup } from "@/Popup";
-import { watch } from "@/watch";
-import { ZincSlotElement } from "@/zinc-slot-element";
+import {classMap} from "lit/directives/class-map.js";
+import {PropertyValues} from "@lit/reactive-element";
+import {Popup} from "@/Popup";
+import {watch} from "@/watch";
+import {waitForEvent} from "@/event";
+import {ZincElement} from "@/zinc-element";
+
+type ToolTipPlacement =
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
 
 @customElement('zn-tooltip')
-export class Tooltip extends ZincSlotElement
+export class Tooltip extends ZincElement
 {
   static styles = unsafeCSS(styles);
 
   private hoverTimeout: number;
+  private closeWatcher: CloseWatcher | null;
 
-  @property({ type: Boolean, reflect: true }) open = false;
-
-  @property({ attribute: 'caption', type: String, reflect: true }) caption;
-
-  @property({ reflect: true }) placement: | 'top' | 'bottom' | 'right' | 'left' = 'top';
-
+  @query('slot:not([name])') defaultSlot: HTMLSlotElement;
   @query('.tooltip__body') body: HTMLElement;
-
   @query('zn-popup') popup: Popup;
+
+  @property() content = '';
+
+  @property() placement: ToolTipPlacement = 'top';
+
+  @property({type: Boolean, reflect: true}) disabled = false;
+
+  @property({type: Number}) distance = 4;
+
+  @property({type: Boolean, reflect: true}) open = false;
+
+  @property({type: Number}) skidding = 0;
+
+  @property() trigger = 'hover focus';
+
+  @property({type: Boolean}) hoist = true;
 
   constructor()
   {
     super();
+    this.addEventListener('blur', this.handleBlur, true);
+    this.addEventListener('focus', this.handleFocus, true);
+    this.addEventListener('click', this.handleClick);
     this.addEventListener('mouseover', this.handleMouseOver);
     this.addEventListener('mouseout', this.handleMouseOut);
   }
 
   disconnectedCallback()
   {
-    super.disconnectedCallback();
+    this.closeWatcher?.destroy();
+    document.removeEventListener('keydown', this.handleDocumentKeyDown);
   }
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
+    this.body.hidden = !this.open;
+
     if(this.open)
     {
-      this.body.hidden = false;
       this.popup.active = true;
       this.popup.reposition();
     }
   }
 
-  // add click event to handle the menu
-  connectedCallback()
+  private hasTrigger(triggerType: string)
   {
-    super.connectedCallback();
-    this.addEventListener('click', () =>
+    const triggers = this.trigger.split(' ');
+    return triggers.includes(triggerType);
+  }
+
+  private handleBlur = () =>
+  {
+    if(this.hasTrigger('focus'))
     {
-      if(this.classList.contains('notification'))
-      {
-        this.classList.remove('notification');
-      }
-    });
-  }
+      this.hide();
+    }
+  };
 
-  private handleMouseOver(e)
+  private handleClick = () =>
   {
-    clearTimeout(this.hoverTimeout);
-    this.hoverTimeout = window.setTimeout(() => this.show(), 0);
-  }
+    if(this.hasTrigger('click'))
+    {
+      this.open ? this.hide() : this.show();
+    }
+  };
 
-  private handleMouseOut(e)
+  private handleFocus = () =>
   {
-    clearTimeout(this.hoverTimeout);
-    this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
+    if(this.hasTrigger('focus'))
+    {
+      this.show();
+    }
+  };
+
+  private handleDocumentKeyDown = (event: KeyboardEvent) =>
+  {
+    if(event.key === 'Escape')
+    {
+      event.stopPropagation();
+      this.hide();
+    }
+  };
+
+  private handleMouseOver()
+  {
+    if(this.hasTrigger('hover'))
+    {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = window.setTimeout(() => this.show(), 0);
+    }
   }
 
+  private handleMouseOut()
+  {
+    if(this.hasTrigger('hover'))
+    {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
+    }
+  }
 
-  @watch('open', { waitUntilFirstUpdate: true })
-  handleOpenChange()
+  @watch('open', {waitUntilFirstUpdate: true})
+  async handleOpenChange()
   {
     if(this.open)
     {
+      if(this.disabled)
+      {
+        return;
+      }
+
+      this.emit('zn-show');
+      if('CloseWatcher' in window)
+      {
+        this.closeWatcher?.destroy();
+        this.closeWatcher = new CloseWatcher();
+        this.closeWatcher.onclose = () =>
+        {
+          this.hide();
+        };
+      }
+      else
+      {
+        document.addEventListener('keydown', this.handleDocumentKeyDown);
+      }
+      this.body.hidden = false;
       this.popup.active = true;
       this.popup.reposition();
-      this.body.hidden = false;
+      this.emit('zn-after-show');
     }
     else
     {
+      this.emit('zn-hide');
       this.popup.active = false;
       this.body.hidden = true;
+      this.emit('zn-after-hide');
     }
   }
 
-  show()
+  @watch(['content', 'distance', 'hoist', 'placement', 'skidding'])
+  async handleOptionsChange()
   {
-    return this.open = true;
+    if(this.hasUpdated)
+    {
+      await this.updateComplete;
+      this.popup.reposition();
+    }
   }
 
-  hide()
+  @watch('disabled')
+  handleDisabledChange()
   {
-    return this.open = false;
+    if(this.disabled && this.open)
+    {
+      this.hide();
+    }
+  }
+
+
+  async show()
+  {
+    if(this.open)
+    {
+      return undefined;
+    }
+
+    this.open = true;
+    return waitForEvent(this, 'zn-after-show');
+  }
+
+  async hide()
+  {
+    if(!this.open)
+    {
+      return;
+    }
+
+    this.open = false;
+    return waitForEvent(this, 'zn-after-hide');
   }
 
   render()
   {
     return html`
       <zn-popup
-        class="${classMap({
-          'tooltip': true,
+        part="base"
+        exportparts="popup:base__popup,arrow:base__arrow"
+        class=${classMap({
+          tooltip: true,
           'tooltip--open': this.open
-        })}"
-        strategy="fixed"
-        distance="6"
-        placement="${this.placement}"
+        })}
+        placement=${this.placement}
+        distance=${this.distance}
+        skidding=${this.skidding}
+        strategy=${this.hoist ? 'fixed' : 'absolute'}
         flip
         shift
         arrow
-        flip-fallback-placements="top left"
         hover-bridge>
-        <div slot="anchor">${this.renderSlot('')}</div>
-        <div part="body" id="tooltip" class="tooltip__body">
-          ${this.caption}
-          ${this.renderSlot('content')}
+        <slot slot="anchor" aria-describedby="tooltip"></slot>
+        <div part="body" id="tooltip" class="tooltip__body" role="tooltip" aria-live=${this.open ? 'polite' : 'off'}>
+          <slot name="content">${this.content}</slot>
         </div>
       </zn-popup>`;
   }

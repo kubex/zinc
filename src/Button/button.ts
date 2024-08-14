@@ -197,7 +197,7 @@ export class Button extends ZincElement implements ZincFormControl
     if(this.tooltip !== undefined)
     {
       content = html`
-        <zn-tooltip placement="top" caption="${this.tooltip}">
+        <zn-tooltip placement="top" content="${this.tooltip}">
           ${content}
         </zn-tooltip>`;
     }

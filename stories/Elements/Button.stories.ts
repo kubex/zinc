@@ -1,10 +1,11 @@
-import { html } from "lit";
-import { Meta, StoryObj } from "@storybook/web-components";
+import {html} from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Button';
 import '../../src/Icon';
+import {Button} from "../../src/Button";
 
-const meta: Meta = {
+const meta: Meta<typeof Button> = {
   component: 'zn-button',
   title: 'Elements/Button',
   tags: ['elements', 'button'],
@@ -14,7 +15,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ content, color, size, verticalAlign, disabled, outline, icon, iconPosition }) =>
+  render: ({content, color, size, verticalAlign, disabled, outline, icon, iconPosition}) =>
   {
     return html`
       <zn-button color="${color}" size="${size}" vertical-align="${verticalAlign}" .disabled="${disabled}"
@@ -36,22 +37,22 @@ export const Default: Story = {
     color: {
       description: 'The variant of the button',
       options: ['default', 'secondary', 'error', 'info', 'success', 'warning'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     },
     size: {
       description: 'The size of the button',
       options: ['small', 'medium', 'large'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     },
     verticalAlign: {
       description: 'The vertical alignment of the button',
       options: ['start', 'center', 'end'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     },
     iconPosition: {
       description: 'The position of the icon',
       options: ['left', 'right'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     }
   }
 };
@@ -149,7 +150,6 @@ export const SizesWithIconsOnly = () => (
 
 export const SizesWithIconsOnlyAndTextOnly = () => (
   html`
-
     <zn-button size="small" icon="add"></zn-button>
     <zn-button size="small">Small</zn-button>
     <zn-button icon="add"></zn-button>

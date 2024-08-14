@@ -30,6 +30,7 @@ import './FormElements/MultiSelect';
 import './FormElements/Toggle';
 import './FormElements/Textarea';
 import './FormElements/Rating';
+import './FormElements/ColorSelect';
 import './ConfirmModal';
 import './StatsTile';
 import './SplitPane';

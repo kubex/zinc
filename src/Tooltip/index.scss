@@ -1,19 +1,38 @@
 @use "../wc";
 
-zn-tooltip {
+:host {
   display: contents;
-  z-index: 1000000;
-
-  .tooltip {
-    &__body {
-      display: block;
-      width: max-content;
-      border-radius: 5px;
-      background-color: var(--arrow-color);
-      color: white;
-      font-size: 12px;
-      padding: 5px;
-    }
-  }
-
 }
+
+.tooltip[placement^='top']::part(popup) {
+  transform-origin: bottom;
+}
+
+.tooltip[placement^='bottom']::part(popup) {
+  transform-origin: top;
+}
+
+.tooltip[placement^='left']::part(popup) {
+  transform-origin: right;
+}
+
+.tooltip[placement^='right']::part(popup) {
+  transform-origin: left;
+}
+
+.tooltip__body {
+  display: block;
+  width: max-content;
+  max-width: max-content;
+  border-radius: 5px;
+  background-color: var(--arrow-color);
+  font-size: 12px;
+  text-align: start;
+  white-space: normal;
+  color: white;
+  padding: 5px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+

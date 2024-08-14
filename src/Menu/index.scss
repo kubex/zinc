@@ -1,17 +1,20 @@
 @use "../wc";
 
 :host {
+
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.menu {
   border-radius: 5px;
   padding: 0;
   overflow: hidden;
   border-width: 1px !important;
   filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
-  background-color: rgb(var(--zn-panel));
-  backdrop-filter: blur(3px);
-}
-
-:host([hidden]) {
-  display: none;
+  background-color: rgb(var(--zn-panel, 255, 255, 255));
 }
 
 :host > div {
@@ -20,7 +23,6 @@
   flex-grow: 1;
   padding: 0;
   width: wc.common-size(spanel);
-  background: transparent;
   gap: wc.spacing(md);
 
   li {

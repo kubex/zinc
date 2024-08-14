@@ -1,10 +1,9 @@
-import { PropertyValues } from "@lit/reactive-element";
-import { html, unsafeCSS } from "lit";
-import { classMap } from 'lit/directives/class-map.js';
-import { customElement, property, query } from 'lit/decorators.js';
-import { ZincElement } from "@/zinc-element";
-import { offsetParent } from 'composed-offset-position';
-import { arrow, autoUpdate, computePosition, flip, offset, platform, shift, size } from '@floating-ui/dom';
+import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
+import {classMap} from 'lit/directives/class-map.js';
+import {html, unsafeCSS} from 'lit';
+import {offsetParent} from 'composed-offset-position';
+import {customElement, property, query} from 'lit/decorators.js';
+import {ZincElement} from "@/zinc-element";
 
 import styles from './index.scss?inline';
 
@@ -47,13 +46,13 @@ export class Popup extends ZincElement
    * Activates the positioning logic and shows the popup. When this attribute is removed, the positioning logic is torn
    * down and the popup will be hidden.
    */
-  @property({ type: Boolean, reflect: true }) active = false;
+  @property({type: Boolean, reflect: true}) active = false;
 
   /**
    * The preferred placement of the popup. Note that the actual placement will vary as configured to keep the
    * panel inside of the viewport.
    */
-  @property({ reflect: true }) placement:
+  @property({reflect: true}) placement:
     | 'top'
     | 'top-start'
     | 'top-end'
@@ -71,39 +70,39 @@ export class Popup extends ZincElement
    * Determines how the popup is positioned. The `absolute` strategy works well in most cases, but if overflow is
    * clipped, using a `fixed` position strategy can often workaround it.
    */
-  @property({ reflect: true }) strategy: 'absolute' | 'fixed' = 'fixed';
+  @property({reflect: true}) strategy: 'absolute' | 'fixed' = 'fixed';
 
   /** The distance in pixels from which to offset the panel away from its anchor. */
-  @property({ type: Number }) distance = 0;
+  @property({type: Number}) distance = 0;
 
   /** The distance in pixels from which to offset the panel along its anchor. */
-  @property({ type: Number }) skidding = 0;
+  @property({type: Number}) skidding = 0;
 
   /**
    * Attaches an arrow to the popup. The arrow's size and color can be customized using the `--arrow-size` and
    * `--arrow-color` custom properties. For additional customizations, you can also target the arrow using
    * `::part(arrow)` in your stylesheet.
    */
-  @property({ type: Boolean }) arrow = false;
+  @property({type: Boolean}) arrow = false;
 
   /**
    * The placement of the arrow. The default is `anchor`, which will align the arrow as close to the center of the
    * anchor as possible, considering available space and `arrow-padding`. A value of `start`, `end`, or `center` will
    * align the arrow to the start, end, or center of the popover instead.
    */
-  @property({ attribute: 'arrow-placement' }) arrowPlacement: 'start' | 'end' | 'center' | 'anchor' = 'anchor';
+  @property({attribute: 'arrow-placement'}) arrowPlacement: 'start' | 'end' | 'center' | 'anchor' = 'anchor';
 
   /**
    * The amount of padding between the arrow and the edges of the popup. If the popup has a border-radius, for example,
    * this will prevent it from overflowing the corners.
    */
-  @property({ attribute: 'arrow-padding', type: Number }) arrowPadding = 10;
+  @property({attribute: 'arrow-padding', type: Number}) arrowPadding = 10;
 
   /**
    * When set, placement of the popup will flip to the opposite site to keep it in view. You can use
    * `flipFallbackPlacements` to further configure how the fallback placement is determined.
    */
-  @property({ type: Boolean }) flip = false;
+  @property({type: Boolean}) flip = false;
 
   /**
    * If the preferred placement doesn't fit, popup will be tested in these fallback placements until one fits. Must be a
@@ -133,33 +132,33 @@ export class Popup extends ZincElement
    * the popup should be positioned using the best available fit based on available space or as it was initially
    * preferred.
    */
-  @property({ attribute: 'flip-fallback-strategy' }) flipFallbackStrategy: 'best-fit' | 'initial' = 'best-fit';
+  @property({attribute: 'flip-fallback-strategy'}) flipFallbackStrategy: 'best-fit' | 'initial' = 'best-fit';
 
   /**
    * The flip boundary describes clipping element(s) that overflow will be checked relative to when flipping. By
    * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
    * change the boundary by passing a reference to one or more elements to this property.
    */
-  @property({ type: Object }) flipBoundary: Element | Element[];
+  @property({type: Object}) flipBoundary: Element | Element[];
 
   /** The amount of padding, in pixels, to exceed before the flip behavior will occur. */
-  @property({ attribute: 'flip-padding', type: Number }) flipPadding = 0;
+  @property({attribute: 'flip-padding', type: Number}) flipPadding = 0;
 
   /** Moves the popup along the axis to keep it in view when clipped. */
-  @property({ type: Boolean }) shift = false;
+  @property({type: Boolean}) shift = false;
 
   /**
    * The shift boundary describes clipping element(s) that overflow will be checked relative to when shifting. By
    * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
    * change the boundary by passing a reference to one or more elements to this property.
    */
-  @property({ type: Object }) shiftBoundary: Element | Element[];
+  @property({type: Object}) shiftBoundary: Element | Element[];
 
   /** The amount of padding, in pixels, to exceed before the shift behavior will occur. */
-  @property({ attribute: 'shift-padding', type: Number }) shiftPadding = 0;
+  @property({attribute: 'shift-padding', type: Number}) shiftPadding = 0;
 
   /** When set, this will cause the popup to automatically resize itself to prevent it from overflowing. */
-  @property({ attribute: 'auto-size' }) autoSize: 'horizontal' | 'vertical' | 'both';
+  @property({attribute: 'auto-size'}) autoSize: 'horizontal' | 'vertical' | 'both';
 
   /** Syncs the popup's width or height to that of the anchor element. */
   @property() sync: 'width' | 'height' | 'both';
@@ -169,10 +168,10 @@ export class Popup extends ZincElement
    * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
    * change the boundary by passing a reference to one or more elements to this property.
    */
-  @property({ type: Object }) autoSizeBoundary: Element | Element[];
+  @property({type: Object}) autoSizeBoundary: Element | Element[];
 
   /** The amount of padding, in pixels, to exceed before the auto-size behavior will occur. */
-  @property({ attribute: 'auto-size-padding', type: Number }) autoSizePadding = 0;
+  @property({attribute: 'auto-size-padding', type: Number}) autoSizePadding = 0;
 
   /**
    * When a gap exists between the anchor and the popup element, this option will add a "hover bridge" that fills the
@@ -180,12 +179,13 @@ export class Popup extends ZincElement
    * because the pointer never technically leaves the element. The hover bridge will only be drawn when the popover is
    * active.
    */
-  @property({ attribute: 'hover-bridge', type: Boolean }) hoverBridge = false;
+  @property({attribute: 'hover-bridge', type: Boolean}) hoverBridge = false;
 
   async connectedCallback()
   {
     super.connectedCallback();
 
+    // Start the positioner after the first update
     await this.updateComplete;
     this.start();
   }
@@ -196,20 +196,23 @@ export class Popup extends ZincElement
     this.stop();
   }
 
-  async updated(_changedProperties: PropertyValues)
+  async updated(changedProps: Map<string, unknown>)
   {
-    super.updated(_changedProperties);
+    super.updated(changedProps);
 
-    if(_changedProperties.has('active'))
+    // Start or stop the positioner when active changes
+    if(changedProps.has('active'))
     {
       this.active ? this.start() : this.stop();
     }
 
-    if(_changedProperties.has('anchor'))
+    // Update the anchor when anchor changes
+    if(changedProps.has('anchor'))
     {
       this.handleAnchorChange();
     }
 
+    // All other properties will trigger a reposition when active
     if(this.active)
     {
       await this.updateComplete;
@@ -220,6 +223,7 @@ export class Popup extends ZincElement
   private async handleAnchorChange()
   {
     await this.stop();
+
     if(this.anchor && typeof this.anchor === 'string')
     {
       // Locate the anchor by id
@@ -241,7 +245,7 @@ export class Popup extends ZincElement
     // and positioning can't be calculated on them
     if(this.anchorEl instanceof HTMLSlotElement)
     {
-      this.anchorEl = this.anchorEl.assignedElements({ flatten: true })[0] as HTMLElement;
+      this.anchorEl = this.anchorEl.assignedElements({flatten: true})[0] as HTMLElement;
     }
 
     // If the anchor is valid, start it up
@@ -256,6 +260,7 @@ export class Popup extends ZincElement
     // We can't start the positioner without an anchor
     if(!this.anchorEl)
     {
+      console.warn('Popup: No anchor element found.');
       return;
     }
 
@@ -285,20 +290,19 @@ export class Popup extends ZincElement
     });
   }
 
+  /** Forces the popup to recalculate and reposition itself. */
   reposition()
   {
     // Nothing to do if the popup is inactive or the anchor doesn't exist
     if(!this.active || !this.anchorEl)
     {
+      console.warn('Popup: Cannot reposition when inactive or anchor element is missing.');
       return;
     }
 
-    //
-    // NOTE: Floating UI middlewares are order dependent: https://floating-ui.com/docs/middleware
-    //
     const middleware = [
       // The offset middleware goes first
-      offset({ mainAxis: this.distance, crossAxis: this.skidding })
+      offset({mainAxis: this.distance, crossAxis: this.skidding})
     ];
 
     // First we sync width/height
@@ -306,10 +310,14 @@ export class Popup extends ZincElement
     {
       middleware.push(
         size({
-          apply: ({ rects }) =>
+          apply: ({rects}) =>
           {
             const syncWidth = this.sync === 'width' || this.sync === 'both';
             const syncHeight = this.sync === 'height' || this.sync === 'both';
+
+            console.log(syncWidth, syncHeight);
+            console.log(rects.reference.width, rects.reference.height);
+
             this.popup.style.width = syncWidth ? `${rects.reference.width}px` : '';
             this.popup.style.height = syncHeight ? `${rects.reference.height}px` : '';
           }
@@ -355,7 +363,7 @@ export class Popup extends ZincElement
         size({
           boundary: this.autoSizeBoundary,
           padding: this.autoSizePadding,
-          apply: ({ availableWidth, availableHeight }) =>
+          apply: ({availableWidth, availableHeight}) =>
           {
             if(this.autoSize === 'vertical' || this.autoSize === 'both')
             {
@@ -409,9 +417,9 @@ export class Popup extends ZincElement
         ...platform,
         getOffsetParent
       }
-    }).then(({ x, y, middlewareData, placement }) =>
+    }).then(({x, y, middlewareData, placement}) =>
     {
-      const staticSide = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' }[placement.split('-')[0]]!;
+      const staticSide = {top: 'bottom', right: 'left', bottom: 'top', left: 'right'}[placement.split('-')[0]]!;
 
       this.setAttribute('data-current-placement', placement);
 
@@ -590,5 +598,3 @@ export class Popup extends ZincElement
     `;
   }
 }
-
-

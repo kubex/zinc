@@ -1,5 +1,5 @@
-import { html } from "lit";
-import { Meta, StoryObj } from "@storybook/web-components";
+import {html} from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Popup';
 import '../../src/Button';
@@ -14,12 +14,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-
 export const Default: Story = {
   render: () =>
   {
     return html`
-      <zn-tooltip caption="Hover Me!">
+      <zn-tooltip content="Hover Me!">
         <zn-button>Awesome!</zn-button>
       </zn-tooltip>
     `;

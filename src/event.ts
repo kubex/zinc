@@ -59,3 +59,21 @@ export type GetCustomEventType<T> = T extends keyof GlobalEventHandlersEventMap
 // `keyof ValidEventTypeMap` is equivalent to `keyof GlobalEventHandlersEventMap` but gives a nicer error message
 export type ValidEventTypeMap = EventTypesWithRequiredDetail | EventTypesWithoutRequiredDetail;
 
+
+export function waitForEvent(el: HTMLElement, eventName: string)
+{
+  return new Promise<void>(resolve =>
+  {
+    function done(event: Event)
+    {
+      if(event.target === el)
+      {
+        el.removeEventListener(eventName, done);
+        resolve();
+      }
+    }
+
+
+    el.addEventListener(eventName, done);
+  });
+}

@@ -164,7 +164,6 @@ export class Dropdown extends ZincElement
 
   handleTriggerClick()
   {
-    console.log('trigger clicked');
     if(this.open)
     {
       this.hide();
@@ -346,8 +345,6 @@ export class Dropdown extends ZincElement
       this.popup.active = false;
       this.emit('zn-after-hide');
     }
-
-    console.log('isOpen', this.open);
   }
 
   render()

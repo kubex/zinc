@@ -1,7 +1,7 @@
 @use "../wc";
 
 :host {
-
+  background-color: transparent;
 }
 
 :host([hidden]) {
@@ -13,11 +13,12 @@
   padding: 0;
   overflow: hidden;
   border-width: 1px !important;
-  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 5px 4px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
   background-color: rgb(var(--zn-panel, 255, 255, 255));
+
 }
 
-:host > div {
+.menu {
   display: flex;
   flex-direction: column;
   flex-grow: 1;

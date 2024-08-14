@@ -296,7 +296,6 @@ export class Popup extends ZincElement
     // Nothing to do if the popup is inactive or the anchor doesn't exist
     if(!this.active || !this.anchorEl)
     {
-      console.warn('Popup: Cannot reposition when inactive or anchor element is missing.');
       return;
     }
 
@@ -564,15 +563,10 @@ export class Popup extends ZincElement
     }
   };
 
-  private handleAnchorClick()
-  {
-    this.active = !this.active;
-  }
-
   render()
   {
     return html`
-      <slot name="anchor" @slotchange=${this.handleAnchorChange} @click=${this.handleAnchorClick}></slot>
+      <slot name="anchor" @slotchange=${this.handleAnchorChange}></slot>
 
       <span
         part="hover-bridge"

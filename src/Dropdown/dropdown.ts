@@ -197,6 +197,10 @@ export class Dropdown extends ZincElement
     const menu = this.getMenu();
     if(menu)
     {
+      const menuItems = menu.getAllItems();
+      const firstMenuItem = menuItems[0];
+      const lastMenuItem = menuItems[menuItems.length - 1];
+
       // When up/down is pressed, we make the assumption the user is familiar with the menu and wants to navigate it
       if(['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key))
       {
@@ -209,6 +213,25 @@ export class Dropdown extends ZincElement
 
           // Wait for the dropdown to open before focusing but not the animation
           await this.updateComplete;
+        }
+
+        if(menuItems.length > 0)
+        {
+          // Focus on the first/last menu item after showing
+          this.updateComplete.then(() =>
+          {
+            if(event.key === 'ArrowDown' || event.key === 'Home')
+            {
+              menu.setCurrentItem(firstMenuItem);
+              firstMenuItem.focus();
+            }
+
+            if(event.key === 'ArrowUp' || event.key === 'End')
+            {
+              menu.setCurrentItem(lastMenuItem);
+              lastMenuItem.focus();
+            }
+          });
         }
       }
     }

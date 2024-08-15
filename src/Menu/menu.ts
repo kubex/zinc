@@ -26,13 +26,13 @@ type NavItem = {
 @customElement('zn-menu')
 export class Menu extends ZincElement
 {
+  static styles = unsafeCSS(styles);
+
   @property({attribute: 'actions', type: Array}) actions = [];
 
   public closer;
 
-  static styles = unsafeCSS(styles);
-
-  _handleAction(e)
+  private handleClick(e)
   {
     if(this.hasAttribute('popover'))
     {
@@ -50,14 +50,110 @@ export class Menu extends ZincElement
     });
   }
 
-  _handleConfirm(triggerId: string, e)
+  private handleConfirm(triggerId: string)
   {
     const confirm = this.shadowRoot.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ConfirmModal;
     if(confirm)
     {
-      confirm.addEventListener('zn-close', (e) => this._handleAction(e));
+      confirm.addEventListener('zn-close', (e) => this.handleClick(e));
       confirm.open();
     }
+  }
+
+  private handleKeyDown(event: KeyboardEvent)
+  {
+    if([' ', 'Enter'].includes(event.key))
+    {
+      const item = this.getCurrentItem();
+      event.preventDefault();
+      event.stopPropagation();
+
+      item?.click();
+    }
+    else if(['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key))
+    {
+      const items = this.getAllItems();
+      const activeItem = this.getCurrentItem();
+      let index = activeItem ? items.indexOf(activeItem) : 0;
+
+      if(items.length > 0)
+      {
+        event.preventDefault();
+        event.stopPropagation();
+
+        switch(event.key)
+        {
+          case 'ArrowDown':
+            index++;
+            break;
+          case 'ArrowUp':
+            index--;
+            break;
+          case 'Home':
+            index = 0;
+            break;
+          case 'End':
+            index = items.length - 1;
+            break;
+        }
+
+        if(index < 0)
+        {
+          index = items.length - 1;
+        }
+
+        if(index > items.length - 1)
+        {
+          index = 0;
+        }
+
+        this.setCurrentItem(items[index]);
+        items[index].focus();
+      }
+    }
+  }
+
+  isMenuItem(item: HTMLElement)
+  {
+    return (
+      item.tagName.toLowerCase() === 'a'
+    );
+  }
+
+  handleMouseDown(event: MouseEvent)
+  {
+    const target = event.target as HTMLElement;
+    console.log('target', target);
+
+    if(this.isMenuItem(target))
+    {
+      this.setCurrentItem(target as HTMLElement);
+    }
+  }
+
+  getAllItems(): HTMLElement[]
+  {
+    const a = this.shadowRoot.querySelectorAll('a');
+    return Array.from(a).filter((el: HTMLElement) =>
+    {
+      return !el.inert;
+    });
+  }
+
+  getCurrentItem(): HTMLElement
+  {
+    return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
+  }
+
+  setCurrentItem(item: HTMLElement)
+  {
+    const items = this.getAllItems();
+    console.log('current item', item);
+
+    items.forEach(i =>
+    {
+      i.setAttribute('tabindex', i === item ? '0' : '-1');
+    });
   }
 
   render()
@@ -73,11 +169,17 @@ export class Menu extends ZincElement
             if(item.confirm)
             {
               return html`
-                <zn-confirm trigger="${item.confirm.trigger}" type="${ifDefined(item.confirm.type)}"
-                            caption="${item.confirm.caption}" content="${item.confirm.content}"
+                <zn-confirm trigger="${item.confirm.trigger}"
+                            type="${ifDefined(item.confirm.type)}"
+                            caption="${item.confirm.caption}"
+                            content="${item.confirm.content}"
                             action="${item.confirm.action}"></zn-confirm>
-                <li class="${liClass}"><span @click="${this._handleConfirm.bind(this, item.confirm.trigger)}"
-                                             id="${item.confirm.trigger}">${item.title}</span></li>`;
+                <li class="${liClass}">
+                  <span @mousedown=${this.handleMouseDown}
+                        @keydown=${this.handleKeyDown}
+                        @click="${this.handleConfirm.bind(this, item.confirm.trigger)}"
+                        id="${item.confirm.trigger}">${item.title}</span>
+                </li>`;
             }
             else
             {
@@ -85,7 +187,10 @@ export class Menu extends ZincElement
               {
                 return html`
                   <li class="${liClass}">
-                    <a @click="${this._handleAction}" href="${item.path}"
+                    <a @click="${this.handleClick}"
+                       @keydown=${this.handleKeyDown}
+                       @mousedown=${this.handleMouseDown}
+                       href="${item.path}"
                        data-target="${ifDefined(item.target)}">${item.title}</a>
                   </li>`;
               }
@@ -93,7 +198,10 @@ export class Menu extends ZincElement
               {
                 return html`
                   <li class="${liClass}">
-                    <span @click="${this._handleAction}" data-path="${ifDefined(item.path)}">${item.title}</span>
+                    <span @click="${this.handleClick}"
+                          @keydown=${this.handleKeyDown}
+                          @mousedown=${this.handleMouseDown}
+                          data-path="${ifDefined(item.path)}">${item.title}</span>
                   </li>`;
               }
             }

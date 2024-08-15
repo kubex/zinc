@@ -27,7 +27,7 @@ export const Default: Story = {
       },
       {
         "title": "Settings",
-        "path": "/settings"
+        "path": "#"
       }
     ],
   }

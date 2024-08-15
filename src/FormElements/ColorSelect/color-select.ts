@@ -438,7 +438,10 @@ export class ColorSelect extends EmptyZincFormElement
         <label
           id="label"
           part="form-control-label"
-          class="form-control__label"
+          class=${classMap({
+            'form-control__label': true,
+            'form-control__label--has-label': hasLabel,
+          })}
           aria-hidden=${hasLabel ? 'false' : 'true'}
           @click=${this.handleLabelClick}>
           <slot name="label">${this.label}</slot>

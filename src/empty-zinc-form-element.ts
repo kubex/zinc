@@ -22,7 +22,7 @@ export abstract class EmptyZincFormElement extends ZincElement implements ZincFo
 
   checkValidity(): boolean
   {
-    return false;
+    return true;
   }
 
   getForm(): HTMLFormElement | null
@@ -33,7 +33,7 @@ export abstract class EmptyZincFormElement extends ZincElement implements ZincFo
 
   reportValidity(): boolean
   {
-    return false;
+    return true;
   }
 
   setCustomValidity(message: string): void

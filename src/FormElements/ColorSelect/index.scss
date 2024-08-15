@@ -38,7 +38,7 @@ $colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
   --color-grey: rgb(128, 128, 128);
 }
 
-.form-control__label:not(:empty) {
+.form-control__label--has-label {
   font-weight: 600;
   font-size: 14px;
   color: rgb(var(--zn-text-heading));
@@ -133,10 +133,8 @@ $colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
   max-height: var(--auto-size-available-height);
   z-index: 1000;
   border: 1px solid rgb(var(--zn-border-color));
-  border-top: 0;
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-radius: 5px;
 }
 
 .select__option {
@@ -181,8 +179,7 @@ $colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
   margin: -#{wc.spacing(sm)};
   margin-top: 7px;
   margin-bottom: 8px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-radius: 5px;
 
   svg {
     transition: all 0.2s ease-in-out;

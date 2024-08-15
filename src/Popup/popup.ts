@@ -313,7 +313,7 @@ export class Popup extends ZincElement
           {
             const syncWidth = this.sync === 'width' || this.sync === 'both';
             const syncHeight = this.sync === 'height' || this.sync === 'both';
-            
+
             this.popup.style.width = syncWidth ? `${rects.reference.width}px` : '';
             this.popup.style.height = syncHeight ? `${rects.reference.height}px` : '';
           }
@@ -423,6 +423,8 @@ export class Popup extends ZincElement
         left: `${x}px`,
         top: `${y}px`
       });
+
+      this.popup.showPopover();
 
       if(this.arrow)
       {
@@ -563,7 +565,7 @@ export class Popup extends ZincElement
   render()
   {
     return html`
-      <slot name="anchor" @slotchange=${this.handleAnchorChange}></slot>
+      <slot class="anchor" name="anchor" @slotchange=${this.handleAnchorChange}></slot>
 
       <span
         part="hover-bridge"
@@ -574,7 +576,9 @@ export class Popup extends ZincElement
       ></span>
 
       <div
+        id="popup"
         part="popup"
+        popover
         class=${classMap({
           popup: true,
           'popup--active': this.active,

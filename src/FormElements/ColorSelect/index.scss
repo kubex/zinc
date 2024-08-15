@@ -27,15 +27,15 @@ $colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
 :host {
   display: block;
 
-  --color-blue: rgb(0, 0, 255);
-  --color-red: rgb(255, 0, 0);
-  --color-orange: rgb(255, 165, 0);
-  --color-yellow: rgb(255, 255, 0);
-  --color-indigo: rgb(75, 0, 130);
-  --color-violet: rgb(238, 130, 238);
-  --color-green: rgb(0, 128, 0);
-  --color-pink: rgb(255, 192, 203);
-  --color-grey: rgb(128, 128, 128);
+  --color-blue: rgb(var(--zn-blue, 0, 0, 255));
+  --color-red: rgb(var(--zn-red, 255, 0, 0));
+  --color-orange: rgb(var(--zn-orange, 255, 165, 0));
+  --color-yellow: rgb(var(--zn-yellow, 255, 255, 0));
+  --color-indigo: rgb(var(--zn-indigo, 75, 0, 130));
+  --color-violet: rgb(var(--zn-violet, 238, 130, 238));
+  --color-green: rgb(var(--zn-green, 0, 128, 0));
+  --color-pink: rgb(var(--zn-pink, 255, 192, 203));
+  --color-grey: rgb(var(--zn-grey, 128, 128, 128));
 }
 
 .form-control__label--has-label {

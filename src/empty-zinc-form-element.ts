@@ -5,9 +5,9 @@ import {property} from "lit/decorators.js";
 export abstract class EmptyZincFormElement extends ZincElement implements ZincFormControl
 {
   @property() name: string;
-  @property() value: string;
+  @property() value;
 
-  private readonly formControlController = new FormControlController(this);
+  protected readonly formControlController = new FormControlController(this);
 
   get validationMessage()
   {

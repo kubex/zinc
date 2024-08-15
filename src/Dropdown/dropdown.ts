@@ -132,8 +132,8 @@ export class Dropdown extends ZincElement
     {
       this.panel.addEventListener('keydown', this.handleKeyDown);
     }
-    document.addEventListener('keydown', this.handleDocumentKeyDown);
-    document.addEventListener('mousedown', this.handleDocumentMouseDown);
+    document.addEventListener('keydown', this.handleDocumentKeyDown.bind(this));
+    document.addEventListener('mousedown', this.handleDocumentMouseDown.bind(this));
 
     this.closeWatcher?.destroy();
   }

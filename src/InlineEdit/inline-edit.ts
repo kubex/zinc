@@ -160,6 +160,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         </span>
         <div class="ai__wrapper">
           <div class="ai__left" @click="${this._handleEditClick}">
+            <slot></slot>
             ${input}
           </div>
           <div class="ai__right">

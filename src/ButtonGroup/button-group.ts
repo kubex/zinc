@@ -11,6 +11,7 @@ export class ButtonGroup extends ZincElement
   @property({}) direction: 'horizontal' | 'vertical' = 'horizontal';
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) wrap = false;
+  @property({type: Boolean}) start = false;
 
   static styles = unsafeCSS(styles);
 
@@ -49,7 +50,8 @@ export class ButtonGroup extends ZincElement
            class="${classMap({
              'button-group': true,
              'button-group--grow': this.grow,
-             'button-group--wrap': this.wrap
+             'button-group--wrap': this.wrap,
+             'button-group--start': this.start,
            })}"
            role="group">
         <slot @slotchange=${this.handleSlotChange}></slot>

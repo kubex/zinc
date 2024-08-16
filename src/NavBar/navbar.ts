@@ -1,12 +1,16 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {ZincElement} from "@/zinc-element";
+import {classMap} from "lit/directives/class-map.js";
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincMenuSelectEvent} from "@/Events/zn-menu-select";
+
+// Dependants
 import "../Popup";
+import '../Dropdown';
 
 import styles from './index.scss?inline';
-import {PropertyValues} from "@lit/reactive-element";
-import {classMap} from "lit/directives/class-map.js";
-import {ZincMenuSelectEvent} from "@/Events/zn-menu-select";
+
 
 @customElement('zn-navbar')
 export class NavBar extends ZincElement
@@ -39,26 +43,10 @@ export class NavBar extends ZincElement
     }
     this._openedTabs.push(item.getAttribute('tab-uri'));
     const ul = this.shadowRoot.querySelector('ul');
-    const dropdown = this.shadowRoot.querySelector('li[id="dropdown-item"]');
+    const dropdown = this.shadowRoot.querySelector('[id="dropdown-item"]');
+    // @ts-ignore
+    dropdown.querySelector('zn-dropdown').hide();
     return dropdown ? ul.insertBefore(item, dropdown) : ul.appendChild(item);
-  }
-
-  public removeItem(name: string)
-  {
-    const item = this.shadowRoot.querySelector(`li[tab-uri="${name}"]`);
-    if(item)
-    {
-      item.remove();
-    }
-  }
-
-  private handlePosition(e)
-  {
-    const target = e.target;
-    const button = this.shadowRoot.querySelector('button[popovertarget="dropdown"]');
-    const rect = button.getBoundingClientRect();
-    target.style.left = `${rect.left}px`;
-    target.style.top = `${rect.bottom}px`;
   }
 
   protected firstUpdated(_changedProperties: PropertyValues)
@@ -66,9 +54,6 @@ export class NavBar extends ZincElement
     super.firstUpdated(_changedProperties);
     if(this.dropdown.length > 0)
     {
-      const element = this.shadowRoot.querySelector('[popover]');
-      element.addEventListener('toggle', this.handlePosition.bind(this));
-
       const menu = this.shadowRoot.querySelector('zn-menu');
       if(menu)
       {
@@ -103,17 +88,6 @@ export class NavBar extends ZincElement
       this.style.display = 'none';
     }
 
-    let dropdown = null;
-    if(this.dropdown && this.dropdown.length > 0)
-    {
-      dropdown = html`
-        <button popovertarget="dropdown">
-          <zn-icon src="add" size="18"></zn-icon>
-        </button>
-        <zn-menu popover id="dropdown" actions="${JSON.stringify(this.dropdown)}"></zn-menu>
-      `;
-    }
-
     return html`
       <ul>
         ${this._preItems}
@@ -133,9 +107,14 @@ export class NavBar extends ZincElement
           return html`
             <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
         })}
-        ${dropdown ? html`
+        ${this.dropdown && this.dropdown.length > 0 ? html`
           <li id="dropdown-item">
-            <div class="dropdown-wrap">${dropdown}</div>
+            <zn-dropdown>
+              <button slot="trigger">
+                <zn-icon src="add" size="18"></zn-icon>
+              </button>
+              <zn-menu actions="${JSON.stringify(this.dropdown)}"></zn-menu>
+            </zn-dropdown>
           </li>` : ''}
         ${this._postItems}
       </ul>`;

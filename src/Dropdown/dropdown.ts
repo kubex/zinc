@@ -253,6 +253,7 @@ export class Dropdown extends ZincElement
   private handleDocumentMouseDown(event: MouseEvent)
   {
     const path = event.composedPath();
+
     if(this.containingElement && !path.includes(this.containingElement))
     {
       this.hide();

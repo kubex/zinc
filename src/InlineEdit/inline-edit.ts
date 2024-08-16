@@ -1,9 +1,9 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query, state } from 'lit/decorators.js';
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { FormControlController } from "@/form";
-import { PropertyValues } from "@lit/reactive-element";
-import { classMap } from "lit/directives/class-map.js";
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query, state} from 'lit/decorators.js';
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {FormControlController} from "@/form";
+import {PropertyValues} from "@lit/reactive-element";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './index.scss?inline';
 
@@ -21,14 +21,15 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   @query('.ai__input') input: HTMLInputElement | HTMLSelectElement;
 
-  @property({ attribute: 'caption-size', reflect: true }) captionSize: 'small' | 'medium' | 'large' = 'medium';
+  @property({attribute: 'caption-size', reflect: true}) captionSize: 'small' | 'medium' | 'large' = 'medium';
   @property() value: string;
   @property() name: string;
-  @property({ attribute: 'default-value' }) defaultValue: string;
+  @property({attribute: 'default-value'}) defaultValue: string;
   @property() caption: string = ""; // Caption
-  @property({ type: Boolean }) disabled: boolean = false;
+  @property({type: Boolean}) disabled: boolean = false;
+  @property({type: Boolean}) horizontal: boolean = false;
 
-  @property({ attribute: 'options', type: Object }) options: { [key: string]: string } = {};
+  @property({attribute: 'options', type: Object}) options: { [key: string]: string } = {};
 
 
   get validity(): ValidityState
@@ -154,6 +155,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         'ai--editing': this.isEditing,
         'ai--focused': this.hasFocus,
         'ai--disabled': this.disabled,
+        'ai--horizontal': this.horizontal,
       })}">
         <span class="ai__caption" @click="${this._handleEditClick}">
           ${this.caption}

@@ -37,14 +37,25 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   connectedCallback()
   {
     super.connectedCallback();
-    const linkedSelectElement = this.parentElement.querySelector(`[id="${this.linkedSelect}"]`) as HTMLSelectElement;
 
-    if(!linkedSelectElement)
+    let level = 0;
+    let currentElement = this.parentElement;
+    // try to fin
+    while (level < 10 && currentElement.tagName !== 'DOCUMENT')
+    {
+      if(currentElement.querySelector(`[id="${this.linkedSelect}"]`) instanceof HTMLSelectElement)
+      {
+        this.linkedSelectElement = currentElement.querySelector(`[id="${this.linkedSelect}"]`) as HTMLSelectElement;
+        break;
+      }
+      currentElement = currentElement.parentElement;
+      level++;
+    }
+
+    if(!this.linkedSelectElement)
     {
       throw new Error(`Linked select element with name ${this.linkedSelect} not found`);
     }
-
-    this.linkedSelectElement = linkedSelectElement as HTMLSelectElement;
   }
 
   protected firstUpdated(_changedProperties: PropertyValues)
@@ -88,6 +99,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
   public handleChange(e: Event)
   {
+    this.value = (e.target as HTMLSelectElement).value;
     this.formControlController.updateValidity();
   }
 
@@ -101,7 +113,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
     const options = this.options[selected];
     return html`
-      <select class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}">
+      <select part="select" class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}">
         ${Object.entries(options).map(([key, value]) => html`
           <option value="${key}" ?selected="${key === this.value}">${value}</option>
         `)}

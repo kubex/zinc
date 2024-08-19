@@ -281,6 +281,7 @@ export class Popup extends ZincElement
         this.removeAttribute('data-current-placement');
         this.style.removeProperty('--auto-size-available-width');
         this.style.removeProperty('--auto-size-available-height');
+        this.popup.hidePopover();
         requestAnimationFrame(() => resolve());
       }
       else

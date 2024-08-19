@@ -6,6 +6,7 @@ import {PropertyValues} from "@lit/reactive-element";
 import {classMap} from "lit/directives/class-map.js";
 
 import styles from './index.scss?inline';
+import {HasSlotController} from "@/slot";
 
 @customElement('zn-inline-edit')
 export class InlineEdit extends ZincElement implements ZincFormControl
@@ -15,6 +16,8 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   private readonly formControlController = new FormControlController(this, {
     defaultValue: (control: InlineEdit) => control.defaultValue,
   });
+
+  private readonly slotController = new HasSlotController(this);
 
   @state() private hasFocus = false;
   @state() private isEditing = false;
@@ -149,6 +152,9 @@ export class InlineEdit extends ZincElement implements ZincFormControl
       </select>`;
     }
 
+    const slotHasContent = this.slotController.test('[default]');
+
+
     return html`
       <div class="${classMap({
         'ai': true,
@@ -163,7 +169,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
         <div class="ai__wrapper">
           <div class="ai__left" @click="${this._handleEditClick}">
             <slot></slot>
-            ${input}
+            ${slotHasContent ? null : input}
           </div>
           <div class="ai__right">
             ${!this.isEditing ?

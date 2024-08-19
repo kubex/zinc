@@ -14,10 +14,9 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: ({ options }) => html`
-    <select id="first">
+    <select id="first" style="margin-bottom: 5px;">
       <option value="1">Option 1</option>
       <option value="2">Option 2</option>
-      <option value="3">Option 3</option>
     </select>
     <zn-linked-select .options=${options} linked-select="first"></zn-linked-select> `,
   args: {

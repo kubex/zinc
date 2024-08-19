@@ -1,10 +1,10 @@
-import { html, unsafeCSS } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import {html, unsafeCSS} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { FormControlController } from "@/form";
-import { PropertyValues } from "@lit/reactive-element";
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {FormControlController} from "@/form";
+import {PropertyValues} from "@lit/reactive-element";
 
 
 @customElement('zn-linked-select')
@@ -15,9 +15,9 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   @property() name: string = "";
   @property() value: string;
 
-  @property({ type: Boolean, reflect: true }) checked = false;
-  @property({ type: Array }) options;
-  @property({ attribute: 'linked-select' }) linkedSelect: string = "";
+  @property({type: Boolean, reflect: true}) checked = false;
+  @property({type: Array}) options;
+  @property({attribute: 'linked-select'}) linkedSelect: string = "";
 
   @query('select') input: HTMLInputElement;
 
@@ -34,9 +34,10 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
     return this.input.validationMessage;
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues)
+  connectedCallback()
   {
-    const linkedSelectElement = document.querySelector(`[id="${this.linkedSelect}"]`) as HTMLSelectElement;
+    super.connectedCallback();
+    const linkedSelectElement = this.parentElement.querySelector(`[id="${this.linkedSelect}"]`) as HTMLSelectElement;
 
     if(!linkedSelectElement)
     {
@@ -44,7 +45,18 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
     }
 
     this.linkedSelectElement = linkedSelectElement as HTMLSelectElement;
-    return this.formControlController.updateValidity();
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    this.linkedSelectElement.addEventListener('change', this.handleLinkedSelectChange);
+    this.formControlController.updateValidity();
+  }
+
+  disconnectedCallback()
+  {
+    this.linkedSelectElement.removeEventListener('change', this.handleLinkedSelectChange);
+    super.disconnectedCallback();
   }
 
   checkValidity(): boolean
@@ -68,7 +80,13 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
   }
 
-  public handleChange(e)
+  public handleLinkedSelectChange = (e: Event) =>
+  {
+    this.requestUpdate();
+    this.formControlController.updateValidity();
+  };
+
+  public handleChange(e: Event)
   {
     this.formControlController.updateValidity();
   }

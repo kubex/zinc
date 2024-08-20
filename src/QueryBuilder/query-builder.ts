@@ -1,11 +1,11 @@
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
 
-import { classMap } from "lit/directives/class-map.js";
-import { FormControlController } from "@/form";
-import { PropertyValues } from "@lit/reactive-element";
-import { MultiSelect } from "@/FormElements/MultiSelect";
+import {classMap} from "lit/directives/class-map.js";
+import {FormControlController} from "@/form";
+import {PropertyValues} from "@lit/reactive-element";
+import {MultiSelect} from "@/FormElements/MultiSelect";
 
 import styles from './index.scss?inline';
 
@@ -60,11 +60,19 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   @query('.add-rule') addRule: HTMLSelectElement;
   @query('input#main-input') input: HTMLInputElement;
 
-  @property({ type: Array }) filters: QueryBuilderData = [];
+  @property({type: Array}) filters: QueryBuilderData = [];
 
 
   @property() name: string;
   @property() value: PropertyKey;
+  @property({
+    attribute: 'show-values',
+    converter: {
+      fromAttribute: (value: string) => value.split(' '),
+      toAttribute: (value: string[]) => value.join(' ')
+    }
+  }) showValues: string[] = [];
+
 
   get validationMessage(): string
   {
@@ -79,6 +87,13 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
+    if(this.showValues)
+    {
+      this.showValues.forEach(item =>
+      {
+        this._addRule(null, item);
+      });
+    }
     this._handleChange();
     this._formController.updateValidity();
   }
@@ -114,9 +129,9 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this.value = btoa(JSON.stringify(data));
   }
 
-  private _addRule(event: Event)
+  private _addRule(event: Event | null, value: string = null)
   {
-    const id = (event.target as HTMLSelectElement).value;
+    const id = value ? value : (event.target as HTMLSelectElement).value;
     if(id === '') return;
 
     const filter = this.filters.find(item => item.id === id);
@@ -254,7 +269,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           const newInput = document.createElement('input');
           newInput.classList.add('query-builder__value');
           newInput.value = filter.value;
-          this._updateValue(uniqueId, { target: newInput });
+          this._updateValue(uniqueId, {target: newInput});
           newInput.setAttribute('type', 'date');
           newInput.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
           parent.appendChild(newInput);
@@ -279,7 +294,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.setAttribute('label', 'Value');
           newInput.addEventListener('change', (e: Event) => this.updateInValue(uniqueId, e));
           newInput.setAttribute('data', JSON.stringify(filter.options));
-          console.log(newInput);
           parent.appendChild(newInput);
         }
         else if(selectedComparator !== previousOperator)
@@ -301,7 +315,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
             option.text = options[item];
             newInput.appendChild(option);
           });
-          this._updateValue(uniqueId, { target: newInput });
+          this._updateValue(uniqueId, {target: newInput});
           newInput.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
 
           parent.appendChild(newInput);
@@ -323,7 +337,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         option.text = filter.options[item];
         input.appendChild(option);
       });
-      this._updateValue(uniqueId, { target: input });
+      this._updateValue(uniqueId, {target: input});
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     }
     else if(filter.type === 'bool' || filter.type === 'boolean')
@@ -497,7 +511,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this.input.setCustomValidity(message);
     this._formController.updateValidity();
   }
-
 
   protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | HTMLSelectElement
   {

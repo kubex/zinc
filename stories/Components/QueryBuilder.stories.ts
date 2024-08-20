@@ -1,5 +1,5 @@
-import { html } from "lit";
-import { Meta, StoryObj } from "@storybook/web-components";
+import {html} from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/QueryBuilder';
 import '../../src/Button';
@@ -15,10 +15,11 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ filters }) => html`
-    <zn-query-builder .filters="${filters}"></zn-query-builder>
+  render: ({filters, alwaysShow}) => html`
+    <zn-query-builder .filters="${filters}" show-values=${alwaysShow}></zn-query-builder>
   `,
   args: {
+    alwaysShow: "2 1 4",
     filters: [
       {
         id: '1',

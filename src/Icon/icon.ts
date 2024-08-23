@@ -34,6 +34,8 @@ const colors = {
   "warning": "rgb(var(--zn-color-warning))",
   "error": "rgb(var(--zn-color-error))",
   "success": "rgb(var(--zn-color-success))",
+  "white": "rgb(var(--zn-body))",
+  "disabled": "rgb(var(--zn-color-disabled))",
 };
 
 type Color = keyof typeof colors;

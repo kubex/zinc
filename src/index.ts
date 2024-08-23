@@ -58,6 +58,7 @@ import './Tooltip';
 import './ProgressTile';
 import './DefinedLabel';
 import './FormElements/LinkedSelect';
+import './InteractionTile';
 
 // Events
 export * from './Events/events';

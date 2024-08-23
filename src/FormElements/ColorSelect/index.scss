@@ -9,7 +9,7 @@ $colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
 
 @mixin color-loop {
   @each $color in $colors {
-    &--#{$color} {
+    &--#{"" + $color} {
       @include background-color($color);
     }
   }

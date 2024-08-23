@@ -123,7 +123,6 @@ export class Menu extends ZincElement
   handleMouseDown(event: MouseEvent)
   {
     const target = event.target as HTMLElement;
-    console.log('target', target);
 
     if(this.isMenuItem(target))
     {
@@ -148,8 +147,6 @@ export class Menu extends ZincElement
   setCurrentItem(item: HTMLElement)
   {
     const items = this.getAllItems();
-    console.log('current item', item);
-
     items.forEach(i =>
     {
       i.setAttribute('tabindex', i === item ? '0' : '-1');

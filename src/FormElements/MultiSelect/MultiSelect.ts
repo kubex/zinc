@@ -71,7 +71,6 @@ export class MultiSelect extends ZincElement implements ZincFormControl
     }
 
     const options = Object.keys(this.data);
-    console.log('options', options);
 
     return html`
       <div class="multi-select ${this.visible ? 'multi-select--open' : ''}" @click="${e => this.toggle(e)}">
@@ -157,7 +156,6 @@ export class MultiSelect extends ZincElement implements ZincFormControl
     }
 
     this.selectedItems.push(item);
-    console.log('selectedItems', this.selectedItems);
 
     this.value = this.selectedItems.join(',');
     this.dispatchEvent(new CustomEvent('multi-select-add-item', { detail: { item } }));
@@ -175,8 +173,6 @@ export class MultiSelect extends ZincElement implements ZincFormControl
     }
 
     this.selectedItems = this.selectedItems.filter((i) => i !== item);
-    console.log('removeSelectedItem', item);
-    console.log('selectedItems', this.selectedItems);
 
     this.value = this.selectedItems.join(',');
     this.dispatchEvent(new CustomEvent('multi-select-remove-item', { detail: { item } }));

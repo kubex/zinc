@@ -1,5 +1,5 @@
-import { html } from "lit";
-import { Meta, StoryObj } from "@storybook/web-components";
+import {html} from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/ButtonGroup';
 import '../../src/Button';
@@ -17,7 +17,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  render: ({ direction, buttons }) =>
+  render: ({direction, buttons}) =>
   {
     return html`
       <zn-button-group direction="${direction}">
@@ -31,15 +31,35 @@ export const Default: Story = {
   args: {
     direction: 'horizontal',
     buttons: [
-      { ...ButtonStories.Default.args, content: "Button 1" },
-      { ...ButtonStories.Default.args, content: "Button 2" },
-      { ...ButtonStories.Default.args, content: "Button 3" },
+      {...ButtonStories.Default.args, content: "Button 1"},
+      {...ButtonStories.Default.args, content: "Button 2"},
+      {...ButtonStories.Default.args, content: "Button 3"},
     ]
   },
   argTypes: {
     direction: {
       options: ['horizontal', 'vertical'],
-      control: { type: 'select' },
+      control: {type: 'select'},
     }
+  }
+};
+
+export const grow: Story = {
+  render: ({buttons}) =>
+  {
+    return html`
+      <zn-button-group direction="horizontal" grow>
+        ${buttons.map((button) => html`
+          <zn-button color="${button.color}" .size="${button.size}" .vertical-align="${button.verticalAlign}"
+                     .disabled="${button.disabled}" .submit="${button.submit}" .grow="${button.grow}"
+                     .icon="${button.icon}" .icon-position="${button.iconPosition}" outline>${button.content}
+          </zn-button>`)}
+      </zn-button-group>`;
+  },
+  args: {
+    buttons: [
+      {...ButtonStories.Default.args, color: 'warning', content: "small"},
+      {...ButtonStories.Default.args, outline: true, content: "More text than normal"},
+    ]
   }
 };

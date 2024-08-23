@@ -338,6 +338,7 @@
 
 :host([data-zn-button-group__button--grow]) {
   flex-grow: 1;
+  flex-basis: 0;
 }
 
 :host([data-zn-button-group__button--grow][data-zn-button-group__button--inner]) .button {
@@ -347,13 +348,13 @@
 }
 
 :host([data-zn-button-group__button--grow][data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
-  .button:after {
+  .button:after {i
     content: '';
     position: absolute;
     top: 0;
     inset-inline-start: 0;
     bottom: 0;
-    border-left: solid 1px rgba(182, 182, 182, 0.33);
+    border-left: solid 1px;
     mix-blend-mode: multiply;
   }
 }

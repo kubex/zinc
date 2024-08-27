@@ -62,8 +62,12 @@
 :host(:not([vertical])), zn-split-pane:not([vertical]) {
   padding-top: 40px;
 
+  #split-nav {
+    display: none;
+  }
+
   @include wc.container-query(md) {
-    padding-top: 0 !important;
+    padding-top: 0;
   }
 
   @include wc.container-query(zero, md) {
@@ -121,10 +125,6 @@
       max-width: 100% !important;
       width: 100%;
     }
-  }
-
-  #split-nav {
-    display: none;
   }
 
   #primary-pane, #secondary-pane {

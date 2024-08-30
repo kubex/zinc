@@ -258,7 +258,7 @@ class DropdownModule
     dropdown.style.position = 'absolute';
     dropdown.style.backgroundColor = 'rgb(var(--zn-panel))';
     dropdown.style.border = '1px solid rgb(var(--zn-border-color))';
-    dropdown.style.zIndex = '1000';
+    dropdown.style.zIndex = '2147483647';
     dropdown.style.minHeight = '150px';
     dropdown.style.overflow = 'auto';
     dropdown.style.padding = '10px 0';

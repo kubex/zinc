@@ -7,8 +7,7 @@ import styles from './index.scss?inline';
 import {classMap} from "lit/directives/class-map.js";
 import {PropertyValues} from "@lit/reactive-element";
 
-export enum InteractionType
-{
+export enum InteractionType {
   chat = 'chat',
   ticket = 'ticket',
   voice = 'voice',
@@ -16,8 +15,7 @@ export enum InteractionType
 }
 
 @customElement('zn-interaction-tile')
-export class InteractionTile extends ZincElement
-{
+export class InteractionTile extends ZincElement {
   static styles = unsafeCSS(styles);
 
   @property({type: InteractionType}) type = InteractionType.unknown;
@@ -42,31 +40,26 @@ export class InteractionTile extends ZincElement
 
   private _updateInterval: any;
 
-  protected firstUpdated(_changedProperties: PropertyValues)
-  {
+  protected firstUpdated(_changedProperties: PropertyValues) {
     this._startInterval();
+    this._maskPhoneNumberInString(this.caption);
     super.firstUpdated(_changedProperties);
   }
 
-  protected _getInteractionColor()
-  {
-    if(this.interactionStatus === 'ended' || this.interactionStatus === 'resolved')
-    {
+  protected _getInteractionColor() {
+    if (this.interactionStatus === 'ended' || this.interactionStatus === 'resolved') {
       return 'disabled';
     }
 
-    if(this.interactionStatus === 'waiting-response')
-    {
+    if (this.interactionStatus === 'waiting-response') {
       const diff = this._getWaitingResponseTime();
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
-      if(minutes >= 1 && minutes < 5)
-      {
+      if (minutes >= 1 && minutes < 5) {
         return 'warning';
       }
 
-      if(minutes > 5)
-      {
+      if (minutes > 5) {
         return 'error';
       }
     }
@@ -74,10 +67,8 @@ export class InteractionTile extends ZincElement
     return 'primary';
   }
 
-  protected _getInteractionIcon()
-  {
-    switch(this.type)
-    {
+  protected _getInteractionIcon() {
+    switch (this.type) {
       case InteractionType.ticket:
         return html`
           <zn-icon color="${this._getInteractionColor()}" src="mail"></zn-icon>`;
@@ -93,23 +84,20 @@ export class InteractionTile extends ZincElement
     }
   }
 
-  disconnectedCallback()
-  {
+  disconnectedCallback() {
     this._clearStartInterval(); // Always clear interval when component is removed
     super.disconnectedCallback();
   }
 
-  protected _getStartTime()
-  {
-    if(!this.startTime) return '';
+  protected _getStartTime() {
+    if (!this.startTime) return '';
     const date = new Date(this.startTime * 1000);
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
   }
 
-  protected _getStatusBar()
-  {
+  protected _getStatusBar() {
     const icon = this._getInteractionIcon();
     const start = this._getStartTime();
 
@@ -120,50 +108,41 @@ export class InteractionTile extends ZincElement
       </div>`;
   }
 
-  protected _getDepartmentAndQueue()
-  {
+  protected _getDepartmentAndQueue() {
     return html`<p>${this.department} ${this.queue ? ' : ' + this.queue : ''}</p>`;
   }
 
-  protected _getWaitingResponseTime()
-  {
+  protected _getWaitingResponseTime() {
     let lastMessageTime = this.lastMessageTime;
-    if(lastMessageTime.toString().length == 10) lastMessageTime = lastMessageTime * 1000;
+    if (lastMessageTime.toString().length == 10) lastMessageTime = lastMessageTime * 1000;
 
     const now = Date.now();
     return now - lastMessageTime; // return diff
   }
 
-  protected _startInterval()
-  {
-    if(this._updateInterval !== undefined) return;
+  protected _startInterval() {
+    if (this._updateInterval !== undefined) return;
     this._updateInterval = setInterval(() => this.requestUpdate(), 500);
   }
 
-  protected _clearStartInterval()
-  {
-    if(this._updateInterval !== undefined)
-    {
+  protected _clearStartInterval() {
+    if (this._updateInterval !== undefined) {
       clearInterval(this._updateInterval);
       this._updateInterval = undefined;
     }
   }
 
-  protected _waitingResponseContent()
-  {
-    if(this.interactionStatus !== 'waiting-response') return;
+  protected _waitingResponseContent() {
+    if (this.interactionStatus !== 'waiting-response') return;
 
     const diff = this._getWaitingResponseTime();
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
 
     let time = html``;
-    if(minutes > 60)
-    {
+    if (minutes > 60) {
       time = html`<p>Overdue</p>`;
-    }
-    else if(minutes > 0 || seconds > 30)
-    {
+    } else if (minutes > 0 || seconds > 30) {
       time = html`<p>${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}</p>`;
     }
 
@@ -176,8 +155,7 @@ export class InteractionTile extends ZincElement
       </div>`;
   }
 
-  protected render(): unknown
-  {
+  protected render(): unknown {
     const color = this._getInteractionColor();
 
     let right = html`
@@ -186,14 +164,12 @@ export class InteractionTile extends ZincElement
         ${this._waitingResponseContent()}
       </div>`;
 
-    if(this.acceptUri)
-    {
+    if (this.acceptUri) {
       right = html`
         ${this._getAcceptButton()}`;
     }
 
-    if(this.interactionStatus === 'ended' || this.interactionStatus === 'resolved')
-    {
+    if (this.interactionStatus === 'ended' || this.interactionStatus === 'resolved') {
       right = html`
         ${this._getStatusBar()}
         <div class="interaction-tile__status">
@@ -236,17 +212,14 @@ export class InteractionTile extends ZincElement
       </div>`;
   }
 
-  protected _getAcceptButton()
-  {
+  protected _getAcceptButton() {
     return html` <a href="${this.acceptUri}">
       <zn-button icon="${this._getInteractionAcceptIcon()}" icon-size="28"></zn-button>
     </a>`;
   }
 
-  protected _getInteractionAcceptIcon()
-  {
-    switch(this.type)
-    {
+  protected _getInteractionAcceptIcon() {
+    switch (this.type) {
       case InteractionType.ticket:
         return 'mail';
       case InteractionType.chat:
@@ -258,30 +231,33 @@ export class InteractionTile extends ZincElement
     }
   }
 
-  protected _getReservedHtml()
-  {
-    if(this.status !== 'queued' || !this.reservedUntil) return;
-    if(this.reservedUntil.toString().length == 10) this.reservedUntil = this.reservedUntil * 1000;
+  protected _getReservedHtml() {
+    if (this.status !== 'queued' || !this.reservedUntil) return;
+    if (this.reservedUntil.toString().length == 10) this.reservedUntil = this.reservedUntil * 1000;
 
     const now = Date.now();
     const diff = this.reservedUntil - now;
     const seconds = Math.floor((diff / 1000) % 60);
 
-    if(seconds <= 0) return;
+    if (seconds <= 0) return;
 
     this._startInterval();
 
     return html`<p class="interaction-tile__reserved">Reserved for ${seconds} seconds</p>`;
   }
 
-  protected _getBrandHtml()
-  {
-    if(!this.brand && !this.brandIcon) return;
+  protected _getBrandHtml() {
+    if (!this.brand && !this.brandIcon) return;
 
     return html`${this.brandIcon ? html`
       <div class="interaction-tile__branding__icon"
            style="background-image: url(${"" + this.brandIcon})"></div>` : ''}
     <p>${this.brand}</p>`;
+  }
+
+  protected _maskPhoneNumberInString(str: string) {
+    console.log(str);
+    return str.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   }
 }
 

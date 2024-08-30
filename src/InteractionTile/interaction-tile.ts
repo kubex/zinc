@@ -255,7 +255,7 @@ export class InteractionTile extends ZincElement {
   }
 
   protected _maskCaption(str: string) {
-    let masked = str.replace(/(\d{2})(\d{3,4})(\d{4})/, "$1******");
+    let masked = str.replace(/\+?(\d{2,4})\s?(\d{2,4})\s?(\d{2,4})\s?(\d{2,4})/, "$1******");
     // mask email
     masked = masked.replace(/([a-zA-Z0-9.+_-]+@([a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+))/, "*****@$2");
     return masked;

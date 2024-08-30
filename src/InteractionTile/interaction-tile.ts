@@ -42,7 +42,6 @@ export class InteractionTile extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     this._startInterval();
-    this._maskPhoneNumberInString(this.caption);
     super.firstUpdated(_changedProperties);
   }
 
@@ -196,7 +195,7 @@ export class InteractionTile extends ZincElement {
         ${reservedHtml}
         <div class="interaction-tile__body">
           <div class="interaction-tile__body--left">
-            <h3>${this.caption}</h3>
+            <h3>${this._maskCaption(this.caption)}</h3>
             <p>${this.lastMessage}</p>
           </div>
           <div class="interaction-tile__body--right">
@@ -255,9 +254,11 @@ export class InteractionTile extends ZincElement {
     <p>${this.brand}</p>`;
   }
 
-  protected _maskPhoneNumberInString(str: string) {
-    console.log(str);
-    return str.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  protected _maskCaption(str: string) {
+    let masked = str.replace(/(\d{2})(\d{3,4})(\d{4})/, "$1******");
+    // mask email
+    masked = masked.replace(/([a-zA-Z0-9.+_-]+@([a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+))/, "*****@$2");
+    return masked;
   }
 }
 

@@ -196,7 +196,7 @@ export class InteractionTile extends ZincElement {
         <div class="interaction-tile__body">
           <div class="interaction-tile__body--left">
             <h3>${this._maskCaption(this.caption)}</h3>
-            <p>${this.lastMessage}</p>
+            <p>${this._maskCaption(this.lastMessage)}</p>
           </div>
           <div class="interaction-tile__body--right">
             ${right}

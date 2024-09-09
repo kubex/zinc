@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from "@storybook/web-components";
+import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/FormElements/DatePicker';
 
@@ -14,6 +14,12 @@ type Story = StoryObj;
 export const Default: Story = {
   args: {
     id: '',
-    name: ''
+    name: '',
+    range: false,
+  },
+  argTypes: {
+    id: {control: 'text'},
+    name: {control: 'text'},
+    range: {control: 'boolean'},
   },
 };

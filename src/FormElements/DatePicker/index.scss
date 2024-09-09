@@ -1,12 +1,12 @@
 @use "sass:map";
 @use '../../wc';
 
-:host, zn-datepicker {
+.datepicker {
   display: flex;
   position: relative;
   margin-bottom: wc.spacing(sm);
 
-  .datepicker__svg-container {
+  &__svg-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -21,6 +21,10 @@
       width: 20px;
       height: 20px;
     }
+  }
+
+  &--range input {
+    min-width: 250px;
   }
 
   input {

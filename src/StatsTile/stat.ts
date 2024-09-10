@@ -100,7 +100,7 @@ export class Stat extends ZincElement
   render()
   {
     return html`
-      <div class="${classMap({'stat-tile': true})}">
+      <div class="${classMap({'stat-tile': true, 'stat-tile--chart': this.showChart})}">
         <div class="container">
           <div class="left">
             <div>

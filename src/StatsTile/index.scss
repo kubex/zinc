@@ -7,7 +7,8 @@
 .stat-tile {
 
   .caption {
-    color: rgb(var(--zn-primary))
+    color: rgb(var(--zn-primary));
+    margin-bottom: wc.spacing(xs);
   }
 
   .container {
@@ -30,7 +31,7 @@
   .amount {
     color: rgb(var(--zn-text-heading));
     font-weight: 600;
-    padding-top: wc.spacing(sm);
+    padding-top: wc.spacing(lg);
     font-size: 36px;
     line-height: 36px;
     display: flex;
@@ -60,6 +61,12 @@
 
     .neutral {
       color: rgb(var(--zn-color-warning));
+    }
+  }
+
+  &--chart {
+    .amount {
+      padding-top: wc.spacing(sm);
     }
   }
 }

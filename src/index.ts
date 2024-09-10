@@ -18,7 +18,7 @@ import '@/Property';
 import '@/NavBar';
 import '@/Charts/Chart';
 import '@/Charts/SimpleChart';
-import '@/Charts/BarChart';
+import '@/Charts/DataChart';
 import '@/Note';
 import '@/Tabs';
 import '@/Columns';

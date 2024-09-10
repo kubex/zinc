@@ -4,7 +4,7 @@ import {Meta, StoryObj} from "@storybook/web-components";
 import '../../src/StatsTile';
 import '../../src/Columns';
 import '../../src/Panel';
-import '../../src/ApexChart';
+import '../../src/Charts/ApexChart';
 
 const meta: Meta = {
   component: 'zn-stat',

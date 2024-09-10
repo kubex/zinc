@@ -1,10 +1,10 @@
-import '../../src/Chart';
+import '../../src/Charts/Chart';
 import {html} from "lit";
 
 export default {
   component: 'zn-chart',
-  title: 'Components/Chart',
-  tags: ['components', 'chart'],
+  title: 'Charts/Chart',
+  tags: ['charts', 'chart'],
 };
 
 const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]

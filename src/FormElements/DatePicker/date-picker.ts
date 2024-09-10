@@ -14,7 +14,7 @@ export class DatePicker extends LitElement
 
   @property({attribute: 'id', type: String, reflect: true}) id;
   @property({attribute: 'name', type: String, reflect: true}) name;
-  @property({attribute: 'value', type: String, reflect: true}) range = false;
+  @property({type: Boolean}) range = false;
 
   private _instance: AirDatepicker<HTMLInputElement>;
   private _inputElement: HTMLInputElement;

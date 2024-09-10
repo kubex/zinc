@@ -1,13 +1,13 @@
-import {EmptyZincFormElement} from "@/empty-zinc-form-element";
 import {html} from "lit";
 import {customElement, property} from "lit/decorators.js";
 import ApexCharts from 'apexcharts';
 import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement} from "@/zinc-element";
 
 type ChartType = 'area' | 'bar' | 'line'
 
 @customElement('zn-data-chart')
-export class DataChart extends EmptyZincFormElement
+export class DataChart extends ZincElement
 {
   @property() type: ChartType = 'bar';
   @property({type: Array}) data: any[] = [];

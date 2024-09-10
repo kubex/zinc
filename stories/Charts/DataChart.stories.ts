@@ -9,7 +9,6 @@ export default {
 
 export const Default = {
   args: {
-    name: 'Data Chart',
     type: 'line',
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
     data: [

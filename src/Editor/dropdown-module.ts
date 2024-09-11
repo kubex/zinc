@@ -49,7 +49,7 @@ class DropdownModule
 
   addEventListeners()
   {
-    this._quill.keyboard.addBinding({ key: 'ArrowDown' }, (range, context) =>
+    this._quill.keyboard.addBinding({key: 'ArrowDown'}, (range, context) =>
     {
       if(dropdownOpen)
       {
@@ -57,7 +57,7 @@ class DropdownModule
       }
     });
 
-    this._quill.keyboard.addBinding({ key: 'ArrowUp' }, (range, context) =>
+    this._quill.keyboard.addBinding({key: 'ArrowUp'}, (range, context) =>
     {
       if(dropdownOpen)
       {
@@ -103,12 +103,7 @@ class DropdownModule
       // can select from.
       const text = this._quill.getText();
       const index = this._quill.getSelection()?.index;
-      let char = text.charAt(index - 1);
-
-      if(index === 0)
-      {
-        char = text.charAt(index);
-      }
+      const char = text.charAt(index);
 
       // if there's no character before the forward slash, we will open the dropdown
       if(char === '/' && !dropdownOpen &&

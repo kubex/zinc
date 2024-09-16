@@ -126,33 +126,10 @@ export class DataChart extends ZincElement
       this.chart.render();
     }
 
-    if(this.live)
-    {
-      const interval = window.setInterval(() =>
-      {
-        this.iteration++;
-        this.chart.updateSeries([
-          {
-            data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 50],
-          },
-          {
-            data: [10, 20, 35, 40, 39, 50, 60, 81, 115, 120],
-          }
-        ]);
-      }, this.liveInterval);
-    }
 
     super.firstUpdated(_changedProperties);
   }
 
-  trigoStrength = 3;
-  iteration = 11;
-
-  protected getRandom()
-  {
-    const i = this.iteration;
-    return (Math.sin(i / this.trigoStrength) * (i / this.trigoStrength) + i / this.trigoStrength + 1) * (this.trigoStrength * 2);
-  }
 
   protected render(): unknown
   {

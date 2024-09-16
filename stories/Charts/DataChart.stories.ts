@@ -1,4 +1,5 @@
 import '../../src/Charts/DataChart';
+import {html} from "lit";
 
 export default {
   component: 'zn-data-chart',
@@ -41,8 +42,13 @@ export const Default = {
 
 
 export const TimeSeries = {
+  render: ({type, data, xAxis}) =>
+  {
+    return html`
+      <zn-data-chart type="${type}" .data=${data} xAxis="${xAxis}"></zn-data-chart>`;
+  },
   args: {
-    type: 'line',
+    type: 'area',
     data: [
       {
         name: 'Series 1',

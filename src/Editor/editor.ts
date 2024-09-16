@@ -88,6 +88,12 @@ export class Editor extends ZincElement implements ZincFormControl
       }
     };
 
+    const empty = (value: string) =>
+    {
+      const match = value.match(/[^<pbr\s>\/]/);
+      return match === null;
+    };
+
     if(this.interactionType === 'chat')
     {
       bindings['enter'] = {
@@ -96,7 +102,7 @@ export class Editor extends ZincElement implements ZincFormControl
         handler: () =>
         {
           const form = this.closest('form');
-          if(form && !dropdownOpen && this.value.trim().length > 0)
+          if(form && !dropdownOpen && this.value && this.value.trim().length > 0 && !empty(this.value))
           {
             this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();

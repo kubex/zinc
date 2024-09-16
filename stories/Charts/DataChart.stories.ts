@@ -38,3 +38,26 @@ export const Default = {
     type: {control: 'select', options: ['line', 'bar', 'area']},
   },
 };
+
+
+export const TimeSeries = {
+  args: {
+    type: 'line',
+    data: [
+      {
+        name: 'Series 1',
+        data: [[1486684800000, 34],
+          [1486771200000, 43],
+          [1486857600000, 31],
+          [1486944000000, 43],
+          [1487030400000, 33],
+          [1487116800000, 52]]
+      },
+    ],
+    xAxis: 'datetime',
+  },
+  argTypes: {
+    name: {control: 'text'},
+    type: {control: 'select', options: ['line', 'bar', 'area']},
+  },
+};

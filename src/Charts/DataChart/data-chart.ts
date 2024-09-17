@@ -38,7 +38,7 @@ export class DataChart extends ZincElement
         enabled: false
       },
       markers: {
-        size: 5,
+        size: 1,
         strokeWidth: 0,
         hover: {
           sizeOffset: 2
@@ -55,12 +55,12 @@ export class DataChart extends ZincElement
           colors: '#72619F',
         },
         markers: {
-          size: 10,
+          size: 5,
           shape: 'circle',
         },
       },
       stroke: {
-        width: 3
+        width: 1.5
       },
       fill: {
         type: 'solid',

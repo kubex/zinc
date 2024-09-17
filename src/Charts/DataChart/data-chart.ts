@@ -22,8 +22,15 @@ export class DataChart extends ZincElement
 
   private chart: ApexCharts;
 
+
+  private lightColors = ["#8967ef", "#6483F2", "#29bab5", "#3F51B5", "#9C27B0", "#ff6c9c", "#6836F5", "#47D6D6"];
+  private darkColors = ["#703cff", "#3b65fb", "#07e3db", "#5c75ff",
+    "#e12cff", "#ff125f", "#ae90ff", "#a6ff9c"];
+
   protected firstUpdated(_changedProperties: PropertyValues)
   {
+    const theme = this.getAttribute('t') || 'light';
+
     // Setup Chart and render it
     const options = {
       chart: {
@@ -44,7 +51,7 @@ export class DataChart extends ZincElement
           sizeOffset: 2
         }
       },
-      colors: ["#8967ef", "#6483F2", "#29bab5", "#3F51B5", "#9C27B0", "#ff6c9c", "#6836F5", "#47D6D6"],
+      // colors: theme === 'dark' ? this.darkColors : this.lightColors,
       legend: {
         position: 'top',
         horizontalAlign: 'right',
@@ -128,6 +135,20 @@ export class DataChart extends ZincElement
 
 
     super.firstUpdated(_changedProperties);
+  }
+
+  attributeChangedCallback(name: string, _old: string | null, value: string | null)
+  {
+    if(this.chart && name === 't')
+    {
+      console.log('Updating colors');
+      console.log(value);
+      this.chart.updateOptions({
+        // colors: value === 'dark' ? this.darkColors : this.lightColors
+      }).then(() => console.log('Updated colors'));
+    }
+
+    super.attributeChangedCallback(name, _old, value);
   }
 
 

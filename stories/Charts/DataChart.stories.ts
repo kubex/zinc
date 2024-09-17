@@ -50,15 +50,9 @@ export const TimeSeries = {
   args: {
     type: 'area',
     data: [
-      {
-        name: 'Series 1',
-        data: [[1486684800000, 34],
-          [1486771200000, 43],
-          [1486857600000, 31],
-          [1486944000000, 43],
-          [1487030400000, 33],
-          [1487116800000, 52]]
-      },
+      {"name": "adyen-connector", "data": [[1726444800, 20]]},
+      {"name": "checkout-connector", "data": [[1726444800, 4]]},
+      {"name": "_", "data": [[1726444800, 1]]}
     ],
     xAxis: 'datetime',
   },

@@ -22,12 +22,15 @@ export class Columns extends LitElement
     this.layout = layout.join('');
     this.maxColumns = Math.min(5, layout.reduce((a, b) => a + b, 0));
 
-    this.querySelectorAll(':scope > *')
-      .forEach((element: HTMLElement, index) =>
-      {
-        const col = index % layout.length;
-        element.classList.add('zn-col-' + layout[col]);
-      });
+    const prefix = 'zn-col-';
+    this.querySelectorAll(':scope > *').forEach((element: HTMLElement, index) =>
+    {
+      const classes = element.className.split(' ').filter((c) => !c.startsWith(prefix));
+      element.className = classes.join(' ');
+
+      const col = index % layout.length;
+      element.classList.add(prefix + layout[col]);
+    });
 
     return html`
       <slot></slot>

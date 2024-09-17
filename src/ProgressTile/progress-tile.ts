@@ -30,7 +30,7 @@ export class ProgressTile extends LitElement
   {
     super.connectedCallback();
     // request an update every second
-    if(!this._timer && this.status !== 'ended')
+    if(!this._timer && !this.isEnded())
     {
       this._timer = setInterval(() =>
       {
@@ -123,7 +123,7 @@ export class ProgressTile extends LitElement
             </div>
           </div>
           <div class="tile__wrapper__right">
-            ${this._humanTime(this._now - this.start)}
+            ${this.isEnded() ? this._humanTime(this.end) : this._humanTime(this._now - this.start)}
           </div>
         </div>
       </div>`;

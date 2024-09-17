@@ -14,6 +14,7 @@ export class DataChart extends ZincElement
   @property({type: Array}) categories: string | string[] = '';
 
   @property() xAxis: string;
+  @property({type: Number, attribute: 'd-size'}) datapointSize: number = 1;
 
   // Live
   @property({type: Boolean}) live = false;
@@ -45,7 +46,7 @@ export class DataChart extends ZincElement
         enabled: false
       },
       markers: {
-        size: 1,
+        size: this.datapointSize,
         strokeWidth: 0,
         hover: {
           sizeOffset: 2
@@ -141,11 +142,9 @@ export class DataChart extends ZincElement
   {
     if(this.chart && name === 't')
     {
-      console.log('Updating colors');
-      console.log(value);
       this.chart.updateOptions({
         // colors: value === 'dark' ? this.darkColors : this.lightColors
-      }).then(() => console.log('Updated colors'));
+      })
     }
 
     super.attributeChangedCallback(name, _old, value);

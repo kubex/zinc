@@ -9,20 +9,28 @@ export class ProgressTile extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({attribute: 'start', reflect: true, type: Number}) start: number;
+  @property({type: Number}) start: number;
+  @property({type: Number}) end: number;
   @property({attribute: 'hold-time', reflect: true, type: Number}) holdTime: number;
   @property({attribute: 'status-icon'}) statusIcon: string;
   @property() caption: string;
   @property() avatar: string;
+  @property() status: string;
 
   private _now = new Date().getTime() / 1000;
   private _timer: NodeJS.Timeout;
+
+
+  isEnded()
+  {
+    return this.status === 'ended' || this.status === 'dropped';
+  }
 
   connectedCallback()
   {
     super.connectedCallback();
     // request an update every second
-    if(!this._timer)
+    if(!this._timer && this.status !== 'ended')
     {
       this._timer = setInterval(() =>
       {
@@ -34,17 +42,27 @@ export class ProgressTile extends LitElement
 
   private _getProgressBarValue()
   {
-    const max = 60 * 5;
-    const current = this.holdTime;
+    // hold time as a percentage of the total time
+    const holdTime = this.holdTime;
+    const total = new Date().getTime() / 1000 - this.start;
+    const percent = (holdTime / total) * 100;
 
-    const diff = max - current;
-    const percent = (diff / max) * 100;
+    if(percent > 100)
+    {
+      return 100;
+    }
+
     return percent;
   }
 
   private getColor()
   {
     const percent = this._getProgressBarValue();
+
+    if(this.isEnded())
+    {
+      return 'var(--zn-border-color)';
+    }
 
     if(percent < 33)
     {
@@ -59,9 +77,8 @@ export class ProgressTile extends LitElement
     return 'var(--zn-color-error)';
   }
 
-  private _humanTime()
+  private _humanTime(diff: number)
   {
-    const diff = this._now - this.start;
     const hours = Math.floor(diff / 3600);
     const minutes = Math.floor((diff % 3600) / 60);
     const seconds = Math.floor(diff % 60);
@@ -74,19 +91,11 @@ export class ProgressTile extends LitElement
     return [hours, minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
   }
 
-  private _humanHoldTime()
+  private _humanEndTime()
   {
-    const diff = this.holdTime;
-    const hours = Math.floor(diff / 3600);
-    const minutes = Math.floor((diff % 3600) / 60);
-    const seconds = Math.floor(diff % 60);
-
-    if(hours <= 0)
-    {
-      return [minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
-    }
-
-    return [hours, minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
+    // convert unix timestamp to human readable time
+    const date = new Date(this.end * 1000);
+    return date.toLocaleTimeString();
   }
 
   render()
@@ -97,19 +106,42 @@ export class ProgressTile extends LitElement
           <zn-icon size="40" src="${this.avatar}"></zn-icon>
         </div>
         <div class="tile__wrapper">
-          <div class="tile__content">
-            <div class="tile__caption">${this.caption}</div>
-            <div class="tile__spacer"></div>
-            <div class="tile__time">${this._humanTime()} (${this._humanHoldTime()})</div>
-            ${this.statusIcon ? html`
-              <zn-icon class="tile__status-icon" src="${this.statusIcon}"></zn-icon>` : ''}
+          <div class="tile__wrapper__left">
+            <div class="tile__content">
+              <div class="tile__caption">${this.caption}</div>
+              <div class="tile__spacer"></div>
+              <div class="tile__time">${this.getTime()}</div>
+              ${this.statusIcon ? html`
+                <zn-icon class="tile__status-icon" src="${this.statusIcon}"></zn-icon>` : ''}
+            </div>
+            <div class="tile__progress-container">
+              <div class="tile__progress-bar"></div>
+              <div class="tile__progress" style="width: ${this._getProgressBarValue() + '%'}"></div>
+            </div>
+            <div class="tile__status">
+              ${this.isEnded() ? '' : this.status}
+            </div>
           </div>
-          <div class="tile__progress-container">
-            <div class="tile__progress-bar"></div>
-            <div class="tile__progress" style="width: ${this._getProgressBarValue() + '%'}"></div>
+          <div class="tile__wrapper__right">
+            ${this._humanTime(this._now - this.start)}
           </div>
         </div>
       </div>`;
+  }
+
+  private getTime()
+  {
+    if(this.status === 'ended')
+    {
+      return 'Ended at ' + this._humanEndTime();
+    }
+
+    if(this.status == 'dropped')
+    {
+      return 'Dropped';
+    }
+
+    return html`${this._humanTime(this.holdTime)}`;
   }
 }
 

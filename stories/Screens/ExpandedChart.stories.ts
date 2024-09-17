@@ -3,7 +3,7 @@ import {Meta, StoryObj} from "@storybook/web-components";
 
 import '../../src/Header';
 import '../../src/Panel';
-import '../../src/Charts/Chart';
+import '../../src/Charts/DataChart';
 import '../../src/FormElements/Group';
 import '../../src/FormElements/Input';
 import '../../src/FormElements/DatePicker';
@@ -22,13 +22,13 @@ const dataset = [
   {
     label: 'Dataset 1',
     data: [
-      {x: "Mon", y: 20000},
-      {x: "Tue", y: 20400},
-      {x: "Wed", y: 19000},
-      {x: "Thu", y: 18700},
-      {x: "Fri", y: 18942},
-      {x: "Sat", y: 19243},
-      {x: "Sun", y: 19400},
+      20000,
+      20400,
+      19000,
+      18700,
+      18942,
+      19243,
+      19400,
     ]
   }
 ];
@@ -53,7 +53,7 @@ export const Default: Story = {
             </zn-input>
           </zn-form-group>
         </form>
-        <zn-chart .datasets=${dataset} .labels=${labels}></zn-chart>
+        <zn-data-chart .data=${dataset} .categories=${labels} type="area"></zn-data-chart>
       </zn-panel>`;
   },
 };

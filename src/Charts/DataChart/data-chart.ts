@@ -37,9 +37,11 @@ export class DataChart extends ZincElement
       chart: {
         type: this.type,
         toolbar: {show: false},
-        height: '250px',
+        height: '300px',
         fontFamily: '"Inter", sans',
-        animations: {},
+        animations: {
+          enabled: false,
+        },
         events: {}
       },
       dataLabels: {

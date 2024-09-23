@@ -123,7 +123,7 @@ export class ProgressTile extends LitElement
             </div>
           </div>
           <div class="tile__wrapper__right">
-            ${this.isEnded() ? this._humanTime(this.end) : this._humanTime(this._now - this.start)}
+            ${this.isEnded() ? this._humanTime(this.end - this.start) : this._humanTime(this._now - this.start)}
           </div>
         </div>
       </div>`;

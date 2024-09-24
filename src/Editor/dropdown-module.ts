@@ -334,6 +334,11 @@ class DropdownModule
       {
         element.style.backgroundColor = 'white';
       }
+
+      if(i === this._selectedIndex)
+      {
+        element.scrollIntoView({block: 'center'});
+      }
     });
   }
 

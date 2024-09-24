@@ -1,5 +1,7 @@
-import '../../src/Charts/DataChart';
 import {html} from "lit";
+
+import '../../src/Charts/DataChart';
+import '../../src/Panel';
 
 export default {
   component: 'zn-data-chart',
@@ -9,8 +11,16 @@ export default {
 
 
 export const Default = {
+  render: ({type, categories, data, height}) =>
+  {
+    return html`
+      <zn-panel>
+        <zn-data-chart type="${type}" .categories=${categories} .data=${data} .height=${height}></zn-data-chart>
+      </zn-panel>`;
+  },
   args: {
-    type: 'line',
+    type: 'area',
+    height: 300,
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
     data: [
       {
@@ -31,6 +41,21 @@ export const Default = {
       }, {
         name: 'Series 5',
         data: [20, 30, 35, 40, 39, 50, 30, 40, 65],
+      }, {
+        name: 'Series 6',
+        data: [10, 20, 25, 30, 29, 40, 20, 30, 55],
+      }, {
+        name: 'Series 7',
+        data: [5, 10, 15, 20, 15, 20, 10, 20, 35],
+      }, {
+        name: 'Series 8',
+        data: [1, 2, 3, 4, 3, 4, 2, 4, 6],
+      }, {
+        name: 'Series 9',
+        data: [20, 30, 35, 40, 39, 50, 30, 40, 65],
+      }, {
+        name: 'Series 10',
+        data: [10, 20, 25, 30, 29, 40, 20, 30, 55],
       }
     ]
   },

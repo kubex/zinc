@@ -14,8 +14,14 @@ type Story = StoryObj;
 
 const cannedResponses = [
   {
+    title: 'Canned Response 2',
+    content: 'This is the canned response 2',
+    command: 'command1',
+    labels: ['label1', 'label2'],
+  },
+  {
     title: 'Canned Response 1',
-    content: 'This is the canned response 1',
+    content: 'This is the canned response 1 http//something.com/{{login}}',
     command: 'command1',
     labels: ['label1', 'label2'],
   }

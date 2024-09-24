@@ -157,7 +157,6 @@ export class DataChart extends ZincElement
       });
     }
 
-    console.log(name, _old, value);
     if(this.chart && name === 'height')
     {
       this.chart.updateOptions({

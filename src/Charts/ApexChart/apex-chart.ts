@@ -67,7 +67,7 @@ export class ApexChart extends ZincElement
     };
 
     const chart = new ApexCharts(this.renderRoot.querySelector('#chart'), config);
-    chart.render().then(r => console.log(r));
+    chart.render();
   }
 
   render()

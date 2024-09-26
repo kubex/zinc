@@ -2,6 +2,7 @@ import {html, LitElement, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
+import {classMap} from "lit/directives/class-map.js";
 
 
 @customElement('zn-progress-tile')
@@ -9,139 +10,110 @@ export class ProgressTile extends LitElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({type: Number}) start: number;
-  @property({type: Number}) end: number;
-  @property({attribute: 'hold-time', reflect: true, type: Number}) holdTime: number;
-  @property({attribute: 'status-icon'}) statusIcon: string;
-  @property() caption: string;
-  @property() avatar: string;
+  @property({type: Number, attribute: 'start-time'}) startTime: number;
+  @property({type: Number, attribute: 'wait-time', reflect: true}) waitTime: number;
+  @property({type: Number, attribute: 'max-time'}) maxTime: number;
+  @property({type: Number, attribute: 'end-time'}) endTime: number;
+
+  @property({type: Number, attribute: 'max-wait-time'}) maxWaitTime: number = 60 * 5;
+  @property({type: Boolean, attribute: 'waiting-agent-response'}) waitingAgentResponse: boolean;
+
   @property() status: string;
+  @property() avatar: string;
+  @property() caption: string;
 
-  private _now = new Date().getTime() / 1000;
-  private _timer: NodeJS.Timeout;
-
-
-  isEnded()
-  {
-    return this.status === 'ended' || this.status === 'dropped';
-  }
+  private _timerInterval: NodeJS.Timeout;
 
   connectedCallback()
   {
     super.connectedCallback();
-    // request an update every second
-    if(!this._timer && !this.isEnded())
+    if(this.status !== 'Ended')
     {
-      this._timer = setInterval(() =>
-      {
-        this._now = new Date().getTime() / 1000;
-        this.requestUpdate();
-      }, 1000);
+      this._timerInterval = setInterval(() => this.requestUpdate(), 1000);
     }
   }
 
-  private _getProgressBarValue()
+  disconnectedCallback()
   {
-    // hold time as a percentage of the total time
-    const holdTime = this.holdTime;
-    const total = new Date().getTime() / 1000 - this.start;
-    const percent = (holdTime / total) * 100;
-
-    if(percent > 100)
-    {
-      return 100;
-    }
-
-    return percent;
+    super.disconnectedCallback();
+    clearInterval(this._timerInterval);
   }
 
-  private getColor()
+  private getHumanReadableTime(time: number): string
   {
-    const percent = this._getProgressBarValue();
+    time = Math.round(time);
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
 
-    if(this.isEnded())
+    if(hours)
     {
-      return 'var(--zn-border-color)';
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
-    if(percent < 33)
-    {
-      return 'var(--zn-color-success)';
-    }
-
-    if(percent < 66)
-    {
-      return 'var(--zn-color-warning)';
-    }
-
-    return 'var(--zn-color-error)';
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  private _humanTime(diff: number)
+  protected render(): unknown
   {
-    const hours = Math.floor(diff / 3600);
-    const minutes = Math.floor((diff % 3600) / 60);
-    const seconds = Math.floor(diff % 60);
+    const now = new Date().getTime() / 1000;
+    const duration = now - this.startTime;
+    const maxDuration = now - this.maxTime;
 
-    if(hours <= 0)
+    if(this.waitingAgentResponse)
     {
-      return [minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
+      this.waitTime += 1;
     }
 
-    return [hours, minutes, seconds].map(v => v.toString().padStart(2, '0')).join(':');
-  }
+    let firstBarWidth = (duration / maxDuration) * 100;
+    firstBarWidth = firstBarWidth > 100 ? 100 : firstBarWidth;
 
-  private _humanEndTime()
-  {
-    // convert unix timestamp to human readable time
-    const date = new Date(this.end * 1000);
-    return date.toLocaleTimeString();
-  }
+    let secondBarWidth = (this.waitTime / this.maxWaitTime) * 100;
+    secondBarWidth = secondBarWidth > 100 ? 100 : secondBarWidth;
 
-  render()
-  {
+    const start = this.getHumanReadableTime(duration);
+    const wait = this.getHumanReadableTime(this.waitTime);
+
+    const status = this.waitingAgentResponse ? 'Waiting for Agent' : this.status;
+    const hasHours = start.match(/:/g).length === 2 || wait.match(/:/g).length === 2;
+
     return html`
-      <div class="tile" style="--color: ${this.getColor()}">
-        <div class="tile__avatar">
-          <zn-icon size="40" src="${this.avatar}"></zn-icon>
-        </div>
-        <div class="tile__wrapper">
-          <div class="tile__wrapper__left">
-            <div class="tile__content">
-              <div class="tile__caption">${this.caption}</div>
-              <div class="tile__spacer"></div>
-              <div class="tile__time">${this.getTime()}</div>
-              ${this.statusIcon ? html`
-                <zn-icon class="tile__status-icon" src="${this.statusIcon}"></zn-icon>` : ''}
+      <div class="${classMap({
+        'progress-tile': true,
+        'progress-tile--with-hours': hasHours,
+        'progress-tile--ended': this.status === 'Ended',
+        'progress-tile--waiting-agent': this.waitingAgentResponse,
+        'progress-tile--interacting': this.status === 'Interacting',
+        'progress-tile--warn': this.waitTime > 60 && this.waitTime < (this.maxWaitTime / 2),
+        'progress-tile--danger': this.waitTime >= this.maxWaitTime
+      })}">
+        <zn-icon size="45" src="${this.avatar}"></zn-icon>
+        <div class="progress-tile__content">
+
+          <div class="progress-tile__header">
+            <div class="header__caption">
+              <p>${this.caption}</p>
             </div>
-            <div class="tile__progress-container">
-              <div class="tile__progress-bar"></div>
-              <div class="tile__progress" style="width: ${this._getProgressBarValue() + '%'}"></div>
-            </div>
-            <div class="tile__status">
-              ${this.isEnded() ? '' : this.status}
+            <div class="header__wait-time">
+              <p>${status}</p>
+              <p>${this.endTime || wait === '00:00' ? '' : wait}</p>
             </div>
           </div>
-          <div class="tile__wrapper__right">
-            ${this.isEnded() ? this._humanTime(this.end - this.start) : this._humanTime(this._now - this.start)}
+
+          <div class="progress-tile__progress-bars">
+            <div class="progress-tile__progress-bars__first"
+                 style="width: ${firstBarWidth}%;"></div>
+            <div class="progress-tile__progress-bars__second"
+                 style="width: ${secondBarWidth}%;"></div>
           </div>
+
         </div>
-      </div>`;
-  }
 
-  private getTime()
-  {
-    if(this.status === 'ended')
-    {
-      return 'Ended at ' + this._humanEndTime();
-    }
-
-    if(this.status == 'dropped')
-    {
-      return 'Dropped';
-    }
-
-    return html`${this._humanTime(this.holdTime)}`;
+        <div class="progress-tile__total-time">
+          ${this.endTime ? this.getHumanReadableTime(this.endTime - this.startTime) : start}
+        </div>
+      </div>
+    `;
   }
 }
 

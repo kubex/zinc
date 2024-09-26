@@ -3,7 +3,7 @@ import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import {PropertyValues} from "@lit/reactive-element";
+import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-sidebar')
 export class Sidebar extends ZincElement
@@ -11,6 +11,7 @@ export class Sidebar extends ZincElement
   @property({attribute: 'caption', type: String, reflect: true}) caption;
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
+  @property({type: Boolean}) wide: boolean = false;
 
   static styles = unsafeCSS(styles);
 
@@ -66,7 +67,7 @@ export class Sidebar extends ZincElement
             <slot></slot>
           </div>
         </div>
-        <div id="sidebar">
+        <div id="sidebar" class="${classMap({'sidebar': true, 'sidebar--wide': this.wide})}">
           ${this._expander()}
           <div id="content">
             <slot name="side"></slot>

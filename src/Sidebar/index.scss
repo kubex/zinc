@@ -34,7 +34,7 @@
 
   }
 
-  #primary-content, #sidebar {
+  #primary-content, .sidebar {
     max-height: 100%;
     max-width: 100%;
   }
@@ -51,7 +51,7 @@
   }
 
 
-  #sidebar {
+  .sidebar {
     width: 100%;
     display: flex;
     flex-shrink: 0;
@@ -59,6 +59,11 @@
     align-items: stretch;
     overflow-y: auto;
     overflow-x: hidden;
+
+    @include wc.container-query(ph) {
+      min-width: wc.common-size(bar);
+      max-width: wc.common-size(bar);
+    }
 
     @include wc.container-query(ph) {
       flex-direction: row;
@@ -89,11 +94,6 @@
       @include wc.container-query(lg) {
         padding-left: var(--zn-padding, 0);
       }
-    }
-
-    @include wc.container-query(ph) {
-      min-width: wc.common-size(bar);
-      max-width: wc.common-size(bar);
     }
 
     #expander {
@@ -172,11 +172,19 @@
 }
 
 :host([open]) {
-  #sidebar {
+  .sidebar {
     @include wc.container-query(ph) {
       min-width: wc.common-size(mpanel);
       max-width: wc.common-size(mpanel);
       width: wc.common-size(mpanel);
+    }
+
+    &--wide {
+      @include wc.container-query(ph) {
+        min-width: wc.common-size(lside);
+        max-width: wc.common-size(lside);
+        width: wc.common-size(lside);
+      }
     }
 
     #expander {
@@ -213,12 +221,17 @@
   }
 }
 
-
 @include wc.container-query(lg) {
-  :host #sidebar {
+  :host .sidebar {
     min-width: wc.common-size(mpanel);
     max-width: wc.common-size(mpanel);
     width: wc.common-size(mpanel);
+
+    &--wide {
+      min-width: wc.common-size(lside);
+      max-width: wc.common-size(lside);
+      width: wc.common-size(lside);
+    }
 
     #content {
       display: block;
@@ -226,7 +239,7 @@
   }
 
   :host(:not([distinct])) {
-    #sidebar {
+    .sidebar {
       background: transparent;
 
       #content {
@@ -238,7 +251,7 @@
 }
 
 :host([distinct]) {
-  #sidebar {
+  .sidebar {
     #content {
       background: rgba(var(--zn-panel), var(--zn-panel-opacity));
     }

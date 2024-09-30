@@ -2,6 +2,7 @@ import Quill from 'quill';
 
 type DropdownModuleOptions = {
   cannedResponses: DropdownModuleCannedResponse[];
+  cannedResponsesUri: string;
 }
 
 type DropdownModuleCannedResponse = {
@@ -18,6 +19,8 @@ class DropdownModule
   private _quill: Quill;
   private _dropdown: HTMLElement;
 
+  private _cannedResponsesUri: string = '';
+
   private _command: string = '';
   private _commands: any = [];
   private _selectedIndex = 0;
@@ -32,13 +35,12 @@ class DropdownModule
       this._commands = options.cannedResponses;
     }
 
-    this._commands.push({
-      title: 'Cancel',
-      content: 'Cancel',
-      command: 'cancel'
-    });
+    if(options.cannedResponsesUri)
+    {
+      this._cannedResponsesUri = options.cannedResponsesUri;
+    }
 
-    if(this._commands.length > 0)
+    if(this._commands.length > 0 || this._cannedResponsesUri !== '')
     {
       quill.on(Quill.events.TEXT_CHANGE, this.onTextChange.bind(this));
       this._dropdown = this.createDropdown();
@@ -65,29 +67,36 @@ class DropdownModule
       }
     });
 
-    // add enter key binding
-    document.addEventListener('keydown', (e) =>
+    const enterCommand = () =>
     {
-      if((e.key === 'Enter' || e.key === 'Tab') && dropdownOpen)
+      // trigger the command based on the selected index and if filters are applied
+      const commandElement = this._commandElements[this._selectedIndex];
+      const commandName = commandElement.getAttribute('data-command');
+
+      const command = this._commands.find(command => command.title === commandName);
+      if(command.command === 'cancel')
       {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        // trigger the command based on the selected index and if filters are applied
-        const commandElement = this._commandElements[this._selectedIndex];
-        const commandName = commandElement.getAttribute('data-command');
-
-        const command = this._commands.find(command => command.title === commandName);
-        if(command.command === 'cancel')
-        {
-          this.closeDropdown();
-        }
-        else
-        {
-          this.triggerCommand(command);
-        }
+        this.closeDropdown();
       }
-      else if(e.key === 'Escape' && dropdownOpen)
+      else
+      {
+        this.triggerCommand(command);
+      }
+    };
+
+    // add enter key binding
+    this._quill.keyboard.addBinding({key: 'Enter'}, (range, context) =>
+    {
+      if(dropdownOpen)
+      {
+        enterCommand();
+      }
+    });
+
+    // on mouse click close the dropdown
+    document.addEventListener('click', (e) =>
+    {
+      if(dropdownOpen && e.target !== this._dropdown)
       {
         this.closeDropdown();
       }
@@ -148,6 +157,7 @@ class DropdownModule
   openDropdown()
   {
     dropdownOpen = true;
+    this.getDropdownContentFromUri();
     this.updateDropdownPosition();
     this._selectedIndex = 0;
     this.updateSelectedCommand();
@@ -284,6 +294,10 @@ class DropdownModule
 
   addCommands(dropdown: HTMLElement = this._dropdown)
   {
+    // clear the dropdown
+    dropdown.innerHTML = '';
+    this._commandElements = [];
+
     const header = document.createElement('div');
     header.style.padding = '5px 10px 10px';
     header.style.color = 'rgb(var(--zn-text-heading))';
@@ -291,6 +305,14 @@ class DropdownModule
 
     header.textContent = 'Canned Responses';
     dropdown.appendChild(header);
+
+
+    // Always include the cancel command
+    this._commands.push({
+      title: 'Close Dropdown',
+      content: 'Cancel',
+      command: 'cancel'
+    });
 
     this._commands.forEach(command =>
     {
@@ -452,6 +474,24 @@ class DropdownModule
 
     // update the quill editor
     this._quill.update();
+  }
+
+  private getDropdownContentFromUri()
+  {
+    if(this._cannedResponsesUri)
+    {
+      fetch(this._cannedResponsesUri)
+        .then(response => response.json())
+        .then(data =>
+        {
+          this._commands = data;
+          this.addCommands();
+          this.updateSelectedCommand();
+        }).catch(error =>
+      {
+        console.error('Error fetching canned responses', error);
+      });
+    }
   }
 }
 

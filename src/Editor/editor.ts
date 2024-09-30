@@ -32,6 +32,8 @@ export class Editor extends ZincElement implements ZincFormControl
   @property({attribute: 'canned-responses', type: Array})
   cannedResponses: Array<any>;
 
+  @property({attribute: 'canned-responses-url'}) cannedResponsesUri: string;
+
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
@@ -189,7 +191,8 @@ export class Editor extends ZincElement implements ZincFormControl
           bindings: bindings
         },
         dropdownModule: {
-          cannedResponses: this.cannedResponses
+          cannedResponses: this.cannedResponses,
+          cannedResponsesUri: this.cannedResponsesUri
         },
         attachmentModule: {
           attachmentInput: attachmentInput,
@@ -299,7 +302,6 @@ export class Editor extends ZincElement implements ZincFormControl
     toolbar.querySelector('button.ql-image').setAttribute('title', 'Image');
     toolbar.querySelector('button.ql-remove-formatting').setAttribute('title', 'Remove Formatting');
   }
-
 
   private _handleSelectionChange()
   {

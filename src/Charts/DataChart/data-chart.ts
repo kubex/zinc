@@ -26,6 +26,8 @@ export class DataChart extends ZincElement
   @property({attribute: 'live-interval', type: Number}) liveInterval = 1000;
   @property({type: Number, reflect: true}) height = 300;
 
+  @property({type: Boolean}) enableAnimations = true;
+
   private chart: ApexCharts;
 
   private lightColors = ["#8967ef", "#6483F2", "#29bab5", "#3F51B5", "#9C27B0", "#ff6c9c", "#6836F5", "#47D6D6"];
@@ -36,6 +38,7 @@ export class DataChart extends ZincElement
     const theme = this.getAttribute('t') || 'light';
     // Setup Chart and render it
     const options = {
+      animations: this.enableAnimations,
       chart: {
         type: this.type,
         toolbar: {show: false},

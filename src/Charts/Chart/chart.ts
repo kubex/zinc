@@ -1,6 +1,6 @@
 import {html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {Chart, ChartConfiguration, registerables} from 'chart.js';
+import {Chart, ChartConfiguration, Colors, registerables} from 'chart.js';
 import {htmlLegendPlugin} from "./HtmlLegendPlugin";
 import {ZincElement} from "@/zinc-element";
 
@@ -19,6 +19,7 @@ export class ZincChart extends ZincElement
   {
     super();
     Chart.register(...registerables);
+    Chart.register(Colors);
   }
 
   static get properties()
@@ -52,7 +53,6 @@ export class ZincChart extends ZincElement
   firstUpdated()
   {
     const ctx = (this.renderRoot.querySelector('#chat') as HTMLCanvasElement).getContext('2d');
-    const drawBackground = this.data.length <= 1;
     const config = {
       type: this.type,
       data: {
@@ -66,11 +66,11 @@ export class ZincChart extends ZincElement
         },
         elements: {
           point: {
-            radius: 2,
+            radius: 3,
           },
           line: {
             borderWidth: 2,
-            fill: true,
+            fill: false,
           }
         },
         scales: {

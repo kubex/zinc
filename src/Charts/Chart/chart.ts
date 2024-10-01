@@ -10,9 +10,8 @@ import styles from './index.scss?inline';
 export class ZincChart extends ZincElement
 {
   static styles = unsafeCSS(styles);
-  private produced: Chart;
 
-  @property({attribute: 'datasets', type: Array, reflect: true}) public datasets;
+  @property({attribute: 'data', type: Array, reflect: true}) public data;
   @property({attribute: 'labels', type: Array, reflect: true}) public labels;
   @property({attribute: 'type', type: String, reflect: true}) public type = 'line';
 
@@ -33,14 +32,14 @@ export class ZincChart extends ZincElement
   connectedCallback()
   {
     super.connectedCallback();
-    if(this.datasets === null || this.datasets === undefined)
+    if(this.data === null || this.data === undefined)
     {
       if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
       {
         const data = this.childNodes[0];
         try
         {
-          this.datasets = JSON.parse(data.textContent);
+          this.data = JSON.parse(data.textContent);
         }
         catch(e)
         { /* empty */
@@ -53,12 +52,12 @@ export class ZincChart extends ZincElement
   firstUpdated()
   {
     const ctx = (this.renderRoot.querySelector('#chat') as HTMLCanvasElement).getContext('2d');
-    const drawBackground = this.datasets.length <= 1;
+    const drawBackground = this.data.length <= 1;
     const config = {
       type: this.type,
       data: {
         labels: this.labels,
-        datasets: this.datasets
+        datasets: this.data
       },
       options: {
         layout: {
@@ -66,7 +65,7 @@ export class ZincChart extends ZincElement
         },
         elements: {
           point: {
-            radius: 6,
+            radius: 3,
             backgroundColor: 'rgb(60, 216, 187)',
             borderColor: 'rgb(60, 216, 187)',
           },
@@ -91,6 +90,10 @@ export class ZincChart extends ZincElement
           },
         },
         maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
         plugins: {
           htmlLegend: {
             containerID: 'legend-container',
@@ -103,7 +106,7 @@ export class ZincChart extends ZincElement
       plugins: [htmlLegendPlugin]
     };
 
-    this.produced = new Chart(ctx, config as ChartConfiguration);
+    new Chart(ctx, config as ChartConfiguration);
   }
 
   render()

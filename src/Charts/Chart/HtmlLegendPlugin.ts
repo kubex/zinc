@@ -9,6 +9,7 @@ const getOrCreateLegendList = (chart, id) =>
     listContainer = document.createElement('ul');
     listContainer.style.display = 'flex';
     listContainer.style.flexDirection = 'row';
+    listContainer.style.justifyContent = 'flex-end'
     listContainer.style.margin = "0";
     listContainer.style.padding = "0";
 
@@ -59,13 +60,12 @@ export const htmlLegendPlugin = {
 
       // Color box
       const boxSpan = document.createElement('span');
-      boxSpan.style.background = item.fillStyle;
-      boxSpan.style.borderColor = item.strokeStyle;
-      boxSpan.style.borderWidth = item.lineWidth + 'px';
+      boxSpan.style.background = item.strokeStyle;
+      boxSpan.style.borderRadius = '50%';
       boxSpan.style.display = 'inline-block';
-      boxSpan.style.height = '20px';
+      boxSpan.style.height = '10px';
       boxSpan.style.marginRight = '10px';
-      boxSpan.style.width = '40px';
+      boxSpan.style.width = '10px';
 
       // Text
       const textContainer = document.createElement('p');
@@ -73,6 +73,7 @@ export const htmlLegendPlugin = {
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
       textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+      textContainer.style.fontSize = '12px';
 
       const text = document.createTextNode(item.text);
       textContainer.appendChild(text);

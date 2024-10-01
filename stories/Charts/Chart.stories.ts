@@ -1,5 +1,6 @@
-import '../../src/Charts/Chart';
 import {html} from "lit";
+import '../../src/Charts/Chart';
+import '../../src/Panel';
 
 export default {
   component: 'zn-chart',
@@ -9,7 +10,7 @@ export default {
 
 const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
-const dataset = [
+const data = [
   {
     label: 'Dataset 1',
     data: [
@@ -24,7 +25,7 @@ const dataset = [
   }
 ];
 
-const datasets = [
+const datas = [
   {
     label: 'Dataset 1',
     data: [
@@ -55,20 +56,23 @@ const datasets = [
   }
 ];
 
-export const Default = ({datasets, labels}) =>
+export const Default = ({data, labels}) =>
   html`
-    <zn-chart .datasets=${datasets} .labels=${labels}></zn-chart>`;
+    <zn-panel>
+      <zn-chart .data=${data} .labels=${labels}></zn-chart>
+    </zn-panel>
+  `;
 
 export const MultiLine = () =>
   html`
-    <zn-chart .datasets=${datasets} .labels=${labels}></zn-chart>`;
+    <zn-chart .data=${datas} .labels=${labels}></zn-chart>`;
 
 export const BarChart = () =>
   html`
-    <zn-chart .datasets=${datasets} .labels=${labels} type="bar"></zn-chart>`;
+    <zn-chart .data=${datas} .labels=${labels} type="bar"></zn-chart>`;
 
 
 Default.args = {
-  datasets: dataset,
+  data: datas,
   labels: labels
 }

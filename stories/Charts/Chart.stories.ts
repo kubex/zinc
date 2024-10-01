@@ -8,7 +8,7 @@ export default {
   tags: ['charts', 'chart'],
 };
 
-const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const data = [
   {
@@ -37,8 +37,6 @@ const datas = [
       {x: "Sat", y: 19243},
       {x: "Sun", y: 19400},
     ],
-    borderColor: 'rgb(79,180,107)',
-    backgroundColor: 'rgb(39,168,78)',
   },
   {
     label: 'Dataset 2',
@@ -51,8 +49,6 @@ const datas = [
       {x: "Sat", y: 9243},
       {x: "Sun", y: 9400},
     ],
-    borderColor: 'rgb(255, 99, 132)',
-    backgroundColor: 'rgb(241,63,100)',
   }
 ];
 
@@ -75,4 +71,4 @@ export const BarChart = () =>
 Default.args = {
   data: datas,
   labels: labels
-}
+};

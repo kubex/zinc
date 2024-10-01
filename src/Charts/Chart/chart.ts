@@ -60,20 +60,17 @@ export class ZincChart extends ZincElement
         datasets: this.data
       },
       options: {
+        animation: false,
         layout: {
           padding: 20
         },
         elements: {
           point: {
-            radius: 3,
-            backgroundColor: 'rgb(60, 216, 187)',
-            borderColor: 'rgb(60, 216, 187)',
+            radius: 2,
           },
           line: {
-            borderWidth: 3,
-            borderColor: 'rgb(60, 216, 187)',
-            backgroundColor: drawBackground ? 'rgba(60, 216, 187, 0.2)' : 'rgba(0, 0, 0, 0)',
-            fill: drawBackground,
+            borderWidth: 2,
+            fill: true,
           }
         },
         scales: {

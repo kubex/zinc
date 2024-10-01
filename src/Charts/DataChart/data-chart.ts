@@ -26,7 +26,7 @@ export class DataChart extends ZincElement
   @property({attribute: 'live-interval', type: Number}) liveInterval = 1000;
   @property({type: Number, reflect: true}) height = 300;
 
-  @property({type: Boolean}) enableAnimations = true;
+  @property({attribute: 'enable-animations', type: Boolean}) enableAnimations = true;
 
   private chart: ApexCharts;
 

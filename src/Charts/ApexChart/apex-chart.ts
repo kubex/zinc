@@ -10,11 +10,8 @@ export class ApexChart extends ZincElement
 {
   static styles = unsafeCSS(styles);
 
-  @property({attribute: 'type'}) public type = 'radialBar';
-  @property({attribute: 'series'}) public series = '0';
-  @property({attribute: 'x-axis-type'}) public xAxisType = 'category';
-  @property({attribute: 'enable-animations', type: Boolean, reflect: true}) public enableAnimations = true;
-
+  @property({attribute: 'type', type: String, reflect: true}) public type = 'radialBar';
+  @property({attribute: 'amount', type: String, reflect: true}) public amount = '0';
 
   static get properties()
   {
@@ -31,11 +28,7 @@ export class ApexChart extends ZincElement
         type: this.type,
         height: '100%'
       },
-      series: [this.series],
-      animations: this.enableAnimations,
-      xaxis: {
-        type: this.xAxisType
-      },
+      series: [this.amount],
       plotOptions: {
         radialBar: {
           startAngle: -135,

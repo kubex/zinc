@@ -35,7 +35,7 @@ class DropdownModule
       this._commands = options.cannedResponses;
     }
 
-    if(options.cannedResponsesUri)
+    if(options.cannedResponsesUri !== ' ')
     {
       this._cannedResponsesUri = options.cannedResponsesUri;
     }
@@ -112,7 +112,7 @@ class DropdownModule
       // can select from.
       const text = this._quill.getText();
       const index = this._quill.getSelection()?.index;
-      const char = text.charAt(index);
+      let char = text.charAt(index);
 
       // if there's no character before the forward slash, we will open the dropdown
       if(char === '/' && !dropdownOpen &&
@@ -134,14 +134,20 @@ class DropdownModule
         this.closeDropdown();
       }
 
+
+      console.log('index', index);
+      console.log('text', text);
+      console.log('char', char);
+      console.log('close dropdown');
+
       // if the dropdown is open, we will filter the commands based on the text that the user has typed
       // after the forward slash
       if(dropdownOpen)
       {
+        console.log(' filter text', text);
         this.commandFilter(text);
         this.updateDropdownPosition();
       }
-
 
       // if the user clicks away from the dropdown, we will close the dropdown
       document.addEventListener('click', (e) =>
@@ -233,7 +239,6 @@ class DropdownModule
         });
       }
     });
-
 
     this._commandElements = filteredTextCommands.filter(command =>
     {

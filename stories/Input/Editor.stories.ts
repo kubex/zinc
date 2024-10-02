@@ -21,8 +21,8 @@ const cannedResponses = [
   },
   {
     title: 'Canned Response 1',
-    content: 'This is the canned response 1 http//something.com/{{login}}',
-    command: 'command1',
+    content: 'This is the canned response 1 ',
+    command: 'this is something',
     labels: ['label1', 'label2'],
   }
 ];
@@ -33,7 +33,7 @@ export const Default: Story = {
       <zn-editor
         attachment-url="#"
         interaction-type="chat"
-        canned-responses=${cannedResponses}>
+        canned-responses="${JSON.stringify(cannedResponses)}">
         Editor
       </zn-editor>
       <input type="text" name="attachments" id="attachments" style="display: none">

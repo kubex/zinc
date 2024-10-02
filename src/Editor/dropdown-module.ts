@@ -30,8 +30,11 @@ class DropdownModule
   {
     this._quill = quill;
 
+    console.log('options', options);
+
     if(options.cannedResponses)
     {
+      console.log('options.cannedResponses', options.cannedResponses);
       this._commands = options.cannedResponses;
     }
 
@@ -134,17 +137,10 @@ class DropdownModule
         this.closeDropdown();
       }
 
-
-      console.log('index', index);
-      console.log('text', text);
-      console.log('char', char);
-      console.log('close dropdown');
-
       // if the dropdown is open, we will filter the commands based on the text that the user has typed
       // after the forward slash
       if(dropdownOpen)
       {
-        console.log(' filter text', text);
         this.commandFilter(text);
         this.updateDropdownPosition();
       }

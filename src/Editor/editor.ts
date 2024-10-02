@@ -164,6 +164,8 @@ export class Editor extends ZincElement implements ZincFormControl
 
     container.push(['remove-formatting']);
 
+    console.log('canned-responses', this.cannedResponses);
+
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {

@@ -13,6 +13,10 @@
     flex-grow: 1;
     max-height: 100%;
 
+    @include wc.container-query(ph) {
+      max-width: calc(100% - wc.common-size(bar));
+    }
+
     @include wc.container-query(zero, ph) {
       min-height: 0;
     }

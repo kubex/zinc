@@ -22,8 +22,8 @@ const cannedResponses = [
   {
     title: 'Canned Response 1',
     content: 'This is the canned response 1 ',
-    command: 'this is something',
-    labels: ['label1', 'label2'],
+    command: 'something1',
+    labels: ['label3', 'label2'],
   }
 ];
 

@@ -30,11 +30,8 @@ class DropdownModule
   {
     this._quill = quill;
 
-    console.log('options', options);
-
     if(options.cannedResponses)
     {
-      console.log('options.cannedResponses', options.cannedResponses);
       this._commands = options.cannedResponses;
     }
 
@@ -96,6 +93,19 @@ class DropdownModule
       }
     });
 
+    document.addEventListener('keydown', (e) =>
+    {
+      if(dropdownOpen && e.key === 'Escape')
+      {
+        this.closeDropdown();
+      }
+
+      if(dropdownOpen && e.key === 'Enter')
+      {
+        enterCommand();
+      }
+    });
+
     // on mouse click close the dropdown
     document.addEventListener('click', (e) =>
     {
@@ -104,6 +114,7 @@ class DropdownModule
         this.closeDropdown();
       }
     });
+
   }
 
   onTextChange(_: any, oldDelta: any, source: any)
@@ -115,7 +126,7 @@ class DropdownModule
       // can select from.
       const text = this._quill.getText();
       const index = this._quill.getSelection()?.index;
-      let char = text.charAt(index);
+      const char = index === 0 ? text.charAt(0) : text.charAt(index - 1); // Last input char
 
       // if there's no character before the forward slash, we will open the dropdown
       if(char === '/' && !dropdownOpen &&
@@ -219,7 +230,7 @@ class DropdownModule
     // filter the commands based on the text
     filteredCommands.forEach(command =>
     {
-      if(command.title.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
+      if(command.command.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
       {
         filteredTextCommands.push(command);
       }
@@ -236,10 +247,26 @@ class DropdownModule
       }
     });
 
-    this._commandElements = filteredTextCommands.filter(command =>
+    // Make sure we have the cancel command
+    let hasCancelCommand = false;
+    filteredCommands.forEach(command =>
     {
-      return command.title.toLowerCase().includes(filteredText.toLowerCase());
-    }).map(command =>
+      if(command.command === 'cancel')
+      {
+        hasCancelCommand = true;
+      }
+    });
+
+    if(!hasCancelCommand)
+    {
+      filteredCommands.push({
+        title: 'Close Dropdown',
+        content: 'Cancel',
+        command: 'cancel'
+      });
+    }
+
+    this._commandElements = filteredTextCommands.map(command =>
     {
       return this.createCommandElement(command);
     });
@@ -249,6 +276,7 @@ class DropdownModule
     {
       this._dropdown.appendChild(element);
     });
+
 
     if(filteredCommands.length !== 0)
     {
@@ -348,7 +376,10 @@ class DropdownModule
 
   updateSelectedCommand()
   {
-    this._commandElements[this._selectedIndex].style.backgroundColor = 'rgba(var(--zn-primary),  0.05)';
+    if(this._commandElements[this._selectedIndex])
+    {
+      this._commandElements[this._selectedIndex].style.backgroundColor = 'rgba(var(--zn-primary),  0.05)';
+    }
 
     // un style all the other commands
     this._commandElements.forEach((element, i) =>

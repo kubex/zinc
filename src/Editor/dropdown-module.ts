@@ -230,7 +230,7 @@ class DropdownModule
     // filter the commands based on the text
     filteredCommands.forEach(command =>
     {
-      if(command.command.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
+      if(command.command?.toLowerCase().includes(filteredText.toLowerCase()) && !filteredTextCommands.includes(command))
       {
         filteredTextCommands.push(command);
       }

@@ -84,16 +84,20 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
     this.formControlController.updateValidity();
   }
 
-  private handleInputValueChange()
+  private handleInputValueChange(e: Event)
   {
-    this.valueInput.value = this.valueInput.value.toLowerCase();
-    this.inputValue = this.valueInput.value;
+    const target = e.target as HTMLInputElement;
+    this.inputValue = target.value.toLowerCase();
+
+    if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
   }
 
-  private handleInputValueInput()
+  private handleInputValueInput(e: Event)
   {
-    this.valueInput.value = this.valueInput.value.toLowerCase();
-    this.inputValue = this.valueInput.value;
+    const target = e.target as HTMLInputElement;
+    this.inputValue = target.value.toLowerCase();
+
+    if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
   }
 
   private handleFormSubmit()
@@ -114,7 +118,6 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
           return;
         }
         predefinedLabels = html`
-          ${predefinedLabels}
           <div class="defined-label__container">
             <div class="defined-label__left">
               ${label}
@@ -122,9 +125,10 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
             <div class="defined-label__right">
               <input
                 part="input-value"
-                id="input-value"
-                class="input__control-value"
+                id="input-value-${label}"
+                class="input__control-value--${label}"
                 type="text"
+                data-label="${label}"
                 @change="${this.handleInputValueChange}"
                 @input="${this.handleInputValueInput}"
               />

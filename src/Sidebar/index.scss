@@ -176,6 +176,12 @@
 }
 
 :host([open]) {
+
+  .relative {
+    @include wc.container-query(ph) {
+      max-width: calc(100% - wc.common-size(mpanel));
+    }
+  }
   .sidebar {
     @include wc.container-query(ph) {
       min-width: wc.common-size(mpanel);

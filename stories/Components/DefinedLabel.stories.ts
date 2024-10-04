@@ -15,10 +15,9 @@ export default meta;
 type Story = StoryObj;
 
 const predefinedLabels = [
-  'label1',
-  'label2',
-  'label3',
-];
+  {'name': 'label1'},
+  {'name': 'label2'},
+  {'name': 'label3', 'options': ["one", "two", "three"]}];
 
 export const Default: Story = {
   render: () =>

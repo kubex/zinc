@@ -86,7 +86,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   private handleInputValueChange(e: Event)
   {
-    const target = e.target as HTMLInputElement;
+    const target = e.target as HTMLInputElement | HTMLSelectElement
     this.inputValue = target.value.toLowerCase();
 
     if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
@@ -94,7 +94,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   private handleInputValueInput(e: Event)
   {
-    const target = e.target as HTMLInputElement;
+    const target = e.target as HTMLInputElement| HTMLSelectElement;
     this.inputValue = target.value.toLowerCase();
 
     if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
@@ -113,25 +113,60 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
     {
       this.predefinedLabels.forEach((label) =>
       {
+        // label = ['name' => 'label', 'options'=>['one', 'two', 'three']]
+        let options = [];
+        if(typeof label !== 'string')
+        {
+          options = label.options;
+          label = label.name;
+        }
+
+
         if(this.value && !label.toLowerCase().includes(this.value.toLowerCase()))
         {
           return;
         }
+
+        let selector = html``;
+        if(options && options.length > 0)
+        {
+          selector = html`
+            <select
+              part="input-value"
+              id="input-value input-value-${label}"
+              class="input__control-value input__control-value--${label}"
+              data-label="${label}"
+              @change="${this.handleInputValueChange}"
+              @input="${this.handleInputValueInput}"
+            >
+              <option value="">Select ${label}</option>
+              ${options.map((option) => html`
+                <option value="${option}">${option}</option>
+              `)}
+            </select>`;
+        }
+        else
+        {
+          selector = html`
+            <input
+              part="input-value"
+              id="input-value input-value-${label}"
+              class="input__control-value input__control-value--${label}"
+              type="text"
+              data-label="${label}"
+              @change="${this.handleInputValueChange}"
+              @input="${this.handleInputValueInput}"
+            />`;
+        }
+
+
         predefinedLabels = html`
           <div class="defined-label__container">
             <div class="defined-label__left">
               ${label}
             </div>
             <div class="defined-label__right">
-              <input
-                part="input-value"
-                id="input-value-${label}"
-                class="input__control-value--${label}"
-                type="text"
-                data-label="${label}"
-                @change="${this.handleInputValueChange}"
-                @input="${this.handleInputValueInput}"
-              />
+              ${selector}
             </div>
             <div class="defined-label__submit">
               <zn-button type="submit" icon="add" slot="submit" size="small"

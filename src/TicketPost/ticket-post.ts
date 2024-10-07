@@ -168,8 +168,6 @@ export class TicketPost extends ZincElement
     }
 
 
-    console.log(textRows);
-
     // filter empty rows
     this._textRows = textRows;
     return this._textRows;

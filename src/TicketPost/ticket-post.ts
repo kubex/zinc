@@ -143,11 +143,10 @@ export class TicketPost extends ZincElement
 
       rows.forEach((row) =>
       {
-        if(row.startsWith('On ') && row.endsWith(' wrote:') && !containsGraterThan) forceReply = true;
+        if(((row.startsWith('On') && row.endsWith('wrote:')) || row.startsWith('From:')) && !containsGraterThan) forceReply = true;
         if(row.startsWith('--')) forceReply = false;
         type = forceReply || row.startsWith('>') ? 'reply' : 'text';
         if(type === 'reply' && row.startsWith('>')) row = row.substring(1).trim();
-        if(row === '') return;
 
         // if previous row is the same type, append to it
         if(previousType === type)
@@ -167,6 +166,9 @@ export class TicketPost extends ZincElement
         previousType = type;
       });
     }
+
+
+    console.log(textRows);
 
     // filter empty rows
     this._textRows = textRows;
@@ -188,7 +190,7 @@ export class TicketPost extends ZincElement
           'hidden': section.type === 'reply'
         })}>
           ${section.lines.map((line) => html`
-            <p>${line}</p>
+            <p>${line == '' ? '\xa0' : line}</p>
           `)}
         </div>
       `)}

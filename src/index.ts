@@ -60,6 +60,7 @@ import '@/ProgressTile';
 import '@/DefinedLabel';
 import '@/FormElements/LinkedSelect';
 import '@/InteractionTile';
+import '@/TicketPost';
 
 // Events
 export * from '@/Events/events';

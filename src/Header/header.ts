@@ -129,10 +129,17 @@ export class Header extends ZincElement
         ${this.entityIdShow ? this.entityId : ''}`;
     }
 
+    let url: TemplateResult;
+    if(this.fullLocation)
+    {
+      url = html`
+        <zn-icon src="link" onclick="navigator.clipboard.writeText('${this.fullLocation}')"></zn-icon>`;
+    }
+
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
-        <div class="alt-overlay">${inNew}${entityId}</div>
+        <div class="alt-overlay">${inNew}${entityId}${url}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
           <div class="caption">

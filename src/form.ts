@@ -233,10 +233,36 @@ export class FormControlController implements ReactiveController
       });
     }
 
+    // get the submit button
+    const submitButton = this.form?.querySelector('[type ="submit"]') as HTMLButtonElement | null;
+    const content = submitButton?.innerHTML;
+    if(submitButton)
+    {
+      setTimeout(() =>
+      {
+        // disable duplicate submit
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Processing...';
+      }, 20);
+
+      setTimeout(() =>
+      {
+        submitButton.disabled = false;
+        submitButton.innerHTML = content ?? '';
+      }, 2000);
+    }
+
     if(this.form && !this.form.noValidate && !disabled && !reportValidity(this.host))
     {
       event.preventDefault();
       event.stopImmediatePropagation();
+
+      // remove the disabled state from the submit button
+      if(submitButton)
+      {
+        submitButton.removeAttribute('disabled');
+        submitButton.innerHTML = content ?? '';
+      }
     }
   };
 

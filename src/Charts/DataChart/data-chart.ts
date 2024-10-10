@@ -45,6 +45,9 @@ export class DataChart extends ZincElement
         foreColor: theme == 'dark' ? "rgb(149, 163, 184)" : "rgb(123, 112, 151)",
         height: this.height + 'px',
         fontFamily: '"Inter", sans',
+        zoom: {
+          enabled: false
+        },
         animations: {
           enabled: false,
         },

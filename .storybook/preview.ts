@@ -10,6 +10,10 @@ import './storybook.scss';
 
 const preview: Preview = {
     parameters: {
+      mockAddonConfigs: {
+        globalMockData: [{}],
+        ignoreQueryParams: true,
+      },
       actions: {argTypesRegex: "^on[A-Z].*"},
       controls: {
         matchers: {

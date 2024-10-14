@@ -13,7 +13,7 @@ const meta: Meta = {
   tags: ['components', 'data-table'],
   parameters: {
     mockData: [{
-      url: 'https://jsonplaceholder.typicode.com/todos',
+      url: '/todos',
       method: 'GET',
       status: 200,
       response: {
@@ -40,7 +40,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <zn-panel caption="Data Table">
-      <zn-data-table data-uri="https://jsonplaceholder.typicode.com/todos"
+      <zn-data-table data-uri="/todos"
                      headers="${JSON.stringify(headers)}"
                      wide-column="displayName"
                      sort-column="id"

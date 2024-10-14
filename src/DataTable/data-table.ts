@@ -4,8 +4,6 @@ import {Task} from "@lit/task";
 import {customElement, property} from 'lit/decorators.js';
 import {classMap} from "lit/directives/class-map.js";
 
-import '../Icon';
-
 import styles from './index.scss?inline';
 
 type TableData = {
@@ -22,13 +20,16 @@ export class DataTable extends ZincElement
   static styles = unsafeCSS(styles);
 
   @property({attribute: 'data-uri'}) dataUri: string;
-  @property({type: Boolean, attribute: 'query-as-route-data'}) queryAsRouteData: boolean = false;
   @property({attribute: 'sort-column'}) sortColumn: string = 'id';
-  @property({attribute: 'key'}) key: string = 'id';
   @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
+
   @property({attribute: 'wide-column'}) wideColumn: string;
+  @property({type: Boolean, attribute: 'query-as-route-data'}) queryAsRouteData: boolean = false;
+
+  @property({attribute: 'key'}) key: string = 'id';
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
+  @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
 
   // Data Table Properties
   private itemsPerPage: number = 10;
@@ -36,7 +37,8 @@ export class DataTable extends ZincElement
   private totalItems: number;
   private totalPages: number;
 
-  private rows: any[] = [];
+  private _rows: any[] = [];
+  private _filteredRows: any[] = [];
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
@@ -103,57 +105,29 @@ export class DataTable extends ZincElement
         <div class="table--empty">No data available</div>`;
     }
 
-    // Sort the data into rows
     const keys = Object.entries(this.headers).map(([key, _]) => key);
-    this.rows = Object.values(data.data).map((row: any) =>
-    {
-      return keys.map((header: any) => row[header]);
-    });
+    const filteredKeys = keys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
 
-    // sort the rows by the key
-    this.rows = this.rows.sort((a, b) =>
-    {
-      if(this.sortDirection === 'asc')
-      {
-        return a[keys.indexOf(this.sortColumn)] > b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-      }
-
-      return a[keys.indexOf(this.sortColumn)] < b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-    });
+    this._filteredRows = this.getRows(filteredKeys, data);
+    this._rows = this.getRows(keys, data);
 
     return html`
-      <table class=${classMap({
-        'table': true,
-      })}>
+      <table class=${classMap({'table': true})}>
         <thead>
         <tr>
           <th>
             <div><input type="checkbox" @change=${this.selectAll}></div>
           </th>
-          ${keys.map((key: any) => html`
-            <th
-              class=${classMap({
-                'table__header': true,
-                'table__header--wide': key === this.wideColumn
-              })}
-              @click="${this.updateSort(key)}">
-              <div>
-                ${this.headers[key]}
-                <div class="table__header__sort">${this.getTableSortIcon(key)}</div>
-              </div>
-            </th>`)}
+          ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
         </tr>
         </thead>
         <tbody>
-        ${this.rows.map((row: any) => html`
+        ${this._filteredRows.map((row: any) => html`
           <tr>
             <td>
               <div><input type="checkbox" @change=${this.selectRow}></div>
             </td>
-            ${row.map((value: any) => html`
-              <td>
-                <div>${this.renderData(value)}`)}</div>
-            </td>
+            ${row.map((value: any) => this.renderCellBody(value))}
           </tr>`)}
         </tbody>
       </table>
@@ -169,7 +143,7 @@ export class DataTable extends ZincElement
     return html`
       <div class="table__footer">
         <div class="table__footer__left">
-          <p>${this.numberOfRowsSelected} of ${this.itemsPerPage} rows selected</p>
+          <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>
         </div>
 
         <div class="table__footer__right">
@@ -272,17 +246,16 @@ export class DataTable extends ZincElement
     for(const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]'))
     {
       (row as HTMLInputElement).checked = checked;
-      this.selectedRows = checked ? this.rows : [];
     }
 
-    // if the select all checkbox is checked
+    this.selectedRows = checked ? this._rows : [];
     this.numberOfRowsSelected = this.selectedRows.length;
     this.requestUpdate();
   }
 
   selectRow()
   {
-    this.selectedRows = this.rows.filter((_, index) =>
+    this.selectedRows = this._rows.filter((_, index) =>
     {
       return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement).checked;
     });
@@ -354,6 +327,51 @@ export class DataTable extends ZincElement
 
     return html`
       <zn-icon src="arrow_upward_alt" size="16"></zn-icon>`;
+  }
+
+  private renderCellHeader(key)
+  {
+    return html`
+      <th
+        class=${classMap({
+          'table__header': true,
+          'table__header--wide': key === this.wideColumn
+        })}
+        @click="${this.updateSort(key)}">
+        <div>
+          ${this.headers[key]}
+          <div class="table__header__sort">${this.getTableSortIcon(key)}</div>
+        </div>
+      </th>`;
+  }
+
+  private renderCellBody(value: any)
+  {
+    return html`
+      <td>
+        <div>${this.renderData(value)}</div>
+      </td>`;
+  }
+
+  private getRows(keys: string[], data: TableData)
+  {
+    let rows = Object.values(data.data).map((row: any) =>
+    {
+      return keys.map((header: any) => row[header]);
+    });
+
+    // sort the rows by the key
+    rows = rows.sort((a, b) =>
+    {
+      if(this.sortDirection === 'asc')
+      {
+        return a[keys.indexOf(this.sortColumn)] > b[keys.indexOf(this.sortColumn)] ? 1 : -1;
+      }
+
+      return a[keys.indexOf(this.sortColumn)] < b[keys.indexOf(this.sortColumn)] ? 1 : -1;
+    });
+
+    return rows;
   }
 }
 

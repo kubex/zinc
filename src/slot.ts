@@ -26,6 +26,11 @@ export class HasSlotController implements ReactiveController
     return slotName === '[default]' ? this.hasDefaultSlot() : this.hasNamedSlot(slotName);
   }
 
+  getSlot(slotName: string)
+  {
+    return this.host.querySelector(`:scope > [slot="${slotName}"]`) as HTMLElement;
+  }
+
   private hasDefaultSlot()
   {
     return [...this.host.childNodes].some(node =>

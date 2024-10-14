@@ -33,7 +33,7 @@
     }
   }
 
-  &__header {
+  &__head {
     &__sort {
       margin-left: wc.spacing(sm);
       display: flex;
@@ -46,10 +46,32 @@
     &--wide {
       width: 100%;
     }
+
+    &--last div {
+      justify-content: flex-end;
+    }
+  }
+
+  &__cell {
+    &--wide {
+      width: 100%;
+    }
+
+    &--last div {
+      justify-content: flex-end;
+    }
   }
 
   &--empty {
     background-color: orange;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: wc.spacing(sm);
+    gap: wc.spacing(sm);
   }
 
   &__footer {

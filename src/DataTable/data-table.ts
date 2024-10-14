@@ -5,6 +5,7 @@ import {customElement, property} from 'lit/decorators.js';
 import {classMap} from "lit/directives/class-map.js";
 
 import styles from './index.scss?inline';
+import {HasSlotController} from "@/slot";
 
 type TableData = {
   page: 1,
@@ -42,6 +43,8 @@ export class DataTable extends ZincElement
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
+
+  private hasSlotController = new HasSlotController(this, '[default], modify-action');
 
   private _dataTask = new Task(this, {
     task: async ([dataUri], {signal}) =>
@@ -112,6 +115,7 @@ export class DataTable extends ZincElement
     this._rows = this.getRows(keys, data);
 
     return html`
+      ${this.getTableHeader()}
       <table class=${classMap({'table': true})}>
         <thead>
         <tr>
@@ -127,12 +131,49 @@ export class DataTable extends ZincElement
             <td>
               <div><input type="checkbox" @change=${this.selectRow}></div>
             </td>
-            ${row.map((value: any) => this.renderCellBody(value))}
+            ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
           </tr>`)}
         </tbody>
       </table>
 
       ${this.getTableFooter()}
+    `;
+  }
+
+  getTableHeader()
+  {
+    const actions = [];
+
+    if(this.selectedRows.length > 0)
+    {
+      actions.push(html`
+        <zn-button @click=${this.clearSelectedRows} size="x-small" outline>
+          Clear Selection
+        </zn-button>`);
+
+      if(this.hasSlotController.test('delete-action'))
+      {
+        actions.push(html`
+          <slot name="delete-action"></slot>`);
+      }
+
+      if(this.hasSlotController.test('modify-action'))
+      {
+        actions.push(html`
+          <slot name="modify-action"></slot>`);
+      }
+    }
+
+    if(this.hasSlotController.test('create-action'))
+    {
+      actions.push(html`
+        <slot name="create-action"></slot>`);
+    }
+
+    return html`
+      <div class="table__header">
+        ${actions}
+      </div>
     `;
   }
 
@@ -250,7 +291,26 @@ export class DataTable extends ZincElement
 
     this.selectedRows = checked ? this._rows : [];
     this.numberOfRowsSelected = this.selectedRows.length;
+    this.updateKeys();
     this.requestUpdate();
+  }
+
+
+  private updateActionKeys(slotName: string)
+  {
+    if(this.hasSlotController.test(slotName))
+    {
+      // we need to look into the slot controller for the keys input
+      const slot = this.hasSlotController.getSlot(slotName);
+      if(slot)
+      {
+        const input = slot.querySelector('input[name="keys"]');
+        if(input && input instanceof HTMLInputElement)
+        {
+          input.value = this.getSelectedKeys().join(',');
+        }
+      }
+    }
   }
 
   selectRow()
@@ -261,6 +321,20 @@ export class DataTable extends ZincElement
     });
 
     this.numberOfRowsSelected = this.selectedRows.length;
+    this.updateKeys();
+    this.requestUpdate();
+  }
+
+  clearSelectedRows()
+  {
+    (this.renderRoot.querySelectorAll('thead input[type="checkbox"]')[0] as HTMLInputElement).checked = false;
+    for(const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]'))
+    {
+      (row as HTMLInputElement).checked = false;
+    }
+
+    this.selectedRows = [];
+    this.numberOfRowsSelected = 0;
     this.requestUpdate();
   }
 
@@ -331,24 +405,34 @@ export class DataTable extends ZincElement
 
   private renderCellHeader(key)
   {
+    let headerKeys = Object.keys(this.headers);
+    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
     return html`
       <th
         class=${classMap({
-          'table__header': true,
-          'table__header--wide': key === this.wideColumn
+          'table__head': true,
+          'table__head--wide': key === this.wideColumn,
+          'table__head--last': key === headerKeys[headerKeys.length - 1]
         })}
         @click="${this.updateSort(key)}">
         <div>
           ${this.headers[key]}
-          <div class="table__header__sort">${this.getTableSortIcon(key)}</div>
+          <div class="table__head__sort">${this.getTableSortIcon(key)}</div>
         </div>
       </th>`;
   }
 
-  private renderCellBody(value: any)
+  private renderCellBody(index: number, value: any)
   {
+    let headerKeys = Object.keys(this.headers);
+    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
+    const header = headerKeys[index];
     return html`
-      <td>
+      <td class=${classMap({
+        'table__cell': true,
+        'table__cell--wide': header === this.wideColumn,
+        'table__cell--last': header === headerKeys[headerKeys.length - 1]
+      })}>
         <div>${this.renderData(value)}</div>
       </td>`;
   }
@@ -372,6 +456,28 @@ export class DataTable extends ZincElement
     });
 
     return rows;
+  }
+
+  private getSelectedKeys()
+  {
+    const headerKeys = Object.keys(this.headers);
+    return this.selectedRows.map((row) => row[headerKeys.indexOf(this.key)]);
+  }
+
+  private updateKeys()
+  {
+    this.updateModifyKeys();
+    this.updateDeleteKeys();
+  }
+
+  private updateModifyKeys()
+  {
+    this.updateActionKeys('modify-action');
+  }
+
+  private updateDeleteKeys()
+  {
+    this.updateActionKeys('delete-action');
   }
 }
 

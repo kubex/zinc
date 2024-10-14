@@ -1,0 +1,54 @@
+@use "../../scss/mixins" as wc;
+@use "../../scss/shared/table";
+
+.table { // The container element that holds the table and the filters
+
+  tr th {
+    padding-bottom: wc.spacing(xs);
+
+    // assume checkbox is the first column
+    &:first-of-type {
+      padding-bottom: wc.spacing(xxs);
+    }
+  }
+
+  tr th, tr td {
+    min-width: 50px;
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+
+    // assume checkbox is the first column
+    &:first-of-type > div {
+      justify-content: center;
+
+      input {
+        margin: 0;
+      }
+    }
+  }
+
+  &__header {
+    &__sort {
+      margin-left: wc.spacing(sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    &--wide {
+      width: 100%;
+    }
+  }
+
+  &--empty {
+    background-color: orange;
+  }
+
+}

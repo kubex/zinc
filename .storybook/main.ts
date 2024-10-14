@@ -6,6 +6,7 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-themes",
+    "storybook-addon-mock",
   ],
   staticDirs: ["../src"],
   framework: {

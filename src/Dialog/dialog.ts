@@ -1,8 +1,8 @@
 import {CSSResultGroup, html, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
+import {ZincElement} from "@/zinc-element";
 
 import styles from './index.scss?inline';
-import {ZincElement} from "../zinc-element";
 
 @customElement('zn-dialog')
 export class Dialog extends ZincElement

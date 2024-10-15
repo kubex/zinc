@@ -15,12 +15,14 @@ export class ConfirmModal extends Dialog
     return [super.styles, unsafeCSS(styles)];
   }
 
-  @property({type: String, reflect: true}) caption: string = '';
-  @property({type: String, reflect: true}) content: string = '';
-  @property({type: String, reflect: true}) action: string = '';
-  @property({type: String, reflect: true}) type: string = 'warning';
-  @property({type: String, reflect: true}) confirmText: string = "Confirm";
-  @property({type: String, reflect: true}) cancelText: string = "Cancel";
+  @property() caption: string = '';
+  @property() content: string = '';
+  @property() action: string = '';
+  @property() confirmText: string = "Confirm";
+  @property() cancelText: string = "Cancel";
+
+  @property() type: 'warning' | 'error' | 'success' | 'info' = 'warning';
+  @property() size: 'small' | 'medium' | 'large' = 'medium';
 
   private _hasVisibleInput: boolean = false;
 
@@ -76,7 +78,12 @@ export class ConfirmModal extends Dialog
     const icon = this.getIcon();
 
     return html`
-      <dialog class="type-${this.type}">
+      <dialog class=${classMap({
+        'dialog': true,
+        'dialog--small': this.size === 'small',
+        'dialog--medium': this.size === 'medium',
+        'dialog--large': this.size === 'large'
+      })}>
         <div id="content"> <!-- default dialog close button -->
           ${icon}
           <h2 class="title">${unsafeHTML(this.caption)}</h2>

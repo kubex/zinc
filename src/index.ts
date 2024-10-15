@@ -61,5 +61,7 @@ import '@/DefinedLabel';
 import '@/FormElements/LinkedSelect';
 import '@/InteractionTile';
 import '@/DataTable';
+import '@/BulkActions';
+
 // Events
 export * from '@/Events/events';

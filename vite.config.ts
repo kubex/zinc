@@ -35,11 +35,6 @@ export default defineConfig({
       formats,
       fileName: format => fileName[format],
     },
-    terserOptions: {
-      format: {
-        comments: false
-      }
-    },
     rollupOptions: {
       output: {
         assetFileNames: assetInfo =>
@@ -50,7 +45,9 @@ export default defineConfig({
       }
     }
   },
-  test: {},
+  esbuild: {
+    legalComments: 'none'
+  },
   resolve: {
     alias: [
       {find: "@", replacement: path.resolve(__dirname, 'src')},

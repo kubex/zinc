@@ -111,6 +111,7 @@ export class DataChart extends ZincElement
     {
       options.chart.animations = {
         enabled: true,
+        // @ts-expect-error this is available. it lies.
         easing: 'linear',
         dynamicAnimation: {
           speed: 400

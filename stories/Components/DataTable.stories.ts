@@ -4,6 +4,7 @@ import {Meta, StoryObj} from "@storybook/web-components";
 import '../../src/DataTable';
 import '../../src/Panel';
 import '../../src/Icon';
+import '../../src/Button';
 
 import data from './ticket-data.json';
 
@@ -13,7 +14,7 @@ const meta: Meta = {
   tags: ['components', 'data-table'],
   parameters: {
     mockData: [{
-      url: '/todos',
+      url: 'https://example.local/todos',
       method: 'GET',
       status: 200,
       response: {
@@ -40,7 +41,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => html`
     <zn-panel caption="Data Table">
-      <zn-data-table data-uri="/todos"
+      <zn-data-table data-uri="https://example.local/todos"
                      headers="${JSON.stringify(headers)}"
                      wide-column="displayName"
                      sort-column="id"

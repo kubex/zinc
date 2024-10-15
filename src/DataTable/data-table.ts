@@ -51,7 +51,6 @@ export class DataTable extends ZincElement
     {
       let url = dataUri;
 
-
       if(this.queryAsRouteData)
       {
         url += `/${this.page}/${this.itemsPerPage}/${this.sortColumn}/${this.sortDirection}`;
@@ -70,7 +69,6 @@ export class DataTable extends ZincElement
       const response = await fetch(url, {
         signal,
         credentials: 'same-origin',
-        method: 'get',
         headers: {
           'x-requested-with': 'XMLHttpRequest',
         },

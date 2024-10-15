@@ -13,6 +13,7 @@ const preview: Preview = {
       mockAddonConfigs: {
         globalMockData: [{}],
         ignoreQueryParams: true,
+        disableUsingOriginal: false,
       },
       actions: {argTypesRegex: "^on[A-Z].*"},
       controls: {

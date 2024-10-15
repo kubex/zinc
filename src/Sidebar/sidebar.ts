@@ -1,9 +1,9 @@
-import {ZincElement} from "../zinc-element";
+import {ZincElement} from "@/zinc-element";
 import {html, unsafeCSS} from 'lit';
+import {classMap} from "lit/directives/class-map.js";
 import {customElement, property} from 'lit/decorators.js';
 
 import styles from './index.scss?inline';
-import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-sidebar')
 export class Sidebar extends ZincElement
@@ -37,7 +37,7 @@ export class Sidebar extends ZincElement
   observerDom()
   {
     // observe the DOM for changes
-    const observer = new MutationObserver((mutations) =>
+    const observer = new MutationObserver((_) =>
     {
       setTimeout(this.scrollBottom.bind(this), 10);
     });

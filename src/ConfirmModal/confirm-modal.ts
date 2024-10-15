@@ -4,6 +4,8 @@ import {Dialog} from "@/Dialog";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 import styles from './index.scss?inline';
+import {PropertyValues} from "@lit/reactive-element";
+import {classMap} from "lit/directives/class-map.js";
 
 @customElement('zn-confirm')
 export class ConfirmModal extends Dialog
@@ -20,6 +22,7 @@ export class ConfirmModal extends Dialog
   @property({type: String, reflect: true}) confirmText: string = "Confirm";
   @property({type: String, reflect: true}) cancelText: string = "Cancel";
 
+  private _hasVisibleInput: boolean = false;
 
   getIcon()
   {
@@ -41,6 +44,33 @@ export class ConfirmModal extends Dialog
     super.connectedCallback();
   }
 
+  protected firstUpdated(_changedProperties: PropertyValues)
+  {
+    super.firstUpdated(_changedProperties);
+
+    const slot = this.shadowRoot.querySelector('slot');
+    const nodes: Node[] = slot.assignedNodes();
+    const form = nodes.filter((node) => node.nodeName === 'FORM');
+
+    const inputs = (form[0] as HTMLFormElement).querySelectorAll('input');
+    const selects = (form[0] as HTMLFormElement).querySelectorAll('select');
+    const textarea = (form[0] as HTMLFormElement).querySelectorAll('textarea');
+
+    const elements = [...inputs, ...selects, ...textarea];
+
+    // Check if there is an input that isn't hidden
+    for(let i = 0; i < elements.length; i++)
+    {
+      if(elements[i].type !== 'hidden')
+      {
+        console.log('found input', elements[i]);
+        this._hasVisibleInput = true;
+        this.requestUpdate();
+        break;
+      }
+    }
+  }
+
   render()
   {
     const icon = this.getIcon();
@@ -48,11 +78,14 @@ export class ConfirmModal extends Dialog
     return html`
       <dialog class="type-${this.type}">
         <div id="content"> <!-- default dialog close button -->
-                           ${icon}
+          ${icon}
           <h2 class="title">${unsafeHTML(this.caption)}</h2>
           <p>${unsafeHTML(this.content)}</p>
           <slot></slot>
-          <div class="button-group">
+          <div class="${classMap({
+            'button-group': true,
+            'button-group--gap': this._hasVisibleInput
+          })}">
             <zn-button class="grow" outline color="${this.type}" dialog-closer>${this.cancelText}</zn-button>
             <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
           </div>

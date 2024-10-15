@@ -8,7 +8,7 @@ import '../../src/Icon';
 import data from './ticket-data.json';
 
 const meta: Meta = {
-  component: 'zn-table',
+  component: 'zn-data-table',
   title: 'Components/DataTable',
   tags: ['components', 'data-table'],
   parameters: {

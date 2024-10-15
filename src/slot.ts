@@ -1,4 +1,4 @@
-import { ReactiveController, ReactiveControllerHost } from "lit";
+import {ReactiveController, ReactiveControllerHost} from "lit";
 
 export class HasSlotController implements ReactiveController
 {

@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import * as path from "node:path";
 
 const getPackageName = () =>
@@ -20,6 +20,13 @@ const formats = Object.keys(fileName) as Array<keyof typeof fileName>;
 
 export default defineConfig({
   base: './',
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler'
+      }
+    }
+  },
   build: {
     outDir: 'dist',
     lib: {
@@ -46,8 +53,8 @@ export default defineConfig({
   test: {},
   resolve: {
     alias: [
-      { find: "@", replacement: path.resolve(__dirname, 'src') },
-      { find: "@@", replacement: path.resolve(__dirname) },
+      {find: "@", replacement: path.resolve(__dirname, 'src')},
+      {find: "@@", replacement: path.resolve(__dirname)},
     ]
   }
 });

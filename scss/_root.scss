@@ -1,10 +1,14 @@
 @use "sass:map";
+@use "sass:color";
 @use "variables";
 
 $var-prefix: '--zn-';
 
 @function hex-to-rgb($color) {
-  @return red($color), green($color), blue($color);
+  $red: color.channel($color, 'red', $space: rgb);
+  $green: color.channel($color, 'green', $space: rgb);
+  $blue: color.channel($color, 'blue', $space: rgb);
+  @return $red, $green, $blue;
 }
 
 $brand-colours: (

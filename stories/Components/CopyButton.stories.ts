@@ -19,7 +19,7 @@ export const Default: Story = {
   render: () =>
   {
     return html`
-      <zn-copy-button></zn-copy-button>
+      <zn-copy-button value="Awesome"></zn-copy-button>
     `;
   },
 };

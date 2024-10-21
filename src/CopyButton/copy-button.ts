@@ -23,7 +23,7 @@ export class CopyButton extends ZincElement
   @state() status: 'rest' | 'success' | 'error' = 'rest';
 
   @property() value = '';
-  @property() copyLabel = '';
+  @property({attribute: 'copy-label'}) copyLabel = '';
 
 
   render()

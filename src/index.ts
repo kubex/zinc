@@ -62,6 +62,7 @@ import '@/FormElements/LinkedSelect';
 import '@/InteractionTile';
 import '@/DataTable';
 import '@/BulkActions';
+import '@/CopyButton';
 
 // Events
 export * from '@/Events/events';

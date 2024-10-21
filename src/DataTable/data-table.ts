@@ -373,9 +373,18 @@ export class DataTable extends ZincElement
 
       if(value['url'])
       {
-        content = html`
-          <a href="${value['url']}">${content}</a>`;
+        if(value['target'])
+        {
+          content = html`
+            <a href="${value['url']}" data-target="${value['target']}">${content}</a>`;
+        }
+        else
+        {
+          content = html`
+            <a href="${value['url']}">${content}</a>`;
+        }
       }
+
 
       return content;
     }

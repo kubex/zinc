@@ -142,12 +142,12 @@ export class Header extends ZincElement
         <div class="alt-overlay">${inNew}${entityId}${url}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
+          <div class="actions">
+            <slot></slot>
+          </div>
           <div class="caption">
             ${backButton}
             ${caption}
-          </div>
-          <div class="actions">
-            <slot></slot>
           </div>
         </div>
         <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">

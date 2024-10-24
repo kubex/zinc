@@ -100,7 +100,7 @@ export class Input extends ZincElement implements ZincFormControl
       ${this.summary}
       <div class="wrap">
         ${this.prefix ? html`<span @click="${this.handleClick}" class="prefix">${this.prefix}</span>` : ''}
-        <slot></slot>
+        <slot part="input" class="input"></slot>
         ${this.suffix ? html`<span @click="${this.handleClick}" class="suffix">${this.suffix}</span>` : ''}
       </div>
       <span class="advice">${this.advice}</span>

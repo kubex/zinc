@@ -1,11 +1,10 @@
 @use '../../wc';
-@use "../../../scss/shared/form-elements";
 
 :host, zn-input {
   display: inline-block;
   width: 100%;
 
-  ::slotted(input),
+  ::slotted(*),
   ::slotted(zn-linked-select::part(select)),
   ::slotted(select),
   ::slotted(textarea) {
@@ -45,6 +44,7 @@
       margin: 0 !important;
     }
 
+    ::slotted(textarea),
     ::slotted(input:not([type="range"]):not([type="color"]):not([type="button"]):not([type="reset"]):not([type="submit"]):not([type="file"])) {
       display: block;
       width: 100%;
@@ -53,6 +53,7 @@
       box-shadow: none !important;
       background-color: rgb(var(--zn-input-bg)) !important;
       padding: wc.spacing(xxs) !important;
+      border: 0 !important;
 
       &::placeholder {
         font-weight: 400;

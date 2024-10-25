@@ -46,8 +46,28 @@ export class DataTable extends ZincElement
 
   private hasSlotController = new HasSlotController(this, '[default], modify-action');
 
+  // Horrible, don't like it, burn it, throw it in the garbage. Take the garbage out. Step on it. Burn it again.
+  private _uacTask = new Task(this, {
+    task: async () =>
+    {
+      const response = await fetch('/_/workspace', {
+        credentials: 'same-origin',
+        headers: {
+          'x-requested-with': 'XMLHttpRequest',
+          'x-rubix': 'startup'
+        }
+      });
+
+      if(!response.ok) throw new Error(response.statusText);
+      const json = await response.json();
+      console.log('UAC', json);
+      return json.uac;
+    },
+    args: () => []
+  });
+
   private _dataTask = new Task(this, {
-    task: async ([dataUri], {signal}) =>
+    task: async ([dataUri, uac], {signal}) =>
     {
       let url = dataUri;
 
@@ -71,13 +91,14 @@ export class DataTable extends ZincElement
         credentials: 'same-origin',
         headers: {
           'x-requested-with': 'XMLHttpRequest',
+          'x-kx-uac': uac
         },
       });
 
       if(!response.ok) throw new Error(response.statusText);
       return response.json();
     },
-    args: () => [this.dataUri]
+    args: () => [this.dataUri, this._uacTask.value]
   });
 
   render()

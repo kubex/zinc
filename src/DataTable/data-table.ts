@@ -25,8 +25,6 @@ export class DataTable extends ZincElement
   @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
 
   @property({attribute: 'wide-column'}) wideColumn: string;
-  @property({type: Boolean, attribute: 'query-as-route-data'}) queryAsRouteData: boolean = false;
-
   @property({attribute: 'key'}) key: string = 'id';
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
@@ -35,7 +33,6 @@ export class DataTable extends ZincElement
   // Data Table Properties
   private itemsPerPage: number = 10;
   private page: number = 1;
-  private totalItems: number;
   private totalPages: number;
 
   private _rows: any[] = [];
@@ -60,7 +57,6 @@ export class DataTable extends ZincElement
 
       if(!response.ok) throw new Error(response.statusText);
       const json = await response.json();
-      console.log('UAC', json);
       return json.uac;
     },
     args: () => []
@@ -71,20 +67,12 @@ export class DataTable extends ZincElement
     {
       let url = dataUri;
 
-      if(this.queryAsRouteData)
-      {
-        url += `/${this.page}/${this.itemsPerPage}/${this.sortColumn}/${this.sortDirection}`;
-      }
-      else
-      {
-        // append query params to the end of url
-        const params = new URLSearchParams();
-        params.append('page', this.page.toString());
-        params.append('per_page', this.itemsPerPage.toString());
-        params.append('sort_column', this.sortColumn);
-        params.append('sort_direction', this.sortDirection);
-        url += '?' + params.toString();
-      }
+      const params = new URLSearchParams();
+      params.append('page', this.page.toString());
+      params.append('per_page', this.itemsPerPage.toString());
+      params.append('sort_column', this.sortColumn);
+      params.append('sort_direction', this.sortDirection);
+      url += '?' + params.toString();
 
       const response = await fetch(url, {
         signal,
@@ -118,7 +106,6 @@ export class DataTable extends ZincElement
   {
     this.itemsPerPage = data.per_page;
     this.page = data.page;
-    this.totalItems = data.total;
     this.totalPages = data.total_pages;
 
     if(!data || !data.data || data.data.length === 0)
@@ -223,7 +210,7 @@ export class DataTable extends ZincElement
 
           <div class="table__footer__pagination-buttons">
             <zn-button @click=${this.goToFirstPage} ?
-                       disabled=${this.page === 1}
+                       ?disabled=${this.page === 1}
                        icon-size="16"
                        size="small"
                        icon="keyboard_double_arrow_left"

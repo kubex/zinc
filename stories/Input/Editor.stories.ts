@@ -2,6 +2,7 @@ import {Meta, StoryObj} from "@storybook/web-components";
 import {html} from "lit";
 
 import '../../src/Editor';
+import '../../src/Icon';
 
 const meta: Meta = {
   component: 'zn-editor',
@@ -32,7 +33,7 @@ export const Default: Story = {
     <form>
       <zn-editor
         attachment-url="#"
-        interaction-type="chat"
+        interaction-type="ticket"
         canned-responses="${JSON.stringify(cannedResponses)}">
         Editor
       </zn-editor>

@@ -14,6 +14,7 @@ type NavItem = {
   type: string;
   path: string;
   target: string;
+  icon: string;
   style: string;
   confirm: {
     type: string;
@@ -219,7 +220,10 @@ export class Menu extends ZincElement
                             @keydown=${this.handleKeyDown}
                             @click="${this.handleConfirm.bind(this, item.confirm.trigger)}"
                             id="${item.confirm.trigger}"
-                            value="paste">{item.title}
+                            value="paste">
+                ${(item.icon) ? html`
+                  <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                ${item.title}
               </zn-menu-item>`;
           }
           else
@@ -228,6 +232,8 @@ export class Menu extends ZincElement
             {
               return html`
                 <zn-menu-item value="${item.title}">
+                  ${(item.icon) ? html`
+                  <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <a @click="${this.handleClick}"
                      @keydown=${this.handleKeyDown}
                      @mousedown=${this.handleMouseDown}
@@ -240,10 +246,12 @@ export class Menu extends ZincElement
             {
               return html`
                 <zn-menu-item value="${item.title}">
-                    <span @click="${this.handleClick}"
-                          @keydown=${this.handleKeyDown}
-                          @mousedown=${this.handleMouseDown}
-                          data-path="${ifDefined(item.path)}">${item.title}</span>
+                  ${(item.icon) ? html`
+                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                  <span @click="${this.handleClick}"
+                        @keydown=${this.handleKeyDown}
+                        @mousedown=${this.handleMouseDown}
+                        data-path="${ifDefined(item.path)}">${item.title}</span>
                 </zn-menu-item>`;
             }
           }

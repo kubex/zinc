@@ -202,10 +202,12 @@ export class Table extends ZincSlotElement
         const id = "actions-" + rk;
         actionsHtml = html`
           <div class="actions">
-            <zn-menu anchor="${id}-btn" popover id="${id}" actions="${JSON.stringify(actions)}"></zn-menu>
-            <button popovertarget="${id}" @click="${this.menuClick}" id="${id}-btn">
-              <zn-icon popovertarget="${id}" src="more_vert"></zn-icon>
-            </button>
+            <zn-dropdown>
+              <zn-new-menu actions="${JSON.stringify(actions)}"></zn-new-menu>
+              <button slot="trigger">
+                <zn-icon src="more_vert"></zn-icon>
+              </button>
+            </zn-dropdown>
           </div>`;
       }
 

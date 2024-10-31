@@ -10,6 +10,7 @@ import '@/Header';
 import '@/Panel';
 import '@/Tile';
 import '@/Menu';
+import '@/NewMenu';
 import '@/Alert';
 import '@/Chip';
 import '@/Dialog';

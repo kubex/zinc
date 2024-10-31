@@ -315,8 +315,8 @@ export class Popup extends ZincElement
             const syncWidth = this.sync === 'width' || this.sync === 'both';
             const syncHeight = this.sync === 'height' || this.sync === 'both';
 
-            this.popup.style.width = syncWidth ? `${rects.reference.width}px` : '';
-            this.popup.style.height = syncHeight ? `${rects.reference.height}px` : '';
+            this.popup.style.minWidth = syncWidth ? `${rects.reference.width}px` : '';
+            this.popup.style.minHeight = syncHeight ? `${rects.reference.height}px` : '';
           }
         })
       );

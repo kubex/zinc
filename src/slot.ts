@@ -68,3 +68,23 @@ export class HasSlotController implements ReactiveController
     }
   };
 }
+
+export function getTextContent(slot: HTMLSlotElement | undefined | null): string
+{
+  if(!slot)
+  {
+    return '';
+  }
+  const nodes = slot.assignedNodes({flatten: true});
+  let text = '';
+
+  [...nodes].forEach(node =>
+  {
+    if(node.nodeType === Node.TEXT_NODE)
+    {
+      text += node.textContent;
+    }
+  });
+
+  return text;
+}

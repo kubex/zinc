@@ -56,7 +56,9 @@ class DropdownModule
       if(dropdownOpen)
       {
         this.moveCursor(1);
+        return false;
       }
+      return true;
     });
 
     this._quill.keyboard.addBinding({key: 'ArrowUp'}, (range, context) =>
@@ -64,7 +66,10 @@ class DropdownModule
       if(dropdownOpen)
       {
         this.moveCursor(-1);
+        return false;
       }
+
+      return true;
     });
 
     const enterCommand = () =>
@@ -90,20 +95,21 @@ class DropdownModule
       if(dropdownOpen)
       {
         enterCommand();
+        return false;
       }
+
+      return true;
     });
 
-    document.addEventListener('keydown', (e) =>
+    this._quill.keyboard.addBinding({key: 'Escape'}, (range, context) =>
     {
-      if(dropdownOpen && e.key === 'Escape')
+      if(dropdownOpen)
       {
         this.closeDropdown();
+        return false;
       }
 
-      if(dropdownOpen && e.key === 'Enter')
-      {
-        enterCommand();
-      }
+      return true;
     });
 
     // on mouse click close the dropdown

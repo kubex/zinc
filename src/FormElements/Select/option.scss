@@ -1,0 +1,80 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+:host(:focus) {
+  outline: none;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: rgb(var(--zn-text));
+  padding: wc.spacing(xs) wc.spacing(md) wc.spacing(xs) wc.spacing(xs);
+  background-color: rgb(var(--zn-panel, 255, 255, 255));
+  transition: .5s fill;
+  cursor: pointer;
+}
+
+.option--hover:not(.option--current):not(.option--disabled) {
+  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+  color: rgb(var(--zn-primary));
+}
+
+.option--current,
+.option--current.option--disabled {
+  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+  color: rgb(var(--zn-primary));
+  opacity: 1;
+}
+
+.option--disabled {
+  outline: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.option__label {
+  flex: 1 1 auto;
+  display: inline-block;
+}
+
+.option .option__check {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  padding-inline-end: wc.spacing(xs);
+}
+
+.option--selected .option__check {
+  visibility: visible;
+}
+
+.option__prefix,
+.option__suffix {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.option__prefix::slotted(*) {
+  margin-inline-end: wc.spacing(xs);
+}
+
+.option__suffix::slotted(*) {
+  margin-inline-start: wc.spacing(xs);
+}
+
+@media (forced-colors: active) {
+  :host(:hover:not([aria-disabled='true'])) .option {
+    outline: dashed 1px SelectedItem;
+    outline-offset: -1px;
+  }
+}

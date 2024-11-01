@@ -58,12 +58,8 @@ export class Select extends ZincElement implements ZincFormControl {
     // @ts-expect-error - this is a valid conversion
   @defaultValue() defaultValue: string | string[] = '';
 
-  /** The select's size. */
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
-
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
-
 
   /** Disables the select control. */
   @property({type: Boolean, reflect: true}) disabled = false;
@@ -83,9 +79,6 @@ export class Select extends ZincElement implements ZincFormControl {
    */
   @property({type: Boolean}) hoist = false;
 
-  /** Draws a filled select. */
-  @property({type: Boolean, reflect: true}) filled = false;
-
   /**
    * The preferred placement of the select's menu. Note that the actual placement may vary as needed to keep the listbox
    * inside of the viewport.
@@ -101,6 +94,8 @@ export class Select extends ZincElement implements ZincFormControl {
 
   /** The select's required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  @property() label = '';
 
   /** Gets the validity state object */
   get validity() {
@@ -180,6 +175,10 @@ export class Select extends ZincElement implements ZincFormControl {
       this.hide();
     }
   };
+
+  private handleLabelClick() {
+    this.displayInput.focus();
+  }
 
   private handleDocumentKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement;
@@ -309,10 +308,6 @@ export class Select extends ZincElement implements ZincFormControl {
       this.hide();
     }
   };
-
-  private handleLabelClick() {
-    this.displayInput.focus();
-  }
 
   private handleComboboxMouseDown(event: MouseEvent) {
     event.preventDefault();
@@ -576,34 +571,38 @@ export class Select extends ZincElement implements ZincFormControl {
   }
 
   render() {
+    const hasLabelSlot = this.hasSlotController.test('label');
     const hasClearIcon = this.clearable && !this.disabled && this.value.length > 0;
+    const hasLabel = this.label ? true : !!hasLabelSlot;
     const isPlaceholderVisible = this.placeholder && this.value && this.value.length <= 0;
 
     return html`
-      <div
-        part="form-control"
-        class=${classMap({
-          'form-control': true,
-          'form-control--small': this.size === 'small',
-          'form-control--medium': this.size === 'medium',
-          'form-control--large': this.size === 'large',
-        })}
-      >
+      <div part="form-control"
+           class=${classMap({
+             'form-control': true,
+             'form-control--has-label': hasLabel
+           })}>
+        <label
+          id="label"
+          part="form-control-label"
+          class="form-control__label"
+          aria-hidden=${hasLabel ? 'false' : 'true'}
+          @click=${this.handleLabelClick}
+        >
+          <slot name="label">${this.label}</slot>
+        </label>
+
         <div part="form-control-input" class="form-control-input">
           <zn-popup
             class=${classMap({
               select: true,
               'select--standard': true,
-              'select--filled': this.filled,
               'select--open': this.open,
               'select--disabled': this.disabled,
               'select--focused': this.hasFocus,
               'select--placeholder-visible': isPlaceholderVisible,
               'select--top': this.placement === 'top',
               'select--bottom': this.placement === 'bottom',
-              'select--small': this.size === 'small',
-              'select--medium': this.size === 'medium',
-              'select--large': this.size === 'large'
             })}
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}

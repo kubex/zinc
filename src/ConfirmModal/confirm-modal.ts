@@ -20,6 +20,7 @@ export class ConfirmModal extends Dialog
   @property() action: string = '';
   @property() confirmText: string = "Confirm";
   @property() cancelText: string = "Cancel";
+  @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
   @property() type: 'warning' | 'error' | 'success' | 'info' = 'warning';
   @property() size: 'small' | 'medium' | 'large' = 'medium';
@@ -85,9 +86,9 @@ export class ConfirmModal extends Dialog
         'dialog--large': this.size === 'large'
       })}>
         <div id="content"> <!-- default dialog close button -->
-          ${icon}
+          ${!this.hideIcon ? icon : ''}
           <h2 class="title">${unsafeHTML(this.caption)}</h2>
-          <p>${unsafeHTML(this.content)}</p>
+          ${this.content && html`<p>${unsafeHTML(this.content)}</p>`}
           <slot></slot>
           <div class="${classMap({
             'button-group': true,

@@ -24,7 +24,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   @query('.ai__input') input: HTMLInputElement | HTMLSelectElement;
 
-  @property({attribute: 'caption-size', reflect: true}) captionSize: 'small' | 'medium' | 'large' = 'medium';
+  @property({attribute: 'caption-size', reflect: true}) captionSize: 'xsmall' | 'small' | 'medium' | 'large' = 'medium';
   @property() value: string;
   @property() name: string;
   @property({attribute: 'default-value'}) defaultValue: string;

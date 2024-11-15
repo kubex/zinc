@@ -1,8 +1,9 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property } from 'lit/decorators.js';
+import {html, unsafeCSS} from "lit";
+import {customElement, property} from 'lit/decorators.js';
+import {ZincElement} from "@/zinc-element";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './index.scss?inline';
-import { ZincElement } from "../zinc-element";
 
 export type AlertLevel = '' | 'primary' | 'error' | 'info' | 'success' | 'warning';
 
@@ -11,10 +12,11 @@ export class Alert extends ZincElement
 {
 
   static styles = unsafeCSS(styles);
-  @property({ type: String }) icon: string = '';
-  @property({ type: String }) caption: string = '';
-  @property({ type: Boolean }) collapse: boolean = false;
-  @property({ type: String }) level: AlertLevel = '';
+  @property({type: String}) icon: string = '';
+  @property({type: String}) caption: string = '';
+  @property({type: Boolean}) collapse: boolean = false;
+  @property({type: String}) level: AlertLevel = '';
+  @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
 
   render()
   {
@@ -38,7 +40,12 @@ export class Alert extends ZincElement
     const caption = this.caption ? html`<h6>${this.caption}</h6>` : '';
 
     return html`
-      <div class="wrapper">
+      <div class=${classMap({
+        wrapper: true,
+        "alert--small": this.size === 'small',
+        "alert--medium": this.size === 'medium',
+        "alert--large": this.size === 'large',
+      })}>
         ${icon}
         <div class="content">
           ${caption}

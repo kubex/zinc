@@ -1,13 +1,13 @@
-import { unsafeCSS } from "lit";
-import { customElement, property, query } from 'lit/decorators.js';
-import { ZincElement, ZincFormControl } from "@/zinc-element";
-import { html, literal } from "lit/static-html.js";
-import { classMap } from "lit/directives/class-map.js";
-import { FormControlController, validValidityState } from "@/form";
-import { HasSlotController } from "@/slot";
+import {unsafeCSS} from "lit";
+import {customElement, property, query} from 'lit/decorators.js';
+import {ZincElement, ZincFormControl} from "@/zinc-element";
+import {html, literal} from "lit/static-html.js";
+import {classMap} from "lit/directives/class-map.js";
+import {FormControlController, validValidityState} from "@/form";
+import {HasSlotController} from "@/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 import styles from './index.scss?inline';
-import { ifDefined } from "lit/directives/if-defined.js";
 
 export type ButtonColor = 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
 export type ButtonSizes = 'content' | 'x-small' | 'small' | 'medium' | 'large';
@@ -26,33 +26,33 @@ export class Button extends ZincElement implements ZincFormControl
 
   @property({}) color: ButtonColor = 'default';
   @property({}) size: ButtonSizes = 'medium';
-  @property({ type: Boolean }) outline = false;
-  @property({ type: Boolean }) disabled = false;
-  @property({ type: Boolean }) grow = false;
+  @property({type: Boolean}) outline = false;
+  @property({type: Boolean}) disabled = false;
+  @property({type: Boolean}) grow = false;
 
   @property() verticalAlign: VerticalAlignments;
 
   @property() content = '';
   @property() icon: string = '';
   @property() gaid: string = '';
-  @property({ attribute: "icon-position" }) iconPosition: IconPosition = 'left';
-  @property({ attribute: "icon-size" }) iconSize: string;
+  @property({attribute: "icon-position"}) iconPosition: IconPosition = 'left';
+  @property({attribute: "icon-size"}) iconSize: string;
   @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;
   @property() value: string;
 
   @property() form: string;
-  @property({ attribute: 'formaction' }) formAction: string;
-  @property({ attribute: 'formenctype' }) formEnctype: 'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain';
-  @property({ attribute: 'formmethod' }) formMethod: 'post' | 'get';
-  @property({ attribute: 'formnovalidate', type: Boolean }) formNoValidate: boolean;
-  @property({ attribute: 'formtarget' }) formTarget: '_self' | '_blank' | '_parent' | '_top' | string;
+  @property({attribute: 'formaction'}) formAction: string;
+  @property({attribute: 'formenctype'}) formEnctype: 'application/x-www-form-urlencoded' | 'multipart/form-data' | 'text/plain';
+  @property({attribute: 'formmethod'}) formMethod: 'post' | 'get';
+  @property({attribute: 'formnovalidate', type: Boolean}) formNoValidate: boolean;
+  @property({attribute: 'formtarget'}) formTarget: '_self' | '_blank' | '_parent' | '_top' | string;
 
   // Link Specific
   @property() href: string;
   @property() target: '_self' | '_blank' | '_parent' | '_top' | string;
-  @property({ attribute: 'data-target' }) dataTarget: 'modal' | 'slide' | string;
+  @property({attribute: 'data-target'}) dataTarget: 'modal' | 'slide' | string;
   @property() rel: string = 'noreferrer noopener';
 
   // Tooltip Specific
@@ -123,6 +123,11 @@ export class Button extends ZincElement implements ZincFormControl
 
   private handleClick()
   {
+    if(this.disabled)
+    {
+      return;
+    }
+
     if(this.type === 'submit')
     {
       this.formControlController.submit(this);

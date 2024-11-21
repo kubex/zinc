@@ -420,6 +420,12 @@ export class ColorSelect extends EmptyZincFormElement
     }
   }
 
+  disconnectedCallback()
+  {
+    super.disconnectedCallback();
+    this.removeOpenListeners();
+  }
+
   protected render()
   {
     const hasLabelSlot = this.hasSlotController.test('label');

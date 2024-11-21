@@ -51,6 +51,11 @@ export class Checkbox extends ZincElement implements ZincFormControl
     this.emit('zn-change');
   }
 
+  public click()
+  {
+    this.input.click();
+  }
+
   checkValidity(): boolean
   {
     return this.input.checkValidity();

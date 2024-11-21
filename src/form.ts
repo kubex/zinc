@@ -445,3 +445,15 @@ export const validValidityState: ValidityState = Object.freeze({
   valid: true,
   valueMissing: false
 });
+
+export const customErrorValidityState: ValidityState = Object.freeze({
+  ...validValidityState,
+  customError: true,
+  valid: false
+});
+
+export const valueMissingValidityState: ValidityState = Object.freeze({
+  ...validValidityState,
+  valueMissing: true,
+  valid: false
+});

@@ -118,6 +118,12 @@ export class Select extends ZincElement implements ZincFormControl
     this.open = false;
   }
 
+  disconnectedCallback()
+  {
+    this.removeOpenListeners();
+    super.disconnectedCallback();
+  }
+
   private addOpenListeners()
   {
     //

@@ -3,12 +3,12 @@ import {customElement, property} from 'lit/decorators.js';
 import {Dialog} from "@/Dialog";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
-import styles from './index.scss?inline';
+import styles from './index-content.scss?inline';
 import {PropertyValues} from "@lit/reactive-element";
 import {classMap} from "lit/directives/class-map.js";
 
-@customElement('zn-confirm')
-export class ConfirmModal extends Dialog
+@customElement('zn-confirm-content')
+export class ConfirmModalContent extends Dialog
 {
   static get styles(): CSSResultGroup
   {
@@ -82,30 +82,19 @@ export class ConfirmModal extends Dialog
   {
     const icon = this.getIcon();
 
-    return html`
-      <dialog class=${classMap({
-        'dialog': true,
-        'dialog--small': this.size === 'small',
-        'dialog--medium': this.size === 'medium',
-        'dialog--large': this.size === 'large'
-      })}>
-        <div id="content"> <!-- default dialog close button -->
-          ${!this.hideIcon ? icon : ''}
-          <h2 class="title">${unsafeHTML(this.caption)}</h2>
-          ${this.content && html`<p>${unsafeHTML(this.content)}</p>`}
-          <slot></slot>
-          <div class="${classMap({
-            'button-group': true,
-            'button-group--gap': this._hasVisibleInput
-          })}">
-            <zn-button class="grow" outline color="${this.type}" dialog-closer>${this.cancelText}</zn-button>
-            <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
-          </div>
-        </div>
-        <div class="done">
-          <zn-icon src="check:success" size="150"></zn-icon>
-        </div>
-      </dialog>`;
+    return html`<!-- default dialog close button -->
+    ${!this.hideIcon ? icon : ''}
+    <h2 class="title">${unsafeHTML(this.caption)}</h2>
+    ${this.content && html`<p>${unsafeHTML(this.content)}</p>`}
+    <slot></slot>
+    <div class="${classMap({
+      'button-group': true,
+      'button-group--gap': this._hasVisibleInput
+    })}">
+      <zn-button class="grow" outline color="${this.type}" dialog-closer>${this.cancelText}</zn-button>
+      <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
+    </div>
+    `;
   }
 
   submitDialog()

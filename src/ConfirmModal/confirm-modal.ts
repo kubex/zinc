@@ -98,7 +98,9 @@ export class ConfirmModal extends Dialog
             'button-group': true,
             'button-group--gap': this._hasVisibleInput
           })}">
-            <zn-button class="grow" outline color="${this.type}" dialog-closer>${this.cancelText}</zn-button>
+            <zn-button class="grow" outline color="${this.type}" dialog-closer modal-closer @click="${this.closeModal}">
+              ${this.cancelText}
+            </zn-button>
             <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
           </div>
         </div>
@@ -106,6 +108,11 @@ export class ConfirmModal extends Dialog
           <zn-icon src="check:success" size="150"></zn-icon>
         </div>
       </dialog>`;
+  }
+
+  closeModal()
+  {
+    this.emit('zn-close', {detail: {element: this}});
   }
 
   submitDialog()

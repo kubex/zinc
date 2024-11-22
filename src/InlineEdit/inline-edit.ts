@@ -1,7 +1,7 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property, query, state} from 'lit/decorators.js';
 import {ZincElement, ZincFormControl} from "@/zinc-element";
-import {FormControlController} from "@/form";
+import {FormControlController, validValidityState} from "@/form";
 import {PropertyValues} from "@lit/reactive-element";
 import {classMap} from "lit/directives/class-map.js";
 
@@ -37,7 +37,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
 
   get validity(): ValidityState
   {
-    return this.input.validity;
+    return this.input?.validity ?? validValidityState;
   }
 
   get validationMessage(): string
@@ -68,7 +68,7 @@ export class InlineEdit extends ZincElement implements ZincFormControl
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     super.firstUpdated(_changedProperties);
-    this.formControlController.updateValidity();
+    this.formControlController?.updateValidity();
 
     if(this.options && Object.keys(this.options).length > 0)
     {

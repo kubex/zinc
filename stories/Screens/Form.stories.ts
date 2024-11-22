@@ -75,11 +75,11 @@ export const Default: Story = {
               <zn-checkbox name="email" title="Same as email"></zn-checkbox>
               <zn-checkbox name="push" title="No push notifications"></zn-checkbox>
             </zn-input>
-          
+
             <zn-radio-group label="Select an option" name="a" value="2">
-              <zn-radio name="radio" value="1">Option 1</zn-radio>
-              <zn-radio name="radio" value="2">Option 2</zn-radio>
-              <zn-radio name="radio" value="3">Option 3</zn-radio>
+              <zn-radio name="radio" value="1" label="Option 1">This is the main content</zn-radio>
+              <zn-radio name="radio" value="2" label="Option 2">This is the main content</zn-radio>
+              <zn-radio name="radio" value="3" label="Option 3">This is the main content</zn-radio>
             </zn-radio-group>
           </zn-form-group>
 

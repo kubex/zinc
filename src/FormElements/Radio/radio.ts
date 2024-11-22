@@ -20,6 +20,8 @@ export class Radio extends ZincElement
   /** Disables the radio. */
   @property({type: Boolean, reflect: true}) disabled = false;
 
+  @property() label: string;
+
   constructor()
   {
     super();
@@ -93,7 +95,10 @@ export class Radio extends ZincElement
             : ''}
         </span>
 
-        <slot part="label" class="radio__label"></slot>
+        <div class="radio__label-wrapper">
+          <slot name="label" part="label" class="radio__label">${this.label}</slot>
+          <slot></slot>
+        </div>
       </span>
     `;
   }

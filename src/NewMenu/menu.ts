@@ -51,7 +51,7 @@ export class Menu extends ZincElement
 
     if(!target) return;
 
-    const closestMenu = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu');
+    const closestMenu: Element|null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
     const clickHasSubmenu = closestMenu !== this;
 
     // Make sure we're the menu thats supposed to be handling the click event.

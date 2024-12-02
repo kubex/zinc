@@ -140,6 +140,15 @@ export class MenuItem extends ZincElement
     return this.hasSlotController.test('submenu');
   }
 
+  handleItemClick()
+  {
+    const anchor = this.querySelector('a');
+    if(anchor)
+    {
+      anchor.click();
+    }
+  }
+
   render()
   {
     const isSubmenuExpanded = this.submenuController.isExpanded();
@@ -158,6 +167,7 @@ export class MenuItem extends ZincElement
         })}
         ?aria-haspopup="${this.isSubmenu()}"
         ?aria-expanded="${(!!isSubmenuExpanded)}"
+        @click=${this.handleItemClick}
       >
         <span part="checked-icon" class="menu-item__check">
           <zn-icon src="check" size="18"></zn-icon>

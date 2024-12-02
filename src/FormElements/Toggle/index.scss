@@ -1,6 +1,10 @@
 @use "../../wc";
 
-:host {
+.switch__wrapper {
+  display: inline-flex;
+}
+
+.switch__input-wrapper {
   text-align: left;
   position: relative;
   display: inline-flex;
@@ -15,11 +19,11 @@
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 }
 
-:host(:focus) {
+:host(:focus) .switch__input-wrapper {
   outline: rgb(var(--zn-primary)) solid 1px;
 }
 
-:host([checked]) {
+:host([checked]) .switch__input-wrapper {
   background: rgba(var(--zn-primary), 0.8);
 
   .switch__control {
@@ -36,6 +40,10 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
+}
+
+.switch-label {
+  font-size: 90%;
 }
 
 .switch__control {

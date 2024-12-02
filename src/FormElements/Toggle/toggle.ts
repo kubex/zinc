@@ -1,12 +1,12 @@
-import { html, unsafeCSS } from "lit";
-import { customElement, property, query, state } from 'lit/decorators.js';
-import { live } from 'lit/directives/live.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
-import { classMap } from 'lit/directives/class-map.js';
-import { PropertyValues } from "@lit/reactive-element";
-import { ZincElement, ZincFormControl } from "../../zinc-element";
-import { FormControlController } from "../../form";
-import { defaultValue } from "../../default-value";
+import {html, unsafeCSS} from "lit";
+import {customElement, property, query, state} from 'lit/decorators.js';
+import {live} from 'lit/directives/live.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {PropertyValues} from "@lit/reactive-element";
+import {ZincElement, ZincFormControl} from "../../zinc-element";
+import {FormControlController} from "../../form";
+import {defaultValue} from "../../default-value";
 
 import styles from './index.scss?inline';
 
@@ -31,27 +31,29 @@ export class Toggle extends ZincElement implements ZincFormControl
 
   @property() value: string;
 
-  @property({ attribute: 'fallback' }) fallbackValue: string = '';
+  @property({attribute: 'fallback'}) fallbackValue: string = '';
 
-  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
-  @property({ type: Boolean, reflect: true }) disabled: boolean = false;
+  @property({type: Boolean, reflect: true}) disabled: boolean = false;
 
-  @property({ type: Boolean, reflect: true }) checked: boolean = false;
+  @property({type: Boolean, reflect: true}) checked: boolean = false;
 
   @defaultValue('checked') defaultChecked = false;
 
-  @property({ reflect: true }) form = '';
+  @property({reflect: true}) form = '';
 
-  @property({ type: Boolean, reflect: true }) required = false;
+  @property({type: Boolean, reflect: true}) required = false;
 
-  @property({ attribute: 'help-text' }) helpText = "";
+  @property({attribute: 'help-text'}) helpText = "";
 
-  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
 
   @property() onText: string = '';
 
   @property() offText: string = '';
+
+  @property() label: string = '';
 
 
   get validity()
@@ -163,7 +165,36 @@ export class Toggle extends ZincElement implements ZincFormControl
     }
 
     return html`
-      <label part="base" class="${classMap({ 'switch': true })}">
+      <div class="switch__wrapper">
+        <label>
+          <p class="switch-label">${this.label}</p>
+          <div class="switch__input-wrapper">
+            ${fallback}
+            <input
+              class="switch__input"
+              type="checkbox"
+              title=${this.title}
+              name=${this.name}
+              value=${ifDefined(this.value)}
+              .checked=${live(this.checked)}
+              .disabled=${this.disabled}
+              .required=${this.required}
+              role="switch"
+              aria-checked=${this.checked ? 'true' : 'false'}
+              aria-describedby="help-text"
+              @click=${this.handleClick}
+              @input=${this.handleInput}
+              @invalid=${this.handleInvalid}
+              @blur=${this.handleBlur}
+              @focus=${this.handleFocus}
+              @keydown=${this.handleKeyDown}/>
+            <span part="control" class="switch__control"></span>
+          </div>
+        </label>
+      </div>`;
+
+    return html`
+      <label part="base" class="${classMap({'switch': true})}">
         ${fallback}
         <input
           class="switch__input"

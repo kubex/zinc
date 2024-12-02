@@ -70,7 +70,6 @@ export class ConfirmModal extends Dialog
     {
       if(elements[i].type !== 'hidden')
       {
-        console.log('found input', elements[i]);
         this._hasVisibleInput = true;
         this.requestUpdate();
         break;

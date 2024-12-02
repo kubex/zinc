@@ -243,6 +243,7 @@ export class Select extends ZincElement implements ZincFormControl
         this.updateComplete.then(() =>
         {
           this.emit('zn-input');
+          this.hide();
           this.emit('zn-change');
         });
       }

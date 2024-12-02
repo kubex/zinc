@@ -140,10 +140,11 @@ export class MenuItem extends ZincElement
     return this.hasSlotController.test('submenu');
   }
 
-  handleItemClick()
+  handleItemClick(event: MouseEvent)
   {
     const anchor = this.querySelector('a');
-    if(anchor)
+    const target = event.target as HTMLElement;
+    if(anchor && !anchor.contains(target))
     {
       anchor.click();
     }

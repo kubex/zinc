@@ -8,6 +8,7 @@ import {MenuItem} from "@/NewMenu/menu-item";
 import styles from './menu.scss?inline';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {ConfirmModal} from "@/ConfirmModal";
+import {Dropdown} from "@/Dropdown";
 
 type NavItem = {
   title: string;
@@ -64,7 +65,8 @@ export class Menu extends ZincElement
       item.checked = !item.checked;
     }
 
-    // this.emit('zn-select', {detail: {item}});
+    // get the parent dropdown and close it
+    (closestMenu?.closest('zn-dropdown') as Dropdown | null).hide();
   }
 
   private handleKeyDown(event: KeyboardEvent)
@@ -233,7 +235,7 @@ export class Menu extends ZincElement
               return html`
                 <zn-menu-item value="${item.title}">
                   ${(item.icon) ? html`
-                  <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <a @click="${this.handleClick}"
                      @keydown=${this.handleKeyDown}
                      @mousedown=${this.handleMouseDown}

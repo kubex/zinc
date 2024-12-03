@@ -576,10 +576,8 @@ export class Select extends ZincElement implements ZincFormControl
   @watch('value', {waitUntilFirstUpdate: true})
   handleValueChange()
   {
-    console.log('value', this.value);
     const allOptions = this.getAllOptions();
     const value = Array.isArray(this.value) ? this.value : [this.value];
-    console.log('value', value);
 
     // Select only the options that match the new value
     this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));

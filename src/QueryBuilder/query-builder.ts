@@ -117,6 +117,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
   private _handleChange()
   {
+    console.log('change');
     const data = [];
     [...this._selectedRules].forEach(([key, value]) =>
     {
@@ -145,6 +146,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       operator: filter.operators.length > 0 ? filter.operators[0] : 'eq',
       value: ''
     });
+    console.log('selected rules', this._selectedRules);
     const row = document.createElement('div');
     row.classList.add('query-builder__row');
     row.id = uniqueId;
@@ -161,7 +163,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       }
       select.appendChild(option);
     });
-    select.addEventListener('change', (e: Event) => this._changeRule(uniqueId, e));
+    select.addEventListener('zn-change', (e: Event) => this._changeRule(uniqueId, e));
     select.classList.add('query-builder__key');
 
     row.appendChild(select);
@@ -241,7 +243,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       }
       comparator.appendChild(option);
     });
-    comparator.addEventListener('change', (e: Event) => this._updateOperatorValue(uniqueId, e));
+    comparator.addEventListener('zn-change', (e: Event) => this._updateOperatorValue(uniqueId, e));
     comparator.classList.add('query-builder__comparator');
     if(comparator.querySelectorAll('zn-options').length === 1)
     {
@@ -284,6 +286,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     {
       comparator.addEventListener('change', (e: Event) =>
       {
+        console.log('change');
         // if selected comparator is in
         const selectedComparator = (e.target as HTMLSelectElement).value;
         if(selectedComparator !== previousOperator && selectedComparator === 'in')
@@ -383,7 +386,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       input.setAttribute('name', 'value');
       input.setAttribute('label', 'Value');
       input.setAttribute('selectedItems', JSON.stringify(filter.options));
-      input.addEventListener('change', (e: Event) => this.updateInValue(uniqueId, e));
+      input.addEventListener('zn-change', (e: Event) => this.updateInValue(uniqueId, e));
     }
     else
     {
@@ -414,6 +417,8 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
   private _updateOperatorValue(id: string, event: Event)
   {
+    console.log('update operator');
+    console.log('id', id);
     const filter = this._selectedRules.get(id);
     if(!filter) return;
 
@@ -444,8 +449,8 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     const parent = (event.target as HTMLElement).parentElement;
     const number = parent.querySelector('input[name="number"]') as HTMLInputElement;
-    const date = parent.querySelector('select[name="date"]') as HTMLSelectElement;
-    const ago = parent.querySelector('select[name="ago"]') as HTMLSelectElement;
+    const date = parent.querySelector('zn-select[name="date"]') as HTMLSelectElement;
+    const ago = parent.querySelector('zn-select[name="ago"]') as HTMLSelectElement;
 
     let value = number.value;
     if(date.value !== '1')
@@ -533,7 +538,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     // dropdown for minutes, hours, days, weeks
     const dropdown = document.createElement('zn-select') as Select;
     dropdown.setAttribute('name', 'date');
-    dropdown.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
+    dropdown.addEventListener('zn-change', (e: Event) => this._updateDateValue(uniqueId, e));
 
     const options = {
       '1': 'Minutes',
@@ -552,7 +557,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     // dropdown ago or from now
     const ago = document.createElement('zn-select') as Select;
     ago.setAttribute('name', 'ago');
-    ago.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
+    ago.addEventListener('zn-change', (e: Event) => this._updateDateValue(uniqueId, e));
 
     const agoOptions = {
       '-1': 'From Now',

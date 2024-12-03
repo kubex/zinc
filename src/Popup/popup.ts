@@ -260,7 +260,6 @@ export class Popup extends ZincElement
     // We can't start the positioner without an anchor
     if(!this.anchorEl)
     {
-      console.warn('Popup: No anchor element found.');
       return;
     }
 

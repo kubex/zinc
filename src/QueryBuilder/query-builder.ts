@@ -1,8 +1,8 @@
 import {ZincElement, ZincFormControl} from "@/zinc-element";
 import {html, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
-
-import {classMap} from "lit/directives/class-map.js";
+import {repeat} from 'lit/directives/repeat.js';
+import type {Option, Select} from "@/FormElements/Select";
 import {FormControlController} from "@/form";
 import {PropertyValues} from "@lit/reactive-element";
 import {MultiSelect} from "@/FormElements/MultiSelect";
@@ -101,13 +101,14 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   render()
   {
     return html`
-      <div class="${classMap({
-        'query-builder': true
-      })}">
+      <div class="query-builder">
         <select class="add-rule" @change="${this._addRule}">
           <option value="">Select Filter</option>
-          ${this.filters.map(item => html`
-            <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
+          ${repeat(this.filters,
+            (item) => item.id,
+            (item) => html`
+              <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`
+          )}
         </select>
         <input id="main-input" name="${this.name}" value="${this.value}" type="hidden">
       </div>
@@ -148,13 +149,16 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     row.classList.add('query-builder__row');
     row.id = uniqueId;
 
-    const select = document.createElement('select');
+    const select = document.createElement('zn-select') as Select;
     this.filters.forEach(item =>
     {
-      const option = document.createElement('option');
+      const option = document.createElement('zn-option') as Option;
       option.value = item.id;
-      option.text = item.name.charAt(0).toUpperCase() + item.name.slice(1);
-      option.selected = item.id === filter.id;
+      option.innerText = item.name.charAt(0).toUpperCase() + item.name.slice(1);
+      if(item.id === filter.id)
+      {
+        select.value = item.id;
+      }
       select.appendChild(option);
     });
     select.addEventListener('change', (e: Event) => this._changeRule(uniqueId, e));
@@ -162,76 +166,76 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     row.appendChild(select);
 
-    const comparator = document.createElement('select');
+    const comparator = document.createElement('zn-select') as Select;
     const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : 'eq';
     filter.operators.forEach(item =>
     {
-      const option = document.createElement('option');
+      const option = document.createElement('zn-option') as Option;
       option.value = item;
       switch(item)
       {
         case 'eq':
-          option.text = 'Equals';
+          option.innerText = 'Equals';
           break;
         case 'neq':
-          option.text = 'Not Equals';
+          option.innerText = 'Not Equals';
           break;
         case 'before':
-          option.text = 'Was Before';
+          option.innerText = 'Was Before';
           break;
         case 'after':
-          option.text = 'Was After';
+          option.innerText = 'Was After';
           break;
         case 'in':
-          option.text = 'In';
+          option.innerText = 'In';
           break;
         case 'matchphrasepre':
-          option.text = 'Match Phrase Prefix';
+          option.innerText = 'Match Phrase Prefix';
           break;
         case 'nmatchphrasepre':
-          option.text = 'Does Not Match Phrase Prefix';
+          option.innerText = 'Does Not Match Phrase Prefix';
           break;
         case 'matchphrase':
-          option.text = 'Match Phrase';
+          option.innerText = 'Match Phrase';
           break;
         case 'nmatchphrase':
-          option.text = 'Does Not Match Phrase';
+          option.innerText = 'Does Not Match Phrase';
           break;
         case 'match':
-          option.text = 'Match';
+          option.innerText = 'Match';
           break;
         case 'nmatch':
-          option.text = 'Does Not Match';
+          option.innerText = 'Does Not Match';
           break;
         case 'starts':
-          option.text = 'Starts With';
+          option.innerText = 'Starts With';
           break;
         case 'nstarts':
-          option.text = 'Does Not Start With';
+          option.innerText = 'Does Not Start With';
           break;
         case 'wild':
-          option.text = 'Wildcard Match';
+          option.innerText = 'Wildcard Match';
           break;
         case 'nwild':
-          option.text = 'Does Not Match Wildcard';
+          option.innerText = 'Does Not Match Wildcard';
           break;
         case 'fuzzy':
-          option.text = 'Fuzzy Match With';
+          option.innerText = 'Fuzzy Match With';
           break;
         case 'nfuzzy':
-          option.text = 'Does Not Match Fuzzy With';
+          option.innerText = 'Does Not Match Fuzzy With';
           break;
         case 'gte':
-          option.text = 'Greater Than or Equals';
+          option.innerText = 'Greater Than or Equals';
           break;
         case 'gt':
-          option.text = 'Greater Than';
+          option.innerText = 'Greater Than';
           break;
         case 'lt':
-          option.text = 'Less Than';
+          option.innerText = 'Less Than';
           break;
         case 'lte':
-          option.text = 'Less Than or Equals';
+          option.innerText = 'Less Than or Equals';
           break;
 
       }
@@ -239,7 +243,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     });
     comparator.addEventListener('change', (e: Event) => this._updateOperatorValue(uniqueId, e));
     comparator.classList.add('query-builder__comparator');
-    if(comparator.options.length === 1)
+    if(comparator.querySelectorAll('zn-options').length === 1)
     {
       comparator.setAttribute('disabled', 'disabled');
     }
@@ -247,7 +251,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     const previousOperator = selectedComparator;
     if(filter.type === 'date')
     {
-      // we need to re render the filter options if the selected value is lt or gt
+      // we need to re-render the filter options if the selected value is lt or gt
       comparator.addEventListener('change', (e: Event) =>
       {
         const select = e.target as HTMLSelectElement;
@@ -304,17 +308,18 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           parent.removeChild(input);
 
 
-          const newInput = document.createElement('select');
+          const newInput = document.createElement('zn-select') as Select;
           newInput.classList.add('query-builder__value');
 
           const options = this.filters.find(item => item.id === filter.id).options;
           Object.keys(options).forEach(item =>
           {
-            const option = document.createElement('option');
+            const option = document.createElement('zn-option') as Option;
             option.value = item;
-            option.text = options[item];
+            option.innerHTML = options[item];
             newInput.appendChild(option);
           });
+
           this._updateValue(uniqueId, {target: newInput});
           newInput.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
 
@@ -325,16 +330,16 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     row.appendChild(comparator);
 
-    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement | MultiSelect;
+    let input: Select | HTMLInputElement | HTMLDivElement | MultiSelect;
     if(filter.options)
     {
-      input = document.createElement('select');
+      input = document.createElement('zn-select') as Select;
       const options = Object.keys(filter.options);
       options.forEach(item =>
       {
-        const option = document.createElement('option');
+        const option = document.createElement('zn-option') as Option;
         option.value = item;
-        option.text = filter.options[item];
+        option.innerText = filter.options[item];
         input.appendChild(option);
       });
       this._updateValue(uniqueId, {target: input});
@@ -342,7 +347,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
     else if(filter.type === 'bool' || filter.type === 'boolean')
     {
-      input = document.createElement('select');
+      input = document.createElement('zn-select') as Select;
       const option1 = document.createElement('option');
       option1.value = '1';
       option1.text = 'True';
@@ -420,7 +425,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this._handleChange();
   }
 
-  private _updateValue(id: string, event: Event | { target: HTMLSelectElement | HTMLInputElement | HTMLDivElement })
+  private _updateValue(id: string, event: Event | { target: Select | HTMLInputElement | HTMLDivElement })
   {
     const filter = this._selectedRules.get(id);
     if(!filter) return;
@@ -512,7 +517,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this._formController.updateValidity();
   }
 
-  protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | HTMLSelectElement
+  protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | Select
   {
     // split into group
     const input = document.createElement('div');
@@ -526,7 +531,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     number.addEventListener('input', (e: Event) => this._updateDateValue(uniqueId, e));
 
     // dropdown for minutes, hours, days, weeks
-    const dropdown = document.createElement('select');
+    const dropdown = document.createElement('zn-select') as Select;
     dropdown.setAttribute('name', 'date');
     dropdown.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
 
@@ -538,14 +543,14 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     };
     Object.keys(options).forEach(item =>
     {
-      const option = document.createElement('option');
+      const option = document.createElement('zn-option') as Option;
       option.value = item;
-      option.text = options[item];
+      option.innerText = options[item];
       dropdown.appendChild(option);
     });
 
     // dropdown ago or from now
-    const ago = document.createElement('select');
+    const ago = document.createElement('zn-select') as Select;
     ago.setAttribute('name', 'ago');
     ago.addEventListener('change', (e: Event) => this._updateDateValue(uniqueId, e));
 
@@ -556,9 +561,9 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
     Object.keys(agoOptions).forEach(item =>
     {
-      const option = document.createElement('option');
+      const option = document.createElement('zn-option') as Option;
       option.value = item;
-      option.text = agoOptions[item];
+      option.innerText = agoOptions[item];
       ago.appendChild(option);
     });
 

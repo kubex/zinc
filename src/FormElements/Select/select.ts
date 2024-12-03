@@ -16,10 +16,8 @@ import styles from './select.scss?inline';
 @customElement('zn-select')
 export class Select extends ZincElement implements ZincFormControl
 {
-
   static styles = unsafeCSS(styles);
 
-  // @ts-expect-error - this is a valid conversion
   private readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this);
   private typeToSelectString = '';
@@ -42,17 +40,13 @@ export class Select extends ZincElement implements ZincFormControl
   @property() name = '';
 
   /**
-   * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-   * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-   * be an array. **For this reason, values must not contain spaces.**
+   * The current value of the select, submitted as a name/value pair with form data.
    */
   @property({reflect: true})
-    // @ts-expect-error - this is a valid conversion
-  value: string | string[] = '';
+  private _value: string = '';
 
   /** The default value of the form control. Primarily used for resetting the form control. */
-    // @ts-expect-error - this is a valid conversion
-  @defaultValue() defaultValue: string | string[] = '';
+  @defaultValue() defaultValue: string = '';
 
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
@@ -92,6 +86,23 @@ export class Select extends ZincElement implements ZincFormControl
   @property({type: Boolean, reflect: true}) required = false;
 
   @property() label = '';
+
+  get value()
+  {
+    return this._value;
+  }
+
+  @state()
+  set value(val: string)
+  {
+    if(this._value === val)
+    {
+      return;
+    }
+
+    this.valueHasChanged = true;
+    this._value = val;
+  }
 
   /** Gets the validity state object */
   get validity()
@@ -243,8 +254,8 @@ export class Select extends ZincElement implements ZincFormControl
         this.updateComplete.then(() =>
         {
           this.emit('zn-input');
-          this.hide();
           this.emit('zn-change');
+          this.hide();
         });
       }
 
@@ -449,6 +460,12 @@ export class Select extends ZincElement implements ZincFormControl
 
     // Select only the options that match the new value
     this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
+
+    // if still no value, select the first option
+    if(this.selectedOptions.length === 0)
+    {
+      this.setSelectedOptions(allOptions[0]);
+    }
   }
 
   // Gets an array of all <zn-option> elements
@@ -498,7 +515,7 @@ export class Select extends ZincElement implements ZincFormControl
     // Set the new selection
     if(newSelectedOptions.length)
     {
-      newSelectedOptions.forEach(el => (el.selected = true));
+      newSelectedOptions.forEach((el: Option) => (el.selected = true));
     }
 
     // Update selection, value, and display label
@@ -526,13 +543,12 @@ export class Select extends ZincElement implements ZincFormControl
   {
     const options = this.getAllOptions();
     // Update selected options cache
-    this.selectedOptions = options.filter(el => el.selected);
+    this.selectedOptions = options.filter(el => el.selected === true);
 
     // Update the value and display label
     const selectedOption = this.selectedOptions[0];
     this.value = selectedOption?.value ?? '';
     this.displayLabel = selectedOption?.getTextLabel?.() ?? '';
-
     // Update validity
     this.updateComplete.then(() =>
     {
@@ -560,8 +576,10 @@ export class Select extends ZincElement implements ZincFormControl
   @watch('value', {waitUntilFirstUpdate: true})
   handleValueChange()
   {
+    console.log('value', this.value);
     const allOptions = this.getAllOptions();
     const value = Array.isArray(this.value) ? this.value : [this.value];
+    console.log('value', value);
 
     // Select only the options that match the new value
     this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));

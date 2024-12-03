@@ -21,6 +21,8 @@ export const Default: Story = {
     return html`
       <zn-form-group caption="Something" description="Help me">
         <zn-select clearable placeholder="Something">
+          <div slot="prefix">$</div>
+          <div slot="suffix">awesome</div>
           <zn-option value="option-1" disabled>Option 1</zn-option>
           <zn-option value="option-2">Option 2</zn-option>
           <zn-option value="option-3">Option 3</zn-option>

@@ -44,7 +44,6 @@
   padding: wc.spacing(sm);
   height: 41px;
   cursor: pointer;
-  gap: 5px;
 }
 
 .select__display-input {
@@ -138,6 +137,14 @@
   display: inline-flex;
   align-items: center;
   color: var(--zn-input-placeholder-color);
+}
+
+.select__suffix::slotted(*) {
+  margin-inline-start: wc.spacing(sm)
+}
+
+.select__prefix::slotted(*) {
+  margin-inline-end: wc.spacing(sm)
 }
 
 /* Clear button */

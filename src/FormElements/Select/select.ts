@@ -42,7 +42,7 @@ export class Select extends ZincElement implements ZincFormControl
   /**
    * The current value of the select, submitted as a name/value pair with form data.
    */
-  @property({reflect: true})
+  @property({attribute: 'value', reflect: true})
   private _value: string = '';
 
   /** The default value of the form control. Primarily used for resetting the form control. */

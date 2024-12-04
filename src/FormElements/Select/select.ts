@@ -47,7 +47,6 @@ export class Select extends ZincElement implements ZincFormControl
   @property({attribute: 'value', reflect: true})
   private _value: string | string[] = '';
 
-  // @ts-expect-error - Not reporting Correctly
   get value()
   {
     return this._value;
@@ -57,13 +56,9 @@ export class Select extends ZincElement implements ZincFormControl
   // @ts-expect-error - Not reporting Correctly
   set value(val: string | string[])
   {
-    if(this.multiple)
+    if(this.multiple === true)
     {
       val = Array.isArray(val) ? val : val.split(' ');
-    }
-    else
-    {
-      val = Array.isArray(val) ? val.join(' ') : val;
     }
 
     if(this._value === val)
@@ -315,7 +310,7 @@ export class Select extends ZincElement implements ZincFormControl
         if(!this.multiple)
         {
           this.hide();
-          this.displayInput.focus({preventScroll: true});
+          // this.displayInput.focus({preventScroll: true});
         }
       }
 
@@ -504,8 +499,10 @@ export class Select extends ZincElement implements ZincFormControl
 
       if(!this.multiple)
       {
-        this.hide();
-        this.displayInput.focus({preventScroll: true});
+        this.hide().then(() =>
+        {
+          this.displayInput.focus({preventScroll: true});
+        });
       }
     }
   }
@@ -544,9 +541,13 @@ export class Select extends ZincElement implements ZincFormControl
           }
         }
       }
+      else if(!this.multiple)
+      {
+        this.setSelectedOptions(allOptions[0]);
+      }
     }
   }
-  
+
   private handleTagRemove(event: ZnRemoveEvent, option: Option)
   {
     event.stopPropagation();
@@ -662,6 +663,7 @@ export class Select extends ZincElement implements ZincFormControl
     }
     else
     {
+      console.log(this.selectedOptions);
       const selectedOption = this.selectedOptions[0];
       this.value = selectedOption?.value ?? '';
       this.displayLabel = selectedOption?.getTextLabel?.() ?? '';
@@ -717,6 +719,15 @@ export class Select extends ZincElement implements ZincFormControl
   @watch('value', {waitUntilFirstUpdate: true})
   handleValueChange()
   {
+    if(!this.valueHasChanged)
+    {
+      const cachedValueHasChanged = this.valueHasChanged;
+      this.value = this.defaultValue;
+
+      // Set it back to false since this isn't an interaction.
+      this.valueHasChanged = cachedValueHasChanged;
+    }
+
     const allOptions = this.getAllOptions();
     const value = Array.isArray(this.value) ? this.value : [this.value];
 

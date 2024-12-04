@@ -1,7 +1,6 @@
-import {customElement, property, state} from "lit/decorators.js";
+import {customElement, state} from "lit/decorators.js";
 import {scrollIntoView} from "@/scroll";
 import {Option} from "@/FormElements/Select/option";
-import {defaultValue} from "@/default-value";
 import {TemplateResult} from "lit";
 import {html} from "lit/static-html.js";
 import {watch} from "@/watch";
@@ -28,26 +27,13 @@ export class MultiSelect extends Select
     {
       return;
     }
-
     val = Array.isArray(val) ? val : val.split(' ');
 
     this.valueHasChanged = true;
     this._value = val;
   }
 
-  /** The default value of the form control. Primarily used for resetting the form control. */
-  @defaultValue() defaultValue: string = '';
-
-  /** Placeholder text to show as a hint when the select is empty. */
-  @property() placeholder = '';
-
-
-  /**
-   * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
-   * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
-   * the specified value.
-   */
-  @property() getTag: (option: Option, index: number) => TemplateResult | string | HTMLElement = option =>
+  getTag: (option: Option, index: number) => TemplateResult | string | HTMLElement = option =>
   {
     return html`
       <zn-tag
@@ -104,16 +90,7 @@ export class MultiSelect extends Select
       if(this.currentOption && !this.currentOption.disabled)
       {
         this.valueHasChanged = true;
-        if(this.multiple)
-        {
-          this.toggleOptionSelection(this.currentOption);
-        }
-        else
-        {
-          this.setSelectedOptions(this.currentOption);
-        }
-
-        this.setSelectedOptions(this.currentOption);
+        this.toggleOptionSelection(this.currentOption);
 
         // Emit after updating
         this.updateComplete.then(() =>
@@ -121,12 +98,6 @@ export class MultiSelect extends Select
           this.emit('zn-input');
           this.emit('zn-change');
         });
-
-        if(!this.multiple)
-        {
-          this.hide();
-          // this.displayInput.focus({preventScroll: true});
-        }
       }
 
       return;
@@ -231,8 +202,6 @@ export class MultiSelect extends Select
   protected handleComboboxMouseDown(event: MouseEvent)
   {
     event.preventDefault();
-
-    console.log(event.target);
     if(this.multiple && (event.target instanceof HTMLElement && event.target.getAttribute('part') === 'clear-button'))
     {
       return;
@@ -310,74 +279,35 @@ export class MultiSelect extends Select
 
     if(!this.disabled)
     {
-      this.toggleOptionSelection(option, false);
+      setTimeout(() =>
+      {
+        this.toggleOptionSelection(option, false);
+      }, 100);
 
       // Emit after updating
       this.updateComplete.then(() =>
       {
-        this.emit('zn-input');
-        this.emit('zn-change');
+        // this.emit('zn-input');
+        // this.emit('zn-change');
       });
     }
   }
 
-  // Gets an array of all <zn-option> elements
-  protected getAllOptions()
-  {
-    return [...this.querySelectorAll<Option>('zn-option')];
-  }
-
-  // Gets the first <zn-option> element
-  protected getFirstOption()
-  {
-    return this.querySelector<Option>('zn-option');
-  }
-
-  // Sets the current option, which is the option the user is currently interacting with (e.g. via keyboard). Only one
-  // option may be "current" at a time.
-  protected setCurrentOption(option: Option | null)
-  {
-    const allOptions = this.getAllOptions();
-
-    // Clear selection
-    allOptions.forEach(el =>
-    {
-      el.current = false;
-      el.tabIndex = -1;
-    });
-
-    // Select the target option
-    if(option)
-    {
-      this.currentOption = option;
-      option.current = true;
-      option.tabIndex = 0;
-      option.focus();
-    }
-  }
-
-  // This method must be called whenever the selection changes. It will update the selected options cache, the current
-  // value, and the display value
   protected selectionChanged()
   {
     const options = this.getAllOptions();
     // Update selected options cache
-    this.selectedOptions = options.filter(el => el.selected === true);
+    this.selectedOptions = options.filter(el => el.selected);
+
+    // Keep a reference to the previous `valueHasChanged`. Changes made here don't count has changing the value.
+    const cachedValueHasChanged = this.valueHasChanged;
 
     // Update the value and display label
-    if(this.multiple)
-    {
-      console.log('multiple', 'selectionChanged', this.selectedOptions);
-      // this.value = this.selectedOptions.map(el => el.value);
-      this.displayLabel = (this.placeholder && this.value.length === 0) ?
-        '' : 'numOptionsSelected ' + this.selectedOptions.length;
-    }
-    else
-    {
-      const selectedOption = this.selectedOptions[0];
-      // this.value = selectedOption?.value ?? '';
-      this.displayLabel = selectedOption?.getTextLabel?.() ?? '';
-    }
+    this.value = this.selectedOptions.map(el => el.value);
+    this.displayLabel = (this.placeholder && this.value.length === 0) ?
+      '' : 'numOptionsSelected ' + this.selectedOptions.length;
+
+    this.valueHasChanged = cachedValueHasChanged;
 
     // Update validity
     this.updateComplete.then(() =>
@@ -385,6 +315,7 @@ export class MultiSelect extends Select
       this.formControlController.updateValidity();
     });
   }
+
 
   protected get tags()
   {
@@ -535,8 +466,7 @@ export class MultiSelect extends Select
                 @blur=${this.handleBlur}
               />
 
-              ${this.multiple ? html`
-                <div part="tags" class="select__tags">${this.tags}</div>` : ''}
+              <div part="tags" class="select__tags">${this.tags}</div>
 
               <input
                 class="select__value-input"

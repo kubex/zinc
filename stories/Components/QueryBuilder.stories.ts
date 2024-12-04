@@ -33,17 +33,17 @@ export const Default: Story = {
       {
         id: '2',
         name: 'age',
-        operators: ['eq']
+        operators: ['eq', 'neq']
       },
       {
         id: '3',
         name: 'address',
-        operators: ['eq']
+        operators: ['eq', 'neq']
       },
       {
         id: '4',
         name: 'country',
-        operators: ['neq'],
+        operators: ['eq', 'neq'],
         options: ['USA', 'UK', 'Canada']
       }
     ]

@@ -130,7 +130,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     this.value = btoa(JSON.stringify(data));
   }
 
-  private _addRule(event: Event | null, value: string = null)
+  private _addRule(event: Event | null, value: string = null, pos = null)
   {
     const id = value ? value : (event.target as HTMLSelectElement).value;
     if(id === '') return;
@@ -407,7 +407,14 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     remove.classList.add('query-builder__remove');
     row.appendChild(remove);
 
-    this.container.insertBefore(row, this.addRule);
+    if(pos !== null)
+    {
+      this.container.insertBefore(row, this.container.children[pos]);
+    }
+    else
+    {
+      this.container.insertBefore(row, this.addRule);
+    }
     this.addRule.value = '';
     this._handleChange();
   }
@@ -481,11 +488,27 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
   private _changeRule(id: string, event: Event)
   {
     // remove the element from the dom
+    const pos = this._getRulePosition(id);
     const button = event.target as HTMLSelectElement;
     button.parentElement.remove();
     // recreate the element based on the selected value;
     this._removeRule(id, event);
-    this._addRule(event);
+    this._addRule(event, null, pos);
+  }
+
+
+  private _getRulePosition(id: string): number
+  {
+    const rules = this.container.querySelectorAll('.query-builder__row');
+    let position = null;
+    rules.forEach((item, index) =>
+    {
+      if(item.id === id)
+      {
+        position = index;
+      }
+    });
+    return position;
   }
 
   private _removeRule(id: string, event: Event)

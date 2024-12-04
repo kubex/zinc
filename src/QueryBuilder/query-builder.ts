@@ -117,7 +117,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
   private _handleChange()
   {
-    console.log('change');
     const data = [];
     [...this._selectedRules].forEach(([key, value]) =>
     {
@@ -146,7 +145,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       operator: filter.operators.length > 0 ? filter.operators[0] : 'eq',
       value: ''
     });
-    console.log('selected rules', this._selectedRules);
     const row = document.createElement('div');
     row.classList.add('query-builder__row');
     row.id = uniqueId;
@@ -286,7 +284,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     {
       comparator.addEventListener('change', (e: Event) =>
       {
-        console.log('change');
         // if selected comparator is in
         const selectedComparator = (e.target as HTMLSelectElement).value;
         if(selectedComparator !== previousOperator && selectedComparator === 'in')
@@ -417,8 +414,6 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
 
   private _updateOperatorValue(id: string, event: Event)
   {
-    console.log('update operator');
-    console.log('id', id);
     const filter = this._selectedRules.get(id);
     if(!filter) return;
 

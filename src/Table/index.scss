@@ -44,12 +44,6 @@ zn-table {
     height: 52px;
   }
 
-  tr td, tr th {
-    &:last-of-type {
-      text-align: right;
-    }
-  }
-
   tr.with-summary td {
     min-height: 80px;
     height: 80px;
@@ -136,6 +130,14 @@ zn-table {
           text-wrap: initial;
         }
       }
+    }
+  }
+}
+
+.table--last-right {
+  tr td, tr th {
+    &:last-of-type {
+      text-align: right;
     }
   }
 }

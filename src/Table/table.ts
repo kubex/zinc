@@ -1,10 +1,11 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {ifDefined} from "lit/directives/if-defined.js";
+import {classMap} from "lit/directives/class-map.js";
+import {ZincSlotElement} from "@/zinc-slot-element";
 
 import styles from './index.scss?inline';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {ZincSlotElement} from "@/zinc-slot-element";
 
 @customElement('zn-table')
 export class Table extends ZincSlotElement
@@ -12,7 +13,9 @@ export class Table extends ZincSlotElement
   @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
   @property({attribute: 'has-actions', type: Boolean, reflect: true}) hasActions: boolean = false;
   @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
+  @property({attribute: 'left-align', type: Boolean, reflect: true}) allLeft: boolean = false;
   @property({attribute: 'data', type: Object, reflect: true}) data: Object;
+
 
   private columns = [];
   private columnDisplay = [];
@@ -94,7 +97,10 @@ export class Table extends ZincSlotElement
   {
     return html`
       <div>
-        <table class="table">
+        <table class="${classMap({
+          'table': true,
+          'table--last-right': !this.allLeft,
+        })}">
           ${this.tableHead()}
           ${this.tableBody()}
         </table>
@@ -259,7 +265,19 @@ export class Table extends ZincSlotElement
       return col;
     }
 
-    if(col.hasOwnProperty('chip'))
+    if(col.hasOwnProperty('chips'))
+    {
+      console.log('Chips', col);
+      const colContent = col['chips'].map((chip) =>
+      {
+        return html`
+          <zn-chip type="${chip['state']}">${chip['chip']}</zn-chip>`;
+      });
+
+      col = html`
+        <span>${colContent}</span>`;
+    }
+    else if(col.hasOwnProperty('chip'))
     {
       let chipState = "";
       if(col.hasOwnProperty('state'))
@@ -267,7 +285,7 @@ export class Table extends ZincSlotElement
         chipState = col['state'];
       }
       col = html`
-        <zn-chip .type="${chipState}">${col['chip']}</zn-chip>`;
+        <zn-chip type="${chipState}">${col['chip']}</zn-chip>`;
     }
     else if(col.hasOwnProperty('href'))
     {

@@ -127,7 +127,9 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       });
     });
 
+    console.log('data', data);
     this.value = btoa(JSON.stringify(data));
+    console.log('value', this.value);
   }
 
   private _addRule(event: Event | null, value: string = null, pos = null)
@@ -282,7 +284,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
     }
     else
     {
-      comparator.addEventListener('change', (e: Event) =>
+      comparator.addEventListener('zn-change', (e: Event) =>
       {
         // if selected comparator is in
         const selectedComparator = (e.target as HTMLSelectElement).value;
@@ -296,7 +298,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           newInput.classList.add('query-builder__value');
           newInput.setAttribute('name', 'value');
           newInput.setAttribute('label', 'Value');
-          newInput.addEventListener('change', (e: Event) => this.updateInValue(uniqueId, e));
+          newInput.addEventListener('zn-change', (e: Event) => this.updateInValue(uniqueId, e));
           newInput.setAttribute('data', JSON.stringify(filter.options));
           parent.appendChild(newInput);
         }
@@ -321,7 +323,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
           });
 
           this._updateValue(uniqueId, {target: newInput});
-          newInput.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
+          newInput.addEventListener('zn-change', (e: Event) => this._updateValue(uniqueId, e));
 
           parent.appendChild(newInput);
         }
@@ -343,7 +345,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
         input.appendChild(option);
       });
       this._updateValue(uniqueId, {target: input});
-      input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
+      input.addEventListener('zn-change', (e: Event) => this._updateValue(uniqueId, e));
     }
     else if(filter.type === 'bool' || filter.type === 'boolean')
     {
@@ -356,7 +358,7 @@ export class QueryBuilder extends ZincElement implements ZincFormControl
       option2.value = '0';
       option2.text = 'False';
       input.appendChild(option2);
-      input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
+      input.addEventListener('zn-change', (e: Event) => this._updateValue(uniqueId, e));
     }
     else if(filter.type === 'number')
     {

@@ -6,11 +6,12 @@ import {HasSlotController} from "@/slot";
 import {Popup} from "@/Popup";
 import {Option} from "@/FormElements/Select/option";
 import {defaultValue} from "@/default-value";
-import {unsafeCSS} from "lit";
+import {TemplateResult, unsafeCSS} from "lit";
 import {html} from "lit/static-html.js";
 import {watch} from "@/watch";
 import {classMap} from "lit/directives/class-map.js";
-
+import {ZnRemoveEvent} from "@/Events/zn-remove";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import styles from './select.scss?inline';
 
 @customElement('zn-select')
@@ -18,6 +19,7 @@ export class Select extends ZincElement implements ZincFormControl
 {
   static styles = unsafeCSS(styles);
 
+  // @ts-expect-error - Not reporting Correctly
   private readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this);
   private typeToSelectString = '';
@@ -43,13 +45,51 @@ export class Select extends ZincElement implements ZincFormControl
    * The current value of the select, submitted as a name/value pair with form data.
    */
   @property({attribute: 'value', reflect: true})
-  private _value: string = '';
+  private _value: string | string[] = '';
+
+  // @ts-expect-error - Not reporting Correctly
+  get value()
+  {
+    return this._value;
+  }
+
+  @state()
+  // @ts-expect-error - Not reporting Correctly
+  set value(val: string | string[])
+  {
+    if(this.multiple)
+    {
+      val = Array.isArray(val) ? val : val.split(' ');
+    }
+    else
+    {
+      val = Array.isArray(val) ? val.join(' ') : val;
+    }
+
+    if(this._value === val)
+    {
+      return;
+    }
+
+    this.valueHasChanged = true;
+    this._value = val;
+  }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue() defaultValue: string = '';
 
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
+
+
+  /** Allows more than one option to be selected. */
+  @property({type: Boolean, reflect: true}) multiple = false;
+
+  /**
+   * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
+   * indicate the number of additional items that are selected. Set to 0 to remove the limit.
+   */
+  @property({attribute: 'max-options-visible', type: Number}) maxOptionsVisible = 0;
 
   /** Disables the select control. */
   @property({type: Boolean, reflect: true}) disabled = false;
@@ -87,22 +127,29 @@ export class Select extends ZincElement implements ZincFormControl
 
   @property() label = '';
 
-  get value()
+  /**
+   * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
+   * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
+   * the specified value.
+   */
+  @property() getTag: (option: Option, index: number) => TemplateResult | string | HTMLElement = option =>
   {
-    return this._value;
-  }
-
-  @state()
-  set value(val: string)
-  {
-    if(this._value === val)
-    {
-      return;
-    }
-
-    this.valueHasChanged = true;
-    this._value = val;
-  }
+    return html`
+      <zn-tag
+        part="tag"
+        exportparts="
+              base:tag__base,
+              content:tag__content,
+              remove-button:tag__remove-button,
+              remove-button__base:tag__remove-button__base
+            "
+        removable
+        @zn-remove=${(event: ZnRemoveEvent) => this.handleTagRemove(event, option)}
+      >
+        ${option.getTextLabel()}
+      </zn-tag>
+    `;
+  };
 
   /** Gets the validity state object */
   get validity()
@@ -247,6 +294,14 @@ export class Select extends ZincElement implements ZincFormControl
       if(this.currentOption && !this.currentOption.disabled)
       {
         this.valueHasChanged = true;
+        if(this.multiple)
+        {
+          this.toggleOptionSelection(this.currentOption);
+        }
+        else
+        {
+          this.setSelectedOptions(this.currentOption);
+        }
 
         this.setSelectedOptions(this.currentOption);
 
@@ -255,8 +310,13 @@ export class Select extends ZincElement implements ZincFormControl
         {
           this.emit('zn-input');
           this.emit('zn-change');
-          this.hide();
         });
+
+        if(!this.multiple)
+        {
+          this.hide();
+          this.displayInput.focus({preventScroll: true});
+        }
       }
 
       return;
@@ -420,7 +480,14 @@ export class Select extends ZincElement implements ZincFormControl
     if(option && !option.disabled)
     {
       this.valueHasChanged = true;
-      this.setSelectedOptions(option);
+      if(this.multiple)
+      {
+        this.toggleOptionSelection(option);
+      }
+      else
+      {
+        this.setSelectedOptions(option);
+      }
 
       // Set focus after updating so the value is announced by screen readers
       this.updateComplete.then(() => this.displayInput.focus({preventScroll: true}));
@@ -435,10 +502,11 @@ export class Select extends ZincElement implements ZincFormControl
         });
       }
 
-      this.hide().then(() =>
+      if(!this.multiple)
       {
+        this.hide();
         this.displayInput.focus({preventScroll: true});
-      });
+      }
     }
   }
 
@@ -462,9 +530,40 @@ export class Select extends ZincElement implements ZincFormControl
     this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
 
     // if still no value, select the first option
-    if(this.selectedOptions.length === 0)
+    if(this.selectedOptions.length === 0 && !this.multiple)
     {
-      this.setSelectedOptions(allOptions[0]);
+      // check if option is disabled
+      if(allOptions.length > 0 && allOptions[0].disabled)
+      {
+        for(const option of allOptions)
+        {
+          if(!option.disabled)
+          {
+            this.setSelectedOptions(option);
+            break;
+          }
+        }
+      }
+    }
+  }
+  
+  private handleTagRemove(event: ZnRemoveEvent, option: Option)
+  {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    this.valueHasChanged = true;
+
+    if(!this.disabled)
+    {
+      this.toggleOptionSelection(option, false);
+
+      // Emit after updating
+      this.updateComplete.then(() =>
+      {
+        this.emit('zn-input');
+        this.emit('zn-change');
+      });
     }
   }
 
@@ -546,13 +645,55 @@ export class Select extends ZincElement implements ZincFormControl
     this.selectedOptions = options.filter(el => el.selected === true);
 
     // Update the value and display label
-    const selectedOption = this.selectedOptions[0];
-    this.value = selectedOption?.value ?? '';
-    this.displayLabel = selectedOption?.getTextLabel?.() ?? '';
+    // Update the value and display label
+    if(this.multiple)
+    {
+      this.value = this.selectedOptions.map(el => el.value);
+
+      if(this.placeholder && this.value.length === 0)
+      {
+        // When no items are selected, keep the value empty so the placeholder shows
+        this.displayLabel = '';
+      }
+      else
+      {
+        this.displayLabel = 'numOptionsSelected ' + this.selectedOptions.length;
+      }
+    }
+    else
+    {
+      const selectedOption = this.selectedOptions[0];
+      this.value = selectedOption?.value ?? '';
+      this.displayLabel = selectedOption?.getTextLabel?.() ?? '';
+    }
+
     // Update validity
     this.updateComplete.then(() =>
     {
       this.formControlController.updateValidity();
+    });
+  }
+
+  protected get tags()
+  {
+    return this.selectedOptions.map((option, index) =>
+    {
+      if(index < this.maxOptionsVisible || this.maxOptionsVisible <= 0)
+      {
+        const tag = this.getTag(option, index);
+        // Wrap so we can handle the remove
+        return html`
+          <div @zn-remove=${(e: ZnRemoveEvent) => this.handleTagRemove(e, option)}>
+            ${typeof tag === 'string' ? unsafeHTML(tag) : tag}
+          </div>`;
+      }
+      else if(index === this.maxOptionsVisible)
+      {
+        // Hit tag limit
+        return html`
+          <zn-tag>+${this.selectedOptions.length - index}</zn-tag>`;
+      }
+      return html``;
     });
   }
 
@@ -708,6 +849,7 @@ export class Select extends ZincElement implements ZincFormControl
               select: true,
               'select--standard': true,
               'select--open': this.open,
+              'select--multiple': this.multiple,
               'select--disabled': this.disabled,
               'select--focused': this.hasFocus,
               'select--placeholder-visible': isPlaceholderVisible,
@@ -751,6 +893,9 @@ export class Select extends ZincElement implements ZincFormControl
                 @focus=${this.handleFocus}
                 @blur=${this.handleBlur}
               />
+
+              ${this.multiple ? html`
+                <div part="tags" class="select__tags">${this.tags}</div>` : ''}
 
               <input
                 class="select__value-input"

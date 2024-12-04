@@ -42,7 +42,7 @@
   vertical-align: middle;
   overflow: hidden;
   padding: wc.spacing(sm);
-  height: 41px;
+  min-height: 41px;
   cursor: pointer;
 }
 
@@ -202,6 +202,29 @@
 
 .select__listbox ::slotted(zn-divider) {
   --spacing: wc.spacing(sm);
+}
+
+.select__tags {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.select__tags::slotted(sl-tag) {
+  cursor: pointer !important;
+}
+
+/* Visually hide the display input when multiple is enabled */
+.select--multiple:not(.select--placeholder-visible) .select__display-input {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 }
 
 .select__listbox ::slotted(small) {

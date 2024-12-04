@@ -20,7 +20,7 @@ export const Default: Story = {
   {
     return html`
       <zn-form-group caption="Something" description="Help me">
-        <zn-select clearable placeholder="Something" multiple>
+        <zn-select clearable placeholder="Something">
           <div slot="prefix">$</div>
           <div slot="suffix">awesome</div>
           <zn-option value="option-1" disabled>Option 1</zn-option>
@@ -35,6 +35,22 @@ export const Default: Story = {
           <zn-option value="option-10">Option 10</zn-option>
           <zn-option value="option-11">Option 11</zn-option>
         </zn-select>
+
+        <zn-multi-select clearable placeholder="Something">
+          <div slot="prefix">$</div>
+          <div slot="suffix">awesome</div>
+          <zn-option value="option-1" disabled>Option 1</zn-option>
+          <zn-option value="option-2">Option 2</zn-option>
+          <zn-option value="option-3">Option 3</zn-option>
+          <zn-option value="option-4">Option 4</zn-option>
+          <zn-option value="option-5">Option 5</zn-option>
+          <zn-option value="option-6">Option 6</zn-option>
+          <zn-option value="option-7">Option 7</zn-option>
+          <zn-option value="option-8">Option 8</zn-option>
+          <zn-option value="option-9">Option 9</zn-option>
+          <zn-option value="option-10">Option 10</zn-option>
+          <zn-option value="option-11">Option 11</zn-option>
+        </zn-multi-select>
       </zn-form-group>`;
   },
 };

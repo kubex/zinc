@@ -1,5 +1,5 @@
-import { LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import {LitElement} from 'lit';
+import {property} from 'lit/decorators.js';
 import {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -21,7 +21,7 @@ const screenSizes = {
 
 export class ZincElement extends LitElement
 {
-  @property({ type: String, attribute: 't', reflect: true })
+  @property({type: String, attribute: 't', reflect: true})
   public t: string = '';
 
   constructor()
@@ -103,7 +103,7 @@ export interface ZincFormControl extends ZincElement
 {
   // Form attributes
   name: string;
-  value: PropertyKey;
+  value: PropertyKey | Array<PropertyKey>;
   disabled?: boolean;
   defaultValue?: PropertyKey;
   defaultChecked?: boolean;

@@ -28,7 +28,6 @@ import '@/FormElements/CheckBox';
 import '@/FormElements/Input';
 import '@/FormElements/DragUpload';
 import '@/FormElements/DatePicker';
-import '@/FormElements/MultiSelect';
 import '@/FormElements/Toggle';
 import '@/FormElements/Textarea';
 import '@/FormElements/Rating';

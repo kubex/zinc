@@ -205,7 +205,6 @@ export class Table extends ZincSlotElement
         <div class="actions"></div>`;
       if(actions && actions.length > 0)
       {
-        const id = "actions-" + rk;
         actionsHtml = html`
           <div class="actions">
             <zn-dropdown>
@@ -292,8 +291,9 @@ export class Table extends ZincSlotElement
       const url = col['href'];
       const text = col.hasOwnProperty('text') ? col['text'] : url;
       const target = col.hasOwnProperty('target') ? col['target'] : '';
+      const gaid = col.hasOwnProperty('gaid') ? col['gaid'] : '';
       col = html`
-        <a href="${url}" data-target="${target}">${text}</a>`;
+        <a href="${url}" data-target="${target}" gaid=${gaid}>${text}</a>`;
     }
 
     return col;

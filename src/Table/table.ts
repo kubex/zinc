@@ -48,6 +48,7 @@ export class Table extends ZincSlotElement
         }
         catch(e)
         { /* empty */
+          console.error('Error parsing JSON', e);
         }
       }
     }

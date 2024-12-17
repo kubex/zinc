@@ -60,10 +60,13 @@ export class ConfirmModal extends Dialog
     ];
 
     const elements = [];
-    elementNameMap.forEach((elementName) =>
+    if(form[0])
     {
-      elements.push(...(form[0] as HTMLFormElement).querySelectorAll(elementName));
-    });
+      elementNameMap.forEach((elementName) =>
+      {
+        elements.push(...(form[0] as HTMLFormElement).querySelectorAll(elementName));
+      });
+    }
 
     // Check if there is an input that isn't hidden
     for(let i = 0; i < elements.length; i++)

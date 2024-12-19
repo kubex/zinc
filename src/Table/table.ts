@@ -40,10 +40,20 @@ export class Table extends ZincSlotElement
     {
       if(this.childNodes.length > 0 && this.childNodes[0].nodeType === 3)
       {
-        const data = this.childNodes[0];
+        // merge all nodes into one
+        const nodes = this.childNodes;
+        let text = '';
+        for(const node of nodes)
+        {
+          text += node.textContent;
+        }
+
+        // remove all \n
+        text = text.replace(/\n/g, '');
+
         try
         {
-          this.data = JSON.parse(data.textContent);
+          this.data = JSON.parse(text);
           this.innerText = '';
         }
         catch(e)

@@ -86,7 +86,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   private handleInputValueChange(e: Event)
   {
-    const target = e.target as HTMLInputElement | HTMLSelectElement
+    const target = e.target as HTMLInputElement | HTMLSelectElement;
     this.inputValue = target.value.toLowerCase();
 
     if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
@@ -94,7 +94,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
 
   private handleInputValueInput(e: Event)
   {
-    const target = e.target as HTMLInputElement| HTMLSelectElement;
+    const target = e.target as HTMLInputElement | HTMLSelectElement;
     this.inputValue = target.value.toLowerCase();
 
     if(target.hasAttribute('data-label')) this.value = target.getAttribute('data-label');
@@ -108,6 +108,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
   render()
   {
     let predefinedLabels = html``;
+    let identifiedLabels = 0;
 
     if(this.predefinedLabels.length > 0)
     {
@@ -160,6 +161,7 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
         }
 
 
+        identifiedLabels++;
         predefinedLabels = html`
           <div class="defined-label__container">
             <div class="defined-label__left">
@@ -191,26 +193,30 @@ export class DefinedLabel extends ZincElement implements ZincFormControl
           @input="${this.handleInput}"
         />
         ${this.value !== '' ? html`
-          <div class="defined-label__container">
-            <div class="defined-label__left">
-              <p><small>Add Custom Label</small></p>
-              ${this.value}
-            </div>
-            <div class="defined-label__right">
-              <input
-                part="input-value"
-                id="input-value"
-                class="input__control-value"
-                type="text"
-                @change="${this.handleInputValueChange}"
-                @input="${this.handleInputValueInput}"
-              />
-            </div>
-            <div class="defined-label__submit">
-              <zn-button type="submit" icon="add" slot="submit" size="small"
-                         @click="${this.handleFormSubmit}"></zn-button>
+          <div class="defined-label__wrap">
+            <p class="defined-label__label"><small>Add Custom Label</small></p>
+            <div class="defined-label__container">
+              <div class="defined-label__left">
+                ${this.value}
+              </div>
+              <div class="defined-label__right">
+                <input
+                  part="input-value"
+                  id="input-value"
+                  class="input__control-value"
+                  type="text"
+                  @change="${this.handleInputValueChange}"
+                  @input="${this.handleInputValueInput}"
+                />
+              </div>
+              <div class="defined-label__submit">
+                <zn-button type="submit" icon="add" slot="submit" size="small"
+                           @click="${this.handleFormSubmit}"></zn-button>
+              </div>
             </div>
           </div>
+          ${identifiedLabels > 0 ? html`
+            <p class="defined-label__label"><small>Add Predefined Label</small></p>` : ''}
           ${predefinedLabels}
         ` : ''}
       </div>

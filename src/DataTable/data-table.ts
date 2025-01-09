@@ -393,6 +393,11 @@ export class DataTable extends ZincElement
         }
       }
 
+      if(value['icon'])
+      {
+        content = html`
+          <zn-icon src="${value['icon']}" size="16"></zn-icon> ${content}`;
+      }
 
       return content;
     }

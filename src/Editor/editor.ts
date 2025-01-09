@@ -3,6 +3,7 @@ import {customElement, property, query} from 'lit/decorators.js';
 import Quill from 'quill';
 import DropdownModule, {dropdownOpen} from "./Modules/dropdown-module";
 import AttachmentModule from "./Modules/attachment-module";
+import TimeTrackingModule from "./Modules/time-tracking-module";
 
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement, ZincFormControl} from "@/zinc-element";
@@ -80,9 +81,12 @@ export class Editor extends ZincElement implements ZincFormControl
     Quill.debug('error');
     Quill.register('modules/dropdownModule', DropdownModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
+    Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
 
     this._updateIcons();
     const attachmentInput = this.getForm().querySelector('input[name="attachments"]');
+    const startTimeInput = this.getForm().querySelector('input[name="startTime"]');
+    const openTimeInput = this.getForm().querySelector('input[name="openTime"]');
 
     const container = [
       ['bold', 'italic', 'underline', 'strike'],
@@ -125,6 +129,10 @@ export class Editor extends ZincElement implements ZincFormControl
         dropdownModule: {
           cannedResponses: this.cannedResponses,
           cannedResponsesUri: this.cannedResponsesUri
+        },
+        timeTrackingModule: {
+          startTimeInput: startTimeInput as HTMLInputElement,
+          openTimeInput: openTimeInput as HTMLInputElement
         },
         attachmentModule: {
           attachmentInput: attachmentInput,

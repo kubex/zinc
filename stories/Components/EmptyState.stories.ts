@@ -23,7 +23,7 @@ const Template = {
   },
   argTypes: {
     type: {
-      options: ['', 'error'],
+      options: ['primary', 'error'],
       control: { type: 'select' },
     },
     caption: {

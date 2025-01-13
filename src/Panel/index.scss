@@ -23,6 +23,17 @@
   }
 }
 
+:host([transparent]) {
+  > div {
+    background-color: transparent;
+    border-color: transparent !important;
+
+    &:before {
+     display: none;
+    }
+  }
+}
+
 :host {
   @include wc.scrollbars;
 

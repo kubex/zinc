@@ -68,3 +68,17 @@
     border: dashed 1px rgb(var(--zn-color-info)) !important;
   }
 }
+
+:host([type="primary"]) {
+  background-color: rgba(var(--zn-primary), .05);
+  min-height: 100px;
+  padding: wc.spacing(xs);
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-primary));
+  }
+
+  .primary {
+    border: dashed 1px rgb(var(--zn-primary)) !important;
+  }
+}

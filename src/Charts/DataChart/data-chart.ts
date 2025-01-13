@@ -28,6 +28,8 @@ export class DataChart extends ZincElement
 
   @property({attribute: 'enable-animations', type: Boolean}) enableAnimations = false;
 
+  @property({attribute: 'y-axis-append', type: String}) yAxisAppend;
+
   private chart: ApexCharts;
 
   private lightColors = ["#8967ef", "#6483F2", "#29bab5", "#3F51B5", "#9C27B0", "#ff6c9c", "#6836F5", "#47D6D6"];
@@ -54,7 +56,7 @@ export class DataChart extends ZincElement
         events: {}
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       markers: {
         size: this.datapointSize,
@@ -63,8 +65,30 @@ export class DataChart extends ZincElement
           sizeOffset: 2
         },
       },
+      yaxis: {
+        labels: {
+          formatter: (value) =>
+          {
+            if(this.yAxisAppend)
+            {
+              return value + this.yAxisAppend;
+            }
+            return value;
+          }
+        }
+      },
       tooltip: {
-        theme: theme
+        theme: theme,
+        y: {
+          formatter: (value, opts) =>
+          {
+            if(this.yAxisAppend)
+            {
+              return value + this.yAxisAppend;
+            }
+            return value;
+          }
+        }
       },
       grid: {
         borderColor: theme === 'dark' ? "rgb(50, 50, 60)" : 'rgb(224, 221, 233)',
@@ -91,7 +115,7 @@ export class DataChart extends ZincElement
         opacity: this.type === 'area' ? 0.1 : .8
       },
       series: this.data,
-      xaxis: {}
+      xaxis: {},
     };
 
     if(this.xAxis)

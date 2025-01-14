@@ -42,7 +42,8 @@ export class Stat extends ZincElement
     const amount = parseFloat(this.amount);
     const currency = this.currency;
 
-    return `${currency}${amount.toFixed(2)}`;
+    const formattedAmount = amount.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return `${currency}${formattedAmount}`;
   }
 
   private getDisplayAmount()

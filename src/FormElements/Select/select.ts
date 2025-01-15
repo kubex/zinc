@@ -572,8 +572,6 @@ export class Select extends ZincElement implements ZincFormControl
       const cache = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
       cache[this.cacheKey] = this.value;
       localStorage.setItem('zn-linked-select-cache', JSON.stringify(cache));
-
-      console.log('cache', cache);
     }
   }
 

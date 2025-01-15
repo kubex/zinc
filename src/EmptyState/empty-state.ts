@@ -19,7 +19,7 @@ export class EmptyState extends LitElement
     const content = html`
       ${this.icon
         ? html`
-          <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}" library="mir"></zn-icon>`
+          <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
         : ''}
       ${this.caption
         ? html`

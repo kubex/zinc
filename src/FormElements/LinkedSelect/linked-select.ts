@@ -5,6 +5,7 @@ import styles from './index.scss?inline';
 import {ZincElement, ZincFormControl} from "@/zinc-element";
 import {FormControlController} from "@/form";
 import {PropertyValues} from "@lit/reactive-element";
+import {Select} from "@/FormElements/Select";
 
 
 @customElement('zn-linked-select')
@@ -19,9 +20,11 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   @property({type: Array}) options;
   @property({attribute: 'linked-select'}) linkedSelect: string = "";
 
-  @query('select') input: HTMLInputElement;
+  @property({attribute: 'cache-key'}) cacheKey: string = "";
 
-  private linkedSelectElement: HTMLSelectElement;
+  @query('zn-select') input: HTMLInputElement;
+
+  private linkedSelectElement: HTMLSelectElement | Select;
   private readonly formControlController = new FormControlController(this);
 
   get validity()
@@ -43,9 +46,10 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
     // try to fin
     while (level < 10 && currentElement.tagName !== 'DOCUMENT')
     {
-      if(currentElement.querySelector(`[id="${this.linkedSelect}"]`) instanceof HTMLSelectElement)
+      const element = currentElement.querySelector(`[id="${this.linkedSelect}"]`);
+      if(element instanceof Select)
       {
-        this.linkedSelectElement = currentElement.querySelector(`[id="${this.linkedSelect}"]`) as HTMLSelectElement;
+        this.linkedSelectElement = element as Select;
         break;
       }
       currentElement = currentElement.parentElement;
@@ -60,13 +64,13 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
   protected firstUpdated(_changedProperties: PropertyValues)
   {
-    this.linkedSelectElement.addEventListener('change', this.handleLinkedSelectChange);
+    this.linkedSelectElement.addEventListener('zn-change', this.handleLinkedSelectChange);
     this.formControlController.updateValidity();
   }
 
   disconnectedCallback()
   {
-    this.linkedSelectElement.removeEventListener('change', this.handleLinkedSelectChange);
+    this.linkedSelectElement.removeEventListener('zn-change', this.handleLinkedSelectChange);
     super.disconnectedCallback();
   }
 
@@ -105,7 +109,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
   render()
   {
-    let selected = this.linkedSelectElement?.value;
+    let selected = this.linkedSelectElement?.value as string;
     if(!selected)
     {
       selected = Object.keys(this.options)[0];
@@ -113,10 +117,11 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
     const options = this.options[selected];
     return html`
-      <select part="select" class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}">
+      <zn-select part="select" class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}"
+                 cache-key="${this.cacheKey}">
         ${Object.entries(options).map(([key, value]) => html`
-          <option value="${key}" ?selected="${key === this.value}">${value}</option>
+          <zn-option value="${key}" ?selected="${key === this.value}">${value}</zn-option>
         `)}
-      </select>`;
+      </zn-select>`;
   }
 }

@@ -75,6 +75,8 @@ export class Select extends ZincElement implements ZincFormControl
    */
   @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
 
+  @property({attribute: 'cache-key'}) cacheKey: string = "";
+
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
@@ -127,6 +129,15 @@ export class Select extends ZincElement implements ZincFormControl
 
     // Because this is a form control, it shouldn't be opened initially
     this.open = false;
+
+    if(this.cacheKey)
+    {
+      const cache = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
+      if(cache[this.cacheKey])
+      {
+        this.value = cache[this.cacheKey];
+      }
+    }
   }
 
   disconnectedCallback()
@@ -554,6 +565,16 @@ export class Select extends ZincElement implements ZincFormControl
     {
       this.formControlController.updateValidity();
     });
+
+    // Cache the value
+    if(this.cacheKey)
+    {
+      const cache = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
+      cache[this.cacheKey] = this.value;
+      localStorage.setItem('zn-linked-select-cache', JSON.stringify(cache));
+
+      console.log('cache', cache);
+    }
   }
 
   protected handleInvalid(event: Event)

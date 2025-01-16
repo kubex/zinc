@@ -5,6 +5,7 @@ import {ZincElement} from "../zinc-element";
 import styles from './index.scss?inline';
 import {NavBar} from "../NavBar";
 import {PropertyValues} from "@lit/reactive-element";
+import {HasSlotController} from "@/slot";
 
 @customElement('zn-header')
 export class Header extends ZincElement
@@ -22,6 +23,8 @@ export class Header extends ZincElement
 
   private _hasNav: boolean;
   private _navBar;
+
+  private hasSlotController = new HasSlotController(this, '[default], actions');
 
   static styles = unsafeCSS(styles);
 
@@ -142,9 +145,11 @@ export class Header extends ZincElement
         <div class="alt-overlay">${inNew}${entityId}${url}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
-          <div class="actions">
-            <slot></slot>
-          </div>
+          ${this.hasSlotController.test('actions') ? html`
+            <div class="actions">
+              <slot></slot>
+            </div>
+          ` : ''}
           <div class="caption">
             ${backButton}
             ${caption}

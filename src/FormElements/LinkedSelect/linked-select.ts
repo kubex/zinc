@@ -21,6 +21,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   @property({attribute: 'linked-select'}) linkedSelect: string = "";
 
   @property({attribute: 'cache-key'}) cacheKey: string = "";
+  @property() label: string = "";
 
   @query('zn-select') input: HTMLInputElement;
 
@@ -118,7 +119,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
     const options = this.options[selected];
     return html`
       <zn-select part="select" class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}"
-                 cache-key="${this.cacheKey}">
+                 cache-key="${this.cacheKey}" label="${this.label}">
         ${Object.entries(options).map(([key, value]) => html`
           <zn-option value="${key}" ?selected="${key === this.value}">${value}</zn-option>
         `)}

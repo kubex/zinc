@@ -1,10 +1,10 @@
-import { ZincElement, ZincFormControl } from "../../zinc-element";
-import { FormControlController, validValidityState } from "../../form";
+import {ZincElement, ZincFormControl} from "../../zinc-element";
+import {FormControlController, validValidityState} from "../../form";
 
-import { html, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import {html, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 
-import { PropertyValues } from "@lit/reactive-element";
+import {PropertyValues} from "@lit/reactive-element";
 
 import styles from './index.scss?inline';
 
@@ -17,18 +17,20 @@ export class Input extends ZincElement implements ZincFormControl
 
   private input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
-  @property({ type: String, reflect: true }) for;
-  @property({ type: String, reflect: true }) label;
-  @property({ type: String, reflect: true }) class;
-  @property({ type: String, reflect: true }) advice;
-  @property({ type: String, reflect: true }) summary;
-  @property({ type: String, reflect: true }) prefix;
-  @property({ type: String, reflect: true }) suffix;
+  @property({type: String, reflect: true}) for;
+  @property({type: String, reflect: true}) label;
+  @property({type: String, reflect: true}) class;
+  @property({type: String, reflect: true}) advice;
+  @property({type: String, reflect: true}) summary;
+  @property({type: String, reflect: true}) prefix;
+  @property({type: String, reflect: true}) suffix;
 
-  @property({ type: String, reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({type: String, reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property() name: string = "";
   @property() value: string;
+
+  @property({type: Boolean, attribute: 'no-style'}) noStyle: boolean = false;
 
   get validity()
   {

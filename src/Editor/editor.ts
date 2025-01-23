@@ -4,6 +4,7 @@ import Quill from 'quill';
 import DropdownModule, {dropdownOpen} from "./Modules/dropdown-module";
 import AttachmentModule from "./Modules/attachment-module";
 import TimeTrackingModule from "./Modules/time-tracking-module";
+import hljs from 'highlight.js';
 
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement, ZincFormControl} from "@/zinc-element";
@@ -91,14 +92,15 @@ export class Editor extends ZincElement implements ZincFormControl
     const container = [
       ['bold', 'italic', 'underline', 'strike'],
       ['undo', 'redo'],
+      ['code-block'],
       [{'list': 'ordered'}, {'list': 'bullet'}],
-      // [{'placeholder': ['{{author.displayName}}', '{{author.FirstName}}', '{{author.LastName}}']}],
     ];
     container.push(this.interactionType === 'ticket' ? ['link', 'image'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);
 
     const quill = new Quill(this.editor, {
       modules: {
+        syntax: {hljs},
         toolbar: {
           container,
           handlers: {

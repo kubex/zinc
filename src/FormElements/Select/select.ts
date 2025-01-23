@@ -1,7 +1,7 @@
 import {customElement, property, query, state} from "lit/decorators.js";
 import {ZincElement, ZincFormControl} from "@/zinc-element";
 import {scrollIntoView} from "@/scroll";
-import {FormControlController} from "@/form";
+import {FormControlController, validValidityState} from "@/form";
 import {HasSlotController} from "@/slot";
 import {Popup} from "@/Popup";
 import {Option} from "@/FormElements/Select/option";
@@ -109,13 +109,13 @@ export class Select extends ZincElement implements ZincFormControl
   /** Gets the validity state object */
   get validity()
   {
-    return this.valueInput.validity;
+    return validValidityState;
   }
 
   /** Gets the validation message */
   get validationMessage()
   {
-    return this.valueInput.validationMessage;
+    return "";
   }
 
   connectedCallback()

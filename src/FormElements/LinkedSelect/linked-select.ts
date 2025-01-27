@@ -65,6 +65,7 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   protected firstUpdated(_changedProperties: PropertyValues)
   {
     this.linkedSelectElement.addEventListener('zn-change', this.handleLinkedSelectChange);
+    this.input.addEventListener('zn-change', this.handleChange);
     this.formControlController.updateValidity();
   }
 
@@ -117,8 +118,12 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
     const options = this.options[selected];
     return html`
-      <zn-select part="select" class="linked-select" name="${this.name}" id="main-input" @change="${this.handleChange}"
-                 cache-key="${this.cacheKey}" label="${this.label}">
+      <zn-select part="select"
+                 class="linked-select"
+                 name="${this.name}"
+                 id="main-input"
+                 cache-key="${this.cacheKey}"
+                 label="${this.label}">
         ${Object.entries(options).map(([key, value]) => html`
           <zn-option value="${key}" ?selected="${key === this.value}">${value}</zn-option>
         `)}

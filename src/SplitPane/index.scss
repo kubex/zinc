@@ -230,40 +230,61 @@
 }
 
 $padding: 8px;
-:host([padded]) {
-  #primary-pane {
-    padding: 0 $padding;
-
-    ::slotted(*) {
-      border-radius: 10px 10px 0 0;
-      border: 1px solid rgb(var(--zn-border-color)) !important;
-    }
-  }
-
-  #resizer {
-    margin-right: $padding;
-  }
-
-  #secondary-pane {
+@include wc.container-query(null, md) {
+  :host([padded]) {
+    padding-left: $padding;
     overflow: hidden;
-    border: 1px solid rgb(var(--zn-border-color)) !important;
-    border-radius: 10px 0 0 0;
-    background-color: #fbfbfb;
+
+    #primary-pane {
+      border-left: 1px solid rgb(var(--zn-border-color));
+    }
+
+    #split-nav {
+      left: $padding;
+      border-radius: 10px 0 0 0;
+      border-left: 1px solid rgb(var(--zn-border-color));
+      border-top: 1px solid rgb(var(--zn-border-color));
+    }
   }
 }
 
-:host([padded-right]) {
-  #primary-pane {
-    padding-right: $padding;
+// Only wrap on md and above screens
+@include wc.container-query(md) {
+  :host([padded]) {
+    #primary-pane {
+      padding: 0 $padding;
 
-    ::slotted(*) {
-      border-radius: 0 10px 0 0;
+      ::slotted(*) {
+        border-radius: 10px 10px 0 0;
+        border: 1px solid rgb(var(--zn-border-color)) !important;
+      }
+    }
+
+    #resizer {
+      margin-right: $padding;
+    }
+
+    #secondary-pane {
+      overflow: hidden;
       border: 1px solid rgb(var(--zn-border-color)) !important;
+      border-radius: 10px 0 0 0;
+      background-color: #fbfbfb;
     }
   }
 
-  #resizer::before {
-    background-color: transparent !important;
+  :host([padded-right]) {
+    #primary-pane {
+      padding-right: $padding;
+
+      ::slotted(*) {
+        border-radius: 0 10px 0 0;
+        border: 1px solid rgb(var(--zn-border-color)) !important;
+      }
+    }
+
+    #resizer::before {
+      background-color: transparent !important;
+    }
   }
 }
 

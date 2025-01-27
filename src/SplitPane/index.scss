@@ -224,22 +224,56 @@
     min-width: 1%;
   }
 
-  #resizer:before {
-    background-color: rgb(var(--zn-blue));
-  }
-
   #primary-pane, #secondary-pane {
     pointer-events: none;
   }
 }
 
+$padding: 8px;
 :host([padded]) {
   #primary-pane {
-    padding: 0 10px;
+    padding: 0 $padding;
 
     ::slotted(*) {
       border-radius: 10px 10px 0 0;
       border: 1px solid rgb(var(--zn-border-color)) !important;
     }
+  }
+
+  #resizer {
+    margin-right: $padding;
+  }
+
+  #secondary-pane {
+    overflow: hidden;
+    border: 1px solid rgb(var(--zn-border-color)) !important;
+    border-radius: 10px 0 0 0;
+    background-color: #fbfbfb;
+  }
+}
+
+:host([padded-right]) {
+  #primary-pane {
+    padding-right: $padding;
+
+    ::slotted(*) {
+      border-radius: 0 10px 0 0;
+      border: 1px solid rgb(var(--zn-border-color)) !important;
+    }
+  }
+
+  #resizer::before {
+    background-color: transparent !important;
+  }
+}
+
+:host([padded]:not(.resizing)),
+:host([padded-right]:not(.resizing)) {
+  #resizer::before {
+    background-color: transparent;
+  }
+
+  #resizer:hover::before {
+    background-color: rgb(var(--zn-blue)) !important;
   }
 }

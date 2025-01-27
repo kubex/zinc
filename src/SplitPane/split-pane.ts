@@ -34,6 +34,7 @@ export class SplitPane extends ZincElement
   @property({attribute: 'focus-pane', type: Number, reflect: true}) _focusPane = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;

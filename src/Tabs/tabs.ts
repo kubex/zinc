@@ -8,6 +8,7 @@ import {deepQuerySelectorAll} from "@/query";
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement} from "@/zinc-element";
 import {ZincMenuSelectEvent} from "@/Events/zn-menu-select";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 @customElement('zn-tabs')
 export class Tabs extends ZincElement
@@ -37,6 +38,9 @@ export class Tabs extends ZincElement
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage;
   @property({attribute: 'store-key', type: String, reflect: true}) storeKey = null;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+
+  @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
 
   static styles = unsafeCSS(styles);
   protected preload = true;
@@ -459,14 +463,16 @@ export class Tabs extends ZincElement
             primary-caption="${this.primaryCaption}"
             secondary-caption="${this.secondaryCaption}"
             store-key="${storeKey}"
+            padded=${ifDefined(this.padded ? true : undefined)})
+            padded-right=${ifDefined(this.paddedRight ? true : undefined)}
             pixels bordered
             min-size="${this._splitMin}"
-          " initial-size="${this._split}">
-          <slot slot="primary" name="left"></slot>
-          <div id="content" slot="${contentSlot}">
-            <slot></slot>
-          </div>
-          <slot slot="secondary" name="right"></slot>
+            initial-size="${this._split}">
+            <slot slot="primary" name="left"></slot>
+            <div id="content" slot="${contentSlot}">
+              <slot></slot>
+            </div>
+            <slot slot="secondary" name="right"></slot>
           </zn-split-pane>
         </div>
         <slot name="bottom"></slot>

@@ -1,10 +1,11 @@
 import {html, unsafeCSS} from "lit";
 import {customElement, property, query} from 'lit/decorators.js';
 import Quill from 'quill';
+
 import DropdownModule, {dropdownOpen} from "./Modules/dropdown-module";
 import AttachmentModule from "./Modules/attachment-module";
 import TimeTrackingModule from "./Modules/time-tracking-module";
-import hljs from 'highlight.js';
+import DragAndDropModule from "./Modules/drag-drop-module";
 
 import {PropertyValues} from "@lit/reactive-element";
 import {ZincElement, ZincFormControl} from "@/zinc-element";
@@ -12,6 +13,7 @@ import {FormControlController} from "@/form";
 import {normalizeNative} from "@/Editor/normalize-native";
 
 import styles from './index.scss?inline';
+import ImageResizeModule from "@/Editor/Modules/ImageResizeModule/image-resize-module";
 
 @customElement('zn-editor')
 export class Editor extends ZincElement implements ZincFormControl
@@ -83,6 +85,8 @@ export class Editor extends ZincElement implements ZincFormControl
     Quill.register('modules/dropdownModule', DropdownModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
+    Quill.register('modules/dragAndDropModule', DragAndDropModule as any);
+    Quill.register('modules/imageResizeModule', ImageResizeModule as any);
 
     this._updateIcons();
     const attachmentInput = this.getForm().querySelector('input[name="attachments"]');
@@ -92,15 +96,13 @@ export class Editor extends ZincElement implements ZincFormControl
     const container = [
       ['bold', 'italic', 'underline', 'strike'],
       ['undo', 'redo'],
-      ['code-block'],
       [{'list': 'ordered'}, {'list': 'bullet'}],
     ];
-    container.push(this.interactionType === 'ticket' ? ['link', 'image'] : ['link', 'image', 'video']);
+    container.push(this.interactionType === 'ticket' ? ['link', 'image', 'image-attachment'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);
 
     const quill = new Quill(this.editor, {
       modules: {
-        syntax: {hljs},
         toolbar: {
           container,
           handlers: {
@@ -165,7 +167,8 @@ export class Editor extends ZincElement implements ZincFormControl
               xhr.send(fd);
             });
           },
-        }
+        },
+        imageResizeModule: {}
       },
       placeholder: 'Compose your reply...',
       theme: 'snow',
@@ -217,7 +220,7 @@ export class Editor extends ZincElement implements ZincFormControl
 
     if(this.interactionType === 'ticket')
     {
-      icons["image"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
+      icons["image-attachment"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
     }
   }
 

@@ -44,7 +44,6 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
 
     let level = 0;
     let currentElement = this.parentElement;
-    // try to fin
     while (level < 10 && currentElement.tagName !== 'DOCUMENT')
     {
       const element = currentElement.querySelector(`[id="${this.linkedSelect}"]`);

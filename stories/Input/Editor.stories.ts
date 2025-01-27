@@ -32,6 +32,7 @@ export const Default: Story = {
   render: () => html`
     <form>
       <zn-editor
+        style="height: 300px"
         attachment-url="#"
         interaction-type="ticket"
         canned-responses="${JSON.stringify(cannedResponses)}">

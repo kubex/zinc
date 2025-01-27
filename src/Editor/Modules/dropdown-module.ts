@@ -72,6 +72,20 @@ class DropdownModule
       return true;
     });
 
+    // add enter key binding
+    this._quill.keyboard.addBinding({key: 'Enter'}, (range, context) =>
+    {
+      console.log('Enter key pressed');
+      if(dropdownOpen)
+      {
+        console.log(dropdownOpen);
+        enterCommand();
+        return false;
+      }
+
+      return true;
+    });
+
     const enterCommand = () =>
     {
       // trigger the command based on the selected index and if filters are applied
@@ -89,20 +103,9 @@ class DropdownModule
       }
     };
 
-    // add enter key binding
-    this._quill.keyboard.addBinding({key: 'Enter'}, (range, context) =>
-    {
-      if(dropdownOpen)
-      {
-        enterCommand();
-        return false;
-      }
-
-      return true;
-    });
-
     this._quill.keyboard.addBinding({key: 'Escape'}, (range, context) =>
     {
+      console.log('Escape key pressed');
       if(dropdownOpen)
       {
         this.closeDropdown();

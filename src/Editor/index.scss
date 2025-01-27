@@ -2,8 +2,6 @@
 @use "../../node_modules/quill/dist/quill.core.css";
 @use "../../node_modules/quill/dist/quill.snow.css" as snow;
 @use "../wc";
-@use "../../node_modules/highlight.js/scss/default";
-@use "../../node_modules/highlight.js/scss/github-dark";
 
 
 :host, zn-editor {
@@ -135,6 +133,11 @@
 .ql-placeholder .ql-picker-label::before {
   content: 'Placeholder';
 }
+
+.ql-code-block-container .ql-ui {
+  color: rgb(var(--zn-text))
+}
+
 
 .ql-code-block {
   font-size: 90%;

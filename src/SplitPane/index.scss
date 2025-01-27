@@ -232,3 +232,14 @@
     pointer-events: none;
   }
 }
+
+:host([padded]) {
+  #primary-pane {
+    padding: 0 20px;
+
+    ::slotted(*) {
+      border-radius: 10px 10px 0 0;
+      border: 1px solid rgb(var(--zn-border-color)) !important;
+    }
+  }
+}

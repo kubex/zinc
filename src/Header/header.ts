@@ -145,11 +145,9 @@ export class Header extends ZincElement
         <div class="alt-overlay">${inNew}${entityId}${url}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
-          ${this.hasSlotController.test('[default]]') ? html`
-            <div class="actions">
-              <slot></slot>
-            </div>
-          ` : ''}
+          <div class="actions">
+            <slot></slot>
+          </div>
           <div class="caption">
             ${backButton}
             ${caption}

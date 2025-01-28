@@ -26,7 +26,18 @@ export class LinkedSelect extends ZincElement implements ZincFormControl
   @query('zn-select') input: HTMLInputElement;
 
   private linkedSelectElement: HTMLSelectElement | Select;
-  private readonly formControlController = new FormControlController(this);
+  private readonly formControlController = new FormControlController(this, {
+    value: (input) =>
+    {
+      const selectElement = this.input;
+      if(selectElement)
+      {
+        return selectElement.value;
+      }
+
+      return input.value;
+    }
+  });
 
   get validity()
   {

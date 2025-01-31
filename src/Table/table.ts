@@ -15,6 +15,7 @@ export class Table extends ZincSlotElement
   @property({attribute: 'headless', type: Boolean, reflect: true}) headless: boolean = false;
   @property({attribute: 'left-align', type: Boolean, reflect: true}) allLeft: boolean = false;
   @property({attribute: 'data', type: Object, reflect: true}) data: Object;
+  @property({attribute: 'bool-icons', type: Boolean}) boolIcons: boolean = false;
 
 
   private columns = [];
@@ -272,6 +273,13 @@ export class Table extends ZincSlotElement
   {
     if(typeof col !== 'object' || col === null)
     {
+      if(this.boolIcons && (col.toString() === 'true' || col.toString() === 'false'))
+      {
+        console.log('BoolIcons', col);
+        return html`
+          <zn-icon src="${col ? 'check' : 'close'}" size="16"></zn-icon>`;
+      }
+
       return col;
     }
 

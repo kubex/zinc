@@ -1,7 +1,11 @@
-import { Meta, StoryObj } from "@storybook/web-components";
-import { html } from "lit";
+import {Meta, StoryObj} from "@storybook/web-components";
+import {html} from "lit";
 
 import '../../src/Tile';
+
+import '../../src/ListTile';
+
+
 import '../../src/Chip';
 import '../../src/Icon';
 import '../../src/Button';
@@ -16,8 +20,29 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+export const ListTile: Story = {
+  render: () => html`
+    <zn-list-tile caption="Caption here"
+                  description="This is the amazing description sfkjdsjkds fkjds fjkds fds njsdfsdjnk kj jks f dsfdsf sfsd skjf sdjkf dsjkf dsjkf dsjkfds jkds jkfds fjkds fjkds jkfds "
+                  href="https://google.com">
+      <zn-list-tile-property slot="properties" caption="Business Relations">
+        Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds 
+      </zn-list-tile-property>
+      <zn-list-tile-property slot="properties" caption="Business Relations">
+        Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds
+      </zn-list-tile-property>
+      <zn-list-tile-property slot="properties" caption="Business Relations">
+        Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds
+      </zn-list-tile-property>
+      <zn-list-tile-property slot="properties" caption="Designer">
+        Due - June 24th 2023
+      </zn-list-tile-property>
+      <zn-chip slot="actions" success>Online</zn-chip>
+    </zn-list-tile>`,
+};
+
 export const Default: Story = {
-  render: ({ caption, description }) => html`
+  render: ({caption, description}) => html`
     <zn-tile caption="${caption}" description="${description}"></zn-tile>`,
   args: {
     caption: 'Mark Crayon',
@@ -25,9 +50,8 @@ export const Default: Story = {
   },
 };
 
-
 export const PrimaryAndStatus: Story = {
-  render: ({ caption, description }) => html`
+  render: ({caption, description}) => html`
     <zn-tile caption="${caption}" description="${description}">
       <zn-icon slot="primary" round size="60" src="https://i.pravatar.cc/60?img=20"></zn-icon>
       <div slot="status">
@@ -42,35 +66,20 @@ export const PrimaryAndStatus: Story = {
 };
 
 export const Status: Story = {
-  render: ({ caption, description }) => html`
-    <zn-tile caption="${caption}" description="${description}">
+  render: () => html`
+    <zn-tile caption="INV-51039543"
+             description="Sent - May 24th 2023"
+             sub-caption="$1,500.00"
+             sub-description="Due - May 31st 2023">
+      
       <zn-chip slot="status" success>paid</zn-chip>
     </zn-tile>`,
-  args: {
-    caption: 'May 17th 2023 — $12.99',
-    description: 'Manager',
-  },
 };
 
 export const Primary: Story = {
-  render: ({ caption, description }) => html`
+  render: ({caption, description}) => html`
     <zn-tile caption="${caption}" description="${description}">
       <zn-icon slot="primary" round size="60" src="https://i.pravatar.cc/60?img=20"></zn-icon>
-    </zn-tile>`,
-  args: {
-    caption: 'Mark Crayon',
-    description: 'Manager',
-  },
-};
-
-export const ActionAndIndicator: Story = {
-  render: ({ caption, description }) => html`
-    <zn-tile caption="${caption}" description="${description}" padded>
-      <zn-icon slot="primary" round size="60" src="https://i.pravatar.cc/60?img=20"></zn-icon>
-      <zn-button slot="status" type="primary">Accept</zn-button>
-      <div slot="top">
-        <zn-timer timestamp="2543432325" type="error"></zn-timer>
-      </div>
     </zn-tile>`,
   args: {
     caption: 'Mark Crayon',

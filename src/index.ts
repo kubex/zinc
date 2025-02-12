@@ -66,6 +66,7 @@ import '@/InteractionTile';
 import '@/DataTable';
 import '@/BulkActions';
 import '@/CopyButton';
+import '@/ListTile';
 
 // Events
 export * from '@/Events/events';

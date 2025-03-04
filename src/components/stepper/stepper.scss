@@ -1,0 +1,88 @@
+@use "../../wc";
+
+:host {
+  width: calc(100% - 4px);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.header {
+  font-weight: 500;
+  color: rgb(var(--zn-text-heading));
+}
+
+.progress {
+  color: rgb(var(--zn-text));
+}
+
+.info {
+  font-size: 90%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label,
+.info {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header {
+  margin-bottom: wc.spacing(xs);
+}
+
+.step-container {
+  width: 100%;
+  position: relative;
+  height: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.step-line {
+  position: absolute;
+  width: 100%;
+  left: 2px;
+  height: 2px;
+  background-color: rgb(var(--zn-border-color));
+}
+
+.step-progress {
+  background-color: rgb(var(--zn-primary));
+  height: 8px;
+  position: absolute;
+  top: 2px;
+  border-radius: 10px;
+}
+
+.steps {
+  position: relative;
+  width: 100%;
+  left: 2px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+
+.step {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: rgb(var(--zn-border-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-width: 3px;
+  border-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+}
+

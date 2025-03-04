@@ -4,7 +4,6 @@ import ZincElement from '../../internal/zinc-element';
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {classMap} from "lit/directives/class-map.js";
-import ZnChip from "../chip";
 
 import styles from './table.scss';
 
@@ -27,9 +26,6 @@ import styles from './table.scss';
  */
 export default class ZnTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-  static dependencies = {
-    'zn-chip': ZnChip,
-  };
 
   @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
   @property({attribute: 'has-actions', type: Boolean, reflect: true}) hasActions: boolean = false;
@@ -38,10 +34,12 @@ export default class ZnTable extends ZincElement {
   @property({attribute: 'data', type: Object, reflect: true}) data: any;
   @property({attribute: 'bool-icons', type: Boolean}) boolIcons: boolean = false;
 
-  private columns: any[] = [];
-  private columnDisplay: any[] = [];
-  private wideColumn: any[] = [];
-  private rows: any[] = [];
+
+  private columns: any = [];
+  private columnDisplay: any = [];
+  private wideColumn: any = [];
+  private rows: any = [];
+
 
   resizing() {
     // TODO Resizing event
@@ -49,7 +47,7 @@ export default class ZnTable extends ZincElement {
 
   connectedCallback() {
     if (this.fixedFirst) {
-      new ResizeObserver(() => this.resizing).observe(this.parentElement as HTMLElement);
+      new ResizeObserver((_) => this.resizing).observe(this.parentElement as Element);
     }
 
     if (this.data === null || this.data === undefined) {
@@ -92,7 +90,7 @@ export default class ZnTable extends ZincElement {
         this.columns.push('');
         for (const row in this.data) {
           for (const column in this.data[row]) {
-            const colName: any = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+            const colName = column.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
             if (!this.columns.includes(colName)) {
               this.columns.push(colName);
             }
@@ -167,7 +165,7 @@ export default class ZnTable extends ZincElement {
   tableBody() {
     const rows: any = [];
     this.hasActions = false;
-    this.rows.forEach((row: any) => {
+    this.rows.forEach((row: any, _: any) => {
       const rowHtml = [];
       const basicData = !row.hasOwnProperty('caption') && !row.hasOwnProperty('data');
 
@@ -222,7 +220,7 @@ export default class ZnTable extends ZincElement {
       }
 
       if (row.hasOwnProperty('data') && row['data'] != null) {
-        (row['data'] as any).forEach((col: any, ck: any) => {
+        row['data'].forEach((col: any, ck: any) => {
           const minDisplay = this.columnDisplay[ck + 1];
           let cellClass = "";
           if (minDisplay != "" && minDisplay != undefined) {

@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './tabs.scss?inline';
+import styles from './tabs.scss';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { deepQuerySelectorAll } from "../../utilities/query";
 import { md5 } from "../../utilities/md5";

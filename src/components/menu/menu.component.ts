@@ -4,7 +4,7 @@ import ZincElement from '../../internal/zinc-element';
 import type ZnMenuItem from "../menu-item";
 import type ZnDropdown from "../dropdown";
 
-import styles from './menu.scss?inline';
+import styles from './menu.scss';
 import ZnConfirmModal from "../confirm-modal";
 import { ifDefined } from "lit/directives/if-defined.js";
 

@@ -5,7 +5,7 @@ import { offsetParent } from 'composed-offset-position';
 import { property, query } from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './popup.scss?inline';
+import styles from './popup.scss';
 
 export interface VirtualElement {
   getBoundingClientRect: () => DOMRect;

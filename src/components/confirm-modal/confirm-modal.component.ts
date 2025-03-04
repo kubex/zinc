@@ -4,7 +4,7 @@ import ZnDialog from "../dialog";
 import { classMap } from "lit/directives/class-map.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
-import styles from './confirm-modal.scss?inline';
+import styles from './confirm-modal.scss';
 
 /**
  * @summary Short summary of the component's intended use.

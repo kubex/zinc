@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, render, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import { md5 } from '../../utilities/md5';
 
-import styles from './icon.scss?inline';
+import styles from './icon.scss';
 
 const Library = {
   None: "",

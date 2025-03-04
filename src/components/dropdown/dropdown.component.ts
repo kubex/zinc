@@ -10,7 +10,7 @@ import type ZnButton from "../button";
 import type ZnPopup from "../popup";
 import type ZnMenu from "../menu";
 
-import styles from './dropdown.scss?inline';
+import styles from './dropdown.scss';
 import { ZnSelectEvent } from "../../events/zn-select";
 
 /**

@@ -1,7 +1,7 @@
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './note.scss?inline';
+import styles from './note.scss';
 
 /**
  * @summary Short summary of the component's intended use.

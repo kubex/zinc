@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './navbar.scss?inline';
+import styles from './navbar.scss';
 import { classMap } from "lit/directives/class-map.js";
 import { ZnMenuSelectEvent } from "../../events/zn-menu-select";
 

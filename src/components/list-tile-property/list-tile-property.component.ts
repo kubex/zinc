@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import { classMap } from "lit/directives/class-map.js";
 
-import styles from './list-tile-property.scss?inline';
+import styles from './list-tile-property.scss';
 
 /**
  * @summary Short summary of the component's intended use.

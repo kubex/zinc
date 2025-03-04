@@ -9,7 +9,7 @@ import { defaultValue } from "../../internal/default-value";
 import { HasSlotController } from "../../internal/slot";
 import type ZnPopup from "../popup";
 
-import styles from './select.scss?inline';
+import styles from './select.scss';
 import ZnOption from "../option";
 
 /**

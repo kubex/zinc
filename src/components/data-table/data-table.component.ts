@@ -6,7 +6,7 @@ import { classMap } from "lit/directives/class-map.js";
 import { HasSlotController } from "../../internal/slot";
 import { Task } from "@lit/task";
 
-import styles from './data-table.scss?inline';
+import styles from './data-table.scss';
 
 type TableData = {
   page: 1,

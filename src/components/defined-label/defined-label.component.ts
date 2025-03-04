@@ -6,7 +6,7 @@ import { live } from "lit/directives/live.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { FormControlController } from "../../internal/form";
 
-import styles from './defined-label.scss?inline';
+import styles from './defined-label.scss';
 
 /**
  * @summary Short summary of the component's intended use.

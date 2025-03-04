@@ -5,7 +5,7 @@ import { FormControlController } from "../../internal/form";
 import { classMap } from "lit/directives/class-map.js";
 import type ZnMultiSelect from "../multi-select";
 
-import styles from './bulk-actions.scss?inline';
+import styles from './bulk-actions.scss';
 
 export type CreatedRule = {
   id: string,

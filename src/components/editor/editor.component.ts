@@ -10,7 +10,7 @@ import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import { normalizeNative } from "./normalize-native";
 
-import styles from './editor.scss?inline';
+import styles from './editor.scss';
 
 /**
  * @summary Short summary of the component's intended use.

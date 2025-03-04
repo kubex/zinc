@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './chat-message.scss?inline';
+import styles from './chat-message.scss';
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { cleanHTML } from "./clean-message";
 

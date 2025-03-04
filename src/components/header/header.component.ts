@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS } 
 import ZincElement from '../../internal/zinc-element';
 import type ZnNavbar from "../navbar";
 
-import styles from './header.scss?inline';
+import styles from './header.scss';
 
 /**
  * @summary Short summary of the component's intended use.

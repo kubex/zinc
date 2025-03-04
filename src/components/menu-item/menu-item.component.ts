@@ -8,7 +8,7 @@ import ZnIcon from "../icon";
 import { getTextContent, HasSlotController } from '../../internal/slot';
 import { SubmenuController } from './submenu-controller';
 
-import styles from './menu-item.scss?inline';
+import styles from './menu-item.scss';
 import { classMap } from "lit/directives/class-map.js";
 
 /**

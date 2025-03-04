@@ -3,7 +3,7 @@ import { html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement, { ZincFormControl } from '../../internal/zinc-element';
 import { FormControlController, validValidityState } from "../../internal/form";
 
-import styles from './input.scss?inline';
+import styles from './input.scss';
 
 /**
  * @summary Short summary of the component's intended use.

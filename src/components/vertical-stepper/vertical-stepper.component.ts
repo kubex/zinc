@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './vertical-stepper.scss?inline';
+import styles from './vertical-stepper.scss';
 
 /**
  * @summary Short summary of the component's intended use.

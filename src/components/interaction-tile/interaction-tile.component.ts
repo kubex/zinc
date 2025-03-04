@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './interaction-tile.scss?inline';
+import styles from './interaction-tile.scss';
 import { classMap } from "lit/directives/class-map.js";
 
 export enum InteractionType {

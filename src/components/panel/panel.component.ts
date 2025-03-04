@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './panel.scss?inline';
+import styles from './panel.scss';
 
 /**
  * @summary Short summary of the component's intended use.

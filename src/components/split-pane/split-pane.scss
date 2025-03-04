@@ -1,0 +1,303 @@
+@use "sass:map";
+@use "../../wc";
+@use "../../../scss/mixins";
+
+:host([bordered]) #resizer:before {
+  background-color: rgb(var(--zn-border-color));
+}
+
+::slotted(*) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+:host {
+  display: flex;
+  height: 0;
+  max-height: 100%;
+  min-height: 100%;
+  width: 100%;
+  flex: 1;
+  min-width: 350px;
+  container-type: inline-size;
+
+  #primary-pane, #secondary-pane {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+
+  slot {
+    overflow: auto;
+  }
+
+  #resizer {
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: 500;
+    }
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: 1;
+      transition: background-color 200ms ease-in-out;
+    }
+
+    cursor: col-resize;
+
+    //padding: var(--zn-padding);
+
+    &:hover:before {
+      background-color: rgb(var(--zn-blue));
+    }
+  }
+}
+
+:host(:not([vertical])), zn-split-pane:not([vertical]) {
+  padding-top: 40px;
+
+  #split-nav {
+    display: none;
+  }
+
+  @include wc.container-query(md) {
+    padding-top: 0;
+  }
+
+  @include wc.container-query(zero, md) {
+
+    #split-nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+
+      li {
+        line-height: 39px;
+        flex-basis: 50%;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+
+        &::before {
+          content: '';
+          left: 50%;
+          right: 50%;
+          bottom: -1px;
+          position: absolute;
+          background-color: rgb(var(--zn-accent));
+          transition: all 300ms ease-in-out;
+          height: wc.spacing(xxs);
+        }
+
+        &:hover:before {
+          left: 20%;
+          right: 20%;
+        }
+
+        &.active::before {
+          left: 0;
+          right: 0;
+        }
+      }
+    }
+
+    #resizer, #primary-pane, #secondary-pane {
+      display: none;
+    }
+
+    #primary-pane, #secondary-pane {
+      max-width: 100% !important;
+      width: 100%;
+    }
+  }
+
+  #primary-pane, #secondary-pane {
+    min-width: var(--min-panel-size, 15%);
+  }
+
+  #primary-pane {
+    max-width: var(--initial-size, 50%);
+  }
+
+  #secondary-pane {
+    max-width: calc(100% - var(--initial-size, 0));
+    width: 100%;
+  }
+
+  #resizer {
+    min-width: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    &:after {
+      inset: 0 -10px;
+      width: 20px;
+    }
+
+
+    &:before {
+      height: 100%;
+      width: 1px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+:host([focus-pane="0"]) {
+  #primary-pane {
+    display: block;
+  }
+}
+
+:host([focus-pane="1"]) {
+  #secondary-pane {
+    display: block;
+  }
+}
+
+:host([vertical]) {
+  flex-direction: column;
+
+
+  #split-nav {
+    display: none;
+  }
+
+  #primary-pane, #secondary-pane {
+    min-height: var(--min-panel-size, 15%);
+  }
+
+  #primary-pane {
+    max-height: var(--initial-size, 50%);
+  }
+
+  #secondary-pane {
+    height: 100%;
+    max-height: calc(100% - var(--initial-size, 0));
+  }
+
+  #resizer {
+
+    min-height: 1px;
+    padding-left: 0;
+    padding-right: 0;
+    cursor: row-resize;
+
+    &:after {
+      inset: -10px 0;
+      height: 20px;
+    }
+
+    &:before {
+      width: 100%;
+      height: 1px;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+:host(.resizing) {
+  cursor: col-resize;
+  user-select: none;
+
+  #primary-pane {
+    min-width: 1%;
+  }
+
+  #primary-pane, #secondary-pane {
+    pointer-events: none;
+  }
+}
+
+$padding: 8px;
+@include wc.container-query(null, md) {
+  :host([padded]) {
+    padding-left: $padding;
+    overflow: hidden;
+
+    #primary-pane {
+      border-left: 1px solid rgb(var(--zn-border-color));
+    }
+
+    #split-nav {
+      left: $padding;
+      border-radius: 10px 0 0 0;
+      border-left: 1px solid rgb(var(--zn-border-color));
+      border-top: 1px solid rgb(var(--zn-border-color));
+    }
+  }
+}
+
+// Only wrap on md and above screens
+@include wc.container-query(md) {
+  :host([padded]) {
+    #primary-pane {
+      padding: 0 $padding;
+
+      ::slotted(*) {
+        border-radius: 10px 10px 0 0;
+        border: 1px solid rgb(var(--zn-border-color)) !important;
+        border-bottom-width: 0 !important;
+      }
+    }
+
+    #resizer {
+      margin-right: $padding;
+    }
+
+    #secondary-pane {
+      overflow: hidden;
+      border-radius: 10px 0 0 0;
+      background-color: #fbfbfb;
+      border: 1px solid rgb(var(--zn-border-color)) !important;
+      border-bottom-width: 0 !important;
+    }
+  }
+
+  :host([padded-right]) {
+    #primary-pane {
+      padding-right: $padding;
+
+      ::slotted(*) {
+        border-radius: 0 10px 0 0;
+        border: 1px solid rgb(var(--zn-border-color)) !important;
+        border-bottom-width: 0 !important;
+      }
+    }
+
+    #resizer::before {
+      background-color: transparent !important;
+    }
+  }
+}
+
+:host([padded]:not(.resizing)),
+:host([padded-right]:not(.resizing)) {
+  #resizer::before {
+    background-color: transparent;
+  }
+
+  #resizer:hover::before {
+    background-color: rgb(var(--zn-blue)) !important;
+  }
+}

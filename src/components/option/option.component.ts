@@ -5,7 +5,7 @@ import ZincElement from '../../internal/zinc-element';
 import { classMap } from "lit/directives/class-map.js";
 import ZnSelect from "../select";
 
-import styles from './option.scss?inline';
+import styles from './option.scss';
 
 /**
  * @summary Short summary of the component's intended use.

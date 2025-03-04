@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './chip.scss?inline';
+import styles from './chip.scss';
 import { HasSlotController } from "../../internal/slot";
 
 /**

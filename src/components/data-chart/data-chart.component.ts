@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import ApexCharts from "apexcharts";
 
-import styles from './data-chart.scss?inline';
+import styles from './data-chart.scss';
 
 /**
  * @summary Short summary of the component's intended use.

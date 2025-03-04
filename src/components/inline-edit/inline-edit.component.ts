@@ -5,7 +5,7 @@ import { FormControlController, validValidityState } from "../../internal/form";
 import { HasSlotController } from '../../internal/slot';
 import { classMap } from "lit/directives/class-map.js";
 
-import styles from './inline-edit.scss?inline';
+import styles from './inline-edit.scss';
 
 /**
  * @summary Short summary of the component's intended use.

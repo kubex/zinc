@@ -9,7 +9,7 @@ import { FormControlController, validValidityState } from "../../internal/form";
 import { HasSlotController } from '../../internal/slot';
 import { watch } from "../../internal/watch";
 
-import styles from './button.scss?inline';
+import styles from './button.scss';
 
 /**
  * @summary Buttons represent actions that are available to the user.

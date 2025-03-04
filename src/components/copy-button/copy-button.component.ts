@@ -2,7 +2,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './copy-button.scss?inline';
+import styles from './copy-button.scss';
 import { classMap } from "lit/directives/class-map.js";
 import ZnTooltip from "../tooltip";
 

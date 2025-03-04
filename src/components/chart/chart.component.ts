@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import { Chart, ChartConfiguration, Colors, registerables } from 'chart.js';
 
-import styles from './chart.scss?inline';
+import styles from './chart.scss';
 import { htmlLegendPlugin } from "./html-legend-plugin";
 
 /**

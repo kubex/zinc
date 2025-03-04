@@ -6,7 +6,7 @@ import type Popup from "../popup";
 import { classMap } from "lit/directives/class-map.js";
 import { waitForEvent } from "../../internal/event";
 
-import styles from './tooltip.scss?inline';
+import styles from './tooltip.scss';
 
 /**
  * @summary The Tooltip component is used to display additional information when a user hovers over or clicks

@@ -3,7 +3,7 @@ import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import { Chart, ChartConfiguration, registerables } from "chart.js";
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './simple-chart.scss?inline';
+import styles from './simple-chart.scss';
 
 /**
  * @summary Short summary of the component's intended use.

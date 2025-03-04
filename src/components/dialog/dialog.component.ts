@@ -2,7 +2,7 @@ import { property, query } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './dialog.scss?inline';
+import styles from './dialog.scss';
 
 /**
  * @summary Short summary of the component's intended use.

@@ -18,7 +18,7 @@ export { default as Chip } from './components/chip';
 export { default as Collapsible } from './components/collapsible';
 export { default as CopyButton } from './components/copy-button';
 export { default as DataTable } from './components/data-table';
-export { default as Columns } from './components/columns';
+export { default as Columns } from './components/cols';
 export { default as ConfirmModal } from './components/confirm-modal';
 export { default as Dialog } from './components/dialog';
 export { default as Dropdown } from './components/dropdown';
@@ -49,6 +49,9 @@ export { default as Table } from './components/table';
 export { default as Pane } from './components/pane';
 export { default as SplitPane } from './components/split-pane';
 export { default as Toggle } from './components/toggle';
+export { default as Sidebar } from './components/sidebar';
+export { default as Sp } from './components/sp';
+export { default as Stepper } from './components/stepper';
 /* plop:component */
 
 // Utilities

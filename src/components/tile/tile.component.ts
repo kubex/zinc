@@ -1,10 +1,10 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
+import ZnMenu from "../menu";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './tile.scss';
-import ZnMenu from "../menu";
-import { classMap } from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -26,16 +26,16 @@ import { classMap } from "lit/directives/class-map.js";
 export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'caption', reflect: true }) caption: string;
-  @property({ attribute: 'description', reflect: true }) description: string;
-  @property({ attribute: 'sub-caption', reflect: true }) subCaption: string;
-  @property({ attribute: 'sub-description', reflect: true }) subDescription: string;
+  @property({attribute: 'caption', reflect: true}) caption: string;
+  @property({attribute: 'description', reflect: true}) description: string;
+  @property({attribute: 'sub-caption', reflect: true}) subCaption: string;
+  @property({attribute: 'sub-description', reflect: true}) subDescription: string;
 
 
-  @property({ attribute: 'right', type: Boolean, reflect: true }) right: boolean;
-  @property({ attribute: 'data-uri', reflect: true }) dataUri: string;
-  @property({ attribute: 'data-target', reflect: true }) dataTarget: string;
-  @property({ type: Boolean }) centered: boolean = false;
+  @property({attribute: 'right', type: Boolean, reflect: true}) right: boolean;
+  @property({attribute: 'data-uri', reflect: true}) dataUri: string;
+  @property({attribute: 'data-target', reflect: true}) dataTarget: string;
+  @property({type: Boolean}) centered: boolean = false;
 
   private menu: any;
 

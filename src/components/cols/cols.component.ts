@@ -2,7 +2,7 @@ import { property } from 'lit/decorators.js';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './columns.scss';
+import styles from './cols.scss';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -21,7 +21,7 @@ import styles from './columns.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnColumns extends ZincElement {
+export default class ZnCols extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
 

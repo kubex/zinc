@@ -1,12 +1,22 @@
-declare module '*.scss'
-{
+declare module '*.scss?inline' {
   const content: Record<string, string>;
   export default content;
 }
 
+declare namespace Chai {
+  interface Assertion {
+    // chai-a11y-axe returns a promise-like object and should be awaited but the types are incorrect
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    accessible: (options?: Object) => PromiseLike<Assertion>;
+  }
+}
+
+interface HTMLInputElement {
+  showPicker: () => void;
+}
+
 /* eslint-disable */
-interface CloseWatcher extends EventTarget
-{
+interface CloseWatcher extends EventTarget {
   new(options?: CloseWatcherOptions): CloseWatcher;
   requestClose(): void;
   close(): void;
@@ -18,7 +28,12 @@ interface CloseWatcher extends EventTarget
 
 declare const CloseWatcher: CloseWatcher;
 
-interface CloseWatcherOptions
-{
+interface CloseWatcherOptions {
   signal: AbortSignal;
 }
+
+declare interface Window {
+  CloseWatcher?: CloseWatcher;
+}
+
+/* eslint-enable */

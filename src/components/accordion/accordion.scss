@@ -1,0 +1,89 @@
+@use "../../wc";
+
+
+zn-accordion:last-of-type > div, :host(:last-of-type) > div {
+  border-bottom-width: 0 !important;
+}
+
+zn-accordion > div, :host > div {
+  border-bottom-width: 1px !important;
+}
+
+:host(:not([flush])) > div {
+  padding: wc.spacing(md) 0;
+}
+
+:host(:not([expanded])) {
+  cursor: pointer;
+}
+
+:host([expanded]) .expand {
+  transform: rotate(180deg);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+  overflow: hidden;
+
+  justify-items: center;
+
+  .caption {
+    font-weight: 600;
+    margin-bottom: wc.spacing(xs);
+    color: rgb(var(--zn-text-heading));
+  }
+
+  .summary {
+    font-weight: 500;
+    font-size: 90%;
+  }
+
+  .label {
+    font-weight: 500;
+    font-size: 90%;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+:host([error-label]) {
+  .header {
+    .caption {
+      color: rgb(var(--zn-color-error));
+    }
+  }
+}
+
+:host([warning-label]) {
+  .header {
+    .caption {
+      color: rgb(var(--zn-color-warning));
+    }
+  }
+}
+
+:host(:not([flush])).content {
+  @include wc.padding();
+}
+
+.content {
+  transition: .1s all ease-out;
+}
+
+:host(:not([expanded])) .content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.expand {
+  margin-left: wc.spacing(md);
+}

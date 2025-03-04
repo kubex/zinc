@@ -1,0 +1,84 @@
+@use "../../wc";
+
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: wc.spacing(xs);
+  padding: wc.spacing(md);
+
+  ::slotted(*) {
+    display: flex;
+    margin-top: wc.spacing(sm);
+  }
+
+  .caption {
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+    text-align: center;
+  }
+
+  .description {
+    text-align: center;
+  }
+}
+
+:host {
+  .wrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: wc.spacing(xs);
+    padding: wc.spacing(sm);
+    flex-grow: 1;
+  }
+}
+
+:host([type="error"]) {
+  background-color: rgba(var(--zn-color-error), .05);
+  min-height: 100px;
+  padding: wc.spacing(xs);
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-color-error));
+  }
+
+  .error {
+    border: dashed 1px rgb(var(--zn-color-error)) !important;
+  }
+}
+
+
+:host([type="info"]) {
+  background-color: rgba(var(--zn-color-info), .05);
+  min-height: 100px;
+  padding: wc.spacing(xs);
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-color-info));
+  }
+
+  .info {
+    border: dashed 1px rgb(var(--zn-color-info)) !important;
+  }
+}
+
+:host([type="primary"]) {
+  background-color: rgba(var(--zn-primary), .05);
+  min-height: 100px;
+  padding: wc.spacing(xs);
+
+  ::slotted(*), .caption, .description {
+    color: rgb(var(--zn-primary));
+  }
+
+  .primary {
+    border: dashed 1px rgb(var(--zn-primary)) !important;
+  }
+}

@@ -1,1 +1,0 @@
-export {ZincChart} from './chart';

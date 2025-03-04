@@ -1,0 +1,12 @@
+import {{ properCase tag }} from './{{ tagWithoutPrefix tag }}.component';
+
+export * from './{{ tagWithoutPrefix tag }}.component';
+export default {{ properCase tag }};
+
+{{ properCase tag }}.define('{{ tag }}');
+
+declare global {
+  interface HTMLElementTagNameMap {
+    '{{ tag }}': {{ properCase tag }};
+  }
+}

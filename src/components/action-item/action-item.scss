@@ -1,0 +1,36 @@
+@use "../../wc";
+
+:host {
+  width: 100%;
+}
+
+.ai {
+  width: 100%;
+
+  &__link {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: wc.spacing(xs);
+  }
+
+  &__caption {
+    font-size: 16px;
+    color: rgb(var(--zn-text-heading));
+    line-height: 20px;
+    font-weight: 600;
+  }
+
+  &__description {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: rgb(var(--zn-text));
+  }
+}

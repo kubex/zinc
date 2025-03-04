@@ -1,0 +1,91 @@
+@use "../../wc";
+
+.tile {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding-top: wc.spacing(md);
+  padding-bottom: wc.spacing(md);
+}
+
+.tile__left {
+  display: flex;
+  column-gap: wc.spacing(md);
+  padding-right: wc.spacing(md);
+  width: 50%;
+  max-width: 400px;
+
+  @include wc.container-query(null, md) {
+    max-width: 320px;
+  }
+}
+
+.tile__right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  flex-grow: 1;
+  column-gap: wc.spacing(lg);
+}
+
+.tile__properties {
+  display: flex;
+  flex-direction: row;
+  column-gap: 30px;
+  overflow: auto;
+
+  @include wc.container-query(null, md) {
+    display: none;
+  }
+}
+
+.tile__content {
+  flex: auto;
+  min-width: 0;
+
+  @extend %property;
+}
+
+.tile__actions {
+  display: flex;
+  column-gap: wc.spacing(md);
+  margin-left: auto;
+}
+
+.tile__link {
+  margin-left: wc.spacing(md);
+}
+
+%property {
+  .tile__caption {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+    color: rgb(var(--zn-text-heading));
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .tile__description {
+    display: block;
+    font-weight: 400;
+    margin-top: wc.spacing(xs);
+    font-size: 12px;
+    color: rgb(var(--zn-text-color));
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+// Tile property
+.tile__property {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  @extend %property;
+}

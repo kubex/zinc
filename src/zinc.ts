@@ -58,7 +58,7 @@ export {default as ScrollContainer} from './components/scroll-container';
 export {default as QueryBuilder} from './components/query-builder';
 export {default as ProgressTile} from './components/progress-tile';
 export {default as ProgressBar} from './components/progress-bar';
-export { default as Order Table } from './components/order-table';
+export { default as OrderTable } from './components/order-table';
 /* plop:component */
 
 // Utilities

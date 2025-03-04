@@ -7,6 +7,6 @@ ZnCols.define('zn-cols'); //
 
 declare global {
   interface HTMLElementTagNameMap {
-    'zn-columns': ZnCols;
+    'zn-cols': ZnCols;
   }
 }

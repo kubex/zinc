@@ -1,12 +1,12 @@
 ---
 meta:
-  title: Columns
+  title: Cols
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-columns></zn-columns>
+<zn-cols></zn-cols>
 ```
 
 ## Examples
@@ -19,4 +19,4 @@ TODO
 
 TODO
 
-[component-metadata:zn-columns]
+[component-metadata:zn-cols]

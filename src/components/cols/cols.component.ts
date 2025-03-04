@@ -1,5 +1,5 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './cols.scss';
@@ -25,8 +25,8 @@ export default class ZnCols extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
 
-  @property({ type: String, reflect: true, attribute: "layout" }) layout: string = '';
-  @property({ attribute: 'mc', type: Number, reflect: true }) maxColumns: number = 0;
+  @property({reflect: true, attribute: "layout"}) layout: string = '';
+  @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
 
 
   render() {

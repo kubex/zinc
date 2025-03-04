@@ -1,0 +1,116 @@
+@use "../../wc";
+
+:ost {
+  display: contents;
+}
+
+.progress-tile {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  zn-icon {
+    display: flex;
+    flex-shrink: 0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+
+    .header__caption {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: wc.spacing(xs);
+      margin-bottom: wc.spacing(xxs);
+
+
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgb(var(--zn-text-body));
+      }
+    }
+
+    .header__wait-time {
+      display: flex;
+      flex-direction: row;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      color: rgb(var(--zn-primary));
+    }
+  }
+
+  &__progress-bars {
+    flex-grow: 1;
+
+    &__first, &__second {
+      height: 4px;
+      background-color: rgba(var(--zn-border-color));
+      transition: width 0.3s;
+    }
+
+    &__second {
+      background-color: rgb(var(--zn-color-success));
+    }
+  }
+
+  &__total-time {
+    min-width: 40px;
+    text-align: end;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(var(--zn-text-heading));
+  }
+
+  &--with-hours {
+    .progress-tile__total-time {
+      min-width: 60px;
+    }
+  }
+
+  &--ended {
+    .progress-tile__progress-bars__first {
+      background-color: rgb(var(--zn-primary));
+    }
+
+    .progress-tile__progress-bars__second {
+      display: none;
+    }
+  }
+
+  &--warning {
+    .progress-tile__progress-bars__second {
+      background-color: rgb(var(--zn-color-warning));
+    }
+
+    .header__wait-time {
+      color: rgb(var(--zn-color-warning));
+    }
+  }
+
+  &--danger {
+    .progress-tile__progress-bars__second {
+      background-color: rgb(var(--zn-color-error));
+    }
+
+    .header__wait-time {
+      color: rgb(var(--zn-color-error));
+    }
+  }
+}

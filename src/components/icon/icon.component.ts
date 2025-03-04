@@ -1,7 +1,7 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, render, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-import { md5 } from '../../utilities/md5';
+import {md5} from '../../utilities/md5';
 
 import styles from './icon.scss';
 
@@ -29,6 +29,7 @@ const LibraryAlias = {
 };
 
 const colors = {
+  "": "",
   "primary": "rgb(var(--zn-primary))",
   "accent": "rgb(var(--zn-primary))",
   "info": "rgb(var(--zn-color-info))",
@@ -61,12 +62,12 @@ type Color = keyof typeof colors;
 export default class ZnIcon extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: String, reflect: true }) src = "";
-  @property({ type: String, reflect: true }) alt = "";
-  @property({ type: Number, reflect: true }) size = 24;
-  @property({ type: String, reflect: true }) library = Library.None;
-  @property({ type: Boolean, reflect: true }) round = false;
-  @property({ type: String, reflect: true }) color: Color = "primary";
+  @property({type: String, reflect: true}) src = "";
+  @property({type: String, reflect: true}) alt = "";
+  @property({type: Number, reflect: true}) size = 24;
+  @property({type: String, reflect: true}) library = Library.None;
+  @property({type: Boolean, reflect: true}) round = false;
+  @property({type: String, reflect: true}) color: Color = "";
 
   gravatarOptions = "";
 

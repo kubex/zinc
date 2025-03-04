@@ -24,7 +24,7 @@ import styles from './sp.scss';
 export default class ZnSp extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean;
+  @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
 
   connectedCallback() {
     super.connectedCallback();

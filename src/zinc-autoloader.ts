@@ -20,7 +20,7 @@ export async function discover(root: Element | ShadowRoot) {
     .map(el => el.tagName.toLowerCase())
     .filter(tag => tag.startsWith('zn-'));
 
-  // If the root element is an undefined Shoelace component, add it to the list
+  // If the root element is an undefined Zinc component, add it to the list
   if (rootIsZincElement && !customElements.get(rootTagName)) {
     tags.push(rootTagName);
   }

@@ -1,0 +1,40 @@
+@use "../../wc";
+
+:host {
+  display: contents;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+
+  &--start {
+    justify-content: flex-start;
+  }
+
+  &--wrap {
+    flex-wrap: wrap;
+  }
+
+  &--grow {
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+}
+
+:host([direction="vertical"]),
+zn-button-group[direction="vertical"] {
+  width: 100%;
+
+  .button-group {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  ::slotted(*) {
+    width: 100%;
+  }
+}

@@ -1,1 +1,0 @@
-export {SimpleChart} from './simplechart';

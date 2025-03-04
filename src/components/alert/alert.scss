@@ -1,0 +1,145 @@
+@use "../../wc";
+
+
+:host, .wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 10px;
+}
+
+:host {
+  background-color: rgba(var(--zn-panel), 0.8);
+}
+
+.wrapper {
+  position: relative;
+  border: 1px solid rgb(var(--zn-border-color)) !important;
+  width: 100%;
+  height: 100%;
+
+  &:before {
+    border-radius: 10px;
+    position: absolute;
+    content: '';
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(3px);
+  }
+}
+
+:host([caption]) zn-icon {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: left;
+  padding: 8px;
+
+  > h6 {
+    font-size: inherit;
+    font-weight: 600;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: wc.spacing(sm);
+}
+
+:host .wrapper {
+  h6 {
+    color: rgb(var(--zn-text));
+  }
+
+  border-color: rgb(var(--zn-border-color)) !important;
+  background: rgba(var(--zn-panel), .05);
+}
+
+:host([level="primary"]) .wrapper {
+  h6 {
+    color: rgb(var(--zn-primary));
+  }
+
+  border-color: rgb(var(--zn-primary)) !important;
+  background: rgba(var(--zn-primary), .05);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-primary));
+  }
+}
+
+:host([level="error"]) .wrapper {
+  h6 {
+    color: rgb(var(--zn-color-error));
+  }
+
+  border-color: rgb(var(--zn-color-error)) !important;
+  background: rgba(var(--zn-color-error), .05);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-color-error));
+  }
+}
+
+:host([level="info"]) .wrapper {
+  h6 {
+    color: rgb(var(--zn-color-info));
+  }
+
+  border-color: rgb(var(--zn-color-info)) !important;
+  background: rgba(var(--zn-color-info), .05);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-color-info));
+  }
+}
+
+:host([level="warning"]) .wrapper {
+  h6 {
+    color: rgb(var(--zn-color-warning));
+  }
+
+  border-color: rgb(var(--zn-color-warning)) !important;
+  background: rgba(var(--zn-color-warning), .05);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-color-warning));
+  }
+}
+
+:host([level="success"]) .wrapper {
+  h6 {
+    color: rgb(var(--zn-color-success));
+  }
+
+  border-color: rgb(var(--zn-color-success)) !important;
+  background: rgba(var(--zn-color-success), .05);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-color-success));
+  }
+}
+
+.alert {
+  &--small {
+    padding: wc.spacing(xxs) wc.spacing(xs);
+    font-size: 90%;
+  }
+
+  &--medium {
+    padding: wc.spacing(xs) wc.spacing(sm);
+    font-size: 100%;
+  }
+
+  &--large {
+    padding: wc.spacing(sm) wc.spacing(md);
+    font-size: 110%;
+  }
+}

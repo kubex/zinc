@@ -1,0 +1,56 @@
+@use "../../wc";
+@use "../../../scss/shared/form-elements";
+
+:host {
+  display: contents;
+
+  --zn-input-bg: var(--zn-panel)
+}
+
+.add-rule {
+  max-width: 200px;
+  margin-bottom: 10px;
+}
+
+.query-builder {
+  display: flex;
+  flex-direction: column;
+
+  zn-button {
+    align-self: flex-end;
+  }
+
+  &__row {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+
+  &__key {
+    max-width: 200px;
+  }
+
+  &__comparator {
+    max-width: 150px;
+  }
+
+  &__value {
+    flex-grow: 1;
+  }
+
+  &__wrapper {
+    width: 100%;
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  input, select {
+    height: 40px;
+  }
+
+}

@@ -1,0 +1,188 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  width: 100%;
+  max-width: 100%;
+  table-layout: auto;
+  text-align: left;
+
+  thead {
+    font-weight: 500;
+  }
+
+  tbody {
+    //background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+
+    a {
+      cursor: pointer;
+      color: rgb(var(--zn-primary));
+    }
+  }
+
+  tbody tr td {
+    border-top: 1px solid rgb(var(--zn-border-color)) !important;
+  }
+
+  tbody tr:first-of-type td {
+    border-top: 0 !important;
+  }
+
+  tbody tr:nth-of-type(even) {
+    background-color: rgba(var(--zn-body));
+  }
+
+  thead tr th:first-of-type,
+  tbody tr td:first-of-type {
+    padding-left: 14px;
+  }
+
+  thead tr th:last-of-type,
+  tbody tr td:last-of-type {
+    padding-right: 14px;
+  }
+
+  th, td {
+    padding: wc.spacing(md);
+    min-width: 90px;
+    white-space: nowrap;
+
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+
+  th {
+    padding-bottom: 0;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+}
+
+.zn-table-fixed {
+  table-layout: fixed;
+}
+
+
+.table { // The container element that holds the table and the filters
+
+  tr th {
+    padding-bottom: wc.spacing(xs);
+
+    // assume checkbox is the first column
+    &:first-of-type {
+      padding-bottom: wc.spacing(xxs);
+    }
+  }
+
+  tr th, tr td {
+    min-width: 50px;
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+
+    // assume checkbox is the first column
+    &:first-of-type > div {
+      justify-content: center;
+
+      input {
+        margin: 0;
+      }
+    }
+  }
+
+  &__head {
+    &__sort {
+      margin-left: wc.spacing(sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    &--wide {
+      width: 100%;
+    }
+
+    &--last div {
+      justify-content: flex-end;
+    }
+  }
+
+  &__cell {
+    &--wide {
+      width: 100%;
+    }
+
+    &--last div {
+      justify-content: flex-end;
+    }
+  }
+
+  &--empty {
+    background-color: orange;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: wc.spacing(sm);
+    gap: wc.spacing(sm);
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: wc.spacing(md) wc.spacing(md);
+
+    &__right, &__left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: wc.spacing(lg);
+    }
+
+    &__rows-per-page {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      opacity: 0.8;
+      gap: wc.spacing(xs);
+    }
+
+    &__pagination-count {
+
+    }
+
+    &__pagination-buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: wc.spacing(xs);
+
+      button {
+        border: 1px solid rgb(var(--zn-border-color));
+        border-radius: 5px;
+        padding: wc.spacing(xs);
+
+        &[disabled] {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+
+  }
+
+}

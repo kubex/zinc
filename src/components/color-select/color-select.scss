@@ -1,0 +1,180 @@
+@use "../../wc";
+
+$colors: (red, blue, orange, yellow, indigo, violet, green, pink, grey);
+
+@mixin background-color($color) {
+  background-color: var(--color-#{$color});
+}
+
+@mixin color-loop {
+  @each $color in $colors {
+    &--#{"" + $color} {
+      @include background-color($color);
+    }
+  }
+}
+
+%color-box {
+  width: 15px;
+  height: 15px;
+  display: block;
+  margin-left: 5px;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+:host {
+  display: block;
+
+  --color-blue: rgb(var(--zn-blue, 0, 0, 255));
+  --color-red: rgb(var(--zn-red, 255, 0, 0));
+  --color-orange: rgb(var(--zn-orange, 255, 165, 0));
+  --color-yellow: rgb(var(--zn-yellow, 255, 255, 0));
+  --color-indigo: rgb(var(--zn-indigo, 75, 0, 130));
+  --color-violet: rgb(var(--zn-violet, 238, 130, 238));
+  --color-green: rgb(var(--zn-green, 0, 128, 0));
+  --color-pink: rgb(var(--zn-pink, 255, 192, 203));
+  --color-grey: rgb(var(--zn-grey, 128, 128, 128));
+}
+
+.form-control__label--has-label {
+  font-size: 90%;
+}
+
+.select__combobox {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+  position: relative;
+  align-items: center;
+  justify-content: start;
+  vertical-align: middle;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 8.5px;
+}
+
+.select__display-input {
+  position: relative;
+  width: 100%;
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: inherit;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  line-height: 26px;
+  -webkit-appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.select__value-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  z-index: -1;
+
+  &::placeholder {
+    font-weight: 400;
+    color: rgba(var(--zn-text), .6);
+  }
+}
+
+.select {
+  flex: 1 1 auto;
+  display: inline-flex;
+  width: 100%;
+  position: relative;
+  vertical-align: middle;
+  border-radius: 5px;
+  border: 1px solid rgb(var(--zn-border-color));
+  background-color: rgb(var(--zn-input-bg));
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  top: -3px;
+
+  &:focus-within, &--open {
+    border-color: rgb(var(--zn-primary));
+    box-shadow: 0 0 0 3px rgba(var(--zn-primary), 0.3);
+  }
+}
+
+.display-color {
+  &--selected {
+    @extend %color-box;
+  }
+
+  @include color-loop;
+}
+
+/* ListBox */
+.select__listbox {
+  display: block;
+  position: relative;
+  max-width: var(--auto-size-available-width);
+  // max-height: var(--auto-size-available-height);
+  z-index: 1000;
+  border: 1px solid rgb(var(--zn-border-color));
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border-radius: 5px;
+}
+
+.select__option {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: wc.spacing(xs);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: rgb(var(--zn-primary));
+    box-shadow: 0 0 0 3px rgba(var(--zn-primary), 0.3);
+  }
+
+  &[selected], &:hover {
+    background-color: rgb(var(--zn-input-bg));
+  }
+}
+
+.color-icon {
+  @extend %color-box;
+  @include color-loop;
+}
+
+:host([open]) {
+  .opener svg {
+    transform: rotate(180deg);
+  }
+}
+
+.opener {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  pointer-events: all;
+  background-color: rgb(var(--zn-input-bg-accent));
+  border-left: 1px solid rgb(var(--zn-border-color));
+  height: calc(100% + 34px);
+  margin: -#{wc.spacing(sm)};
+  margin-top: 7px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+
+  svg {
+    transition: all 0.2s ease-in-out;
+  }
+}

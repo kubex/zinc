@@ -1,0 +1,35 @@
+@use "../../wc";
+
+:host {
+  display: contents;
+}
+
+.defined-label {
+
+  .input__control, .input__control-value {
+    background-color: rgb(var(--zn-panel));
+  }
+
+  &__label {
+    margin-top: 4px;
+    margin-bottom: 3px;
+  }
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: wc.spacing(sm);
+    width: 100%;
+  }
+
+  &__left {
+    flex-grow: 1;
+  }
+
+}

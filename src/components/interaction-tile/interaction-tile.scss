@@ -1,0 +1,196 @@
+@use "../../wc";
+
+:host {
+  display: contents;
+  width: fit-content;
+
+  --interaction-tile-color: var(--zn-primary);
+}
+
+:host(.active) {
+  .interaction-tile {
+    background-color: rgb(var(--zn-panel));
+    border-right: 5px solid rgb(var(--interaction-tile-color));
+  }
+}
+
+.interaction-tile {
+  padding: wc.spacing(md) wc.spacing(md) wc.spacing(sm);
+  border-top: 1px solid rgb(var(--zn-border-color));
+  container-type: inline-size;
+  border-right: 5px solid transparent;
+
+  &--warning {
+    --interaction-tile-color: var(--zn-color-warning);
+  }
+
+  &--error {
+    --interaction-tile-color: var(--zn-color-error);
+  }
+
+  &--disabled {
+    --interaction-tile-color: var(--zn-color-disabled, 204, 204, 204);
+
+    .interaction-tile__body, .interaction-tile__footer {
+      opacity: 0.6;
+    }
+  }
+
+  &__reserved {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: wc.spacing(xs) wc.spacing(sm);
+    margin-bottom: wc.spacing(sm);
+    border-radius: 50px;
+    background-color: rgba(var(--interaction-tile-color), 0.15);
+    color: rgb(var(--interaction-tile-color));
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  &__status {
+    display: contents;
+
+    &__ended {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50px;
+      background-color: rgb(var(--interaction-tile-color));
+    }
+  }
+
+  &__status-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    gap: wc.spacing(xs);
+
+    p {
+      line-height: 0;
+      font-weight: 500;
+      color: rgb(var(--interaction-tile-color));
+    }
+  }
+
+  &__status__waiting-response {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1px;
+    border-radius: 50px;
+    border: 1px solid rgb(var(--interaction-tile-color));
+    background-color: rgba(var(--interaction-tile-color), 0.15);
+
+    > p {
+      font-size: 12px;
+      line-height: 12px;
+      font-weight: 600;
+      padding-right: wc.spacing(xs);
+      padding-left: wc.spacing(sm);
+      color: rgb(var(--interaction-tile-color));
+    }
+
+    .waiting-response-bg {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background-color: rgb(var(--interaction-tile-color));
+      color: white;
+      font-size: 12px;
+    }
+  }
+
+  &__body {
+    gap: wc.spacing(md);
+    display: flex;
+    align-items: center;
+
+    &--left {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: wc.spacing(xs);
+      overflow: hidden;
+
+      @container (max-width: 200px) {
+        display: none;
+      }
+
+      p, h3 {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+
+    &--right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: wc.spacing(sm);
+
+      @container (max-width: 200px) {
+        padding-bottom: wc.spacing(md);
+        align-items: center;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  &__branding {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: wc.spacing(sm);
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+      background-position: center;
+      background-size: contain;
+    }
+
+    p {
+      font-size: 12px;
+      line-height: 12px;
+      font-weight: 600;
+      color: rgb(var(--zn-text-heading));
+    }
+  }
+
+  &__queue {
+    display: flex;
+    align-items: center;
+
+    p {
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 12px;
+      text-transform: uppercase;
+      color: rgb(var(--zn-text-heading));
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgb(var(--zn-border-color));
+    margin-top: 10px;
+    padding: wc.spacing(sm) 0 0;
+
+    @container (max-width: 200px) {
+      display: none;
+    }
+  }
+}

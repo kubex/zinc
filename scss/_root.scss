@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "sass:color";
+@use "sass:meta";
 @use "variables";
 
 $var-prefix: '--zn-';
@@ -106,7 +107,7 @@ $theme-flow: (
 );
 
 @mixin spread-map($map: (), $pre: '') {
-  @if type-of($map) != 'map' {
+  @if meta.type-of($map) != 'map' {
     @error 'spread-map() only works with maps';
   }
 

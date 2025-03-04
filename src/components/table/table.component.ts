@@ -105,7 +105,7 @@ export default class ZnTable extends ZincElement {
 
   render() {
     return html`
-      <div>
+      <div class="table-wrapper">
         <table class="${classMap({
           'table': true,
           'table--last-right': !this.allLeft,

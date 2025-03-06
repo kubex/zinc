@@ -48,7 +48,7 @@ table {
   }
 
   th, td {
-    padding: wc.spacing(md);
+    padding: var(--zn-spacing-medium);
     min-width: 90px;
     white-space: nowrap;
 
@@ -71,11 +71,11 @@ table {
 .table { // The container element that holds the table and the filters
 
   tr th {
-    padding-bottom: wc.spacing(xs);
+    padding-bottom: var(--zn-spacing-x-small);
 
     // assume checkbox is the first column
     &:first-of-type {
-      padding-bottom: wc.spacing(xxs);
+      padding-bottom: var(--zn-spacing-2x-small);
     }
   }
 
@@ -101,7 +101,7 @@ table {
 
   &__head {
     &__sort {
-      margin-left: wc.spacing(sm);
+      margin-left: var(--zn-spacing-small);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -136,21 +136,21 @@ table {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    padding: wc.spacing(sm);
-    gap: wc.spacing(sm);
+    padding: var(--zn-spacing-small);
+    gap: var(--zn-spacing-small);
   }
 
   &__footer {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: wc.spacing(md) wc.spacing(md);
+    padding: var(--zn-spacing-medium) var(--zn-spacing-medium);
 
     &__right, &__left {
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: wc.spacing(lg);
+      gap: var(--zn-spacing-large);
     }
 
     &__rows-per-page {
@@ -158,7 +158,7 @@ table {
       flex-direction: row;
       align-items: center;
       opacity: 0.8;
-      gap: wc.spacing(xs);
+      gap: var(--zn-spacing-x-small);
     }
 
     &__pagination-count {
@@ -169,12 +169,12 @@ table {
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: wc.spacing(xs);
+      gap: var(--zn-spacing-x-small);
 
       button {
         border: 1px solid rgb(var(--zn-border-color));
         border-radius: 5px;
-        padding: wc.spacing(xs);
+        padding: var(--zn-spacing-x-small);
 
         &[disabled] {
           cursor: not-allowed;

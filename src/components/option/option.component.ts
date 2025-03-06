@@ -1,11 +1,12 @@
-import { property, query, state } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { watch } from '../../internal/watch';
+import {property, query, state} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
-import { classMap } from "lit/directives/class-map.js";
-import ZnSelect from "../select";
+import {classMap} from "lit/directives/class-map.js";
+import ZnIcon from "../icon";
 
 import styles from './option.scss';
+import {LocalizeController} from "../../utilities/localize";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -13,19 +14,25 @@ import styles from './option.scss';
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-icon
  *
- * @event zn-event-name - Emitted as an example.
+ * @slot - The option's label.
+ * @slot prefix - Used to prepend an icon or similar element to the menu item.
+ * @slot suffix - Used to append an icon or similar element to the menu item.
  *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
+ * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
  * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
+ * @csspart label - The option's label.
+ * @csspart prefix - The container that wraps the prefix.
+ * @csspart suffix - The container that wraps the suffix.
  */
 export default class ZnOption extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {'zn-icon': ZnIcon};
+
+  private cachedTextLabel: string;
+  // @ts-expect-error - Controller is currently unused
+  private readonly localize = new LocalizeController(this);
 
   @query('.option__label') defaultSlot: HTMLSlotElement;
 
@@ -38,10 +45,10 @@ export default class ZnOption extends ZincElement {
    * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
    * multiple values.
    */
-  @property({ reflect: true }) value = '';
+  @property({reflect: true}) value = '';
 
   /** Draws the option in a disabled state, preventing selection. */
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -50,13 +57,19 @@ export default class ZnOption extends ZincElement {
   }
 
   private handleDefaultSlotChange() {
-    // When the label changes, tell the controller to update
-    customElements.whenDefined('zn-select').then(() => {
-      const controller = this.closest('zn-select') as ZnSelect | null;
-      if (controller) {
-        controller.handleDefaultSlotChange();
-      }
-    });
+    const textLabel = this.getTextLabel();
+
+    // Ignore the first time the label is set
+    if (typeof this.cachedTextLabel === 'undefined') {
+      this.cachedTextLabel = textLabel;
+      return;
+    }
+
+    // When the label changes, emit a slotchange event so parent controls see it
+    if (textLabel !== this.cachedTextLabel) {
+      this.cachedTextLabel = textLabel;
+      this.emit('slotchange', {bubbles: true, composed: false, cancelable: false});
+    }
   }
 
   private handleMouseEnter() {
@@ -123,9 +136,13 @@ export default class ZnOption extends ZincElement {
           'option--hover': this.hasHover
         })}
         @mouseenter=${this.handleMouseEnter}
-        @mouseleave=${this.handleMouseLeave}
-      >
-        <zn-icon part="checked-icon" class="option__check" src="check"></zn-icon>
+        @mouseleave=${this.handleMouseLeave}>
+        <zn-icon
+          part="checked-option-icon"
+          class="option__check"
+          src="check_small"
+          aria-hidden="true"
+        ></zn-icon>
         <slot part="prefix" name="prefix" class="option__prefix"></slot>
         <slot part="label" class="option__label" @slotchange=${this.handleDefaultSlotChange}></slot>
         <slot part="suffix" name="suffix" class="option__suffix"></slot>

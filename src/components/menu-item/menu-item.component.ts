@@ -165,7 +165,7 @@ export default class ZnMenuItem extends ZincElement {
         ?aria-expanded="${isSubmenuExpanded}"
       >
         <span part="checked-icon" class="menu-item__check">
-          <sl-icon name="checked-option" library="system" aria-hidden="true"></sl-icon>
+          <zn-icon src="checked-option" aria-hidden="true"></zn-icon>
         </span>
 
         <slot name="prefix" part="prefix" class="menu-item__prefix"></slot>
@@ -175,12 +175,12 @@ export default class ZnMenuItem extends ZincElement {
         <slot name="suffix" part="suffix" class="menu-item__suffix"></slot>
 
         <span part="submenu-icon" class="menu-item__chevron">
-          <sl-icon name=${isRtl ? 'chevron-left' : 'chevron-right'} library="system" aria-hidden="true"></sl-icon>
+          <zn-icon src=${isRtl ? 'chevron-left' : 'chevron-right'} aria-hidden="true"></zn-icon>
         </span>
 
         ${this.submenuController.renderSubmenu()}
         ${this.loading ? html`
-          <sl-spinner part="spinner" exportparts="base:spinner__base"></sl-spinner> ` : ''}
+          <zn-spinner part="spinner" exportparts="base:spinner__base"></zn-spinner> ` : ''}
       </div>
     `;
   }

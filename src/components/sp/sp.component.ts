@@ -1,8 +1,9 @@
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './sp.scss';
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,15 +26,26 @@ export default class ZnSp extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
+  @property({attribute: 'row', type: Boolean, reflect: true}) row: boolean = false;
+  @property({attribute: 'no-gap', type: Boolean, reflect: true}) noGap: boolean = false;
+  @property({attribute: 'grow', type: Boolean, reflect: true}) grow: boolean = false;
+  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
+  @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
 
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.divide) {
-      this.classList.add('zn-divide');
-    }
-  }
-
-  createRenderRoot() {
-    return this;
+  protected render(): unknown {
+    return html`
+      <div class="${classMap({
+        'sp': true,
+        'sp--divide': this.divide,
+        'sp--row': this.row,
+        'sp--no-gap': this.noGap,
+        'sp--grow': this.grow,
+        'sp--flush': this.flush,
+        'sp--flush-y': this.flushY,
+        'sp--flush-x': this.flushX
+      })}">
+        <slot></slot>
+      </div>`;
   }
 }

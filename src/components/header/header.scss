@@ -58,8 +58,8 @@
     flex-wrap: wrap;
     width: 100%;
     height: fit-content;
-    padding-left: wc.spacing(lg);
-    padding-right: wc.spacing(lg);
+    padding-left: var(--zn-spacing-large);
+    padding-right: var(--zn-spacing-large);
     gap: 10px;
   }
 
@@ -75,6 +75,16 @@
     flex-basis: 100%;
     font-size: 12px;
     line-height: 12px;
+
+    a {
+      font-size: 0.875rem;
+      color: inherit;
+      text-decoration: inherit;
+
+      &:hover {
+        color: rgb(var(--zn-dark-text));
+      }
+    }
   }
 
   .breadcrumb:not(:empty) {
@@ -113,7 +123,7 @@
     margin: 0;
     font-weight: 600;
 
-    @media screen and (min-width: wc.container-width(lg)) {
+    @media screen and (min-width: var(--zn-container-lg)) {
       font-size: 20px;
     }
 
@@ -126,7 +136,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: wc.spacing(xs);
+    gap: var(--zn-spacing-x-small);
   }
 
   slot[name="nav"] {

@@ -1,0 +1,60 @@
+@use "../../wc";
+@use "../../form-control";
+
+:host {
+  display: block;
+  line-height: var(--zn-line-height-dense);
+}
+
+:host([horizontal]) .form-control-input {
+  display: flex;
+  column-gap: var(--zn-spacing-2x-large);
+}
+
+:host([contained]) .form-control-input {
+  margin-top: var(--zn-spacing-medium);
+}
+
+:host([horizontal][contained]) .form-control-input {
+  margin-top: var(--zn-spacing-medium);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  gap: var(--zn-spacing-x-small);
+}
+
+::slotted(zn-checkbox) {
+  margin-top: var(--zn-spacing-medium);
+}
+
+::slotted(zn-checkbox[horizontal]),
+::slotted(zn-checkbox[contained]) {
+  margin-top: var(--zn-spacing-small);
+}
+
+::slotted(zn-checkbox[horizontal][contained]) {
+  margin-top: 0;
+  height: 100%;
+}
+
+.form-control {
+  position: relative;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.form-control__label {
+  padding: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,9 +1,9 @@
 import '../../../dist/zinc.js';
 import { expect, fixture, html } from '@open-wc/testing';
 
-describe('<zn-multi-select>', () => {
+describe('<zn-checkbox-group>', () => {
   it('should render a component', async () => {
-    const el = await fixture(html` <zn-multi-select></zn-multi-select> `);
+    const el = await fixture(html` <zn-checkbox-group></zn-checkbox-group> `);
 
     expect(el).to.exist;
   });

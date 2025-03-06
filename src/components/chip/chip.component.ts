@@ -32,12 +32,14 @@ export default class ZnChip extends ZincElement {
 
   render() {
     return html`
-      ${this.icon ? html`
-        <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
-      ${this.hasSlotController.test('[default]') ? html`
-        <slot></slot>` : ''}
-      ${this.hasSlotController.test('action') ? html`
-        <slot name="action"></slot>` : ''}
+      <div>
+        ${this.icon ? html`
+          <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
+        ${this.hasSlotController.test('[default]') ? html`
+          <slot></slot>` : ''}
+        ${this.hasSlotController.test('action') ? html`
+          <slot name="action"></slot>` : ''}
+      </div>
     `;
   }
 }

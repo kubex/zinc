@@ -11,11 +11,6 @@ import styles from './button.scss';
 import ZnTooltip from "../tooltip";
 import ZnIcon from "../icon";
 
-export type ButtonColor = 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
-export type ButtonSizes = 'content' | 'x-small' | 'small' | 'medium' | 'large';
-export type VerticalAlignments = 'start' | 'center' | 'end';
-export type IconPosition = 'left' | 'right';
-
 /**
  * @summary Buttons represent actions that are available to the user.
  * @documentation https://inc.style/components/button
@@ -52,18 +47,19 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   @query('.button') button: HTMLButtonElement;
 
-  @property({}) color: ButtonColor = 'default';
-  @property({}) size: ButtonSizes = 'medium';
+  @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
+    'transparent' | 'star' = 'default';
+  @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
   @property({type: Boolean}) outline = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
 
-  @property() verticalAlign: VerticalAlignments;
+  @property() verticalAlign: 'start' | 'center' | 'end';
 
   @property() content = '';
   @property() icon: string = '';
   @property() gaid: string = '';
-  @property({attribute: "icon-position"}) iconPosition: IconPosition = 'left';
+  @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
   @property() type: 'button' | 'submit' | 'reset';
 

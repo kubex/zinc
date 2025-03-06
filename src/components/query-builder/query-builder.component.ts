@@ -7,7 +7,6 @@ import {FormControlController} from "../../internal/form";
 import styles from './query-builder.scss';
 import ZnSelect from "../select";
 import ZnOption from "../option";
-import ZnMultiSelect from "../multi-select";
 
 export type QueryBuilderData = Array<QueryBuilderItem>;
 
@@ -71,7 +70,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   static dependencies = {
     'zn-option': ZnOption,
     'zn-select': ZnSelect,
-    'zn-multi-select': ZnMultiSelect,
   };
 
   private _selectedRules: Map<string, CreatedRule> = new Map<string, CreatedRule>();
@@ -327,7 +325,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     row.appendChild(comparator);
 
-    let input: ZnSelect | HTMLInputElement | HTMLDivElement | ZnMultiSelect;
+    let input: ZnSelect | HTMLInputElement | HTMLDivElement;
     if (filter.options) {
       input = document.createElement('zn-select') as ZnSelect;
       const options = Object.keys(filter.options);
@@ -363,8 +361,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
       }
     } else if (selectedComparator === 'in') {
-      input = document.createElement('zn-multi-select') as ZnMultiSelect;
+      input = document.createElement('zn-select') as ZnSelect;
       input.setAttribute('name', 'value');
+      input.setAttribute('multi', 'true');
       input.setAttribute('label', 'Value');
       input.setAttribute('selectedItems', JSON.stringify(filter.options));
       input.addEventListener('zn-change', (e: Event) => this.updateInValue(uniqueId, e));
@@ -448,7 +447,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const filter = this._selectedRules.get(id);
     if (!filter) return;
 
-    const input = event.target as ZnMultiSelect;
+    const input = event.target as ZnSelect;
     const inputValue: any = input.value;
     filter.value = inputValue.split(',');
 

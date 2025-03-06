@@ -3,175 +3,104 @@
 @use "sass:meta";
 @use "variables";
 
-$var-prefix: '--zn-';
-
-@function hex-to-rgb($color) {
-  $red: color.channel($color, 'red', $space: rgb);
-  $green: color.channel($color, 'green', $space: rgb);
-  $blue: color.channel($color, 'blue', $space: rgb);
-  @return $red, $green, $blue;
-}
-
-$brand-colours: (
-  'red': hex-to-rgb(#ED546D),
-  'blue': hex-to-rgb(#6483F2),
-  'green': hex-to-rgb(#29bab5),
-  'orange': hex-to-rgb(#FF8800),
-  'yellow': hex-to-rgb(#FFC107),
-  'indigo': hex-to-rgb(#3F51B5),
-  'violet': hex-to-rgb(#9C27B0),
-  'pink': hex-to-rgb(#ff6c9c),
-  'grey': hex-to-rgb(#9E9E9E),
-  'primary': hex-to-rgb(#6836F5),
-  'accent': hex-to-rgb(#47D6D6),
-);
-
-$brand-colours-dark: (
-  'primary': hex-to-rgb(#8967ef),
-);
-
-// Global Colors
-$theme-colors: (
-  'info': map.get($brand-colours, 'blue'),
-  'warning': map.get($brand-colours, 'orange'),
-  'error': map.get($brand-colours, 'red'),
-  'success': map.get($brand-colours, 'green'),
-  'disabled': hex-to-rgb(#b5b5b5),
-);
-
-// Light Theme
-$theme-light: (
-  'panel-opacity': 1,
-  'text': hex-to-rgb(#7B7097),
-  'text-heading': hex-to-rgb(#382768),
-  'text-page-title': hex-to-rgb(#343434),
-  'text-panel-title': map.get($brand-colours, 'primary'),
-  'body': hex-to-rgb(#F8F7FB),
-  'shadow': hex-to-rgb(#ECE9F1),
-  'panel': hex-to-rgb(#FFFFFF),
-  'panel-secondary': (246 246 246),
-  'panel-highlight': hex-to-rgb(#f8f9fc),
-  'panel-highlight-opacity': 1,
-  'border-color': hex-to-rgb(#E0DDE9),
-  'input-bg': hex-to-rgb(#F8F7FB),
-  'input-bg-accent': hex-to-rgb(#EDEBF5),
-  'bright-bg': hex-to-rgb(#ffffff),
-  'light-text': hex-to-rgb(#7B7097),
-  'dark-text': hex-to-rgb(#382768),
-  'purple-text': hex-to-rgb(#6836F5),
-);
-
-// Dark theme
-$theme-dark: (
-  'body': (20, 22, 27),
-  'panel': (33, 34, 41),
-  'shadow': (10, 10, 10),
-  'panel-secondary': (27, 27, 30),
-  'panel-opacity': 1,
-  'text': hex-to-rgb(#95a3b8),
-  'text-heading': hex-to-rgb(#f1f5f9),
-  'text-page-title': hex-to-rgb(#E1E1E1),
-  //'text-panel-title': map.get($brand-colours-dark, 'primary'),
-  'text-panel-title': (181, 158, 255),
-  'panel-highlight': hex-to-rgb(#ffffff),
-  'panel-highlight-opacity': 0.1,
-  'border-color': (50, 50, 60),
-  'input-bg': (28, 28, 32),
-  'input-bg-accent': hex-to-rgb(#485466),
-  'bright-bg': hex-to-rgb(#e1e1e1),
-  'light-text': hex-to-rgb(#ada3c0),
-  'dark-text': hex-to-rgb(#c9c9c9),
-  'purple-text': hex-to-rgb(#818cf9),
-  'accent': hex-to-rgb(#0fa5ea),
-);
-
-// Dark themex
-$theme-flow: (
-  'body': hex-to-rgb(#1E0D4F),
-  'panel': hex-to-rgb(#FFFFFF),
-  'panel-secondary': hex-to-rgb(#30384c),
-  'panel-opacity': 0.05,
-  'text': hex-to-rgb(#D5C9F4),
-  'text-heading': hex-to-rgb(#E1E1E1),
-  'text-page-title': hex-to-rgb(#E1E1E1),
-  'text-panel-title': map.get($brand-colours-dark, 'primary'),
-  'panel-highlight': hex-to-rgb(#ffffff),
-  'panel-highlight-opacity': 0.1,
-  'border-color': hex-to-rgb(#000000),
-  'input-bg': hex-to-rgb(#150E2C),
-  'input-bg-accent': hex-to-rgb(#150E2C),
-  'bright-bg': hex-to-rgb(#e1e1e1),
-  'light-text': hex-to-rgb(#ada3c0),
-  'dark-text': hex-to-rgb(#c9c9c9),
-  'purple-text': hex-to-rgb(#7659C7),
-);
-
-@mixin spread-map($map: (), $pre: '') {
-  @if meta.type-of($map) != 'map' {
-    @error 'spread-map() only works with maps';
-  }
-
-  @each $key, $value in $map {
-    #{$pre}#{$key}: #{$value};
-  }
-}
-
 :root {
+  // Brand Colors
+  --zn-red: 237, 84, 109;
+  --zn-blue: 100, 131, 242;
+  --zn-green: 41, 186, 181;
+  --zn-orange: 255, 136, 0;
+  --zn-yellow: 255, 193, 7;
+  --zn-indigo: 63, 81, 181;
+  --zn-violet: 156, 39, 176;
+  --zn-pink: 255, 108, 156;
+  --zn-grey: 158, 158, 158;
+  --zn-primary: 104, 54, 245;
+  --zn-accent: 71, 214, 214;
+
   // Theme Colors
-  @include spread-map($brand-colours, #{$var-prefix});
-  @include spread-map($theme-colors, #{$var-prefix} + 'color-');
-  @include spread-map(variables.$common-sizes, #{$var-prefix} + 'size-');
+  --zn-color-info: 100, 131, 242;
+  --zn-color-warning: 255, 136, 0;
+  --zn-color-error: 237, 84, 109;
+  --zn-color-success: 41, 186, 181;
+  --zn-color-disabled: 181, 181, 181;
+
+  // Common Sizes
+  --zn-size-bar: 60px;
+  --zn-size-tile: 80px;
+  --zn-size-sidenav: 320px;
+  --zn-size-spanel: 170px;
+  --zn-size-mpanel: 320px;
+  --zn-size-panel: 360px;
+  --zn-size-lside: 460px;
 
   // Font Families
-  #{$var-prefix}font-family-sans: 'Inter', sans-serif;
-  #{$var-prefix}font-family-serif: 'Roboto Slab', serif;
-  #{$var-prefix}font-family-mono: 'Roboto Mono', monospace;
+  --zn-font-family-sans: 'Inter', sans-serif;
+  --zn-font-family-serif: 'Roboto Slab', serif;
+  --zn-font-family-mono: 'Roboto Mono', monospace;
 
   // Default Opacities
-  #{$var-prefix}bg-opacity: 1;
-  #{$var-prefix}text-opacity: 1;
-
+  --zn-bg-opacity: 1;
+  --zn-text-opacity: 1;
 
   --base: 255, 255, 255;
   --inverse-base: 0, 0, 0;
 }
 
 .zn-mono {
-  font-family: var(#{$var-prefix}font-family-mono);
-}
-
-@each $key, $value in $theme-colors {
-  .zn-#{$key} {
-    color: rgb($value...);
-  }
+  font-family: var(--zn-font-family-mono);
 }
 
 [t="light"], .theme-light {
-  @include spread-map($theme-light, #{$var-prefix});
+  // Theme Light
+  --zn-panel-opacity: 1;
+  --zn-text: 123, 112, 151;
+  --zn-text-heading: 56, 39, 104;
+  --zn-text-page-title: 52, 52, 52;
+  --zn-text-panel-title: 104, 54, 245;
+  --zn-body: 248, 247, 251;
+  --zn-shadow: 236, 233, 241;
+  --zn-panel: 255, 255, 255;
+  --zn-panel-secondary: 246 246 246;
+  --zn-panel-highlight: 248, 249, 252;
+  --zn-panel-highlight-opacity: 1;
+  --zn-border-color: 224, 221, 233;
+  --zn-input-bg: 248, 247, 251;
+  --zn-input-bg-accent: 237, 235, 245;
+  --zn-bright-bg: 255, 255, 255;
+  --zn-light-text: 123, 112, 151;
+  --zn-dark-text: 56, 39, 104;
+  --zn-purple-text: 104, 54, 245;
 
   .zn-primary {
     color: #6836F5;
   }
 }
 
-[t="flow"], .theme-flow {
-  @include spread-map($theme-flow, #{$var-prefix});
-  @include spread-map($brand-colours-dark, #{$var-prefix});
-  --base: 0, 0, 0;
-  --inverse-base: 255, 255, 255;
-
-  body {
-    background: radial-gradient(at top, rgba(30, 13, 79, 1) 0%, rgba(12, 7, 24, 1) 100%);
-  }
-
-  .zn-primary {
-    color: #8967ef !important;
-  }
-}
-
 [t="dark"], .theme-dark {
-  @include spread-map($theme-dark, #{$var-prefix});
-  @include spread-map($brand-colours-dark, #{$var-prefix});
+  // Theme Dark
+  --zn-body: 20, 22, 27;
+  --zn-panel: 33, 34, 41;
+  --zn-shadow: 10, 10, 10;
+  --zn-panel-secondary: 27, 27, 30;
+  --zn-panel-opacity: 1;
+  --zn-text: 149, 163, 184;
+  --zn-text-heading: 241, 245, 249;
+  --zn-text-page-title: 225, 225, 225;
+  --zn-text-panel-title: 181, 158, 255;
+  --zn-panel-highlight: 255, 255, 255;
+  --zn-panel-highlight-opacity: 0.1;
+  --zn-border-color: 50, 50, 60;
+  --zn-input-bg: 28, 28, 32;
+  --zn-input-bg-accent: 72, 84, 102;
+  --zn-bright-bg: 225, 225, 225;
+  --zn-light-text: 173, 163, 192;
+  --zn-dark-text: 201, 201, 201;
+  --zn-purple-text: 129, 140, 249;
+  --zn-accent: 15, 165, 234;
+
+  // Theme Dark Brand Colours
+  --zn-primary: 137, 103, 239;
+
   --base: 0, 0, 0;
   --inverse-base: 255, 255, 255;
 

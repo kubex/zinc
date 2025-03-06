@@ -64,7 +64,7 @@ export default class ZnIcon extends ZincElement {
 
   @property({type: String, reflect: true}) src = "";
   @property({type: String, reflect: true}) alt = "";
-  @property({type: Number, reflect: true}) size = 24;
+  @property({type: Number, reflect: true}) size: number;
   @property({type: String, reflect: true}) library = Library.None;
   @property({type: Boolean, reflect: true}) round = false;
   @property({type: String, reflect: true}) color: Color = "";

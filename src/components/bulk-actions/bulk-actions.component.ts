@@ -1,9 +1,8 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
+import {property, query} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-import { FormControlController } from "../../internal/form";
-import { classMap } from "lit/directives/class-map.js";
-import type ZnMultiSelect from "../multi-select";
+import {FormControlController} from "../../internal/form";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './bulk-actions.scss';
 
@@ -50,7 +49,7 @@ export default class ZnBulkActions extends ZincElement {
 
   @property() name: string;
   @property() value: PropertyKey;
-  @property({ type: Array }) actions: BulkActionData = [];
+  @property({type: Array}) actions: BulkActionData = [];
 
   private _selectedRules: Map<string, CreatedRule> = new Map<string, CreatedRule>();
   private _formController: FormControlController = new FormControlController(this, {});
@@ -127,7 +126,7 @@ export default class ZnBulkActions extends ZincElement {
 
     row.appendChild(select);
 
-    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement | ZnMultiSelect;
+    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement;
     if (filter.options) {
       input = document.createElement('select');
       const options = Object.keys(filter.options);
@@ -137,7 +136,7 @@ export default class ZnBulkActions extends ZincElement {
         option.text = filter.options ? (filter.options[item]) : '';
         input.appendChild(option);
       });
-      this._updateValue(uniqueId, { target: input });
+      this._updateValue(uniqueId, {target: input});
       input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
     } else if (filter.type === 'bool' || filter.type === 'boolean') {
       input = document.createElement('select');

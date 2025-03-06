@@ -5,15 +5,15 @@
 }
 
 :host([tile]) {
-  min-width: wc.common-size(tile);
+  min-width: var(--zn-spacing-tile);
 }
 
 :host([small]) {
-  min-width: wc.common-size(spanel);
+  min-width: var(--zn-spacing-small-panel);
 }
 
 :host([medium]) {
-  min-width: wc.common-size(mpanel);
+  min-width: var(--zn-spacing-medium-panel);
 }
 
 :host([tabbed]), :host([flush]) {
@@ -32,7 +32,7 @@
     }
 
     .header {
-      padding: 0 0 wc.spacing(md);
+      padding: 0 0 var(--zn-spacing-medium);
     }
   }
 }
@@ -46,7 +46,7 @@
   display: flex;
   max-width: 100%;
   z-index: 1;
-  min-width: wc.common-size(panel);
+  min-width: var(--zn-spacing-panel);
   position: relative;
   margin-bottom: 2px;
 
@@ -56,7 +56,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    flex-basis: wc.common-size(spanel);
+    flex-basis: var(--zn-spacing-small-panel);
     width: 100%;
     background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
     border-radius: 10px;
@@ -76,7 +76,7 @@
     .header {
       display: flex;
       justify-items: center;
-      padding: wc.spacing(md) wc.spacing(md) 0;
+      padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
 
       span {
         font-weight: 600;
@@ -92,7 +92,7 @@
       flex-direction: column;
       overflow-y: auto;
       flex-grow: 1;
-      padding: wc.spacing(md);
+      padding: var(--zn-spacing-medium);
 
       > :not([hidden]) ~ :not([hidden]) {
         border: 1px solid black !important;
@@ -107,7 +107,7 @@
     .footer {
       font-size: 13px;
       display: block;
-      padding: wc.spacing(sm) wc.spacing(md);
+      padding: var(--zn-spacing-small) var(--zn-spacing-medium);
       background: rgb(var(--zn-panel-secondary));
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
@@ -128,11 +128,11 @@
   }
 
   .header {
-    padding: wc.spacing(md);
+    padding: var(--zn-spacing-medium);
   }
 
   .footer {
-    padding-bottom: wc.spacing(md);
+    padding-bottom: var(--zn-spacing-medium);
   }
 }
 
@@ -146,7 +146,7 @@
   }
 
   ::slotted(*:not([slot="footer"])) {
-    padding: wc.spacing(md);
+    padding: var(--zn-spacing-medium);
     border-top-width: 1px !important;
   }
 
@@ -167,6 +167,11 @@
   width: 100%;
   border-width: 1px !important;
   min-width: 0;
+}
+
+h2 {
+  padding: 0;
+  margin: 0;
 }
 
 :host([bright]) > div {

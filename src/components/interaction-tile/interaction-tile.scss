@@ -15,7 +15,7 @@
 }
 
 .interaction-tile {
-  padding: wc.spacing(md) wc.spacing(md) wc.spacing(sm);
+  padding: var(--zn-spacing-medium) var(--zn-spacing-medium) var(--zn-spacing-small);
   border-top: 1px solid rgb(var(--zn-border-color));
   container-type: inline-size;
   border-right: 5px solid transparent;
@@ -40,8 +40,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: wc.spacing(xs) wc.spacing(sm);
-    margin-bottom: wc.spacing(sm);
+    padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+    margin-bottom: var(--zn-spacing-small);
     border-radius: 50px;
     background-color: rgba(var(--interaction-tile-color), 0.15);
     color: rgb(var(--interaction-tile-color));
@@ -70,7 +70,7 @@
     justify-content: center;
     align-items: center;
     width: fit-content;
-    gap: wc.spacing(xs);
+    gap: var(--zn-spacing-x-small);
 
     p {
       line-height: 0;
@@ -92,8 +92,8 @@
       font-size: 12px;
       line-height: 12px;
       font-weight: 600;
-      padding-right: wc.spacing(xs);
-      padding-left: wc.spacing(sm);
+      padding-right: var(--zn-spacing-x-small);
+      padding-left: var(--zn-spacing-small);
       color: rgb(var(--interaction-tile-color));
     }
 
@@ -112,7 +112,7 @@
   }
 
   &__body {
-    gap: wc.spacing(md);
+    gap: var(--zn-spacing-medium);
     display: flex;
     align-items: center;
 
@@ -120,7 +120,7 @@
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      gap: wc.spacing(xs);
+      gap: var(--zn-spacing-x-small);
       overflow: hidden;
 
       @container (max-width: 200px) {
@@ -131,6 +131,11 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        margin: 0;
+      }
+
+      h3 {
+        margin-bottom: 5px;
       }
     }
 
@@ -138,10 +143,10 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: wc.spacing(sm);
+      gap: var(--zn-spacing-small);
 
       @container (max-width: 200px) {
-        padding-bottom: wc.spacing(md);
+        padding-bottom: var(--zn-spacing-medium);
         align-items: center;
         flex-grow: 1;
       }
@@ -152,7 +157,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: wc.spacing(sm);
+    gap: var(--zn-spacing-small);
 
     &__icon {
       width: 20px;
@@ -187,7 +192,7 @@
     justify-content: space-between;
     border-top: 1px solid rgb(var(--zn-border-color));
     margin-top: 10px;
-    padding: wc.spacing(sm) 0 0;
+    padding: var(--zn-spacing-small) 0 0;
 
     @container (max-width: 200px) {
       display: none;

@@ -1,7 +1,7 @@
 @use "../../wc";
 
 .pagination {
-  margin: wc.spacing(md) auto;
+  margin: var(--zn-spacing-medium) auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -28,21 +28,21 @@
     }
 
     &:first-of-type {
-      border-top-left-radius: wc.spacing(sm);
-      border-bottom-left-radius: wc.spacing(sm);
+      border-top-left-radius: var(--zn-spacing-small);
+      border-bottom-left-radius: var(--zn-spacing-small);
 
       &:before {
-        border-bottom-left-radius: wc.spacing(sm);
+        border-bottom-left-radius: var(--zn-spacing-small);
       }
     }
 
     &:last-of-type {
       border-right-width: 1px;
-      border-top-right-radius: wc.spacing(sm);
-      border-bottom-right-radius: wc.spacing(sm);
+      border-top-right-radius: var(--zn-spacing-small);
+      border-bottom-right-radius: var(--zn-spacing-small);
 
       &:before {
-        border-bottom-right-radius: wc.spacing(sm);
+        border-bottom-right-radius: var(--zn-spacing-small);
         right: 0;
       }
     }
@@ -54,7 +54,7 @@
       font-size: inherit;
       line-height: inherit;
       font-weight: inherit;
-      padding: wc.spacing(sm) wc.spacing(md);
+      padding: var(--zn-spacing-small) var(--zn-spacing-medium);
 
       &:disabled, &--disabled {
         cursor: not-allowed;

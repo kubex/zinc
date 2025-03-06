@@ -6,15 +6,15 @@ zn-tile, :host {
 
 :host([padded]) {
   .bottom, .wrap, .top {
-    padding: wc.spacing(xl) wc.spacing(lg);
+    padding: var(--zn-spacing-x-large) var(--zn-spacing-large);
   }
 
   .top {
     padding-bottom: 0;
 
     &:not(:empty) {
-      padding-top: wc.spacing(sm);
-      padding-bottom: wc.spacing(xs);
+      padding-top: var(--zn-spacing-small);
+      padding-bottom: var(--zn-spacing-x-small);
     }
   }
 
@@ -34,7 +34,7 @@ zn-tile, :host {
 :host {
   container-type: inline-size;
   display: flex;
-  min-height: wc.common-size(tile);
+  min-height: var(--zn-spacing-tile);
   width: 100%;
   flex-direction: column;
   align-items: center;
@@ -49,8 +49,8 @@ zn-tile, :host {
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    gap: wc.spacing(sm);
-    padding-top: wc.spacing(sm);
+    gap: var(--zn-spacing-small);
+    padding-top: var(--zn-spacing-small);
   }
 
   > .bottom {
@@ -60,9 +60,9 @@ zn-tile, :host {
     align-items: center;
     overflow: hidden;
     flex-wrap: nowrap;
-    padding-bottom: wc.spacing(sm);
-    padding-top: wc.spacing(sm);
-    gap: wc.spacing(md);
+    padding-bottom: var(--zn-spacing-small);
+    padding-top: var(--zn-spacing-small);
+    gap: var(--zn-spacing-medium);
 
     > * {
       height: 100%;
@@ -141,7 +141,7 @@ zn-tile, :host {
 
       zn-icon {
         cursor: pointer;
-        padding: wc.spacing(md);
+        padding: var(--zn-spacing-medium);
         border-radius: 100%;
 
         &:hover {
@@ -158,10 +158,10 @@ zn-tile, :host {
 }
 
 :host([child]) {
-  height: wc.common-size(bar);
+  height: var(--zn-spacing-bar);
 
   > div {
-    padding-left: wc.spacing(xl);
+    padding-left: var(--zn-spacing-x-large);
 
     .description {
       display: none;

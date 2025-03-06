@@ -88,21 +88,24 @@
 
   <div class="sidebar-buttons">
     <zn-button size="small" class="repo-button repo-button--github" href="https://github.com/kubex/zinc"
-               target="_blank">
-      <zn-icon slot="prefix" src="github"></zn-icon>
+               target="_blank" icon="folder_open" color="secondary">
       Code
     </zn-button>
-    <zn-button size="small" class="repo-button repo-button--star"
-               href="https://github.com/kubex/zinc/stargazers" target="_blank">
-      <zn-icon slot="prefix" src="star"></zn-icon>
+    <zn-button size="small" class="repo-button repo-button--star" color="secondary"
+               href="https://github.com/kubex/zinc/stargazers" target="_blank" icon="star">
       Star
     </zn-button>
   </div>
 
-  <button class="search-box" type="button" title="Press / to search" aria-label="Search" data-plugin="search">
-    <sl-icon name="search"></sl-icon>
+  <zn-button icon="search"
+             class="search-box"
+             color="secondary"
+             type="button"
+             title="Press / to search"
+             aria-label="Search"
+             data-plugin="search">
     <span>Search</span>
-  </button>
+  </zn-button>
 
   <nav>
     {% include 'sidebar.njk' %}

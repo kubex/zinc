@@ -32,13 +32,11 @@ module.exports = function (eleventyConfig)
   eleventyConfig.addGlobalData('layout', 'default'); // make 'default' the default layout
   eleventyConfig.addGlobalData('toc', true); // enable the table of contents
   eleventyConfig.addGlobalData('meta', {
-    title: 'Zinc ',
+    title:       'Zinc ',
     description: 'A design system for building modern web applications',
-    // image: 'teamshares/logos/teamshares-logo.png',
-    version: customElementsManifest.package.version,
-    // upstreamVersion: customElementsManifest.package.upstreamVersion,
-    components: allComponents,
-    outdir: outDir
+    version:     customElementsManifest.package.version,
+    components:  allComponents,
+    outdir:      outDir
   });
 
   //
@@ -148,9 +146,9 @@ module.exports = function (eleventyConfig)
       levels: ['h2', 'h3', 'h4', 'h5']
     });
     tableOfContents(doc, {
-      levels: ['h2', 'h3'],
+      levels:    ['h2', 'h3'],
       container: '#content .content__toc > ul',
-      within: '#content .content__body'
+      within:    '#content .content__body'
     });
     codePreviews(doc);
     externalLinks(doc, {target: '_blank'});
@@ -244,16 +242,16 @@ module.exports = function (eleventyConfig)
   //
   eleventyConfig.setServerOptions({
     domDiff: false, // disable dom diffing so custom elements don't break on reload,
-    port: 4000 // if port 4000 is taken, 11ty will use the next one available
+    port:    4000 // if port 4000 is taken, 11ty will use the next one available
   });
 
   //
   // 11ty config
   //
   return {
-    dir: {
-      input: 'pages',
-      output: '../_site',
+    dir:                    {
+      input:    'pages',
+      output:   '../_site',
       includes: '../_includes' // resolved relative to the input dir
     },
     markdownTemplateEngine: 'njk', // use Nunjucks instead of Liquid for markdown files

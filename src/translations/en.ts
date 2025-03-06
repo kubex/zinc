@@ -6,6 +6,14 @@ const translation: Translation = {
   $dir: 'ltr',
 
   onChange: 'onChange',
+  showPassword: 'Show password',
+  hidePassword: 'Hide password',
+  clearEntry: 'Clear entry',
+  numOptionsSelected: num => {
+    if (num === 0) return 'No options selected';
+    if (num === 1) return '1 option selected';
+    return `${num} options selected`;
+  },
 }
 
 registerTranslation(translation);

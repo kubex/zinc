@@ -1,0 +1,528 @@
+:root,
+:host,
+[t="light"],
+.theme-light {
+  color-scheme: light;
+
+  /**************************************************************
+  * Color Primitives
+  *************************************************************/
+
+  /* Gray */
+  --zn-color-gray-50: hsl(255, 33%, 98%);
+  --zn-color-gray-100: hsl(240, 13%, 95%);
+  --zn-color-gray-200: hsl(255, 12%, 94%);
+  --zn-color-gray-300: hsl(260, 21%, 89%);
+  --zn-color-gray-400: hsl(251, 17%, 76%);
+  --zn-color-gray-500: hsl(254, 17%, 66%);
+  --zn-color-gray-600: hsl(258, 15%, 58%);
+  --zn-color-gray-700: hsl(259, 13%, 54%);
+  --zn-color-gray-800: hsl(259, 13%, 42%);
+  --zn-color-gray-900: hsl(262, 12%, 35%);
+  --zn-color-gray-950: hsl(258, 15%, 23%);
+
+  /* Red */
+  --zn-color-red-50: hsl(0 85.7% 97.3%);
+  --zn-color-red-100: hsl(0 93.3% 94.1%);
+  --zn-color-red-200: hsl(0 96.3% 89.4%);
+  --zn-color-red-300: hsl(0 93.5% 81.8%);
+  --zn-color-red-400: hsl(0 90.6% 70.8%);
+  --zn-color-red-500: hsl(0 84.2% 60.2%);
+  --zn-color-red-600: hsl(0 72.2% 50.6%);
+  --zn-color-red-700: hsl(0 73.7% 41.8%);
+  --zn-color-red-800: hsl(0 70% 35.3%);
+  --zn-color-red-900: hsl(0 62.8% 30.6%);
+  --zn-color-red-950: hsl(0 60% 19.6%);
+
+  /* Orange */
+  --zn-color-orange-50: hsl(33.3 100% 96.5%);
+  --zn-color-orange-100: hsl(34.3 100% 91.8%);
+  --zn-color-orange-200: hsl(32.1 97.7% 83.1%);
+  --zn-color-orange-300: hsl(30.7 97.2% 72.4%);
+  --zn-color-orange-400: hsl(27 96% 61%);
+  --zn-color-orange-500: hsl(24.6 95% 53.1%);
+  --zn-color-orange-600: hsl(20.5 90.2% 48.2%);
+  --zn-color-orange-700: hsl(17.5 88.3% 40.4%);
+  --zn-color-orange-800: hsl(15 79.1% 33.7%);
+  --zn-color-orange-900: hsl(15.3 74.6% 27.8%);
+  --zn-color-orange-950: hsl(15.2 69.1% 19%);
+
+  /* Amber */
+  --zn-color-amber-50: hsl(48 100% 96.1%);
+  --zn-color-amber-100: hsl(48 96.5% 88.8%);
+  --zn-color-amber-200: hsl(48 96.6% 76.7%);
+  --zn-color-amber-300: hsl(45.9 96.7% 64.5%);
+  --zn-color-amber-400: hsl(43.3 96.4% 56.3%);
+  --zn-color-amber-500: hsl(37.7 92.1% 50.2%);
+  --zn-color-amber-600: hsl(32.1 94.6% 43.7%);
+  --zn-color-amber-700: hsl(26 90.5% 37.1%);
+  --zn-color-amber-800: hsl(22.7 82.5% 31.4%);
+  --zn-color-amber-900: hsl(21.7 77.8% 26.5%);
+  --zn-color-amber-950: hsl(22.9 74.1% 16.7%);
+
+  /* Yellow */
+  --zn-color-yellow-50: hsl(54.5 91.7% 95.3%);
+  --zn-color-yellow-100: hsl(54.9 96.7% 88%);
+  --zn-color-yellow-200: hsl(52.8 98.3% 76.9%);
+  --zn-color-yellow-300: hsl(50.4 97.8% 63.5%);
+  --zn-color-yellow-400: hsl(47.9 95.8% 53.1%);
+  --zn-color-yellow-500: hsl(45.4 93.4% 47.5%);
+  --zn-color-yellow-600: hsl(40.6 96.1% 40.4%);
+  --zn-color-yellow-700: hsl(35.5 91.7% 32.9%);
+  --zn-color-yellow-800: hsl(31.8 81% 28.8%);
+  --zn-color-yellow-900: hsl(28.4 72.5% 25.7%);
+  --zn-color-yellow-950: hsl(33.1 69% 13.9%);
+
+  /* Lime */
+  --zn-color-lime-50: hsl(78.3 92% 95.1%);
+  --zn-color-lime-100: hsl(79.6 89.1% 89.2%);
+  --zn-color-lime-200: hsl(80.9 88.5% 79.6%);
+  --zn-color-lime-300: hsl(82 84.5% 67.1%);
+  --zn-color-lime-400: hsl(82.7 78% 55.5%);
+  --zn-color-lime-500: hsl(83.7 80.5% 44.3%);
+  --zn-color-lime-600: hsl(84.8 85.2% 34.5%);
+  --zn-color-lime-700: hsl(85.9 78.4% 27.3%);
+  --zn-color-lime-800: hsl(86.3 69% 22.7%);
+  --zn-color-lime-900: hsl(87.6 61.2% 20.2%);
+  --zn-color-lime-950: hsl(86.5 60.6% 13.9%);
+
+  /* Green */
+  --zn-color-green-50: hsl(138.5 76.5% 96.7%);
+  --zn-color-green-100: hsl(140.6 84.2% 92.5%);
+  --zn-color-green-200: hsl(141 78.9% 85.1%);
+  --zn-color-green-300: hsl(141.7 76.6% 73.1%);
+  --zn-color-green-400: hsl(141.9 69.2% 58%);
+  --zn-color-green-500: hsl(142.1 70.6% 45.3%);
+  --zn-color-green-600: hsl(142.1 76.2% 36.3%);
+  --zn-color-green-700: hsl(142.4 71.8% 29.2%);
+  --zn-color-green-800: hsl(142.8 64.2% 24.1%);
+  --zn-color-green-900: hsl(143.8 61.2% 20.2%);
+  --zn-color-green-950: hsl(144.3 60.7% 12%);
+
+  /* Emerald */
+  --zn-color-emerald-50: hsl(151.8 81% 95.9%);
+  --zn-color-emerald-100: hsl(149.3 80.4% 90%);
+  --zn-color-emerald-200: hsl(152.4 76% 80.4%);
+  --zn-color-emerald-300: hsl(156.2 71.6% 66.9%);
+  --zn-color-emerald-400: hsl(158.1 64.4% 51.6%);
+  --zn-color-emerald-500: hsl(160.1 84.1% 39.4%);
+  --zn-color-emerald-600: hsl(161.4 93.5% 30.4%);
+  --zn-color-emerald-700: hsl(162.9 93.5% 24.3%);
+  --zn-color-emerald-800: hsl(163.1 88.1% 19.8%);
+  --zn-color-emerald-900: hsl(164.2 85.7% 16.5%);
+  --zn-color-emerald-950: hsl(164.3 87.5% 9.4%);
+
+  /* Teal */
+  --zn-color-teal-50: hsl(166.2 76.5% 96.7%);
+  --zn-color-teal-100: hsl(167.2 85.5% 89.2%);
+  --zn-color-teal-200: hsl(168.4 83.8% 78.2%);
+  --zn-color-teal-300: hsl(170.6 76.9% 64.3%);
+  --zn-color-teal-400: hsl(172.5 66% 50.4%);
+  --zn-color-teal-500: hsl(173.4 80.4% 40%);
+  --zn-color-teal-600: hsl(174.7 83.9% 31.6%);
+  --zn-color-teal-700: hsl(175.3 77.4% 26.1%);
+  --zn-color-teal-800: hsl(176.1 69.4% 21.8%);
+  --zn-color-teal-900: hsl(175.9 60.8% 19%);
+  --zn-color-teal-950: hsl(176.5 58.6% 11.4%);
+
+  /* Cyan */
+  --zn-color-cyan-50: hsl(183.2 100% 96.3%);
+  --zn-color-cyan-100: hsl(185.1 95.9% 90.4%);
+  --zn-color-cyan-200: hsl(186.2 93.5% 81.8%);
+  --zn-color-cyan-300: hsl(187 92.4% 69%);
+  --zn-color-cyan-400: hsl(187.9 85.7% 53.3%);
+  --zn-color-cyan-500: hsl(188.7 94.5% 42.7%);
+  --zn-color-cyan-600: hsl(191.6 91.4% 36.5%);
+  --zn-color-cyan-700: hsl(192.9 82.3% 31%);
+  --zn-color-cyan-800: hsl(194.4 69.6% 27.1%);
+  --zn-color-cyan-900: hsl(196.4 63.6% 23.7%);
+  --zn-color-cyan-950: hsl(196.8 61% 16.1%);
+
+  /* Sky */
+  --zn-color-sky-50: hsl(204 100% 97.1%);
+  --zn-color-sky-100: hsl(204 93.8% 93.7%);
+  --zn-color-sky-200: hsl(200.6 94.4% 86.1%);
+  --zn-color-sky-300: hsl(199.4 95.5% 73.9%);
+  --zn-color-sky-400: hsl(198.4 93.2% 59.6%);
+  --zn-color-sky-500: hsl(198.6 88.7% 48.4%);
+  --zn-color-sky-600: hsl(200.4 98% 39.4%);
+  --zn-color-sky-700: hsl(201.3 96.3% 32.2%);
+  --zn-color-sky-800: hsl(201 90% 27.5%);
+  --zn-color-sky-900: hsl(202 80.3% 23.9%);
+  --zn-color-sky-950: hsl(202.3 73.8% 16.5%);
+
+  /* Blue */
+  --zn-color-blue-50: hsl(213.8 100% 96.9%);
+  --zn-color-blue-100: hsl(214.3 94.6% 92.7%);
+  --zn-color-blue-200: hsl(213.3 96.9% 87.3%);
+  --zn-color-blue-300: hsl(211.7 96.4% 78.4%);
+  --zn-color-blue-400: hsl(213.1 93.9% 67.8%);
+  --zn-color-blue-500: hsl(217.2 91.2% 59.8%);
+  --zn-color-blue-600: hsl(221.2 83.2% 53.3%);
+  --zn-color-blue-700: hsl(224.3 76.3% 48%);
+  --zn-color-blue-800: hsl(225.9 70.7% 40.2%);
+  --zn-color-blue-900: hsl(224.4 64.3% 32.9%);
+  --zn-color-blue-950: hsl(226.2 55.3% 18.4%);
+
+  /* Indigo */
+  --zn-color-indigo-50: hsl(225.9 100% 96.7%);
+  --zn-color-indigo-100: hsl(226.5 100% 93.9%);
+  --zn-color-indigo-200: hsl(228 96.5% 88.8%);
+  --zn-color-indigo-300: hsl(229.7 93.5% 81.8%);
+  --zn-color-indigo-400: hsl(234.5 89.5% 73.9%);
+  --zn-color-indigo-500: hsl(238.7 83.5% 66.7%);
+  --zn-color-indigo-600: hsl(243.4 75.4% 58.6%);
+  --zn-color-indigo-700: hsl(244.5 57.9% 50.6%);
+  --zn-color-indigo-800: hsl(243.7 54.5% 41.4%);
+  --zn-color-indigo-900: hsl(242.2 47.4% 34.3%);
+  --zn-color-indigo-950: hsl(243.5 43.6% 22.9%);
+
+  /* Violet */
+  --zn-color-violet-50: hsl(250 100% 97.6%);
+  --zn-color-violet-100: hsl(251.4 91.3% 95.5%);
+  --zn-color-violet-200: hsl(250.5 95.2% 91.8%);
+  --zn-color-violet-300: hsl(252.5 94.7% 85.1%);
+  --zn-color-violet-400: hsl(255.1 91.7% 76.3%);
+  --zn-color-violet-500: hsl(258.3 89.5% 66.3%);
+  --zn-color-violet-600: hsl(262.1 83.3% 57.8%);
+  --zn-color-violet-700: hsl(263.4 70% 50.4%);
+  --zn-color-violet-800: hsl(263.4 69.3% 42.2%);
+  --zn-color-violet-900: hsl(263.5 67.4% 34.9%);
+  --zn-color-violet-950: hsl(265.1 61.5% 21.4%);
+
+  /* Purple */
+  --zn-color-purple-50: hsl(249, 100%, 97%);
+  --zn-color-purple-100: hsl(245, 100%, 95%);
+  --zn-color-purple-200: hsl(244, 100%, 92%);
+  --zn-color-purple-300: hsl(246, 100%, 85%);
+  --zn-color-purple-400: hsl(249, 100%, 76%);
+  --zn-color-purple-500: hsl(252, 98%, 66%);
+  --zn-color-purple-600: hsl(256, 91%, 59%);
+  --zn-color-purple-700: hsl(257, 76%, 50%);
+  --zn-color-purple-800: hsl(257, 76%, 42%);
+  --zn-color-purple-900: hsl(257, 73%, 35%);
+  --zn-color-purple-950: hsl(255, 79%, 23%);
+
+  /* Fuchsia */
+  --zn-color-fuchsia-50: hsl(289.1 100% 97.8%);
+  --zn-color-fuchsia-100: hsl(287 100% 95.5%);
+  --zn-color-fuchsia-200: hsl(288.3 95.8% 90.6%);
+  --zn-color-fuchsia-300: hsl(291.1 93.1% 82.9%);
+  --zn-color-fuchsia-400: hsl(292 91.4% 72.5%);
+  --zn-color-fuchsia-500: hsl(292.2 84.1% 60.6%);
+  --zn-color-fuchsia-600: hsl(293.4 69.5% 48.8%);
+  --zn-color-fuchsia-700: hsl(294.7 72.4% 39.8%);
+  --zn-color-fuchsia-800: hsl(295.4 70.2% 32.9%);
+  --zn-color-fuchsia-900: hsl(296.7 63.6% 28%);
+  --zn-color-fuchsia-950: hsl(297.1 56.8% 14.5%);
+
+  /* Pink */
+  --zn-color-pink-50: hsl(327.3 73.3% 97.1%);
+  --zn-color-pink-100: hsl(325.7 77.8% 94.7%);
+  --zn-color-pink-200: hsl(325.9 84.6% 89.8%);
+  --zn-color-pink-300: hsl(327.4 87.1% 81.8%);
+  --zn-color-pink-400: hsl(328.6 85.5% 70.2%);
+  --zn-color-pink-500: hsl(330.4 81.2% 60.4%);
+  --zn-color-pink-600: hsl(333.3 71.4% 50.6%);
+  --zn-color-pink-700: hsl(335.1 77.6% 42%);
+  --zn-color-pink-800: hsl(335.8 74.4% 35.3%);
+  --zn-color-pink-900: hsl(335.9 69% 30.4%);
+  --zn-color-pink-950: hsl(336.2 65.4% 15.9%);
+
+  /* Rose */
+  --zn-color-rose-50: hsl(355.7 100% 97.3%);
+  --zn-color-rose-100: hsl(355.6 100% 94.7%);
+  --zn-color-rose-200: hsl(352.7 96.1% 90%);
+  --zn-color-rose-300: hsl(352.6 95.7% 81.8%);
+  --zn-color-rose-400: hsl(351.3 94.5% 71.4%);
+  --zn-color-rose-500: hsl(349.7 89.2% 60.2%);
+  --zn-color-rose-600: hsl(346.8 77.2% 49.8%);
+  --zn-color-rose-700: hsl(345.3 82.7% 40.8%);
+  --zn-color-rose-800: hsl(343.4 79.7% 34.7%);
+  --zn-color-rose-900: hsl(341.5 75.5% 30.4%);
+  --zn-color-rose-950: hsl(341.3 70.1% 17.1%);
+
+  /**************************************************************
+   * Theme Tokens
+   *************************************************************/
+
+  /* Primary */
+  --zn-color-primary-50: var(--zn-color-purple-50);
+  --zn-color-primary-100: var(--zn-color-purple-100);
+  --zn-color-primary-200: var(--zn-color-purple-200);
+  --zn-color-primary-300: var(--zn-color-purple-300);
+  --zn-color-primary-400: var(--zn-color-purple-400);
+  --zn-color-primary-500: var(--zn-color-purple-500);
+  --zn-color-primary-600: var(--zn-color-purple-600);
+  --zn-color-primary-700: var(--zn-color-purple-700);
+  --zn-color-primary-800: var(--zn-color-purple-800);
+  --zn-color-primary-900: var(--zn-color-purple-900);
+  --zn-color-primary-950: var(--zn-color-purple-950);
+
+  /* Success */
+  --zn-color-success-50: var(--zn-color-green-50);
+  --zn-color-success-100: var(--zn-color-green-100);
+  --zn-color-success-200: var(--zn-color-green-200);
+  --zn-color-success-300: var(--zn-color-green-300);
+  --zn-color-success-400: var(--zn-color-green-400);
+  --zn-color-success-500: var(--zn-color-green-500);
+  --zn-color-success-600: var(--zn-color-green-600);
+  --zn-color-success-700: var(--zn-color-green-700);
+  --zn-color-success-800: var(--zn-color-green-800);
+  --zn-color-success-900: var(--zn-color-green-900);
+  --zn-color-success-950: var(--zn-color-green-950);
+
+  /* Warning */
+  --zn-color-warning-50: var(--zn-color-amber-50);
+  --zn-color-warning-100: var(--zn-color-amber-100);
+  --zn-color-warning-200: var(--zn-color-amber-200);
+  --zn-color-warning-300: var(--zn-color-amber-300);
+  --zn-color-warning-400: var(--zn-color-amber-400);
+  --zn-color-warning-500: var(--zn-color-amber-500);
+  --zn-color-warning-600: var(--zn-color-amber-600);
+  --zn-color-warning-700: var(--zn-color-amber-700);
+  --zn-color-warning-800: var(--zn-color-amber-800);
+  --zn-color-warning-900: var(--zn-color-amber-900);
+  --zn-color-warning-950: var(--zn-color-amber-950);
+
+  /* Danger */
+  --zn-color-danger-50: var(--zn-color-red-50);
+  --zn-color-danger-100: var(--zn-color-red-100);
+  --zn-color-danger-200: var(--zn-color-red-200);
+  --zn-color-danger-300: var(--zn-color-red-300);
+  --zn-color-danger-400: var(--zn-color-red-400);
+  --zn-color-danger-500: var(--zn-color-red-500);
+  --zn-color-danger-600: var(--zn-color-red-600);
+  --zn-color-danger-700: var(--zn-color-red-700);
+  --zn-color-danger-800: var(--zn-color-red-800);
+  --zn-color-danger-900: var(--zn-color-red-900);
+  --zn-color-danger-950: var(--zn-color-red-950);
+
+  /* Neutral */
+  --zn-color-neutral-50: var(--zn-color-gray-50);
+  --zn-color-neutral-100: var(--zn-color-gray-100);
+  --zn-color-neutral-200: var(--zn-color-gray-200);
+  --zn-color-neutral-300: var(--zn-color-gray-300);
+  --zn-color-neutral-400: var(--zn-color-gray-400);
+  --zn-color-neutral-500: var(--zn-color-gray-500);
+  --zn-color-neutral-600: var(--zn-color-gray-600);
+  --zn-color-neutral-700: var(--zn-color-gray-700);
+  --zn-color-neutral-800: var(--zn-color-gray-800);
+  --zn-color-neutral-900: var(--zn-color-gray-900);
+  --zn-color-neutral-950: var(--zn-color-gray-950);
+
+  /* Neutral one-offs */
+  --zn-color-neutral-0: hsl(0, 0%, 100%);
+  --zn-color-neutral-1000: hsl(0, 0%, 0%);
+
+  /* Border radii */
+  --zn-border-radius-small: 0.1875rem; // 3px
+  --zn-border-radius-medium: 0.325rem; // 5.2px
+  --zn-border-radius-large: 0.5rem; // 8px
+  --zn-border-radius-x-large: 1rem; // 16px
+  --zn-border-radius-circle: 50%;
+  --zn-border-radius-pill: 9999px;
+
+  /* Elevations */
+  --zn-shadow-x-small: 0 1px 2px hsl(240 3.8% 46.1% / 6%);
+  --zn-shadow-small: 0 1px 2px hsl(240 3.8% 46.1% / 12%);
+  --zn-shadow-medium: 0 2px 4px hsl(240 3.8% 46.1% / 12%);
+  --zn-shadow-large: 0 2px 8px hsl(240 3.8% 46.1% / 12%);
+  --zn-shadow-x-large: 0 4px 16px hsl(240 3.8% 46.1% / 12%);
+
+  /* Spacings */
+  --zn-spacing-3x-small: 0.125rem; // 2px
+  --zn-spacing-2x-small: 0.25rem; // 4px
+  --zn-spacing-x-small: 0.5rem; // 8px
+  --zn-spacing-small: 0.75rem; // 12px
+  --zn-spacing-medium: 1rem; // 16px
+  --zn-spacing-large: 1.25rem; // 20px
+  --zn-spacing-x-large: 1.75rem; // 28px
+  --zn-spacing-2x-large: 2.25rem; // 36px
+  --zn-spacing-3x-large: 3rem; // 48px
+  --zn-spacing-4x-large: 4.5rem; // 72px
+
+  /* Fixed Spaces */
+  --zn-spacing-bar: 60px;
+  --zn-spacing-tile: 80px;
+  --zn-spacing-sidenav: 320px;
+  --zn-spacing-small-panel: 170px;
+  --zn-spacing-medium-panel: 320px;
+  --zn-spacing-panel: 360px;
+  --zn-spacing-lside: 460px; // Not sure what this is @mressex figure it out.
+
+  /** Container Sizes */
+  --zn-container-default: 100%;
+  --zn-container-sm: 360px;
+  --zn-container-smp: 480px;
+  --zn-container-ph: 600px;
+  --zn-container-md: 768px;
+  --zn-container-lg: 1100px;
+  --zn-container-hd: 1440px;
+  --zn-container-3k: 1960px;
+  --zn-container-4k: 2560px;
+
+
+  /* Transitions  */
+  --zn-transition-x-slow: 1000ms;
+  --zn-transition-slow: 500ms;
+  --zn-transition-medium: 250ms;
+  --zn-transition-fast: 150ms;
+  --zn-transition-x-fast: 50ms;
+
+  /**************************************************************
+   * Typography
+   *************************************************************/
+
+  /* Fonts */
+  --zn-font-mono: 'Roboto Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  --zn-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --zn-font-serif: 'Roboto Slab', Georgia, 'Times New Roman', serif;
+
+  /* Font sizes */
+  --zn-font-size-2x-small: 0.625rem; // 10px
+  --zn-font-size-x-small: 0.75rem; // 12px
+  --zn-font-size-small: 0.875rem; // 14px
+  --zn-font-size-medium: 1rem; // 16px
+  --zn-font-size-large: 1.25rem; // 20px
+  --zn-font-size-x-large: 1.5rem; // 24px
+  --zn-font-size-2x-large: 2.25rem; // 36px
+  --zn-font-size-3x-large: 3rem; //48px
+  --zn-font-size-4x-large: 4.5rem; //72px
+
+  /* Font weights */
+  --zn-font-weight-light: 300;
+  --zn-font-weight-normal: 400;
+  --zn-font-weight-semibold: 500;
+  --zn-font-weight-bold: 700;
+
+  /* Letter spacings */
+  --zn-letter-spacing-denser: -0.03em;
+  --zn-letter-spacing-dense: -0.015em;
+  --zn-letter-spacing-normal: normal;
+  --zn-letter-spacing-loose: 0.075em;
+  --zn-letter-spacing-looser: 0.15em;
+
+  /* Line heights */
+  --zn-line-height-denser: 1;
+  --zn-line-height-dense: 1.4;
+  --zn-line-height-normal: 1.8;
+  --zn-line-height-loose: 2.2;
+  --zn-line-height-looser: 2.6;
+
+  /* Focus rings */
+  --zn-focus-ring-color: var(--zn-color-primary-600);
+  --zn-focus-ring-style: solid;
+  --zn-focus-ring-width: 3px;
+  --zn-focus-ring: var(--zn-focus-ring-style) var(--zn-focus-ring-width) var(--zn-focus-ring-color);
+  --zn-focus-ring-offset: 1px;
+
+  /**************************************************************
+   * Forms
+   *************************************************************/
+
+  /* Buttons */
+  --zn-button-font-size-small: var(--zn-font-size-x-small);
+  --zn-button-font-size-medium: var(--zn-font-size-small);
+  --zn-button-font-size-large: var(--zn-font-size-medium);
+
+  /* Inputs */
+  --zn-input-height-small: 1.875rem; // 30px
+  --zn-input-height-medium: 2.5rem; // 40px
+  --zn-input-height-large: 3.125rem; // 50px
+
+  /* Input background colors */
+  --zn-input-background-color: var(--zn-color-neutral-50);
+  --zn-input-background-color-hover: var(--zn-color-neutral-100);
+  --zn-input-background-color-focus: var(--zn-color-neutral-100);
+  --zn-input-background-color-disabled: var(--zn-color-neutral-300);
+
+  /* Input borders */
+  --zn-input-border-color: var(--zn-color-neutral-300);
+  --zn-input-border-color-hover: var(--zn-color-neutral-400);
+  --zn-input-border-color-focus: var(--zn-color-primary-500);
+  --zn-input-border-color-disabled: var(--zn-color-neutral-300);
+  --zn-input-border-width: 1px;
+
+  /* Input Required Content */
+  --zn-input-required-content: '*';
+  --zn-input-required-content-offset: -2px;
+  --zn-input-required-content-color: var(--zn-input-label-color);
+
+  /* Input border radii */
+  --zn-input-border-radius-small: var(--zn-border-radius-medium);
+  --zn-input-border-radius-medium: var(--zn-border-radius-medium);
+  --zn-input-border-radius-large: var(--zn-border-radius-medium);
+
+  /* Input fonts */
+  --zn-input-font-family: var(--zn-font-sans);
+  --zn-input-font-weight: var(--zn-font-weight-normal);
+  --zn-input-font-size-small: var(--zn-font-size-small);
+  --zn-input-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-font-size-large: var(--zn-font-size-large);
+  --zn-input-letter-spacing: var(--zn-letter-spacing-normal);
+
+  /* Input colors */
+  --zn-input-color: var(--zn-color-neutral-800);
+  --zn-input-color-hover: var(--zn-color-neutral-800);
+  --zn-input-color-focus: var(--zn-color-neutral-700);
+  --zn-input-color-disabled: var(--zn-color-neutral-800);
+  --zn-input-icon-color: var(--zn-color-neutral-500);
+  --zn-input-icon-color-hover: var(--zn-color-neutral-600);
+  --zn-input-icon-color-focus: var(--zn-color-neutral-600);
+  --zn-input-placeholder-color: var(--zn-color-neutral-500);
+  --zn-input-placeholder-color-disabled: var(--zn-color-neutral-600);
+
+  /* Input spacing */
+  --zn-input-spacing-small: var(--zn-spacing-small);
+  --zn-input-spacing-medium: var(--zn-spacing-medium);
+  --zn-input-spacing-large: var(--zn-spacing-large);
+
+  /* Focus rings */
+  --zn-input-focus-ring-color: hsl(256 91% 59%/ 40%);
+  --zn-input-focus-ring-offset: 0;
+
+  /* Labels */
+  --zn-input-label-font-size-small: var(--zn-font-size-small);
+  --zn-input-label-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-label-font-size-large: var(--zn-font-size-large);
+  --zn-input-label-color: var(--zn-color-neutral-900);
+
+  /* Help text */
+  --zn-input-help-text-font-size-small: var(--zn-font-size-x-small);
+  --zn-input-help-text-font-size-medium: var(--zn-font-size-small);
+  --zn-input-help-text-font-size-large: var(--zn-font-size-medium);
+  --zn-input-help-text-color: var(--zn-color-neutral-500);
+
+  /* Toggles (checkboxes, radios, switches) */
+  --zn-toggle-size-small: 0.875rem; // 14px
+  --zn-toggle-size-medium: 1.125rem; // 18px
+  --zn-toggle-size-large: 1.375rem; // 22px
+
+  /* Overlays */
+  --zn-overlay-background-color: hsl(240 3.8% 46.1% / 33%);
+
+  /* Panels */
+  --zn-panel-background-color: var(--zn-color-neutral-0);
+  --zn-panel-border-color: var(--zn-color-neutral-200);
+  --zn-panel-border-width: 1px;
+
+  /* Tooltips */
+  --zn-tooltip-border-radius: var(--zn-border-radius-medium);
+  --zn-tooltip-background-color: var(--zn-color-neutral-900);
+  --zn-tooltip-color: var(--zn-color-neutral-0);
+  --zn-tooltip-font-family: var(--zn-font-sans);
+  --zn-tooltip-font-weight: var(--zn-font-weight-normal);
+  --zn-tooltip-font-size: var(--zn-font-size-small);
+  --zn-tooltip-line-height: var(--zn-line-height-dense);
+  --zn-tooltip-padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  --zn-tooltip-arrow-size: 6px;
+
+  /* Z-indexes */
+  --zn-z-index-drawer: 700;
+  --zn-z-index-dialog: 800;
+  --zn-z-index-dropdown: 900;
+  --zn-z-index-toast: 950;
+  --zn-z-index-tooltip: 1000;
+}

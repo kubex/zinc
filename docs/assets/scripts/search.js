@@ -340,7 +340,7 @@
         }
         if(page.url.includes('components/'))
         {
-          icon = 'puzzle';
+          icon = 'extension';
         }
         if(page.url.includes('tokens/'))
         {

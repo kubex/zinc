@@ -15,7 +15,7 @@
     max-height: 100%;
 
     @include wc.container-query(ph) {
-      max-width: calc(100% - wc.common-size(bar));
+      max-width: calc(100% - var(--zn-spacing-bar));
     }
 
     @include wc.container-query(zero, ph) {
@@ -66,8 +66,8 @@
     overflow-x: hidden;
 
     @include wc.container-query(ph) {
-      min-width: wc.common-size(bar);
-      max-width: wc.common-size(bar);
+      min-width: var(--zn-spacing-bar);
+      max-width: var(--zn-spacing-bar);
     }
 
     @include wc.container-query(ph) {
@@ -86,7 +86,7 @@
       position: absolute;
       right: 0;
       left: 0;
-      top: wc.common-size(bar);
+      top: var(--zn-spacing-bar);
       bottom: 0;
       flex-grow: 1;
 
@@ -109,7 +109,7 @@
       justify-content: center;
       overflow: hidden;
       border-bottom-width: 1px;
-      height: wc.common-size(bar);
+      height: var(--zn-spacing-bar);
       width: 100%;
       background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
       z-index: 20;
@@ -122,12 +122,12 @@
         height: unset;
         flex-direction: column;
         justify-content: start;
-        min-width: wc.common-size(bar);
-        max-width: wc.common-size(bar);
-        width: wc.common-size(bar);
+        min-width: var(--zn-spacing-bar);
+        max-width: var(--zn-spacing-bar);
+        width: var(--zn-spacing-bar);
         border-bottom-width: 0;
         border-left-width: 1px;
-        padding-bottom: wc.common-size(bar);
+        padding-bottom: var(--zn-spacing-bar);
       }
 
       @include wc.container-query(lg) {
@@ -137,7 +137,7 @@
       span {
         writing-mode: horizontal-tb;
         flex-grow: 1;
-        padding-left: wc.spacing(md);
+        padding-left: var(--zn-spacing-medium);
         display: none;
 
         @include wc.container-query(ph) {
@@ -155,14 +155,14 @@
 
       zn-icon {
         color: rgb(var(--zn-text));
-        margin-left: wc.spacing(md);
-        margin-right: wc.spacing(md);
+        margin-left: var(--zn-spacing-medium);
+        margin-right: var(--zn-spacing-medium);
         transition: all 500ms ease-in-out;
         rotate: 0;
 
         @include wc.container-query(ph) {
-          margin-top: wc.spacing(md);
-          margin-bottom: wc.spacing(md);
+          margin-top: var(--zn-spacing-medium);
+          margin-bottom: var(--zn-spacing-medium);
           rotate: 90deg;
         }
       }
@@ -180,22 +180,22 @@
 
   .relative {
     @include wc.container-query(ph) {
-      max-width: calc(100% - wc.common-size(mpanel));
+      max-width: calc(100% - var(--zn-spacing-medium-panel));
     }
   }
 
   .sidebar {
     @include wc.container-query(ph) {
-      min-width: wc.common-size(mpanel);
-      max-width: wc.common-size(mpanel);
-      width: wc.common-size(mpanel);
+      min-width: var(--zn-spacing-medium-panel);
+      max-width: var(--zn-spacing-medium-panel);
+      width: var(--zn-spacing-medium-panel);
     }
 
     &--wide {
       @include wc.container-query(ph) {
-        min-width: wc.common-size(lside);
-        max-width: wc.common-size(lside);
-        width: wc.common-size(lside);
+        min-width: var(--zn-spacing-lside);
+        max-width: var(--zn-spacing-lside);
+        width: var(--zn-spacing-lside);
       }
     }
 
@@ -235,14 +235,14 @@
 
 @include wc.container-query(lg) {
   :host .sidebar {
-    min-width: wc.common-size(mpanel);
-    max-width: wc.common-size(mpanel);
-    width: wc.common-size(mpanel);
+    min-width: var(--zn-spacing-medium-panel);
+    max-width: var(--zn-spacing-medium-panel);
+    width: var(--zn-spacing-medium-panel);
 
     &--wide {
-      min-width: wc.common-size(lside);
-      max-width: wc.common-size(lside);
-      width: wc.common-size(lside);
+      min-width: var(--zn-spacing-lside);
+      max-width: var(--zn-spacing-lside);
+      width: var(--zn-spacing-lside);
     }
 
     #content {

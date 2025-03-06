@@ -7,12 +7,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: wc.spacing(xs);
-  padding: wc.spacing(md);
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-medium);
 
   ::slotted(*) {
     display: flex;
-    margin-top: wc.spacing(sm);
+    margin-top: var(--zn-spacing-small);
   }
 
   .caption {
@@ -34,8 +34,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: wc.spacing(xs);
-    padding: wc.spacing(sm);
+    gap: var(--zn-spacing-x-small);
+    padding: var(--zn-spacing-small);
     flex-grow: 1;
   }
 }
@@ -43,7 +43,7 @@
 :host([type="error"]) {
   background-color: rgba(var(--zn-color-error), .05);
   min-height: 100px;
-  padding: wc.spacing(xs);
+  padding: var(--zn-spacing-x-small);
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-color-error));
@@ -58,7 +58,7 @@
 :host([type="info"]) {
   background-color: rgba(var(--zn-color-info), .05);
   min-height: 100px;
-  padding: wc.spacing(xs);
+  padding: var(--zn-spacing-x-small);
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-color-info));
@@ -72,7 +72,7 @@
 :host([type="primary"]) {
   background-color: rgba(var(--zn-primary), .05);
   min-height: 100px;
-  padding: wc.spacing(xs);
+  padding: var(--zn-spacing-x-small);
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-primary));

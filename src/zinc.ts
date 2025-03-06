@@ -58,7 +58,6 @@ export {default as Toggle} from './components/toggle';
 export {default as Input} from './components/input';
 export {default as Select} from './components/select';
 export {default as Option} from './components/option';
-export {default as MultiSelect} from './components/multi-select';
 export {default as Textarea} from './components/textarea';
 export {default as Checkbox} from './components/checkbox';
 export {default as ColorSelect} from './components/color-select';
@@ -69,6 +68,7 @@ export {default as Radio} from './components/radio';
 export {default as Rating} from './components/rating';
 export {default as RadioGroup} from './components/radio-group';
 export {default as DragUpload} from './components/drag-upload';
+export {default as CheckboxGroup} from './components/checkbox-group';
 /* plop:component */
 
 // Utilities

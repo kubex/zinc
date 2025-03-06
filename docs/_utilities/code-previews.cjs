@@ -29,7 +29,6 @@ module.exports = function (doc, options)
       return;
     }
     const adjacentPre = pre.nextElementSibling?.tagName.toLowerCase() === 'pre' ? pre.nextElementSibling : null;
-    const reactCode = adjacentPre?.querySelector('code[class$="react"]');
     const sourceGroupId = `code-preview-source-group-${count}`;
     const isExpanded = code.getAttribute('class').includes(':expanded');
 
@@ -45,7 +44,7 @@ module.exports = function (doc, options)
         </div>
 
         <div class="code-preview__source-group" id="${sourceGroupId}">
-          <div class="code-preview__source code-preview__source--html" ${reactCode ? 'data-flavor="html"' : ''}>
+          <div class="code-preview__source code-preview__source--html">
             <pre><code class="language-html">${escapeHtml(code.textContent)}</code></pre>
           </div>
         </div>
@@ -55,8 +54,7 @@ module.exports = function (doc, options)
             type="button"
             class="code-preview__button code-preview__toggle"
             aria-expanded="${isExpanded ? 'true' : 'false'}"
-            aria-controls="${sourceGroupId}"
-          >
+            aria-controls="${sourceGroupId}">
             Source
             <svg
               viewBox="0 0 24 24"
@@ -64,8 +62,7 @@ module.exports = function (doc, options)
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
-              stroke-linejoin="round"
-            >
+              stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>

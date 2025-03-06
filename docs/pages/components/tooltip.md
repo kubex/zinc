@@ -173,7 +173,7 @@ Tooltips can be controlled programmatically by setting the `trigger` attribute t
 You can control the size of tooltip arrows by overriding the `--zn-tooltip-arrow-size` design token. To remove them, set the value to `0` as shown below.
 
 :::warning
-**Note:** Tooltips without arrows are not the standard tooltip pattern in our Design System, and there is no Figma component for this option. Please check with the design team before using this option.
+**Note:** Tooltips without arrows are not the standard tooltip pattern in our Design System.
 :::
 
 ```html:preview

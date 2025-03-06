@@ -6,11 +6,24 @@
   }
 }
 
+zn-navbar {
+  ul {
+    padding-left: 0;
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 :host([stacked]) {
   width: unset;
   height: 100%;
 
   ul {
+    margin: 0;
+    padding: 0;
     flex-direction: column;
     gap: 0;
     border-bottom: none;
@@ -18,7 +31,7 @@
 
   li {
     border-bottom: 1px solid rgb(var(--zn-border-color));
-    padding: wc.spacing(md);
+    padding: var(--zn-spacing-medium);
 
     &.active:before, &.zn-tb-active:before {
       display: none;
@@ -32,13 +45,13 @@
 
 :host([stacked][slot="left"]) {
   ul {
-    padding-right: wc.spacing(md);
+    padding-right: var(--zn-spacing-medium);
   }
 }
 
 :host([stacked][slot="right"]) {
   ul {
-    padding-left: wc.spacing(md);
+    padding-left: var(--zn-spacing-medium);
   }
 }
 
@@ -133,7 +146,7 @@
         position: absolute;
         background-color: rgb(var(--zn-primary));
         transition: all 300ms ease-in-out;
-        height: wc.spacing(xxs);
+        height: var(--zn-spacing-2x-small);
       }
 
       &:hover:before {
@@ -202,8 +215,8 @@ button[popovertarget] {
   }
 
   li {
-    padding-left: wc.spacing(md);
-    padding-right: wc.spacing(md);
+    padding-left: var(--zn-spacing-medium);
+    padding-right: var(--zn-spacing-medium);
 
     &:first-of-type {
       &.active {
@@ -265,8 +278,8 @@ button[popovertarget] {
         transform: translateY(-50%) translateX(-50%);
         background-color: rgba(var(--zn-primary), 0.2);
         border-radius: 50%;
-        height: wc.spacing(lg);
-        width: wc.spacing(lg);
+        height: var(--zn-spacing-large);
+        width: var(--zn-spacing-large);
         pointer-events: none;
       }
     }

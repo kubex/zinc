@@ -28,23 +28,10 @@ export default class ZnFormGroup extends ZincElement {
   @property({reflect: true}) description: string;
 
   render() {
-    const caption = this.caption ? html`<h2 class="caption">${this.caption}</h2>` : null;
-    const description = this.description ? html`<p class="description">${this.description}</p>` : null;
+    // const caption = this.caption ? html`<h2 class="caption">${this.caption}</h2>` : null;
+    // const description = this.description ? html`<p class="description">${this.description}</p>` : null;
 
-    let header = null;
 
-    if (caption || header) {
-      header = html`
-        <div class="header">
-          ${caption}
-          ${description}
-        </div>`;
-    }
-
-    return html`
-      ${header}
-      <div class="fg-inputs">
-        <slot></slot>
-      </div>`;
+    return html`<slot></slot>`;
   }
 }

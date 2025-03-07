@@ -31,7 +31,7 @@
               aria-activedescendant
             >
             <button type="button" class="search__clear-button" aria-label="Clear entry" tabindex="-1" hidden>
-              <zn-icon src="x-circle-fill"></zn-icon>
+              <zn-icon src="cancel"></zn-icon>
             </button>
           </div>
         </div>

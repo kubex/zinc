@@ -1,5 +1,6 @@
 :root {
   --docs-background-color: rgb(var(--zn-body));
+  --docs-sidebar-color: rgb(var(--zn-panel));
   --docs-border-color: rgb(var(--zn-border-color));
   --docs-border-width: 1px;
   --docs-border-radius: 10px;
@@ -37,9 +38,16 @@
   --docs-shadow-x-large: 0 4px 16px rgb(0 0 0 / 48%);
 }
 
+
+/* Reset Margins on Typography */
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 1rem 0 !important;
+}
+
 /* Utils */
-html.zn-theme-dark .only-light,
-html:not(.zn-theme-dark) .only-dark {
+html[t=dark] .only-light,
+html:not([t=dark]) .only-dark {
   display: none !important;
 }
 
@@ -677,7 +685,7 @@ pre:hover .copy-code-button,
   bottom: 0;
   z-index: 20;
   width: var(--docs-sidebar-width);
-  background-color: var(--docs-background-color);
+  background-color: var(--docs-sidebar-color);
   border-right: solid var(--docs-border-width) var(--docs-border-color);
   border-radius: 0;
   padding: 2rem;
@@ -729,13 +737,13 @@ pre:hover .copy-code-button,
 
 #sidebar ul {
   padding: 0;
-  margin: 0;
+  margin: 1rem 0;
 }
 
 #sidebar ul li {
   list-style: none;
   padding: 0;
-  margin: 0.125rem 0.5rem;
+  margin: .5rem 0;
 }
 
 #sidebar ul ul ul {
@@ -1008,8 +1016,8 @@ html.sidebar-open #menu-toggle {
   right: 1rem;
   z-index: 10;
   background: var(--zn-color-neutral-800);
-  border-bottom-left-radius: calc(var(--docs-border-radius) * 2);
-  border-bottom-right-radius: calc(var(--docs-border-radius) * 2);
+  border-bottom-left-radius: var(--docs-border-radius);
+  border-bottom-right-radius: var(--docs-border-radius);
   padding: 0.125rem 0.25rem;
 }
 

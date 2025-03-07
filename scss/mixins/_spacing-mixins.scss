@@ -34,59 +34,15 @@
 }
 
 @mixin gap {
-  --zn-gap: #{spacing(md)};
-  /* --zn-gap: #{spacing(xxs)};
-  @include container-query(smp) {
-    --zn-gap: #{spacing(md)};
-  }
-
-  @include container-query(md) {
-    --zn-gap: #{spacing(md)};
-  }
-
-  @include container-query(lg) {
-    --zn-gap: #{spacing(lg)};
-  }
- */
-  gap: var(--zn-gap, 0);
+  gap: var(--zn-spacing-medium, 0);
 }
 
-
 @mixin gap-sm {
-  --zn-gap: #{spacing(xs)};
-  /* --zn-gap: #{spacing(xxs)};
-  @include container-query(smp) {
-    --zn-gap: #{spacing(md)};
-  }
-
-  @include container-query(md) {
-    --zn-gap: #{spacing(md)};
-  }
-
-  @include container-query(lg) {
-    --zn-gap: #{spacing(lg)};
-  }
- */
-  gap: var(--zn-gap, 0);
+  gap: var(--zn-spacing-x-small, 0);
 }
 
 @mixin padding {
-  --zn-padding: #{spacing(md)};
-  /* --zn-padding: #{spacing(xs)};
-
-  @include container-query(smp) {
-    --zn-padding: #{spacing(sm)};
-  }
-
-  @include container-query(md) {
-    --zn-padding: #{spacing(md)};
-  }
-
-  @include container-query(lg) {
-    --zn-padding: #{spacing(lg)};
-  } */
-
-  padding: var(--zn-padding, 0);
+  padding: var(--zn-spacing-medium, 0);
 }
 
 @function spacing($size, $default: sm) {

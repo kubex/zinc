@@ -165,7 +165,7 @@ export default class ZnMenuItem extends ZincElement {
         ?aria-expanded="${isSubmenuExpanded}"
       >
         <span part="checked-icon" class="menu-item__check">
-          <zn-icon src="checked-option" aria-hidden="true"></zn-icon>
+          <zn-icon src="check_small" aria-hidden="true"></zn-icon>
         </span>
 
         <slot name="prefix" part="prefix" class="menu-item__prefix"></slot>

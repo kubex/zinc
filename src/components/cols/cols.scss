@@ -1,6 +1,8 @@
 @use "../../wc";
 
 :host {
+  --zn-col-basis: var(--zn-spacing-small-panel);
+
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;
@@ -28,17 +30,17 @@
 }
 
 ::slotted(.zn-col-1) {
-  flex-basis: var(--zn-spacing-small-panel);
+  flex-basis: var(--zn-col-basis);
   min-width: var(--col-width);
 }
 
 ::slotted(.zn-col-2) {
-  flex-basis: calc(var(--zn-spacing-small-panel) * 2);
+  flex-basis: calc(var(--zn-col-basis) * 2);
   min-width: calc(var(--col-width) * 2);
 }
 
 ::slotted(.zn-col-3) {
-  flex-basis: calc(var(--zn-spacing-small-panel) * 3);
+  flex-basis: calc(var(--zn-col-basis) * 3);
   min-width: calc(var(--col-width) * 3);
 }
 

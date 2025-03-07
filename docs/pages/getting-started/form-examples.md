@@ -18,9 +18,7 @@ input,
       label="Profile" 
       label-tooltip="huh"
       help-text="This information will be displayed publicly so be careful what you share">
-      <zn-input name="name" label="Name" required>
-        <input type="text" id="text" name="text">
-      </zn-input>
+      <zn-input type="text" name="name" label="Name" required></zn-input>
       <br />
       <zn-select label="Favorite Animal" clearable required>
         <zn-option value="birds">Birds</zn-option>
@@ -38,7 +36,7 @@ input,
         <zn-checkbox value="I'm option 2">Option 2</zn-checkbox>
         <zn-checkbox value="I'm option 3">Option 3</zn-checkbox>
        </zn-checkbox-group>
-    
+  
     </zn-form-group>
     
     <zn-form-group 

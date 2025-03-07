@@ -58,19 +58,18 @@
 <div id="icon-toolbar">
   {# GitHub #}
   <a href="https://github.com/kubex/zinc" title="View zinc on GitHub">
-    <zn-icon src="github"></zn-icon>
+    <zn-icon src="code"></zn-icon>
   </a>
 
   {# Theme selector #}
   <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
-    <zn-button slot="trigger" size="small" variant="text" title="Press \ to toggle">
+    <zn-button slot="trigger" size="content" color="transparent" title="Press \ to toggle">
       <zn-icon class="only-light" src="light_mode"></zn-icon>
       <zn-icon class="only-dark" src="dark_mode"></zn-icon>
     </zn-button>
     <zn-menu>
       <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
       <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
-      <zn-divider></zn-divider>
       <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
     </zn-menu>
   </zn-dropdown>
@@ -99,7 +98,8 @@
 
   <zn-button icon="search"
              class="search-box"
-             color="secondary"
+             color="transparent"
+             size="small"
              type="button"
              title="Press / to search"
              aria-label="Search"

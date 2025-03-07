@@ -1,12 +1,12 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property, query} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import type ZnMenuItem from "../menu-item";
 import type ZnDropdown from "../dropdown";
 
 import styles from './menu.scss';
 import ZnConfirmModal from "../confirm-modal";
-import { ifDefined } from "lit/directives/if-defined.js";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 type NavItem = {
   title: string;
@@ -47,7 +47,7 @@ export default class ZnMenu extends ZincElement {
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
-  @property({ attribute: 'actions', type: Array }) actions = [];
+  @property({attribute: 'actions', type: Array}) actions = [];
 
   connectedCallback() {
     super.connectedCallback();
@@ -65,7 +65,7 @@ export default class ZnMenu extends ZincElement {
     const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
     const clickHasSubmenu = closestMenu !== this;
 
-    // Make sure we're the menu thats supposed to be handling the click event.
+    // Make sure we're the menu that's supposed to be handling the click event.
     if (clickHasSubmenu) return;
 
     // This isn't true. But we use it for TypeScript checks below.
@@ -77,6 +77,8 @@ export default class ZnMenu extends ZincElement {
 
     // get the parent dropdown and close it
     (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
+
+    this.emit('zn-select', {detail: {item}});
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -149,7 +151,7 @@ export default class ZnMenu extends ZincElement {
 
   /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
   getAllItems() {
-    return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
+    return [...this.defaultSlot.assignedElements({flatten: true})].filter((el: HTMLElement) => {
       return !(el.inert || !this.isMenuItem(el));
 
     }) as ZnMenuItem[];

@@ -1,38 +1,41 @@
-.zn-divide > *:not(:first-child) {
-  border-top: 1px solid rgb(var(--zn-border-color));
-}
-
-zn-si
-.zn-divide > div:empty + div:not(:first-child) {
-  /** Support Empty Divs only - custom elements can be empty and have content **/
-  border-top: 0;
-}
-
-
 .zn-divide {
   display: flex;
   flex-direction: column;
+
+  & > *:not(:first-child) {
+    border-top: 1px solid rgb(var(--zn-border-color));
+  }
+
+  & > div:empty + div:not(:first-child) {
+    /** Support Empty Divs only - custom elements can be empty and have content **/
+    border-top: 0;
+  }
 }
 
 .zn-divide-y {
   display: flex;
   flex-direction: row;
+
+  & > *:not(:first-child):not(:empty) {
+    border-left: 1px solid rgb(var(--zn-border-color));
+  }
 }
 
-.zn-divide-y > *:not(:first-child):not(:empty) {
-  border-left: 1px solid rgb(var(--zn-border-color));
-}
-
-.zn-pad {
+.zn-c-pad {
   --zn-pad-spacing: var(--zn-spacing-large);
 }
 
-.zn-pad-x > * {
+.zn-c-pad-x > * {
   padding-left: var(--zn-pad-spacing);
   padding-right: var(--zn-pad-spacing);
 }
 
-.zn-pad-y > * {
-  padding-top: var(--zn-pad-spacing);
-  padding-bottom: var(--zn-pad-spacing);
+.zn-c-pad-y > * {
+  &:not(:first-child) {
+    padding-top: var(--zn-pad-spacing);
+  }
+
+  &:not(:last-child) {
+    padding-bottom: var(--zn-pad-spacing);
+  }
 }

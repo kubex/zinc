@@ -56,7 +56,7 @@ export default class ZnFormGroup extends ZincElement {
         aria-labelledby="label"
         aria-describedby="help-text">
 
-        <zn-cols layout="1,2" mc="2">
+        <zn-cols layout="1,2" mc="2" part="form-control-container" class="form-control__container">
           <div>
             <label
               part="form-control-label"

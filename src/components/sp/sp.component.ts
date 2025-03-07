@@ -41,13 +41,13 @@ export default class ZnSp extends ZincElement {
     }
 
     if (this.padX) {
-      this.classList.add('zn-pad');
-      this.classList.add('zn-pad-x');
+      this.classList.add('zn-c-pad');
+      this.classList.add('zn-c-pad-x');
     }
 
     if (this.padY) {
-      this.classList.add('zn-pad');
-      this.classList.add('zn-pad-y');
+      this.classList.add('zn-c-pad');
+      this.classList.add('zn-c-pad-y');
     }
   }
 

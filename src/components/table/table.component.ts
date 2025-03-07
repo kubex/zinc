@@ -201,7 +201,7 @@ export default class ZnTable extends ZincElement {
         actionsHtml = html`
           <div class="actions">
             <zn-dropdown>
-              <zn-new-menu actions="${JSON.stringify(actions)}"></zn-new-menu>
+              <zn-menu actions="${JSON.stringify(actions)}"></zn-menu>
               <button slot="trigger">
                 <zn-icon src="more_vert"></zn-icon>
               </button>

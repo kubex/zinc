@@ -33,6 +33,13 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.divide) {
+      this.classList.add('zn-divide');
+    }
+  }
+
   protected render(): unknown {
     return html`
       <div class="${classMap({

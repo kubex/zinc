@@ -12,16 +12,8 @@ import {HasSlotController} from "../../internal/slot";
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
  * @slot - The default slot.
- * @slot example - An example slot.
  *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnFormGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -61,10 +53,8 @@ export default class ZnFormGroup extends ZincElement {
           'form-control--has-label-tooltip': hasLabelTooltip,
           'form-control--has-help-text': hasHelpText
         })}
-        role="listbox"
         aria-labelledby="label"
-        aria-describedby="help-text"
-        aria-errormessage="error-message">
+        aria-describedby="help-text">
 
         <zn-cols layout="1,2" mc="2">
           <div>
@@ -80,7 +70,7 @@ export default class ZnFormGroup extends ZincElement {
                     <div slot="content">
                       <slot name="label-tooltip">${this.labelTooltip}</slot>
                     </div>
-                    <sl-icon library="fa" name="fas-circle-info"></sl-icon>
+                    <zn-icon src="info"></zn-icon>
                   </zn-tooltip>`
                 : ''}
             </label>

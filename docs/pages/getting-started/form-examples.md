@@ -13,7 +13,7 @@ input,
 
 ```html:preview
 <form class="input-validation-required">
-  <zn-form-group >
+  <zn-form-group label="Profile" help-text="This information will be displayed publicly so be careful what you share">
     <zn-input name="name" label="Name" required>
       <input type="text" id="text" name="text">
     </zn-input>

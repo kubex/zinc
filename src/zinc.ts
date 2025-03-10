@@ -14,7 +14,7 @@ export {default as Collapsible} from './components/collapsible';
 export {default as CopyButton} from './components/copy-button';
 export {default as DataTable} from './components/data-table';
 export {default as Cols} from './components/cols';
-export {default as ConfirmModal} from './components/confirm-modal';
+export {default as ConfirmModal} from './components/confirm';
 export {default as Dialog} from './components/dialog';
 export {default as Dropdown} from './components/dropdown';
 export {default as Menu} from './components/menu';

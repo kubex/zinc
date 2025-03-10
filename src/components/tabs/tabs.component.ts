@@ -1,12 +1,12 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
-import { ifDefined } from "lit/directives/if-defined.js";
-import { deepQuerySelectorAll } from "../../utilities/query";
-import { md5 } from "../../utilities/md5";
-import { Store } from "../../internal/storage";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {deepQuerySelectorAll} from "../../utilities/query";
+import {md5} from "../../utilities/md5";
+import {Store} from "../../internal/storage";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -28,39 +28,39 @@ import { Store } from "../../internal/storage";
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private _panel: HTMLElement;
+  private _panel: HTMLElement | any;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
+  // @ts-ignore
+  private storage: Storage;
 
-  @property({ attribute: 'master-id', reflect: true }) masterId = '';
-  @property({ attribute: 'default-uri', reflect: true }) defaultUri = '';
+  @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
+  @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
-  @property({ attribute: 'caption', reflect: true }) caption = '';
-  @property({ attribute: 'header', reflect: true }) header = '';
+  @property({attribute: 'caption', type: String, reflect: true}) caption = '';
+  @property({attribute: 'header', type: String, reflect: true}) header = '';
 
-  @property({ attribute: 'active', reflect: true }) _current = '';
-  @property({ attribute: 'split', type: Number, reflect: true }) _split: number;
-  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
+  @property({attribute: 'active', type: String, reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split: any;
+  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
 
-  @property({ attribute: 'primary-caption', reflect: true }) primaryCaption = 'Navigation';
-  @property({ attribute: 'secondary-caption', reflect: true }) secondaryCaption = 'Content';
+  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
 
-  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
+  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
-  @property({ attribute: 'store-key', reflect: true }) storeKey = null;
-  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+  @property({attribute: 'store-key', type: String, reflect: true}) storeKey: any = null;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
-  @property({ attribute: 'padded', type: Boolean, reflect: true }) padded = false;
-  @property({ attribute: 'padded-right', type: Boolean, reflect: true }) paddedRight = false;
+  @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
 
   protected preload = true;
   protected _store: Store;
   protected _activeClicks = 0;
-
-  storage: Storage;
 
   constructor() {
     super();
@@ -77,7 +77,7 @@ export default class ZnTabs extends ZincElement {
     this.preload = !this.noPrefetch;
 
     await this.updateComplete;
-    this._panel = this.shadowRoot?.querySelector('#content') as HTMLElement;
+    this._panel = this.shadowRoot?.querySelector('#content');
     this.observerDom();
     this._registerTabs();
 
@@ -125,7 +125,7 @@ export default class ZnTabs extends ZincElement {
     setTimeout(() => {
       this._registerTabs();
 
-      const storedValue = this._store.get(this.storeKey ?? '');
+      const storedValue = this._store.get(this.storeKey);
       if (storedValue != null) {
         this._prepareTab(storedValue);
         this.setActiveTab(storedValue, false, false);
@@ -146,9 +146,9 @@ export default class ZnTabs extends ZincElement {
 
     this.addEventListener('zn-menu-select', () => {
       setTimeout(() => {
-        this.reRegisterTabs();
+        this.reRegisterTabs()
       }, 200);
-    }, { passive: true });
+    }, {passive: true});
   }
 
   _prepareTab(tabId: string) {
@@ -161,7 +161,7 @@ export default class ZnTabs extends ZincElement {
 
     const uriTabs = deepQuerySelectorAll("[tab-uri]", this, '');
     for (let i = 0; i < uriTabs.length; i++) {
-      const uri = uriTabs[i].getAttribute("tab-uri") as string;
+      const uri: any = uriTabs[i].getAttribute("tab-uri");
       const eleTabId = this._uriToId(uri);
       if (eleTabId == tabId) {
         this._createUriPanel(uriTabs[i], uri, eleTabId);
@@ -199,7 +199,7 @@ export default class ZnTabs extends ZincElement {
       this._panels.set(tabId, [tabNode]);
     }
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: { element: tabNode, source: tabEle }
+      detail: {element: tabNode, source: tabEle}
     }));
     return tabNode;
   }
@@ -214,7 +214,7 @@ export default class ZnTabs extends ZincElement {
 
   fetchUriTab(target: HTMLElement) {
     if (!target.hasAttribute('tab') && target.hasAttribute('tab-uri')) {
-      const tabUri = target.getAttribute("tab-uri") as string;
+      const tabUri: any = target.getAttribute("tab-uri");
       this._createUriPanel(target, tabUri, this._uriToId(tabUri));
     }
   }
@@ -224,7 +224,7 @@ export default class ZnTabs extends ZincElement {
 
     if (target.hasAttribute('tab')) {
       setTimeout(() => {
-        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));
+        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target) as any);
       }, 10);
     }
   }
@@ -247,8 +247,8 @@ export default class ZnTabs extends ZincElement {
   setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: any = null) {
     let hasActive = false;
     this._tabs.forEach(tab => {
-      if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri') as string)) {
-        tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri') as string) as string);
+      if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri') as any)) {
+        tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri') as any) as any);
       }
 
       let setActive = tabName == tab.getAttribute('tab');
@@ -268,7 +268,7 @@ export default class ZnTabs extends ZincElement {
     //This must be done AFTER selectTab to avoid panel bugs
 
     if (store && this._store != null) {
-      this._store.set(this.storeKey ?? '', tabName);
+      this._store.set(this.storeKey, tabName);
     }
   }
 
@@ -303,7 +303,7 @@ export default class ZnTabs extends ZincElement {
         element.toggleAttribute('selected', isActive);
         if (isActive && refresh) {
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: { element: element }
+            detail: {element: element}
           }));
         }
       });

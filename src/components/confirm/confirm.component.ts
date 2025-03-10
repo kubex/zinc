@@ -1,10 +1,10 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZnDialog from "../dialog";
-import { classMap } from "lit/directives/class-map.js";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
+import {classMap} from "lit/directives/class-map.js";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
-import styles from './confirm-modal.scss';
+import styles from './confirm.scss';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -23,7 +23,7 @@ import styles from './confirm-modal.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnConfirmModal extends ZnDialog {
+export default class ZnConfirm extends ZnDialog {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() caption: string = '';
@@ -31,7 +31,7 @@ export default class ZnConfirmModal extends ZnDialog {
   @property() action: string = '';
   @property() confirmText: string = "Confirm";
   @property() cancelText: string = "Cancel";
-  @property({ type: Boolean, attribute: 'hide-icon' }) hideIcon: boolean = false;
+  @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
   @property() type: 'warning' | 'error' | 'success' | 'info' = 'warning';
   @property() size: 'small' | 'medium' | 'large' = 'medium';
@@ -52,7 +52,7 @@ export default class ZnConfirmModal extends ZnDialog {
   }
 
   connectedCallback() {
-    this.emit('zn-element-added', { detail: { element: this } });
+    this.emit('zn-element-added', {detail: {element: this}});
     super.connectedCallback();
   }
 
@@ -118,7 +118,7 @@ export default class ZnConfirmModal extends ZnDialog {
   }
 
   closeModal() {
-    this.emit('zn-close', { detail: { element: this } });
+    this.emit('zn-close', {detail: {element: this}});
   }
 
   submitDialog() {
@@ -130,7 +130,7 @@ export default class ZnConfirmModal extends ZnDialog {
       form.method = 'POST';
       this.appendChild(form);
       document.dispatchEvent(new CustomEvent('zn-register-element', {
-        detail: { element: form }
+        detail: {element: form}
       }));
     }
 

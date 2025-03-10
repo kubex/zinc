@@ -12,7 +12,7 @@ unusedProperties: |
 ### Basic Checkbox
 
 ```html:preview
-<zn-checkbox>Financial products access<zn-checkbox>
+<zn-checkbox>Financial products access</zn-checkbox>
 ```
 
 :::tip
@@ -42,7 +42,7 @@ useful for giving more emphasis to a checkbox or list of checkboxes.
 <zn-checkbox-group label="Financial products permissions" contained>
   <zn-checkbox description="Requires separate initiators and approvers">Initiate outbound transfers</zn-checkbox>
   <zn-checkbox description="Requires separate initiators and approvers">Approve outbound transfers </zn-checkbox>
-  <zn-checkbox description="Applies to both cash account and charge card" disabled>Export transactions<zn-checkbox>
+  <zn-checkbox description="Applies to both cash account and charge card" disabled>Export transactions</zn-checkbox>
 <zn-checkbox-group>
 ```
 
@@ -66,7 +66,7 @@ when it is checked. The slot is unstyled by default. Use `::part(selected-conten
   <div slot="selected-content">
     <p>A mobile number is required to grant this user access to financial products. The number will be used for login verification.</p>
     <zn-input style="width: 280px;" label="Mobile number" type="tel" required optional-icon></div>
-<zn-checkbox>
+</zn-checkbox>
 <style>
  zn-checkbox::part(selected-content) {
     font-size: 14px;
@@ -81,7 +81,7 @@ when it is checked. The slot is unstyled by default. Use `::part(selected-conten
 Use the `checked` attribute to activate the checkbox.
 
 ```html:preview
-<zn-checkbox checked>Financial products access<zn-checkbox>
+<zn-checkbox checked>Financial products access</zn-checkbox>
 ```
 
 ### Indeterminate
@@ -89,7 +89,7 @@ Use the `checked` attribute to activate the checkbox.
 Use the `indeterminate` attribute to make the checkbox indeterminate.
 
 ```html:preview
-<zn-checkbox indeterminate>Indeterminate<zn-checkbox>
+<zn-checkbox indeterminate>Indeterminate</zn-checkbox>
 ```
 
 ### Disabled
@@ -97,7 +97,7 @@ Use the `indeterminate` attribute to make the checkbox indeterminate.
 Use the `disabled` attribute to disable the checkbox.
 
 ```html:preview
-<zn-checkbox disabled>Disabled<zn-checkbox>
+<zn-checkbox disabled>Disabled</zn-checkbox>
 ```
 
 ### Sizes

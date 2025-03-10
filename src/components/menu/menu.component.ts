@@ -5,7 +5,7 @@ import type ZnMenuItem from "../menu-item";
 import type ZnDropdown from "../dropdown";
 
 import styles from './menu.scss';
-import ZnConfirmModal from "../confirm-modal";
+import ZnConfirm from "../confirm";
 import {ifDefined} from "lit/directives/if-defined.js";
 
 type NavItem = {
@@ -179,7 +179,7 @@ export default class ZnMenu extends ZincElement {
   }
 
   private handleConfirm(triggerId: string) {
-    const confirm = this.shadowRoot?.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ZnConfirmModal;
+    const confirm = this.shadowRoot?.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ZnConfirm;
     if (confirm) {
       confirm.addEventListener('zn-close', (e) => this.handleClick(e as any));
       confirm.open();

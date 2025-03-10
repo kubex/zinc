@@ -45,7 +45,7 @@ export default class ZnAlert extends ZincElement {
       }
     }
 
-    const caption = this.caption ? html`<h6>${this.caption}</h6>` : '';
+    const caption = this.caption ? html`<p>${this.caption}</p>` : '';
 
     return html`
       <div class=${classMap({

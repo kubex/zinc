@@ -1,12 +1,12 @@
 ---
 meta:
-  title: Confirm Modal
+  title: Confirm
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-confirm-modal></zn-confirm-modal>
+<zn-confirm></zn-confirm>
 ```
 
 ## Examples
@@ -19,4 +19,4 @@ TODO
 
 TODO
 
-[component-metadata:zn-confirm-modal]
+[component-metadata:zn-confirm]

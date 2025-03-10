@@ -24,7 +24,10 @@ import styles from './confirm.scss';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnConfirm extends ZnDialog {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+
+  static get styles(): CSSResultGroup {
+    return [super.styles, unsafeCSS(styles)];
+  }
 
   @property() caption: string = '';
   @property() content: string = '';
@@ -105,10 +108,12 @@ export default class ZnConfirm extends ZnDialog {
             'button-group': true,
             'button-group--gap': this._hasVisibleInput
           })}">
-            <zn-button class="grow" outline color="${this.type}" dialog-closer modal-closer @click="${this.closeModal}">
+            <zn-button style="flex-grow:1" outline color="${this.type}" dialog-closer modal-closer
+                       @click="${this.closeModal}">
               ${this.cancelText}
             </zn-button>
-            <zn-button class="grow" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
+            <zn-button style="flex-grow:1" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}
+            </zn-button>
           </div>
         </div>
         <div class="done">

@@ -92,7 +92,7 @@ export default class ZnDialog extends ZincElement {
 
   render() {
     return html`
-      <dialog>
+      <dialog class="dialog">
         <div id="content">
           <slot></slot>
         </div>

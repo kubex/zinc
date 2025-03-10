@@ -1,122 +1,124 @@
 @use "../../wc";
 
 :host {
-  dialog {
-    margin: 0;
-    background: rgb(var(--zn-panel));
 
+}
+
+.dialog {
+  margin: 0;
+  background: rgb(var(--zn-panel));
+
+  width: 100%;
+  max-width: 100%;
+
+  height: 100%;
+  min-height: 100%;
+  max-height: 100vh;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  div#content {
     width: 100%;
-    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 
-    height: 100%;
-    min-height: 100%;
-    max-height: 100vh;
+    @media (min-width: 600px) {
+      width: 540px;
+    }
+  }
 
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
+  @media (max-height: 600px) and (min-width: 600px) {
+    margin: auto;
+    max-height: 100%;
+  }
 
-    div#content {
-      width: 100%;
+  @media (min-width: 600px) {
+    max-width: 540px;
+    border-radius: 10px;
+    height: fit-content;
+    min-height: unset;
+  }
+
+  @media (min-height: 600px) and (min-width: 600px) {
+    margin: 10vh auto;
+    max-height: 80vh;
+  }
+
+  @media (min-height: 800px) and (min-width: 600px) {
+    margin: 10% auto;
+    // max-height: 60vh;
+  }
+
+  &[open] {
+    div {
+      display: flex;
+    }
+  }
+
+  &[open].closing {
+    div.done {
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+    }
+  }
 
-      @media (min-width: 600px) {
-        width: 540px;
-      }
+  div.done {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--zn-success), 0.4);
+  }
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+  }
+
+  @keyframes closing {
+    10% {
+      opacity: 1;
+      border-radius: 1000px;
+
+
+      max-width: 165px;
+      max-height: 165px;
+      width: 165px;
+      height: 165px;
     }
 
-    @media (max-height: 600px) and (min-width: 600px) {
-      margin: auto;
-      max-height: 100%;
+    80% {
+      opacity: 0.5;
+      border-radius: 50%;
+      max-width: 120px;
+      max-height: 120px;
     }
 
-    @media (min-width: 600px) {
-      max-width: 540px;
-      border-radius: 10px;
-      height: fit-content;
-      min-height: unset;
-    }
-
-    @media (min-height: 600px) and (min-width: 600px) {
-      margin: 10vh auto;
-      max-height: 80vh;
-    }
-
-    @media (min-height: 800px) and (min-width: 600px) {
-      margin: 10% auto;
-      // max-height: 60vh;
-    }
-
-    &[open] {
-      div {
-        display: flex;
-      }
-    }
-
-    &[open].closing {
-      div.done {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-
-    div.done {
+    100% {
       display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(var(--zn-success), 0.4);
+      opacity: 0;
+      border-radius: 50%;
+
+      max-width: 50px;
+      max-height: 50px;
+      animation-play-state: paused;
     }
+  }
 
-    &::backdrop {
-      background: rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(4px);
-    }
+  &.closing {
+    overflow: hidden;
 
-    @keyframes closing {
-      10% {
-        opacity: 1;
-        border-radius: 1000px;
+    animation-name: closing;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+    animation-duration: 2.1s;
 
-
-        max-width: 165px;
-        max-height: 165px;
-        width: 165px;
-        height: 165px;
-      }
-
-      80% {
-        opacity: 0.5;
-        border-radius: 50%;
-        max-width: 120px;
-        max-height: 120px;
-      }
-
-      100% {
-        display: none;
-        opacity: 0;
-        border-radius: 50%;
-
-        max-width: 50px;
-        max-height: 50px;
-        animation-play-state: paused;
-      }
-    }
-
-    &.closing {
-      overflow: hidden;
-
-      animation-name: closing;
-      animation-timing-function: ease-in;
-      animation-iteration-count: 1;
-      animation-duration: 2.1s;
-
-      div#content {
-        opacity: 0;
-      }
+    div#content {
+      opacity: 0;
     }
   }
 }

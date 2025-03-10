@@ -134,7 +134,6 @@ export default class ZnHeader extends ZincElement {
     }
 
     const hasDefaultSlot = this.hasSlotController.test('[default]');
-    const hasNavSlot = this.hasSlotController.test('nav');
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
@@ -151,10 +150,9 @@ export default class ZnHeader extends ZincElement {
             ${caption}
           </div>
         </div>
-        ${hasNavSlot ? html`
-          <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
-            <slot name="nav"></slot>
-          </div>` : ''}
+        <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
+          <slot name="nav"></slot>
+        </div>
       </div>
     `;
     if (this.fullWidth) {

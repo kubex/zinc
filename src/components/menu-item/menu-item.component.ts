@@ -1,5 +1,5 @@
 import {property, query} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, unsafeCSS} from 'lit';
 import {LocalizeController} from '../../utilities/localize';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -7,9 +7,11 @@ import ZnPopup from "../popup";
 import ZnIcon from "../icon";
 import {getTextContent, HasSlotController} from '../../internal/slot';
 import {SubmenuController} from './submenu-controller';
+import {html, literal} from "lit/static-html.js";
+import {classMap} from "lit/directives/class-map.js";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 import styles from './menu-item.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -55,6 +57,12 @@ export default class ZnMenuItem extends ZincElement {
 
   /** Draws the menu item in a disabled state, preventing selection. */
   @property({type: Boolean, reflect: true}) disabled = false;
+
+  // Link Specific
+  @property() href: string;
+  @property() target: '_self' | '_blank' | '_parent' | '_top' | string;
+  @property({attribute: 'data-target'}) dataTarget: 'modal' | 'slide' | string;
+  @property() rel: string = 'noreferrer noopener';
 
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
@@ -143,14 +151,24 @@ export default class ZnMenuItem extends ZincElement {
     return this.hasSlotController.test('submenu');
   }
 
+  private _isLink() {
+    return this.href !== undefined;
+  }
+
   render() {
     const isRtl = this.localize.dir() === 'rtl';
     const isSubmenuExpanded = this.submenuController.isExpanded();
+    const isLink = this._isLink();
+    const tag = isLink ? literal`a` : literal`div`;
 
     return html`
-      <div
+      <${tag}
         id="anchor"
         part="base"
+        href=${ifDefined(this.href)}
+        target=${ifDefined(isLink ? this.target : undefined)}
+        data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
+        rel=${ifDefined(isLink ? this.rel : undefined)}
         class=${classMap({
           'menu-item': true,
           'menu-item--rtl': isRtl,
@@ -161,8 +179,7 @@ export default class ZnMenuItem extends ZincElement {
           'menu-item--submenu-expanded': isSubmenuExpanded
         })}
         ?aria-haspopup="${this.isSubmenu()}"
-        ?aria-expanded="${isSubmenuExpanded}"
-      >
+        ?aria-expanded="${isSubmenuExpanded}">
         <span part="checked-icon" class="menu-item__check">
           <zn-icon src="check_small" aria-hidden="true"></zn-icon>
         </span>
@@ -180,7 +197,7 @@ export default class ZnMenuItem extends ZincElement {
         ${this.submenuController.renderSubmenu()}
         ${this.loading ? html`
           <zn-spinner part="spinner" exportparts="base:spinner__base"></zn-spinner> ` : ''}
-      </div>
+        </div>
     `;
   }
 }

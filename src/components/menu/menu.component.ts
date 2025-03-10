@@ -192,8 +192,7 @@ export default class ZnMenu extends ZincElement {
         @slotchange=${this.handleSlotChange}
         @click=${this.handleClick}
         @keydown=${this.handleKeyDown}
-        @mousedown=${this.handleMouseDown}
-      >
+        @mousedown=${this.handleMouseDown}>
         ${this.actions.map((item: NavItem) => {
           if (item.confirm) {
             return html`
@@ -214,16 +213,16 @@ export default class ZnMenu extends ZincElement {
           } else {
             if (item.type !== 'dropdown') {
               return html`
-                <zn-menu-item value="${item.title}">
+                <zn-menu-item value="${item.title}"
+                              href="${item.path}"
+                              data-target="${ifDefined(item.target)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
-                  <a @click="${this.handleClick}"
-                     @keydown=${this.handleKeyDown}
-                     @mousedown=${this.handleMouseDown}
-                     href="${item.path}"
-                     data-target="${ifDefined(item.target)}">${item.title}</a>
-                </zn-menu-item>
-              `;
+                  <span @click="${this.handleClick}"
+                        @keydown=${this.handleKeyDown}
+                        @mousedown=${this.handleMouseDown}
+                        data-target="${ifDefined(item.target)}">${item.title}</span>
+                </zn-menu-item>`;
             } else {
               return html`
                 <zn-menu-item value="${item.title}">

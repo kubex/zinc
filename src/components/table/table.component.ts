@@ -257,7 +257,6 @@ export default class ZnTable extends ZincElement {
     }
 
     if (col.hasOwnProperty('chips')) {
-      console.log('Chips', col);
       const colContent = col['chips'].map((chip: any) => {
         return html`
           <zn-chip type="${chip['state']}">${chip['chip']}</zn-chip>`;

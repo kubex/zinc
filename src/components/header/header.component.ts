@@ -115,7 +115,7 @@ export default class ZnHeader extends ZincElement {
     let backButton: TemplateResult = html``;
     if (this.previousPath && this.previousPath.length > 0) {
       backButton = html`
-        <a href="${this.previousPath}" data-target="${this.previousTarget ? this.previousTarget : ''}">
+        <a href="${this.previousPath}" class="caption__back" data-target="${this.previousTarget ? this.previousTarget : ''}">
           <zn-icon src="arrow_back"></zn-icon>
         </a>`;
     }

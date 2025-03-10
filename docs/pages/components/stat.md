@@ -5,8 +5,10 @@ meta:
 layout: component
 ---
 
+Simple Example.
+
 ```html:preview
-<zn-stat></zn-stat>
+<zn-stat caption="Something" description="Another Thing" amount="100" previous="10" currency="$" show-delta show-chart></zn-stat>
 ```
 
 ## Examples

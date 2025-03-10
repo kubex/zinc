@@ -1,9 +1,10 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import type ZnNavbar from "../navbar";
 
 import styles from './header.scss';
+import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,16 +26,18 @@ import styles from './header.scss';
 export default class ZnHeader extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'full-location', reflect: true }) fullLocation: string;
-  @property({ attribute: 'entity-id', reflect: true }) entityId: string;
-  @property({ attribute: 'entity-id-show', type: Boolean, reflect: true }) entityIdShow: boolean;
-  @property({ attribute: 'transparent', type: Boolean, reflect: true }) transparent: boolean = false;
-  @property({ attribute: 'caption', reflect: true }) caption: String;
-  @property({ attribute: 'navigation', type: Array, reflect: true }) navigation = [];
-  @property({ attribute: 'breadcrumb', type: Array }) breadcrumb = [];
-  @property({ attribute: 'full-width', type: Boolean, reflect: true }) fullWidth: boolean;
-  @property({ attribute: 'previous-path', reflect: true }) previousPath: string;
-  @property({ attribute: 'previous-target', reflect: true }) previousTarget: string;
+  @property({attribute: 'full-location', reflect: true}) fullLocation: string;
+  @property({attribute: 'entity-id', reflect: true}) entityId: string;
+  @property({attribute: 'entity-id-show', type: Boolean, reflect: true}) entityIdShow: boolean;
+  @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
+  @property({attribute: 'caption', reflect: true}) caption: String;
+  @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
+  @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
+  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
+  @property({attribute: 'previous-path', reflect: true}) previousPath: string;
+  @property({attribute: 'previous-target', reflect: true}) previousTarget: string;
+
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'nav');
 
   private _hasNav: boolean;
   private _navBar: ZnNavbar;
@@ -77,7 +80,6 @@ export default class ZnHeader extends ZincElement {
   }
 
   render() {
-
     if (this.caption == "" && (!this._hasNav) && (!this?.breadcrumb?.length)) {
       return html``;
     }
@@ -131,23 +133,28 @@ export default class ZnHeader extends ZincElement {
         <zn-icon src="link" onclick="navigator.clipboard.writeText('${this.fullLocation}')"></zn-icon>`;
     }
 
+    const hasDefaultSlot = this.hasSlotController.test('[default]');
+    const hasNavSlot = this.hasSlotController.test('nav');
+
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
       <div>
         <div class="alt-overlay">${inNew}${entityId}${url}</div>
         <div class="width-container content">
           <div class="breadcrumb">${breadcrumb}</div>
-          <div class="actions">
-            <slot></slot>
-          </div>
+          ${hasDefaultSlot ? html`
+            <div class="actions">
+              <slot></slot>
+            </div>` : ''}
           <div class="caption">
             ${backButton}
             ${caption}
           </div>
         </div>
-        <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
-          <slot name="nav"></slot>
-        </div>
+        ${hasNavSlot ? html`
+          <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
+            <slot name="nav"></slot>
+          </div>` : ''}
       </div>
     `;
     if (this.fullWidth) {

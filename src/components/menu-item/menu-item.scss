@@ -22,6 +22,11 @@
   border-bottom-width: 1px;
 }
 
+.menu-item__label::slotted(*) {
+  text-decoration: none;
+  color: inherit;
+}
+
 .menu-item.menu-item--disabled {
   outline: none;
   opacity: 0.5;
@@ -48,6 +53,7 @@
 }
 
 .menu-item .menu-item__prefix::slotted(*) {
+  --icon-size: var(--zn-font-size-small);
   margin-inline-end: var(--zn-spacing-small);
 }
 

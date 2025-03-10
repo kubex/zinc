@@ -1,15 +1,15 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { LocalizeController } from '../../utilities/localize';
-import { watch } from '../../internal/watch';
+import {property, query} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {LocalizeController} from '../../utilities/localize';
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnPopup from "../popup";
 import ZnIcon from "../icon";
-import { getTextContent, HasSlotController } from '../../internal/slot';
-import { SubmenuController } from './submenu-controller';
+import {getTextContent, HasSlotController} from '../../internal/slot';
+import {SubmenuController} from './submenu-controller';
 
 import styles from './menu-item.scss';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -33,8 +33,7 @@ export default class ZnMenuItem extends ZincElement {
 
   static dependencies = {
     'zn-icon': ZnIcon,
-    'zn-popup': ZnPopup,
-    // 'zn-spinner': ZnSpinner
+    'zn-popup': ZnPopup
   };
 
   private cachedTextLabel: string;
@@ -46,16 +45,16 @@ export default class ZnMenuItem extends ZincElement {
   @property() type: 'normal' | 'checkbox' = 'normal';
 
   /** Draws the item in a checked state. */
-  @property({ type: Boolean, reflect: true }) checked = false;
+  @property({type: Boolean, reflect: true}) checked = false;
 
   /** A unique value to store in the menu item. This can be used as a way to identify menu items when selected. */
   @property() value = '';
 
   /** Draws the menu item in a loading state. */
-  @property({ type: Boolean, reflect: true }) loading = false;
+  @property({type: Boolean, reflect: true}) loading = false;
 
   /** Draws the menu item in a disabled state, preventing selection. */
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
@@ -85,7 +84,7 @@ export default class ZnMenuItem extends ZincElement {
     // When the label changes, emit a slotchange event so parent controls see it
     if (textLabel !== this.cachedTextLabel) {
       this.cachedTextLabel = textLabel;
-      this.emit('slotchange', { bubbles: true, composed: false, cancelable: false });
+      this.emit('slotchange', {bubbles: true, composed: false, cancelable: false});
     }
   }
 

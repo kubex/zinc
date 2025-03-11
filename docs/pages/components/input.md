@@ -196,6 +196,24 @@ so that we can consider whether the pattern needs to be updated.
 </zn-input>
 ```
 
+### Prefix Submit Button
+
+Use the `type="submit"` attribute to create a submit button as a Suffix to the input. This is useful for search inputs.
+
+```html:preview
+<zn-input label="Search" placeholder="Search">
+  <zn-button slot="suffix" type="submit" variant="primary">Search</zn-button>
+</zn-input>
+```
+
+Or as a Prefix
+
+```html:preview
+<zn-input label="Search" placeholder="Search">
+  <zn-button slot="prefix" type="submit" variant="primary">Search</zn-button>
+</zn-input>
+```
+
 ### Customizing Label Position
 
 Use [CSS parts](#css-parts) to customize the way form controls are drawn. This example uses CSS grid to position the

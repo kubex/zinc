@@ -160,6 +160,12 @@
   margin-inline-end: var(--zn-input-spacing-small);
 }
 
+.input--small .input__suffix ::slotted(zn-button),
+.input--small .input__prefix ::slotted(zn-button) {
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+}
+
 .input--medium {
   border-radius: var(--zn-input-border-radius-medium);
   font-size: var(--zn-input-font-size-medium);
@@ -186,6 +192,12 @@
   margin-inline-end: var(--zn-input-spacing-medium);
 }
 
+.input--medium .input__suffix ::slotted(zn-button),
+.input--medium .input__prefix ::slotted(zn-button) {
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+}
+
 .input--large {
   border-radius: var(--zn-input-border-radius-large);
   font-size: var(--zn-input-font-size-large);
@@ -210,6 +222,13 @@
 .input--large .input__suffix ::slotted(*),
 .input__suffix-default {
   margin-inline-end: var(--zn-input-spacing-large);
+}
+
+.input--large .input__suffix ::slotted(zn-button),
+.input--large .input__prefix ::slotted(zn-button),
+{
+  margin-inline-end: 0;
+  margin-inline-start: 0;
 }
 
 /*

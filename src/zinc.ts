@@ -69,6 +69,7 @@ export {default as Rating} from './components/rating';
 export {default as RadioGroup} from './components/radio-group';
 export {default as DragUpload} from './components/drag-upload';
 export {default as CheckboxGroup} from './components/checkbox-group';
+export { default as ConfirmContent } from './components/confirm-content';
 /* plop:component */
 
 // Utilities

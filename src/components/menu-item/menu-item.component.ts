@@ -60,6 +60,7 @@ export default class ZnMenuItem extends ZincElement {
 
   // Link Specific
   @property() href: string;
+  @property({attribute: "data-path"}) dataPath: string;
   @property() target: '_self' | '_blank' | '_parent' | '_top' | string;
   @property({attribute: 'data-target'}) dataTarget: 'modal' | 'slide' | string;
   @property() rel: string = 'noreferrer noopener';
@@ -152,7 +153,7 @@ export default class ZnMenuItem extends ZincElement {
   }
 
   private _isLink() {
-    return this.href !== undefined;
+    return this.href !== undefined || this.dataPath !== undefined;
   }
 
   render() {
@@ -165,6 +166,7 @@ export default class ZnMenuItem extends ZincElement {
       <${tag}
         id="anchor"
         part="base"
+        data-path=${ifDefined(this.dataPath)}
         href=${ifDefined(this.href)}
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}

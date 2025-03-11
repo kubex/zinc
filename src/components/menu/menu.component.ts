@@ -225,13 +225,12 @@ export default class ZnMenu extends ZincElement {
                 </zn-menu-item>`;
             } else {
               return html`
-                <zn-menu-item value="${item.title}">
+                <zn-menu-item value="${item.title}" data-path="${ifDefined(item.path)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <span @click="${this.handleClick}"
                         @keydown=${this.handleKeyDown}
-                        @mousedown=${this.handleMouseDown}
-                        data-path="${ifDefined(item.path)}">${item.title}</span>
+                        @mousedown=${this.handleMouseDown}>${item.title}</span>
                 </zn-menu-item>`;
             }
           }

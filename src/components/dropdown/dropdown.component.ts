@@ -1,17 +1,17 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
-import { watch } from '../../internal/watch';
+import {property, query} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
-import { classMap } from "lit/directives/class-map.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { getTabbableBoundary } from "../../internal/tabbable";
-import { waitForEvent } from "../../internal/event";
+import {classMap} from "lit/directives/class-map.js";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {getTabbableBoundary} from "../../internal/tabbable";
+import {waitForEvent} from "../../internal/event";
 import type ZnButton from "../button";
 import type ZnPopup from "../popup";
 import type ZnMenu from "../menu";
 
 import styles from './dropdown.scss';
-import { ZnSelectEvent } from "../../events/zn-select";
+import {ZnSelectEvent} from "../../events/zn-select";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -40,32 +40,32 @@ export default class ZnDropdown extends ZincElement {
   private closeWatcher: CloseWatcher | null;
 
   /** Indicates whether the dropdown is open */
-  @property({ type: Boolean, reflect: true }) open: boolean = false;
+  @property({type: Boolean, reflect: true}) open: boolean = false;
 
   /** The placement of the dropdown. Note the actual placement may vary based on the available space */
-  @property({ reflect: true }) placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |
+  @property({reflect: true}) placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |
     'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' = 'bottom-start';
 
   /** Disable the dropdown */
-  @property({ type: Boolean, reflect: true }) disabled: boolean = false;
+  @property({type: Boolean, reflect: true}) disabled: boolean = false;
 
   /** By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open */
-  @property({ attribute: 'stay-open-on-select', type: Boolean, reflect: true }) stayOpenOnSelect: boolean = false;
+  @property({attribute: 'stay-open-on-select', type: Boolean, reflect: true}) stayOpenOnSelect: boolean = false;
 
   /** The dropdown will close when the user interacts outside the element**/
-  @property({ attribute: false }) containingElement?: HTMLElement;
+  @property({attribute: false}) containingElement?: HTMLElement;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
-  @property({ type: Number }) distance: number = 0;
+  @property({type: Number}) distance: number = 0;
 
   /** The distance in pixels from which to offset the panel away from the trigger */
-  @property({ type: Number }) skidding: number = 0;
+  @property({type: Number}) skidding: number = 0;
 
   /** Enable this option if the parent is overflow hidden and the dropdown is not visible */
-  @property({ type: Boolean }) hoist: boolean = true;
+  @property({type: Boolean}) hoist: boolean = true;
 
   /** Syncs the popup width or height with the trigger element */
-  @property({ reflect: true }) sync: 'width' | 'height' | 'both' | undefined = undefined;
+  @property({reflect: true}) sync: 'width' | 'height' | 'both' | undefined = undefined;
 
   connectedCallback() {
     super.connectedCallback();
@@ -77,7 +77,7 @@ export default class ZnDropdown extends ZincElement {
   }
 
   public focusOnTrigger() {
-    const trigger = this.trigger?.assignedElements({ flatten: true })[0] as HTMLElement | undefined;
+    const trigger = this.trigger?.assignedElements({flatten: true})[0] as HTMLElement | undefined;
     if (typeof trigger?.focus === 'function') {
       trigger.focus();
     }
@@ -99,7 +99,7 @@ export default class ZnDropdown extends ZincElement {
   }
 
   private getMenu() {
-    return this.panel.assignedElements({ flatten: true }).find(el => el.tagName.toLowerCase() === 'zn-menu') as
+    return this.panel.assignedElements({flatten: true}).find(el => el.tagName.toLowerCase() === 'zn-menu') as
       ZnMenu | undefined;
   }
 
@@ -132,9 +132,8 @@ export default class ZnDropdown extends ZincElement {
   }
 
   /** Events */
-  handlePanelSelect(event: ZnSelectEvent) {
+  handlePanelSelect = (event: ZnSelectEvent) => {
     const target = event.target as HTMLElement;
-
     if (!this.stayOpenOnSelect && target.tagName.toLowerCase() === 'zn-menu') {
       this.hide();
       this.focusOnTrigger();
@@ -271,7 +270,7 @@ export default class ZnDropdown extends ZincElement {
 
   /** Aria related method */
   private updateAccessibleTrigger() {
-    const assignedElements = this.trigger.assignedElements({ flatten: true }) as HTMLElement[];
+    const assignedElements = this.trigger.assignedElements({flatten: true}) as HTMLElement[];
     const accessibleTrigger = assignedElements.find(el => getTabbableBoundary(el).start);
     let target: HTMLElement | null = null;
 
@@ -291,7 +290,7 @@ export default class ZnDropdown extends ZincElement {
     }
   }
 
-  @watch('open', { waitUntilFirstUpdate: true })
+  @watch('open', {waitUntilFirstUpdate: true})
   async handleOpenChange() {
     if (this.disabled) {
       this.open = false;

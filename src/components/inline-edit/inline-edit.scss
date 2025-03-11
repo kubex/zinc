@@ -3,6 +3,7 @@
 
 :host {
   width: 100%;
+  container-type: inline-size;
 }
 
 .ai {
@@ -32,8 +33,13 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     gap: 10px;
+
+    @include wc.container-query(null, smp) {
+      flex-direction: column;
+      gap: 5px;
+      align-items: start;
+    }
 
     .ai__caption {
       width: fit-content;
@@ -47,6 +53,10 @@
       width: 100%;
       display: flex;
       justify-content: flex-end;
+
+      @include wc.container-query(null, smp) {
+        justify-content: flex-start;
+      }
     }
 
     .ai__wrapper {
@@ -56,6 +66,10 @@
     .ai__input[disabled] {
       text-align: end;
       padding: 6px 0 !important;
+
+      @include wc.container-query(null, smp) {
+        text-align: start;
+      }
     }
   }
 

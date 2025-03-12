@@ -1,9 +1,10 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './chip.scss';
-import { HasSlotController } from "../../internal/slot";
+import {HasSlotController} from "../../internal/slot";
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,14 +26,21 @@ import { HasSlotController } from "../../internal/slot";
 export default class ZnChip extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: String }) icon: string = '';
-  @property({ type: String }) type: string = ''; // Just used in CSS
+  @property({type: String}) icon: string = '';
+
+  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' = 'info';
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
   render() {
     return html`
-      <div>
+      <div class=${classMap({
+        'chip': true,
+        'chip--info': this.type === 'info',
+        'chip--success': this.type === 'success',
+        'chip--warning': this.type === 'warning',
+        'chip--error': this.type === 'error',
+      })}>
         ${this.icon ? html`
           <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
         ${this.hasSlotController.test('[default]') ? html`

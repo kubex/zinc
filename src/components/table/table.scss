@@ -1,7 +1,11 @@
 @use "../../wc";
 @use "../../../scss/shared/table";
 
-zn-table {
+:host {
+  display: block;
+}
+
+.table-wrapper {
   max-width: 100%;
   width: 100%;
   overflow: hidden;
@@ -49,28 +53,36 @@ tr.with-summary td {
   height: 80px;
 }
 
-tr[color="error"] {
+.table-row.table-row--error {
   color: rgb(var(--zn-color-error));
   border-color: rgb(var(--zn-color-error));
   background: rgba(var(--zn-color-error), .10);
 }
 
-tr[color="info"] {
+.table-row.table-row--info {
   color: rgb(var(--zn-color-info));
   border-color: rgb(var(--zn-color-info));
   background: rgba(var(--zn-color-info), .10);
 }
 
-tr[color="warning"] {
+.table-row.table-row--warning {
   color: rgb(var(--zn-color-warning));
   border-color: rgb(var(--zn-color-warning));
   background: rgba(var(--zn-color-warning), .10);
 }
 
-tr[color="success"] {
+.table-row.table-row--success {
   color: rgb(var(--zn-color-success)) !important;
   border-color: rgb(var(--zn-color-success));
   background: rgba(var(--zn-color-success), .10);
+}
+
+.table-row.table-row--nested td:first-of-type {
+  padding-left: var(--zn-spacing-medium);
+
+  zn-icon {
+    --icon-color: rgb(var(--zn-text-heading));
+  }
 }
 
 th.wide-column {
@@ -93,7 +105,7 @@ td.capcol {
 
   & > div {
     display: flex;
-    column-gap: var(--zn-spacing-medium);
+    column-gap: var(--zn-spacing-small);
     align-items: center;
 
     div {

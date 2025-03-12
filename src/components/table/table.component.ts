@@ -178,15 +178,20 @@ export default class ZnTable extends ZincElement {
       const target = row.hasOwnProperty('target') ? row['target'] : [];
       let caption = row.hasOwnProperty('caption') ? this.columnContent(row['caption']) : '';
       const summary = row.hasOwnProperty('summary') ? this.columnContent(row['summary']) : '';
-      const icon = row.hasOwnProperty('icon') ? row['icon'] : '';
+      let icon = row.hasOwnProperty('icon') ? row['icon'] : '';
       let iconSize = row.hasOwnProperty('iconSize') ? row['iconSize'] : '';
-      const id = row.hasOwnProperty('id') ? row['id'] : '';
+      const id: string = row.hasOwnProperty('id') ? row['id'] : '';
       const color = row.hasOwnProperty('color') ? row['color'] : '';
+      const nested: boolean = row.hasOwnProperty('nested') ? row['nested'] === 'true' : false;
 
       this.hasActions = this.hasActions || (actions && actions.length > 0);
 
       if (uri != "") {
         caption = html`<a data-target="${ifDefined(target)}" href="${uri}">${caption}</a>`;
+      }
+
+      if (nested) {
+        icon = "subdirectory_arrow_right";
       }
 
       let iconHtml = html``;
@@ -234,7 +239,15 @@ export default class ZnTable extends ZincElement {
       }
 
       rows.push(html`
-        <tr .id="${id}" .color="${color}">${rowHtml}</tr>`);
+        <tr .id=${ifDefined(id)} class="${classMap({
+          'table-row': true,
+          'table-row--nested': nested,
+          'table-row--error': color === 'error',
+          'table-row--info': color === 'info',
+          'table-row--warning': color === 'warning',
+          'table-row--success': color === 'success',
+        })}">${rowHtml}
+        </tr>`);
     });
 
     return html`
@@ -248,7 +261,6 @@ export default class ZnTable extends ZincElement {
   columnContent(col: any) {
     if (typeof col !== 'object' || col === null) {
       if (this.boolIcons && (col.toString() === 'true' || col.toString() === 'false')) {
-        console.log('BoolIcons', col);
         return html`
           <zn-icon src="${col ? 'check' : 'close'}" size="16"></zn-icon>`;
       }

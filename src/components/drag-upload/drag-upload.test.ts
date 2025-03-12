@@ -1,4 +1,4 @@
-import '../../../dist/zinc.js';
+import '../../../dist/zn.min.js';
 import { expect, fixture, html } from '@open-wc/testing';
 
 describe('<zn-drag-upload>', () => {

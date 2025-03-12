@@ -187,7 +187,7 @@ module.exports = {
         ]
       }
     ],
-    'import/extensions': "never",
+    'import/extensions': 0,
     'import/no-duplicates': 'warn',
     'sort-imports-es6-autofix/sort-imports-es6': [
       2,

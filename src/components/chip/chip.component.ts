@@ -28,7 +28,7 @@ export default class ZnChip extends ZincElement {
 
   @property({type: String}) icon: string = '';
 
-  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' = 'info';
+  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' | 'primary' = 'primary';
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
@@ -40,6 +40,7 @@ export default class ZnChip extends ZincElement {
         'chip--success': this.type === 'success',
         'chip--warning': this.type === 'warning',
         'chip--error': this.type === 'error',
+        'chip--primary': this.type === 'primary'
       })}>
         ${this.icon ? html`
           <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}

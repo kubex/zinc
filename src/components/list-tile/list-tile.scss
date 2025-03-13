@@ -4,8 +4,12 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  padding-top: var(--zn-spacing-medium);
-  padding-bottom: var(--zn-spacing-medium);
+  padding-top: var(--zn-spacing-large);
+  padding-bottom: var(--zn-spacing-large);
+
+  &:hover {
+    background-color: var(--zn-color-neutral-100);
+  }
 }
 
 .tile__left {
@@ -38,6 +42,12 @@
   @include wc.container-query(null, md) {
     display: none;
   }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .tile__content {

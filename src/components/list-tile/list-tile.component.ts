@@ -1,10 +1,12 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {html, literal} from "lit/static-html.js";
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import { HasSlotController } from "../../internal/slot";
-import { classMap } from "lit/directives/class-map.js";
 
 import styles from './list-tile.scss';
+import {ifDefined} from "lit/directives/if-defined.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -28,16 +30,19 @@ export default class ZnListTile extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, '[default]');
 
-  @property({ attribute: 'caption', reflect: true }) caption: string;
-  @property({ attribute: 'description', reflect: true }) description: string;
-  @property({ attribute: 'href', reflect: true }) href: string;
+  @property({attribute: 'caption', reflect: true}) caption: string;
+  @property({attribute: 'description', reflect: true}) description: string;
+  @property({attribute: 'href', reflect: true}) href: string;
 
   render() {
+    const tag = this.href ? literal`a` : literal`button`;
     return html`
-      <div class="${classMap({
-        tile: true,
-        'tile--has-image': this.hasSlotController.test('image')
-      })}">
+      <${tag}
+        href="${ifDefined(this.href)}"
+        class="${classMap({
+          tile: true,
+          'tile--has-image': this.hasSlotController.test('image')
+        })}">
         <div class="tile__left">
           <slot name="image" part="image" class="tile__image"></slot>
           <div class="tile__content">
@@ -52,6 +57,6 @@ export default class ZnListTile extends ZincElement {
             <zn-icon src="keyboard_arrow_right"></zn-icon>
           </a>` : ''}
         </div>
-      </div>`;
+      </${tag}>`;
   }
 }

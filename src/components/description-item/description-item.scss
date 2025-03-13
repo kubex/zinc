@@ -1,0 +1,24 @@
+@use "../../wc";
+
+:host {
+  display: block;
+
+  --zn-description-item-label-max-width: 300px;
+}
+
+.description-item {
+  display: flex;
+  flex-direction: row;
+  padding: var(--zn-spacing-medium);
+
+  @include wc.container-query(null, md) {
+    flex-direction: column;
+  }
+
+  &__label {
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+    max-width: var(--zn-description-item-label-max-width);
+    width: 100%;
+  }
+}

@@ -14,10 +14,11 @@ layout: component
     Margot Foster
   </zn-description-item>
   <zn-description-item label="Full name">
-    Margot Foster
+    margot.foster@example.com
   </zn-description-item>
   <zn-description-item label="Full name">
-    Margot Foster
+    lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
   </zn-description-item>
 </zn-sp>
 ```

@@ -192,31 +192,37 @@ export default class ZnIcon extends ZincElement {
 
     if (iconHtml) {
       return html`
-        <div class="${classMap({
-          'icon': true,
-          'icon--round': this.round,
-        })}">
-          ${iconHtml}
+        <div class="icon-wrapper">
+          <div class="${classMap({
+            'icon': true,
+            'icon--round': this.round,
+          })}">
+            ${iconHtml}
+          </div>
         </div>`;
     }
 
     if (this.src !== "") {
       return html`
-        <div class="${classMap({
-          'icon': true,
-          'icon--round': this.round,
-        })}">
-          <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
-               width="${this.size}"/>
+        <div class="icon-wrapper">
+          <div class="${classMap({
+            'icon': true,
+            'icon--round': this.round,
+          })}">
+            <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
+                 width="${this.size}"/>
+          </div>
         </div>`;
     }
 
     return html`
-      <div class="${classMap({
-        'icon': true,
-        'icon--round': this.round,
-      })}">
-        <slot></slot>
+      <div class="icon-wrapper">
+        <div class="${classMap({
+          'icon': true,
+          'icon--round': this.round,
+        })}">
+          <slot></slot>
+        </div>
       </div>`;
   }
 }

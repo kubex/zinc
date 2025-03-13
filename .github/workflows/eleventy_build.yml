@@ -30,7 +30,8 @@ jobs:
 
       - run: npm run build # Build the site
 
-      - run: cp -r dist _site
+      # Copy the dist/ folder into _site/dist
+      - run: cp -r dist/ _site/dist
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

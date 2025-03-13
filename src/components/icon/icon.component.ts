@@ -4,6 +4,7 @@ import ZincElement from '../../internal/zinc-element';
 import {md5} from '../../utilities/md5';
 
 import styles from './icon.scss';
+import {classMap} from "lit/directives/class-map.js";
 
 const Library = {
   None: "",
@@ -147,46 +148,75 @@ export default class ZnIcon extends ZincElement {
 
   render() {
     const color = colors[this.color];
+
+    let iconHtml;
+
     switch (this.library) {
       case Library.Material:
       case LibraryAlias.Material:
-        return html`<i part="icon" class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.MaterialOutlined:
       case LibraryAlias.MaterialOutlined:
-        return html`<i part="icon" class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.MaterialRound:
       case LibraryAlias.MaterialRound:
-        return html`<i part="icon" class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.MaterialSharp:
       case LibraryAlias.MaterialSharp:
-        return html`<i part="icon" class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.MaterialTwoTone:
       case LibraryAlias.MaterialTwoTone:
-        return html`<i part="icon" class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.MaterialSymbolOutlined:
       case LibraryAlias.MaterialSymbolOutlined:
-        return html`<i part="icon" class="mi mi--symbol-outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        iconHtml = html`<i part="icon" class="mi mi--symbol-outlined" style="--icon-color: ${color}">${this.src}</i>`;
+        break;
       case Library.Gravatar:
       case LibraryAlias.Gravatar:
-        return html`<img
+        iconHtml = html`<img
           part="icon"
           alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+        break;
       case Library.Libravatar:
-        return html`<img
+        iconHtml = html`<img
           part="icon"
           alt="${this.alt}"
           src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
+        break;
     }
 
-    if (this.src != "") {
+    if (iconHtml) {
       return html`
-        <div>
+        <div class="${classMap({
+          'icon': true,
+          'icon--round': this.round,
+        })}">
+          ${iconHtml}
+        </div>`;
+    }
+
+    if (this.src !== "") {
+      return html`
+        <div class="${classMap({
+          'icon': true,
+          'icon--round': this.round,
+        })}">
           <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
                width="${this.size}"/>
         </div>`;
     }
 
     return html`
-      <slot></slot>`;
+      <div class="${classMap({
+        'icon': true,
+        'icon--round': this.round,
+      })}">
+        <slot></slot>
+      </div>`;
   }
 }

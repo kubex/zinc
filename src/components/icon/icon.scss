@@ -1,8 +1,12 @@
 @use "../../wc";
 
-:host {
-  --icon-size: 24px;
 
+:host {
+  display: inline-block;
+  --icon-size: 24px;
+}
+
+.icon {
   user-select: none;
   font-family: sans-serif;
   overflow: hidden;
@@ -10,7 +14,7 @@
   margin: 0;
   padding: 0;
 
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -19,13 +23,13 @@
   width: var(--icon-size);
   height: var(--icon-size);
 
-  &, i {
+  & i {
     font-size: var(--icon-size);
     color: var(--icon-color);
   }
 }
 
-:host([round]) {
+.icon--round {
   border-radius: 50%;
 }
 

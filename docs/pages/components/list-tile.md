@@ -6,22 +6,9 @@ layout: component
 ---
 
 ```html:preview
-<zn-list-tile caption="Caption here"
-  description="This is the amazing description sfkjdsjkds fkjds fjkds fds njsdfsdjnk kj jks f dsfdsf sfsd skjf sdjkf dsjkf dsjkf dsjkfds jkds jkfds fjkds fjkds jkfds "
-  href="https://google.com">
-  <zn-list-tile-property slot="properties" caption="Business Relations">
-    Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds 
-  </zn-list-tile-property>
-  <zn-list-tile-property slot="properties" caption="Business Relations">
-    Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds
-  </zn-list-tile-property>
-  <zn-list-tile-property slot="properties" caption="Business Relations">
-    Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds
-  </zn-list-tile-property>
-  <zn-list-tile-property slot="properties" caption="Designer">
-    Due - June 24th 2023
-  </zn-list-tile-property>
-  <zn-chip slot="actions" success>Online</zn-chip>
+<zn-list-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+  <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+  <zn-list-tile-property slot="properties" caption="Co-Founder / CEO Relations">Last seen 2h ago</zn-list-tile-property>
 </zn-list-tile>
 ```
 

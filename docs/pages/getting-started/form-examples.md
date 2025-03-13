@@ -16,9 +16,6 @@ You can also wrap the form component in `<div class="form-spacing">` to give som
 components.
 :::
 
-<zn-button>Hello</zn-button>
-
-
 ```html:preview
 <form class="input-validation-required">
   <zn-sp pad-y divide>

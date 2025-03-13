@@ -48,6 +48,8 @@ module.exports = function (eleventyConfig)
   // Copy assets
   //
   eleventyConfig.addPassthroughCopy(assetsDir);
+  eleventyConfig.addPassthroughCopy({'../dist/zn.min.js': 'assets/scripts/zn.min.js'});
+  eleventyConfig.addPassthroughCopy({'../dist/zn.min.css': 'assets/styles/zn.min.css'});
   eleventyConfig.setServerPassthroughCopyBehavior('passthrough'); // emulates passthrough copy during --serve
 
   //

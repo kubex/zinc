@@ -14,28 +14,6 @@ layout: component
 </zn-container>
 ```
 
-## Examples
-
-### Padded Container
-
-```html:preview
-<zn-container padded>
-  <div 
-  style="position:relative; height: 200px; border: 1px dashed white; background: var(--zn-color-primary-100); opacity: 0.75;">
-  </div>
-</zn-container>
-```
-
-### Breakpoint Container
-
-```html:preview
-<zn-container breakpoint>
-  <div 
-  style="position:relative; height: 200px; border: 1px dashed white; background: var(--zn-color-primary-100); opacity: 0.75;">
-  </div>
-</zn-container>
-```
-
 TODO
 
 [component-metadata:zn-container]

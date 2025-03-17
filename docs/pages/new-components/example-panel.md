@@ -4,7 +4,7 @@ meta:
   description: This is an example page using the new components
 ---
 
-# Example Page
+# Example Panel
 
 ```html:preview
 

@@ -4977,44 +4977,6 @@ declare module "components/container/index" {
         }
     }
 }
-declare module "components/list-container/list-container.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/list-container
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnListContainer extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly localize;
-        divide: boolean;
-        size: "small" | "medium" | "large";
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/list-container/index" {
-    import ZnListContainer from "components/list-container/list-container.component";
-    export * from "components/list-container/list-container.component";
-    export default ZnListContainer;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-list-container': ZnListContainer;
-        }
-    }
-}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5155,7 +5117,6 @@ declare module "zinc" {
     export { default as EmptyDialog } from "components/empty-dialog/index";
     export { default as DescriptionItem } from "components/description-item/index";
     export { default as Container } from "components/container/index";
-    export { default as ListContainer } from "components/list-container/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

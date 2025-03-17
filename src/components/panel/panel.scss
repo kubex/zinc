@@ -16,9 +16,15 @@
   min-width: var(--zn-spacing-medium-panel);
 }
 
-:host([tabbed]), :host([flush]) {
+:host([flush]) {
   > div .body {
-    padding: 0;
+    padding: var(--zn-spacing-medium) 0 0;
+  }
+}
+
+:host([tabbed]) {
+  > div .body {
+    padding: var(--zn-spacing-x-small) 0 0;
   }
 }
 
@@ -93,9 +99,9 @@
       padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
 
       span {
-        font-weight: 600;
+        font-weight: var(--zn-font-weight-bold);
         flex-grow: 1;
-        font-size: 17px;
+        font-size: var(--zn-font-size-medium);
         color: rgba(var(--zn-text-panel-title), 100%);
       }
     }

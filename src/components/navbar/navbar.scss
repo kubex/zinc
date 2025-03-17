@@ -1,20 +1,26 @@
 @use "../../wc";
 
+
+:host {
+  display: block;
+  --zn-navbar-padding-left: 0;
+  --zn-navbar-padding-right: 0;
+}
+
+ul {
+  padding-left: var(--zn-navbar-padding-left);
+  padding-right: var(--zn-navbar-padding-right);
+}
+
 :host([baseless]) {
   ul {
     border-bottom: none;
   }
 }
 
-zn-navbar {
-  ul {
-    padding-left: 0;
-  }
-}
 
 ul {
   margin: 0;
-  padding: 0;
 }
 
 :host([stacked]) {
@@ -146,7 +152,7 @@ ul {
         position: absolute;
         background-color: rgb(var(--zn-primary));
         transition: all 300ms ease-in-out;
-        height: var(--zn-spacing-2x-small);
+        height: 2px;
       }
 
       &:hover:before {
@@ -157,11 +163,6 @@ ul {
 
       &.active, &.zn-tb-active {
         color: rgb(var(--zn-primary));
-      }
-
-      &.active::before, &.zn-tb-active::before {
-        left: -8px;
-        right: -8px;
       }
     }
 

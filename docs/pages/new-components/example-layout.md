@@ -7,6 +7,13 @@ fullWidth: true
 
 # Example Layout
 
+Most pages should be scaffolded in the following way. This layout is designed to be responsive and to work well on all
+devices. It is also designed to be easy to read and understand.
+
+`zn-sp` allows you to add space between elements. It is a shorthand for `zn-space`. It is a flex container that has a
+default gap of `--zn-spacing-medium`. by specifying `no-gap` you can remove the gap between elements. So that if the
+component you are using already includes padding or margin it will not be doubled up.
+
 ```html:preview
 
 <zn-container padded>
@@ -31,13 +38,27 @@ fullWidth: true
       </zn-panel>
     </zn-cols>
 
-    <zn-panel caption="Some Panel">
-      <zn-sp divide>
-        <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
-        </zn-description-item>
-        <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
-        </zn-description-item>
-      </zn-sp>
+    <zn-panel caption="Some Panel" tabbed>
+      <zn-tabs>
+        <zn-navbar slot="top">
+          <li tab>Customer</li>
+          <li tab="something-else">Something Else</li>
+        </zn-navbar>
+
+        <zn-sp id="" divide>
+          <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+          </zn-description-item>
+          <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+          </zn-description-item>
+        </zn-sp>
+
+        <zn-sp id="something-else" divide>
+          <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+          </zn-description-item>
+          <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+          </zn-description-item>
+        </zn-sp>
+      </zn-tabs>
     </zn-panel>
 
     <zn-panel caption="Some Panel">

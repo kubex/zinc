@@ -1,7 +1,8 @@
 ---
 meta:
-  title: Example Page
+  title: Example Panel
   description: This is an example page using the new components
+fullWidth: true
 ---
 
 # Example Panel

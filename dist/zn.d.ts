@@ -2453,6 +2453,7 @@ declare module "components/panel/panel.component" {
         caption: string;
         rows: number;
         tabbed: boolean;
+        flush: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): unknown;
     }

@@ -4964,7 +4964,6 @@ declare module "components/container/container.component" {
     export default class ZnContainer extends ZincElement {
         static styles: CSSResultGroup;
         padded: boolean;
-        breakpoint: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -5002,6 +5001,7 @@ declare module "components/list-container/list-container.component" {
         static styles: CSSResultGroup;
         private readonly localize;
         divide: boolean;
+        padSmall: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }

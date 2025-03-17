@@ -6,7 +6,13 @@ layout: component
 ---
 
 ```html:preview
-<zn-sidebar></zn-sidebar>
+<zn-sidebar>
+  <div slot="side" class="zn-divide">
+    This is the sidebar content
+  </div>
+  
+  This is the body content
+</zn-sidebar>
 ```
 
 ## Examples

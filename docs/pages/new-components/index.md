@@ -1,7 +1,7 @@
 ---
 meta:
   title: New Components
-  description: List of new Component based off of TailwindPlus
+  description: List of new Components
 ---
 
 ## Why New Components?

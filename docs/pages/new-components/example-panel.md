@@ -10,7 +10,23 @@ fullWidth: true
 ```html:preview
 
 <zn-container padded>
-  <zn-list-container pad-sm>
+  <zn-list-container size="small">
+    <zn-cols layout="1,1">
+      <zn-panel caption="Some Panel">
+        <zn-list-container divide>
+          <zn-description-item label="Label 1">This is awesome</zn-description-item>
+          <zn-description-item label="Label 2">This is awesome</zn-description-item>
+        </zn-list-container>
+      </zn-panel>
+
+      <zn-panel caption="Some Panel">
+        <zn-list-container divide>
+          <zn-description-item label="Label 1">This is awesome</zn-description-item>
+          <zn-description-item label="Label 2">This is awesome</zn-description-item>
+        </zn-list-container>
+      </zn-panel>
+    </zn-cols>
+
     <zn-panel caption="Some Panel">
       <zn-list-container divide>
         <zn-description-item label="Label 1">This is awesome</zn-description-item>

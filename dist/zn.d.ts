@@ -5001,7 +5001,7 @@ declare module "components/list-container/list-container.component" {
         static styles: CSSResultGroup;
         private readonly localize;
         divide: boolean;
-        padSmall: boolean;
+        size: "small" | "medium" | "large";
         render(): import("lit").TemplateResult<1>;
     }
 }

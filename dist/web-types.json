@@ -2634,7 +2634,13 @@
           "doc-url": "",
           "attributes": [
             { "name": "divide", "value": { "type": "boolean" } },
-            { "name": "pad-sm", "value": { "type": "boolean" } }
+            {
+              "name": "size",
+              "value": {
+                "type": "\"small\" | \"medium\" | \"large\"",
+                "default": "\"medium\""
+              }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2646,7 +2652,7 @@
           "js": {
             "properties": [
               { "name": "divide", "type": "boolean" },
-              { "name": "padSmall", "type": "boolean" }
+              { "name": "size", "type": "\"small\" | \"medium\" | \"large\"" }
             ],
             "events": [
               {

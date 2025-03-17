@@ -1,0 +1,39 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  container-type: inline-size;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--zn-container-hd);
+
+  &--padded {
+    padding-left: var(--zn-spacing-medium);
+    padding-right: var(--zn-spacing-medium);
+
+    @include wc.container-query(sm) {
+      padding-left: var(--zn-spacing-x-large);
+      padding-right: var(--zn-spacing-x-large);
+    }
+
+    @include wc.container-query(lg) {
+      padding-left: var(--zn-spacing-2x-large);
+      padding-right: var(--zn-spacing-2x-large);
+    }
+  }
+
+  &--breakpoint {
+    max-width: var(--zn-container-md);
+
+    @include wc.container-query(lg) {
+      max-width: var(--zn-container-lg);
+    }
+
+    @include wc.container-query(hd) {
+      max-width: var(--zn-container-hd);
+    }
+  }
+}

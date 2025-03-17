@@ -30,12 +30,14 @@ export default class ZnListContainer extends ZincElement {
   private readonly localize = new LocalizeController(this);
 
   @property({type: Boolean}) divide: boolean;
+  @property({type: Boolean, attribute: "pad-sm"}) padSmall: boolean;
 
   render() {
     return html`
       <div class=${classMap({
         'list-container': true,
         'list-container--divide': this.divide,
+        'list-container--pad-sm': this.padSmall
       })}>
         <slot></slot>
       </div>`;

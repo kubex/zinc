@@ -19,14 +19,12 @@ export default class ZnContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: Boolean}) padded: boolean;
-  @property({type: Boolean}) breakpoint: boolean;
 
   render() {
     return html`
       <div part="base" class=${classMap({
         'container': true,
         'container--padded': this.padded,
-        'container--breakpoint': this.breakpoint,
       })}>
         <slot></slot>
       </div>`;

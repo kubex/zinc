@@ -9,12 +9,21 @@ fullWidth: true
 
 ```html:preview
 
-<zn-container padded breakpoint>
-  <zn-panel caption="Some Panel">
-    <zn-list-container>
-      <zn-description-item label="Label 1">This is awesome</zn-description-item>
-      <zn-description-item label="Label 2">This is awesome</zn-description-item>
-    </zn-list-container>
-  </zn-panel>
+<zn-container padded>
+  <zn-list-container pad-sm>
+    <zn-panel caption="Some Panel">
+      <zn-list-container divide>
+        <zn-description-item label="Label 1">This is awesome</zn-description-item>
+        <zn-description-item label="Label 2">This is awesome</zn-description-item>
+      </zn-list-container>
+    </zn-panel>
+
+    <zn-panel caption="Some Panel">
+      <zn-list-container divide>
+        <zn-description-item label="Label 1">This is awesome</zn-description-item>
+        <zn-description-item label="Label 2">This is awesome</zn-description-item>
+      </zn-list-container>
+    </zn-panel>
+  </zn-list-container>
 </zn-container>
 ```

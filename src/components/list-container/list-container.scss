@@ -12,8 +12,24 @@
     padding-bottom: var(--zn-spacing-medium);
   }
 
-  // Add a border bottom to all slotted elements that are not the last child
-  ::slotted(*:not(:last-child)) {
-    border-bottom: 1px solid rgb(var(--zn-border-color));
+  &--divide {
+    // Add a border bottom to all slotted elements that are not the last child
+    ::slotted(*:not(:last-child)) {
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+    }
+  }
+
+  &--pad-sm {
+    ::slotted(*) {
+      padding-top: var(--zn-spacing-small);
+      padding-bottom: var(--zn-spacing-small);
+    }
+
+    &:not(.list-container--divide) {
+      // remove padding bottom if not divided and not last child
+      ::slotted(*:not(:last-child)) {
+        padding-bottom: 0;
+      }
+    }
   }
 }

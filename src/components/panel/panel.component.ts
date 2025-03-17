@@ -1,8 +1,9 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -24,10 +25,10 @@ import styles from './panel.scss';
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'basis-px', type: Number, reflect: true }) basis: number;
-  @property({ attribute: 'caption', type: String, reflect: true }) caption: string;
-  @property({ attribute: 'rows', type: Number, reflect: true }) rows: number;
-  @property({ attribute: 'tabbed', type: Boolean, reflect: true }) tabbed: boolean;
+  @property({attribute: 'basis-px', type: Number, reflect: true}) basis: number;
+  @property({attribute: 'caption', type: String, reflect: true}) caption: string;
+  @property({attribute: 'rows', type: Number, reflect: true}) rows: number;
+  @property({attribute: 'tabbed', type: Boolean, reflect: true}) tabbed: boolean;
 
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -76,11 +77,15 @@ export default class ZnPanel extends ZincElement {
     }
 
     return html`
-      <div>${header}
-        <div class="body">
-          <slot></slot>
+      <div class=${classMap({
+        panel: true,
+      })}>
+        <div>${header}
+          <div class="body">
+            <slot></slot>
+          </div>
+          ${footer}
         </div>
-        ${footer}
       </div>`;
   }
 }

@@ -22,6 +22,12 @@
   }
 }
 
+.panel {
+  &--tabbed {
+
+  }
+}
+
 :host([transparent]) {
   > div {
     background-color: transparent;
@@ -36,6 +42,13 @@
     }
   }
 }
+
+.panel {
+  ::slotted(zn-sp::part(base)) {
+    padding: 0 !important
+  }
+}
+
 
 :host {
   @include wc.scrollbars;

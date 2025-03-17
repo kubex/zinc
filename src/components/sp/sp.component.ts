@@ -41,7 +41,7 @@ export default class ZnSp extends ZincElement {
 
   protected render(): unknown {
     return html`
-      <div class="${classMap({
+      <div part="base" class="${classMap({
         'sp': true,
         'sp--divide': this.divide,
         'sp--row': this.row,

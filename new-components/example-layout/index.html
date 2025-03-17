@@ -456,12 +456,13 @@
         <div class="content__toc">
           <ul>
             <li class="top"><a href="#">Example Layout</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#simple-panel-example">Simple Panel Example</a></li>
+            <li data-level="3"><a href="#sidebar-layout-example">Sidebar Layout Example</a></li>
           </ul>
         </div>
 
         <div class="content__body">
-          <h1>Example Layout</h1>
+          <h1>Expanded Example</h1>
           <p>
             Most pages should be scaffolded in the following way. This layout is designed to be responsive and to work
             well on all devices. It is also designed to be easy to read and understand.
@@ -630,9 +631,13 @@
             </div>
           </div>
 
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <h3 id="simple-panel-example" class="anchor-heading">
+            Simple Panel Example<a href="#simple-panel-example" aria-label='Direct link to "Simple Panel Example"'></a>
           </h3>
+          <p>
+            Using <code>flush</code> on the panel allows you to remove all padding around the content, this is great for
+            tables that you want to be full width.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -640,17 +645,6 @@
                 <zn-sp>
                   <zn-panel caption="Some Panel" flush="">
                     <zn-sp divide="" flush="">
-                      <zn-description-item style="background: var(--zn-color-red-100)" label="Label 1"
-                        >This is awesome</zn-description-item
-                      >
-                      <zn-description-item style="background: var(--zn-color-red-100)" label="Label 2"
-                        >This is awesome</zn-description-item
-                      >
-                    </zn-sp>
-                  </zn-panel>
-
-                  <zn-panel caption="Some Panel">
-                    <zn-sp divide="">
                       <zn-description-item style="background: var(--zn-color-red-100)" label="Label 1"
                         >This is awesome</zn-description-item
                       >
@@ -678,13 +672,6 @@
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Some Panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-container</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-14"></zn-copy-button></pre>
@@ -697,6 +684,108 @@
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
                 aria-controls="code-preview-source-group-11"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="sidebar-layout-example" class="anchor-heading">
+            Sidebar Layout Example<a
+              href="#sidebar-layout-example"
+              aria-label='Direct link to "Sidebar Layout Example"'
+            ></a>
+          </h3>
+          <p>This is the standard way of scaffolding pages with a sidebar</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-sidebar>
+                <div slot="side">
+                  <zn-sp>
+                    <zn-sp divide="" flush="">
+                      <zn-description-item style="background: var(--zn-color-red-100)" label="Label 1"
+                        >This is awesome
+                      </zn-description-item>
+                      <zn-description-item style="background: var(--zn-color-red-100)" label="Label 2"
+                        >This is awesome
+                      </zn-description-item>
+                    </zn-sp>
+                  </zn-sp>
+                </div>
+
+                <zn-container padded="" style="background: var(--zn-color-neutral-50)">
+                  <zn-sp>
+                    <zn-panel caption="Some Panel" flush="">
+                      <zn-sp divide="" flush="">
+                        <zn-description-item style="background: var(--zn-color-red-100)" label="Label 1"
+                          >This is awesome
+                        </zn-description-item>
+                        <zn-description-item style="background: var(--zn-color-red-100)" label="Label 2"
+                          >This is awesome
+                        </zn-description-item>
+                      </zn-sp>
+                    </zn-panel>
+                  </zn-sp>
+                </zn-container>
+              </zn-sidebar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-12">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-15">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>side<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">divide</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-container</span> <span class="token attr-name">padded</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-50<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Some Panel<span class="token punctuation">"</span></span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">divide</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-red-100<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-container</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
+
+</code><zn-copy-button class="copy-code-button" from="code-block-15"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-12"
               >
                 Source
                 <svg

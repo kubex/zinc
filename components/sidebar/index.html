@@ -120,10 +120,16 @@
                 <a href="/new-components">Why new Components?</a>
               </li>
               <li>
+                <a href="/new-components/example-panel">Example Panel</a>
+              </li>
+              <li>
                 <h3>Layout</h3>
                 <ul>
                   <li>
                     <a href="/components/container">Container</a>
+                  </li>
+                  <li>
+                    <a href="/components/list-container">List Container</a>
                   </li>
                 </ul>
               </li>
@@ -300,6 +306,10 @@
 
               <li>
                 <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/list-container"> List Container </a>
               </li>
 
               <li>
@@ -482,17 +492,27 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-sidebar></zn-sidebar>
+              <zn-sidebar>
+                <div slot="side" class="zn-divide">This is the sidebar content</div>
+
+                This is the body content
+              </zn-sidebar>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-126">
+            <div class="code-preview__source-group" id="code-preview-source-group-129">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-130"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-130"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-133"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>side<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>zn-divide<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    This is the sidebar content
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  
+  This is the body content
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-133"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -501,7 +521,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-126"
+                aria-controls="code-preview-source-group-129"
               >
                 Source
                 <svg

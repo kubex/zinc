@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-layout="component" data-zinc-version="1.0.0">
+<html lang="en" data-layout="default" data-zinc-version="1.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <title>Data Table</title>
+    <meta name="description" content="This is an example page using the new components" />
+    <title>Example Panel</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,9 +12,9 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.syle/assets" />
 
-    <meta property="og:url" content="https://zinc.syle/components/data-table/" />
-    <meta property="og:title" content="Data Table" />
-    <meta property="og:description" content="" />
+    <meta property="og:url" content="https://zinc.syle/new-components/example-panel/" />
+    <meta property="og:title" content="Example Panel" />
+    <meta property="og:description" content="This is an example page using the new components" />
     <meta property="og:image" content="https://zinc.syle/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -120,7 +120,7 @@
                 <a href="/new-components">Why new Components?</a>
               </li>
               <li>
-                <a href="/new-components/example-panel">Example Panel</a>
+                <a href="/new-components/example-panel" class="active-link">Example Panel</a>
               </li>
               <li>
                 <h3>Layout</h3>
@@ -241,7 +241,7 @@
               </li>
 
               <li>
-                <a href="/components/data-table" class="active-link"> Data Table </a>
+                <a href="/components/data-table"> Data Table </a>
               </li>
 
               <li>
@@ -459,50 +459,44 @@
 
     <main>
       <a id="main-content"></a>
-      <article id="content" class="content content--with-toc">
+      <article id="content" class="content content--with-toc content--full-width">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Data Table</a></li>
-            <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
-            <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
-            <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
+            <li class="top"><a href="#">Example Panel</a></li>
           </ul>
         </div>
 
         <div class="content__body">
-          <header class="component-header">
-            <h1>Data Table</h1>
-
-            <div class="component-header__tag">
-              <code>&lt;zn-data-table&gt; | ZnDataTable</code>
-            </div>
-
-            <div class="component-header__info">
-              <zn-chip type="info"> Since 1.0 </zn-chip>
-              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
-            </div>
-          </header>
-
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <h1>Example Panel</h1>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-data-table></zn-data-table>
+              <zn-container padded="" breakpoint="">
+                <zn-panel caption="Some Panel">
+                  <zn-list-container>
+                    <zn-description-item label="Label 1">This is awesome</zn-description-item>
+                    <zn-description-item label="Label 2">This is awesome</zn-description-item>
+                  </zn-list-container>
+                </zn-panel>
+              </zn-container>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-61">
+            <div class="code-preview__source-group" id="code-preview-source-group-10">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-65"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-65"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-13">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-container</span> <span class="token attr-name">padded</span> <span class="token attr-name">breakpoint</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Some Panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-container</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-description-item</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This is awesome<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-description-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-container</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-container</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-13"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -511,7 +505,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-61"
+                aria-controls="code-preview-source-group-10"
               >
                 Source
                 <svg
@@ -527,139 +521,6 @@
               </button>
             </div>
           </div>
-
-          <h2 id="examples" class="anchor-heading">
-            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
-          </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
-          </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
-          </h3>
-          <p>TODO</p>
-          <p>[component-metadata:zn-data-table]</p>
-
-          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
-          </p>
-
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
-          </p>
-
-          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
-          </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

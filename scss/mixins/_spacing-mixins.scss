@@ -34,15 +34,17 @@
 }
 
 @mixin gap {
-  gap: var(--zn-spacing-medium, 0);
+  gap: var(--zn-gap, 0);
 }
 
 @mixin gap-sm {
-  gap: var(--zn-spacing-x-small, 0);
+  --zn-gap: var(--zn-spacing-small, 0);
+  gap: var(--zn-gap, 0);
 }
 
 @mixin padding {
-  padding: var(--zn-spacing-medium, 0);
+  --zn-gap: var(--zn-spacing-medium, 0);
+  gap: var(--zn-gap, 0);
 }
 
 @function spacing($size, $default: sm) {

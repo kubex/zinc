@@ -9,6 +9,28 @@
   @include mixins.gap();
   @include mixins.padding();
 
+  &--divide.sp--no-gap {
+    ::slotted(*:not(:last-child)) {
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+    }
+  }
+
+  &--divide:not(.sp--no-gap) {
+    ::slotted(*:not(:last-child)) {
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        height: 1px;
+        width: 100%;
+        bottom: calc((var(--zn-gap) / 2) * -1);
+        background-color: rgb(var(--zn-border-color));
+      }
+    }
+  }
+
   &--row {
     flex-direction: row;
   }
@@ -34,4 +56,5 @@
     padding-left: 0;
     padding-right: 0;
   }
+
 }

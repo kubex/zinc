@@ -37,19 +37,6 @@ export default class ZnSp extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.divide) {
-      this.classList.add('zn-divide');
-    }
-
-    if (this.padX) {
-      this.classList.add('zn-c-pad');
-      this.classList.add('zn-c-pad-x');
-    }
-
-    if (this.padY) {
-      this.classList.add('zn-c-pad');
-      this.classList.add('zn-c-pad-y');
-    }
   }
 
   protected render(): unknown {
@@ -60,8 +47,6 @@ export default class ZnSp extends ZincElement {
         'sp--row': this.row,
         'sp--grow': this.grow,
         'sp--no-gap': this.noGap,
-        'sp--pad-x': this.padX,
-        'sp--pad-y': this.padY,
         'sp--flush': this.flush,
         'sp--flush-y': this.flushY,
         'sp--flush-x': this.flushX

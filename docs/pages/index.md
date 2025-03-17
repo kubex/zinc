@@ -5,23 +5,13 @@ meta:
 toc: false
 ---
 
-<div class="splash">
-  <div class="splash-start">
-<img class="splash-logo" src="/assets/images/wordmark.svg" alt="zinc">
-
-# <zn-visually-hidden>zinc:</zn-visually-hidden> A Library of Web Components based off of Shoelace
+# A Library of Web Components based off of Shoelace and TailwindPlus
 
 - Fully customizable with CSS 🎨
 - Includes a dark theme 🌛
 - Built with accessibility in mind ♿️
 - Built-in localization 💬
 - Open source 😸
-
-</div>
-  <div class="splash-end">
-    <img class="splash-image" src="/assets/images/undraw-content-team.svg" alt="Cartoon of people assembling components while standing on a giant laptop.">
-  </div>
-</div>
 
 <div class="badges">
 

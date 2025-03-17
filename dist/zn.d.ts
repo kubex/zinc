@@ -4948,6 +4948,36 @@ declare module "components/description-item/index" {
         }
     }
 }
+declare module "components/container/container.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Layout container, used to wrap content with optional padding and breakpoint width.
+     * @documentation https://zinc.style/components/container
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        padded: boolean;
+        breakpoint: boolean;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/container/index" {
+    import ZnContainer from "components/container/container.component";
+    export * from "components/container/container.component";
+    export default ZnContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-container': ZnContainer;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5087,6 +5117,7 @@ declare module "zinc" {
     export { default as ConfirmContent } from "components/confirm-content/index";
     export { default as EmptyDialog } from "components/empty-dialog/index";
     export { default as DescriptionItem } from "components/description-item/index";
+    export { default as Container } from "components/container/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

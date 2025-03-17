@@ -43,9 +43,10 @@
   }
 }
 
-.panel {
-  ::slotted(zn-sp::part(base)) {
-    padding: 0 !important
+
+.panel:not(.panel--flush) {
+  ::slotted(zn-sp) {
+    --zn-sp-padding: 0 !important
   }
 }
 

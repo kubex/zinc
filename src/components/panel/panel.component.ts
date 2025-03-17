@@ -29,6 +29,7 @@ export default class ZnPanel extends ZincElement {
   @property({attribute: 'caption', type: String, reflect: true}) caption: string;
   @property({attribute: 'rows', type: Number, reflect: true}) rows: number;
   @property({attribute: 'tabbed', type: Boolean, reflect: true}) tabbed: boolean;
+  @property({type: Boolean}) flush: boolean;
 
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -79,9 +80,10 @@ export default class ZnPanel extends ZincElement {
     return html`
       <div class=${classMap({
         panel: true,
+        'panel--flush': this.flush || this.tabbed
       })}>
         <div>${header}
-          <div class="body">
+          <div class="panel__body body">
             <slot></slot>
           </div>
           ${footer}

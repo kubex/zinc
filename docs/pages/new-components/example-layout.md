@@ -58,7 +58,7 @@ fullWidth: true
 
 <zn-container padded>
   <zn-sp>
-    <zn-panel caption="Some Panel">
+    <zn-panel caption="Some Panel" flush>
       <zn-sp divide flush>
         <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome</zn-description-item>
         <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome</zn-description-item>

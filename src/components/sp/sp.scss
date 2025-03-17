@@ -3,11 +3,17 @@
 @use "../../../scss/mixins";
 
 
+:host {
+  display: block;
+  --zn-sp-padding: var(--zn-spacing-medium);
+  --zn-sp-gap: var(--zn-spacing-medium);
+}
+
 .sp {
   display: grid;
   flex-grow: 0;
-  @include mixins.gap();
-  @include mixins.padding();
+  padding: var(--zn-sp-padding);
+  gap: var(--zn-sp-gap);
 
   &--divide.sp--no-gap {
     ::slotted(*:not(:last-child)) {
@@ -25,7 +31,7 @@
         display: block;
         height: 1px;
         width: 100%;
-        bottom: calc((var(--zn-gap) / 2) * -1);
+        bottom: calc((var(--zn-sp-gap) / 2) * -1);
         background-color: rgb(var(--zn-border-color));
       }
     }

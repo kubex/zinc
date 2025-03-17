@@ -102,13 +102,11 @@ This is the standard way of scaffolding pages with a sidebar
 <zn-sidebar>
 
   <div slot="side">
-    <zn-sp>
-      <zn-sp divide flush>
-        <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
-        </zn-description-item>
-        <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
-        </zn-description-item>
-      </zn-sp>
+    <zn-sp divide flush>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+      </zn-description-item>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      </zn-description-item>
     </zn-sp>
   </div>
 

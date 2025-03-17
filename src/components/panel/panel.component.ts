@@ -64,7 +64,7 @@ export default class ZnPanel extends ZincElement {
       header = html`
         <div class="header">
           <span>${this.caption}</span>
-          <slot name="actions"></slot>
+          <slot name="actions" class="header__actions"></slot>
         </div>
       `;
     }

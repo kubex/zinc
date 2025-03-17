@@ -24,7 +24,7 @@
 
 :host([tabbed]) {
   > div .body {
-    padding: var(--zn-spacing-x-small) 0 0;
+    padding: var(--zn-spacing-small) 0 0;
   }
 }
 
@@ -53,6 +53,12 @@
   }
 }
 
+.header__actions {
+  display: flex;
+  gap: var(--zn-spacing-2x-small);
+  align-items: center;
+}
+
 :host {
   @include wc.scrollbars;
 
@@ -75,7 +81,6 @@
     flex-basis: var(--zn-spacing-small-panel);
     width: 100%;
     background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
-    border-radius: 10px;
 
     &:before {
       position: absolute;
@@ -103,7 +108,6 @@
     }
 
     .body {
-      border-radius: 10px;
       display: flex;
       flex-direction: column;
       overflow-y: auto;

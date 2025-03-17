@@ -4,7 +4,7 @@
   --docs-border-color: rgb(var(--zn-border-color));
   --docs-border-width: 1px;
   --docs-border-radius: 10px;
-  --docs-content-max-width: 1400px;
+  --docs-content-max-width: 840px;
   --docs-sidebar-width: 320px;
   --docs-sidebar-transition-speed: 250ms;
   --docs-content-toc-max-width: 260px;
@@ -732,12 +732,22 @@ pre:hover .copy-code-button,
   font-size: var(--zn-font-size-medium);
   font-weight: var(--zn-font-weight-semibold);
   border-bottom: solid var(--docs-border-width) var(--docs-border-color);
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 1.5rem 0 0.5rem 0 !important;
+}
+
+#sidebar nav h3 {
+  font-size: var(--zn-font-size-medium);
+  font-weight: var(--zn-font-weight-semibold);
+  border-bottom: solid var(--docs-border-width) var(--docs-border-color);
 }
 
 #sidebar ul {
   padding: 0;
   margin: 1rem 0;
+}
+
+#sidebar ul ul {
+  margin-left: 1rem;
 }
 
 #sidebar ul li {
@@ -747,7 +757,7 @@ pre:hover .copy-code-button,
 }
 
 #sidebar ul ul ul {
-  margin-left: 0.75rem;
+  margin-left: 1.25rem;
 }
 
 #sidebar ul li a {

@@ -29,42 +29,6 @@
           }
         },
         {
-          "name": "zn-action-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "description",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-accordion",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -96,6 +60,42 @@
               { "name": "summary", "type": "string" },
               { "name": "label", "type": "string" },
               { "name": "expanded", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-item",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "description",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "uri", "type": "string" }
             ],
             "events": [
               {
@@ -943,8 +943,8 @@
             {
               "name": "type",
               "value": {
-                "type": "'info' | 'success' | 'warning' | 'error' | 'primary'",
-                "default": "'primary'"
+                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'",
+                "default": "'neutral'"
               }
             }
           ],
@@ -960,7 +960,7 @@
               { "name": "icon", "type": "string" },
               {
                 "name": "type",
-                "type": "'info' | 'success' | 'warning' | 'error' | 'primary'"
+                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'"
               }
             ],
             "events": [
@@ -1254,18 +1254,6 @@
                 "description": "Emitted as an example."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-container",
-          "description": "Layout container, used to wrap content with optional padding and breakpoint width.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [{ "name": "padded", "value": { "type": "boolean" } }],
-          "slots": [{ "name": "", "description": "The default slot." }],
-          "events": [],
-          "js": {
-            "properties": [{ "name": "padded", "type": "boolean" }],
-            "events": []
           }
         },
         {

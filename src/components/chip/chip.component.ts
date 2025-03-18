@@ -28,7 +28,8 @@ export default class ZnChip extends ZincElement {
 
   @property({type: String}) icon: string = '';
 
-  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' | 'primary' = 'primary';
+  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
+    'transparent' | 'neutral' = 'neutral';
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
@@ -40,7 +41,9 @@ export default class ZnChip extends ZincElement {
         'chip--success': this.type === 'success',
         'chip--warning': this.type === 'warning',
         'chip--error': this.type === 'error',
-        'chip--primary': this.type === 'primary'
+        'chip--primary': this.type === 'primary',
+        'chip--transparent': this.type === 'transparent',
+        'chip--neutral': this.type === 'neutral'
       })}>
         ${this.icon ? html`
           <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}

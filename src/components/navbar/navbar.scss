@@ -124,7 +124,7 @@ ul {
 
       user-select: none;
       font-weight: 500;
-      padding-bottom: 10px;
+      padding-bottom: var(--zn-spacing-x-small);
       position: relative;
 
       display: flex;
@@ -164,6 +164,11 @@ ul {
 
       &.active, &.zn-tb-active {
         color: rgb(var(--zn-primary));
+      }
+
+      &.active::before, &.zn-tb-active::before {
+        left: calc(var(--zn-spacing-medium) * -1);
+        right: calc(var(--zn-spacing-medium) * -1);
       }
     }
 

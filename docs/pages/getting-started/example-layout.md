@@ -16,8 +16,8 @@ component you are using already includes padding or margin it will not be double
 
 ```html:preview
 
-<zn-container padded>
-  <zn-sp>
+<zn-pane>
+  <zn-sp flush>
     <zn-cols layout="1,1">
       <zn-panel caption="Some Panel">
         <zn-sp divide no-gap>
@@ -70,7 +70,7 @@ component you are using already includes padding or margin it will not be double
       </zn-sp>
     </zn-panel>
   </zn-sp>
-</zn-container>
+</zn-pane>
 ```
 
 ### Simple Panel Example

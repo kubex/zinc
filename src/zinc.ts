@@ -72,7 +72,6 @@ export {default as CheckboxGroup} from './components/checkbox-group';
 export {default as ConfirmContent} from './components/confirm-content';
 export {default as EmptyDialog} from './components/empty-dialog';
 export {default as DescriptionItem} from './components/description-item';
-export {default as Container} from './components/container';
 /* plop:component */
 
 // Utilities

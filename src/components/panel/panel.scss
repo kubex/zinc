@@ -27,9 +27,16 @@
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
   &__header {
-    display: flex;;
+    display: flex;
     justify-items: center;
     padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
+
+    &__left {
+      display: flex;
+      flex-direction: column;
+      gap: var(--zn-spacing-2x-small);
+      flex-grow: 1;
+    }
 
     &__actions {
       display: flex;
@@ -39,11 +46,15 @@
 
     .panel__caption {
       font-weight: var(--zn-font-weight-bold);
-      flex-grow: 1;
       font-size: var(--zn-font-size-medium);
-      color: rgba(var(--zn-text-panel-title), 100%);
-      display: flex;
-      align-items: center;
+      color: rgb(var(--zn-text-panel-title));
+      margin: 0;
+    }
+
+    .panel__description {
+      font-weight: var(--zn-font-weight-semibold);
+      font-size: var(--zn-font-size-medium);
+      color: rgb(var(--zn-text));
       margin: 0;
     }
   }

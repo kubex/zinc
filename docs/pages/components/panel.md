@@ -7,7 +7,7 @@ layout: component
 
 ```html:preview
 
-<zn-panel caption="Example Panel" flush tabbed>
+<zn-panel caption="Example Panel" description="Full Example of a panel" flush tabbed>
 
   <!-- All the panel actions -->
   <zn-chip slot="actions" icon="home">Awesome</zn-chip>
@@ -50,7 +50,7 @@ Basic panels are just that, basic. However, they are a key component in the zn f
 around been displayed in a panel.
 
 ```html:preview
-<zn-panel caption="Example Panel">
+<zn-panel caption="Example Panel" description="Simple Panels are the best">
   <div>Panel Content</div>
 </zn-panel>
 ```

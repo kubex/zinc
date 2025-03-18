@@ -29,6 +29,8 @@ export default class ZnPanel extends ZincElement {
 
   @property() caption: string;
 
+  @property() description: string;
+
   @property({type: Boolean}) tabbed: boolean;
 
   @property({type: Boolean}) flush: boolean;
@@ -71,7 +73,10 @@ export default class ZnPanel extends ZincElement {
 
         ${hasHeader ? html`
           <div class="panel__header">
-            <span class="panel__caption">${this.caption}</span>
+            <div class="panel__header__left">
+              <span class="panel__caption">${this.caption}</span>
+              <span class="panel__description">${this.description}</span>
+            </div>
             ${hasActionSlot ? html`
               <slot name="actions" class="panel__header__actions"></slot>
             ` : null}

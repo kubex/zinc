@@ -2449,6 +2449,7 @@ declare module "components/panel/panel.component" {
         private readonly hasSlotController;
         basis: number;
         caption: string;
+        description: string;
         tabbed: boolean;
         flush: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;

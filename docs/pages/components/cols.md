@@ -42,4 +42,4 @@ layout: component
 </zn-cols>
 ```
 
-[component-metadata:zn-cols]
+

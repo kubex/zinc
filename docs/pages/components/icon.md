@@ -34,7 +34,7 @@ TODO
 
 TODO
 
-[component-metadata:zn-icon]
+
 
 <!-- Supporting scripts and styles for the search utility -->
 <script>

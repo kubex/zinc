@@ -20,5 +20,3 @@ TODO
 ### Second Example
 
 TODO
-
-[component-metadata:zn-accordion]

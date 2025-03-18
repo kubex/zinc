@@ -98,7 +98,7 @@ panel. This can be useful when using other components such as `zn-tabs`.
 </zn-panel>
 ```
 
-[component-metadata:zn-panel]
+
 
 ### Moving the caption
 
@@ -135,4 +135,4 @@ panel. This can be useful when using other components such as `zn-tabs`.
 </zn-panel>
 ```
 
-[component-metadata:zn-panel]
+

@@ -2436,12 +2436,9 @@ declare module "components/panel/panel.component" {
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
      * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot actions - The actions slot.
+     * @slot footer - The footer slot.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -2449,9 +2446,9 @@ declare module "components/panel/panel.component" {
      */
     export default class ZnPanel extends ZincElement {
         static styles: CSSResultGroup;
+        private readonly hasSlotController;
         basis: number;
         caption: string;
-        rows: number;
         tabbed: boolean;
         flush: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;

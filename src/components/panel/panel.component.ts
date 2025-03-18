@@ -4,6 +4,7 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
 import {classMap} from "lit/directives/class-map.js";
+import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -11,12 +12,9 @@ import {classMap} from "lit/directives/class-map.js";
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot actions - The actions slot.
+ * @slot footer - The footer slot.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -25,17 +23,26 @@ import {classMap} from "lit/directives/class-map.js";
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({attribute: 'basis-px', type: Number, reflect: true}) basis: number;
-  @property({attribute: 'caption', type: String, reflect: true}) caption: string;
-  @property({attribute: 'rows', type: Number, reflect: true}) rows: number;
-  @property({attribute: 'tabbed', type: Boolean, reflect: true}) tabbed: boolean;
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
+
+  @property({type: Number}) basis: number;
+
+  @property() caption: string;
+
+  @property({type: Boolean}) tabbed: boolean;
+
   @property({type: Boolean}) flush: boolean;
 
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
+    if (this.basis) {
+      this.style.setProperty('--zn-panel-basis', this.basis.toString());
+    }
+
     if (!this.tabbed) {
-      const tabs = this.querySelector('zn-tabs');
+      const tabs = this.querySelector('zn-tabs')!;
       if (tabs) {
         tabs.setAttribute('flush-x', '');
         const body = this.shadowRoot?.querySelector('.body');
@@ -46,48 +53,37 @@ export default class ZnPanel extends ZincElement {
     }
   }
 
+
   protected render(): unknown {
-    if (this.basis > 0) {
-      this.style.flexBasis = this.basis + 'px';
-    }
-
-    const footerItems = this.querySelectorAll('[slot="footer"]').length > 0;
-    const actionItems = this.querySelectorAll('[slot="actions"]').length > 0;
-
-    if (this.rows > 0) {
-      this.style.setProperty('--row-count', this.rows.toString());
-    }
-
-    let header;
-    if (actionItems || this.caption || this.firstChild?.nodeName == 'ZN-TABS') {
-      // zn-tabs uses the header as top-padding
-      header = html`
-        <div class="header">
-          <span>${this.caption}</span>
-          <slot name="actions" class="header__actions"></slot>
-        </div>
-      `;
-    }
-
-    let footer;
-    if (footerItems) {
-      footer = html`
-        <div class="footer">
-          <slot name="footer"></slot>
-        </div>`;
-    }
+    const hasActionSlot = this.hasSlotController.test('actions');
+    const hasFooterSlot = this.hasSlotController.test('footer');
+    const hasHeader = this.caption || hasActionSlot;
 
     return html`
-      <div class=${classMap({
+      <div part="base" class=${classMap({
         panel: true,
-        'panel--flush': this.flush || this.tabbed
+        'panel--flush': this.flush || this.tabbed,
+        'panel--tabbed': this.tabbed,
+        'panel--has-actions': hasActionSlot,
+        'panel--has-footer': hasFooterSlot,
+        'panel--has-header': hasHeader,
       })}>
-        <div>${header}
-          <div class="panel__body body">
-            <slot></slot>
+
+        ${hasHeader ? html`
+          <div class="panel__header">
+            <span class="panel__caption">${this.caption}</span>
+            ${hasActionSlot ? html`
+              <slot name="actions" class="panel__header__actions"></slot>
+            ` : null}
           </div>
-          ${footer}
+        ` : null}
+
+        <div class="panel__body">
+          <slot></slot>
         </div>
+
+        ${hasFooterSlot ? html`
+          <slot name="footer" class="panel__footer"></slot>` : null}
       </div>`;
   }
 }

@@ -55,8 +55,84 @@ around been displayed in a panel.
 </zn-panel>
 ```
 
-### Second Example
+### Flush with Tabs
 
-TODO
+`flush` panels are designed to be used in a layout where the content of the panel needs to take up the entire width of
+the
+panel. This can be useful when using other components such as `zn-tabs`.
+
+```html:preview
+
+<zn-panel caption="Example Panel" flush tabbed>
+
+  <!-- All the panel actions -->
+  <zn-chip slot="actions" icon="home">Awesome</zn-chip>
+  <zn-chip slot="actions" icon="phone" type="info">example</zn-chip>
+
+  <!-- Example panel content -->
+  <zn-tabs flush>
+    <zn-navbar slot="top">
+      <li tab>Customer</li>
+      <li tab="something-else">Something Else</li>
+    </zn-navbar>
+
+    <zn-sp id="" divide>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+      </zn-description-item>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      </zn-description-item>
+    </zn-sp>
+
+    <zn-sp id="something-else" divide>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+      </zn-description-item>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+      </zn-description-item>
+    </zn-sp>
+  </zn-tabs>
+
+  <!-- Panel Footer -->
+  <span slot="footer">
+    Some awesome footer information
+  </span>
+</zn-panel>
+```
+
+[component-metadata:zn-panel]
+
+### Moving the caption
+
+```html:preview
+
+<zn-panel flush>
+
+  <!-- Example panel content -->
+  <zn-tabs caption="Example Panel">
+    <zn-navbar slot="top">
+      <li tab>Customer</li>
+      <li tab="something-else">Something Else</li>
+    </zn-navbar>
+
+    <zn-sp id="" divide>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+      </zn-description-item>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      </zn-description-item>
+    </zn-sp>
+
+    <zn-sp id="something-else" divide>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+      </zn-description-item>
+      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+      </zn-description-item>
+    </zn-sp>
+  </zn-tabs>
+
+  <!-- Panel Footer -->
+  <span slot="footer">
+    Some awesome footer information
+  </span>
+</zn-panel>
+```
 
 [component-metadata:zn-panel]

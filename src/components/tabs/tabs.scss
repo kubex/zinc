@@ -92,8 +92,9 @@ h1, h2 {
 
   #header {
     display: flex;
-    padding: 0 15px;
-    gap: 15px;
+    align-items: center;
+    padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
+    gap: var(--zn-spacing-medium);
 
     #actions ::slotted(*:not(.zn-tb-active)) {
       display: none;
@@ -101,7 +102,6 @@ h1, h2 {
 
     #actions {
       display: flex;
-      max-height: 25px;
       overflow: visible;
     }
 
@@ -110,21 +110,12 @@ h1, h2 {
     }
   }
 
-  h1 {
-    font-size: 18px;
-    line-height: 35px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: rgb(var(--zn-text-page-title));
-
-    @media screen and (min-width: var(--zn-container-lg)) {
-      font-size: 20px;
-    }
-  }
-
   h2 {
-    font-weight: 600;
-    font-size: 17px;
+    font-weight: var(--zn-font-weight-bold);
+    flex-grow: 1;
+    font-size: var(--zn-font-size-medium);
     color: rgba(var(--zn-text-panel-title), 100%);
+    padding: 0;
+    margin: 0;
   }
 }

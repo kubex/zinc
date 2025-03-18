@@ -1,7 +1,5 @@
-import { type CSSResultGroup, PropertyValues, unsafeCSS } from 'lit';
+import {PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-
-import styles from './absolute-container.scss';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -21,11 +19,17 @@ import styles from './absolute-container.scss';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnAbsoluteContainer extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+
+  private domObserver: MutationObserver;
 
   connectedCallback() {
     super.connectedCallback();
     this.observerDom();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.domObserver?.disconnect();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -43,11 +47,11 @@ export default class ZnAbsoluteContainer extends ZincElement {
 
   observerDom() {
     // observe the DOM for changes
-    const observer = new MutationObserver(() => {
+    this.domObserver = new MutationObserver(() => {
       this.resize();
     });
 
-    observer.observe(this,
+    this.domObserver.observe(this,
       {
         childList: true,
         subtree: true,

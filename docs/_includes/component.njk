@@ -44,49 +44,37 @@
   {# Markdown content #}
   {{ content | safe }}
 
-  {# Importing #}
-  {#  <h2>Importing</h2> #}
-  {#  <p> #}
-  {#    If you're using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free to use #}
-  {#    any of the following snippets to <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component. #}
-  {#  </p> #}
+  Importing
+  <h2>Importing</h2>
+  <p>
+    If you're using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free to use
+    any of the following snippets to <a href="/getting-started/installation#cherry-picking">cherry pick</a> this
+    component.
+  </p>
 
-  {#  <zn-tab-group> #}
-  {#    <zn-tab slot="nav" panel="script">Script</zn-tab> #}
-  {#    <zn-tab slot="nav" panel="import">Import</zn-tab> #}
-  {#    <zn-tab slot="nav" panel="bundler">Bundler</zn-tab> #}
-  {#    <zn-tab slot="nav" panel="react">React</zn-tab> #}
+  <zn-accordion caption="Script">
+    <p>
+      To import this component from <a href="https://www.jsdelivr.com/package/npm/@kubex/zinc">the CDN</a>
+      using a script tag:
+    </p>
+    <pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@kubex/zinc@{{ meta.version }}/dist/{{ component.path }}&quot;&gt;&lt;/script&gt;</code></pre>
+  </zn-accordion>
 
-  {#    <zn-tab-panel name="script"> #}
-  {#      <p> #}
-  {#        To import this component from <a href="https://www.jsdelivr.com/package/npm/@kubex/zinc">the CDN</a> #}
-  {#        using a script tag: #}
-  {#      </p> #}
-  {#      <pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@kubex/zinc@{{ meta.version }}/{{ meta.cdndir }}/{{ component.path }}&quot;&gt;&lt;/script&gt;</code></pre> #}
-  {#    </zn-tab-panel> #}
+  <zn-accordion caption="JavaScript">
+    <p>
+      To import this component from <a href="https://www.jsdelivr.com/package/npm/@kubex/zinc">the CDN</a>
+      using a JavaScript import:
+    </p>
+    <pre><code
+        class="language-js">import 'https://cdn.jsdelivr.net/npm/@kubex/zinc@{{ meta.version }}/dist/{{ component.path }}';</code></pre>
+  </zn-accordion>
 
-  {#    <zn-tab-panel name="import"> #}
-  {#      <p> #}
-  {#        To import this component from <a href="https://www.jsdelivr.com/package/npm/@kubex/zinc">the CDN</a> #}
-  {#        using a JavaScript import: #}
-  {#      </p> #}
-  {#      <pre><code class="language-js">import 'https://cdn.jsdelivr.net/npm/@kubex/zinc@{{ meta.version }}/{{ meta.cdndir }}/{{ component.path }}';</code></pre> #}
-  {#    </zn-tab-panel> #}
-
-  {#    <zn-tab-panel name="bundler"> #}
-  {#      <p> #}
-  {#        To import this component using <a href="{{ rootUrl('/getting-started/installation#bundling') }}">a bundler</a>: #}
-  {#      </p> #}
-  {#      <pre><code class="language-js">import '@kubex/zinc/{{ meta.npmdir }}/{{ component.path }}';</code></pre> #}
-  {#    </zn-tab-panel> #}
-
-  {#    <zn-tab-panel name="react"> #}
-  {#      <p> #}
-  {#        To import this component as a <a href="/frameworks/react">React component</a>: #}
-  {#      </p> #}
-  {#      <pre><code class="language-js">import {{ component.name }} from '@kubex/zinc/{{ meta.npmdir }}/react/{{ component.tagNameWithoutPrefix }}';</code></pre> #}
-  {#    </zn-tab-panel> #}
-  {#  </zn-tab-group> #}
+  <zn-accordion caption="Bundler">
+    <p>
+      To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:
+    </p>
+    <pre><code class="language-js">import '@kubex/zinc/dist/{{ component.path }}';</code></pre>
+  </zn-accordion>
 
   {# Slots #}
   {% if component.slots.length %}

@@ -1,16 +1,12 @@
 @use "../../wc";
 
-
 zn-accordion:last-of-type > div, :host(:last-of-type) > div {
   border-bottom-width: 0 !important;
 }
 
 zn-accordion > div, :host > div {
   border-bottom-width: 1px !important;
-}
-
-:host(:not([flush])) > div {
-  padding: var(--zn-spacing-medium) 0;
+  background-color: rgb(var(--zn-panel));
 }
 
 :host(:not([expanded])) {
@@ -21,18 +17,24 @@ zn-accordion > div, :host > div {
   transform: rotate(180deg);
 }
 
+
 .header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   cursor: pointer;
   overflow: hidden;
-
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
   justify-items: center;
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
 
   .caption {
     font-weight: 600;
-    margin-bottom: var(--zn-spacing-x-small);
+    margin: 0;
     color: rgb(var(--zn-text-heading));
   }
 
@@ -75,6 +77,14 @@ zn-accordion > div, :host > div {
 
 .content {
   transition: .1s all ease-out;
+  background-color: rgb(var(--zn-body));
+}
+
+:host([expanded]) .content {
+  margin: var(--zn-spacing-medium);
+  margin-top: 0;
+  padding: var(--zn-spacing-medium);
+  padding-top: var(--zn-spacing-2x-small);
 }
 
 :host(:not([expanded])) .content {

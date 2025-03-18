@@ -228,7 +228,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.open = false;
 
     if (this.cacheKey) {
-      const cache = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
+      const cache: any = JSON.parse(localStorage.getItem('zn-linked-select-cache') || '{}');
       if (cache[this.cacheKey]) {
         this.value = cache[this.cacheKey];
       }
@@ -544,10 +544,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const allOptions = this.getAllOptions();
 
     // Clear selection
-    allOptions.forEach(el => {
+    allOptions.forEach((el: ZnOption) => {
       el.current = false;
       el.tabIndex = -1;
     });
+
 
     // Select the target option
     if (option) {
@@ -657,7 +658,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   async handleOpenChange() {
     if (this.open && !this.disabled) {
       // Reset the current option
-      this.setCurrentOption(this.selectedOptions[0] || this.getFirstOption());
+      this.setCurrentOption(null);
 
       // Show
       this.emit('zn-show');

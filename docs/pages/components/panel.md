@@ -20,17 +20,17 @@ layout: component
       <li tab="something-else">Something Else</li>
     </zn-navbar>
 
-    <zn-sp id="" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+    <zn-sp id="" no-gap divide>
+      <zn-description-item  label="Label 1">This is awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      <zn-description-item  label="Label 2">This is awesome
       </zn-description-item>
     </zn-sp>
 
-    <zn-sp id="something-else" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+    <zn-sp id="something-else" no-gap divide>
+      <zn-description-item  label="Label 3">This is not awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+      <zn-description-item  label="Label 4">This is not awesome
       </zn-description-item>
     </zn-sp>
   </zn-tabs>
@@ -76,17 +76,17 @@ panel. This can be useful when using other components such as `zn-tabs`.
       <li tab="something-else">Something Else</li>
     </zn-navbar>
 
-    <zn-sp id="" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+    <zn-sp id="" no-gap divide>
+      <zn-description-item  label="Label 1">This is awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      <zn-description-item  label="Label 2">This is awesome
       </zn-description-item>
     </zn-sp>
 
-    <zn-sp id="something-else" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+    <zn-sp id="something-else" no-gap divide>
+      <zn-description-item  label="Label 3">This is not awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+      <zn-description-item  label="Label 4">This is not awesome
       </zn-description-item>
     </zn-sp>
   </zn-tabs>
@@ -113,17 +113,17 @@ panel. This can be useful when using other components such as `zn-tabs`.
       <li tab="something-else">Something Else</li>
     </zn-navbar>
 
-    <zn-sp id="" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
+    <zn-sp id="" no-gap divide>
+      <zn-description-item label="Label 1">This is awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 2">This is awesome
+      <zn-description-item label="Label 2">This is awesome
       </zn-description-item>
     </zn-sp>
 
-    <zn-sp id="something-else" divide>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 3">This is not awesome
+    <zn-sp id="something-else" no-gap divide>
+      <zn-description-item label="Label 3">This is not awesome
       </zn-description-item>
-      <zn-description-item style="background: var(--zn-color-red-100);" label="Label 4">This is not awesome
+      <zn-description-item label="Label 4">This is not awesome
       </zn-description-item>
     </zn-sp>
   </zn-tabs>

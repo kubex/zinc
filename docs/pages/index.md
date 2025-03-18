@@ -5,7 +5,7 @@ meta:
 toc: false
 ---
 
-# A Library of Web Components based off of Shoelace
+# A Library of Web Components based off of Shoelace 
 
 - Fully customizable with CSS 🎨
 - Includes a dark theme 🌛

@@ -1,10 +1,10 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
-import {classMap} from "lit/directives/class-map.js";
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,7 +25,7 @@ export default class ZnPanel extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
 
-  @property({type: Number}) basis: number;
+  @property({attribute: 'basis-px', type: Number}) basis: number;
 
   @property() caption: string;
 
@@ -40,7 +40,7 @@ export default class ZnPanel extends ZincElement {
     super.firstUpdated(_changedProperties);
 
     if (this.basis) {
-      this.style.setProperty('--zn-panel-basis', this.basis.toString());
+      this.style.setProperty('--zn-panel-basis', this.basis.toString() + 'px');
     }
 
     if (!this.tabbed) {

@@ -1,4 +1,4 @@
-import {property} from 'lit/decorators.js';
+import {property, query} from 'lit/decorators.js';
 import {type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import type ZnNavbar from "../navbar";
@@ -26,47 +26,73 @@ import {HasSlotController} from "../../internal/slot";
 export default class ZnHeader extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({attribute: 'full-location', reflect: true}) fullLocation: string;
-  @property({attribute: 'entity-id', reflect: true}) entityId: string;
-  @property({attribute: 'entity-id-show', type: Boolean, reflect: true}) entityIdShow: boolean;
-  @property({attribute: 'transparent', type: Boolean, reflect: true}) transparent: boolean = false;
-  @property({attribute: 'caption', reflect: true}) caption: String;
-  @property({attribute: 'navigation', type: Array, reflect: true}) navigation = [];
-  @property({attribute: 'breadcrumb', type: Array}) breadcrumb = [];
-  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
-  @property({attribute: 'previous-path', reflect: true}) previousPath: string;
-  @property({attribute: 'previous-target', reflect: true}) previousTarget: string;
-
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'nav');
 
-  private _hasNav: boolean;
-  private _navBar: ZnNavbar;
+  @property({attribute: 'full-location'}) fullLocation: string;
 
+  @property({attribute: 'entity-id'}) entityId: string;
+
+  @property({attribute: 'entity-id-show', type: Boolean}) entityIdShow: boolean;
+
+  @property({type: Boolean}) transparent: boolean = false;
+
+  @property() caption: string;
+
+  @property({type: Array}) navigation = [];
+
+  @property({type: Array}) breadcrumb = [];
+
+  @property({attribute: 'full-width', type: Boolean}) fullWidth: boolean;
+
+  @property({attribute: 'previous-path'}) previousPath: string;
+
+  @property({attribute: 'previous-target'}) previousTarget: string;
+
+  @query('zn-navbar') navbar: ZnNavbar;
+
+
+  private _hasNav: boolean;
+
+  // Attach any event listeners you may need
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('alt-press', () => this.classList.toggle('alt-pressed', true));
-    window.addEventListener('alt-up', () => this.classList.toggle('alt-pressed', false));
+    window.addEventListener('alt-press', this.handleAltPress);
+    window.addEventListener('alt-up', this.handleAltUp);
+  }
+
+  // Clean up event listeners
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('alt-press', this.handleAltPress);
+    window.removeEventListener('alt-up', this.handleAltUp);
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    this._navBar = this.querySelector('zn-navbar') as ZnNavbar;
     this.updateNav();
   }
 
+  handleAltPress = () => {
+    this.classList.toggle('alt-pressed', true);
+  }
+
+  handleAltUp = () => {
+    this.classList.toggle('alt-pressed', false);
+  }
+
   updateNav() {
-    if (!this._navBar && this.navigation && this.navigation.length > 0) {
-      this._navBar = document.createElement('zn-navbar');
+    if (!this.navbar && this.navigation && this.navigation.length > 0) {
+      this.navbar = document.createElement('zn-navbar');
       const nc = this.shadowRoot?.querySelector('#nav-container');
       if (nc) {
         nc.classList.remove('navless');
-        nc.appendChild(this._navBar);
+        nc.appendChild(this.navbar);
       }
     }
-    if (this._navBar) {
+    if (this.navbar) {
       this._hasNav = true;
-      (this._navBar as ZnNavbar).navigation = this.navigation;
-      this._navBar.setAttribute('baseless', '');
+      (this.navbar as ZnNavbar).navigation = this.navigation;
+      this.navbar.setAttribute('baseless', '');
     }
   }
 
@@ -115,7 +141,8 @@ export default class ZnHeader extends ZincElement {
     let backButton: TemplateResult = html``;
     if (this.previousPath && this.previousPath.length > 0) {
       backButton = html`
-        <a href="${this.previousPath}" class="caption__back" data-target="${this.previousTarget ? this.previousTarget : ''}">
+        <a href="${this.previousPath}" class="caption__back"
+           data-target="${this.previousTarget ? this.previousTarget : ''}">
           <zn-icon src="arrow_back"></zn-icon>
         </a>`;
     }

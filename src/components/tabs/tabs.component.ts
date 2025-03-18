@@ -1,12 +1,13 @@
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
+import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {md5} from "../../utilities/md5";
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {deepQuerySelectorAll} from "../../utilities/query";
-import {md5} from "../../utilities/md5";
-import {Store} from "../../internal/storage";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -28,15 +29,17 @@ import {Store} from "../../internal/storage";
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
+
   private _panel: HTMLElement | any;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
-  // @ts-ignore
+  // @ts-expect-error
   private storage: Storage;
 
-  @property({attribute: 'master-id', type: String, reflect: true}) masterId = '';
+  @property({attribute: 'master-id'}) masterId: string;
   @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
   @property({attribute: 'caption', type: String, reflect: true}) caption = '';
@@ -52,7 +55,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key', type: String, reflect: true}) storeKey: any = null;
+  @property({attribute: 'store-key'}) storeKey: string = null;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
@@ -70,7 +73,7 @@ export default class ZnTabs extends ZincElement {
   async connectedCallback() {
     super.connectedCallback();
 
-    if (this.masterId == '') {
+    if (!this.masterId) {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
 
@@ -99,10 +102,10 @@ export default class ZnTabs extends ZincElement {
   }
 
   _addPanel(panel: HTMLElement) {
-    if (this._panels.has(panel.getAttribute('id') as string)) {
+    if (this._panels.has(panel.getAttribute('id')!)) {
       return;
     }
-    this._panels.set(panel.getAttribute('id') as string, [panel]);
+    this._panels.set(panel.getAttribute('id')!, [panel]);
   }
 
   _addTab(tab: HTMLElement) {
@@ -134,7 +137,7 @@ export default class ZnTabs extends ZincElement {
 
       const defaultTab = this._current || '';
       if (!this._panels.has(defaultTab) && this._tabs.length > 0) {
-        let tabUri = this._tabs[0].getAttribute('tab-uri');
+        const tabUri = this._tabs[0].getAttribute('tab-uri');
         if (tabUri) {
           this.clickTab(this._tabs[0], false);
           return;
@@ -161,9 +164,9 @@ export default class ZnTabs extends ZincElement {
 
     const uriTabs = deepQuerySelectorAll("[tab-uri]", this, '');
     for (let i = 0; i < uriTabs.length; i++) {
-      const uri: any = uriTabs[i].getAttribute("tab-uri");
+      const uri: string | null = uriTabs[i].getAttribute("tab-uri");
       const eleTabId = this._uriToId(uri);
-      if (eleTabId == tabId) {
+      if (eleTabId === tabId) {
         this._createUriPanel(uriTabs[i], uri, eleTabId);
         // do not break, as multiple tabs can have the same uri
       }
@@ -185,7 +188,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     if (this._panels.has(tabId)) {
-      // @ts-ignore
+      // @ts-expect-error
       return this._panels.get(tabId)[0] as HTMLDivElement;
     }
 
@@ -238,7 +241,7 @@ export default class ZnTabs extends ZincElement {
       if (parent.hasAttribute('ref-tab')) {
         return parent.getAttribute('ref-tab');
       }
-      // @ts-ignore
+      // @ts-expect-error
       parent = parent?.parentElement || parent?.getRootNode()?.host;
     }
     return null;
@@ -372,7 +375,7 @@ export default class ZnTabs extends ZincElement {
 
     deepQuerySelectorAll('[ref-tab-uri]', this, 'zn-tabs').forEach(ele => {
       if (!ele.hasAttribute('ref-tab')) {
-        ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri') as string));
+        ele.setAttribute('ref-tab', this._uriToId(ele.getAttribute('ref-tab-uri')!));
         ele.removeAttribute('ref-tab-uri');
         this._actions.push(ele as HTMLElement);
       }
@@ -383,7 +386,7 @@ export default class ZnTabs extends ZincElement {
     if (this._split > 0) {
       let storeKey: any = this.storeKey;
       if (storeKey) {
-        storeKey = storeKey + "-split";
+        storeKey += "-split";
       }
 
       let contentSlot = 'secondary';
@@ -398,7 +401,7 @@ export default class ZnTabs extends ZincElement {
             primary-caption="${this.primaryCaption}"
             secondary-caption="${this.secondaryCaption}"
             store-key="${storeKey}"
-            padded=${ifDefined(this.padded ? true : undefined)})
+            padded=${ifDefined(this.padded ? true : undefined)}
             padded-right=${ifDefined(this.paddedRight ? true : undefined)}
             pixels bordered
             min-size="${this._splitMin}"
@@ -415,6 +418,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     return html`
+      <zn-header .caption=${ifDefined(this.caption)} class="tabs__header" part="header"></zn-header>
       <div id="header">
         ${this.header ? html`<h1>${this.header}</h1>` : ''}
         ${this.caption ? html`<h2>${this.caption}</h2>` : ''}

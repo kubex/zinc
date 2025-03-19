@@ -7,9 +7,9 @@ import {classMap} from "lit/directives/class-map.js";
 import styles from './bulk-actions.scss';
 
 export type CreatedRule = {
-  id: string,
-  name: string
-  value: string
+  id: string;
+  name: string;
+  value: string;
 }
 
 export type BulkActionData = Array<BulkActionItem>;

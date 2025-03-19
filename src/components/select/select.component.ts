@@ -4,7 +4,7 @@ import {type CSSResultGroup, html, TemplateResult, unsafeCSS} from 'lit';
 import {watch} from '../../internal/watch';
 import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 import {classMap} from "lit/directives/class-map.js";
-import {FormControlController} from "../../internal/form";
+import {FormControlController, validValidityState} from "../../internal/form";
 import {scrollIntoView} from "../../internal/scroll";
 import {defaultValue} from "../../internal/default-value";
 import {HasSlotController} from "../../internal/slot";
@@ -209,12 +209,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Gets the validity state object */
   get validity() {
-    return this.valueInput.validity;
+    return this.valueInput ? this.valueInput.validity : validValidityState
   }
 
   /** Gets the validation message */
   get validationMessage() {
-    return this.valueInput.validationMessage;
+    return this.valueInput?.validationMessage;
   }
 
   connectedCallback() {

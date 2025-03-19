@@ -7,6 +7,7 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
+import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -28,7 +29,7 @@ import styles from './tabs.scss';
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  // private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
 
   private _panel: HTMLElement | any;
   private _panels: Map<string, Element[]>;
@@ -382,6 +383,11 @@ export default class ZnTabs extends ZincElement {
   }
 
   render() {
+    const hasActionSlot = this.hasSlotController.test('actions');
+    const hasHeader = this.header && this.header.length > 0;
+    const hasCaption = this.caption && this.caption.length > 0;
+
+
     if (this._split > 0) {
       let storeKey: any = this.storeKey;
       if (storeKey) {
@@ -417,14 +423,15 @@ export default class ZnTabs extends ZincElement {
     }
 
     return html`
-      <zn-header .caption=${ifDefined(this.caption)} class="tabs__header" part="header"></zn-header>
-      <div id="header">
-        ${this.header ? html`<h1>${this.header}</h1>` : ''}
-        ${this.caption ? html`<h2>${this.caption}</h2>` : ''}
-        <div id="actions">
-          <slot name="actions"></slot>
-        </div>
-      </div>
+      ${hasHeader || hasCaption || hasActionSlot ? html`
+        <div id="header">
+          ${hasHeader ? html`<h1>${this.header}</h1>` : ''}
+          ${hasCaption ? html`<h2>${this.caption}</h2>` : ''}
+          ${hasActionSlot ? html`
+            <div id="actions">
+              <slot name="actions"></slot>
+            </div>` : ''}
+        </div>` : null}
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>

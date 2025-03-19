@@ -8,7 +8,7 @@ import styles from './menu.scss';
 import ZnConfirm from "../confirm";
 import {ifDefined} from "lit/directives/if-defined.js";
 
-type NavItem = {
+interface NavItem {
   title: string;
   type: string;
   path: string;
@@ -22,7 +22,7 @@ type NavItem = {
     content: string;
     trigger: string;
     action: string;
-  }
+  };
 }
 
 /**

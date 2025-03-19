@@ -1,10 +1,12 @@
-import {property, query} from 'lit/decorators.js';
+import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import type ZnNavbar from "../navbar";
 
 import styles from './header.scss';
 import {HasSlotController} from "../../internal/slot";
+import {watch} from "../../internal/watch";
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -38,9 +40,11 @@ export default class ZnHeader extends ZincElement {
 
   @property() caption: string;
 
+  @property() description: string;
+
   @property({type: Array}) navigation = [];
 
-  @property({type: Array}) breadcrumb = [];
+  @property({type: Array}) breadcrumb: { path: string; title: string }[] = [];
 
   @property({attribute: 'full-width', type: Boolean}) fullWidth: boolean;
 
@@ -48,10 +52,7 @@ export default class ZnHeader extends ZincElement {
 
   @property({attribute: 'previous-target'}) previousTarget: string;
 
-  @query('zn-navbar') navbar: ZnNavbar;
-
-
-  private _hasNav: boolean;
+  private navbar: ZnNavbar;
 
   // Attach any event listeners you may need
   connectedCallback() {
@@ -69,6 +70,7 @@ export default class ZnHeader extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+    this.navbar = this.querySelector('zn-navbar') as ZnNavbar;
     this.updateNav();
   }
 
@@ -80,7 +82,9 @@ export default class ZnHeader extends ZincElement {
     this.classList.toggle('alt-pressed', false);
   }
 
+  @watch('navigation', {waitUntilFirstUpdate: true})
   updateNav() {
+
     if (!this.navbar && this.navigation && this.navigation.length > 0) {
       this.navbar = document.createElement('zn-navbar');
       const nc = this.shadowRoot?.querySelector('#nav-container');
@@ -89,97 +93,97 @@ export default class ZnHeader extends ZincElement {
         nc.appendChild(this.navbar);
       }
     }
+
     if (this.navbar) {
-      this._hasNav = true;
       (this.navbar as ZnNavbar).navigation = this.navigation;
       this.navbar.setAttribute('baseless', '');
     }
   }
 
-  protected updated(_changedProperties: PropertyValues) {
-    super.updated(_changedProperties);
-    _changedProperties.forEach((_oldValue: any, propName: any) => {
-      if (propName == 'navigation') {
-        setTimeout(this.updateNav.bind(this), 100);
-      }
-    });
-  }
-
   render() {
-    if (this.caption == "" && (!this._hasNav) && (!this?.breadcrumb?.length)) {
-      return html``;
-    }
+    const hasDefaultSlot = this.hasSlotController.test('[default]');
+    const hasNavigationSlot = this.hasSlotController.test('nav');
+    const hasNavigation = this.navigation && this.navigation.length > 0 || hasNavigationSlot;
+
+    const hasPreviousPath = this.previousPath;
+    const hasEntityId = this.entityId;
+    const hasFullLocation = this.fullLocation;
+    const hasBreadcrumb = this.breadcrumb && this.breadcrumb.length > 0;
 
     let breadcrumb: TemplateResult = html``;
-    if (this?.breadcrumb?.length) {
+    if (hasBreadcrumb) {
       breadcrumb = html`
-        ${this.breadcrumb.map((item: any, index) => {
-          const prefix = index == 0 ? '' : ' > ';
-          if (item.path == '') {
+        ${this.breadcrumb.map((item, index) => {
+          const prefix = index === 0 ? '' : ' > ';
+
+          if (item.path === '') {
             return html`
               ${prefix} <span>${item.title}</span>`;
           }
+
           return html`
             ${prefix} <a href="${item.path}">${item.title}</a>`;
         })}`;
     }
 
-    let caption: TemplateResult = html``;
-    if (this.caption) {
-      caption = html`
-        <h1>${this.caption}</h1>`;
-    }
-
-    let inNew: TemplateResult = html``;
-    if (this.fullLocation) {
-      inNew = html`
-        <a href="${this.fullLocation}" target="_blank">
-          <zn-icon src="open_in_new"></zn-icon>
-        </a>`;
-    }
-
-    let backButton: TemplateResult = html``;
-    if (this.previousPath && this.previousPath.length > 0) {
-      backButton = html`
-        <a href="${this.previousPath}" class="caption__back"
-           data-target="${this.previousTarget ? this.previousTarget : ''}">
-          <zn-icon src="arrow_back"></zn-icon>
-        </a>`;
-    }
-
-    let entityId: TemplateResult = html``;
-    if (this.entityId) {
-      entityId = html`
-        <zn-icon src="fingerprint" onclick="navigator.clipboard.writeText('${this.entityId}')"></zn-icon>
-        ${this.entityIdShow ? this.entityId : ''}`;
-    }
-
-    let url: TemplateResult = html``;
-    if (this.fullLocation) {
-      url = html`
-        <zn-icon src="link" onclick="navigator.clipboard.writeText('${this.fullLocation}')"></zn-icon>`;
-    }
-
-    const hasDefaultSlot = this.hasSlotController.test('[default]');
-
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
-      <div>
-        <div class="alt-overlay">${inNew}${entityId}${url}</div>
+      <div class=${classMap({
+        'header': true,
+        'header--transparent': this.transparent,
+        'header--full-width': this.fullWidth,
+        'header--has-nav': hasNavigation,
+        'header--has-breadcrumb': hasBreadcrumb,
+        'header--has-previous': hasPreviousPath,
+        'header--has-entity-id': hasEntityId,
+        'header--has-full-location': hasFullLocation,
+      })} part="base">
+
+        ${hasFullLocation || hasEntityId ? html`
+          <div class="alt-overlay">
+            ${hasFullLocation ? html`
+              <a href="${this.fullLocation}" target="_blank">
+                <zn-icon src="open_in_new"></zn-icon>
+              </a>` : null}
+            ${hasEntityId ? html`
+                <zn-copy-button copy-label="Copy Entity ID" value="${this.entityId}" src="fingerprint"></zn-copy-button>`
+              : null}
+            ${hasFullLocation ? html`
+                <zn-copy-button copy-label="Copy Full Location" value="${this.fullLocation}" src="link"></zn-copy-button>`
+              : null}
+          </div>` : null}
+
+
         <div class="width-container content">
-          <div class="breadcrumb">${breadcrumb}</div>
+          ${hasBreadcrumb ? html`
+            <div class="breadcrumb">
+              ${breadcrumb}  <!--- Maybe make this into a component -->
+            </div>` : null}
+
           ${hasDefaultSlot ? html`
             <div class="actions">
               <slot></slot>
             </div>` : ''}
+
           <div class="caption">
-            ${backButton}
-            ${caption}
+            ${hasPreviousPath ? html`
+              <a href="${this.previousPath}" class="caption__back"
+                 data-target="${this.previousTarget ? this.previousTarget : ''}">
+                <zn-icon src="arrow_back"></zn-icon>
+              </a>` : null}
+            <div class="header__left">
+              <span class="header__caption" part="header-caption">${this.caption}</span>
+              <span class="header__description">${this.description}</span>
+            </div>
           </div>
+
         </div>
-        <div class="width-container ${this._hasNav ? '' : 'navless'}" id="nav-container">
-          <slot name="nav"></slot>
-        </div>
+
+        ${hasNavigation ? html`
+          <div class="width-container navless" id="nav-container">
+            <slot name="nav"></slot>
+          </div>` : null}
+
       </div>
     `;
     if (this.fullWidth) {

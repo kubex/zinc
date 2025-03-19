@@ -1,9 +1,9 @@
-import { property, query, state } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property, query, state} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './copy-button.scss';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 import ZnTooltip from "../tooltip";
 
 /**
@@ -36,7 +36,8 @@ export default class ZnCopyButton extends ZincElement {
   @state() status: 'rest' | 'success' | 'error' = 'rest';
 
   @property() value = '';
-  @property({ attribute: 'copy-label' }) copyLabel = '';
+  @property({attribute: 'copy-label'}) copyLabel = '';
+  @property() src = '';
 
 
   render() {
@@ -52,7 +53,7 @@ export default class ZnCopyButton extends ZincElement {
         content=${copyLabel}>
         <button class="copy-button__button" part="button" @click=${this.handleCopy}>
           <slot part="copy-icon" name="copy-icon">
-            <zn-icon src="content_copy"></zn-icon>
+            <zn-icon src="${this.src ? this.src : 'content_copy'}"></zn-icon>
           </slot>
           <slot part="success-icon" name="success-icon" hidden>
             <zn-icon src="check"></zn-icon>

@@ -2,6 +2,7 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './pane.scss';
+import {property} from "lit/decorators.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -22,6 +23,8 @@ import styles from './pane.scss';
  */
 export default class ZnPane extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  @property ({type: Boolean}) flush: boolean;
 
   protected _header: HTMLElement;
 

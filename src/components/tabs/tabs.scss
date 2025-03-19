@@ -90,10 +90,10 @@ h1, h2 {
 
 :host {
 
-  #header {
+  #header:not(:empty) {
     display: flex;
     align-items: center;
-    padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
+    padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
     gap: var(--zn-spacing-medium);
 
     #actions ::slotted(*:not(.zn-tb-active)) {

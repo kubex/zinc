@@ -1,5 +1,40 @@
 @use "../../wc";
 
+:host {
+  display: block;
+}
+
+// TODO, update scss to match this bit and not the below
+.header {
+
+  // This isn't correct fix this also
+  .caption {
+    padding: var(--zn-spacing-small) 0;
+  }
+
+  &__caption {
+    font-weight: var(--zn-font-weight-bold);
+    font-size: var(--zn-font-size-medium);
+    color: rgba(var(--zn-text-panel-title), 100%);
+    margin: 0;
+    line-height: 35px;
+  }
+
+  &--has-breadcrumb {
+    .caption {
+      padding-top: 0;
+    }
+  }
+
+  // remove the padding on the nav
+  &--has-nav {
+    .caption {
+      padding-bottom: 0;
+    }
+  }
+}
+
+
 :host([transparent]) > div {
   background-color: transparent;
 }

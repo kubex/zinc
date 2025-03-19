@@ -96,16 +96,6 @@ button:focus-visible {
   color: var(--zn-color-neutral-900);
 }
 
-/* Show custom elements only after they're registered */
-:not(:defined),
-:not(:defined) * {
-  opacity: 0;
-}
-
-:defined {
-  opacity: 1;
-  transition: 0.1s opacity;
-}
 
 html {
   height: 100%;
@@ -1051,11 +1041,6 @@ html.sidebar-open #menu-toggle {
   padding: 0.5rem;
   margin: 0;
   cursor: pointer;
-}
-
-#theme-selector:not(:defined) {
-  /* Hide when not defined to prevent extra wide icon toolbar while loading */
-  display: none;
 }
 
 #theme-selector zn-menu {

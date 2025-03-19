@@ -34,6 +34,14 @@
           ],
           "members": [
             {
+              "kind": "field",
+              "name": "domObserver",
+              "type": {
+                "text": "MutationObserver"
+              },
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "resize"
             },
@@ -72,6 +80,128 @@
           "declaration": {
             "name": "ZnAbsoluteContainer",
             "module": "components/absolute-container/absolute-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-item/action-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionItem",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "uri",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "description"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "uri"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-item",
+          "tagName": "zn-action-item",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-item",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionItem",
+            "module": "components/action-item/action-item.js"
           }
         }
       ]
@@ -224,128 +354,6 @@
           "declaration": {
             "name": "ZnAccordion",
             "module": "components/accordion/accordion.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-item/action-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionItem",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "description",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "uri",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "description"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "uri"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-item",
-          "tagName": "zn-action-item",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-item",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionItem",
-            "module": "components/action-item/action-item.js"
           }
         }
       ]
@@ -7307,12 +7315,18 @@
           "members": [
             {
               "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'nav')"
+            },
+            {
+              "kind": "field",
               "name": "fullLocation",
               "type": {
                 "text": "string"
               },
-              "attribute": "full-location",
-              "reflects": true
+              "attribute": "full-location"
             },
             {
               "kind": "field",
@@ -7320,8 +7334,7 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "entity-id",
-              "reflects": true
+              "attribute": "entity-id"
             },
             {
               "kind": "field",
@@ -7329,8 +7342,7 @@
               "type": {
                 "text": "boolean"
               },
-              "attribute": "entity-id-show",
-              "reflects": true
+              "attribute": "entity-id-show"
             },
             {
               "kind": "field",
@@ -7339,17 +7351,15 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "transparent",
-              "reflects": true
+              "attribute": "transparent"
             },
             {
               "kind": "field",
               "name": "caption",
               "type": {
-                "text": "String"
+                "text": "string"
               },
-              "attribute": "caption",
-              "reflects": true
+              "attribute": "caption"
             },
             {
               "kind": "field",
@@ -7358,8 +7368,7 @@
                 "text": "array"
               },
               "default": "[]",
-              "attribute": "navigation",
-              "reflects": true
+              "attribute": "navigation"
             },
             {
               "kind": "field",
@@ -7376,8 +7385,7 @@
               "type": {
                 "text": "boolean"
               },
-              "attribute": "full-width",
-              "reflects": true
+              "attribute": "full-width"
             },
             {
               "kind": "field",
@@ -7385,8 +7393,7 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "previous-path",
-              "reflects": true
+              "attribute": "previous-path"
             },
             {
               "kind": "field",
@@ -7394,15 +7401,14 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "previous-target",
-              "reflects": true
+              "attribute": "previous-target"
             },
             {
               "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'nav')"
+              "name": "navbar",
+              "type": {
+                "text": "ZnNavbar"
+              }
             },
             {
               "kind": "field",
@@ -7414,11 +7420,11 @@
             },
             {
               "kind": "field",
-              "name": "_navBar",
-              "type": {
-                "text": "ZnNavbar"
-              },
-              "privacy": "private"
+              "name": "handleAltPress"
+            },
+            {
+              "kind": "field",
+              "name": "handleAltUp"
             },
             {
               "kind": "method",
@@ -7464,7 +7470,7 @@
             {
               "name": "caption",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "fieldName": "caption"
             },
@@ -11447,7 +11453,7 @@
               "type": {
                 "text": "number"
               },
-              "attribute": "basis"
+              "attribute": "basis-px"
             },
             {
               "kind": "field",
@@ -11484,7 +11490,7 @@
           ],
           "attributes": [
             {
-              "name": "basis",
+              "name": "basis-px",
               "type": {
                 "text": "number"
               },
@@ -14671,7 +14677,7 @@
             {
               "kind": "method",
               "name": "getFirstOption",
-              "privacy": "private"
+              "privacy": "public"
             },
             {
               "kind": "method",
@@ -16718,9 +16724,7 @@
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "attribute": "master-id",
-              "reflects": true
+              "attribute": "master-id"
             },
             {
               "kind": "field",
@@ -16827,8 +16831,7 @@
                 "text": "any"
               },
               "default": "null",
-              "attribute": "store-key",
-              "reflects": true
+              "attribute": "store-key"
             },
             {
               "kind": "field",
@@ -17132,7 +17135,6 @@
               "type": {
                 "text": "string"
               },
-              "default": "''",
               "fieldName": "masterId"
             },
             {

@@ -598,7 +598,7 @@ declare module "components/button/index" {
     }
 }
 declare module "components/absolute-container/absolute-container.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -618,8 +618,9 @@ declare module "components/absolute-container/absolute-container.component" {
      * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnAbsoluteContainer extends ZincElement {
-        static styles: CSSResultGroup;
+        private domObserver;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         resize(): void;
         observerDom(): void;
@@ -2042,6 +2043,7 @@ declare module "components/navbar/index" {
 declare module "components/header/header.component" {
     import { type CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type ZnNavbar from "components/navbar/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/header
@@ -2061,21 +2063,24 @@ declare module "components/header/header.component" {
      */
     export default class ZnHeader extends ZincElement {
         static styles: CSSResultGroup;
+        private readonly hasSlotController;
         fullLocation: string;
         entityId: string;
         entityIdShow: boolean;
         transparent: boolean;
-        caption: String;
+        caption: string;
         navigation: never[];
         breadcrumb: never[];
         fullWidth: boolean;
         previousPath: string;
         previousTarget: string;
-        private readonly hasSlotController;
+        navbar: ZnNavbar;
         private _hasNav;
-        private _navBar;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        handleAltPress: () => void;
+        handleAltUp: () => void;
         updateNav(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): TemplateResult<1>;
@@ -2350,8 +2355,8 @@ declare module "utilities/query" {
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
     import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/tabs
@@ -3197,7 +3202,7 @@ declare module "components/select/select.component" {
         private handleDefaultSlotChange;
         private handleTagRemove;
         private getAllOptions;
-        private getFirstOption;
+        getFirstOption(): ZnOption | null;
         private setCurrentOption;
         private setSelectedOptions;
         private toggleOptionSelection;

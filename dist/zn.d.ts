@@ -963,6 +963,7 @@ declare module "components/copy-button/copy-button.component" {
         status: 'rest' | 'success' | 'error';
         value: string;
         copyLabel: string;
+        src: string;
         render(): import("lit").TemplateResult<1>;
         private showStatus;
         private handleCopy;
@@ -2043,7 +2044,6 @@ declare module "components/navbar/index" {
 declare module "components/header/header.component" {
     import { type CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type ZnNavbar from "components/navbar/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/header
@@ -2069,20 +2069,22 @@ declare module "components/header/header.component" {
         entityIdShow: boolean;
         transparent: boolean;
         caption: string;
+        description: string;
         navigation: never[];
-        breadcrumb: never[];
+        breadcrumb: {
+            path: string;
+            title: string;
+        }[];
         fullWidth: boolean;
         previousPath: string;
         previousTarget: string;
-        navbar: ZnNavbar;
-        private _hasNav;
+        private navbar;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleAltPress: () => void;
         handleAltUp: () => void;
         updateNav(): void;
-        protected updated(_changedProperties: PropertyValues): void;
         render(): TemplateResult<1>;
     }
 }
@@ -2376,6 +2378,7 @@ declare module "components/tabs/tabs.component" {
      */
     export default class ZnTabs extends ZincElement {
         static styles: CSSResultGroup;
+        private readonly hasSlotController;
         private _panel;
         private _panels;
         private _tabs;
@@ -2545,6 +2548,7 @@ declare module "components/pane/pane.component" {
      */
     export default class ZnPane extends ZincElement {
         static styles: CSSResultGroup;
+        flush: boolean;
         protected _header: HTMLElement;
         connectedCallback(): void;
         render(): import("lit").TemplateResult<1>;

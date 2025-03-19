@@ -4656,6 +4656,15 @@
               "attribute": "copy-label"
             },
             {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "src"
+            },
+            {
               "kind": "method",
               "name": "showStatus",
               "privacy": "private",
@@ -4696,6 +4705,14 @@
               },
               "default": "''",
               "fieldName": "copyLabel"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "src"
             }
           ],
           "superclass": {
@@ -7363,6 +7380,14 @@
             },
             {
               "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
               "name": "navigation",
               "type": {
                 "text": "array"
@@ -7374,7 +7399,7 @@
               "kind": "field",
               "name": "breadcrumb",
               "type": {
-                "text": "array"
+                "text": "{ path: string; title: string }[]"
               },
               "default": "[]",
               "attribute": "breadcrumb"
@@ -7408,13 +7433,6 @@
               "name": "navbar",
               "type": {
                 "text": "ZnNavbar"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_hasNav",
-              "type": {
-                "text": "boolean"
               },
               "privacy": "private"
             },
@@ -7475,6 +7493,13 @@
               "fieldName": "caption"
             },
             {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
               "name": "navigation",
               "type": {
                 "text": "array"
@@ -7485,7 +7510,7 @@
             {
               "name": "breadcrumb",
               "type": {
-                "text": "array"
+                "text": "{ path: string; title: string }[]"
               },
               "default": "[]",
               "fieldName": "breadcrumb"
@@ -11364,6 +11389,14 @@
           "members": [
             {
               "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
               "name": "_header",
               "type": {
                 "text": "HTMLElement"
@@ -11375,6 +11408,15 @@
             {
               "description": "Emitted as an example.",
               "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
             }
           ],
           "superclass": {
@@ -16666,6 +16708,13 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
             {
               "kind": "field",
               "name": "_panel",

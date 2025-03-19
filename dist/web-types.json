@@ -1265,7 +1265,8 @@
             {
               "name": "copy-label",
               "value": { "type": "string", "default": "''" }
-            }
+            },
+            { "name": "src", "value": { "type": "string", "default": "''" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -1283,7 +1284,8 @@
               { "name": "isCopying", "type": "boolean" },
               { "name": "status", "type": "'rest' | 'success' | 'error'" },
               { "name": "value", "type": "string" },
-              { "name": "copyLabel", "type": "string" }
+              { "name": "copyLabel", "type": "string" },
+              { "name": "src", "type": "string" }
             ],
             "events": [
               {
@@ -1867,13 +1869,17 @@
               "value": { "type": "boolean", "default": "false" }
             },
             { "name": "caption", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } },
             {
               "name": "navigation",
               "value": { "type": "array", "default": "[]" }
             },
             {
               "name": "breadcrumb",
-              "value": { "type": "array", "default": "[]" }
+              "value": {
+                "type": "{ path: string; title: string }[]",
+                "default": "[]"
+              }
             },
             { "name": "full-width", "value": { "type": "boolean" } },
             { "name": "previous-path", "value": { "type": "string" } },
@@ -1893,12 +1899,15 @@
               { "name": "entityIdShow", "type": "boolean" },
               { "name": "transparent", "type": "boolean" },
               { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
               { "name": "navigation", "type": "array" },
-              { "name": "breadcrumb", "type": "array" },
+              {
+                "name": "breadcrumb",
+                "type": "{ path: string; title: string }[]"
+              },
               { "name": "fullWidth", "type": "boolean" },
               { "name": "previousPath", "type": "string" },
               { "name": "previousTarget", "type": "string" },
-              { "name": "navbar", "type": "ZnNavbar" },
               { "name": "handleAltPress" },
               { "name": "handleAltUp" }
             ],
@@ -2977,7 +2986,7 @@
           "name": "zn-pane",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
-          "attributes": [],
+          "attributes": [{ "name": "flush", "value": { "type": "boolean" } }],
           "slots": [
             { "name": "", "description": "The default slot." },
             { "name": "example", "description": "An example slot." }
@@ -2986,7 +2995,7 @@
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
-            "properties": [],
+            "properties": [{ "name": "flush", "type": "boolean" }],
             "events": [
               {
                 "name": "zn-event-name",

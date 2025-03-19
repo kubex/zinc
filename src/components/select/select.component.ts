@@ -534,7 +534,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   // Gets the first <zn-option> element
-  private getFirstOption() {
+  public getFirstOption() {
     return this.querySelector<ZnOption>('zn-option');
   }
 

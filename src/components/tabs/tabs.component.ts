@@ -1,6 +1,5 @@
 import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
-import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
 import {property} from 'lit/decorators.js';
@@ -29,7 +28,7 @@ import styles from './tabs.scss';
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
+  // private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
 
   private _panel: HTMLElement | any;
   private _panels: Map<string, Element[]>;
@@ -55,7 +54,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key'}) storeKey: string = null;
+  @property({attribute: 'store-key'}) storeKey: any = null;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
@@ -164,7 +163,7 @@ export default class ZnTabs extends ZincElement {
 
     const uriTabs = deepQuerySelectorAll("[tab-uri]", this, '');
     for (let i = 0; i < uriTabs.length; i++) {
-      const uri: string | null = uriTabs[i].getAttribute("tab-uri");
+      const uri: any = uriTabs[i].getAttribute("tab-uri");
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
         this._createUriPanel(uriTabs[i], uri, eleTabId);

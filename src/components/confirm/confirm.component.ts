@@ -1,8 +1,9 @@
-import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZnDialog from "../dialog";
 import {classMap} from "lit/directives/class-map.js";
-import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property, query} from 'lit/decorators.js';
+import ZincElement from "../../internal/zinc-element";
+import ZnDialog from "../dialog";
 
 import styles from './confirm.scss';
 
@@ -23,25 +24,72 @@ import styles from './confirm.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnConfirm extends ZnDialog {
+export default class ZnConfirm extends ZincElement {
+  static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-dialog': ZnDialog
+  };
 
-  static get styles(): CSSResultGroup {
-    return [super.styles, unsafeCSS(styles)];
-  }
+  /** The dialog's theme variant. */
+  @property({reflect: true}) color: 'default' | 'warning' | 'announcement' = 'default';
+
+  /** The dialog's size. */
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+
+  /** The dialogs type, which will determine the icon and color. */
+  @property() type: 'warning' | 'error' | 'success' | 'info' = 'warning';
+
+  /**
+   * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
+   * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
+   */
+  @property({type: Boolean, reflect: true}) open = false;
 
   @property() caption: string = '';
-  @property() content: string = '';
+
   @property() action: string = '';
+
+  @property() content: string = '';
+
   @property() confirmText: string = "Confirm";
+
   @property() cancelText: string = "Cancel";
+
   @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
-  @property() type: 'warning' | 'error' | 'success' | 'info' = 'warning';
-  @property() size: 'small' | 'medium' | 'large' = 'medium';
+  /**
+   * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
+   * will need to manually open the dialog using the `show()` method.
+   */
+  @property({reflect: true}) trigger: string;
 
-  private _hasVisibleInput: boolean = false;
+  /** The Dialogs announcement text. */
+  @property() announcement: string = '';
 
-  getIcon() {
+  /** The Dialogs footer text. */
+  @property({attribute: 'footer-text'}) footerText: string = '';
+
+  @query('zn-dialog') dialog: ZnDialog;
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    if (this.open) {
+      this.dialog.show();
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    if (this.trigger) {
+      const trigger = this.parentElement?.querySelector('#' + this.trigger);
+      if (trigger) {
+        trigger.addEventListener('click', () => this.dialog.show());
+      }
+    }
+  }
+
+  render() {
     const src = {
       'warning': 'priority_high',
       'error': 'priority_high',
@@ -50,80 +98,29 @@ export default class ZnConfirm extends ZnDialog {
     };
 
     return html`
-      <zn-icon slot="primary" color="${this.type}" src="${src[this.type]}" size="24"></zn-icon>
-    `;
-  }
+      <zn-dialog size="${this.size}" variant="announcement" label=${ifDefined(this.caption)} trigger=${this.trigger}
+                 class=${classMap({
+                   'confirm-dialog': true,
+                   'confirm-dialog--warning': this.type === 'warning',
+                   'confirm-dialog--error': this.type === 'error',
+                   'confirm-dialog--success': this.type === 'success',
+                   'confirm-dialog--info': this.type === 'info'
+                 })}>
 
-  connectedCallback() {
-    this.emit('zn-element-added', {detail: {element: this}});
-    super.connectedCallback();
-  }
+        <slot name="announcement-intro" slot="announcement-intro">${this.announcement}</slot>
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
+        ${!this.hideIcon ? html`
+            <zn-icon slot="header-icon" color="${this.type}" src="${src[this.type]}"></zn-icon>`
+          : ''}
 
-    const slot = this.shadowRoot?.querySelector('slot');
-    if (slot) {
-      const nodes: Node[] = slot.assignedNodes();
-      const form = nodes.filter((node) => node.nodeName === 'FORM');
+        ${this.content ? html`<p class="confirm-dialog__content">${this.content}</p>` : ''}
+        <slot></slot>
 
-      const elementNameMap = [
-        'input', 'select', 'textarea', 'zn-select', 'zn-input', 'zn-textarea'
-      ];
+        <zn-button outline color="${this.type}" slot="footer" dialog-closer>${this.cancelText}</zn-button>
+        <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
 
-      const elements: any[] = [];
-      if (form[0]) {
-        elementNameMap.forEach((elementName) => {
-          elements.push(...(form[0] as HTMLFormElement).querySelectorAll(elementName));
-        });
-      }
-
-      // Check if there is an input that isn't hidden
-      for (let i = 0; i < elements.length; i++) {
-        if (elements[i].type !== 'hidden') {
-          this._hasVisibleInput = true;
-          this.requestUpdate();
-          break;
-        }
-      }
-    }
-  }
-
-  render() {
-    const icon = this.getIcon();
-
-    return html`
-      <dialog class=${classMap({
-        'dialog': true,
-        'dialog--small': this.size === 'small',
-        'dialog--medium': this.size === 'medium',
-        'dialog--large': this.size === 'large'
-      })}>
-        <div id="content"> <!-- default dialog close button -->
-          ${!this.hideIcon ? icon : ''}
-          <h2 class="title">${unsafeHTML(this.caption)}</h2>
-          ${this.content && html`<p>${unsafeHTML(this.content)}</p>`}
-          <slot></slot>
-          <div class="${classMap({
-            'button-group': true,
-            'button-group--gap': this._hasVisibleInput
-          })}">
-            <zn-button style="flex-grow:1" outline color="${this.type}" dialog-closer modal-closer
-                       @click="${this.closeModal}">
-              ${this.cancelText}
-            </zn-button>
-            <zn-button style="flex-grow:1" color="${this.type}" @click="${this.submitDialog}"> ${this.confirmText}
-            </zn-button>
-          </div>
-        </div>
-        <div class="done">
-          <zn-icon src="check:success" size="150"></zn-icon>
-        </div>
-      </dialog>`;
-  }
-
-  closeModal() {
-    this.emit('zn-close', {detail: {element: this}});
+        <slot name="footer-text" slot="footer-text">${this.footerText}</slot>
+      </zn-dialog>`;
   }
 
   submitDialog() {
@@ -141,7 +138,7 @@ export default class ZnConfirm extends ZnDialog {
 
     if (form && form.reportValidity()) {
       form.requestSubmit();
-      this.close();
+      this.dialog.hide();
     }
   }
 }

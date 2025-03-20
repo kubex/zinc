@@ -39,7 +39,7 @@ export default class ZnTabs extends ZincElement {
   // @ts-expect-error
   private storage: Storage;
 
-  @property({attribute: 'master-id'}) masterId: string;
+  @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
   @property({attribute: 'caption', type: String, reflect: true}) caption = '';

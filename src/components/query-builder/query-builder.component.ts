@@ -138,9 +138,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       });
     });
 
-    console.log('data', data);
     this.value = btoa(JSON.stringify(data));
-    console.log('value', this.value);
   }
 
   private _addRule(event: Event | null, value: string, pos: any = null) {

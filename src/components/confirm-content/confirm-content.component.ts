@@ -124,7 +124,7 @@ export default class ZnConfirmContent extends Dialog {
 
     if (form && form.reportValidity()) {
       form.requestSubmit();
-      this.close();
+      this.hide();
     }
   }
 }

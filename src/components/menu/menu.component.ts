@@ -182,7 +182,7 @@ export default class ZnMenu extends ZincElement {
     const confirm = this.shadowRoot?.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ZnConfirm;
     if (confirm) {
       confirm.addEventListener('zn-close', (e) => this.handleClick(e as any));
-      confirm.open();
+      confirm.show();
     }
   }
 

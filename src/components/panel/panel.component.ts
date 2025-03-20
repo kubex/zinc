@@ -35,6 +35,8 @@ export default class ZnPanel extends ZincElement {
 
   @property({type: Boolean}) flush: boolean;
 
+  @property({type: Boolean}) transparent: boolean;
+
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -66,6 +68,7 @@ export default class ZnPanel extends ZincElement {
         panel: true,
         'panel--flush': this.flush || this.tabbed,
         'panel--tabbed': this.tabbed,
+        'panel--transparent': this.transparent,
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
         'panel--has-header': hasHeader,

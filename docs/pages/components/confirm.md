@@ -21,16 +21,29 @@ layout: component
                     
                     <form class="form-spacing">
                       <zn-input label="Name" required></zn-input>
-                      <zn-input label="Email" required></zn-input>
+                      <zn-input label="Email" type="email" required></zn-input>
                     </form>
 </zn-confirm>
 ```
 
 ## Examples
 
-### First Example
+### Announcement Confirmations
 
-TODO
+```html:preview
+<zn-button id="action-trigger">Trigger Confirm Content</zn-button>
+<zn-confirm trigger="action-trigger"
+                    variant="announcement"
+                    type="warning"
+                    caption="Changing the status of this item"
+                    content="By changing the status of this item, you will be affecting the status of all related items.">
+                    
+                    <form class="form-spacing">
+                      <zn-input label="Name" required></zn-input>
+                      <zn-input label="Email" type="email" required></zn-input>
+                    </form>
+</zn-confirm>
+```
 
 ### Second Example
 

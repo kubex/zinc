@@ -6,6 +6,7 @@ import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
 
 import styles from './confirm.scss';
+import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -30,8 +31,10 @@ export default class ZnConfirm extends ZincElement {
     'zn-dialog': ZnDialog
   };
 
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'footer');
+
   /** The dialog's theme variant. */
-  @property({reflect: true}) color: 'default' | 'warning' | 'announcement' = 'default';
+  @property({reflect: true}) variant: 'default' | 'warning' | 'announcement' = 'default';
 
   /** The dialog's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -84,10 +87,19 @@ export default class ZnConfirm extends ZincElement {
     if (this.trigger) {
       const trigger = this.parentElement?.querySelector('#' + this.trigger);
       if (trigger) {
-        trigger.addEventListener('click', () => this.dialog.show());
+        trigger.addEventListener('click', () => this.show());
       }
     }
   }
+
+  show() {
+    this.dialog.show();
+  }
+
+  hide() {
+    this.dialog.hide();
+  }
+
 
   render() {
     const src = {
@@ -98,13 +110,14 @@ export default class ZnConfirm extends ZincElement {
     };
 
     return html`
-      <zn-dialog size="${this.size}" variant="announcement" label=${ifDefined(this.caption)} trigger=${this.trigger}
+      <zn-dialog size="${this.size}" variant="${this.variant}" label=${ifDefined(this.caption)} trigger=${this.trigger}
                  class=${classMap({
                    'confirm-dialog': true,
                    'confirm-dialog--warning': this.type === 'warning',
                    'confirm-dialog--error': this.type === 'error',
                    'confirm-dialog--success': this.type === 'success',
-                   'confirm-dialog--info': this.type === 'info'
+                   'confirm-dialog--info': this.type === 'info',
+                   'confirm-dialog--has-default-slot': this.hasSlotController.test('[default]'),
                  })}>
 
         <slot name="announcement-intro" slot="announcement-intro">${this.announcement}</slot>
@@ -138,7 +151,7 @@ export default class ZnConfirm extends ZincElement {
 
     if (form && form.reportValidity()) {
       form.requestSubmit();
-      this.dialog.hide();
+      this.hide();
     }
   }
 }

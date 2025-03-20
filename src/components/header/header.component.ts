@@ -160,17 +160,18 @@ export default class ZnHeader extends ZincElement {
               ${breadcrumb}  <!--- Maybe make this into a component -->
             </div>` : null}
 
+          ${hasPreviousPath ? html`
+            <a href="${this.previousPath}" class="caption__back"
+               data-target="${this.previousTarget ? this.previousTarget : ''}">
+              <zn-button size="content" icon="arrow_back" icon-size="24" color="transparent"></zn-buttonicon>
+            </a>` : null}
+
           ${hasDefaultSlot ? html`
             <div class="actions">
               <slot></slot>
             </div>` : ''}
 
           <div class="caption">
-            ${hasPreviousPath ? html`
-              <a href="${this.previousPath}" class="caption__back"
-                 data-target="${this.previousTarget ? this.previousTarget : ''}">
-                <zn-icon src="arrow_back"></zn-icon>
-              </a>` : null}
             <div class="header__left">
               <span class="header__caption" part="header-caption">${this.caption}</span>
               <span class="header__description">${this.description}</span>

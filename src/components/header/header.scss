@@ -9,7 +9,7 @@
 
   // This isn't correct fix this also
   .caption {
-    padding: var(--zn-spacing-small) 0;
+    //padding: var(--zn-spacing-small) 0;
   }
 
   &__caption {
@@ -17,7 +17,6 @@
     font-size: var(--zn-font-size-medium);
     color: rgba(var(--zn-text-panel-title), 100%);
     margin: 0;
-    line-height: 35px;
   }
 
   &--has-breadcrumb {
@@ -34,6 +33,16 @@
   }
 }
 
+.caption__back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: inherit;
+}
+
+.content {
+  padding: var(--zn-spacing-small) 0;
+}
 
 :host([transparent]) > div {
   background-color: transparent;
@@ -99,6 +108,18 @@
     padding-right: var(--zn-spacing-large);
   }
 
+  .header__left {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--zn-spacing-2x-small);
+  }
+
+  .header__description {
+    display: contents;
+    font-size: var(--zn-font-size-small);
+  }
+
   .navless {
     min-height: 10px;
   }
@@ -109,22 +130,24 @@
 
   .breadcrumb {
     flex-basis: 100%;
-    font-size: 12px;
-    line-height: 12px;
+    font-size: var(--zn-font-size-x-small);
+    font-weight: var(--zn-font-weight-semibold);
+    color: rgb(var(--zn-primary));
+
+    display: flex;
+    align-items: center;
+    gap: var(--zn-spacing-2x-small);
 
     a {
       font-size: 0.875rem;
-      color: inherit;
+      color: rgb(var(--zn-text));
+      font-weight: var(--zn-font-weight-normal);
       text-decoration: inherit;
 
       &:hover {
         color: rgb(var(--zn-dark-text));
       }
     }
-  }
-
-  .breadcrumb:not(:empty) {
-    padding-top: 10px;
   }
 
   .caption {
@@ -152,7 +175,6 @@
   h1 {
     flex-grow: 1;
     font-size: 18px;
-    line-height: 35px;
 
     overflow: hidden;
     text-overflow: ellipsis;

@@ -29,42 +29,6 @@
           }
         },
         {
-          "name": "zn-action-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "description",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-accordion",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -96,6 +60,42 @@
               { "name": "summary", "type": "string" },
               { "name": "label", "type": "string" },
               { "name": "expanded", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-item",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "description",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "uri", "type": "string" }
             ],
             "events": [
               {
@@ -1114,15 +1114,44 @@
           "doc-url": "",
           "attributes": [
             {
+              "name": "variant",
+              "description": "The dialog's theme variant.",
+              "value": {
+                "type": "'default' | 'warning' | 'announcement'",
+                "default": "'default'"
+              }
+            },
+            {
+              "name": "size",
+              "description": "The dialog's size.",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "type",
+              "description": "The dialogs type, which will determine the icon and color.",
+              "value": {
+                "type": "'warning' | 'error' | 'success' | 'info'",
+                "default": "'warning'"
+              }
+            },
+            {
+              "name": "open",
+              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "caption",
               "value": { "type": "string", "default": "''" }
             },
             {
-              "name": "content",
+              "name": "action",
               "value": { "type": "string", "default": "''" }
             },
             {
-              "name": "action",
+              "name": "content",
               "value": { "type": "string", "default": "''" }
             },
             {
@@ -1138,20 +1167,20 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
-              "name": "type",
-              "value": {
-                "type": "'warning' | 'error' | 'success' | 'info'",
-                "default": "'warning'"
-              }
+              "name": "trigger",
+              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+              "value": { "type": "string" }
             },
             {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
+              "name": "announcement",
+              "description": "The Dialogs announcement text.",
+              "value": { "type": "string", "default": "''" }
             },
-            { "name": "trigger", "value": { "type": "string" } }
+            {
+              "name": "footer-text",
+              "description": "The Dialogs footer text.",
+              "value": { "type": "string", "default": "''" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -1162,18 +1191,48 @@
           ],
           "js": {
             "properties": [
+              {
+                "name": "variant",
+                "description": "The dialog's theme variant.",
+                "type": "'default' | 'warning' | 'announcement'"
+              },
+              {
+                "name": "size",
+                "description": "The dialog's size.",
+                "type": "'small' | 'medium' | 'large'"
+              },
+              {
+                "name": "type",
+                "description": "The dialogs type, which will determine the icon and color.",
+                "type": "'warning' | 'error' | 'success' | 'info'"
+              },
+              {
+                "name": "open",
+                "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+                "type": "boolean"
+              },
               { "name": "caption", "type": "string" },
-              { "name": "content", "type": "string" },
               { "name": "action", "type": "string" },
+              { "name": "content", "type": "string" },
               { "name": "confirmText", "type": "string" },
               { "name": "cancelText", "type": "string" },
               { "name": "hideIcon", "type": "boolean" },
               {
-                "name": "type",
-                "type": "'warning' | 'error' | 'success' | 'info'"
+                "name": "trigger",
+                "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+                "type": "string"
               },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
-              { "name": "trigger", "type": "string" }
+              {
+                "name": "announcement",
+                "description": "The Dialogs announcement text.",
+                "type": "string"
+              },
+              {
+                "name": "footerText",
+                "description": "The Dialogs footer text.",
+                "type": "string"
+              },
+              { "name": "dialog", "type": "ZnDialog" }
             ],
             "events": [
               {
@@ -1522,22 +1581,137 @@
         },
         {
           "name": "zn-dialog",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
           "doc-url": "",
-          "attributes": [{ "name": "trigger", "value": { "type": "string" } }],
+          "attributes": [
+            {
+              "name": "variant",
+              "description": "The dialog's theme variant.",
+              "value": {
+                "type": "'default' | 'warning' | 'announcement'",
+                "default": "'default'"
+              }
+            },
+            {
+              "name": "size",
+              "description": "The dialog's size.",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "open",
+              "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "label",
+              "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "no-header",
+              "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "trigger",
+              "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+              "value": { "type": "string" }
+            }
+          ],
           "slots": [
             { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            {
+              "name": "label",
+              "description": "The dialog's label. Alternatively you can use the `label` attribute."
+            },
+            {
+              "name": "header-icon",
+              "description": "Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant."
+            },
+            {
+              "name": "announcement-intro",
+              "description": "Optional Intro text to display below the icon, when using the variant `announcement`."
+            },
+            {
+              "name": "header-actions",
+              "description": "Optional actions to add to the header. Works best with `<zn-button>` elements."
+            },
+            {
+              "name": "footer",
+              "description": "The dialog's footer. This is typically used for buttons representing various options."
+            },
+            {
+              "name": "footer-text",
+              "description": "Optional text to include below the footer buttons, when using the variant `announcement`."
+            }
           ],
           "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
+            {
+              "name": "zn-show",
+              "description": "Emitted when the dialog is opens."
+            },
+            {
+              "name": "zn-close",
+              "description": "Emitted when the dialog is closed."
+            },
+            {
+              "name": "zn-request-close",
+              "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+              "description": "Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss."
+            }
           ],
           "js": {
-            "properties": [{ "name": "trigger", "type": "string" }],
+            "properties": [
+              { "name": "dialog", "type": "HTMLDialogElement" },
+              { "name": "panel", "type": "HTMLElement" },
+              { "name": "overlay", "type": "HTMLElement" },
+              {
+                "name": "variant",
+                "description": "The dialog's theme variant.",
+                "type": "'default' | 'warning' | 'announcement'"
+              },
+              {
+                "name": "size",
+                "description": "The dialog's size.",
+                "type": "'small' | 'medium' | 'large'"
+              },
+              {
+                "name": "open",
+                "description": "Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the dialog's state.",
+                "type": "boolean"
+              },
+              {
+                "name": "label",
+                "description": "The dialog's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "noHeader",
+                "description": "Disables the header. This will also remove the default close button, so please ensure you provide an easy,\naccessible way to close the dialog.",
+                "type": "boolean"
+              },
+              {
+                "name": "trigger",
+                "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
+                "type": "string"
+              }
+            ],
             "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "zn-show",
+                "description": "Emitted when the dialog is opens."
+              },
+              {
+                "name": "zn-close",
+                "description": "Emitted when the dialog is closed."
+              },
+              {
+                "name": "zn-request-close",
+                "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+                "description": "Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss."
               }
             ]
           }

@@ -1097,38 +1097,119 @@ declare module "components/cols/index" {
         }
     }
 }
+declare module "internal/offset" {
+    /**
+     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
+     * parent doesn't have to be positioned relative or absolute.
+     *
+     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
+     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
+     */
+    export function getOffset(element: HTMLElement, parent: HTMLElement): {
+        top: number;
+        left: number;
+    };
+}
+declare module "internal/scroll" {
+    /**
+     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
+     * without premature unlocking.
+     */
+    export function lockBodyScrolling(lockingEl: HTMLElement): void;
+    /**
+     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
+     */
+    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
+    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
+    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
+}
 declare module "components/dialog/dialog.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/dialog
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-button
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-show - Emitted when the dialog is opens.
+     * @event zn-close - Emitted when the dialog is closed.
+     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
+     * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling
+     * `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in
+     * destructive behavior such as data loss.
      *
      * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot label - The dialog's label. Alternatively you can use the `label` attribute.
+     * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied
+     * to the icon depending on the dialog variant.
+     * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.
+     * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
+     * @slot footer - The dialog's footer. This is typically used for buttons representing various options.
+     * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart header - The dialog's header. This element wraps the title and header actions.
+     * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
+     * @csspart title - The dialog's title.
+     * @csspart close-button - The dialog's close button.
+     * @csspart close-button__base - The close buttons exported `base` part.
+     * @csspart body - The dialog's body.
+     * @csspart footer - The dialog's footer.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.
+     * @cssproperty --header-spacing - The amount of padding to use for the header.
+     * @cssproperty --body-spacing - The amount of padding to use for the body.
+     * @cssproperty --footer-spacing - The amount of padding to use for the footer.
      */
     export default class ZnDialog extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+        };
+        private readonly hasSlotController;
+        private closeWatcher;
+        dialog: HTMLDialogElement;
+        panel: HTMLElement;
+        overlay: HTMLElement;
+        /** The dialog's theme variant. */
+        variant: 'default' | 'warning' | 'announcement';
+        /** The dialog's size. */
+        size: 'small' | 'medium' | 'large';
+        /**
+         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
+         */
+        open: boolean;
+        /**
+         * The dialog's label as displayed in the header. You should always include a relevant label even when using
+         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
+         */
+        label: string;
+        /**
+         * Disables the header. This will also remove the default close button, so please ensure you provide an easy,
+         * accessible way to close the dialog.
+         */
+        noHeader: boolean;
+        /**
+         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
+         * will need to manually open the dialog using the `show()` method.
+         */
         trigger: string;
-        private _dialog;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        protected _openDialog(e: any): void;
-        protected _closeDialog(e?: any): void;
-        open(): void;
-        close(): void;
-        successCloseDialog(): void;
-        private _closeClickHandler;
+        private requestClose;
+        private addOpenListeners;
+        private removeOpenListeners;
+        /** Shows the dialog. */
+        show(): void;
+        /** Hides the dialog. */
+        hide(): void;
+        private closeClickHandler;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -1143,7 +1224,8 @@ declare module "components/dialog/index" {
     }
 }
 declare module "components/confirm/confirm.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
     import ZnDialog from "components/dialog/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -1162,22 +1244,44 @@ declare module "components/confirm/confirm.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnConfirm extends ZnDialog {
-        static get styles(): CSSResultGroup;
+    export default class ZnConfirm extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dialog': typeof ZnDialog;
+        };
+        private readonly hasSlotController;
+        /** The dialog's theme variant. */
+        variant: 'default' | 'warning' | 'announcement';
+        /** The dialog's size. */
+        size: 'small' | 'medium' | 'large';
+        /** The dialogs type, which will determine the icon and color. */
+        type: 'warning' | 'error' | 'success' | 'info';
+        /**
+         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
+         */
+        open: boolean;
         caption: string;
-        content: string;
         action: string;
+        content: string;
         confirmText: string;
         cancelText: string;
         hideIcon: boolean;
-        type: 'warning' | 'error' | 'success' | 'info';
-        size: 'small' | 'medium' | 'large';
-        private _hasVisibleInput;
-        getIcon(): import("lit").TemplateResult<1>;
-        connectedCallback(): void;
+        /**
+         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
+         * will need to manually open the dialog using the `show()` method.
+         */
+        trigger: string;
+        /** The Dialogs announcement text. */
+        announcement: string;
+        /** The Dialogs footer text. */
+        footerText: string;
+        dialog: ZnDialog;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        show(): void;
+        hide(): void;
         render(): import("lit").TemplateResult<1>;
-        closeModal(): void;
         submitDialog(): void;
     }
 }
@@ -2915,32 +3019,6 @@ declare module "internal/animate" {
         easing?: string;
         offset?: number | null;
     }[];
-}
-declare module "internal/offset" {
-    /**
-     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
-     * parent doesn't have to be positioned relative or absolute.
-     *
-     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
-     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
-     */
-    export function getOffset(element: HTMLElement, parent: HTMLElement): {
-        top: number;
-        left: number;
-    };
-}
-declare module "internal/scroll" {
-    /**
-     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
-     * without premature unlocking.
-     */
-    export function lockBodyScrolling(lockingEl: HTMLElement): void;
-    /**
-     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
-     */
-    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
-    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
-    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
 }
 declare module "internal/default-value" {
     import type { ReactiveElement } from 'lit';
@@ -5243,6 +5321,16 @@ declare module "events/zn-open" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-open': ZnOpenEvent;
+        }
+    }
+}
+declare module "events/zn-request-close" {
+    export type ZnRequestCloseEvent = CustomEvent<{
+        source: 'close-button' | 'keyboard' | 'overlay';
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-request-close': ZnRequestCloseEvent;
         }
     }
 }

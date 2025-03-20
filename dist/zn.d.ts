@@ -2564,6 +2564,7 @@ declare module "components/panel/panel.component" {
         description: string;
         tabbed: boolean;
         flush: boolean;
+        transparent: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): unknown;
     }

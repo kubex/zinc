@@ -437,7 +437,7 @@
           <ul>
             <li class="top"><a href="#">Confirm</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
+            <li data-level="3"><a href="#announcement-confirmations">Announcement Confirmations</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -485,7 +485,7 @@
               >
                 <form class="form-spacing">
                   <zn-input label="Name" required=""></zn-input>
-                  <zn-input label="Email" required=""></zn-input>
+                  <zn-input label="Email" type="email" required=""></zn-input>
                 </form>
               </zn-confirm>
 
@@ -511,7 +511,7 @@
                     
                     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
                       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-                      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+                      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
                     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-confirm</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-115"></zn-copy-button></pre>
@@ -543,10 +543,74 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="announcement-confirmations" class="anchor-heading">
+            Announcement Confirmations<a
+              href="#announcement-confirmations"
+              aria-label='Direct link to "Announcement Confirmations"'
+            ></a>
           </h3>
-          <p>TODO</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-button id="action-trigger">Trigger Confirm Content</zn-button>
+              <zn-confirm
+                trigger="action-trigger"
+                variant="announcement"
+                type="warning"
+                caption="Changing the status of this item"
+                content="By changing the status of this item, you will be affecting the status of all related items."
+              >
+                <form class="form-spacing">
+                  <zn-input label="Name" required=""></zn-input>
+                  <zn-input label="Email" type="email" required=""></zn-input>
+                </form>
+              </zn-confirm>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-58">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-116"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-trigger<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Trigger Confirm Content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-confirm</span> <span class="token attr-name">trigger</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-trigger<span class="token punctuation">"</span></span>
+                    <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>announcement<span class="token punctuation">"</span></span>
+                    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span>
+                    <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Changing the status of this item<span class="token punctuation">"</span></span>
+                    <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>By changing the status of this item, you will be affecting the status of all related items.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                    
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+                      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-confirm</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-116"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-58"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h3 id="second-example" class="anchor-heading">
             Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
           </h3>
@@ -573,7 +637,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-116"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/confirm/confirm.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-116"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-117"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/confirm/confirm.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-117"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="JavaScript">
@@ -588,12 +652,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-117"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/confirm/confirm.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-117"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-118"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/confirm/confirm.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-118"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-118"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/confirm/confirm.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-118"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-119"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/confirm/confirm.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-119"></zn-copy-button></pre>
           </zn-accordion>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

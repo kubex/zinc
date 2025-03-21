@@ -6,10 +6,13 @@
 
 // TODO, update scss to match this bit and not the below
 .header {
+  flex-grow: 1;
 
   // This isn't correct fix this also
   .caption {
     //padding: var(--zn-spacing-small) 0;
+    justify-content: space-between;
+    gap: var(--zn-spacing-2x-small);
   }
 
   &__caption {
@@ -89,11 +92,11 @@
 }
 
 
-:host > div {
+.header {
   display: flex;
   flex-direction: column;
   border-bottom-width: 1px;
-  // border-top-width: 1px;e
+  // border-top-width: 1px;
   overflow: hidden;
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
@@ -117,7 +120,7 @@
 
   .header__description {
     display: contents;
-    font-size: var(--zn-font-size-small);
+    font-size: var(--zn-font-size-medium);
   }
 
   .navless {
@@ -132,7 +135,7 @@
     flex-basis: 100%;
     font-size: var(--zn-font-size-x-small);
     font-weight: var(--zn-font-weight-semibold);
-    color: rgb(var(--zn-primary));
+    color: rgb(var(--zn-text));
 
     display: flex;
     align-items: center;
@@ -140,12 +143,12 @@
 
     a {
       font-size: 0.875rem;
-      color: rgb(var(--zn-text));
+      color: inherit;
       font-weight: var(--zn-font-weight-normal);
       text-decoration: inherit;
 
       &:hover {
-        color: rgb(var(--zn-dark-text));
+        color: rgb(var(--zn-primary));
       }
     }
   }

@@ -154,7 +154,7 @@ export default class ZnHeader extends ZincElement {
           </div>` : null}
 
 
-        <div class="width-container content">
+        <div class="width-container content" part="content">
           ${hasBreadcrumb ? html`
             <div class="breadcrumb">
               ${breadcrumb}  <!--- Maybe make this into a component -->
@@ -175,6 +175,10 @@ export default class ZnHeader extends ZincElement {
             <div class="header__left">
               <span class="header__caption" part="header-caption">${this.caption}</span>
               <span class="header__description">${this.description}</span>
+            </div>
+
+            <div class="header__right">
+              <slot name="actions"></slot>
             </div>
           </div>
 

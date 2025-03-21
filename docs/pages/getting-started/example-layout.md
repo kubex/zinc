@@ -19,7 +19,7 @@ component you are using already includes padding or margin it will not be double
 <zn-pane>
   <zn-sp flush>
     <zn-cols layout="1,1">
-      <zn-panel caption="Some Panel">
+      <zn-panel caption="Some Panel" description="Hello World">
         <zn-sp divide no-gap>
           <zn-description-item style="background: var(--zn-color-red-100);" label="Label 1">This is awesome
           </zn-description-item>

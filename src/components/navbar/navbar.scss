@@ -9,8 +9,13 @@
 }
 
 ul {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: var(--zn-navbar-padding-left);
+  padding-right: var(--zn-navbar-padding-right);
+
+  li {
+    padding-top: 0;
+    font-size: var(--zn-font-size-medium);
+  }
 }
 
 :host([baseless]) {
@@ -124,7 +129,7 @@ ul {
 
       user-select: none;
       font-weight: 500;
-      padding: var(--zn-spacing-x-small);
+      padding: 0 0 var(--zn-spacing-x-small) ;
       position: relative;
 
       display: flex;

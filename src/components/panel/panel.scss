@@ -27,34 +27,14 @@
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 
   &__header {
-    display: flex;
-    justify-items: center;
-    padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
+    padding: var(--zn-spacing-medium);
 
-    &__left {
-      display: flex;
-      flex-direction: column;
-      gap: var(--zn-spacing-2x-small);
-      flex-grow: 1;
+    &::part(base) {
+      border-bottom: 0;
     }
 
-    &__actions {
-      display: flex;
-      gap: var(--zn-spacing-2x-small);
-    }
-
-    .panel__caption {
-      font-weight: var(--zn-font-weight-bold);
-      font-size: var(--zn-font-size-medium);
-      color: rgb(var(--zn-text-panel-title));
-      margin: 0;
-    }
-
-    .panel__description {
-      font-weight: var(--zn-font-weight-semibold);
-      font-size: var(--zn-font-size-medium);
-      color: rgb(var(--zn-text));
-      margin: 0;
+    &::part(content) {
+      padding: 0;
     }
   }
 
@@ -63,7 +43,7 @@
     flex-direction: column;
     overflow-y: auto;
     flex-grow: 1;
-    padding: var(--zn-spacing-medium);
+    padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
 
     > :not([hidden]) ~ :not([hidden]) {
       border: 1px solid rgb(var(--zn-border-color));
@@ -77,22 +57,6 @@
     background: rgb(var(--zn-panel-secondary));
     border-bottom-left-radius: var(--zn-border-radius-large);
     border-bottom-right-radius: var(--zn-border-radius-large);
-  }
-
-  &:before {
-    position: absolute;
-    content: '';
-    bottom: -3px;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background-color: rgb(var(--zn-shadow));
-    border-radius: var(--zn-border-radius-large);
-    z-index: -1;
-  }
-
-  &--flush .panel__body {
-    padding: var(--zn-spacing-medium) 0 0;
   }
 
   &--tabbed .panel__body {
@@ -112,6 +76,22 @@
     ::slotted(zn-sp) {
       --zn-sp-padding: 0 !important
     }
+  }
+
+  &:before {
+    position: absolute;
+    content: '';
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background-color: rgb(var(--zn-shadow));
+    border-radius: var(--zn-border-radius-large);
+    z-index: -1;
+  }
+
+  &:not(.panel--has-header):not(.panel--flush) &__body {
+    padding-top: var(--zn-spacing-medium);
   }
 }
 

@@ -1,10 +1,11 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import type { PropertyValues} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
 import styles from './navbar.scss';
-import { classMap } from "lit/directives/class-map.js";
-import { ZnMenuSelectEvent } from "../../events/zn-menu-select";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -26,12 +27,12 @@ import { ZnMenuSelectEvent } from "../../events/zn-menu-select";
 export default class ZnNavbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'navigation', type: Array }) navigation = [];
-  @property({ attribute: 'full-width', type: Boolean, reflect: true }) fullWidth: boolean;
-  @property({ attribute: 'icon-bar', type: Boolean, reflect: true }) iconBar: boolean;
-  @property({ attribute: 'hide-one', type: Boolean, reflect: true }) hideOne: boolean;
-  @property({ type: Boolean }) stacked: boolean;
-  @property({ type: Array }) dropdown = [];
+  @property({attribute: 'navigation', type: Array}) navigation = [];
+  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
+  @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
+  @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
+  @property({type: Boolean}) stacked: boolean;
+  @property({type: Array}) dropdown = [];
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
@@ -50,7 +51,7 @@ export default class ZnNavbar extends ZincElement {
     this._openedTabs.push(item.getAttribute('tab-uri'));
     const ul = this.shadowRoot?.querySelector('ul');
     const dropdown = this.shadowRoot?.querySelector('[id="dropdown-item"]');
-    // @ts-ignore
+    // @ts-expect-error
     dropdown.querySelector('zn-dropdown').hide();
     return dropdown ? ul?.insertBefore(item, dropdown) : ul?.appendChild(item);
   }
@@ -64,7 +65,7 @@ export default class ZnNavbar extends ZincElement {
           const element = e.detail.element;
           if (element.hasAttribute('data-path')) {
             const li = document.createElement('li');
-            li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path') as string);
+            li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path')!);
             li.innerText = (e.detail.element as HTMLElement).innerText;
             this.addItem(li);
             setTimeout(() => {
@@ -96,10 +97,10 @@ export default class ZnNavbar extends ZincElement {
           }
           if (item.path != undefined) {
             return html`
-              <li class="${classMap({ 'active': item.active })}" tab-uri="${item.path}">${content}</li>`;
+              <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
           }
           return html`
-            <li class="${classMap({ 'active': item.active })}" tab="">${content}</li>`;
+            <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
         })}
         ${this.dropdown && this.dropdown.length > 0 ? html`
           <li id="dropdown-item">

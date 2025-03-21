@@ -2493,6 +2493,7 @@ declare module "components/tabs/tabs.component" {
         masterId: string;
         defaultUri: string;
         caption: string;
+        description: string;
         header: string;
         _current: string;
         _split: any;

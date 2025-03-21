@@ -185,11 +185,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         <div class="ai__right">
           ${!this.isEditing ?
             html`
-              <zn-button @click="${this.handleEditClick}" icon="edit" icon-size="24" color="transparent"></zn-button>` :
+              <zn-button @click="${this.handleEditClick}" icon="edit" size="x-small" icon-size="20" color="transparent"></zn-button>` :
             html`
-              <zn-button type="submit" @click="${this.handleSubmitClick}" icon="check" icon-size="24"
+              <zn-button type="submit" @click="${this.handleSubmitClick}" icon="check" size="x-small" icon-size="20"
                          color="transparent"></zn-button>
-              <zn-button type="button" @click="${this.handleCancelClick}" icon="close" icon-size="24"
+              <zn-button type="button" @click="${this.handleCancelClick}" icon="close" size="x-small" icon-size="20"
                          color="transparent"></zn-button>`}
         </div>
       </div>`;

@@ -42,7 +42,10 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
-  @property({attribute: 'caption', type: String, reflect: true}) caption = '';
+  @property() caption: string;
+
+  @property() description: string;
+
   @property({attribute: 'header', type: String, reflect: true}) header = '';
 
   @property({attribute: 'active', type: String, reflect: true}) _current = '';

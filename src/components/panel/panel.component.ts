@@ -80,8 +80,7 @@ export default class ZnPanel extends ZincElement {
                      description="${this.description}">
             ${hasActionSlot ? html`
               <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
-          </zn-header>
-          </div>` : null}
+          </zn-header>` : null}
 
         <div class="panel__body">
           <slot></slot>

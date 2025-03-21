@@ -34,7 +34,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
   });
 
-  @property({reflect: true}) size: 'xsmall' | 'small' | 'medium' | 'large' = 'medium';
 
   @property({reflect: true}) value: string;
 
@@ -147,7 +146,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 @click="${this.handleEditClick}"
                 .disabled="${!this.isEditing}"
                 @input="${this.handleInput}"
-                @blur="${this.handleBlur}"></zn-input>`;
+                @blur="${this.handleBlur}">
+      </zn-input>`;
 
     if (Object.keys(this.options).length > 0) {
       input = html`

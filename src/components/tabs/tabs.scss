@@ -90,6 +90,14 @@ h1, h2 {
 
 :host {
 
+  slot[name="top"]::slotted(zn-navbar) {
+    padding-top: var(--zn-spacing-medium);
+  }
+
+  #header ~ slot[name="top"]::slotted(zn-navbar)  {
+    padding-top: 0
+  }
+
   #header:not(:empty) {
     display: flex;
     align-items: center;

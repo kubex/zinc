@@ -7,19 +7,48 @@ layout: component
 
 ```html:preview
 
-<zn-tabs flush="" caption="Billing" default-uri="" header="" active="tab-7ee7c65c-349267" split-min="60"
-         primary-caption="Navigation" secondary-caption="Content" store-ttl="0" master-id="349267">
-  
-  
+<zn-tabs caption="Example Panel" flush>
+  <zn-navbar slot="top">
+    <li tab>Customer</li>
+    <li tab="something-else">Something Else</li>
+  </zn-navbar>
 
+  <zn-sp id="" no-gap divide>
+    <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+    <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
+  </zn-sp>
+
+  <zn-sp id="something-else" no-gap divide>
+    <zn-inline-edit padded inline caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+    <zn-inline-edit padded inline caption="Label 4" value="This is not Awesome"></zn-inline-edit>
+  </zn-sp>
 </zn-tabs>
 ```
 
 ## Examples
 
-### First Example
+### Without a Caption
 
-TODO
+
+```html:preview
+
+<zn-tabs flush>
+  <zn-navbar slot="top">
+    <li tab>Customer</li>
+    <li tab="something-else">Something Else</li>
+  </zn-navbar>
+
+  <zn-sp id="" no-gap divide>
+    <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+    <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
+  </zn-sp>
+
+  <zn-sp id="something-else" no-gap divide>
+    <zn-inline-edit padded inline caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+    <zn-inline-edit padded inline caption="Label 4" value="This is not Awesome"></zn-inline-edit>
+  </zn-sp>
+</zn-tabs>
+```
 
 ### Second Example
 

@@ -2760,7 +2760,6 @@ declare module "components/inline-edit/inline-edit.component" {
     export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
-        size: 'xsmall' | 'small' | 'medium' | 'large';
         value: string;
         name: string;
         caption: string;

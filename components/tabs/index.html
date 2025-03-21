@@ -433,7 +433,7 @@
           <ul>
             <li class="top"><a href="#">Tabs</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
+            <li data-level="3"><a href="#without-a-caption">Without a Caption</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -462,18 +462,21 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-tabs
-                flush=""
-                caption="Billing"
-                default-uri=""
-                header=""
-                active="tab-7ee7c65c-349267"
-                split-min="60"
-                primary-caption="Navigation"
-                secondary-caption="Content"
-                store-ttl="0"
-                master-id="349267"
-              >
+              <zn-tabs caption="Example Panel" flush="">
+                <zn-navbar slot="top">
+                  <li tab="">Customer</li>
+                  <li tab="something-else">Something Else</li>
+                </zn-navbar>
+
+                <zn-sp id="" no-gap="" divide="">
+                  <zn-inline-edit padded="" inline="" caption="Label 1" value="This is Awesome"></zn-inline-edit>
+                  <zn-inline-edit padded="" inline="" caption="Label 2" value="This is Awesome"></zn-inline-edit>
+                </zn-sp>
+
+                <zn-sp id="something-else" no-gap="" divide="">
+                  <zn-inline-edit padded="" inline="" caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+                  <zn-inline-edit padded="" inline="" caption="Label 4" value="This is not Awesome"></zn-inline-edit>
+                </zn-sp>
               </zn-tabs>
 
               <div class="code-preview__resizer">
@@ -484,11 +487,21 @@
             <div class="code-preview__source-group" id="code-preview-source-group-147">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-343">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Billing<span class="token punctuation">"</span></span> <span class="token attr-name">default-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">header</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">active</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab-7ee7c65c-349267<span class="token punctuation">"</span></span> <span class="token attr-name">split-min</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60<span class="token punctuation">"</span></span>
-         <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Navigation<span class="token punctuation">"</span></span> <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span> <span class="token attr-name">store-ttl</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span> <span class="token attr-name">master-id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>349267<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  
-  
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Example Panel<span class="token punctuation">"</span></span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">tab</span><span class="token punctuation">&gt;</span></span>Customer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>something-else<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Something Else<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
 
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">no-gap</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>something-else<span class="token punctuation">"</span></span> <span class="token attr-name">no-gap</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 3<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is not Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 4<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is not Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-343"></zn-copy-button></pre>
               </div>
@@ -519,10 +532,79 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="without-a-caption" class="anchor-heading">
+            Without a Caption<a href="#without-a-caption" aria-label='Direct link to "Without a Caption"'></a>
           </h3>
-          <p>TODO</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs flush="">
+                <zn-navbar slot="top">
+                  <li tab="">Customer</li>
+                  <li tab="something-else">Something Else</li>
+                </zn-navbar>
+
+                <zn-sp id="" no-gap="" divide="">
+                  <zn-inline-edit padded="" inline="" caption="Label 1" value="This is Awesome"></zn-inline-edit>
+                  <zn-inline-edit padded="" inline="" caption="Label 2" value="This is Awesome"></zn-inline-edit>
+                </zn-sp>
+
+                <zn-sp id="something-else" no-gap="" divide="">
+                  <zn-inline-edit padded="" inline="" caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+                  <zn-inline-edit padded="" inline="" caption="Label 4" value="This is not Awesome"></zn-inline-edit>
+                </zn-sp>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-148">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-344">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">tab</span><span class="token punctuation">&gt;</span></span>Customer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>something-else<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Something Else<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">no-gap</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>something-else<span class="token punctuation">"</span></span> <span class="token attr-name">no-gap</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 3<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is not Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 4<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is not Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-344"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-148"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h3 id="second-example" class="anchor-heading">
             Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
           </h3>
@@ -549,7 +631,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-344"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tabs/tabs.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-344"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-345"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tabs/tabs.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-345"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="JavaScript">
@@ -564,12 +646,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-345"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tabs/tabs.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-345"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-346"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tabs/tabs.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-346"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-346"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/tabs/tabs.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-346"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-347"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/tabs/tabs.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-347"></zn-copy-button></pre>
           </zn-accordion>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

@@ -696,17 +696,6 @@
       ]
     },
     {
-      "name": "zn-description-item",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [{ "name": "label", "values": [] }],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/description-item"
-        }
-      ]
-    },
-    {
       "name": "zn-dialog",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
       "attributes": [
@@ -971,7 +960,7 @@
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         {
-          "name": "caption-size",
+          "name": "size",
           "values": [
             { "name": "xsmall" },
             { "name": "small" },
@@ -981,10 +970,11 @@
         },
         { "name": "value", "values": [] },
         { "name": "name", "values": [] },
-        { "name": "default-value", "values": [] },
         { "name": "caption", "values": [] },
         { "name": "disabled", "values": [] },
-        { "name": "horizontal", "values": [] },
+        { "name": "inline", "values": [] },
+        { "name": "padded", "values": [] },
+        { "name": "required", "values": [] },
         {
           "name": "options",
           "values": [{ "name": "{ [key: string]: string }" }]

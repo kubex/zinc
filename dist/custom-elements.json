@@ -5878,96 +5878,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/description-item/description-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDescriptionItem",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "label"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "label"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "description-item",
-          "tagName": "zn-description-item",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/description-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/description-item",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDescriptionItem",
-            "module": "components/description-item/description-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/dialog/dialog.js",
       "declarations": [
         {
@@ -7960,44 +7870,12 @@
             },
             {
               "kind": "field",
-              "name": "slotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "hasFocus",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "isEditing",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "HTMLInputElement | HTMLSelectElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "captionSize",
+              "name": "size",
               "type": {
                 "text": "'xsmall' | 'small' | 'medium' | 'large'"
               },
               "default": "'medium'",
-              "attribute": "caption-size",
+              "attribute": "size",
               "reflects": true
             },
             {
@@ -8006,7 +7884,8 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "value"
+              "attribute": "value",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -8018,19 +7897,10 @@
             },
             {
               "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "default-value"
-            },
-            {
-              "kind": "field",
               "name": "caption",
               "type": {
                 "text": "string"
               },
-              "default": "\"\"",
               "attribute": "caption"
             },
             {
@@ -8039,17 +7909,31 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
               "attribute": "disabled"
             },
             {
               "kind": "field",
-              "name": "horizontal",
+              "name": "inline",
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
-              "attribute": "horizontal"
+              "attribute": "inline"
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "padded"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "required"
             },
             {
               "kind": "field",
@@ -8059,6 +7943,36 @@
               },
               "default": "{}",
               "attribute": "options"
+            },
+            {
+              "kind": "field",
+              "name": "hasFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "isEditing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "ZnInput | ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -8122,72 +8036,31 @@
             },
             {
               "kind": "method",
-              "name": "_handleBlur",
-              "privacy": "private"
+              "name": "handleValueChange"
             },
             {
-              "kind": "method",
-              "name": "_handleEditClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "escKeyHandler"
             },
             {
-              "kind": "method",
-              "name": "_handleInput",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "handleEditClick"
             },
             {
-              "kind": "method",
-              "name": "_handleSubmitClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "handleSubmitClick"
             },
             {
-              "kind": "method",
-              "name": "_handleCancelClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "handleCancelClick"
             },
             {
-              "kind": "method",
-              "name": "escKeyHandler",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "handleBlur"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput"
             }
           ],
           "events": [
@@ -8198,12 +8071,12 @@
           ],
           "attributes": [
             {
-              "name": "caption-size",
+              "name": "size",
               "type": {
                 "text": "'xsmall' | 'small' | 'medium' | 'large'"
               },
               "default": "'medium'",
-              "fieldName": "captionSize"
+              "fieldName": "size"
             },
             {
               "name": "value",
@@ -8220,18 +8093,10 @@
               "fieldName": "name"
             },
             {
-              "name": "default-value",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "defaultValue"
-            },
-            {
               "name": "caption",
               "type": {
                 "text": "string"
               },
-              "default": "\"\"",
               "fieldName": "caption"
             },
             {
@@ -8239,16 +8104,28 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
               "fieldName": "disabled"
             },
             {
-              "name": "horizontal",
+              "name": "inline",
               "type": {
                 "text": "boolean"
               },
-              "default": "false",
-              "fieldName": "horizontal"
+              "fieldName": "inline"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "padded"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "required"
             },
             {
               "name": "options",

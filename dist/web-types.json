@@ -1558,28 +1558,6 @@
           }
         },
         {
-          "name": "zn-description-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [{ "name": "label", "value": { "type": "string" } }],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [{ "name": "label", "type": "string" }],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-dialog",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
           "doc-url": "",
@@ -2139,7 +2117,7 @@
           "doc-url": "",
           "attributes": [
             {
-              "name": "caption-size",
+              "name": "size",
               "value": {
                 "type": "'xsmall' | 'small' | 'medium' | 'large'",
                 "default": "'medium'"
@@ -2147,19 +2125,11 @@
             },
             { "name": "value", "value": { "type": "string" } },
             { "name": "name", "value": { "type": "string" } },
-            { "name": "default-value", "value": { "type": "string" } },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "horizontal",
-              "value": { "type": "boolean", "default": "false" }
-            },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "disabled", "value": { "type": "boolean" } },
+            { "name": "inline", "value": { "type": "boolean" } },
+            { "name": "padded", "value": { "type": "boolean" } },
+            { "name": "required", "value": { "type": "boolean" } },
             {
               "name": "options",
               "value": { "type": "{ [key: string]: string }", "default": "{}" }
@@ -2175,22 +2145,27 @@
           "js": {
             "properties": [
               {
-                "name": "input",
-                "type": "HTMLInputElement | HTMLSelectElement"
-              },
-              {
-                "name": "captionSize",
+                "name": "size",
                 "type": "'xsmall' | 'small' | 'medium' | 'large'"
               },
               { "name": "value", "type": "string" },
               { "name": "name", "type": "string" },
-              { "name": "defaultValue", "type": "string" },
               { "name": "caption", "type": "string" },
               { "name": "disabled", "type": "boolean" },
-              { "name": "horizontal", "type": "boolean" },
+              { "name": "inline", "type": "boolean" },
+              { "name": "padded", "type": "boolean" },
+              { "name": "required", "type": "boolean" },
               { "name": "options", "type": "{ [key: string]: string }" },
+              { "name": "input", "type": "ZnInput | ZnSelect" },
+              { "name": "defaultValue", "type": "string" },
               { "name": "validity", "type": "ValidityState" },
-              { "name": "validationMessage", "type": "string" }
+              { "name": "validationMessage", "type": "string" },
+              { "name": "escKeyHandler" },
+              { "name": "handleEditClick" },
+              { "name": "handleSubmitClick" },
+              { "name": "handleCancelClick" },
+              { "name": "handleBlur" },
+              { "name": "handleInput" }
             ],
             "events": [
               {

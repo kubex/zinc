@@ -2,112 +2,93 @@
 @use "../../../scss/shared/form-elements";
 
 :host {
-  width: 100%;
+  display: block;
   container-type: inline-size;
+  width: 100%;
+  --zn-inline-edit-caption-max-width: 300px
 }
 
 .ai {
-  width: 100%;
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  flex-direction: row;
 
   &:not(.ai--editing) {
-    .ai__input {
-      appearance: none;
+    .ai__input::part(base), .ai__input::part(combobox) {
       background-color: transparent;
-      border: none;
-      font-size: 12px;
-      color: rgb(var(--zn-text));
-      line-height: 18px;
-      font-weight: 500;
+      border-color: transparent;
+      box-shadow: none;
+      opacity: 1;
+      cursor: initial;
+    }
+
+    .ai__input::part(input), .ai__input::part(combobox) {
       padding: 0;
+    }
+
+    .ai__input::part(expand-icon) {
+      display: none;
     }
   }
 
-  .ai__input {
+  &__input::part(form-control-input) {
+    margin: 0;
+  }
+
+  &__input {
     height: unset;
     opacity: 1;
   }
 
-  &--horizontal {
+  &--padded {
+    padding: var(--zn-spacing-large);
+  }
+
+  &--inline {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
+    align-items: start;
+    gap: 5px;
 
-    @include wc.container-query(null, smp) {
-      flex-direction: column;
-      gap: 5px;
-      align-items: start;
+    @include wc.container-query(smp) {
+      align-items: center;
+    }
+
+    .ai__input {
+      width: 100%;
     }
 
     .ai__caption {
-      width: fit-content;
-    }
-
-    .ai__right {
-      display: none;
+      max-width: var(--zn-inline-edit-caption-max-width);
+      align-items: center;
+      display: flex;
     }
 
     .ai__left {
       width: 100%;
       display: flex;
+      flex-direction: row;
       justify-content: flex-end;
 
       @include wc.container-query(null, smp) {
         justify-content: flex-start;
-      }
-    }
-
-    .ai__wrapper {
-      margin-top: 0;
-    }
-
-    .ai__input[disabled] {
-      text-align: end;
-      padding: 6px 0 !important;
-
-      @include wc.container-query(null, smp) {
-        text-align: start;
+        flex-direction: column;
       }
     }
   }
 
   &--editing {
-    .ai__input {
-      font-size: 12px;
-      font-weight: 500;
-      color: rgb(var(--zn-text));
-      line-height: 18px;
-      padding: 5px;
-    }
-
     .ai__right {
       display: flex !important;
+      align-items: start;
     }
-  }
-
-  &--disabled {
-    .ai__right {
-      display: none !important;
-    }
-  }
-
-  &__wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 5px;
-    gap: 10px;
   }
 
   &__left {
     display: flex;
     flex-direction: column;
-    gap: 0 10px;
-    flex-grow: 1;
-    align-items: end;
+    gap: 5px;
+    width: 100%;
   }
 
   &:not(.ai--disabled) {
@@ -117,11 +98,11 @@
   }
 
   &__caption {
-    font-size: 16px;
-    color: rgb(var(--zn-text-heading));
     line-height: 20px;
-    font-weight: 600;
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
     width: 100%;
+    flex-shrink: 0;
   }
 
   &__description {
@@ -152,30 +133,10 @@
     }
   }
 
-  &:hover:not(.ai--disabled):not(.ai--horizontal) {
+  &--disabled {
     .ai__right {
-      display: flex !important;
+      display: none !important;
     }
-  }
-
-  select[disabled], input[disabled] {
-    pointer-events: none;
-  }
-}
-
-:host([caption-size="small"]) {
-  .ai__caption {
-    font-size: 14px;
-    line-height: 18px;
-    font-weight: 500;
-  }
-}
-
-:host([caption-size="xsmall"]) {
-  .ai__caption {
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 500;
   }
 }
 

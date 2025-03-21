@@ -21,17 +21,13 @@ layout: component
     </zn-navbar>
 
     <zn-sp id="" no-gap divide>
-      <zn-description-item  label="Label 1">This is awesome
-      </zn-description-item>
-      <zn-description-item  label="Label 2">This is awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
     </zn-sp>
 
     <zn-sp id="something-else" no-gap divide>
-      <zn-description-item  label="Label 3">This is not awesome
-      </zn-description-item>
-      <zn-description-item  label="Label 4">This is not awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 4" value="This is not Awesome"></zn-inline-edit>
     </zn-sp>
   </zn-tabs>
 
@@ -77,17 +73,13 @@ panel. This can be useful when using other components such as `zn-tabs`.
     </zn-navbar>
 
     <zn-sp id="" no-gap divide>
-      <zn-description-item  label="Label 1">This is awesome
-      </zn-description-item>
-      <zn-description-item  label="Label 2">This is awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
     </zn-sp>
 
     <zn-sp id="something-else" no-gap divide>
-      <zn-description-item  label="Label 3">This is not awesome
-      </zn-description-item>
-      <zn-description-item  label="Label 4">This is not awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 4" value="This is not Awesome"></zn-inline-edit>
     </zn-sp>
   </zn-tabs>
 
@@ -97,8 +89,6 @@ panel. This can be useful when using other components such as `zn-tabs`.
   </span>
 </zn-panel>
 ```
-
-
 
 ### Moving the caption
 
@@ -114,17 +104,13 @@ panel. This can be useful when using other components such as `zn-tabs`.
     </zn-navbar>
 
     <zn-sp id="" no-gap divide>
-      <zn-description-item label="Label 1">This is awesome
-      </zn-description-item>
-      <zn-description-item label="Label 2">This is awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
     </zn-sp>
 
     <zn-sp id="something-else" no-gap divide>
-      <zn-description-item label="Label 3">This is not awesome
-      </zn-description-item>
-      <zn-description-item label="Label 4">This is not awesome
-      </zn-description-item>
+      <zn-inline-edit padded inline caption="Label 3" value="This is not Awesome"></zn-inline-edit>
+      <zn-inline-edit padded inline caption="Label 4" value="This is not Awesome"></zn-inline-edit>
     </zn-sp>
   </zn-tabs>
 

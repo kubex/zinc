@@ -1,11 +1,14 @@
-import { property, query, state } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
-import ZincElement, { ZincFormControl } from '../../internal/zinc-element';
-import { FormControlController, validValidityState } from "../../internal/form";
-import { HasSlotController } from '../../internal/slot';
-import { classMap } from "lit/directives/class-map.js";
+import {property, query, state} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
+import {FormControlController} from "../../internal/form";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './inline-edit.scss';
+import {defaultValue} from "../../internal/default-value";
+import ZnInput from "../input";
+import ZnSelect from "../select";
+import {watch} from "../../internal/watch";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -31,29 +34,35 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
   });
 
-  private readonly slotController = new HasSlotController(this);
+  @property({reflect: true}) size: 'xsmall' | 'small' | 'medium' | 'large' = 'medium';
 
-  @state() private hasFocus = false;
-  @state() private isEditing = false;
+  @property({reflect: true}) value: string;
 
-  @query('.ai__input') input: HTMLInputElement | HTMLSelectElement;
-
-  @property({
-    attribute: 'caption-size',
-    reflect: true
-  }) captionSize: 'xsmall' | 'small' | 'medium' | 'large' = 'medium';
-  @property() value: string;
   @property() name: string;
-  @property({ attribute: 'default-value' }) defaultValue: string;
-  @property() caption: string = ""; // Caption
-  @property({ type: Boolean }) disabled: boolean = false;
-  @property({ type: Boolean }) horizontal: boolean = false;
 
-  @property({ attribute: 'options', type: Object }) options: { [key: string]: string } = {};
+  @property() caption: string;
 
+  @property({type: Boolean}) disabled: boolean
+
+  @property({type: Boolean}) inline: boolean
+
+  @property({type: Boolean}) padded: boolean
+
+  @property({type: Boolean}) required: boolean
+
+  @property({type: Object}) options: { [key: string]: string } = {};
+
+  @state() private hasFocus: boolean;
+
+  @state() private isEditing: boolean;
+
+  @query('.ai__input') input: ZnInput | ZnSelect;
+
+  @defaultValue('value') defaultValue: string;
 
   get validity(): ValidityState {
-    return this.input?.validity ?? validValidityState;
+    console.log('input', this.input);
+    return this.input.validity;
   }
 
   get validationMessage(): string {
@@ -76,82 +85,85 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.input.setCustomValidity(message);
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    this.formControlController?.updateValidity();
-
-    if (this.options && Object.keys(this.options).length > 0) {
-      this.value = Object.keys(this.options).find(key => this.options[key] === this.value) || this.value;
-    }
-
-    // If we don't have a default value, set the value to the default value
-    if (!this.defaultValue) {
-      this.defaultValue = this.value;
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('keydown', this.escKeyHandler);
   }
 
-  private _handleBlur() {
-    this.hasFocus = false;
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('keydown', this.escKeyHandler);
   }
 
-  private _handleEditClick(e: any) {
+  @watch('value', {waitUntilFirstUpdate: true})
+  async handleValueChange() {
+    await this.updateComplete;
+    this.formControlController.updateValidity();
+  }
+
+  escKeyHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && this.isEditing) {
+      console.log('esc');
+      this.isEditing = false;
+      this.value = this.defaultValue;
+    }
+  };
+
+  handleEditClick = (e: MouseEvent) => {
+    e.preventDefault();
     if (this.disabled) {
       return;
     }
-
-    e.preventDefault();
     this.isEditing = true;
-    // Add event listener for esc key
-    this.addEventListener('keydown', this.escKeyHandler);
   }
 
-  private _handleInput(e: Event) {
-    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
-  }
-
-  private _handleSubmitClick(e: any) {
+  handleSubmitClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
     this.formControlController.submit();
-  }
+  };
 
-  private _handleCancelClick(e: any) {
+  handleCancelClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
     this.value = this.defaultValue;
-    this.requestUpdate();
-  }
+  };
 
-  escKeyHandler(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      this.isEditing = false;
-      this.value = this.defaultValue;
+  handleBlur = () => {
+    this.hasFocus = false;
+  };
 
-      this.removeEventListener('keydown', this.escKeyHandler);
-    }
-  }
+  handleInput = (e: Event) => {
+    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+  };
 
 
   protected render() {
-    let input = html`<input type="text" class="ai__input" value="${this.value}"
-                            .disabled="${!this.isEditing}"
-                            @input="${this._handleInput}"
-                            @blur="${this._handleBlur}"/>`;
+    let input = html`
+      <zn-input type="text"
+                class="ai__input"
+                name="${this.name}"
+                value="${this.value}"
+                @click="${this.handleEditClick}"
+                .disabled="${!this.isEditing}"
+                @input="${this.handleInput}"
+                @blur="${this.handleBlur}"></zn-input>`;
 
     if (Object.keys(this.options).length > 0) {
-      input = html`<select class="ai__input"
-                           .disabled="${!this.isEditing}"
-                           @input="${this._handleInput}"
-                           @blur="${this._handleBlur}">
-        ${Object.keys(this.options).map(key => html`
-          <option value="${key}" ?selected="${this.value == key || this.value == this.options[key]}">
-            ${this.options[key]}
-          </option>`)}
-      </select>`;
+      input = html`
+        <zn-select class="ai__input"
+                   name="${this.name}"
+                   value="${this.value}"
+                   @click="${this.handleEditClick}"
+                   .disabled="${!this.isEditing}"
+                   @input="${this.handleInput}"
+                   @blur="${this.handleBlur}">
+          ${Object.keys(this.options).map(key => html`
+            <zn-option value="${key}">
+              ${this.options[key]}
+            </zn-option>`)}
+        </zn-select>`;
     }
-
-    const slotHasContent = this.slotController.test('[default]');
-
 
     return html`
       <div class="${classMap({
@@ -159,27 +171,26 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--editing': this.isEditing,
         'ai--focused': this.hasFocus,
         'ai--disabled': this.disabled,
-        'ai--horizontal': this.horizontal,
+        'ai--inline': this.inline,
+        'ai--padded': this.padded,
       })}">
-        <span class="ai__caption" @click="${this._handleEditClick}">
-          ${this.caption}
-        </span>
-        <div class="ai__wrapper">
-          <div class="ai__left" @click="${this._handleEditClick}">
-            <slot></slot>
-            ${slotHasContent ? null : input}
-          </div>
-          <div class="ai__right">
-            ${!this.isEditing ?
-              html`
-                <zn-button @click="${this._handleEditClick}" src="edit" color="transparent">Edit</zn-button>` :
-              html`
-                <zn-button type="submit" @click="${this._handleSubmitClick}" icon="check" icon-size="24"
-                           color="transparent"></zn-button>
-                <zn-button type="button" @click="${this._handleCancelClick}" icon="close" icon-size="24"
-                           color="transparent"></zn-button>
-              `}
-          </div>
+
+        <div class="ai__left">
+          <span class="ai__caption" @click="${this.handleEditClick}">
+            ${this.caption}
+          </span>
+          ${input}
+        </div>
+
+        <div class="ai__right">
+          ${!this.isEditing ?
+            html`
+              <zn-button @click="${this.handleEditClick}" icon="edit" icon-size="24" color="transparent"></zn-button>` :
+            html`
+              <zn-button type="submit" @click="${this.handleSubmitClick}" icon="check" icon-size="24"
+                         color="transparent"></zn-button>
+              <zn-button type="button" @click="${this.handleCancelClick}" icon="close" icon-size="24"
+                         color="transparent"></zn-button>`}
         </div>
       </div>`;
   }

@@ -35,7 +35,7 @@ export default class ZnListTile extends ZincElement {
   @property({attribute: 'href', reflect: true}) href: string;
 
   render() {
-    const tag = this.href ? literal`a` : literal`button`;
+    const tag = this.href ? literal`a` : literal`div`;
     return html`
       <${tag}
         href="${ifDefined(this.href)}"

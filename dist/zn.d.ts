@@ -2099,7 +2099,8 @@ declare module "events/zn-menu-select" {
     }
 }
 declare module "components/navbar/navbar.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import type { PropertyValues } from 'lit';
+    import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.

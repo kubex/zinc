@@ -1846,6 +1846,7 @@ declare module "components/list-tile/list-tile.component" {
         caption: string;
         description: string;
         href: string;
+        dataTarget: string;
         render(): import("lit").TemplateResult;
     }
 }
@@ -3170,6 +3171,51 @@ declare module "components/table/index" {
         }
     }
 }
+declare module "components/sp/sp.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/sp
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnSp extends ZincElement {
+        static styles: CSSResultGroup;
+        divide: boolean;
+        row: boolean;
+        grow: boolean;
+        padX: boolean;
+        padY: boolean;
+        noGap: boolean;
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
+        connectedCallback(): void;
+        protected render(): unknown;
+    }
+}
+declare module "components/sp/index" {
+    import ZnSp from "components/sp/sp.component";
+    export * from "components/sp/sp.component";
+    export default ZnSp;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-sp': ZnSp;
+        }
+    }
+}
 declare module "components/pane/pane.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -3324,51 +3370,6 @@ declare module "components/sidebar/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-sidebar': ZnSidebar;
-        }
-    }
-}
-declare module "components/sp/sp.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/sp
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnSp extends ZincElement {
-        static styles: CSSResultGroup;
-        divide: boolean;
-        row: boolean;
-        grow: boolean;
-        padX: boolean;
-        padY: boolean;
-        noGap: boolean;
-        flush: boolean;
-        flushX: boolean;
-        flushY: boolean;
-        connectedCallback(): void;
-        protected render(): unknown;
-    }
-}
-declare module "components/sp/index" {
-    import ZnSp from "components/sp/sp.component";
-    export * from "components/sp/sp.component";
-    export default ZnSp;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-sp': ZnSp;
         }
     }
 }
@@ -5027,7 +5028,7 @@ declare module "components/description-item/description-item.component" {
     export default class ZnDescriptionItem extends ZincElement {
         static styles: CSSResultGroup;
         private readonly localize;
-        label: string;
+        caption: string;
         connectedCallback(): void;
         render(): import("lit").TemplateResult<1>;
     }

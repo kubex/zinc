@@ -29,42 +29,6 @@
           }
         },
         {
-          "name": "zn-action-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "description",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-accordion",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -96,6 +60,42 @@
               { "name": "summary", "type": "string" },
               { "name": "label", "type": "string" },
               { "name": "expanded", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-item",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "description",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "uri", "type": "string" }
             ],
             "events": [
               {
@@ -1561,7 +1561,7 @@
           "name": "zn-description-item",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
-          "attributes": [{ "name": "label", "value": { "type": "string" } }],
+          "attributes": [{ "name": "caption", "value": { "type": "string" } }],
           "slots": [
             { "name": "", "description": "The default slot." },
             { "name": "example", "description": "An example slot." }
@@ -1570,7 +1570,7 @@
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
-            "properties": [{ "name": "label", "type": "string" }],
+            "properties": [{ "name": "caption", "type": "string" }],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2797,7 +2797,8 @@
           "attributes": [
             { "name": "caption", "value": { "type": "string" } },
             { "name": "description", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } }
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "data-target", "value": { "type": "string" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2810,7 +2811,8 @@
             "properties": [
               { "name": "caption", "type": "string" },
               { "name": "description", "type": "string" },
-              { "name": "href", "type": "string" }
+              { "name": "href", "type": "string" },
+              { "name": "dataTarget", "type": "string" }
             ],
             "events": [
               {

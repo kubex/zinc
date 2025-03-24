@@ -33,12 +33,14 @@ export default class ZnListTile extends ZincElement {
   @property({attribute: 'caption', reflect: true}) caption: string;
   @property({attribute: 'description', reflect: true}) description: string;
   @property({attribute: 'href', reflect: true}) href: string;
+  @property({attribute: 'data-target', reflect: true}) dataTarget: string;
 
   render() {
     const tag = this.href ? literal`a` : literal`div`;
     return html`
       <${tag}
         href="${ifDefined(this.href)}"
+        data-target="${ifDefined(this.dataTarget)}"
         class="${classMap({
           tile: true,
           'tile--has-image': this.hasSlotController.test('image')
@@ -53,9 +55,6 @@ export default class ZnListTile extends ZincElement {
         <div class="tile__right">
           <slot name="properties" part="properties" class="tile__properties"></slot>
           <slot name="actions" part="actions" class="tile__actions"></slot>
-          ${this.href ? html`<a href="${this.href}" class="tile__link">
-            <zn-icon src="keyboard_arrow_right"></zn-icon>
-          </a>` : ''}
         </div>
       </${tag}>`;
   }

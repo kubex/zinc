@@ -11,17 +11,21 @@
   flex-grow: 1;
   overflow: hidden;
   margin: 0;
-
-  zn-header {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
 }
 
 // this is bad, don't do this, fix it. :(
 :host(:not([flush])) .pane__content {
   padding: var(--zn-spacing-medium);
+}
+
+zn-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  &::part(content) {
+    max-width: var(--zn-container-hd);
+  }
 }
 
 .pane__content {
@@ -31,6 +35,12 @@
   z-index: 0;
   min-height: 0;
   overflow: auto;
+}
+
+.width-container {
+  max-width: var(--zn-container-hd);
+  margin: 0 auto;
+  width: 100%;
 }
 
 slot {

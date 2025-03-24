@@ -29,7 +29,7 @@ export default class ZnDescriptionItem extends ZincElement {
   // @ts-expect-error unused property
   private readonly localize = new LocalizeController(this);
 
-  @property() label: string;
+  @property() caption: string;
 
   connectedCallback() {
     super.connectedCallback();
@@ -41,10 +41,14 @@ export default class ZnDescriptionItem extends ZincElement {
       <div class=${classMap({
         'description-item': true,
       })}>
-        <div class="description-item__label">${this.label}</div>
+        <div class="description-item__caption">${this.caption}</div>
         <div class="description-item__content">
-          <slot></slot>
-          <slot name="actions" class="description-item__actions"></slot>
+          <div class="description-item__content-inner">
+            <slot></slot>
+          </div>
+          <div class="description-item__action-wrapper">
+            <slot name="actions" class="description-item__actions"></slot>
+          </div>
         </div>
       </div>
     `;

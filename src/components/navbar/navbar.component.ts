@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import type { PropertyValues} from 'lit';
+import type {PropertyValues} from 'lit';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
@@ -100,7 +100,7 @@ export default class ZnNavbar extends ZincElement {
               <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
           }
           return html`
-            <li class="${classMap({'active': item.active})}" tab="">${content}</li>`;
+            <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
         })}
         ${this.dropdown && this.dropdown.length > 0 ? html`
           <li id="dropdown-item">

@@ -89,7 +89,6 @@ export default class ZnHeader extends ZincElement {
       this.navbar = document.createElement('zn-navbar');
       const nc = this.shadowRoot?.querySelector('#nav-container');
       if (nc) {
-        nc.classList.remove('navless');
         nc.appendChild(this.navbar);
       }
     }
@@ -185,7 +184,7 @@ export default class ZnHeader extends ZincElement {
         </div>
 
         ${hasNavigation ? html`
-          <div class="width-container navless" id="nav-container">
+          <div class="width-container" id="nav-container">
             <slot name="nav"></slot>
           </div>` : null}
 

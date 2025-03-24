@@ -21,18 +21,31 @@ component you are using already includes padding or margin it will not be double
     <zn-cols layout="1,1">
       <zn-panel caption="Some Panel" description="Hello World">
         <zn-sp divide no-gap>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1" value="This is awesome">
-          </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2" value="This is awesome">
-          </zn-inline-edit>
+          <zn-description-item label="Full name">
+            <zn-inline-edit name="name" value="Margot Foster"></zn-inline-edit>
+          </zn-description-item>
+          <zn-description-item label="Full name">
+            Something
+            <zn-button icon="add" color="secondary" size="x-small" slot="actions" icon-size="20"></zn-button>
+          </zn-description-item>
+          <zn-description-item label="Full name">
+            Something
+            <zn-button color="transparent" size="x-small" slot="actions">Update</zn-button>
+          </zn-description-item>
+          <zn-description-item label="Selet Option">
+            <zn-inline-edit name="name" value="1"
+                            options="{&quot;1&quot;: &quot;Option 1&quot;,&quot;2&quot;: &quot;Option 2&quot;}"></zn-inline-edit>
+          </zn-description-item>
         </zn-sp>
       </zn-panel>
 
       <zn-panel caption="Some Panel">
         <zn-sp divide>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1" value="This is awesome">
+          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1"
+                          value="This is awesome">
           </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2" value="This is awesome">
+          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2"
+                          value="This is awesome">
           </zn-inline-edit>
         </zn-sp>
       </zn-panel>
@@ -53,9 +66,11 @@ component you are using already includes padding or margin it will not be double
         </zn-sp>
 
         <zn-sp id="something-else" divide>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 3" value="This is not awesome">
+          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 3"
+                          value="This is not awesome">
           </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 4" value="This is not awesome">
+          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 4"
+                          value="This is not awesome">
           </zn-inline-edit>
         </zn-sp>
       </zn-tabs>

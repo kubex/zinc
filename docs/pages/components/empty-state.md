@@ -16,9 +16,20 @@ layout: component
 
 ## Examples
 
-### First Example
+### With Buttons
 
-TODO
+```html:preview
+
+<zn-empty-state
+  caption="The Caption"
+  description="The Description"
+  icon="check">
+  <zn-button-group>
+    <zn-button>Button 1</zn-button>
+    <zn-button>Button 2</zn-button>
+  </zn-button-group>
+</zn-empty-state>
+```
 
 ### Second Example
 

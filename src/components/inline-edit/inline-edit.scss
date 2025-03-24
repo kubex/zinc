@@ -5,13 +5,14 @@
   display: block;
   container-type: inline-size;
   width: 100%;
-  --zn-inline-edit-caption-max-width: 300px
 }
 
 .ai {
   display: flex;
   width: 100%;
   flex-direction: row;
+  align-items: center;
+  gap: 10px;
 
   &:not(.ai--editing) {
     .ai__input::part(base), .ai__input::part(combobox) {
@@ -24,6 +25,7 @@
 
     .ai__input::part(input), .ai__input::part(combobox) {
       padding: 0;
+      color: rgb(var(--zn-text));
     }
 
     .ai__input::part(expand-icon) {
@@ -58,12 +60,6 @@
       width: 100%;
     }
 
-    .ai__caption {
-      max-width: var(--zn-inline-edit-caption-max-width);
-      align-items: center;
-      display: flex;
-    }
-
     .ai__left {
       width: 100%;
       display: flex;
@@ -92,16 +88,9 @@
   }
 
   &:not(.ai--disabled) {
-    .ai__left, .ai__caption {
+    .ai__left {
       cursor: pointer;
     }
-  }
-
-  &__caption {
-    line-height: 20px;
-    font-weight: 500;
-    color: rgb(var(--zn-text-heading));
-    width: 100%;
   }
 
   &__description {
@@ -120,16 +109,6 @@
     gap: 10px;
     align-items: center;
     justify-content: flex-end;
-
-    zn-button::part(base) {
-      padding: 0;
-      font-size: 12px;
-      line-height: 0;
-    }
-
-    zn-button {
-      line-height: 0;
-    }
   }
 
   &--disabled {

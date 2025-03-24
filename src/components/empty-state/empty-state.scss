@@ -43,14 +43,10 @@
 :host([type="error"]) {
   background-color: rgba(var(--zn-color-error), .05);
   min-height: 100px;
-  padding: var(--zn-spacing-x-small);
+  border: dashed 1px rgb(var(--zn-color-error)) !important;
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-color-error));
-  }
-
-  .error {
-    border: dashed 1px rgb(var(--zn-color-error)) !important;
   }
 }
 
@@ -58,27 +54,19 @@
 :host([type="info"]) {
   background-color: rgba(var(--zn-color-info), .05);
   min-height: 100px;
-  padding: var(--zn-spacing-x-small);
+  border: dashed 1px rgb(var(--zn-color-info)) !important;
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-color-info));
-  }
-
-  .info {
-    border: dashed 1px rgb(var(--zn-color-info)) !important;
   }
 }
 
 :host([type="primary"]) {
   background-color: rgba(var(--zn-primary), .05);
   min-height: 100px;
-  padding: var(--zn-spacing-x-small);
+  border: dashed 1px rgb(var(--zn-primary)) !important;
 
   ::slotted(*), .caption, .description {
     color: rgb(var(--zn-primary));
-  }
-
-  .primary {
-    border: dashed 1px rgb(var(--zn-primary)) !important;
   }
 }

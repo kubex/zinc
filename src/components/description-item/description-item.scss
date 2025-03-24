@@ -1,0 +1,54 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  container-type: inline-size;
+
+  --zn-description-item-label-max-width: 300px;
+}
+
+.description-item {
+  display: flex;
+  flex-direction: row;
+  padding: var(--zn-spacing-large);
+  align-items: center;
+
+  @include wc.container-query(null, md) {
+    --zn-description-item-label-max-width: 200px;
+  }
+
+  @include wc.container-query(null, smp) {
+    --zn-description-item-label-max-width: 150px;
+  }
+
+  @include wc.container-query(null, sm) {
+    flex-direction: column;
+    align-items: baseline;
+    gap: var(--zn-spacing-small);
+  }
+
+  &__content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 220px;
+    line-height: 30px;
+  }
+
+  &__label {
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+    max-width: var(--zn-description-item-label-max-width);
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  &__actions {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+}

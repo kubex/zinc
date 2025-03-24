@@ -41,6 +41,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() caption: string;
 
+  @property({attribute: 'edit-text'}) editText: string;
+
   @property({type: Boolean}) disabled: boolean
 
   @property({type: Boolean}) inline: boolean
@@ -138,6 +140,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
 
   protected render() {
+    const hasEditText = this.editText;
+
     let input = html`
       <zn-input type="text"
                 class="ai__input"
@@ -165,7 +169,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         </zn-select>`;
     }
 
-    return html`
+    const inlineEdit = html`
       <div class="${classMap({
         'ai': true,
         'ai--editing': this.isEditing,
@@ -175,23 +179,35 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--padded': this.padded,
       })}">
 
-        <div class="ai__left">
-          <span class="ai__caption" @click="${this.handleEditClick}">
-            ${this.caption}
-          </span>
+        <div class="ai__left" @click="${this.handleEditClick}">
           ${input}
         </div>
 
         <div class="ai__right">
           ${!this.isEditing ?
             html`
-              <zn-button @click="${this.handleEditClick}" icon="edit" size="x-small" icon-size="20" color="transparent"></zn-button>` :
+              ${hasEditText ? html`
+                <zn-button @click="${this.handleEditClick}" size="x-small" color="secondary">
+                  ${this.editText}
+                </zn-button>` : html`
+                <zn-button @click="${this.handleEditClick}" icon="edit" size="x-small" icon-size="20"
+                           color="secondary"></zn-button>`}` :
             html`
               <zn-button type="submit" @click="${this.handleSubmitClick}" icon="check" size="x-small" icon-size="20"
-                         color="transparent"></zn-button>
+                         color="secondary"></zn-button>
               <zn-button type="button" @click="${this.handleCancelClick}" icon="close" size="x-small" icon-size="20"
-                         color="transparent"></zn-button>`}
+                         color="secondary"></zn-button>`}
         </div>
       </div>`;
+
+
+    if (this.caption) {
+      return html`
+        <zn-description-item label="${this.caption}">
+          ${inlineEdit}
+        </zn-description-item>`;
+    }
+
+    return inlineEdit;
   }
 }

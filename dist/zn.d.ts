@@ -2763,6 +2763,7 @@ declare module "components/inline-edit/inline-edit.component" {
         value: string;
         name: string;
         caption: string;
+        editText: string;
         disabled: boolean;
         inline: boolean;
         padded: boolean;
@@ -5003,6 +5004,44 @@ declare module "components/empty-dialog/index" {
         }
     }
 }
+declare module "components/description-item/description-item.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/description-item
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDescriptionItem extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        label: string;
+        connectedCallback(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/description-item/index" {
+    import ZnDescriptionItem from "components/description-item/description-item.component";
+    export * from "components/description-item/description-item.component";
+    export default ZnDescriptionItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-description-item': ZnDescriptionItem;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5141,6 +5180,7 @@ declare module "zinc" {
     export { default as CheckboxGroup } from "components/checkbox-group/index";
     export { default as ConfirmContent } from "components/confirm-content/index";
     export { default as EmptyDialog } from "components/empty-dialog/index";
+    export { default as DescriptionItem } from "components/description-item/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

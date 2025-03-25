@@ -470,7 +470,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--disabled': this.disabled,
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
-                 'input--no-spin-buttons': this.noSpinButtons || this.type !== 'currency',
+                 'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
                })}>
 
             <span part="prefix" class="input__prefix">

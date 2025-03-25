@@ -165,6 +165,14 @@ the [Properties table](#properties) for the full list of options.
 <br />
 ```
 
+### Min Max Validation
+
+```html:preview
+<zn-input type="date" label="Input type: Date" placeholder="Date" help-text="Calendar icon opens the browser default date picker" min="01/01/1970"></zn-input>
+<br />
+<zn-input type="number" label="Input type: Number" min="10" max="100"></zn-input>
+```
+
 ### Prefix & Suffix Icons
 
 Several input types have specific `prefix` and `suffix` elements or icons that are displayed by default. You can also

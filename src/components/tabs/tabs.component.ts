@@ -238,6 +238,11 @@ export default class ZnTabs extends ZincElement {
   setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: any = null) {
     let hasActive = false;
     this._tabs.forEach(tab => {
+
+      if (!tab.hasAttribute('tab') && tab.hasAttribute('tab-uri')) {
+        return;
+      }
+
       if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri') as any)) {
         tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri') as any) as any);
       }

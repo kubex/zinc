@@ -86,21 +86,32 @@ export default class ZnNavbar extends ZincElement {
       this.style.display = 'none';
     }
 
+    let defaultTabDeclared = false;
+
     return html`
       <ul>
         ${this._preItems}
-        ${this.navigation.map((item: any) => {
+        ${this.navigation.map((item: any,) => {
           let content = html`${item.title}`;
+
           if (item.icon != undefined && item.icon != '') {
             content = html`
               <zn-icon src="${item.icon}"></zn-icon>${content}`;
           }
+
           if (item.path != undefined) {
             return html`
               <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
           }
+
+          if (!defaultTabDeclared || item.tab) {
+            defaultTabDeclared = true;
+            return html`
+              <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
+          }
+
           return html`
-            <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
+            <li class="${classMap({'active': item.active})}">${content}</li>`;
         })}
         ${this.dropdown && this.dropdown.length > 0 ? html`
           <li id="dropdown-item">

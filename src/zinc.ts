@@ -40,7 +40,6 @@ export {default as Timer} from './components/timer';
 export {default as Tabs} from './components/tabs';
 export {default as Panel} from './components/panel';
 export {default as Table} from './components/table';
-export {default as Pane} from './components/pane';
 export {default as SplitPane} from './components/split-pane';
 export {default as Sidebar} from './components/sidebar';
 export {default as Sp} from './components/sp';

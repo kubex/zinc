@@ -247,6 +247,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   private handleBlur() {
     this.hasFocus = false;
+    if (this.hasAttribute('min') && this.value < this.min ) {
+      this.setAttribute('value', this.min as string );
+    }
+    if (this.hasAttribute('max') && this.value > this.max ) {
+      this.setAttribute('value', this.max as string );
+    }
     this.emit('zn-blur');
   }
 

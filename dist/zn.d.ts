@@ -2710,6 +2710,7 @@ declare module "components/select/select.component" {
         protected get tags(): TemplateResult<1>[];
         private handleInvalid;
         handleDisabledChange(): void;
+        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         handleValueChange(): void;
         handleOpenChange(): Promise<void>;
         /** Shows the listbox. */

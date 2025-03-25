@@ -2769,7 +2769,6 @@ declare module "components/inline-edit/inline-edit.component" {
         private readonly formControlController;
         value: string;
         name: string;
-        caption: string;
         editText: string;
         disabled: boolean;
         inline: boolean;
@@ -3044,6 +3043,7 @@ declare module "components/tabs/tabs.component" {
         storeKey: string;
         storeTtl: number;
         padded: boolean;
+        fullWidth: boolean;
         paddedRight: boolean;
         protected preload: boolean;
         protected _store: Store;
@@ -5006,7 +5006,7 @@ declare module "components/empty-dialog/index" {
         }
     }
 }
-declare module "components/description-item/description-item.component" {
+declare module "components/item/item.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
@@ -5026,7 +5026,7 @@ declare module "components/description-item/description-item.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnDescriptionItem extends ZincElement {
+    export default class ZnItem extends ZincElement {
         static styles: CSSResultGroup;
         private readonly localize;
         caption: string;
@@ -5034,13 +5034,13 @@ declare module "components/description-item/description-item.component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/description-item/index" {
-    import ZnDescriptionItem from "components/description-item/description-item.component";
-    export * from "components/description-item/description-item.component";
-    export default ZnDescriptionItem;
+declare module "components/item/index" {
+    import ZnItem from "components/item/item.component";
+    export * from "components/item/item.component";
+    export default ZnItem;
     global {
         interface HTMLElementTagNameMap {
-            'zn-description-item': ZnDescriptionItem;
+            'zn-item': ZnItem;
         }
     }
 }
@@ -5182,7 +5182,7 @@ declare module "zinc" {
     export { default as CheckboxGroup } from "components/checkbox-group/index";
     export { default as ConfirmContent } from "components/confirm-content/index";
     export { default as EmptyDialog } from "components/empty-dialog/index";
-    export { default as DescriptionItem } from "components/description-item/index";
+    export { default as DescriptionItem } from "components/item/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

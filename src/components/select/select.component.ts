@@ -1,7 +1,6 @@
 import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
-import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
@@ -129,7 +128,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
-  @defaultValue() defaultValue: string | string[] = '';
+  @property({attribute: 'value' }) defaultValue: string | string[] = '';
 
   /** The select's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -527,20 +526,20 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /* @internal - used by options to update labels */
   private handleDefaultSlotChange() {
+    if (!customElements.get('zn-option')) {
+      customElements.whenDefined('zn-option').then(() => this.handleDefaultSlotChange());
+    }
+
     const allOptions = this.getAllOptions();
-    const value = Array.isArray(this.value) ? this.value : [this.value];
+    const val = this.valueHasChanged ? this.value : this.defaultValue;
+    const value = Array.isArray(val) ? val : [val];
     const values: string[] = [];
 
     // Check for duplicate values in menu items
-    if (customElements.get('zn-option')) {
-      allOptions.forEach(option => values.push(option.value));
+    allOptions.forEach(option => values.push(option.value));
 
-      // Select only the options that match the new value
-      this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
-    } else {
-      // Rerun this handler when <zn-option> is registered
-      customElements.whenDefined('zn-option').then(() => this.handleDefaultSlotChange());
-    }
+    // Select only the options that match the new value
+    this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
   }
 
   private handleTagRemove(event: ZnRemoveEvent, option: ZnOption) {
@@ -680,7 +679,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  @watch('value', {waitUntilFirstUpdate: true})
+  attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null) {
+    super.attributeChangedCallback(name, oldVal, newVal);
+
+    if (name === 'value') {
+      const cachedValueHasChanged = this.valueHasChanged;
+      this.value = this.defaultValue;
+
+      // Set it back to false since this isn't an interaction.
+      this.valueHasChanged = cachedValueHasChanged;
+    }
+  }
+
+  @watch(['defaultValue', 'value'], {waitUntilFirstUpdate: true})
   handleValueChange() {
     if (!this.valueHasChanged) {
       const cachedValueHasChanged = this.valueHasChanged;

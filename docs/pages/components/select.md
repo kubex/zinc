@@ -16,14 +16,22 @@ Use the `label` attribute to give the select an accessible label. For labels tha
 instead.
 
 ```html:preview
-<zn-select label="Select one option">
-  <zn-option value="option-1">Option 1</zn-option>
-  <zn-option value="option-2">Option 2</zn-option>
-  <zn-option value="option-3">Option 3</zn-option>
-  <zn-option value="option-4">Option 4</zn-option>
-  <zn-option value="option-5">Option 5</zn-option>
-  <zn-option value="option-6">Option 6</zn-option>
-</zn-select>
+
+<form method="get" action="#">
+  <zn-select name="something" label="Select one option" value="0">
+    <zn-option value="0">Option 0</zn-option>
+    <zn-option value="1">Option 1</zn-option>
+    <zn-option value="2">Option 2</zn-option>
+    <zn-option value="3">Option 3</zn-option>
+    <zn-option value="4">Option 4</zn-option>
+    <zn-option value="5">Option 5</zn-option>
+    <zn-option value="6">Option 6</zn-option>
+  </zn-select>
+  
+  <br>
+  
+  <zn-button type="submit">Submit</zn-button>
+</form>
 ```
 
 :::tip

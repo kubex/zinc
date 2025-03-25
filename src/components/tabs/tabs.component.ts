@@ -47,7 +47,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key'}) storeKey: string | null = null;
+  @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;

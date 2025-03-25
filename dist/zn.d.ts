@@ -3167,6 +3167,89 @@ declare module "components/table/index" {
         }
     }
 }
+declare module "components/sp/sp.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/sp
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnSp extends ZincElement {
+        static styles: CSSResultGroup;
+        divide: boolean;
+        row: boolean;
+        grow: boolean;
+        padX: boolean;
+        padY: boolean;
+        noGap: boolean;
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
+        connectedCallback(): void;
+        protected render(): unknown;
+    }
+}
+declare module "components/sp/index" {
+    import ZnSp from "components/sp/sp.component";
+    export * from "components/sp/sp.component";
+    export default ZnSp;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-sp': ZnSp;
+        }
+    }
+}
+declare module "components/pane/pane.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/pane
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnPane extends ZincElement {
+        static styles: CSSResultGroup;
+        flush: boolean;
+        protected _header: HTMLElement;
+        connectedCallback(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/pane/index" {
+    import ZnPane from "components/pane/pane.component";
+    export * from "components/pane/pane.component";
+    export default ZnPane;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-pane': ZnPane;
+        }
+    }
+}
 declare module "utilities/on" {
     type OnEvent = Event & {
         selectedTarget: EventTarget;
@@ -3283,51 +3366,6 @@ declare module "components/sidebar/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-sidebar': ZnSidebar;
-        }
-    }
-}
-declare module "components/sp/sp.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/sp
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnSp extends ZincElement {
-        static styles: CSSResultGroup;
-        divide: boolean;
-        row: boolean;
-        grow: boolean;
-        padX: boolean;
-        padY: boolean;
-        noGap: boolean;
-        flush: boolean;
-        flushX: boolean;
-        flushY: boolean;
-        connectedCallback(): void;
-        protected render(): unknown;
-    }
-}
-declare module "components/sp/index" {
-    import ZnSp from "components/sp/sp.component";
-    export * from "components/sp/sp.component";
-    export default ZnSp;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-sp': ZnSp;
         }
     }
 }
@@ -5108,6 +5146,7 @@ declare module "zinc" {
     export { default as Tabs } from "components/tabs/index";
     export { default as Panel } from "components/panel/index";
     export { default as Table } from "components/table/index";
+    export { default as Pane } from "components/pane/index";
     export { default as SplitPane } from "components/split-pane/index";
     export { default as Sidebar } from "components/sidebar/index";
     export { default as Sp } from "components/sp/index";

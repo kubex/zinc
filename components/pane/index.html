@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>Form Group</title>
+    <title>Pane</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,8 +12,8 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.syle/assets" />
 
-    <meta property="og:url" content="https://zinc.syle/components/form-group/" />
-    <meta property="og:title" content="Form Group" />
+    <meta property="og:url" content="https://zinc.syle/components/pane/" />
+    <meta property="og:title" content="Pane" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://zinc.syle/assets" />
 
@@ -251,7 +251,7 @@
               </li>
 
               <li>
-                <a href="/components/form-group" class="active-link"> Form Group </a>
+                <a href="/components/form-group"> Form Group </a>
               </li>
 
               <li>
@@ -315,7 +315,7 @@
               </li>
 
               <li>
-                <a href="/components/pane"> Pane </a>
+                <a href="/components/pane" class="active-link"> Pane </a>
               </li>
 
               <li>
@@ -428,22 +428,25 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Form Group</a></li>
+            <li class="top"><a href="#">Pane</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#first-example">First Example</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Form Group</h1>
+            <h1>Pane</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-form-group&gt; | ZnFormGroup</code>
+              <code>&lt;zn-pane&gt; | ZnPane</code>
             </div>
 
             <div class="component-header__info">
@@ -456,17 +459,17 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-form-group></zn-form-group>
+              <zn-pane></zn-pane>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-78">
+            <div class="code-preview__source-group" id="code-preview-source-group-113">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-172"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-group</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-form-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-172"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-255"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-pane</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-pane</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-255"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -475,7 +478,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-78"
+                aria-controls="code-preview-source-group-113"
               >
                 Source
                 <svg
@@ -525,7 +528,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-173"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/form-group/form-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-173"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-256"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/pane/pane.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-256"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="JavaScript">
@@ -540,12 +543,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-174"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/form-group/form-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-174"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-257"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/pane/pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-257"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-175"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/form-group/form-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-175"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-258"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/pane/pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-258"></zn-copy-button></pre>
           </zn-accordion>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -563,6 +566,13 @@
                   <td class="nowrap">(default)</td>
                   <td>The default slot.</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>example</code>
+                  </td>
+                  <td>An example slot.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -571,8 +581,35 @@
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
           </p>
 
-          <h2 id="properties" class="anchor-heading">
-            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted as an example.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
           </h2>
 
           <div class="table-scroll">
@@ -581,85 +618,13 @@
                 <tr>
                   <th class="table-name">Name</th>
                   <th class="table-description">Description</th>
-                  <th class="table-reflects">Reflects</th>
-                  <th class="table-type">Type</th>
                   <th class="table-default">Default</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>
-                    <code class="nowrap">label</code>
-                  </td>
-                  <td>
-                    The form group’s label. Required for proper accessibility. If you need to display HTML, use the
-                    <code>label</code> slot instead.
-                  </td>
-                  <td style="text-align: center"></td>
-                  <td>
-                    <code>string</code>
-                  </td>
-                  <td>
-                    <code>''</code>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    <code class="nowrap">labelTooltip</code>
-
-                    <br />
-                    <zn-tooltip content="This attribute is different from its property">
-                      <small>
-                        <code class="nowrap"> label-tooltip </code>
-                      </small>
-                    </zn-tooltip>
-                  </td>
-                  <td>
-                    Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use
-                    the
-                    <code>label-tooltip</code> slot instead.
-                  </td>
-                  <td style="text-align: center"></td>
-                  <td>
-                    <code>string</code>
-                  </td>
-                  <td>
-                    <code>''</code>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    <code class="nowrap">helpText</code>
-
-                    <br />
-                    <zn-tooltip content="This attribute is different from its property">
-                      <small>
-                        <code class="nowrap"> help-text </code>
-                      </small>
-                    </zn-tooltip>
-                  </td>
-                  <td>
-                    The form groups help text. If you need to display HTML, use the <code>help-text</code> slot instead.
-                  </td>
-                  <td style="text-align: center"></td>
-                  <td>
-                    <code>string</code>
-                  </td>
-                  <td>
-                    <code>''</code>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>updateComplete</code></td>
-                  <td>
-                    A read-only promise that resolves when the component has
-                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
-                  </td>
-                  <td></td>
-                  <td></td>
+                  <td class="nowrap"><code>--example</code></td>
+                  <td>An example CSS custom property.</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -669,9 +634,42 @@
           <p>
             <em
               >Learn more about
-              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
             >
           </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The component’s base wrapper.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-example&gt;</code></li>
+          </ul>
         </div>
       </article>
     </main>

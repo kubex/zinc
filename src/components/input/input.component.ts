@@ -245,14 +245,21 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     return this.input.validationMessage;
   }
 
+  private validateMinMax(): void {
+    if (this.type !== 'number' && this.type !== 'date') {
+      return;
+    }
+    if (typeof this.min !== 'undefined' && parseInt(this.value as string) < parseInt(this.min as string)) {
+      this.value = this.min.toString();
+    }
+    if (typeof this.max !== 'undefined' && parseInt(this.value as string) > parseInt(this.max as string)) {
+      this.value = this.max.toString();
+    }
+  }
+
   private handleBlur() {
     this.hasFocus = false;
-    if (this.hasAttribute('min') && this.value < this.min ) {
-      this.setAttribute('value', this.min as string );
-    }
-    if (this.hasAttribute('max') && this.value > this.max ) {
-      this.setAttribute('value', this.max as string );
-    }
+    this.validateMinMax();
     this.emit('zn-blur');
   }
 

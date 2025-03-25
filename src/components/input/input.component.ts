@@ -245,8 +245,21 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     return this.input.validationMessage;
   }
 
+  private validateMinMax(): void {
+    if (this.type !== 'number' && this.type !== 'date') {
+      return;
+    }
+    if (typeof this.min !== 'undefined' && parseInt(this.value as string) < parseInt(this.min as string)) {
+      this.value = this.min.toString();
+    }
+    if (typeof this.max !== 'undefined' && parseInt(this.value as string) > parseInt(this.max as string)) {
+      this.value = this.max.toString();
+    }
+  }
+
   private handleBlur() {
     this.hasFocus = false;
+    this.validateMinMax();
     this.emit('zn-blur');
   }
 
@@ -464,7 +477,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--disabled': this.disabled,
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
-                 'input--no-spin-buttons': this.noSpinButtons || this.type !== 'currency',
+                 'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
                })}>
 
             <span part="prefix" class="input__prefix">

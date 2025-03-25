@@ -321,10 +321,6 @@
               </li>
 
               <li>
-                <a href="/components/pane"> Pane </a>
-              </li>
-
-              <li>
                 <a href="/components/panel"> Panel </a>
               </li>
 
@@ -435,7 +431,6 @@
         <div class="content__toc">
           <ul>
             <li class="top"><a href="#">Example Page</a></li>
-            <li data-level="2"><a href="#what-we-want-it-to-look-like">What we want it to look like</a></li>
           </ul>
         </div>
 
@@ -468,10 +463,11 @@
 
               <zn-tabs flush="" primary-caption="Navigation" secondary-caption="content">
                 <!-- This is the navigation for the first set of tabs -->
+                <!-- highlight should change from highlight to pill-bar or something similar -->
                 <zn-navbar
                   slot="top"
                   highlight=""
-                  navigation='[{"title":"John Doe","active":false,"hintText":"Overview","launchMode":"page"}]'
+                  navigation='[{"title":"John Doe","hintText":"Overview"}, {"title":"Jane Doe","hintText":"Overview","tab":"2"}]'
                   dropdown='[{"tab":"2","title":"Some Actions","type":"dropdown"}]'
                 >
                 </zn-navbar>
@@ -507,12 +503,12 @@
 
                 <!-- This is the content of the second tab -->
                 <div id="2">
-                  <zn-pane>
+                  <zn-tabs>
                     <zn-header
                       slot="top"
                       caption="Customer"
                       description="My Awesome Customer"
-                      navigation='[{"title":"Overview"}, {"title":"Details", "tab":"details"}]'
+                      navigation='[{"title":"Overview"}, {"title":"Details"}]'
                     >
                     </zn-header>
                     <!-- This is where your page content would be defined -->
@@ -520,7 +516,7 @@
                       <!-- Maybe zn-sp should be defaulted into the content? -->
                       <zn-panel caption="Number 2">Something Something Darkside</zn-panel>
                     </zn-sp>
-                  </zn-pane>
+                  </zn-tabs>
                 </div>
               </zn-tabs>
 
@@ -542,9 +538,10 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span> <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Navigation<span class="token punctuation">"</span></span> <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 
   <span class="token comment">&lt;!-- This is the navigation for the first set of tabs --&gt;</span>
+  <span class="token comment">&lt;!-- highlight should change from highlight to pill-bar or something similar --&gt;</span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span>
              <span class="token attr-name">highlight</span>
-             <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>John Doe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>active<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:false,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hintText<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>launchMode<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>page<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span>
+             <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>John Doe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hintText<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}, {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jane Doe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hintText<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span>
              <span class="token attr-name">dropdown</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Some Actions<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>dropdown<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
 
@@ -578,17 +575,17 @@
 
   <span class="token comment">&lt;!-- This is the content of the second tab --&gt;</span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-pane</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-header</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span>
                  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span>
                  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>My Awesome Customer<span class="token punctuation">"</span></span>
-                 <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}, {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                 <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}, {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-header</span><span class="token punctuation">&gt;</span></span>
       <span class="token comment">&lt;!-- This is where your page content would be defined --&gt;</span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span> <span class="token comment">&lt;!-- Maybe zn-sp should be defaulted into the content? --&gt;</span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Number 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Something Something Darkside<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-pane</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
@@ -603,189 +600,6 @@
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
                 aria-controls="code-preview-source-group-4"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h2 id="what-we-want-it-to-look-like" class="anchor-heading">
-            What we want it to look like<a
-              href="#what-we-want-it-to-look-like"
-              aria-label='Direct link to "What we want it to look like"'
-            ></a>
-          </h2>
-          <p>
-            Ideally we want to merge <code>zn-panel</code> and <code>zn-tabs</code> into a single component, this is
-            because they are both used to define the layout of the page but act in different ways.
-          </p>
-          <p>
-            We can used <code>tabbed</code> on the <code>zn-panel</code> component to define that it should be a tabbed
-            layout, and then use the <code>zn-navbar</code> component to define the navigation for the tabs. We should
-            remove the navigation attribute from the <code>zn-header</code> component and instead use the
-            <code>zn-navbar</code> component to define the navigation for the inner tabs.
-          </p>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <style>
-                .code-preview__preview {
-                  background-color: rgb(var(--zn-body)) !important;
-                  padding: 0 25px 0 0;
-                }
-              </style>
-
-              <zn-panel tabbed="" flush="" primary-caption="Navigation" secondary-caption="content">
-                <!-- This is the navigation for the first set of tabs -->
-                <!-- highlight should change from highlight to pill-bar or something similar -->
-                <zn-navbar
-                  slot="top"
-                  highlight=""
-                  navigation='[{"title":"John Doe","active":false,"hintText":"Overview","launchMode":"page"}]'
-                  dropdown='[{"tab":"2","title":"Some Actions","type":"dropdown"}]'
-                >
-                </zn-navbar>
-
-                <!-- This is the content of the first tab / default -->
-                <!-- Can probably remove flush as they should all be by default -->
-                <zn-panel flush="" tabbed="" primary-caption="Navigation" secondary-caption="Content">
-                  <!-- This is the Navigation/Header for the Inner set of tabs -->
-                  <zn-header
-                    slot="top"
-                    caption="Customer"
-                    description="My Awesome Customer"
-                    navigation='[{"title":"Overview"}, {"title":"Details", "tab":"details"}]'
-                  >
-                  </zn-header>
-
-                  <!--This is the content of the first tab / default inside the first tab -->
-                  <div>
-                    <!-- This is where your page content would be defined -->
-                    <zn-sp>
-                      <zn-panel caption="Something">Data Points</zn-panel>
-                      <zn-panel caption="Another Thing">Other Points</zn-panel>
-                    </zn-sp>
-                  </div>
-
-                  <!--This is the content of the second tab inside the first tab -->
-                  <div id="details">
-                    <!-- This is where your page content would be defined -->
-                    <zn-sp>
-                      <zn-panel caption="Awesome">this is an example of the details tab</zn-panel>
-                    </zn-sp>
-                  </div>
-                </zn-panel>
-
-                <!-- This is the content of the second tab -->
-                <div id="2">
-                  <zn-pane>
-                    <zn-header
-                      slot="top"
-                      caption="Customer"
-                      description="My Awesome Customer"
-                      navigation='[{"title":"Overview"}, {"title":"Details", "tab":"details"}]'
-                    >
-                    </zn-header>
-                    <!-- This is where your page content would be defined -->
-                    <zn-sp>
-                      <!-- Maybe zn-sp should be defaulted into the content? -->
-                      <zn-panel caption="Number 2">Something Something Darkside</zn-panel>
-                    </zn-sp>
-                  </zn-pane>
-                </div>
-              </zn-panel>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-5">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-5">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
-  <span class="token selector">.code-preview__preview</span> <span class="token punctuation">{</span>
-    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-body<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token important">!important</span><span class="token punctuation">;</span>
-    <span class="token property">padding</span><span class="token punctuation">:</span> 0 25px 0 0<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">tabbed</span> <span class="token attr-name">flush</span> <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Navigation<span class="token punctuation">"</span></span> <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token comment">&lt;!-- This is the navigation for the first set of tabs --&gt;</span>
-  <span class="token comment">&lt;!-- highlight should change from highlight to pill-bar or something similar --&gt;</span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span>
-             <span class="token attr-name">highlight</span>
-             <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>John Doe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>active<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:false,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hintText<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>launchMode<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>page<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span>
-             <span class="token attr-name">dropdown</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Some Actions<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>dropdown<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token comment">&lt;!-- This is the content of the first tab / default --&gt;</span>
-  <span class="token comment">&lt;!-- Can probably remove flush as they should all be by default --&gt;</span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">flush</span> <span class="token attr-name">tabbed</span> <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Navigation<span class="token punctuation">"</span></span> <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token comment">&lt;!-- This is the Navigation/Header for the Inner set of tabs --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-header</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span>
-               <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span>
-               <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>My Awesome Customer<span class="token punctuation">"</span></span>
-               <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}, {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-header</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token comment">&lt;!--This is the content of the first tab / default inside the first tab --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
-      <span class="token comment">&lt;!-- This is where your page content would be defined --&gt;</span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Something<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Data Points<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Another Thing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Other Points<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token comment">&lt;!--This is the content of the second tab inside the first tab --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>details<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token comment">&lt;!-- This is where your page content would be defined --&gt;</span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>this is an example of the details tab<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token comment">&lt;!-- This is the content of the second tab --&gt;</span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-pane</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-header</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span>
-                 <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span>
-                 <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>My Awesome Customer<span class="token punctuation">"</span></span>
-                 <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Overview<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}, {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>tab<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>details<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-header</span><span class="token punctuation">&gt;</span></span>
-      <span class="token comment">&lt;!-- This is where your page content would be defined --&gt;</span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span><span class="token punctuation">&gt;</span></span> <span class="token comment">&lt;!-- Maybe zn-sp should be defaulted into the content? --&gt;</span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Number 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Something Something Darkside<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-pane</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
-
-</code><zn-copy-button class="copy-code-button" from="code-block-5"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-5"
               >
                 Source
                 <svg

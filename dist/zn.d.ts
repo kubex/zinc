@@ -3021,18 +3021,13 @@ declare module "components/tabs/tabs.component" {
      */
     export default class ZnTabs extends ZincElement {
         static styles: CSSResultGroup;
-        private readonly hasSlotController;
         private _panel;
         private _panels;
         private _tabs;
         private _actions;
         private _knownUri;
-        private storage;
         masterId: string;
         defaultUri: string;
-        caption: string;
-        description: string;
-        header: string;
         _current: string;
         _split: any;
         _splitMin: number;
@@ -3040,7 +3035,7 @@ declare module "components/tabs/tabs.component" {
         secondaryCaption: string;
         noPrefetch: boolean;
         localStorage: boolean;
-        storeKey: any;
+        storeKey: string;
         storeTtl: number;
         padded: boolean;
         paddedRight: boolean;

@@ -62,7 +62,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @defaultValue('value') defaultValue: string;
 
   get validity(): ValidityState {
-    console.log('input', this.input);
     return this.input.validity;
   }
 
@@ -104,7 +103,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   escKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.isEditing) {
-      console.log('esc');
       this.isEditing = false;
       this.value = this.defaultValue;
     }
@@ -149,8 +147,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 value="${this.value}"
                 @click="${this.handleEditClick}"
                 .disabled="${!this.isEditing}"
-                @input="${this.handleInput}"
-                @blur="${this.handleBlur}">
+                @zn-input="${this.handleInput}"
+                @zn-blur="${this.handleBlur}">
       </zn-input>`;
 
     if (Object.keys(this.options).length > 0) {
@@ -160,8 +158,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                    value="${this.value}"
                    @click="${this.handleEditClick}"
                    .disabled="${!this.isEditing}"
-                   @input="${this.handleInput}"
-                   @blur="${this.handleBlur}">
+                   @zn-input="${this.handleInput}"
+                   @zn-blur="${this.handleBlur}">
           ${Object.keys(this.options).map(key => html`
             <zn-option value="${key}">
               ${this.options[key]}
@@ -199,7 +197,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                          color="secondary"></zn-button>`}
         </div>
       </div>`;
- 
+
 
     if (this.caption) {
       return html`

@@ -199,13 +199,18 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                          color="secondary"></zn-button>`}
         </div>
       </div>`;
- 
+
 
     if (this.caption) {
       return html`
-        <zn-description-item caption="${this.caption}">
-          ${inlineEdit}
-        </zn-description-item>`;
+        <div class=${classMap({
+          'inline-edit': true,
+        })}>
+          <div class="inline-edit__caption">${this.caption}</div>
+          <div class="inline-edit__content">
+            ${inlineEdit}
+          </div>
+        </div>`;
     }
 
     return inlineEdit;

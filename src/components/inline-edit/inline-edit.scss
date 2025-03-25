@@ -5,6 +5,49 @@
   display: block;
   container-type: inline-size;
   width: 100%;
+
+  --zn-description-item-label-max-width: 300px;
+}
+
+.inline-edit {
+  display: flex;
+  flex-direction: row;
+  padding: var(--zn-spacing-large);
+
+  &__caption {
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+    line-height: 33px;
+    max-width: var(--zn-description-item-label-max-width);
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  @include wc.container-query(null, md) {
+    --zn-description-item-label-max-width: 200px;
+  }
+
+  @include wc.container-query(null, smp) {
+    --zn-description-item-label-max-width: 150px;
+  }
+
+  @include wc.container-query(null, sm) {
+    flex-direction: column;
+    align-items: baseline;
+    gap: var(--zn-spacing-small);
+  }
+
+  &__content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    min-width: 220px;
+    line-height: 30px;
+  }
+
+  &__content-inner {
+    width: 100%;
+  }
 }
 
 .ai {

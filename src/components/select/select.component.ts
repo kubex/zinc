@@ -1,22 +1,23 @@
 import {animateTo, stopAnimations} from '../../internal/animate.js';
-import {property, query, state} from 'lit/decorators.js';
-import {type CSSResultGroup, html, TemplateResult, unsafeCSS} from 'lit';
-import {watch} from '../../internal/watch';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 import {classMap} from "lit/directives/class-map.js";
-import {FormControlController, validValidityState} from "../../internal/form";
-import {scrollIntoView} from "../../internal/scroll";
+import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
+import {FormControlController} from "../../internal/form";
+import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
 import {LocalizeController} from "../../utilities/localize";
-import {ZnRemoveEvent} from "../../events/zn-remove";
+import {property, query, state} from 'lit/decorators.js';
+import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {waitForEvent} from "../../internal/event";
+import {watch} from '../../internal/watch';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
-import ZnOption from "../option";
 import ZnPopup from "../popup";
+import type {ZnRemoveEvent} from "../../events/zn-remove";
+import type ZnOption from "../option";
 
 import styles from './select.scss';
 
@@ -94,22 +95,38 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() displayLabel = '';
   @state() currentOption: ZnOption;
   @state() selectedOptions: ZnOption[] = [];
+  @state() private valueHasChanged: boolean = false;
 
   /** The name of the select, submitted as a name/value pair with form data. */
   @property() name = '';
+
+  private _value: string | string[] = '';
+
+  get value() {
+    return this._value
+  }
+
 
   /**
    * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
    * value attribute will be a space-delimited list of values based on the options selected, and the value property will
    * be an array. **For this reason, values must not contain spaces.**
    */
-  @property({
-    converter: {
-      fromAttribute: (value: string) => value.split(' '),
-      toAttribute: (value: string[]) => value.join(' ')
+  @state()
+  set value(val: string | string[]) {
+    if (this.multiple) {
+      val = Array.isArray(val) ? val : val.split(' ');
+    } else {
+      val = Array.isArray(val) ? val.join(' ') : val;
     }
-  })
-  value: string | string[] = '';
+
+    if (this._value === val) {
+      return;
+    }
+
+    this.valueHasChanged = true;
+    this._value = val;
+  }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue() defaultValue: string | string[] = '';
@@ -209,12 +226,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Gets the validity state object */
   get validity() {
-    return this.valueInput ? this.valueInput.validity : validValidityState
+    return this.valueInput.validity;
   }
 
   /** Gets the validation message */
   get validationMessage() {
-    return this.valueInput?.validationMessage;
+    return this.valueInput.validationMessage;
   }
 
   connectedCallback() {
@@ -237,7 +254,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 
   private addOpenListeners() {
-    const root = this.getRootNode();
+    document.addEventListener('focusin', this.handleDocumentFocusIn);
+    document.addEventListener('keydown', this.handleDocumentKeyDown);
+    document.addEventListener('mousedown', this.handleDocumentMouseDown);
+
+    // If the component is rendered in a shadow root, we need to attach the focusin listener there too
+    if (this.getRootNode() !== document) {
+      this.getRootNode().addEventListener('focusin', this.handleDocumentFocusIn);
+    }
+
     if ('CloseWatcher' in window) {
       this.closeWatcher?.destroy();
       this.closeWatcher = new CloseWatcher();
@@ -248,9 +273,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         }
       };
     }
-    root.addEventListener('focusin', this.handleDocumentFocusIn);
-    root.addEventListener('keydown', this.handleDocumentKeyDown);
-    root.addEventListener('mousedown', this.handleDocumentMouseDown);
   }
 
   private removeOpenListeners() {
@@ -258,6 +280,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     root.removeEventListener('focusin', this.handleDocumentFocusIn);
     root.removeEventListener('keydown', this.handleDocumentKeyDown);
     root.removeEventListener('mousedown', this.handleDocumentMouseDown);
+
+    if (this.getRootNode() !== document) {
+      this.getRootNode().removeEventListener('focusin', this.handleDocumentFocusIn);
+    }
+
     this.closeWatcher?.destroy();
   }
 
@@ -312,6 +339,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       // If it is open, update the value based on the current selection and close it
       if (this.currentOption && !this.currentOption.disabled) {
+        this.valueHasChanged = true;
         if (this.multiple) {
           this.toggleOptionSelection(this.currentOption);
         } else {
@@ -472,6 +500,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const oldValue = this.value;
 
     if (option && !option.disabled) {
+      this.valueHasChanged = true
       if (this.multiple) {
         this.toggleOptionSelection(option);
       } else {
@@ -593,6 +622,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Update selected options cache
     this.selectedOptions = this.getAllOptions().filter(el => el.selected);
 
+    // Keep a reference to the previous `valueHasChanged`. Changes made here don't count has changing the value.
+    const cachedValueHasChanged: boolean = this.valueHasChanged;
+
     // Update the value and display label
     if (this.multiple) {
       this.value = this.selectedOptions.map(el => el.value);
@@ -604,9 +636,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayLabel = this.localize.term('numOptionsSelected', this.selectedOptions.length);
       }
     } else {
-      this.value = this.selectedOptions[0]?.value ?? '';
-      this.displayLabel = this.selectedOptions[0]?.getTextLabel() ?? '';
+      const selectedOption = this.selectedOptions[0];
+      this.value = selectedOption?.value ?? '';
+      this.displayLabel = selectedOption?.getTextLabel() ?? '';
     }
+
+    this.valueHasChanged = cachedValueHasChanged;
 
     // Update validity
     this.updateComplete.then(() => {
@@ -647,6 +682,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   @watch('value', {waitUntilFirstUpdate: true})
   handleValueChange() {
+    if (!this.valueHasChanged) {
+      const cachedValueHasChanged = this.valueHasChanged;
+      this.value = this.defaultValue;
+
+      // Set it back to false since this isn't an interaction
+      this.valueHasChanged = cachedValueHasChanged;
+    }
     const allOptions = this.getAllOptions();
     const value = Array.isArray(this.value) ? this.value : [this.value];
 
@@ -860,7 +902,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 type="text"
                 ?disabled=${this.disabled}
                 ?required=${this.required}
-                .value=${Array.isArray(this.value) ? this.value.join(', ') : this.value}
+                value=${Array.isArray(this.value) ? this.value.join(', ') : this.value}
                 tabindex="-1"
                 aria-hidden="true"
                 @focus=${() => this.focus()}

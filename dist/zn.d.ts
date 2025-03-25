@@ -2365,6 +2365,7 @@ declare module "components/input/input.component" {
         get validity(): ValidityState;
         /** Gets the validation message */
         get validationMessage(): string;
+        private validateMinMax;
         private handleBlur;
         private handleChange;
         private handleClearClick;

@@ -7,7 +7,6 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -29,24 +28,14 @@ import {HasSlotController} from "../../internal/slot";
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
-
   private _panel: HTMLElement | any;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
-  // @ts-expect-error
-  private storage: Storage;
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
-
-  @property() caption: string;
-
-  @property() description: string;
-
-  @property({attribute: 'header', type: String, reflect: true}) header = '';
 
   @property({attribute: 'active', type: String, reflect: true}) _current = '';
   @property({attribute: 'split', type: Number, reflect: true}) _split: any;
@@ -58,7 +47,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key'}) storeKey: any = null;
+  @property({attribute: 'store-key'}) storeKey: string | null = null;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
@@ -151,26 +140,22 @@ export default class ZnTabs extends ZincElement {
     }, 10);
 
     this.addEventListener('zn-menu-select', () => {
-      setTimeout(() => {
-        this.reRegisterTabs()
-      }, 200);
+      setTimeout(this.reRegisterTabs, 200);
     }, {passive: true});
   }
 
   _prepareTab(tabId: string) {
-    for (let i = 0; i < this._tabs.length; i++)
-      for (let i = 0; i < this._tabs.length; i++) {
-        if (this._tabs[i].getAttribute('tab') == tabId) {
-          return;
-        }
+    for (const tab of this._tabs) {
+      if (tab.getAttribute('tab') === tabId) {
+        return;
       }
+    }
 
-    const uriTabs = deepQuerySelectorAll("[tab-uri]", this, '');
-    for (let i = 0; i < uriTabs.length; i++) {
-      const uri: any = uriTabs[i].getAttribute("tab-uri");
+    for (const uriTab of deepQuerySelectorAll("[tab-uri]", this, '')) {
+      const uri: string = uriTab.getAttribute("tab-uri")!;
       const eleTabId = this._uriToId(uri);
       if (eleTabId === tabId) {
-        this._createUriPanel(uriTabs[i], uri, eleTabId);
+        this._createUriPanel(uriTab, uri, eleTabId);
         // do not break, as multiple tabs can have the same uri
       }
     }
@@ -352,13 +337,15 @@ export default class ZnTabs extends ZincElement {
     if (this._panels.has(tabId)) {
       this._panels.delete(tabId);
     }
-    for (let j = 0; j < this._tabs.length; j++) {
-      if (this._tabs[j].getAttribute('tab') == tabId) {
-        this._tabs[j].remove();
-        this._tabs.splice(j, 1);
+
+    for (const tab of this._tabs) {
+      if (tab.getAttribute('tab') === tabId) {
+        tab.remove();
+        this._tabs.splice(this._tabs.indexOf(tab), 1);
       }
     }
-    if (this._current == tabId) {
+
+    if (this._current === tabId) {
       this.setActiveTab('', true, false);
     }
   }
@@ -367,6 +354,7 @@ export default class ZnTabs extends ZincElement {
     deepQuerySelectorAll('[tab]', this, 'zn-tabs').forEach(ele => {
       this._addTab(ele as HTMLElement);
     });
+
     deepQuerySelectorAll('[tab-uri]', this, 'zn-tabs').forEach(ele => {
       if (ele.getAttribute('tab-uri') === "") {
         ele.setAttribute('tab', "");
@@ -386,13 +374,8 @@ export default class ZnTabs extends ZincElement {
   }
 
   render() {
-    const hasActionSlot = this.hasSlotController.test('actions');
-    const hasHeader = this.header && this.header.length > 0;
-    const hasCaption = this.caption && this.caption.length > 0;
-
-
     if (this._split > 0) {
-      let storeKey: any = this.storeKey;
+      let storeKey: string | null = this.storeKey;
       if (storeKey) {
         storeKey += "-split";
       }
@@ -426,15 +409,6 @@ export default class ZnTabs extends ZincElement {
     }
 
     return html`
-      ${hasHeader || hasCaption || hasActionSlot ? html`
-        <div id="header">
-          ${hasHeader ? html`<h1>${this.header}</h1>` : ''}
-          ${hasCaption ? html`<h2>${this.caption}</h2>` : ''}
-          ${hasActionSlot ? html`
-            <div id="actions">
-              <slot name="actions"></slot>
-            </div>` : ''}
-        </div>` : null}
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>

@@ -2438,14 +2438,6 @@ declare module "internal/animate" {
         offset?: number | null;
     }[];
 }
-declare module "events/zn-remove" {
-    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-remove': ZnRemoveEvent;
-        }
-    }
-}
 declare module "utilities/animation-registry" {
     export interface ElementAnimation {
         keyframes: Keyframe[];
@@ -2471,6 +2463,14 @@ declare module "utilities/animation-registry" {
     export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
     /** Gets an element's animation. Falls back to the default if no animation is found. */
     export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
+}
+declare module "events/zn-remove" {
+    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-remove': ZnRemoveEvent;
+        }
+    }
 }
 declare module "components/option/option.component" {
     import { type CSSResultGroup } from 'lit';
@@ -2536,13 +2536,14 @@ declare module "components/option/index" {
     }
 }
 declare module "components/select/select.component" {
-    import { type CSSResultGroup, TemplateResult } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import { type CSSResultGroup, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
-    import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
+    import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/select
@@ -2612,14 +2613,17 @@ declare module "components/select/select.component" {
         displayLabel: string;
         currentOption: ZnOption;
         selectedOptions: ZnOption[];
+        private valueHasChanged;
         /** The name of the select, submitted as a name/value pair with form data. */
         name: string;
+        private _value;
+        get value(): string | string[];
         /**
          * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
          * value attribute will be a space-delimited list of values based on the options selected, and the value property will
          * be an array. **For this reason, values must not contain spaces.**
          */
-        value: string | string[];
+        set value(val: string | string[]);
         /** The default value of the form control. Primarily used for resetting the form control. */
         defaultValue: string | string[];
         /** The select's size. */

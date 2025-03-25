@@ -34,12 +34,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
   });
 
-
   @property({reflect: true}) value: string;
 
   @property() name: string;
-
-  @property() caption: string;
 
   @property({attribute: 'edit-text'}) editText: string;
 
@@ -167,7 +164,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         </zn-select>`;
     }
 
-    const inlineEdit = html`
+    return html`
       <div class="${classMap({
         'ai': true,
         'ai--editing': this.isEditing,
@@ -197,15 +194,5 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                          color="secondary"></zn-button>`}
         </div>
       </div>`;
-
-
-    if (this.caption) {
-      return html`
-        <zn-description-item caption="${this.caption}">
-          ${inlineEdit}
-        </zn-description-item>`;
-    }
-
-    return inlineEdit;
   }
 }

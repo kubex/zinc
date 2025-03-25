@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-action-item></zn-action-item>
+<zn-action-item caption="Caption" description="Description" uri="#"></zn-action-item>
 ```
 
 ## Examples

@@ -15,7 +15,7 @@
   width: 100%;
 }
 
-::slotted(zn-navbar) {
+::slotted(zn-navbar:not([highlight])) {
   --zn-navbar-padding-left: var(--zn-spacing-medium);
   --zn-navbar-padding-right: var(--zn-spacing-medium);
 }
@@ -90,7 +90,7 @@ h1, h2 {
 
 :host {
 
-  slot[name="top"]::slotted(zn-navbar) {
+  slot[name="top"]::slotted(zn-navbar:not([highlight])) {
     padding-top: var(--zn-spacing-medium);
   }
 

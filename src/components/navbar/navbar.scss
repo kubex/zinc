@@ -24,17 +24,11 @@ ul {
   }
 }
 
-
-ul {
-  margin: 0;
-}
-
 :host([stacked]) {
   width: unset;
   height: 100%;
 
   ul {
-    margin: 0;
     padding: 0;
     flex-direction: column;
     gap: 0;
@@ -111,14 +105,12 @@ ul {
 
 :host {
   display: block;
-  overflow: auto;
   width: 100%;
 
   ul {
     display: flex;
     flex-basis: 100%;
     gap: 30px;
-    margin: 0;
     list-style: none;
     border-bottom: 1px solid rgb(var(--zn-border-color));
 
@@ -129,7 +121,7 @@ ul {
 
       user-select: none;
       font-weight: 500;
-      padding: 0 0 var(--zn-spacing-x-small) ;
+      padding: 0 0 var(--zn-spacing-small);
       position: relative;
 
       display: flex;
@@ -222,6 +214,12 @@ button[popovertarget] {
 }
 
 :host([highlight]) {
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+
+  &:host([dropdown]) li {
+    border-bottom: 0;
+  }
+
   ul {
     gap: 0;
     overflow: initial;
@@ -230,12 +228,8 @@ button[popovertarget] {
   li {
     padding-left: var(--zn-spacing-medium);
     padding-right: var(--zn-spacing-medium);
-
-    &:first-of-type {
-      &.active {
-        border-left: none;
-      }
-    }
+    padding-top: var(--zn-spacing-small);
+    position: relative;
 
     &:hover::before,
     &::before:not(.active):not(#dropdown-item) {
@@ -246,10 +240,13 @@ button[popovertarget] {
       border-left: 1px solid rgb(var(--zn-border-color));
       border-right: 1px solid rgb(var(--zn-border-color));
 
-      &:before {
+      &::after {
+        content: '';
+        position: absolute;
         left: 0;
         right: 0;
-        bottom: -2px;
+        bottom: -1px;
+        height: 1px;
         background-color: rgb(var(--zn-panel));
       }
     }
@@ -268,7 +265,14 @@ button[popovertarget] {
   li {
     border-bottom: 1px solid rgb(var(--zn-border-color));
     border-right: 1px solid rgb(var(--zn-border-color));
-    border-left: 0 !important;
+    border-right: 1px solid rgb(var(--zn-border-color));
+    border-left: 0;
+
+    @include wc.container-query(hd) {
+      &:first-of-type {
+        border-left: 1px solid rgb(var(--zn-border-color));
+      }
+    }
 
     &.active {
       border-bottom: 0;

@@ -87,7 +87,7 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <ul>
+      <ul class="width-container">
         ${this._preItems}
         ${this.navigation.map((item: any) => {
           let content = html`${item.title}`;

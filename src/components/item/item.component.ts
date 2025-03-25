@@ -3,7 +3,7 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {LocalizeController} from '../../utilities/localize';
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './description-item.scss';
+import styles from './item.scss';
 import {classMap} from "lit/directives/class-map.js";
 
 /**
@@ -23,7 +23,7 @@ import {classMap} from "lit/directives/class-map.js";
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnDescriptionItem extends ZincElement {
+export default class ZnItem extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   // @ts-expect-error unused property

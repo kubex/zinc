@@ -7,6 +7,7 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -51,6 +52,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
+  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
 
   protected preload = true;
@@ -412,7 +414,7 @@ export default class ZnTabs extends ZincElement {
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>
-        <div id="content">
+        <div id="content" class="${classMap({'width-container': !this.fullWidth})}">
           <slot></slot>
         </div>
         <slot name="right"></slot>

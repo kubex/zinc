@@ -125,10 +125,6 @@ export default class ZnColorSelect extends ZincElement implements ZincFormContro
     root.removeEventListener('keydown', this.handleDocumentKeyDown);
     root.removeEventListener('mousedown', this.handleDocumentMouseDown);
 
-    if (this.getRootNode() !== document) {
-      this.getRootNode().removeEventListener('focusin', this.handleDocumentFocusIn);
-    }
-
     this.closeWatcher?.destroy();
   }
 

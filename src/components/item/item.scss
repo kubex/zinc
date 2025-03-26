@@ -10,7 +10,7 @@
 .description-item {
   display: flex;
   flex-direction: row;
-  padding: var(--zn-spacing-large);
+  padding: var(--zn-spacing-medium);
 
   @include wc.container-query(null, md) {
     --zn-item-label-max-width: 200px;
@@ -25,7 +25,6 @@
     align-items: baseline;
     gap: var(--zn-spacing-small);
   }
-
 
   &__content {
     width: 100%;
@@ -57,5 +56,31 @@
     display: flex;
     gap: 10px;
     flex-direction: row;
+  }
+
+  &--stacked {
+    flex-direction: column;
+    align-items: baseline;
+    gap: var(--zn-spacing-2x-small);
+  }
+
+  &--edit-on-hover {
+    ::slotted(zn-inline-edit::part('actions')) {
+      display: none;
+    }
+
+    .description-item__actions {
+      display: none;
+    }
+
+    &:hover {
+      ::slotted(zn-inline-edit::part('actions')) {
+        display: flex;
+      }
+
+      .description-item__actions {
+        display: flex;
+      }
+    }
   }
 }

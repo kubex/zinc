@@ -137,6 +137,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   protected render() {
     const hasEditText = this.editText;
 
+    console.log('this.options', this.options);
+
     let input = html`
       <zn-input type="text"
                 class="ai__input"
@@ -178,7 +180,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
           ${input}
         </div>
 
-        <div class="ai__right">
+        <div class="ai__right" part="actions">
           ${!this.isEditing ?
             html`
               ${hasEditText ? html`

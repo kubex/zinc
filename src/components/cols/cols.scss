@@ -1,77 +1,67 @@
 @use "../../wc";
 
 :host {
-  --zn-col-basis: var(--zn-spacing-small-panel);
+  display: block;
+  --zn-col-basis: 250px;
+  --col-width: 23%;
+}
 
+.cols {
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;
   flex-shrink: 1;
   width: 100%;
   container-type: inline-size;
+  overflow: hidden;
 
-  // width: 100cqw;
   max-width: 100%;
-  --col-width: 23%;
 
-  @include wc.gap;
-}
-
-:host([mc="5"]) {
-  --col-width: 17%;
-}
-
-:host([mc="3"]) {
-  --col-width: 30%;
-}
-
-:host([mc="2"]) {
-  --col-width: 40%;
-}
-
-::slotted(.zn-col-1) {
-  flex-basis: var(--zn-col-basis);
-  min-width: var(--col-width);
-}
-
-::slotted(.zn-col-2) {
-  flex-basis: calc(var(--zn-col-basis) * 2);
-  min-width: calc(var(--col-width) * 2);
-}
-
-::slotted(.zn-col-3) {
-  flex-basis: calc(var(--zn-col-basis) * 3);
-  min-width: calc(var(--col-width) * 3);
-}
-
-:host([layout="121"]) {
-  ::slotted(.zn-col-2) {
-    order: -1;
-    min-width: 100%;
-  }
-}
-
-@include wc.container-query(hd) {
-  :host([layout="121"]) {
-    ::slotted(.zn-col-2) {
-      order: initial;
-      min-width: 46%;
+  @for $i from 1 through 12 {
+    ::slotted(.zn-col-#{$i}) {
+      flex-basis: calc(var(--zn-col-basis) * #{$i});
+      min-width: calc(var(--col-width) * #{$i});
+      flex-grow: #{$i}
     }
   }
-}
 
-::slotted(.zn-col-1) {
-  flex-grow: 1;
-}
+  &--mc-2 {
+    --col-width: 40%;
+  }
 
-::slotted(.zn-col-2) {
-  flex-grow: 2;
-}
+  &--mc-3 {
+    --col-width: 30%;
+  }
 
-::slotted(.zn-col-3) {
-  flex-grow: 3;
-}
+  &--mc-4 {
+    --col-width: 23%;
+  }
 
-::slotted(.zn-col-3) {
-  flex-grow: 4;
+  &--mc-5 {
+    --col-width: 18%;
+  }
+
+  &--layout-121 {
+    ::slotted(.zn-col-2) {
+      order: -1;
+      min-width: 100%;
+
+      @include wc.container-query(hd) {
+        order: initial;
+        min-width: 46%;
+      }
+    }
+  }
+
+  &--gap {
+    gap: var(--zn-spacing-small);
+  }
+
+  &--border {
+    ::slotted(*) {
+      border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
+      margin-bottom: -1px;
+      margin-top: 1px;
+    }
+  }
 }

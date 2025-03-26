@@ -7,7 +7,7 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="3,1">
+<zn-cols layout="2,1" gap border>
   <zn-panel>1</zn-panel>
   <zn-panel>2</zn-panel>
   <zn-panel>3</zn-panel>
@@ -22,7 +22,7 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="1,1">
+<zn-cols layout="1,1" gap>
   <zn-panel>1</zn-panel>
   <zn-panel>2</zn-panel>
   <zn-panel>3</zn-panel>
@@ -34,7 +34,7 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="1,1,1">
+<zn-cols layout="1,1,1" gap>
   <zn-panel>1</zn-panel>
   <zn-panel>2</zn-panel>
   <zn-panel>3</zn-panel>

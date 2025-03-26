@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './cols.scss';
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -26,15 +27,23 @@ export default class ZnCols extends ZincElement {
 
 
   @property({reflect: true, attribute: "layout"}) layout: string = '';
+
   @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
+
+  @property({type: Boolean}) gap: boolean = false;
+
+  @property({type: Boolean}) border: boolean = false;
 
 
   render() {
     const layout: number[] = this.layout.split(/[\s,]+/).map((a) => parseInt(a)).filter((item) => !!item);
+
     if (layout.length === 0) {
       layout.push(1, 1, 1, 1);
     }
+
     this.layout = layout.join('');
+
     this.maxColumns = Math.min(5, layout.reduce((a, b) => a + b, 0));
 
     const prefix = 'zn-col-';
@@ -47,7 +56,15 @@ export default class ZnCols extends ZincElement {
     });
 
     return html`
-      <slot></slot>
+      <div class="${classMap({
+        'cols': true,
+        'cols--gap': this.gap,
+        'cols--border': this.border,
+        [`cols--layout-${this.layout}`]: !!this.layout,
+        [`cols--mc-${this.maxColumns}`]: !!this.maxColumns,
+      })}">
+        <slot></slot>
+      </div>
     `;
   }
 }

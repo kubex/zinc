@@ -31,6 +31,11 @@ export default class ZnItem extends ZincElement {
 
   @property() caption: string;
 
+  @property({type: Boolean}) stacked: boolean;
+
+  @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
+
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -40,6 +45,8 @@ export default class ZnItem extends ZincElement {
     return html`
       <div class=${classMap({
         'description-item': true,
+        'description-item--stacked': this.stacked,
+        'description-item--edit-on-hover': this.editOnHover,
       })}>
         <div class="description-item__caption">${this.caption}</div>
         <div class="description-item__content">

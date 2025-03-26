@@ -2776,6 +2776,7 @@ declare module "components/inline-edit/inline-edit.component" {
         disabled: boolean;
         inline: boolean;
         padded: boolean;
+        size: 'small' | 'medium' | 'large';
         required: boolean;
         options: {
             [key: string]: string;
@@ -5010,7 +5011,7 @@ declare module "components/empty-dialog/index" {
     }
 }
 declare module "components/item/item.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -5037,6 +5038,7 @@ declare module "components/item/item.component" {
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         connectedCallback(): void;
+        protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

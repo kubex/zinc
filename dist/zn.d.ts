@@ -3046,6 +3046,7 @@ declare module "components/tabs/tabs.component" {
         storeKey: string;
         storeTtl: number;
         padded: boolean;
+        fullWidth: boolean;
         paddedRight: boolean;
         protected preload: boolean;
         protected _store: Store;
@@ -5033,6 +5034,7 @@ declare module "components/item/item.component" {
         private readonly localize;
         caption: string;
         stacked: boolean;
+        size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         connectedCallback(): void;
         render(): import("lit").TemplateResult<1>;

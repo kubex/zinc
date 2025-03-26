@@ -48,6 +48,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) padded: boolean
 
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+
   @property({type: Boolean}) required: boolean
 
   @property({type: Object}) options: { [key: string]: string } = {};
@@ -145,6 +147,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       <zn-input type="text"
                 class="ai__input"
                 name="${this.name}"
+                size="${this.size}"
                 value="${this.value}"
                 @click="${this.handleEditClick}"
                 .disabled="${!this.isEditing}"
@@ -157,7 +160,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         <zn-select class="ai__input"
                    name="${this.name}"
                    value="${this.value}"
-                   placeholder="${this.placeholder}"
+                   size="${this.size}"
+                   placeholder=" ${this.placeholder}"
                    @click="${this.handleEditClick}"
                    .disabled="${!this.isEditing}"
                    @zn-input="${this.handleInput}"

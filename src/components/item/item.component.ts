@@ -1,5 +1,5 @@
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import {LocalizeController} from '../../utilities/localize';
 import ZincElement from '../../internal/zinc-element';
 
@@ -40,7 +40,11 @@ export default class ZnItem extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
-    
+  }
+
+  protected updated(_changedProperties: PropertyValues) {
+    super.updated(_changedProperties);
+
     const inlineEdit = this.querySelector('zn-inline-edit');
     if (inlineEdit) {
       inlineEdit.setAttribute('size', this.size);

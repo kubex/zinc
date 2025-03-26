@@ -1084,6 +1084,8 @@ declare module "components/cols/cols.component" {
         static styles: CSSResultGroup;
         layout: string;
         maxColumns: number;
+        gap: boolean;
+        border: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -5030,6 +5032,8 @@ declare module "components/item/item.component" {
         static styles: CSSResultGroup;
         private readonly localize;
         caption: string;
+        stacked: boolean;
+        editOnHover: boolean;
         connectedCallback(): void;
         render(): import("lit").TemplateResult<1>;
     }

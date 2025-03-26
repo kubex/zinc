@@ -49,7 +49,7 @@ export default class ZnSp extends ZincElement {
         'sp--no-gap': this.noGap,
         'sp--flush': this.flush,
         'sp--flush-y': this.flushY,
-        'sp--flush-x': this.flushX
+        'sp--flush-x': this.flushX,
       })}">
         <slot></slot>
       </div>`;

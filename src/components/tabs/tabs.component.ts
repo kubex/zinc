@@ -7,7 +7,6 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.

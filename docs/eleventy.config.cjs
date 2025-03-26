@@ -28,7 +28,7 @@ module.exports = function (eleventyConfig)
   //
   // Global data
   //
-  eleventyConfig.addGlobalData('baseUrl', 'https://zinc.syle/'); // the production URL
+  eleventyConfig.addGlobalData('baseUrl', 'https://zinc.style'); // the production URL
   eleventyConfig.addGlobalData('layout', 'default'); // make 'default' the default layout
   eleventyConfig.addGlobalData('toc', true); // enable the table of contents
   eleventyConfig.addGlobalData('meta', {
@@ -58,6 +58,7 @@ module.exports = function (eleventyConfig)
   eleventyConfig.addNunjucksGlobal('rootUrl', (value = '', absolute = false) =>
   {
     value = path.join('/', value);
+    value = value.replace(/\/+$/, '');
     return absolute ? new URL(value, eleventyConfig.globalData.baseUrl).toString() : value;
   });
 
@@ -195,7 +196,7 @@ module.exports = function (eleventyConfig)
         const url = path
           .join('/', path.relative(eleventyConfig.dir.output, result.outputPath))
           .replace(/\\/g, '/') // convert backslashes to forward slashes
-          .replace(/\/index.html$/, '/'); // convert trailing /index.html to /
+          .replace(/\/index.html$/, ''); // convert trailing /index.html to /
         const doc = new JSDOM(result.content, {
           // We must set a default URL so links are parsed with a hostname. Let's use a bogus TLD so we can easily
           // identify which ones are internal and which ones are external.
@@ -242,7 +243,8 @@ module.exports = function (eleventyConfig)
   //
   eleventyConfig.setServerOptions({
     domDiff: false, // disable dom diffing so custom elements don't break on reload,
-    port:    4000 // if port 4000 is taken, 11ty will use the next one available
+    port:    4000,// if port 4000 is taken, 11ty will use the next one available
+    watch:   ['dist/**/*'] // additional files to watch that will trigger server updates (array of paths or globs)
   });
 
   //

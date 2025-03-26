@@ -50,7 +50,7 @@ async function buildTheDocs(watch = false)
     if(watch)
     {
       args.push('--watch');
-      //      args.push('--incremental');
+      args.push('--incremental');
     }
 
     const child = spawn('npx', args, {

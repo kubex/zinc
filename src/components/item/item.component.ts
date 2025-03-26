@@ -33,12 +33,18 @@ export default class ZnItem extends ZincElement {
 
   @property({type: Boolean}) stacked: boolean;
 
-  @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
+  @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
 
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
+    
+    const inlineEdit = this.querySelector('zn-inline-edit');
+    if (inlineEdit) {
+      inlineEdit.setAttribute('size', this.size);
+    }
   }
 
   render() {
@@ -47,6 +53,9 @@ export default class ZnItem extends ZincElement {
         'description-item': true,
         'description-item--stacked': this.stacked,
         'description-item--edit-on-hover': this.editOnHover,
+        'description-item--small': this.size === 'small',
+        'description-item--medium': this.size === 'medium',
+        'description-item--large': this.size === 'large',
       })}>
         <div class="description-item__caption">${this.caption}</div>
         <div class="description-item__content">

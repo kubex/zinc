@@ -32,7 +32,7 @@ export default class ZnPane extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this._header = this.querySelector("zn-header") as HTMLElement;
-
+return
     // if slotted zn-sp is present, add flush class to zn-sp
     const sp = this.querySelectorAll<ZnSp>("zn-sp") as NodeListOf<ZnSp>;
     sp.forEach((ele) => {

@@ -30,7 +30,7 @@ export default class ZnCols extends ZincElement {
 
   @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
 
-  @property({type: Boolean}) gap: boolean = false;
+  @property({attribute: "no-gap", type: Boolean}) noGap: boolean = false;
 
   @property({type: Boolean}) border: boolean = false;
 
@@ -58,7 +58,7 @@ export default class ZnCols extends ZincElement {
     return html`
       <div class="${classMap({
         'cols': true,
-        'cols--gap': this.gap,
+        'cols--no-gap': this.noGap,
         'cols--border': this.border,
         [`cols--layout-${this.layout}`]: !!this.layout,
         [`cols--mc-${this.maxColumns}`]: !!this.maxColumns,

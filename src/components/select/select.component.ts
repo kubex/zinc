@@ -253,14 +253,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 
   private addOpenListeners() {
-    document.addEventListener('focusin', this.handleDocumentFocusIn);
-    document.addEventListener('keydown', this.handleDocumentKeyDown);
-    document.addEventListener('mousedown', this.handleDocumentMouseDown);
-
-    // If the component is rendered in a shadow root, we need to attach the focusin listener there too
-    if (this.getRootNode() !== document) {
-      this.getRootNode().addEventListener('focusin', this.handleDocumentFocusIn);
-    }
+    const root = this.getRootNode();
+    root.addEventListener('focusin', this.handleDocumentFocusIn);
+    root.addEventListener('keydown', this.handleDocumentKeyDown);
+    root.addEventListener('mousedown', this.handleDocumentMouseDown);
 
     if ('CloseWatcher' in window) {
       this.closeWatcher?.destroy();
@@ -275,13 +271,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   private removeOpenListeners() {
-    document.removeEventListener('focusin', this.handleDocumentFocusIn);
-    document.removeEventListener('keydown', this.handleDocumentKeyDown);
-    document.removeEventListener('mousedown', this.handleDocumentMouseDown);
-
-    if (this.getRootNode() !== document) {
-      this.getRootNode().removeEventListener('focusin', this.handleDocumentFocusIn);
-    }
+    const root = this.getRootNode();
+    root.removeEventListener('focusin', this.handleDocumentFocusIn);
+    root.removeEventListener('keydown', this.handleDocumentKeyDown);
+    root.removeEventListener('mousedown', this.handleDocumentMouseDown);
 
     this.closeWatcher?.destroy();
   }

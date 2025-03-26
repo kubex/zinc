@@ -2771,6 +2771,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private readonly formControlController;
         value: string;
         name: string;
+        placeholder: string;
         editText: string;
         disabled: boolean;
         inline: boolean;
@@ -3045,7 +3046,6 @@ declare module "components/tabs/tabs.component" {
         storeKey: string;
         storeTtl: number;
         padded: boolean;
-        fullWidth: boolean;
         paddedRight: boolean;
         protected preload: boolean;
         protected _store: Store;

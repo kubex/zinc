@@ -65,7 +65,7 @@ export default class ZnSidebar extends ZincElement {
 
   render() {
     return html`
-      <div class="container">
+      <div class="container width-container">
         <div class="relative">
           <div id="primary-content">
             <slot></slot>

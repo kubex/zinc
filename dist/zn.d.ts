@@ -1084,7 +1084,7 @@ declare module "components/cols/cols.component" {
         static styles: CSSResultGroup;
         layout: string;
         maxColumns: number;
-        gap: boolean;
+        noGap: boolean;
         border: boolean;
         render(): import("lit").TemplateResult<1>;
     }

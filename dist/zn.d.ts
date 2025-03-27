@@ -601,21 +601,15 @@ declare module "components/absolute-container/absolute-container.component" {
     import { PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary The absolute container will take the total inner height of the content (positioned absolute), and set that
+     * as it's min height, Creating enough space to show the content.
+     *
      * @documentation https://zinc.style/components/absolute-container
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @slot - The default slot
      *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnAbsoluteContainer extends ZincElement {
         private domObserver;

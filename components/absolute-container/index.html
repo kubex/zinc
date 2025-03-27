@@ -430,14 +430,8 @@
           <ul>
             <li class="top"><a href="#">Absolute Container</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
-            <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
@@ -455,11 +449,30 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            The absolute container will take the total inner height of the content (positioned absolute), and set that
+            as it’s min height, Creating enough space to show the content.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-absolute-container></zn-absolute-container>
+              <zn-sidebar>
+                <div style="display: flex; flex-direction: column; position: relative">
+                  This is content on the outside
+                  <zn-absolute-container>
+                    <div
+                      style="
+                        background-color: var(--zn-color-amber-100);
+                        height: 400px;
+                        width: 100%;
+                        position: absolute;
+                      "
+                    >
+                      This is the content of the absoloute
+                    </div>
+                  </zn-absolute-container>
+                </div>
+              </zn-sidebar>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -468,7 +481,17 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-14">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-17"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-17">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    This is content on the outside
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-amber-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span> <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        This is the content of the absoloute
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sidebar</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-17"></zn-copy-button></pre>
               </div>
             </div>
@@ -498,14 +521,62 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
-          </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
-          </h3>
-          <p>TODO</p>
+          <p>
+            The absolute container is used to wrap absolute elements, that would otherwise cause problems with the dom.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; position: relative">
+                <zn-absolute-container>
+                  <div
+                    style="background-color: var(--zn-color-amber-100); height: 400px; width: 100%; position: absolute"
+                  >
+                    This is the content of the absoloute
+                  </div>
+                </zn-absolute-container>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-15">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-18">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-amber-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span> <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      This is the content of the absoloute
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-absolute-container</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-18"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-15"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -528,7 +599,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-18"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/absolute-container/absolute-container.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-18"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-19"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/absolute-container/absolute-container.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-19"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="JavaScript">
@@ -543,12 +614,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-19"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/absolute-container/absolute-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-19"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-20"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/absolute-container/absolute-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-20"></zn-copy-button></pre>
           </zn-accordion>
 
           <zn-accordion caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-20"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/absolute-container/absolute-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-20"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-21"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/absolute-container/absolute-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-21"></zn-copy-button></pre>
           </zn-accordion>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -564,14 +635,7 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
+                  <td>The default slot</td>
                 </tr>
               </tbody>
             </table>
@@ -580,96 +644,6 @@
           <p>
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
           </p>
-
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
-          </p>
-
-          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
-          </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

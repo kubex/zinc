@@ -1,9 +1,8 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './pane.scss';
 import {property} from "lit/decorators.js";
-import ZnSp from "../sp";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -32,18 +31,12 @@ export default class ZnPane extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this._header = this.querySelector("zn-header") as HTMLElement;
-return
-    // if slotted zn-sp is present, add flush class to zn-sp
-    const sp = this.querySelectorAll<ZnSp>("zn-sp") as NodeListOf<ZnSp>;
-    sp.forEach((ele) => {
-      ele.setAttribute("flush", "");
-    });
   }
 
   render() {
     if (this._header) {
       this.classList.add("with-header");
-      this._header.setAttribute('slot','top')
+      this._header.setAttribute('slot', 'top')
     }
 
     return html`

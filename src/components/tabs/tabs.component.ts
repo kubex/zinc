@@ -1,13 +1,15 @@
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
+import type { PropertyValues} from 'lit';
 
 import styles from './tabs.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -35,6 +37,9 @@ export default class ZnTabs extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
 
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
+
+
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
 
@@ -54,6 +59,11 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
+
+
+  // Creating a header
+  @property() caption: string;
+  @property() description: string;
 
   protected preload = true;
   protected _store: Store;
@@ -376,6 +386,11 @@ export default class ZnTabs extends ZincElement {
   }
 
   render() {
+    const hasActionSlot = this.hasSlotController.test('actions');
+    const hasCaption = this.caption && this.caption.length > 0;
+    const hasDescription = this.description && this.description.length > 0;
+    const hasHeader = hasCaption || hasActionSlot || hasDescription;
+
     if (this._split > 0) {
       let storeKey: string | null = this.storeKey;
       if (storeKey) {
@@ -411,6 +426,10 @@ export default class ZnTabs extends ZincElement {
     }
 
     return html`
+      ${hasHeader ? html`
+        <zn-header caption="${ifDefined(this.caption)}" description="${ifDefined(this.description)}">
+          <slot name="actions" slot="actions"></slot>
+        </zn-header>` : null}
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>

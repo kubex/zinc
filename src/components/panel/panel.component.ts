@@ -40,7 +40,6 @@ export default class ZnPanel extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-
     if (this.basis) {
       this.style.setProperty('--zn-panel-basis', this.basis.toString() + 'px');
     }
@@ -56,7 +55,6 @@ export default class ZnPanel extends ZincElement {
       }
     }
   }
-
 
   protected render(): unknown {
     const hasActionSlot = this.hasSlotController.test('actions');

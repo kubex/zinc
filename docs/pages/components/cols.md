@@ -7,7 +7,7 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="2,1" gap border>
+<zn-cols layout="2,1" border>
   <zn-panel>1</zn-panel>
   <zn-panel>2</zn-panel>
   <zn-panel>3</zn-panel>
@@ -22,11 +22,31 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="1,1" gap>
-  <zn-panel>1</zn-panel>
-  <zn-panel>2</zn-panel>
-  <zn-panel>3</zn-panel>
-  <zn-panel>4</zn-panel>
+<zn-cols layout="1,1" sticky>
+  <div>
+    <zn-panel style="position:sticky;">
+      <div class="box" style="height: 100px; margin: 10px 0; background: purple"></div>
+      <div class="box" style="height: 100px;"></div>
+    </zn-panel>
+  </div>
+  <div>
+    <zn-panel>
+      <div class="box" style="height: 100px;  margin: 10px 0; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+      <div class="box" style="height: 100px; background: orange"></div>
+    </zn-panel>
+  </div>
 </zn-cols>
 ```
 
@@ -34,7 +54,7 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="1,1,1" gap>
+<zn-cols layout="1,1,1">
   <zn-panel>1</zn-panel>
   <zn-panel>2</zn-panel>
   <zn-panel>3</zn-panel>

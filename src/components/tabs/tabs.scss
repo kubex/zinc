@@ -1,5 +1,4 @@
 @use "../../wc";
-@use "../../../scss/boot"; // Tabs load in such a way we need to include the global styles on them again
 
 :host, #mid, #content {
   flex: 1;
@@ -23,6 +22,11 @@
 ::slotted(zn-sp) {
   --zn-sp-padding: 0 !important
 }
+
+zn-header::part(base) {
+  border-bottom-width: 0 !important;
+}
+
 
 h1, h2 {
   padding: 0;
@@ -94,7 +98,7 @@ h1, h2 {
     padding-top: var(--zn-spacing-medium);
   }
 
-  #header ~ slot[name="top"]::slotted(zn-navbar)  {
+  #header ~ slot[name="top"]::slotted(zn-navbar) {
     padding-top: 0
   }
 
@@ -126,4 +130,8 @@ h1, h2 {
     padding: 0;
     margin: 0;
   }
+}
+
+::slotted(div[ref-tab]:not(.zn-tb-active)) {
+  display: none;
 }

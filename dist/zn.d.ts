@@ -1846,8 +1846,9 @@ declare module "components/note/note.component" {
      *
      * @event zn-event-name - Emitted as an example.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot caption - The note's caption.
+     * @slot date - The note's date.
+     * @slot body - The note's body.
      *
      * @csspart base - The component's base wrapper.
      *

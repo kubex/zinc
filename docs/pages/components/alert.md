@@ -10,9 +10,7 @@ layout: component
 ### Basic Alert
 
 ```html:preview
-<zn-alert open>
-  <zn-icon slot="icon" src="info"></sl-icon>
-  <div slot="header">This is the alert header</div>
+<zn-alert open icon="info" caption="This is the alert">
   This is the alert message. Keep it simple!
 </zn-alert>
 ```

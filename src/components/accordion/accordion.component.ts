@@ -1,5 +1,5 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './accordion.scss';
@@ -24,10 +24,10 @@ import styles from './accordion.scss';
 export default class ZnAccordion extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: String, reflect: true }) caption = '';
-  @property({ type: String, reflect: true }) summary = '';
-  @property({ type: String, reflect: true }) label = '';
-  @property({ type: Boolean, reflect: true }) expanded: boolean = false;
+  @property({reflect: true}) caption = '';
+  @property({reflect: true}) description = '';
+  @property({reflect: true}) label = '';
+  @property({type: Boolean, reflect: true}) expanded: boolean = false;
 
 
   render() {
@@ -36,10 +36,10 @@ export default class ZnAccordion extends ZincElement {
         <slot name="header" class="header" @click="${(e: MouseEvent) => this.handleCollapse(e)}">
           <div>
             <p class="caption">${this.caption}</p>
-            <p class="summary">${this.summary}</p>
+            <p class="description">${this.description}</p>
           </div>
           <div class="header__right">
-            <p class="label">${this.label}</p>
+            <slot name="label"><p class="label">${this.label}</p></slot>
             <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>
           </div>
         </slot>

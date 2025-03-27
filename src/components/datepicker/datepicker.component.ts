@@ -76,7 +76,7 @@ export default class ZnDatepicker extends ZincElement {
       </div>`;
   }
 
-  private async getOptions(): Promise<Partial<AirDatepickerOptions>> {
+  async getOptions(): Promise<Partial<AirDatepickerOptions>> {
     return {
       locale: localeEn,
       range: this.range,

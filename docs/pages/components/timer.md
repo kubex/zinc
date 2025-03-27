@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-timer></zn-timer>
+<zn-timer timestamp="1743070352"></zn-timer>
 ```
 
 ## Examples

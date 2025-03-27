@@ -6,7 +6,9 @@ layout: component
 ---
 
 ```html:preview
-<zn-collapsible></zn-collapsible>
+<zn-collapsible caption="hello">
+  Something
+</zn-collapsible>
 ```
 
 ## Examples

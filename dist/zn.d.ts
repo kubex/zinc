@@ -457,18 +457,6 @@ declare module "utilities/md5" {
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    const colors: {
-        "": string;
-        primary: string;
-        accent: string;
-        info: string;
-        warning: string;
-        error: string;
-        success: string;
-        white: string;
-        disabled: string;
-    };
-    type Color = keyof typeof colors;
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -491,13 +479,12 @@ declare module "components/icon/icon.component" {
         src: string;
         alt: string;
         size: number;
-        library: string;
         round: boolean;
-        color: Color;
+        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
         gravatarOptions: string;
         connectedCallback(): void;
         ravatarOptions(): void;
-        attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -671,44 +658,6 @@ declare module "components/accordion/index" {
         }
     }
 }
-declare module "components/action-item/action-item.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/action-item
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnActionItem extends ZincElement {
-        static styles: CSSResultGroup;
-        caption: string;
-        description: string;
-        uri: string;
-        protected render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/action-item/index" {
-    import ZnActionItem from "components/action-item/action-item.component";
-    export * from "components/action-item/action-item.component";
-    export default ZnActionItem;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-action-item': ZnActionItem;
-        }
-    }
-}
 declare module "components/alert/alert.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -747,44 +696,6 @@ declare module "components/alert/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-alert': ZnAlert;
-        }
-    }
-}
-declare module "components/avatar/avatar.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/avatar
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnAvatar extends ZincElement {
-        static styles: CSSResultGroup;
-        avatar: string;
-        getRandomColorCssVar(): string;
-        protected firstUpdated(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/avatar/index" {
-    import ZnAvatar from "components/avatar/avatar.component";
-    export * from "components/avatar/avatar.component";
-    export default ZnAvatar;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-avatar': ZnAvatar;
         }
     }
 }
@@ -2046,52 +1957,6 @@ declare module "components/chart/index" {
         }
     }
 }
-declare module "components/apex-chart/apex-chart.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/apex-chart
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnApexChart extends ZincElement {
-        static styles: CSSResultGroup;
-        type: string;
-        amount: string;
-        static get properties(): {
-            Test: {
-                type: StringConstructor;
-            };
-            myChart: {
-                type: ObjectConstructor;
-            };
-        };
-        firstUpdated(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/apex-chart/index" {
-    import ZnApexChart from "components/apex-chart/apex-chart.component";
-    export * from "components/apex-chart/apex-chart.component";
-    export default ZnApexChart;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-apex-chart': ZnApexChart;
-        }
-    }
-}
 declare module "components/data-chart/data-chart.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -2948,7 +2813,7 @@ declare module "components/interaction-tile/interaction-tile.component" {
         acceptUri: string;
         private _updateInterval;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected _getInteractionColor(): "disabled" | "warning" | "error" | "primary";
+        protected _getInteractionColor(): "disabled" | "primary" | "warning" | "error";
         protected _getInteractionIcon(): import("lit").TemplateResult<1>;
         disconnectedCallback(): void;
         protected _getStartTime(): string;
@@ -5129,9 +4994,7 @@ declare module "zinc" {
     export { default as Tooltip } from "components/tooltip/index";
     export { default as Popup } from "components/popup/index";
     export { default as Accordion } from "components/accordion/index";
-    export { default as ActionItem } from "components/action-item/index";
     export { default as Alert } from "components/alert/index";
-    export { default as Avatar } from "components/avatar/index";
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as Chip } from "components/chip/index";
     export { default as Collapsible } from "components/collapsible/index";
@@ -5151,7 +5014,6 @@ declare module "zinc" {
     export { default as ListTile } from "components/list-tile/index";
     export { default as ListTileProperty } from "components/list-tile-property/index";
     export { default as Chart } from "components/chart/index";
-    export { default as ApexChart } from "components/apex-chart/index";
     export { default as DataChart } from "components/data-chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";

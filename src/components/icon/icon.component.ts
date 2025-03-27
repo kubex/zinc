@@ -1,47 +1,12 @@
-import {property} from 'lit/decorators.js';
+import {choose} from 'lit/directives/choose.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
 import {md5} from '../../utilities/md5';
+import {property} from 'lit/decorators.js';
+import ZincElement from '../../internal/zinc-element';
+import {styleMap} from "lit/directives/style-map.js";
 
 import styles from './icon.scss';
-import {classMap} from "lit/directives/class-map.js";
-
-const Library = {
-  None: "",
-  Material: "material",
-  MaterialOutlined: "material-outlined",
-  MaterialRound: "material-round",
-  MaterialSharp: "material-sharp",
-  MaterialTwoTone: "material-two-tone",
-  MaterialSymbolOutlined: "material-symbols-outlined",
-  Gravatar: "gravatar",
-  Libravatar: "libravatar"
-};
-
-const LibraryAlias = {
-  Material: "mi",
-  MaterialOutlined: "mio",
-  MaterialRound: "mir",
-  MaterialSharp: "mis",
-  MaterialTwoTone: "mit",
-  MaterialSymbolOutlined: "mis",
-
-  Gravatar: "grav",
-};
-
-const colors = {
-  "": "",
-  "primary": "rgb(var(--zn-primary))",
-  "accent": "rgb(var(--zn-primary))",
-  "info": "rgb(var(--zn-color-info))",
-  "warning": "rgb(var(--zn-color-warning))",
-  "error": "rgb(var(--zn-color-error))",
-  "success": "rgb(var(--zn-color-success))",
-  "white": "rgb(var(--zn-body))",
-  "disabled": "rgb(var(--zn-color-disabled))",
-};
-
-type Color = keyof typeof colors;
 
 /**
  * @summary Short summary of the component's intended use.
@@ -63,165 +28,94 @@ type Color = keyof typeof colors;
 export default class ZnIcon extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({type: String, reflect: true}) src = "";
-  @property({type: String, reflect: true}) alt = "";
-  @property({type: Number, reflect: true}) size: number;
-  @property({type: String, reflect: true}) library = Library.None;
+  @property({reflect: true}) src: string;
+
+  @property({reflect: true}) alt: string;
+
+  @property({type: Number, reflect: true}) size: number = 24;
+
   @property({type: Boolean, reflect: true}) round = false;
-  @property({type: String, reflect: true}) color: Color = "";
+
+  @property({reflect: true}) library: "material" | "material-outlined" | "material-round" | "material-sharp" |
+    "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+
+  @property({reflect: true}) color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" |
+    "disabled";
 
   gravatarOptions = "";
 
   connectedCallback() {
     super.connectedCallback();
 
-    //Register the material design icon packs
+    if (this.src.includes('@')) {
+      const split = this.src.split('@');
+      if (split[1].includes('.')) {
+        this.library = "gravatar";
+      }
+
+      if (this.library === "gravatar" || this.library === "libravatar") {
+        this.ravatarOptions();
+        this.src = md5(this.src);
+      }
+    } else if (!this.library && this.src && !this.src.includes('/')) {
+      this.library = "material-symbols-outlined";
+    }
+
+    // load the material icons font if the library is set to material
     render(html`
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
 
-    if (this.src.includes(':') && !this.src.includes(':/')) {
-      const split = this.src.split(':');
-      this.src = split[0];
-      switch (split[1]) {
-        case 'round':
-          this.round = true;
-          break;
-        case 'info':
-          this.color = 'info';
-          break;
-        case 'warning':
-          this.color = 'warning';
-          break;
-        case 'error':
-          this.color = 'error';
-          break;
-        case 'success':
-          this.color = 'success';
-          break;
-        case 'primary':
-          this.color = 'primary';
-          break;
-        case 'accent':
-          this.color = 'accent';
-          break;
-      }
-    }
-
-    if (this.src.includes('@')) {
-      if (this.library == "") {
-        const split = this.src.split('@');
-        if (split[1].includes('.')) {
-          this.library = Library.Gravatar;
-        } else {
-          this.library = split[1];
-          this.src = split[0];
-        }
-      }
-
-      if (this.library == Library.Gravatar || this.library == Library.Libravatar) {
-        this.ravatarOptions();
-        this.src = md5(this.src);
-      }
-    } else if (this.library == "" && !this.src.includes('/') && this.src) {
-      this.library = Library.MaterialSymbolOutlined;
-    }
     this.ravatarOptions();
   }
 
   ravatarOptions() {
-    if ((this.library == Library.Gravatar || this.library == Library.Libravatar) && this.src.includes('#')) {
+    if ((this.library === "gravatar" || this.library === "libravatar") && this.src.includes('#')) {
       const split = this.src.split('#');
       this.gravatarOptions = "&d=" + split[1];
       this.src = split[0];
     }
   }
 
-  attributeChangedCallback(name: string, _old: string | null, value: string | null) {
-    super.attributeChangedCallback(name, _old, value);
-    if (name == "size") {
-      this.size = Number(value) - Number(value) % 4;
-      this.style.setProperty('--icon-size', this.size + "px");
-    }
-  }
-
   render() {
-    const color = colors[this.color];
-
-    let iconHtml;
-
-    switch (this.library) {
-      case Library.Material:
-      case LibraryAlias.Material:
-        iconHtml = html`<i part="icon" class="mi mi" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.MaterialOutlined:
-      case LibraryAlias.MaterialOutlined:
-        iconHtml = html`<i part="icon" class="mi mi--outlined" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.MaterialRound:
-      case LibraryAlias.MaterialRound:
-        iconHtml = html`<i part="icon" class="mi mi--round" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.MaterialSharp:
-      case LibraryAlias.MaterialSharp:
-        iconHtml = html`<i part="icon" class="mi mi--sharp" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.MaterialTwoTone:
-      case LibraryAlias.MaterialTwoTone:
-        iconHtml = html`<i part="icon" class="mi mi--two-tone" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.MaterialSymbolOutlined:
-      case LibraryAlias.MaterialSymbolOutlined:
-        iconHtml = html`<i part="icon" class="mi mi--symbol-outlined" style="--icon-color: ${color}">${this.src}</i>`;
-        break;
-      case Library.Gravatar:
-      case LibraryAlias.Gravatar:
-        iconHtml = html`<img
-          part="icon"
-          alt="${this.alt}" src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
-        break;
-      case Library.Libravatar:
-        iconHtml = html`<img
-          part="icon"
-          alt="${this.alt}"
-          src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`;
-        break;
-    }
-
-    if (iconHtml) {
-      return html`
-        <div class="icon-wrapper">
-          <div class="${classMap({
-            'icon': true,
-            'icon--round': this.round,
-          })}">
-            ${iconHtml}
-          </div>
-        </div>`;
-    }
-
-    if (this.src !== "") {
-      return html`
-        <div class="icon-wrapper">
-          <div class="${classMap({
-            'icon': true,
-            'icon--round': this.round,
-          })}">
-            <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
-                 width="${this.size}"/>
-          </div>
-        </div>`;
-    }
-
     return html`
       <div class="icon-wrapper">
         <div class="${classMap({
           'icon': true,
           'icon--round': this.round,
-        })}">
-          <slot></slot>
+          'icon--primary': this.color === "primary",
+          'icon--accent': this.color === "accent",
+          'icon--info': this.color === "info",
+          'icon--warning': this.color === "warning",
+          'icon--error': this.color === "error",
+          'icon--success': this.color === "success",
+          'icon--white': this.color === "white",
+          'icon--disabled': this.color === "disabled",
+          'icon--avatar': this.library === "avatar"
+        })}" style="${styleMap({'--icon-size': this.library === "avatar" ? "40px" : this.size + "px"})}">
+          ${this.library ? html`
+            ${choose(this.library, [
+              ["material", () => html`<i part="icon" class="mi mi">${this.src}</i>`],
+              ["material-outlined", () => html`<i part="icon" class="mi mi--outlined">${this.src}</i>`],
+              ["material-round", () => html`<i part="icon" class="mi mi--round">${this.src}</i>`],
+              ["material-sharp", () => html`<i part="icon" class="mi mi--sharp">${this.src}</i>`],
+              ["material-two-tone", () => html`<i part="icon" class="mi mi--two-tone">${this.src}</i>`],
+              ["material-symbols-outlined", () => html`<i part="icon"
+                                                          class="mi mi--symbol-outlined">${this.src}</i>`],
+              ["gravatar", () => html`<img part="icon" alt="${this.alt}"
+                                           src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
+              ["libravatar", () => html`<img part="icon" alt="${this.alt}"
+                                             src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
+              ["avatar", () => html`<span class="avatar__text">${this.src}</span>`]
+            ], () => html`Library not supported: ${this.library}`)}` : ''}
+
+          ${!this.library && this.src ? html`
+            <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
+                 width="${this.size}"/>` : ''}
+
+          ${!this.library && !this.src ? html`
+            <slot></slot>` : ''}
         </div>
       </div>`;
   }

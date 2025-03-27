@@ -6,6 +6,48 @@ layout: component
 ---
 
 ```html:preview
+
+<zn-icon src="Add"></zn-icon>
+```
+
+## Examples
+
+### Avatar
+
+```html:preview
+
+<zn-icon src="BG" library="avatar" color="primary"></zn-icon>
+<zn-icon src="BG" library="avatar" color="accent" round></zn-icon>
+```
+
+## Icon Colors
+
+```html:preview
+
+<zn-icon src="Check" color="accent" size="32"></zn-icon>
+<zn-icon src="check" color="warning" size="32"></zn-icon>
+<zn-icon src="check" color="primary" size="32"></zn-icon>
+<zn-icon src="check" color="info" size="32"></zn-icon>
+<zn-icon src="check" color="error" size="32"></zn-icon>
+<zn-icon src="check" color="disabled" size="32"></zn-icon>
+<zn-icon src="check" color="success" size="32"></zn-icon>
+<zn-icon src="check" color="white" size="32"></zn-icon>
+```
+
+## Gravatar
+
+```html:preview
+
+<zn-icon src="test1@example.com" size="32"></zn-icon>
+```
+
+## Default  icons
+
+Our icons are taken directly from Material Icons. Click or tap on any icon to copy its name, then you can use it in
+your HTML like this:
+
+```html
+
 <zn-icon src="check"></zn-icon>
 ```
 
@@ -23,17 +65,6 @@ layout: component
   <div class="icon-list"></div>
   <input type="text" class="icon-copy-input" aria-hidden="true" tabindex="-1">
 </div>
-
-## Examples
-
-### First Example
-
-TODO
-
-### Second Example
-
-TODO
-
 
 
 <!-- Supporting scripts and styles for the search utility -->

@@ -5,6 +5,7 @@ import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
+import {ifDefined} from "lit/directives/if-defined.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -75,6 +76,7 @@ export default class ZnPanel extends ZincElement {
         ${hasHeader ? html`
           <zn-header class="panel__header"
                      caption="${this.caption}"
+                     transparent="${ifDefined(this.transparent)}"
                      description="${this.description}">
             ${hasActionSlot ? html`
               <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

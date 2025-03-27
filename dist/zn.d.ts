@@ -660,7 +660,7 @@ declare module "components/accordion/accordion.component" {
     export default class ZnAccordion extends ZincElement {
         static styles: CSSResultGroup;
         caption: string;
-        summary: string;
+        description: string;
         label: string;
         expanded: boolean;
         render(): import("lit").TemplateResult<1>;
@@ -4450,6 +4450,7 @@ declare module "components/color-select/index" {
 declare module "components/datepicker/datepicker.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import { AirDatepickerOptions } from "air-datepicker";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/datepicker
@@ -4478,7 +4479,7 @@ declare module "components/datepicker/datepicker.component" {
         init(): Promise<void>;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
-        private getOptions;
+        getOptions(): Promise<Partial<AirDatepickerOptions>>;
     }
 }
 declare module "components/datepicker/index" {

@@ -4,7 +4,7 @@ $colors: (
   red: var(--zn-color-red-500),
   blue: var(--zn-color-blue-500),
   orange: var(--zn-color-orange-500),
-  yellow: var(--zn-color-yellow-500),
+  yellow: var(--zn-color-yellow-400),
   indigo: var(--zn-color-indigo-500),
   violet: var(--zn-color-violet-500),
   green: var(--zn-color-green-500),
@@ -25,6 +25,7 @@ $colors: (
   flex-wrap: nowrap;
   padding: var(--zn-spacing-medium);
   gap: var(--zn-spacing-x-small);
+  border-left: 3px solid transparent;
 
   &__header {
     display: flex;
@@ -50,7 +51,7 @@ $colors: (
 
   @each $name, $color in $colors {
     &--#{'' + $name} {
-      background-color: color-mix(in hsl, #{$color}, transparent 70%);
+      border-left: 3px solid #{$color};
     }
   }
 }

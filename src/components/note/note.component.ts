@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
+import type {Colors} from "../color-select";
 
 import styles from './note.scss';
 
@@ -25,7 +26,10 @@ import styles from './note.scss';
 export default class ZnNote extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({reflect: true}) color: 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray' | '' = '';
+  @property({reflect: true}) color: Colors;
+  @property({reflect: true}) caption: string = '';
+  @property({reflect: true}) date: string = '';
+  @property({type: HTMLElement, reflect: true}) body: string = '';
 
   protected render(): unknown {
     return html`
@@ -42,12 +46,12 @@ export default class ZnNote extends ZincElement {
         'note--gray': this.color === 'gray',
       })}">
         <div class="note__header">
-          <slot class="note__header__caption" name="caption"></slot>
-          <slot class="note__header__date" name="date"></slot>
+          <slot name="caption" class="note__header__caption">${this.caption}</slot>
+          <slot name="date" class="note__header__date">
+            <small>${this.date}</small>
+          </slot>
         </div>
-        <div class="note__body">
-          <slot></slot>
-        </div>
+        <slot name="body" class="note__body">${this.body}</slot>
       </div>
     `;
   }

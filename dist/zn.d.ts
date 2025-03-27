@@ -1740,9 +1740,102 @@ declare module "components/empty-state/index" {
         }
     }
 }
+declare module "utilities/query" {
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
+}
+declare module "components/color-select/color-select.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import { HasSlotController } from "internal/slot";
+    import ZnPopup from "components/popup/index";
+    import { FormControlController } from "internal/form";
+    export type Colors = 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray';
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/color-select
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnColorSelect extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        protected readonly hasSlotController: HasSlotController;
+        protected readonly formControlController: FormControlController;
+        private typeToSelectString;
+        private typeToSelectTimeout;
+        private closeWatcher;
+        popup: ZnPopup;
+        combobox: HTMLSlotElement;
+        displayInput: HTMLSlotElement;
+        valueInput: HTMLInputElement;
+        listbox: HTMLSlotElement;
+        name: string;
+        private hasFocus;
+        displayLabel: string;
+        currentOption: HTMLElement;
+        selectedOptions: HTMLElement[];
+        value: string | string[];
+        options: string[];
+        label: string;
+        helpText: string;
+        placeholder: string;
+        clearable: boolean;
+        disabled: boolean;
+        open: boolean;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(_: string): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private handleLabelClick;
+        private handleDocumentFocusIn;
+        private handleDocumentKeyDown;
+        private handleDocumentMouseDown;
+        private handleComboboxKeyDown;
+        private handleComboboxMouseDown;
+        private handleInvalid;
+        private handleOptionClick;
+        private getAllOptions;
+        private setCurrentOption;
+        private setSelectedOptions;
+        private selectionChanged;
+        private getFirstOption;
+        show(): Promise<void>;
+        hide(): Promise<void>;
+        handleDisabledChange(): void;
+        handleValueChange(): void;
+        handleOpenChange(): Promise<void>;
+        disconnectedCallback(): void;
+        protected render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/color-select/index" {
+    import ZnColorSelect from "components/color-select/color-select.component";
+    export * from "components/color-select/color-select.component";
+    export default ZnColorSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-color-select': ZnColorSelect;
+        }
+    }
+}
 declare module "components/note/note.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { Colors } from "components/color-select/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/note
@@ -1762,6 +1855,10 @@ declare module "components/note/note.component" {
      */
     export default class ZnNote extends ZincElement {
         static styles: CSSResultGroup;
+        color: Colors;
+        caption: string;
+        date: string;
+        body: string;
         protected render(): unknown;
     }
 }
@@ -3003,9 +3100,6 @@ declare module "components/timer/index" {
             'zn-timer': ZnTimer;
         }
     }
-}
-declare module "utilities/query" {
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup } from 'lit';
@@ -4356,94 +4450,6 @@ declare module "components/checkbox/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-checkbox': ZnCheckbox;
-        }
-    }
-}
-declare module "components/color-select/color-select.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import { HasSlotController } from "internal/slot";
-    import ZnPopup from "components/popup/index";
-    import { FormControlController } from "internal/form";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/color-select
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnColorSelect extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        protected readonly hasSlotController: HasSlotController;
-        protected readonly formControlController: FormControlController;
-        private typeToSelectString;
-        private typeToSelectTimeout;
-        private closeWatcher;
-        popup: ZnPopup;
-        combobox: HTMLSlotElement;
-        displayInput: HTMLSlotElement;
-        valueInput: HTMLInputElement;
-        listbox: HTMLSlotElement;
-        name: string;
-        private hasFocus;
-        displayLabel: string;
-        currentOption: HTMLElement;
-        selectedOptions: HTMLElement[];
-        value: string | string[];
-        options: string[];
-        label: string;
-        helpText: string;
-        placeholder: string;
-        clearable: boolean;
-        disabled: boolean;
-        open: boolean;
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(_: string): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private handleLabelClick;
-        private handleDocumentFocusIn;
-        private handleDocumentKeyDown;
-        private handleDocumentMouseDown;
-        private handleComboboxKeyDown;
-        private handleComboboxMouseDown;
-        private handleInvalid;
-        private handleOptionClick;
-        private getAllOptions;
-        private setCurrentOption;
-        private setSelectedOptions;
-        private selectionChanged;
-        private getFirstOption;
-        show(): Promise<void>;
-        hide(): Promise<void>;
-        handleDisabledChange(): void;
-        handleValueChange(): void;
-        handleOpenChange(): Promise<void>;
-        disconnectedCallback(): void;
-        protected render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/color-select/index" {
-    import ZnColorSelect from "components/color-select/color-select.component";
-    export * from "components/color-select/color-select.component";
-    export default ZnColorSelect;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-color-select': ZnColorSelect;
         }
     }
 }

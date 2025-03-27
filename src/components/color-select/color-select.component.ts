@@ -11,6 +11,8 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {waitForEvent} from "../../internal/event";
 import {classMap} from "lit/directives/class-map.js";
 
+export type Colors = 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray';
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/color-select

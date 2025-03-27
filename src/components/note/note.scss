@@ -1,51 +1,57 @@
 @use "../../wc";
 
-zn-note:first-of-type > div, :host(:first-of-type) > div {
-  border-top-width: 0 !important;
-}
-
-zn-note > div, :host > div {
-  border-width: 0;
-  border-top-width: 1px !important;
-  border-style: solid;
-  border-color: rgb(var(--zn-border-color));
-}
-
+$colors: (
+  red: var(--zn-color-red-500),
+  blue: var(--zn-color-blue-500),
+  orange: var(--zn-color-orange-500),
+  yellow: var(--zn-color-yellow-400),
+  indigo: var(--zn-color-indigo-500),
+  violet: var(--zn-color-violet-500),
+  green: var(--zn-color-green-500),
+  pink: var(--zn-color-pink-500),
+  gray: var(--zn-color-gray-500)
+);
 
 :host {
-  > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex-wrap: nowrap;
-    padding-top: var(--zn-spacing-large);
-    padding-bottom: var(--zn-spacing-large);
-    gap: var(--zn-spacing-x-small);
-  }
+  display: block;
 }
 
-zn-note, :host {
-  .header {
+.note {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  padding: var(--zn-spacing-medium);
+  gap: var(--zn-spacing-x-small);
+  border-left: 3px solid transparent;
+
+  &__header {
     display: flex;
     justify-content: space-between;
 
-    .caption {
-      font-weight: 600;
-      font-size: 16px;
+    &__caption {
+      font-weight: var(--zn-font-weight-semibold);
+      font-size: var(--zn-font-size-medium);
       color: rgb(var(--zn-text-heading));
     }
 
-    .date {
-      font-size: 90%;
+    &__date {
+      font-size: var(--zn-font-size-small);
     }
   }
 
-  .body {
+  &__body {
     display: flex;
     flex-direction: column;
     gap: var(--zn-spacing-small);
     max-width: var(--zn-container-md);
+  }
+
+  @each $name, $color in $colors {
+    &--#{'' + $name} {
+      border-left: 3px solid #{$color};
+    }
   }
 }

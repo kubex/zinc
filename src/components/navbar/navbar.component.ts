@@ -1,6 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import type {PropertyValues} from 'lit';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
@@ -87,7 +86,10 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <ul class="width-container">
+      <ul class="${classMap({
+        'navbar': true,
+        'width-container': !this.fullWidth,
+      })}">
         ${this._preItems}
         ${this.navigation.map((item: any) => {
           let content = html`${item.title}`;

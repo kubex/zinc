@@ -7,6 +7,6 @@ ZnChart.define('zn-chart');
 
 declare global {
   interface HTMLElementTagNameMap {
-    'zn-chart': ZnChart;
+    'zn-data-chart': ZnChart;
   }
 }

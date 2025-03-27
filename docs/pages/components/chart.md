@@ -1,12 +1,17 @@
 ---
 meta:
-  title: Chart
+  title: Data Chart
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-chart></zn-chart>
+<zn-chart 
+  type="area" 
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;]" 
+  data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,45,50,49,60,70,91,125]}]" 
+  height="300">
+</zn-chart>
 ```
 
 ## Examples

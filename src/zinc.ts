@@ -4,7 +4,7 @@ export {default as Icon} from './components/icon';
 export {default as AbsoluteContainer} from './components/absolute-container';
 export {default as Tooltip} from './components/tooltip';
 export {default as Popup} from './components/popup';
-export {default as Accordion} from './components/accordion';
+export {default as Collapsible} from './components/collapsible';
 export {default as Alert} from './components/alert';
 export {default as ButtonGroup} from './components/button-group';
 export {default as Chip} from './components/chip';

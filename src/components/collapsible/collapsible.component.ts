@@ -1,13 +1,13 @@
 import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-
-import styles from './accordion.scss';
 import {Store} from "../../internal/storage";
+
+import styles from './collapsible.scss';
 
 /**
  * @summary Short summary of the component's intended use.
- * @documentation https://zinc.style/components/accordion
+ * @documentation https://zinc.style/components/collapsible
  * @status experimental
  * @since 1.0
  *
@@ -22,7 +22,7 @@ import {Store} from "../../internal/storage";
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnAccordion extends ZincElement {
+export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({reflect: true}) caption = '';
@@ -45,7 +45,7 @@ export default class ZnAccordion extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znaccord:", this.storeTtl);
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zncla:", this.storeTtl);
     this.expanded = this.defaultState === 'open';
 
     if (this.storeKey) {
@@ -68,7 +68,7 @@ export default class ZnAccordion extends ZincElement {
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
         <slot name="header" class="header" @click="${this.handleCollapse}">
           <div>
-            <p class="caption">${this.caption}</p>
+            <p class="caption"><slot name="caption">${this.caption}</slot></p>
             <p class="description">${this.description}</p>
           </div>
           <div class="header__right">

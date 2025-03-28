@@ -1,14 +1,14 @@
 ---
 meta:
-  title: Accordion
+  title: Collapsible
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-accordion caption="This is the caption" label="label">
+<zn-collapsible caption="This is the caption" label="label">
   Boo <zn-icon src="android"></zn-icon>
-</zn-accordion>
+</zn-collapsible>
 ```
 
 ## Examples

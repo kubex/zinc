@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './accordion.scss';
+import {Store} from "../../internal/storage";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,15 +26,47 @@ export default class ZnAccordion extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({reflect: true}) caption = '';
+
   @property({reflect: true}) description = '';
+
   @property({reflect: true}) label = '';
+
   @property({type: Boolean, reflect: true}) expanded: boolean = false;
 
+  @property({attribute: 'default'}) defaultState: 'open' | 'closed';
+
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+
+  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
+
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+
+  protected _store: Store;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znaccord:", this.storeTtl);
+    this.expanded = this.defaultState === 'open';
+
+    if (this.storeKey) {
+      const hasPref = this._store.get(this.storeKey);
+      if (hasPref) {
+        this.expanded = hasPref === "true";
+      }
+    }
+  }
+
+  handleCollapse = (e: MouseEvent) => {
+    if (this.expanded) {
+      this.expanded = false;
+      e.stopPropagation();
+    }
+  }
 
   render() {
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
-        <slot name="header" class="header" @click="${(e: MouseEvent) => this.handleCollapse(e)}">
+        <slot name="header" class="header" @click="${this.handleCollapse}">
           <div>
             <p class="caption">${this.caption}</p>
             <p class="description">${this.description}</p>
@@ -44,17 +77,8 @@ export default class ZnAccordion extends ZincElement {
           </div>
         </slot>
         <div class="content">
-          <slot @slotchange="${(e: any) => (e.target.assignedNodes().length === 0)}">
-
-          </slot>
+          <slot></slot>
         </div>
       </div>`;
-  }
-
-  handleCollapse(e: any) {
-    if (this.expanded) {
-      this.expanded = false;
-      e.stopPropagation();
-    }
   }
 }

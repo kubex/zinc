@@ -632,13 +632,13 @@ declare module "internal/storage" {
         cleanup(): void;
     }
 }
-declare module "components/accordion/accordion.component" {
+declare module "components/collapsible/collapsible.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     import { Store } from "internal/storage";
     /**
      * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/accordion
+     * @documentation https://zinc.style/components/collapsible
      * @status experimental
      * @since 1.0
      *
@@ -653,7 +653,7 @@ declare module "components/accordion/accordion.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnAccordion extends ZincElement {
+    export default class ZnCollapsible extends ZincElement {
         static styles: CSSResultGroup;
         caption: string;
         description: string;
@@ -669,13 +669,13 @@ declare module "components/accordion/accordion.component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/accordion/index" {
-    import ZnAccordion from "components/accordion/accordion.component";
-    export * from "components/accordion/accordion.component";
-    export default ZnAccordion;
+declare module "components/collapsible/index" {
+    import ZnCollapsible from "components/collapsible/collapsible.component";
+    export * from "components/collapsible/collapsible.component";
+    export default ZnCollapsible;
     global {
         interface HTMLElementTagNameMap {
-            'zn-accordion': ZnAccordion;
+            'zn-accordion': ZnCollapsible;
         }
     }
 }
@@ -1557,14 +1557,9 @@ declare module "components/empty-state/index" {
         }
     }
 }
-declare module "utilities/query" {
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
-}
 declare module "components/color-select/color-select.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import { HasSlotController } from "internal/slot";
-    import ZnPopup from "components/popup/index";
     import { FormControlController } from "internal/form";
     export type Colors = 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray';
     /**
@@ -1586,56 +1581,16 @@ declare module "components/color-select/color-select.component" {
      */
     export default class ZnColorSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        protected readonly hasSlotController: HasSlotController;
         protected readonly formControlController: FormControlController;
-        private typeToSelectString;
-        private typeToSelectTimeout;
-        private closeWatcher;
-        popup: ZnPopup;
-        combobox: HTMLSlotElement;
-        displayInput: HTMLSlotElement;
-        valueInput: HTMLInputElement;
-        listbox: HTMLSlotElement;
         name: string;
-        private hasFocus;
-        displayLabel: string;
-        currentOption: HTMLElement;
-        selectedOptions: HTMLElement[];
-        value: string | string[];
-        options: string[];
-        label: string;
-        helpText: string;
-        placeholder: string;
-        clearable: boolean;
-        disabled: boolean;
-        open: boolean;
+        value: string;
+        select: HTMLSelectElement;
         get validationMessage(): string;
         get validity(): ValidityState;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
-        setCustomValidity(_: string): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private handleLabelClick;
-        private handleDocumentFocusIn;
-        private handleDocumentKeyDown;
-        private handleDocumentMouseDown;
-        private handleComboboxKeyDown;
-        private handleComboboxMouseDown;
-        private handleInvalid;
-        private handleOptionClick;
-        private getAllOptions;
-        private setCurrentOption;
-        private setSelectedOptions;
-        private selectionChanged;
-        private getFirstOption;
-        show(): Promise<void>;
-        hide(): Promise<void>;
-        handleDisabledChange(): void;
-        handleValueChange(): void;
-        handleOpenChange(): Promise<void>;
-        disconnectedCallback(): void;
+        setCustomValidity(message: string): void;
         protected render(): import("lit").TemplateResult<1>;
     }
 }
@@ -2744,6 +2699,9 @@ declare module "components/timer/index" {
             'zn-timer': ZnTimer;
         }
     }
+}
+declare module "utilities/query" {
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup } from 'lit';
@@ -4704,7 +4662,7 @@ declare module "zinc" {
     export { default as AbsoluteContainer } from "components/absolute-container/index";
     export { default as Tooltip } from "components/tooltip/index";
     export { default as Popup } from "components/popup/index";
-    export { default as Accordion } from "components/accordion/index";
+    export { default as Collapsible } from "components/collapsible/index";
     export { default as Alert } from "components/alert/index";
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as Chip } from "components/chip/index";

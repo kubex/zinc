@@ -1420,52 +1420,109 @@
           "members": [
             {
               "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'area' | 'bar' | 'line'"
+              },
+              "default": "'bar'",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
               "name": "data",
               "type": {
                 "text": "any[]"
               },
-              "privacy": "public",
-              "attribute": "data",
-              "reflects": true
+              "default": "[]",
+              "attribute": "data"
             },
             {
               "kind": "field",
-              "name": "labels",
+              "name": "categories",
               "type": {
-                "text": "any[]"
+                "text": "string | string[]"
               },
-              "privacy": "public",
-              "attribute": "labels",
-              "reflects": true
+              "default": "''",
+              "attribute": "categories"
             },
             {
               "kind": "field",
-              "name": "type",
+              "name": "xAxis",
               "type": {
                 "text": "string"
               },
-              "privacy": "public",
-              "default": "'line'",
-              "attribute": "type",
+              "attribute": "xAxis"
+            },
+            {
+              "kind": "field",
+              "name": "datapointSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "d-size"
+            },
+            {
+              "kind": "field",
+              "name": "live",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "live"
+            },
+            {
+              "kind": "field",
+              "name": "dataUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "data-url"
+            },
+            {
+              "kind": "field",
+              "name": "liveInterval",
+              "type": {
+                "text": "number"
+              },
+              "default": "1000",
+              "attribute": "live-interval"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "attribute": "height",
               "reflects": true
             },
             {
               "kind": "field",
-              "name": "Test",
-              "privacy": "public",
+              "name": "enableAnimations",
               "type": {
-                "text": "string"
+                "text": "boolean"
               },
-              "attribute": "Test"
+              "default": "false",
+              "attribute": "enable-animations"
             },
             {
               "kind": "field",
-              "name": "myChart",
-              "privacy": "public",
+              "name": "yAxisAppend",
               "type": {
-                "text": "object"
+                "text": "string"
               },
-              "attribute": "myChart"
+              "attribute": "y-axis-append"
+            },
+            {
+              "kind": "field",
+              "name": "chart",
+              "type": {
+                "text": "ApexCharts"
+              },
+              "privacy": "private"
             }
           ],
           "events": [
@@ -1476,40 +1533,90 @@
           ],
           "attributes": [
             {
+              "name": "type",
+              "type": {
+                "text": "'area' | 'bar' | 'line'"
+              },
+              "default": "'bar'",
+              "fieldName": "type"
+            },
+            {
               "name": "data",
               "type": {
                 "text": "any[]"
               },
+              "default": "[]",
               "fieldName": "data"
             },
             {
-              "name": "labels",
+              "name": "categories",
               "type": {
-                "text": "any[]"
+                "text": "string | string[]"
               },
-              "fieldName": "labels"
+              "default": "''",
+              "fieldName": "categories"
             },
             {
-              "name": "type",
+              "name": "xAxis",
               "type": {
                 "text": "string"
               },
-              "default": "'line'",
-              "fieldName": "type"
+              "fieldName": "xAxis"
             },
             {
-              "name": "Test",
+              "name": "d-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "datapointSize"
+            },
+            {
+              "name": "live",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "live"
+            },
+            {
+              "name": "data-url",
               "type": {
                 "text": "string"
               },
-              "fieldName": "Test"
+              "default": "''",
+              "fieldName": "dataUrl"
             },
             {
-              "name": "myChart",
+              "name": "live-interval",
               "type": {
-                "text": "object"
+                "text": "number"
               },
-              "fieldName": "myChart"
+              "default": "1000",
+              "fieldName": "liveInterval"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "number"
+              },
+              "default": "300",
+              "fieldName": "height"
+            },
+            {
+              "name": "enable-animations",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "enableAnimations"
+            },
+            {
+              "name": "y-axis-append",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "yAxisAppend"
             }
           ],
           "superclass": {
@@ -1520,8 +1627,8 @@
           "tagNameWithoutPrefix": "chart",
           "tagName": "zn-chart",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/chart\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/chart",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-chart\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/data-chart",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
@@ -1536,190 +1643,6 @@
           "declaration": {
             "name": "ZnChart",
             "module": "components/chart/chart.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/chat-message/chat-message.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnChatMessage",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "sender",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "sender"
-            },
-            {
-              "kind": "field",
-              "name": "message",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "message"
-            },
-            {
-              "kind": "field",
-              "name": "time",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "time"
-            },
-            {
-              "kind": "field",
-              "name": "actionType",
-              "type": {
-                "text": "'' | 'connected.agent' | 'attachment.added' |\n    'multi.answer' | 'transfer' | 'ended' | \"error\" | 'message-sending' | 'customer.ended' |\n    'customer.connected' | 'customer.disconnected'"
-              },
-              "default": "''",
-              "attribute": "action-type"
-            },
-            {
-              "kind": "field",
-              "name": "customerInitiated",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"0\"",
-              "attribute": "customer-initiated",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "_displayMessage",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getSentTime",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_displayMultiAnswer",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_prepareMessageContent",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getAuthor",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getTime",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "sender",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "sender"
-            },
-            {
-              "name": "message",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "message"
-            },
-            {
-              "name": "time",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "time"
-            },
-            {
-              "name": "action-type",
-              "type": {
-                "text": "'' | 'connected.agent' | 'attachment.added' |\n    'multi.answer' | 'transfer' | 'ended' | \"error\" | 'message-sending' | 'customer.ended' |\n    'customer.connected' | 'customer.disconnected'"
-              },
-              "default": "''",
-              "fieldName": "actionType"
-            },
-            {
-              "name": "customer-initiated",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"0\"",
-              "fieldName": "customerInitiated"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "chat-message",
-          "tagName": "zn-chat-message",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/chat-message",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnChatMessage",
-            "module": "components/chat-message/chat-message.js"
           }
         }
       ]
@@ -4382,266 +4305,6 @@
           "declaration": {
             "name": "ZnCopyButton",
             "module": "components/copy-button/copy-button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/data-chart/data-chart.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataChart",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "'area' | 'bar' | 'line'"
-              },
-              "default": "'bar'",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "data",
-              "type": {
-                "text": "any[]"
-              },
-              "default": "[]",
-              "attribute": "data"
-            },
-            {
-              "kind": "field",
-              "name": "categories",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "attribute": "categories"
-            },
-            {
-              "kind": "field",
-              "name": "xAxis",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "xAxis"
-            },
-            {
-              "kind": "field",
-              "name": "datapointSize",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "d-size"
-            },
-            {
-              "kind": "field",
-              "name": "live",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "live"
-            },
-            {
-              "kind": "field",
-              "name": "dataUrl",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "data-url"
-            },
-            {
-              "kind": "field",
-              "name": "liveInterval",
-              "type": {
-                "text": "number"
-              },
-              "default": "1000",
-              "attribute": "live-interval"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "default": "300",
-              "attribute": "height",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "enableAnimations",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "enable-animations"
-            },
-            {
-              "kind": "field",
-              "name": "yAxisAppend",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "y-axis-append"
-            },
-            {
-              "kind": "field",
-              "name": "chart",
-              "type": {
-                "text": "ApexCharts"
-              },
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "type",
-              "type": {
-                "text": "'area' | 'bar' | 'line'"
-              },
-              "default": "'bar'",
-              "fieldName": "type"
-            },
-            {
-              "name": "data",
-              "type": {
-                "text": "any[]"
-              },
-              "default": "[]",
-              "fieldName": "data"
-            },
-            {
-              "name": "categories",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "fieldName": "categories"
-            },
-            {
-              "name": "xAxis",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "xAxis"
-            },
-            {
-              "name": "d-size",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "datapointSize"
-            },
-            {
-              "name": "live",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "live"
-            },
-            {
-              "name": "data-url",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "dataUrl"
-            },
-            {
-              "name": "live-interval",
-              "type": {
-                "text": "number"
-              },
-              "default": "1000",
-              "fieldName": "liveInterval"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "number"
-              },
-              "default": "300",
-              "fieldName": "height"
-            },
-            {
-              "name": "enable-animations",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "enableAnimations"
-            },
-            {
-              "name": "y-axis-append",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "yAxisAppend"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "data-chart",
-          "tagName": "zn-data-chart",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-chart\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/data-chart",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataChart",
-            "module": "components/data-chart/data-chart.js"
           }
         }
       ]

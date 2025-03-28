@@ -1556,56 +1556,6 @@ declare module "components/defined-label/index" {
         }
     }
 }
-declare module "components/chat-message/clean-message" {
-    export function cleanHTML(message: string): string;
-}
-declare module "components/chat-message/chat-message.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/chat-message
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnChatMessage extends ZincElement {
-        static styles: CSSResultGroup;
-        sender: string;
-        message: string;
-        time: string;
-        actionType: '' | 'connected.agent' | 'attachment.added' | 'multi.answer' | 'transfer' | 'ended' | "error" | 'message-sending' | 'customer.ended' | 'customer.connected' | 'customer.disconnected';
-        customerInitiated: string;
-        connectedCallback(): void;
-        render(): import("lit").TemplateResult<1>;
-        private _displayMessage;
-        private _getSentTime;
-        private _displayMultiAnswer;
-        private _prepareMessageContent;
-        private _getAuthor;
-        private _getTime;
-    }
-}
-declare module "components/chat-message/index" {
-    import ZnChatMessage from "components/chat-message/chat-message.component";
-    export * from "components/chat-message/chat-message.component";
-    export default ZnChatMessage;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-chat-message': ZnChatMessage;
-        }
-    }
-}
 declare module "components/empty-state/empty-state.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -1902,62 +1852,7 @@ declare module "components/list-tile-property/index" {
         }
     }
 }
-declare module "components/chart/html-legend-plugin" {
-    export const htmlLegendPlugin: {
-        id: string;
-        afterUpdate(chart: any, _args: any, options: any): void;
-    };
-}
 declare module "components/chart/chart.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/chart
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnChart extends ZincElement {
-        static styles: CSSResultGroup;
-        data: any[];
-        labels: any[];
-        type: string;
-        constructor();
-        static get properties(): {
-            Test: {
-                type: StringConstructor;
-            };
-            myChart: {
-                type: ObjectConstructor;
-            };
-        };
-        connectedCallback(): void;
-        firstUpdated(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/chart/index" {
-    import ZnChart from "components/chart/chart.component";
-    export * from "components/chart/chart.component";
-    export default ZnChart;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-chart': ZnChart;
-        }
-    }
-}
-declare module "components/data-chart/data-chart.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
@@ -1977,7 +1872,7 @@ declare module "components/data-chart/data-chart.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnDataChart extends ZincElement {
+    export default class ZnChart extends ZincElement {
         static styles: CSSResultGroup;
         type: 'area' | 'bar' | 'line';
         data: any[];
@@ -1996,13 +1891,13 @@ declare module "components/data-chart/data-chart.component" {
         protected render(): unknown;
     }
 }
-declare module "components/data-chart/index" {
-    import ZnDataChart from "components/data-chart/data-chart.component";
-    export * from "components/data-chart/data-chart.component";
-    export default ZnDataChart;
+declare module "components/chart/index" {
+    import ZnChart from "components/chart/chart.component";
+    export * from "components/chart/chart.component";
+    export default ZnChart;
     global {
         interface HTMLElementTagNameMap {
-            'zn-data-chart': ZnDataChart;
+            'zn-data-chart': ZnChart;
         }
     }
 }
@@ -5007,14 +4902,12 @@ declare module "zinc" {
     export { default as Menu } from "components/menu/index";
     export { default as MenuItem } from "components/menu-item/index";
     export { default as DefinedLabel } from "components/defined-label/index";
-    export { default as ChatMessage } from "components/chat-message/index";
     export { default as EmptyState } from "components/empty-state/index";
     export { default as Note } from "components/note/index";
     export { default as Tile } from "components/tile/index";
     export { default as ListTile } from "components/list-tile/index";
     export { default as ListTileProperty } from "components/list-tile-property/index";
-    export { default as Chart } from "components/chart/index";
-    export { default as DataChart } from "components/data-chart/index";
+    export { default as DataChart } from "components/chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";
     export { default as Navbar } from "components/navbar/index";

@@ -374,14 +374,38 @@
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
-            { "name": "data", "value": { "type": "any[]" } },
-            { "name": "labels", "value": { "type": "any[]" } },
             {
               "name": "type",
-              "value": { "type": "string", "default": "'line'" }
+              "value": { "type": "'area' | 'bar' | 'line'", "default": "'bar'" }
             },
-            { "name": "Test", "value": { "type": "string" } },
-            { "name": "myChart", "value": { "type": "object" } }
+            { "name": "data", "value": { "type": "any[]", "default": "[]" } },
+            {
+              "name": "categories",
+              "value": { "type": "string | string[]", "default": "''" }
+            },
+            { "name": "xAxis", "value": { "type": "string" } },
+            { "name": "d-size", "value": { "type": "number", "default": "1" } },
+            {
+              "name": "live",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "data-url",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "live-interval",
+              "value": { "type": "number", "default": "1000" }
+            },
+            {
+              "name": "height",
+              "value": { "type": "number", "default": "300" }
+            },
+            {
+              "name": "enable-animations",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "y-axis-append", "value": { "type": "string" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -392,63 +416,17 @@
           ],
           "js": {
             "properties": [
+              { "name": "type", "type": "'area' | 'bar' | 'line'" },
               { "name": "data", "type": "any[]" },
-              { "name": "labels", "type": "any[]" },
-              { "name": "type", "type": "string" },
-              { "name": "Test", "type": "string" },
-              { "name": "myChart", "type": "object" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-chat-message",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "sender",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "message",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "time", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "action-type",
-              "value": {
-                "type": "'' | 'connected.agent' | 'attachment.added' |\n    'multi.answer' | 'transfer' | 'ended' | \"error\" | 'message-sending' | 'customer.ended' |\n    'customer.connected' | 'customer.disconnected'",
-                "default": "''"
-              }
-            },
-            {
-              "name": "customer-initiated",
-              "value": { "type": "string", "default": "\"0\"" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "sender", "type": "string" },
-              { "name": "message", "type": "string" },
-              { "name": "time", "type": "string" },
-              {
-                "name": "actionType",
-                "type": "'' | 'connected.agent' | 'attachment.added' |\n    'multi.answer' | 'transfer' | 'ended' | \"error\" | 'message-sending' | 'customer.ended' |\n    'customer.connected' | 'customer.disconnected'"
-              },
-              { "name": "customerInitiated", "type": "string" }
+              { "name": "categories", "type": "string | string[]" },
+              { "name": "xAxis", "type": "string" },
+              { "name": "datapointSize", "type": "number" },
+              { "name": "live", "type": "boolean" },
+              { "name": "dataUrl", "type": "string" },
+              { "name": "liveInterval", "type": "number" },
+              { "name": "height", "type": "number" },
+              { "name": "enableAnimations", "type": "boolean" },
+              { "name": "yAxisAppend", "type": "string" }
             ],
             "events": [
               {
@@ -1244,73 +1222,6 @@
               { "name": "value", "type": "string" },
               { "name": "copyLabel", "type": "string" },
               { "name": "src", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-data-chart",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "type",
-              "value": { "type": "'area' | 'bar' | 'line'", "default": "'bar'" }
-            },
-            { "name": "data", "value": { "type": "any[]", "default": "[]" } },
-            {
-              "name": "categories",
-              "value": { "type": "string | string[]", "default": "''" }
-            },
-            { "name": "xAxis", "value": { "type": "string" } },
-            { "name": "d-size", "value": { "type": "number", "default": "1" } },
-            {
-              "name": "live",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "data-url",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "live-interval",
-              "value": { "type": "number", "default": "1000" }
-            },
-            {
-              "name": "height",
-              "value": { "type": "number", "default": "300" }
-            },
-            {
-              "name": "enable-animations",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "y-axis-append", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "type", "type": "'area' | 'bar' | 'line'" },
-              { "name": "data", "type": "any[]" },
-              { "name": "categories", "type": "string | string[]" },
-              { "name": "xAxis", "type": "string" },
-              { "name": "datapointSize", "type": "number" },
-              { "name": "live", "type": "boolean" },
-              { "name": "dataUrl", "type": "string" },
-              { "name": "liveInterval", "type": "number" },
-              { "name": "height", "type": "number" },
-              { "name": "enableAnimations", "type": "boolean" },
-              { "name": "yAxisAppend", "type": "string" }
             ],
             "events": [
               {

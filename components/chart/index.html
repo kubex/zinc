@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>Chart</title>
+    <title>Data Chart</title>
 
     <meta name="turbo-cache-control" />
 
@@ -13,7 +13,7 @@
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
     <meta property="og:url" content="https://zinc.style/components/chart" />
-    <meta property="og:title" content="Chart" />
+    <meta property="og:title" content="Data Chart" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -155,10 +155,6 @@
               </li>
 
               <li>
-                <a href="/components/chat-message"> Chat Message </a>
-              </li>
-
-              <li>
                 <a href="/components/checkbox"> Checkbox </a>
               </li>
 
@@ -192,10 +188,6 @@
 
               <li>
                 <a href="/components/copy-button"> Copy Button </a>
-              </li>
-
-              <li>
-                <a href="/components/data-chart"> Data Chart </a>
               </li>
 
               <li>
@@ -416,7 +408,7 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Chart</a></li>
+            <li class="top"><a href="#">Data Chart</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#first-example">First Example</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
@@ -447,7 +439,13 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chart></zn-chart>
+              <zn-chart
+                type="area"
+                categories='["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]'
+                data='[{"name":"Series 1","data":[30,40,45,50,49,60,70,91,125]}]'
+                height="300"
+              >
+              </zn-chart>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -456,7 +454,12 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-30">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-52"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-52"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> 
+  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span> 
+  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>May<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jun<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jul<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Aug<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sep<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span> 
+  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Series 1<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,45,50,49,60,70,91,125]}]<span class="token punctuation">"</span></span> 
+  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-52"></zn-copy-button></pre>
               </div>
             </div>

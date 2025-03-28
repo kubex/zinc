@@ -1591,6 +1591,8 @@ declare module "components/color-select/color-select.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
+        handleValueChange(): Promise<void>;
+        handleInput: (e: Event) => void;
         protected render(): import("lit").TemplateResult<1>;
     }
 }

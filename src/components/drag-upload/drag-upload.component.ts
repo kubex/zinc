@@ -1,9 +1,9 @@
-import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
+import {FormControlController} from "../../internal/form";
+import {property, query} from 'lit/decorators.js';
+import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './drag-upload.scss';
-import ZnButton from "../button";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -22,111 +22,90 @@ import ZnButton from "../button";
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnDragUpload extends ZincElement {
+export default class ZnDragUpload extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({reflect: true}) text: string;
-  @property({reflect: true}) types: string;
-  @property({reflect: true}) size: string;
+  private readonly formControlController = new FormControlController(this)
 
-  private internals: ElementInternals;
-  private value: string;
+  @property({reflect: true}) caption: string;
 
-  constructor() {
-    super();
-    this.internals = this.attachInternals();
+  @property({reflect: true}) types: string = 'image/*,application/pdf';
+
+  @property({reflect: true}) size: string = '10'; // MB
+
+  @property() name: string = "";
+
+  @property({reflect: true}) value: File | null;
+
+  @query('#fileUpload') uploadInput: HTMLInputElement;
+
+  /** Gets the validity state object */
+  get validity() {
+    return this.uploadInput.validity;
   }
 
-  _updateInternals() {
-    this.internals.setFormValue(this.value);
-    this.internals.setValidity({});
+  /** Gets the validation message */
+  get validationMessage() {
+    return this.uploadInput.validationMessage;
   }
 
-  static get formAssociated() {
-    return true;
+  /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+  checkValidity(): boolean {
+    return this.uploadInput.checkValidity();
+  }
+
+  /** Gets the associated form, if one exists. */
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
+  reportValidity() {
+    return this.uploadInput.reportValidity();
+  }
+
+  /** Sets a custom validation message. Pass an empty string to restore validity. */
+  setCustomValidity(message: string) {
+    this.uploadInput.setCustomValidity(message);
+    this.formControlController.updateValidity();
   }
 
   getHumanTypes() {
-    return this.types.split(',').map((type) => {
-      return type.replace('image/', '').toUpperCase();
-    }).join(', ');
+    return this.types.split(',').join(', ');
   }
 
   render() {
     return html`
       <div id="drag-upload">
         <div id="info">
-          <p>${this.text}</p>
+          <p>${this.caption}</p>
           <p>(${this.getHumanTypes()}) up to (${this.size}MB)</p>
+          ${this.value ? html`<p>${this.value.name}</p>
+          <zn-button icon="close" color="transparent" @click="${this.handleClearValue}"></zn-button>` : ''}
         </div>
         <input type="file" id="fileUpload" accept="${this.types}" size="${this.size}"
                @change="${this.handleUpload}">
         <label for="fileUpload">Upload</label>
+        ${this.value ? html`
+          <zn-button type="submit" icon="upload" color="default" size="small"></zn-button>` : ''}
       </div>`;
   }
 
-  handleUpload(e: any) {
+  handleClearValue = (e: MouseEvent) => {
+    this.value = null;
+    e.preventDefault();
+  }
+
+  handleUpload = (e: Event & { target: HTMLInputElement }) => {
+    if (!e.target.files) return;
     const file = e.target.files[0];
     this.value = file;
+
     const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const data = e.target.result;
+    reader.onload = (onloadEvent: ProgressEvent<FileReader>) => {
+      const data = onloadEvent.target?.result;
       this.dispatchEvent(new CustomEvent('file-uploaded', {detail: {file, data}}));
     };
     reader.readAsDataURL(file);
-
-    // Edit the #drag-upload #info text to show the file name
-    const info: any = this.shadowRoot?.getElementById('info');
-    info.innerHTML = `<p>${file.name}</p>`;
-    info.classList.add('flex');
-    info.style.gap = '1rem';
-    info.style.alignItems = 'center';
-
-    // add a cancel button
-    const cancel: ZnButton = document.createElement('zn-button');
-    cancel.setAttribute('icon', 'close');
-    cancel.setAttribute('color', 'transparent');
-    cancel.addEventListener('click', () => {
-      info.innerHTML = '';
-      info.classList.remove('flex');
-      info.style.gap = '';
-      info.style.alignItems = '';
-      info.innerHTML = `<p>${this.text}</p><p>(${this.getHumanTypes()}) up to (${this.size}MB)</p>`;
-
-      const input = this.shadowRoot?.getElementById('fileUpload') as HTMLInputElement;
-      input.value = '';
-
-      // show the upload button
-      const upload = this.shadowRoot?.querySelector("label[for='fileUpload']") as HTMLElement;
-      upload.style.display = 'block';
-
-      // remove the submit button
-      const submit = this.shadowRoot?.querySelector('zn-button[type="submit"]') as HTMLElement;
-      if (submit) {
-        submit.remove();
-      }
-    });
-
-    info.appendChild(cancel);
-
-    // hide the upload button
-    const upload = this.shadowRoot?.querySelector("label[for='fileUpload']") as HTMLElement;
-    upload.style.display = 'none';
-
-    // add submit button
-    const submit = document.createElement('zn-button');
-    submit.setAttribute('icon', 'upload');
-    submit.setAttribute('color', 'primary');
-    submit.setAttribute('size', 'small');
-    submit.setAttribute('type', 'submit');
-
-    submit.addEventListener('click', () => {
-      const form = this.closest('form');
-      if (form) {
-        form.requestSubmit();
-      }
-    });
-
-    upload.insertAdjacentElement('afterend', submit);
   }
 }

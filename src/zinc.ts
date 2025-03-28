@@ -27,7 +27,6 @@ export {default as SimpleChart} from './components/simple-chart';
 export {default as Header} from './components/header';
 export {default as Navbar} from './components/navbar';
 export {default as InlineEdit} from './components/inline-edit';
-export {default as InteractionTile} from './components/interaction-tile';
 export {default as Pagination} from './components/pagination';
 export {default as VerticalStepper} from './components/vertical-stepper';
 export {default as Timer} from './components/timer';

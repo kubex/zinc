@@ -16,6 +16,62 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-accordion",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "description",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "expanded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "default", "value": { "type": "'open' | 'closed'" } },
+            { "name": "local-storage", "value": { "type": "boolean" } },
+            {
+              "name": "store-key",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "label", "type": "string" },
+              { "name": "expanded", "type": "boolean" },
+              { "name": "defaultState", "type": "'open' | 'closed'" },
+              { "name": "localStorage", "type": "boolean" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "handleCollapse" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -61,47 +117,6 @@
                 "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-accordion",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "description",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "label", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "expanded",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "label", "type": "string" },
-              { "name": "expanded", "type": "boolean" }
             ],
             "events": [
               {
@@ -829,48 +844,6 @@
                 "name": "type",
                 "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'"
               }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-collapsible",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "open", "value": { "type": "boolean" } },
-            { "name": "default", "value": { "type": "string" } },
-            { "name": "local-storage", "value": { "type": "Boolean" } },
-            {
-              "name": "store-key",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "store-ttl",
-              "value": { "type": "number", "default": "0" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "open", "type": "boolean" },
-              { "name": "defaultState", "type": "string" },
-              { "name": "localStorage", "type": "Boolean" },
-              { "name": "storeKey", "type": "string" },
-              { "name": "storeTtl", "type": "number" }
             ],
             "events": [
               {

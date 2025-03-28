@@ -618,9 +618,24 @@ declare module "components/absolute-container/index" {
         }
     }
 }
+declare module "internal/storage" {
+    export class Store {
+        storage: Storage;
+        prefix: string;
+        ttl: number;
+        constructor(storage: Storage, prefix: string, ttl?: number);
+        get(key: string): null | string;
+        stripTtl(value: string | null): null | string;
+        setWithTTL(key: string, value: string, ttl: number): void;
+        set(key: string, value: string): void;
+        remove(key: string): void;
+        cleanup(): void;
+    }
+}
 declare module "components/accordion/accordion.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import { Store } from "internal/storage";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/accordion
@@ -644,8 +659,14 @@ declare module "components/accordion/accordion.component" {
         description: string;
         label: string;
         expanded: boolean;
+        defaultState: 'open' | 'closed';
+        localStorage: boolean;
+        storeKey: string;
+        storeTtl: number;
+        protected _store: Store;
+        connectedCallback(): void;
+        handleCollapse: (e: MouseEvent) => void;
         render(): import("lit").TemplateResult<1>;
-        handleCollapse(e: any): void;
     }
 }
 declare module "components/accordion/index" {
@@ -775,65 +796,6 @@ declare module "components/chip/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-chip': ZnChip;
-        }
-    }
-}
-declare module "internal/storage" {
-    export class Store {
-        storage: Storage;
-        prefix: string;
-        ttl: number;
-        constructor(storage: Storage, prefix: string, ttl?: number);
-        get(key: string): null | string;
-        stripTtl(value: string | null): null | string;
-        setWithTTL(key: string, value: string, ttl: number): void;
-        set(key: string, value: string): void;
-        remove(key: string): void;
-        cleanup(): void;
-    }
-}
-declare module "components/collapsible/collapsible.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import { Store } from "internal/storage";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/collapsible
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnCollapsible extends ZincElement {
-        static styles: CSSResultGroup;
-        caption: string;
-        open: boolean;
-        defaultState: string;
-        localStorage: Boolean;
-        storeKey: string;
-        storeTtl: number;
-        protected _store: Store;
-        connectedCallback(): void;
-        toggle(): void;
-        protected render(): unknown;
-    }
-}
-declare module "components/collapsible/index" {
-    import ZnCollapsible from "components/collapsible/collapsible.component";
-    export * from "components/collapsible/collapsible.component";
-    export default ZnCollapsible;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-collapsible': ZnCollapsible;
         }
     }
 }
@@ -4843,7 +4805,6 @@ declare module "zinc" {
     export { default as Alert } from "components/alert/index";
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as Chip } from "components/chip/index";
-    export { default as Collapsible } from "components/collapsible/index";
     export { default as CopyButton } from "components/copy-button/index";
     export { default as DataTable } from "components/data-table/index";
     export { default as Cols } from "components/cols/index";

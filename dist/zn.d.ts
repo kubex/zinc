@@ -4663,45 +4663,6 @@ declare module "components/checkbox-group/index" {
         }
     }
 }
-declare module "components/empty-dialog/empty-dialog.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-    * @summary Short summary of the component's intended use.
-    * @documentation https://zinc.style/components/empty-dialog
-    * @status experimental
-    * @since 1.0
-    *
-    * @dependency zn-example
-    *
-    * @event zn-event-name - Emitted as an example.
-    *
-    * @slot - The default slot.
-    * @slot example - An example slot.
-    *
-    * @csspart base - The component's base wrapper.
-    *
-    * @cssproperty --example - An example CSS custom property.
-    */
-    export default class ZnEmptyDialog extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly localize;
-        /** An example attribute. */
-        attr: string;
-        handleExampleChange(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/empty-dialog/index" {
-    import ZnEmptyDialog from "components/empty-dialog/empty-dialog.component";
-    export * from "components/empty-dialog/empty-dialog.component";
-    export default ZnEmptyDialog;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-empty-dialog': ZnEmptyDialog;
-        }
-    }
-}
 declare module "components/item/item.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -4874,8 +4835,7 @@ declare module "zinc" {
     export { default as RadioGroup } from "components/radio-group/index";
     export { default as DragUpload } from "components/drag-upload/index";
     export { default as CheckboxGroup } from "components/checkbox-group/index";
-    export { default as EmptyDialog } from "components/empty-dialog/index";
-    export { default as DescriptionItem } from "components/item/index";
+    export { default as Item } from "components/item/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

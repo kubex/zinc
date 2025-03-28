@@ -20,6 +20,7 @@ export interface QueryBuilderItem {
   type?: QueryBuilderType;
   options?: QueryBuilderOptions;
   operators: QueryBuilderOperators[];
+  maxOptionsVisible?: string;
 }
 
 export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
@@ -306,6 +307,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
             newInput.classList.add('query-builder__value');
             newInput.setAttribute('name', 'value');
             newInput.setAttribute('multiple', 'true');
+            if (!isUndefined(filter.maxOptionsVisible)) {
+              newInput.setAttribute('max-options-visible', filter.maxOptionsVisible);
+            }
             newInput.setAttribute('clearable', 'true');
             newInput.addEventListener('zn-change', (e: ZnChangeEvent) => this.updateInValue(uniqueId, e));
 
@@ -372,6 +376,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
           input = document.createElement('zn-select') as ZnSelect;
           input.setAttribute('name', 'value');
           input.setAttribute('multiple', 'true');
+          if (!isUndefined(filter.maxOptionsVisible)) {
+            input.setAttribute('max-options-visible', filter.maxOptionsVisible);
+          }
           input.setAttribute('clearable', 'true');
           input.setAttribute('selectedItems', JSON.stringify(filter.options));
           const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;

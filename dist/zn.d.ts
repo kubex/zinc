@@ -2553,6 +2553,8 @@ declare module "components/inline-edit/inline-edit.component" {
         options: {
             [key: string]: string;
         };
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;

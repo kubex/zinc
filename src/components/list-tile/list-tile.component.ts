@@ -1,7 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
-import {html, literal} from "lit/static-html.js";
+import {html} from "lit/static-html.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -30,20 +30,37 @@ export default class ZnListTile extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, '[default]');
 
-  @property({attribute: 'caption', reflect: true}) caption: string;
-  @property({attribute: 'description', reflect: true}) description: string;
-  @property({attribute: 'href', reflect: true}) href: string;
-  @property({attribute: 'data-target', reflect: true}) dataTarget: string;
+  @property({attribute: 'caption'}) caption: string;
+  @property({attribute: 'description'}) description: string;
+  @property({attribute: 'link'}) href: string;
+  @property({attribute: 'data-target'}) dataTarget: string;
+
+  private clickHandler = (e: MouseEvent) => {
+    e.preventDefault();
+
+    if (e.target && (e.target as HTMLElement).tagName === 'ZN-BUTTON') {
+      console.log('button clicked');
+      return;
+    }
+
+    this.dispatchEvent(new CustomEvent('zn-click', {bubbles: true, composed: true}));
+
+    const anchor = this.shadowRoot?.querySelector<HTMLAnchorElement>('#anchor-trigger');
+    if (anchor) {
+      anchor.click();
+    }
+  }
 
   render() {
-    const tag = this.href ? literal`a` : literal`div`;
     return html`
-      <${tag}
-        href="${ifDefined(this.href)}"
+      ${this.href ? html`<a id="anchor-trigger" href="${this.href}" style="display: none"></a>` : ''}
+      <div
+        @click="${this.href ? this.clickHandler : undefined}"
         data-target="${ifDefined(this.dataTarget)}"
         class="${classMap({
           tile: true,
-          'tile--has-image': this.hasSlotController.test('image')
+          'tile--has-image': this.hasSlotController.test('image'),
+          'tile--has-href': this.href
         })}">
         <div class="tile__left">
           <slot name="image" part="image" class="tile__image"></slot>
@@ -56,6 +73,6 @@ export default class ZnListTile extends ZincElement {
           <slot name="properties" part="properties" class="tile__properties"></slot>
           <slot name="actions" part="actions" class="tile__actions"></slot>
         </div>
-      </${tag}>`;
+      </div>`;
   }
 }

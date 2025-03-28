@@ -1722,6 +1722,7 @@ declare module "components/list-tile/list-tile.component" {
         description: string;
         href: string;
         dataTarget: string;
+        private clickHandler;
         render(): import("lit").TemplateResult;
     }
 }

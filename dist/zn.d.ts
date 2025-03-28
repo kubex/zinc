@@ -4509,7 +4509,7 @@ declare module "components/radio-group/index" {
 }
 declare module "components/drag-upload/drag-upload.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
+    import ZincElement, { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/drag-upload
@@ -4527,19 +4527,33 @@ declare module "components/drag-upload/drag-upload.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnDragUpload extends ZincElement {
+    export default class ZnDragUpload extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        text: string;
+        private readonly formControlController;
+        caption: string;
         types: string;
         size: string;
-        private internals;
-        private value;
-        constructor();
-        _updateInternals(): void;
-        static get formAssociated(): boolean;
+        name: string;
+        value: File | null;
+        uploadInput: HTMLInputElement;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
         getHumanTypes(): string;
         render(): import("lit").TemplateResult<1>;
-        handleUpload(e: any): void;
+        handleClearValue: (e: MouseEvent) => void;
+        handleUpload: (e: Event & {
+            target: HTMLInputElement;
+        }) => void;
     }
 }
 declare module "components/drag-upload/index" {

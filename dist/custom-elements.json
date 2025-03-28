@@ -61,6 +61,164 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/alert/alert.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnAlert",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "collapse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "collapse"
+            },
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
+              },
+              "default": "'info'",
+              "attribute": "level"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "attribute": "size"
+            },
+            {
+              "kind": "method",
+              "name": "hideAlert",
+              "privacy": "public"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "collapse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "collapse"
+            },
+            {
+              "name": "level",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
+              },
+              "default": "'info'",
+              "fieldName": "level"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "alert",
+          "tagName": "zn-alert",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/alert\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/alert",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnAlert",
+            "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/accordion/accordion.js",
       "declarations": [
         {
@@ -274,164 +432,6 @@
           "declaration": {
             "name": "ZnAccordion",
             "module": "components/accordion/accordion.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/alert/alert.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnAlert",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "collapse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "collapse"
-            },
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
-              },
-              "default": "'info'",
-              "attribute": "level"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "attribute": "size"
-            },
-            {
-              "kind": "method",
-              "name": "hideAlert",
-              "privacy": "public"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "collapse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "collapse"
-            },
-            {
-              "name": "level",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
-              },
-              "default": "'info'",
-              "fieldName": "level"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "alert",
-          "tagName": "zn-alert",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/alert\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/alert",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnAlert",
-            "module": "components/alert/alert.js"
           }
         }
       ]
@@ -5231,11 +5231,18 @@
           "members": [
             {
               "kind": "field",
-              "name": "text",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
               "type": {
                 "text": "string"
               },
-              "attribute": "text",
+              "attribute": "caption",
               "reflects": true
             },
             {
@@ -5244,6 +5251,7 @@
               "type": {
                 "text": "string"
               },
+              "default": "'image/*,application/pdf'",
               "attribute": "types",
               "reflects": true
             },
@@ -5253,59 +5261,99 @@
               "type": {
                 "text": "string"
               },
+              "default": "'10'",
               "attribute": "size",
               "reflects": true
             },
             {
               "kind": "field",
-              "name": "internals",
+              "name": "name",
               "type": {
-                "text": "ElementInternals"
+                "text": "string"
               },
-              "privacy": "private"
+              "default": "\"\"",
+              "attribute": "name"
             },
             {
               "kind": "field",
               "name": "value",
               "type": {
-                "text": "string"
+                "text": "File | null"
               },
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_updateInternals"
+              "attribute": "value",
+              "reflects": true
             },
             {
               "kind": "field",
-              "name": "formAssociated",
-              "static": true,
+              "name": "uploadInput",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "description": "Gets the validity state object",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
             },
             {
               "kind": "method",
               "name": "getHumanTypes"
             },
             {
-              "kind": "method",
-              "name": "handleUpload",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "handleClearValue"
+            },
+            {
+              "kind": "field",
+              "name": "handleUpload"
             }
           ],
           "events": [
-            {
-              "name": "file-uploaded",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
             {
               "description": "Emitted as an example.",
               "name": "zn-event-name"
@@ -5313,17 +5361,18 @@
           ],
           "attributes": [
             {
-              "name": "text",
+              "name": "caption",
               "type": {
                 "text": "string"
               },
-              "fieldName": "text"
+              "fieldName": "caption"
             },
             {
               "name": "types",
               "type": {
                 "text": "string"
               },
+              "default": "'image/*,application/pdf'",
               "fieldName": "types"
             },
             {
@@ -5331,7 +5380,23 @@
               "type": {
                 "text": "string"
               },
+              "default": "'10'",
               "fieldName": "size"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "File | null"
+              },
+              "fieldName": "value"
             }
           ],
           "superclass": {

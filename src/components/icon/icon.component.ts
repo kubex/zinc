@@ -107,7 +107,7 @@ export default class ZnIcon extends ZincElement {
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
               ["libravatar", () => html`<img part="icon" alt="${this.alt}"
                                              src="https://seccdn.libravatar.org/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
-              ["avatar", () => html`<span class="avatar__text">${this.src}</span>`]
+              ["avatar", () => html`<span class="avatar__text">${this.getAvatarInitials(this.src)}</span>`]
             ], () => html`Library not supported: ${this.library}`)}` : ''}
 
           ${!this.library && this.src ? html`
@@ -118,5 +118,14 @@ export default class ZnIcon extends ZincElement {
             <slot></slot>` : ''}
         </div>
       </div>`;
+  }
+
+  private getAvatarInitials(avatar: string) {
+    const words = avatar.split(' ');
+    if (words.length > 1) {
+      return words.map(word => word.charAt(0)).join('').toUpperCase();
+    } else {
+      return avatar.slice(0, 2).toUpperCase();
+    }
   }
 }

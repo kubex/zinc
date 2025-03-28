@@ -126,15 +126,16 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   render() {
     return html`
       <div class="query-builder">
-        <select class="add-rule" @change="${this._addRule}">
-          <option value="">Select Filter</option>
-          ${repeat(this.filters,
-            (item) => item.id,
-            (item) => html`
-              <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`
-          )}
-        </select>
-        <input id="main-input" name="${this.name}" value="${this.value}" type="hidden">
+        <zn-select class="add-rule"
+                   size="medium"
+                   placeholder="Select Filter"
+                   @click="${this._addRule}">
+          ${this.filters.map(item => html`
+            <zn-option value="${item.id}">
+              ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+            </zn-option>`)}
+        </zn-select>
+        <input id="main-input" name="${this.name}" value="${this.value}" hidden>
       </div>
     `;
   }

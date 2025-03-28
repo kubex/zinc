@@ -4,6 +4,7 @@ import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 import styles from './color-select.scss';
 import {FormControlController} from "../../internal/form";
 import {property, query} from "lit/decorators.js";
+import {watch} from "../../internal/watch";
 
 export type Colors = 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray';
 
@@ -51,7 +52,6 @@ export default class ZnColorSelect extends ZincElement implements ZincFormContro
     return this.formControlController.getForm();
   }
 
-
   reportValidity(): boolean {
     return this.select.reportValidity();
   }
@@ -60,12 +60,25 @@ export default class ZnColorSelect extends ZincElement implements ZincFormContro
     return this.select.setCustomValidity(message);
   }
 
+  @watch('value', {waitUntilFirstUpdate: true})
+  async handleValueChange() {
+    await this.updateComplete;
+    this.formControlController.updateValidity();
+  }
+
+  handleInput = (e: Event) => {
+    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+  };
 
   protected render() {
     const colors: Colors[] = ['red', 'blue', 'orange', 'yellow', 'indigo', 'violet', 'green', 'pink', 'gray'];
 
     return html`
-      <zn-select id="select" name="${this.name}" value="${this.value}" placeholder="Choose a color">
+      <zn-select id="select"
+                 name="${this.name}"
+                 @zn-input="${this.handleInput}"
+                 value="${this.value}"
+                 placeholder="Choose a color">
         ${colors.map(color => html`
           <zn-option class="select__option" value="${color}">
             <div slot="prefix" class="color-icon color-icon--${color.toLowerCase()}"></div>

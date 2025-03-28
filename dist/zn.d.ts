@@ -4687,55 +4687,6 @@ declare module "components/checkbox-group/index" {
         }
     }
 }
-declare module "components/confirm-content/confirm-content.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import { Dialog } from "zinc";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/confirm-content
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnConfirmContent extends Dialog {
-        static get styles(): CSSResultGroup;
-        caption: string;
-        content: string;
-        action: string;
-        confirmText: string;
-        cancelText: string;
-        hideIcon: boolean;
-        type: 'warning' | 'error' | 'success' | 'info';
-        size: 'small' | 'medium' | 'large';
-        private _hasVisibleInput;
-        getIcon(): import("lit").TemplateResult<1>;
-        connectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
-        closeModal(): void;
-        submitDialog(): void;
-    }
-}
-declare module "components/confirm-content/index" {
-    import ZnConfirmContent from "components/confirm-content/confirm-content.component";
-    export * from "components/confirm-content/confirm-content.component";
-    export default ZnConfirmContent;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-confirm-content': ZnConfirmContent;
-        }
-    }
-}
 declare module "components/empty-dialog/empty-dialog.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -4948,7 +4899,6 @@ declare module "zinc" {
     export { default as RadioGroup } from "components/radio-group/index";
     export { default as DragUpload } from "components/drag-upload/index";
     export { default as CheckboxGroup } from "components/checkbox-group/index";
-    export { default as ConfirmContent } from "components/confirm-content/index";
     export { default as EmptyDialog } from "components/empty-dialog/index";
     export { default as DescriptionItem } from "components/item/index";
     export * from "events/events";

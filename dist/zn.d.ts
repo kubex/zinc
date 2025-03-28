@@ -486,6 +486,7 @@ declare module "components/icon/icon.component" {
         connectedCallback(): void;
         ravatarOptions(): void;
         render(): import("lit").TemplateResult<1>;
+        private getAvatarInitials;
     }
 }
 declare module "components/icon/index" {

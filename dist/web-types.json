@@ -16,61 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-alert",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "icon", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "collapse",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "level",
-              "value": {
-                "type": "'primary' | 'error' | 'info' | 'success' | 'warning'",
-                "default": "'info'"
-              }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "icon", "type": "string" },
-              { "name": "caption", "type": "string" },
-              { "name": "collapse", "type": "boolean" },
-              {
-                "name": "level",
-                "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
-              },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-accordion",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -117,6 +62,61 @@
               { "name": "storeKey", "type": "string" },
               { "name": "storeTtl", "type": "number" },
               { "name": "handleCollapse" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-alert",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "icon", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "collapse",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "level",
+              "value": {
+                "type": "'primary' | 'error' | 'info' | 'success' | 'warning'",
+                "default": "'info'"
+              }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "icon", "type": "string" },
+              { "name": "caption", "type": "string" },
+              { "name": "collapse", "type": "boolean" },
+              {
+                "name": "level",
+                "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
+              },
+              { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
             "events": [
               {
@@ -2347,91 +2347,6 @@
               {
                 "name": "zn-invalid",
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-interaction-tile",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "type", "value": { "type": "string" } },
-            {
-              "name": "interaction-status",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "status",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "last-message",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "last-message-count",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "last-message-time",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "start-time",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "reserved-until",
-              "value": { "type": "number", "default": "0" }
-            },
-            { "name": "brand", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "brand-icon",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "department",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "queue", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "accept-uri",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "type" },
-              { "name": "interactionStatus", "type": "string" },
-              { "name": "status", "type": "string" },
-              { "name": "caption", "type": "string" },
-              { "name": "lastMessage", "type": "string" },
-              { "name": "lastMessageCount", "type": "number" },
-              { "name": "lastMessageTime", "type": "number" },
-              { "name": "startTime", "type": "number" },
-              { "name": "reservedUntil", "type": "number" },
-              { "name": "brand", "type": "string" },
-              { "name": "brandIcon", "type": "string" },
-              { "name": "department", "type": "string" },
-              { "name": "queue", "type": "string" },
-              { "name": "acceptUri", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }

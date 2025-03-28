@@ -2626,78 +2626,6 @@ declare module "components/inline-edit/index" {
         }
     }
 }
-declare module "components/interaction-tile/interaction-tile.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export enum InteractionType {
-        chat = "chat",
-        ticket = "ticket",
-        voice = "voice",
-        unknown = "unknown"
-    }
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/interaction-tile
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnInteractionTile extends ZincElement {
-        static styles: CSSResultGroup;
-        type: InteractionType;
-        interactionStatus: string;
-        status: string;
-        caption: string;
-        lastMessage: string;
-        lastMessageCount: number;
-        lastMessageTime: number;
-        startTime: number;
-        reservedUntil: number;
-        brand: string;
-        brandIcon: string;
-        department: string;
-        queue: string;
-        acceptUri: string;
-        private _updateInterval;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected _getInteractionColor(): "disabled" | "primary" | "warning" | "error";
-        protected _getInteractionIcon(): import("lit").TemplateResult<1>;
-        disconnectedCallback(): void;
-        protected _getStartTime(): string;
-        protected _getStatusBar(): import("lit").TemplateResult<1>;
-        protected _getDepartmentAndQueue(): import("lit").TemplateResult<1>;
-        protected _getWaitingResponseTime(): number;
-        protected _startInterval(): void;
-        protected _clearStartInterval(): void;
-        protected _waitingResponseContent(): import("lit").TemplateResult<1> | undefined;
-        protected render(): unknown;
-        protected _getAcceptButton(): import("lit").TemplateResult<1>;
-        protected _getInteractionAcceptIcon(): "chat" | "mail" | "call" | "support_agent";
-        protected _getReservedHtml(): import("lit").TemplateResult<1> | undefined;
-        protected _getBrandHtml(): import("lit").TemplateResult<1> | undefined;
-        protected _maskCaption(str: string): string;
-    }
-}
-declare module "components/interaction-tile/index" {
-    import ZnInteractionTile from "components/interaction-tile/interaction-tile.component";
-    export * from "components/interaction-tile/interaction-tile.component";
-    export default ZnInteractionTile;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-interaction-tile': ZnInteractionTile;
-        }
-    }
-}
 declare module "components/pagination/pagination.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -4799,7 +4727,6 @@ declare module "zinc" {
     export { default as Header } from "components/header/index";
     export { default as Navbar } from "components/navbar/index";
     export { default as InlineEdit } from "components/inline-edit/index";
-    export { default as InteractionTile } from "components/interaction-tile/index";
     export { default as Pagination } from "components/pagination/index";
     export { default as VerticalStepper } from "components/vertical-stepper/index";
     export { default as Timer } from "components/timer/index";

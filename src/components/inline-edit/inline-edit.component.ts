@@ -9,6 +9,7 @@ import {defaultValue} from "../../internal/default-value";
 import ZnInput from "../input";
 import ZnSelect from "../select";
 import {watch} from "../../internal/watch";
+import {ifDefined} from "lit/directives/if-defined.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -53,6 +54,10 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @property({type: Boolean}) required: boolean
 
   @property({type: Object}) options: { [key: string]: string } = {};
+
+  /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+  @property({attribute: 'help-text'}) helpText: string = '';
+
 
   @state() private hasFocus: boolean;
 
@@ -149,6 +154,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 name="${this.name}"
                 size="${this.size}"
                 value="${this.value}"
+                help-text="${ifDefined(this.helpText)}"
                 @click="${this.handleEditClick}"
                 .disabled="${!this.isEditing}"
                 @zn-input="${this.handleInput}"
@@ -160,6 +166,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         <zn-select class="ai__input"
                    name="${this.name}"
                    value="${this.value}"
+                   help-text="${ifDefined(this.helpText)}"
                    size="${this.size}"
                    placeholder=" ${this.placeholder}"
                    @click="${this.handleEditClick}"

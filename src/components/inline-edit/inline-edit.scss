@@ -11,7 +11,6 @@
   display: flex;
   width: 100%;
   flex-direction: row;
-  align-items: center;
   gap: 10px;
 
   &:not(.ai--editing) {
@@ -29,6 +28,10 @@
     }
 
     .ai__input::part(expand-icon) {
+      display: none;
+    }
+
+    .ai__input::part(form-control-help-text) {
       display: none;
     }
   }

@@ -49,26 +49,30 @@ export default class ZnTile extends ZincElement {
     const tag = isLink ? literal`a` : literal`div`;
 
     return html`
-      <${tag}
-        href="${ifDefined(this.href)}"
-        data-uri="${ifDefined(this.dataUri)}"
-        data-target="${ifDefined(this.dataTarget)}"
+      <div
         class="${classMap({
           tile: true,
           'tile--has-image': this.hasSlotController.test('image'),
           'tile--has-href': isLink
         })}">
-        <div class="tile__left">
-          <slot name="image" part="image" class="tile__image"></slot>
-          <div class="tile__content">
-            <p part="caption" class="tile__caption">${this.caption}</p>
-            <p part="description" class="tile__description">${this.description}</p>
+        <${tag}
+          href="${ifDefined(this.href)}"
+          data-uri="${ifDefined(this.dataUri)}"
+          data-target="${ifDefined(this.dataTarget)}"
+          class="tile__link">
+          <div class="tile__left">
+            <slot name="image" part="image" class="tile__image"></slot>
+            <div class="tile__content">
+              <p part="caption" class="tile__caption">${this.caption}</p>
+              <p part="description" class="tile__description">${this.description}</p>
+            </div>
           </div>
-        </div>
+        </${tag}>
+
         <div class="tile__right">
           <slot name="properties" part="properties" class="tile__properties"></slot>
           <slot name="actions" part="actions" class="tile__actions"></slot>
         </div>
-      </${tag}>`;
+      </div>`;
   }
 }

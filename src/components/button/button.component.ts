@@ -152,17 +152,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   protected render(): unknown {
     const isLink = this._isLink();
-    const defaultSizes: any = {
-      'x-small': '14',
-      'small': '18',
-      'medium': '20',
-      'large': '30'
-    };
-
-    const iconSize = this.iconSize !== undefined ? this.iconSize : defaultSizes[this.size];
 
     const icon = this.icon ? html`
-      <zn-icon src="${this.icon}" id="xy2" size="${iconSize}"></zn-icon>` : '';
+      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"></zn-icon>` : '';
 
     const tag = isLink ? literal`a` : literal`button`;
 
@@ -197,8 +189,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}
         gaid=${ifDefined(this.gaid)}
-        @click=${this.handleClick}
-      >
+        @click=${this.handleClick}>
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label" class="button__label">${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}

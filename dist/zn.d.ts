@@ -2569,9 +2569,11 @@ declare module "components/inline-edit/inline-edit.component" {
         setCustomValidity(message: string): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        firstUpdated(): Promise<void>;
         handleValueChange(): Promise<void>;
+        handleIsEditingChange(): Promise<void>;
         escKeyHandler: (e: KeyboardEvent) => void;
-        handleEditClick: (e: MouseEvent) => void;
+        handleEditClick: () => void;
         handleSubmitClick: (e: MouseEvent) => void;
         handleCancelClick: (e: MouseEvent) => void;
         handleBlur: () => void;

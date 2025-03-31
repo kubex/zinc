@@ -60,9 +60,13 @@ export default class ZnMenuItem extends ZincElement {
 
   // Link Specific
   @property() href: string;
+
   @property({attribute: "data-path"}) dataPath: string;
+
   @property() target: '_self' | '_blank' | '_parent' | '_top' | string;
+
   @property({attribute: 'data-target'}) dataTarget: 'modal' | 'slide' | string;
+
   @property() rel: string = 'noreferrer noopener';
 
   private readonly localize = new LocalizeController(this);

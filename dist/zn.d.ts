@@ -2608,6 +2608,8 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
     export default class ZnVerticalStepper extends ZincElement {
         static styles: CSSResultGroup;
         last: boolean;
+        first: boolean;
+        active: boolean;
         description: string;
         caption: string;
         render(): import("lit").TemplateResult<1>;

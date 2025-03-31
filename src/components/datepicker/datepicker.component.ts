@@ -1,9 +1,8 @@
-import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
-import AirDatepicker, {AirDatepickerOptions} from "air-datepicker";
-import localeEn from 'air-datepicker/locale/en';
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
+import AirDatepicker, {type AirDatepickerLocale} from "air-datepicker";
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './datepicker.scss';
 
@@ -28,13 +27,15 @@ export default class ZnDatepicker extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({attribute: 'id', reflect: true}) id: string;
+
   @property({attribute: 'name', reflect: true}) name: string;
+
   @property({type: Boolean}) range = false;
 
   private _instance: AirDatepicker<HTMLInputElement>;
   _inputElement: HTMLInputElement;
 
-  async initialiseDatepicker() {
+  initialiseDatepicker() {
     if (this._instance) {
       if (Object.prototype.hasOwnProperty.call(this._instance, 'destroy')) {
         this._instance.destroy();
@@ -44,13 +45,15 @@ export default class ZnDatepicker extends ZincElement {
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
     if (inputElement) {
       this._inputElement = inputElement;
-      const options = await this.getOptions();
-      this._instance = new AirDatepicker(inputElement, options);
+      this._instance = new AirDatepicker(inputElement, {
+        locale: enLocale,
+        range: this.range
+      });
     }
   }
 
-  async init() {
-    await this.initialiseDatepicker();
+  init() {
+    this.initialiseDatepicker();
   }
 
   protected updated(_changedProperties: PropertyValues) {
@@ -75,11 +78,17 @@ export default class ZnDatepicker extends ZincElement {
         <input type="text" placeholder="Select date">
       </div>`;
   }
-
-  async getOptions(): Promise<Partial<AirDatepickerOptions>> {
-    return {
-      locale: localeEn,
-      range: this.range,
-    };
-  }
 }
+
+const enLocale: Partial<AirDatepickerLocale> = {
+  days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+  months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  today: 'Today',
+  clear: 'Clear',
+  dateFormat: 'mm/dd/yyyy',
+  timeFormat: 'hh:ii aa',
+  firstDay: 0
+};

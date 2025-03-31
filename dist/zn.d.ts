@@ -1545,6 +1545,7 @@ declare module "components/empty-state/empty-state.component" {
         caption: string;
         description: string;
         type: 'error' | 'info' | 'primary' | '';
+        padded: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }

@@ -48,9 +48,9 @@ export default class ZnStepper extends ZincElement {
           <div class="label">
             ${this.label
               ? html`
-                <p class="info">
+                <span class="info">
                   ${this.label}
-                </p>`
+                </span>`
               : ''}
           </div>
         `
@@ -58,10 +58,10 @@ export default class ZnStepper extends ZincElement {
       ${this.caption || this.showProgress
         ? html`
           <div class="header">
-            <p class="caption">${this.caption}</p>
+            <span class="caption">${this.caption}</span>
             ${this.showProgress
               ? html`
-                <p class="progress">${this.value > this.steps ? this.steps : this.value} / ${this.steps} steps</p>`
+                <span class="progress">${this.value > this.steps ? this.steps : this.value} / ${this.steps} steps</span>`
               : ''}
           </div>
         `

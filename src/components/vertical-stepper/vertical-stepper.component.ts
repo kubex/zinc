@@ -25,8 +25,10 @@ export default class ZnVerticalStepper extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({ type: Boolean, reflect: true }) last = false;
-  @property({ type: String, reflect: true }) description: string;
-  @property({ type: String, reflect: true }) caption: string;
+  @property({ type: Boolean, reflect: true }) first = false;
+  @property({ type: Boolean, reflect: true }) active = false;
+  @property({ reflect: true }) description: string;
+  @property({ reflect: true }) caption: string;
 
   render() {
     return html`

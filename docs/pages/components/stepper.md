@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-stepper></zn-stepper>
+<zn-stepper caption="Caption here" label="Label here" steps="3" value="2" show-progress></zn-stepper>
 ```
 
 ## Examples
@@ -18,5 +18,3 @@ TODO
 ### Second Example
 
 TODO
-
-

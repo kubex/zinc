@@ -1,21 +1,43 @@
 ---
 meta:
-  title: Tile
+  title: List Tile
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-tile caption="This is the caption" description="This is the description">
-  <zn-icon slot="primary" round size="50" src="https://i.pravatar.cc/60?img=20"></zn-icon>
+<zn-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+  <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+  <zn-tile-property slot="properties" caption="Co-Founder / CEO Relations">Last seen 2h ago</zn-tile-property>
 </zn-tile>
 ```
 
 ## Examples
 
-### First Example
+### List
 
-TODO
+```html:preview
+<zn-sp divide no-gap>
+  <zn-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+    <zn-tile-property slot="properties" caption="Co-Founder / CEO">
+      Last seen 2h ago
+    </zn-tile-property>
+  </zn-tile>
+  <zn-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+    <zn-tile-property slot="properties" caption="Co-Founder / CEO">
+      Last seen 2h ago
+    </zn-tile-property>
+  </zn-tile>
+  <zn-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
+    <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
+    <zn-tile-property slot="properties" caption="Co-Founder / CEO">
+      Last seen 2h ago
+    </zn-tile-property>
+  </zn-tile>
+</zn-sp>
+```
 
 ### Second Example
 

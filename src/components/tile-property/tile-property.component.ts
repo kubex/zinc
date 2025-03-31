@@ -3,11 +3,11 @@ import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import { classMap } from "lit/directives/class-map.js";
 
-import styles from './list-tile-property.scss';
+import styles from './tile-property.scss';
 
 /**
  * @summary Short summary of the component's intended use.
- * @documentation https://zinc.style/components/list-tile-property
+ * @documentation https://zinc.style/components/tile-property
  * @status experimental
  * @since 1.0
  *
@@ -22,7 +22,7 @@ import styles from './list-tile-property.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnListTileProperty extends ZincElement {
+export default class ZnTileProperty extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({ attribute: 'caption', reflect: true }) caption: string;

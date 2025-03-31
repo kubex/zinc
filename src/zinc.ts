@@ -38,7 +38,6 @@ export {default as SplitPane} from './components/split-pane';
 export {default as Sidebar} from './components/sidebar';
 export {default as Sp} from './components/sp';
 export {default as Stepper} from './components/stepper';
-export {default as Prop} from './components/prop';
 export {default as Stat} from './components/stat';
 export {default as ScrollContainer} from './components/scroll-container';
 export {default as QueryBuilder} from './components/query-builder';

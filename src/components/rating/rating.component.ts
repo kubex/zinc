@@ -1,12 +1,14 @@
-import {property, query, state} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
-import {styleMap} from 'lit/directives/style-map.js';
-import {classMap} from "lit/directives/class-map.js";
 import {clamp} from "lodash";
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {FormControlController, validValidityState} from "../../internal/form";
+import {property, query, state} from 'lit/decorators.js';
+import {styleMap} from 'lit/directives/style-map.js';
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './rating.scss';
-import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,23 +27,64 @@ import {unsafeHTML} from "lit/directives/unsafe-html.js";
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnRating extends ZincElement {
+export default class ZnRating extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  private readonly formControlController = new FormControlController(this, {
+    assumeInteractionOn: ['zn-blur', 'zn-input']
+  });
 
   @query('.rating') rating: HTMLElement;
 
   @state() private hoverValue: number = 0;
+
   @state() private isHovering: boolean = false;
 
-  @property() label = "";
+  @property() label: string;
+
+  @property() name: string;
+
   @property({type: Number}) value: number = 0;
+
   @property({type: Number}) max: number = 5;
+
   @property({type: Number}) precision: number = 1;
+
   @property({type: Boolean}) readonly: boolean = false;
+
   @property({type: Boolean}) disabled: boolean = false;
 
   @property() getSymbol: (value: number) => string = () => '<zn-icon src="warning"></zn-icon>';
 
+  /** Gets the validity state object */
+  get validity() {
+    return validValidityState;
+  }
+
+  /** Gets the validation message */
+  get validationMessage() {
+    return "";
+  }
+
+  /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+  checkValidity(): boolean {
+    return true;
+  }
+
+  /** Gets the associated form, if one exists. */
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
+  reportValidity() {
+    return true;
+  }
+
+  /** Sets a custom validation message. Pass an empty string to restore validity. */
+  setCustomValidity() {
+    this.formControlController.updateValidity();
+  }
 
   private _roundToPrecision(value: number, precision: number): number {
     const factor = 1 / precision;
@@ -90,7 +133,7 @@ export default class ZnRating extends ZincElement {
     this.hoverValue = this._getValueFromMousePosition(event);
   }
 
-  private _handleMouseLeave(_: MouseEvent) {
+  private _handleMouseLeave() {
     this.isHovering = false;
   }
 

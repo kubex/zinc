@@ -11,9 +11,15 @@ layout: component
 
 ## Examples
 
-### First Example
+### Form example with Value and Name
 
-TODO
+```html:preview
+
+<form action="#" method="get">
+  <zn-rating value="2" name="rating"></zn-rating>
+  <zn-button type="submit">Submit</zn-button>
+</form>
+```
 
 ### Second Example
 

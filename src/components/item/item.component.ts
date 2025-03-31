@@ -37,6 +37,8 @@ export default class ZnItem extends ZincElement {
 
   @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
 
+  @property() icon: string;
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -61,6 +63,10 @@ export default class ZnItem extends ZincElement {
         'description-item--medium': this.size === 'medium',
         'description-item--large': this.size === 'large',
       })}>
+        <div class="description-item__icon">
+          ${this.icon ? html`
+            <zn-icon src="${this.icon}" size="20"></zn-icon>` : ''}
+        </div>
         <div class="description-item__caption">${this.caption}</div>
         <div class="description-item__content">
           <div class="description-item__content-inner">

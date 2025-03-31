@@ -3156,7 +3156,6 @@ declare module "components/stat/stat.component" {
         type: string;
         previous: string;
         currency: string;
-        showChart: boolean;
         showDelta: boolean;
         calcPercentageDifference(): number;
         getCurrentAmount(): string;

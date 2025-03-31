@@ -6,9 +6,9 @@ layout: component
 ---
 
 ```html:preview
-<zn-list-tile-property slot="properties" caption="Business Relations">
+<zn-tile-property slot="properties" caption="Business Relations">
   Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds 
-</zn-list-tile-property>
+</zn-tile-property>
 ```
 
 ## Examples

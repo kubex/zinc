@@ -11,9 +11,12 @@ layout: component
 
 ## Examples
 
-### First Example
+### Range
 
-TODO
+```html:preview
+<zn-datepicker range></zn-datepicker>
+```
+
 
 ### Second Example
 

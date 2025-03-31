@@ -3128,47 +3128,6 @@ declare module "components/stepper/index" {
         }
     }
 }
-declare module "components/prop/prop.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/prop
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnProp extends ZincElement {
-        static styles: CSSResultGroup;
-        caption: string;
-        subCaption: string;
-        icon: string;
-        library: string;
-        inline: boolean;
-        colspan: number;
-        protected render(): unknown;
-    }
-}
-declare module "components/prop/index" {
-    import ZnProp from "components/prop/prop.component";
-    export * from "components/prop/prop.component";
-    export default ZnProp;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-prop': ZnProp;
-        }
-    }
-}
 declare module "components/stat/stat.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -4259,6 +4218,7 @@ declare module "components/radio/index" {
 }
 declare module "components/rating/rating.component" {
     import { type CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -4277,18 +4237,32 @@ declare module "components/rating/rating.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnRating extends ZincElement {
+    export default class ZnRating extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        private readonly formControlController;
         rating: HTMLElement;
         private hoverValue;
         private isHovering;
         label: string;
+        name: string;
         value: number;
         max: number;
         precision: number;
         readonly: boolean;
         disabled: boolean;
         getSymbol: (value: number) => string;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(): void;
         private _roundToPrecision;
         private _getValueFromXCoordinate;
         private _getValueFromMousePosition;
@@ -4586,6 +4560,7 @@ declare module "components/item/item.component" {
         stacked: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
+        icon: string;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
@@ -4706,7 +4681,6 @@ declare module "zinc" {
     export { default as Sidebar } from "components/sidebar/index";
     export { default as Sp } from "components/sp/index";
     export { default as Stepper } from "components/stepper/index";
-    export { default as Prop } from "components/prop/index";
     export { default as Stat } from "components/stat/index";
     export { default as ScrollContainer } from "components/scroll-container/index";
     export { default as QueryBuilder } from "components/query-builder/index";

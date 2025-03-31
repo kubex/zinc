@@ -64,9 +64,7 @@ class DropdownModule {
 
     // add enter key binding
     this._quill.keyboard.addBinding({ key: 'Enter' }, () => {
-      console.log('Enter key pressed');
       if (dropdownOpen) {
-        console.log(dropdownOpen);
         enterCommand();
         return false;
       }
@@ -88,7 +86,6 @@ class DropdownModule {
     };
 
     this._quill.keyboard.addBinding({ key: 'Escape' }, () => {
-      console.log('Escape key pressed');
       if (dropdownOpen) {
         this.closeDropdown();
         return false;

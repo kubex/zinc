@@ -25,10 +25,8 @@ class ImageResizeModule extends Module<ImageResizeModuleOptions>
 
   handleClick = (e: MouseEvent) =>
   {
-    console.log('click', e);
     if(e.target && e.target instanceof Element && e.target.tagName && e.target.tagName.toUpperCase() === 'IMG')
     {
-      console.log('image clicked');
       if(this._focusedImage === e.target)
       {
         return; // already focused
@@ -50,7 +48,6 @@ class ImageResizeModule extends Module<ImageResizeModuleOptions>
 
   handleScroll = (e: MouseEvent) =>
   {
-    console.log('scroll', e);
     if(this._focusedImage)
     {
       this.hide(); // hide the overlay if the user scrolls as it is no longer in the right place
@@ -59,14 +56,12 @@ class ImageResizeModule extends Module<ImageResizeModuleOptions>
 
   show = (image: HTMLImageElement) =>
   {
-    console.log('show', image);
     this._focusedImage = image;
     this.showOverlay();
   };
 
   hide = () =>
   {
-    console.log('hide');
     this.hideOverlay();
     this._focusedImage = null;
   };

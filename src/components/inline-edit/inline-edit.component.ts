@@ -103,8 +103,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   async firstUpdated() {
     await this.updateComplete;
-
-    console.log('this.input', this.input);
     this.input.addEventListener('onclick', this.handleEditClick);
   }
 

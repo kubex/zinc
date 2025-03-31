@@ -1,9 +1,9 @@
 import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './stat.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -31,7 +31,6 @@ export default class ZnStatsTile extends ZincElement {
   @property() type = 'number';
   @property() previous = '0';
   @property() currency = '';
-  @property({type: Boolean, attribute: 'show-chart'}) showChart = false;
   @property({type: Boolean, attribute: 'show-delta'}) showDelta = false;
 
   calcPercentageDifference() {
@@ -101,7 +100,7 @@ export default class ZnStatsTile extends ZincElement {
 
   render() {
     return html`
-      <div class="${classMap({'stat-tile': true, 'stat-tile--chart': this.showChart})}">
+      <div class="${classMap({'stat-tile': true})}">
         <div class="container">
           <div class="left">
             <div>
@@ -111,11 +110,6 @@ export default class ZnStatsTile extends ZincElement {
             <p class="amount">${this.getDisplayAmount()}</p>
             <p class="bottom">${this.diffText()}</p>
           </div>
-          ${this.showChart ? html`
-            <div class="right">
-              <zn-apex-chart type="radialBar" amount="${this.amount}"></zn-apex-chart>
-            </div>
-          ` : ''}
         </div>
       </div>
     `;

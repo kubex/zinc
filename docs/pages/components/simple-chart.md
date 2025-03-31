@@ -6,7 +6,8 @@ layout: component
 ---
 
 ```html:preview
-<zn-simple-chart></zn-simple-chart>
+<zn-simple-chart>
+</zn-simple-chart>
 ```
 
 ## Examples

@@ -3979,9 +3979,8 @@ declare module "components/checkbox/index" {
     }
 }
 declare module "components/datepicker/datepicker.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import { AirDatepickerOptions } from "air-datepicker";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/datepicker
@@ -4006,11 +4005,10 @@ declare module "components/datepicker/datepicker.component" {
         range: boolean;
         private _instance;
         _inputElement: HTMLInputElement;
-        initialiseDatepicker(): Promise<void>;
-        init(): Promise<void>;
+        initialiseDatepicker(): void;
+        init(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
-        getOptions(): Promise<Partial<AirDatepickerOptions>>;
     }
 }
 declare module "components/datepicker/index" {

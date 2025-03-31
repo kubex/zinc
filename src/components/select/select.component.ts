@@ -128,7 +128,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
-  @property({attribute: 'value' }) defaultValue: string | string[] = '';
+  @property({attribute: 'value'}) defaultValue: string | string[] = '';
 
   /** The select's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';

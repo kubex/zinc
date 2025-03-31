@@ -101,10 +101,25 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     document.removeEventListener('keydown', this.escKeyHandler);
   }
 
+  async firstUpdated() {
+    await this.updateComplete;
+
+    console.log('this.input', this.input);
+    this.input.addEventListener('onclick', this.handleEditClick);
+  }
+
   @watch('value', {waitUntilFirstUpdate: true})
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
+  }
+
+  @watch('isEditing', {waitUntilFirstUpdate: true})
+  async handleIsEditingChange() {
+    await this.updateComplete;
+    if (this.input instanceof ZnSelect && !this.isEditing) {
+      await this.input.hide();
+    }
   }
 
   escKeyHandler = (e: KeyboardEvent) => {
@@ -114,8 +129,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     }
   };
 
-  handleEditClick = (e: MouseEvent) => {
-    e.preventDefault();
+  handleEditClick = () => {
     if (this.disabled) {
       return;
     }
@@ -142,11 +156,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
   };
 
-
   protected render() {
     const hasEditText = this.editText;
-
-    console.log('this.options', this.options);
 
     let input = html`
       <zn-input type="text"
@@ -155,8 +166,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 size="${this.size}"
                 value="${this.value}"
                 help-text="${ifDefined(this.helpText)}"
-                @click="${this.handleEditClick}"
-                .disabled="${!this.isEditing}"
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;
@@ -169,8 +178,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                    help-text="${ifDefined(this.helpText)}"
                    size="${this.size}"
                    placeholder=" ${this.placeholder}"
-                   @click="${this.handleEditClick}"
-                   .disabled="${!this.isEditing}"
                    @zn-input="${this.handleInput}"
                    @zn-blur="${this.handleBlur}">
           ${Object.keys(this.options).map(key => html`

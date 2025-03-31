@@ -1671,19 +1671,14 @@ declare module "components/tile/tile.component" {
      */
     export default class ZnTile extends ZincElement {
         static styles: CSSResultGroup;
+        private readonly hasSlotController;
         caption: string;
         description: string;
-        subCaption: string;
-        subDescription: string;
-        right: boolean;
-        dataUri: string;
+        href: string;
         dataTarget: string;
-        centered: boolean;
-        private menu;
-        constructor();
-        connectedCallback(): void;
-        _handleActions(e: any): void;
-        render(): import("lit").TemplateResult<1>;
+        dataUri: string;
+        private _isLink;
+        render(): import("lit").TemplateResult;
     }
 }
 declare module "components/tile/index" {
@@ -1696,12 +1691,12 @@ declare module "components/tile/index" {
         }
     }
 }
-declare module "components/list-tile/list-tile.component" {
+declare module "components/tile-property/tile-property.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/list-tile
+     * @documentation https://zinc.style/components/tile-property
      * @status experimental
      * @since 1.0
      *
@@ -1716,62 +1711,20 @@ declare module "components/list-tile/list-tile.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnListTile extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly hasSlotController;
-        caption: string;
-        description: string;
-        href: string;
-        dataTarget: string;
-        dataUri: string;
-        private _isLink;
-        render(): import("lit").TemplateResult;
-    }
-}
-declare module "components/list-tile/index" {
-    import ZnListTile from "components/list-tile/list-tile.component";
-    export * from "components/list-tile/list-tile.component";
-    export default ZnListTile;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-list-tile': ZnListTile;
-        }
-    }
-}
-declare module "components/list-tile-property/list-tile-property.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/list-tile-property
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnListTileProperty extends ZincElement {
+    export default class ZnTileProperty extends ZincElement {
         static styles: CSSResultGroup;
         caption: string;
         description: string;
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/list-tile-property/index" {
-    import ZnListTileProperty from "components/list-tile-property/list-tile-property.component";
-    export * from "components/list-tile-property/list-tile-property.component";
-    export default ZnListTileProperty;
+declare module "components/tile-property/index" {
+    import ZnTileProperty from "components/tile-property/tile-property.component";
+    export * from "components/tile-property/tile-property.component";
+    export default ZnTileProperty;
     global {
         interface HTMLElementTagNameMap {
-            'zn-list-tile-property': ZnListTileProperty;
+            'zn-tile-property': ZnTileProperty;
         }
     }
 }
@@ -4661,9 +4614,8 @@ declare module "zinc" {
     export { default as DefinedLabel } from "components/defined-label/index";
     export { default as EmptyState } from "components/empty-state/index";
     export { default as Note } from "components/note/index";
-    export { default as Tile } from "components/tile/index";
-    export { default as ListTile } from "components/list-tile/index";
-    export { default as ListTileProperty } from "components/list-tile-property/index";
+    export { default as ListTile } from "components/tile/index";
+    export { default as ListTileProperty } from "components/tile-property/index";
     export { default as DataChart } from "components/chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";

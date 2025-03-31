@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>List Tile</title>
+    <title>List Tile Property</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,8 +12,8 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/list-tile" />
-    <meta property="og:title" content="List Tile" />
+    <meta property="og:url" content="https://zinc.style/components/tile-property" />
+    <meta property="og:title" content="List Tile Property" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -243,14 +243,6 @@
               </li>
 
               <li>
-                <a href="/components/list-tile" class="active-link"> List Tile </a>
-              </li>
-
-              <li>
-                <a href="/components/list-tile-property"> List Tile Property </a>
-              </li>
-
-              <li>
                 <a href="/components/menu"> Menu </a>
               </li>
 
@@ -363,6 +355,10 @@
               </li>
 
               <li>
+                <a href="/components/tile-property" class="active-link"> Tile Property </a>
+              </li>
+
+              <li>
                 <a href="/components/timer"> Timer </a>
               </li>
 
@@ -388,9 +384,9 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">List Tile</a></li>
+            <li class="top"><a href="#">List Tile Property</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#list">List</a></li>
+            <li data-level="3"><a href="#first-example">First Example</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -403,10 +399,10 @@
 
         <div class="content__body">
           <header class="component-header">
-            <h1>List Tile</h1>
+            <h1>Tile Property</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-list-tile&gt; | ZnListTile</code>
+              <code>&lt;zn-tile-property&gt; | ZnTileProperty</code>
             </div>
 
             <div class="component-header__info">
@@ -419,29 +415,21 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-list-tile
-                caption="Leslie Alexander"
-                description="Leslie.alexander@example.com"
-                href="https://google.com"
-              >
-                <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round=""></zn-icon>
-                <zn-list-tile-property slot="properties" caption="Co-Founder / CEO Relations"
-                  >Last seen 2h ago</zn-list-tile-property
-                >
-              </zn-list-tile>
+              <zn-list-tile-property slot="properties" caption="Business Relations">
+                Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds
+              </zn-list-tile-property>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-100">
+            <div class="code-preview__source-group" id="code-preview-source-group-162">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-195"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie Alexander<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie.alexander@example.com<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://google.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://i.pravatar.cc/60?img=70<span class="token punctuation">"</span></span> <span class="token attr-name">round</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile-property</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Co-Founder / CEO Relations<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Last seen 2h ago<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile-property</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-195"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-335"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile-property</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Business Relations<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  Front-end Developer sdkf dskjf dskjf dsjkf dskjfdskjf dskjf dsf dsfdsf dsfdsds 
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile-property</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-335"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -450,7 +438,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-100"
+                aria-controls="code-preview-source-group-162"
               >
                 Source
                 <svg
@@ -470,96 +458,10 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="list" class="anchor-heading">List<a href="#list" aria-label='Direct link to "List"'></a></h3>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-sp divide="" no-gap="">
-                <zn-list-tile
-                  caption="Leslie Alexander"
-                  description="Leslie.alexander@example.com"
-                  href="https://google.com"
-                >
-                  <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round=""></zn-icon>
-                  <zn-list-tile-property slot="properties" caption="Co-Founder / CEO">
-                    Last seen 2h ago
-                  </zn-list-tile-property>
-                </zn-list-tile>
-                <zn-list-tile
-                  caption="Leslie Alexander"
-                  description="Leslie.alexander@example.com"
-                  href="https://google.com"
-                >
-                  <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round=""></zn-icon>
-                  <zn-list-tile-property slot="properties" caption="Co-Founder / CEO">
-                    Last seen 2h ago
-                  </zn-list-tile-property>
-                </zn-list-tile>
-                <zn-list-tile
-                  caption="Leslie Alexander"
-                  description="Leslie.alexander@example.com"
-                  href="https://google.com"
-                >
-                  <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round=""></zn-icon>
-                  <zn-list-tile-property slot="properties" caption="Co-Founder / CEO">
-                    Last seen 2h ago
-                  </zn-list-tile-property>
-                </zn-list-tile>
-              </zn-sp>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-101">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-196"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">divide</span> <span class="token attr-name">no-gap</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie Alexander<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie.alexander@example.com<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://google.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://i.pravatar.cc/60?img=70<span class="token punctuation">"</span></span> <span class="token attr-name">round</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile-property</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Co-Founder / CEO<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      Last seen 2h ago
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile-property</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie Alexander<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie.alexander@example.com<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://google.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://i.pravatar.cc/60?img=70<span class="token punctuation">"</span></span> <span class="token attr-name">round</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile-property</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Co-Founder / CEO<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      Last seen 2h ago
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile-property</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie Alexander<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leslie.alexander@example.com<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://google.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://i.pravatar.cc/60?img=70<span class="token punctuation">"</span></span> <span class="token attr-name">round</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-list-tile-property</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Co-Founder / CEO<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      Last seen 2h ago
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile-property</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-list-tile</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-196"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-101"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
+          <h3 id="first-example" class="anchor-heading">
+            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          </h3>
+          <p>TODO</p>
           <h3 id="second-example" class="anchor-heading">
             Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
           </h3>
@@ -586,7 +488,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-197"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/list-tile/list-tile.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-197"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-336"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tile-property/tile-property.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-336"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -601,12 +503,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-198"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/list-tile/list-tile.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-198"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-337"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/tile-property/tile-property.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-337"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-199"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/list-tile/list-tile.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-199"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-338"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/tile-property/tile-property.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-338"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

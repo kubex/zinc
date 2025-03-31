@@ -8337,261 +8337,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/list-tile/list-tile.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnListTile",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]')"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "dataTarget",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-target"
-            },
-            {
-              "kind": "field",
-              "name": "dataUri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-uri"
-            },
-            {
-              "kind": "method",
-              "name": "_isLink",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "href"
-            },
-            {
-              "name": "data-target",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataTarget"
-            },
-            {
-              "name": "data-uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataUri"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "list-tile",
-          "tagName": "zn-list-tile",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/list-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/list-tile",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnListTile",
-            "module": "components/list-tile/list-tile.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/list-tile-property/list-tile-property.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnListTileProperty",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "list-tile-property",
-          "tagName": "zn-list-tile-property",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/list-tile-property\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/list-tile-property",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnListTileProperty",
-            "module": "components/list-tile-property/list-tile-property.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/menu/menu.js",
       "declarations": [
         {
@@ -16669,12 +16414,18 @@
           "members": [
             {
               "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]')"
+            },
+            {
+              "kind": "field",
               "name": "caption",
               "type": {
                 "text": "string"
               },
-              "attribute": "caption",
-              "reflects": true
+              "attribute": "caption"
             },
             {
               "kind": "field",
@@ -16682,44 +16433,15 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "description",
-              "reflects": true
+              "attribute": "description"
             },
             {
               "kind": "field",
-              "name": "subCaption",
+              "name": "href",
               "type": {
                 "text": "string"
               },
-              "attribute": "sub-caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "subDescription",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "sub-description",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "right",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "right",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "dataUri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-uri",
-              "reflects": true
+              "attribute": "href"
             },
             {
               "kind": "field",
@@ -16727,37 +16449,20 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "data-target",
-              "reflects": true
+              "attribute": "data-target"
             },
             {
               "kind": "field",
-              "name": "centered",
+              "name": "dataUri",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "default": "false",
-              "attribute": "centered"
-            },
-            {
-              "kind": "field",
-              "name": "menu",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private"
+              "attribute": "data-uri"
             },
             {
               "kind": "method",
-              "name": "_handleActions",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "name": "_isLink",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -16782,32 +16487,11 @@
               "fieldName": "description"
             },
             {
-              "name": "sub-caption",
+              "name": "href",
               "type": {
                 "text": "string"
               },
-              "fieldName": "subCaption"
-            },
-            {
-              "name": "sub-description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "subDescription"
-            },
-            {
-              "name": "right",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "right"
-            },
-            {
-              "name": "data-uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataUri"
+              "fieldName": "href"
             },
             {
               "name": "data-target",
@@ -16817,12 +16501,11 @@
               "fieldName": "dataTarget"
             },
             {
-              "name": "centered",
+              "name": "data-uri",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "default": "false",
-              "fieldName": "centered"
+              "fieldName": "dataUri"
             }
           ],
           "superclass": {
@@ -16849,6 +16532,106 @@
           "declaration": {
             "name": "ZnTile",
             "module": "components/tile/tile.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile-property/tile-property.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileProperty",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "tile-property",
+          "tagName": "zn-tile-property",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile-property\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/tile-property",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileProperty",
+            "module": "components/tile-property/tile-property.js"
           }
         }
       ]

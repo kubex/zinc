@@ -256,13 +256,14 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             class="checkbox__control">
             ${this.checked
               ? html`
-                <zn-icon part="checked-icon" class="checkbox__checked-icon" src="check"></zn-icon>`
+                <zn-icon part="checked-icon" class="checkbox__checked-icon" size="16" src="check"></zn-icon>`
               : ''}
             ${!this.checked && this.indeterminate
               ? html`
                 <zn-icon
                   part="indeterminate-icon"
                   class="checkbox__indeterminate-icon"
+                  size="16"
                   src="check_indeterminate_small"></zn-icon>`
               : ''}
           </span>

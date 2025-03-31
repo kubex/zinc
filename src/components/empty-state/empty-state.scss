@@ -1,6 +1,12 @@
 @use "../../wc";
 
 :host {
+  display: block;
+  container-type: inline-size;
+  width: 100%;
+}
+
+.empty-state {
   height: 100%;
   width: 100%;
   display: flex;
@@ -8,7 +14,6 @@
   align-items: center;
   justify-content: center;
   gap: var(--zn-spacing-x-small);
-  padding: var(--zn-spacing-medium);
 
   ::slotted(*) {
     display: flex;
@@ -24,10 +29,8 @@
   .description {
     text-align: center;
   }
-}
 
-:host {
-  .wrapper {
+  &__wrapper {
     height: 100%;
     width: 100%;
     display: flex;
@@ -35,38 +38,54 @@
     align-items: center;
     justify-content: center;
     gap: var(--zn-spacing-x-small);
-    padding: var(--zn-spacing-small);
+    padding: var(--zn-spacing-large);
     flex-grow: 1;
   }
-}
 
-:host([type="error"]) {
-  background-color: rgba(var(--zn-color-error), .05);
-  min-height: 100px;
-  border: dashed 1px rgb(var(--zn-color-error)) !important;
+  // Colors
 
-  ::slotted(*), .caption, .description {
-    color: rgb(var(--zn-color-error));
+  &--error {
+    background-color: rgba(var(--zn-color-error), .05);
+    min-height: 100px;
+
+    .empty-state__wrapper {
+      border: dashed 1px rgb(var(--zn-color-error)) !important;
+    }
+
+    ::slotted(*), .caption, .description {
+      color: rgb(var(--zn-color-error));
+    }
   }
-}
 
+  &--info {
+    background-color: rgba(var(--zn-color-info), .05);
+    min-height: 100px;
 
-:host([type="info"]) {
-  background-color: rgba(var(--zn-color-info), .05);
-  min-height: 100px;
-  border: dashed 1px rgb(var(--zn-color-info)) !important;
+    .empty-state__wrapper {
+      border: dashed 1px rgb(var(--zn-color-info)) !important;
+    }
 
-  ::slotted(*), .caption, .description {
-    color: rgb(var(--zn-color-info));
+    ::slotted(*), .caption, .description {
+      color: rgb(var(--zn-color-info));
+    }
   }
-}
 
-:host([type="primary"]) {
-  background-color: rgba(var(--zn-primary), .05);
-  min-height: 100px;
-  border: dashed 1px rgb(var(--zn-primary)) !important;
+  &--primary {
+    background-color: rgba(var(--zn-primary), .05);
+    min-height: 100px;
 
-  ::slotted(*), .caption, .description {
-    color: rgb(var(--zn-primary));
+    .empty-state__wrapper {
+      border: dashed 1px rgb(var(--zn-primary)) !important;
+    }
+
+    ::slotted(*), .caption, .description {
+      color: rgb(var(--zn-primary));
+    }
+  }
+
+  // End colors
+
+  &--padded {
+    padding: var(--zn-spacing-medium);
   }
 }

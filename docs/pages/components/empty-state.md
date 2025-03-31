@@ -31,8 +31,21 @@ layout: component
 </zn-empty-state>
 ```
 
-### Second Example
+### Padded
 
-TODO
+```html:preview
+
+<zn-empty-state
+  padded
+  type="primary"
+  caption="The Caption"
+  description="The Description"
+  icon="check">
+  <zn-button-group>
+    <zn-button>Button 1</zn-button>
+    <zn-button>Button 2</zn-button>
+  </zn-button-group>
+</zn-empty-state>
+```
 
 

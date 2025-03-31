@@ -1,7 +1,7 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-import { classMap } from "lit/directives/class-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 import styles from './empty-state.scss';
 
@@ -25,37 +25,39 @@ import styles from './empty-state.scss';
 export default class ZnEmptyState extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: String }) icon: string = '';
-  @property({ type: String }) caption: string = '';
-  @property({ type: String }) description: string = '';
-  @property({ type: String }) type: 'error' | 'info' | 'primary' | '' = '';
+  @property({type: String}) icon: string = '';
+
+  @property({type: String}) caption: string = '';
+
+  @property({type: String}) description: string = '';
+
+  @property({type: String}) type: 'error' | 'info' | 'primary' | '' = '';
+
+  @property({type: Boolean}) padded: boolean = false;
 
   render() {
-    const content = html`
-      ${this.icon
-        ? html`
-          <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
-        : ''}
-      ${this.caption
-        ? html`
-          <div class="caption">${this.caption}</div>`
-        : ''}
-      ${this.description
-        ? html`
-          <div class="description">${this.description}</div>`
-        : ''}
-      <slot></slot>`;
-
-    if (this.type) {
-      return html`
-        <div class="${classMap({
-          'wrapper': true,
-          [this.type]: true
-        })}">
-          ${content}
-        </div>`;
-    }
-
-    return content;
+    return html`
+      <div class="${classMap({
+        'empty-state': true,
+        'empty-state--error': this.type === 'error',
+        'empty-state--info': this.type === 'info',
+        'empty-state--primary': this.type === 'primary',
+        'empty-state--padded': this.padded
+      })}">
+        <div class="empty-state__wrapper">
+          ${this.icon
+            ? html`<zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
+            : ''}
+          ${this.caption
+            ? html`
+              <div class="caption">${this.caption}</div>`
+            : ''}
+          ${this.description
+            ? html`
+              <div class="description">${this.description}</div>`
+            : ''}
+          <slot></slot>
+        </div>
+      </div>`
   }
 }

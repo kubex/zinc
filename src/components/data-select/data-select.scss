@@ -1,0 +1,31 @@
+@use "../../wc";
+
+$colors: (
+  red: var(--zn-color-red-500),
+  blue: var(--zn-color-blue-500),
+  orange: var(--zn-color-orange-500),
+  yellow: var(--zn-color-yellow-400),
+  indigo: var(--zn-color-indigo-500),
+  violet: var(--zn-color-violet-500),
+  green: var(--zn-color-green-500),
+  pink: var(--zn-color-pink-500),
+  gray: var(--zn-color-gray-500)
+);
+
+:host {
+  display: block;
+}
+
+.color-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+  border-radius: 100%;
+  flex-shrink: 0;
+
+  @each $name, $color in $colors {
+    &--#{$name} {
+      background-color: #{$color};
+    }
+  }
+}

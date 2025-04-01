@@ -4546,6 +4546,7 @@ declare module "components/data-select/data-select.component" {
     import { FormControlController } from "internal/form";
     import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-select
@@ -4567,7 +4568,7 @@ declare module "components/data-select/data-select.component" {
         static styles: CSSResultGroup;
         private readonly localize;
         protected readonly formControlController: FormControlController;
-        select: HTMLSelectElement;
+        select: ZnSelect;
         selectPrefix: HTMLElement;
         /** The name of the select. Used for form submission. */
         name: string;
@@ -4575,8 +4576,8 @@ declare module "components/data-select/data-select.component" {
         value: string;
         /** The provider of the select. */
         provider: 'color' | 'currency' | 'country';
-        /** Should we hide the prefix of the options, and the select. */
-        hidePrefix: boolean;
+        /** Should we show the prefix of the options, and the select. */
+        showPrefix: boolean;
         /** Should we show the clear button. */
         clearable: boolean;
         /** An array of keys to use for filtering the options in the selected provider. */

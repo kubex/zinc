@@ -2,7 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
-import type {Colors} from "../color-select";
+import {type colors} from "../data-select/providers/color-data-provider";
 
 import styles from './note.scss';
 
@@ -27,7 +27,7 @@ import styles from './note.scss';
 export default class ZnNote extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({reflect: true}) color: Colors;
+  @property({reflect: true}) color: typeof colors[number];
   @property({reflect: true}) caption: string = '';
   @property({reflect: true}) date: string = '';
   @property({type: HTMLElement, reflect: true}) body: string = '';

@@ -61,6 +61,164 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/alert/alert.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnAlert",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "collapse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "collapse"
+            },
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
+              },
+              "default": "'info'",
+              "attribute": "level"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "attribute": "size"
+            },
+            {
+              "kind": "method",
+              "name": "hideAlert",
+              "privacy": "public"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "collapse",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "collapse"
+            },
+            {
+              "name": "level",
+              "type": {
+                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
+              },
+              "default": "'info'",
+              "fieldName": "level"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "alert",
+          "tagName": "zn-alert",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/alert\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/alert",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnAlert",
+            "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/bulk-actions/bulk-actions.js",
       "declarations": [
         {
@@ -351,164 +509,6 @@
           "declaration": {
             "name": "ZnBulkActions",
             "module": "components/bulk-actions/bulk-actions.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/alert/alert.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnAlert",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "collapse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "collapse"
-            },
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
-              },
-              "default": "'info'",
-              "attribute": "level"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "attribute": "size"
-            },
-            {
-              "kind": "method",
-              "name": "hideAlert",
-              "privacy": "public"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "collapse",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "collapse"
-            },
-            {
-              "name": "level",
-              "type": {
-                "text": "'primary' | 'error' | 'info' | 'success' | 'warning'"
-              },
-              "default": "'info'",
-              "fieldName": "level"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "alert",
-          "tagName": "zn-alert",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/alert\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/alert",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnAlert",
-            "module": "components/alert/alert.js"
           }
         }
       ]
@@ -11029,6 +11029,14 @@
             },
             {
               "kind": "field",
+              "name": "_previousOperator",
+              "type": {
+                "text": "QueryBuilderOperators"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "container",
               "type": {
                 "text": "HTMLDivElement"
@@ -11038,7 +11046,7 @@
               "kind": "field",
               "name": "addRule",
               "type": {
-                "text": "HTMLSelectElement"
+                "text": "ZnSelect"
               }
             },
             {
@@ -11122,9 +11130,9 @@
                 },
                 {
                   "name": "pos",
-                  "default": "null",
+                  "optional": true,
                   "type": {
-                    "text": "any"
+                    "text": "number"
                   }
                 }
               ]
@@ -11143,7 +11151,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event"
+                    "text": "ZnChangeEvent"
                   }
                 }
               ]
@@ -11162,7 +11170,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event | { target: ZnSelect | HTMLInputElement | HTMLDivElement }"
+                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
                   }
                 }
               ]
@@ -11219,7 +11227,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event"
+                    "text": "ZnChangeEvent"
                   }
                 }
               ]
@@ -11325,6 +11333,25 @@
                   "name": "value",
                   "type": {
                     "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "createOptions",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "QueryBuilderOptions"
+                  }
+                },
+                {
+                  "name": "selectElement",
+                  "type": {
+                    "text": "ZnSelect"
                   }
                 }
               ]

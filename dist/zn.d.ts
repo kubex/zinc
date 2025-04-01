@@ -3153,26 +3153,48 @@ declare module "components/scroll-container/index" {
         }
     }
 }
+declare module "events/zn-change" {
+    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-change': ZnChangeEvent;
+        }
+    }
+}
+declare module "events/zn-input" {
+    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-input': ZnInputEvent;
+        }
+    }
+}
 declare module "components/query-builder/query-builder.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import ZnSelect from "components/select/index";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZnOption from "components/option/index";
-    export type QueryBuilderData = Array<QueryBuilderItem>;
-    export type QueryBuilderItem = {
+    import ZnSelect from "components/select/index";
+    export type QueryBuilderData = QueryBuilderItem[];
+    export interface QueryBuilderItem {
         id: string;
         name: string;
-        type?: 'bool' | 'boolean' | 'date' | 'number';
-        options?: Object;
-        operators: Array<QueryBuilderOperators>;
-    };
+        type?: QueryBuilderType;
+        options?: QueryBuilderOptions;
+        operators: QueryBuilderOperators[];
+        maxOptionsVisible?: string;
+    }
+    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
+    export interface QueryBuilderOptions {
+        [key: string | number]: string | number;
+    }
     export type QueryBuilderOperators = 'eq' | 'neq' | 'before' | 'after' | 'in' | 'matchphrasepre' | 'nmatchphrasepre' | 'matchphrase' | 'nmatchphrase' | 'match' | 'nmatch' | 'starts' | 'nstarts' | 'wild' | 'nwild' | 'fuzzy' | 'nfuzzy' | 'gte' | 'gt' | 'lt' | 'lte';
-    export type CreatedRule = {
+    export interface CreatedRule {
         id: string;
         name: string;
         operator: string;
         value: string;
-    };
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/query-builder
@@ -3199,8 +3221,9 @@ declare module "components/query-builder/query-builder.component" {
         };
         private _selectedRules;
         private _formController;
+        private _previousOperator;
         container: HTMLDivElement;
-        addRule: HTMLSelectElement;
+        addRule: ZnSelect;
         input: HTMLInputElement;
         filters: QueryBuilderData;
         name: string;
@@ -3224,6 +3247,7 @@ declare module "components/query-builder/query-builder.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | ZnSelect;
+        protected createOptions(options: QueryBuilderOptions, selectElement: ZnSelect): void;
     }
 }
 declare module "components/query-builder/index" {
@@ -4620,14 +4644,6 @@ declare module "events/zn-focus" {
         }
     }
 }
-declare module "events/zn-input" {
-    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-input': ZnInputEvent;
-        }
-    }
-}
 declare module "events/zn-show" {
     export type ZnShowEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -4731,14 +4747,6 @@ declare module "events/zn-cancel" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-cancel': ZnCancelEvent;
-        }
-    }
-}
-declare module "events/zn-change" {
-    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-change': ZnChangeEvent;
         }
     }
 }

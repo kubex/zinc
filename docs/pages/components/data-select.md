@@ -16,14 +16,14 @@ layout: component
 
 ## Examples
 
-### Hide Prefix
+### Show Prefix
 
 ```html:preview
 
 <div class="form-spacing">
-  <zn-data-select provider="country" name="country" hide-prefix></zn-data-select>
-  <zn-data-select provider="currency" name="currency" hide-prefix></zn-data-select>
-  <zn-data-select provider="color" name="color" hide-prefix></zn-data-select>
+  <zn-data-select provider="country" name="country" show-prefix></zn-data-select>
+  <zn-data-select provider="currency" name="currency" show-prefix></zn-data-select>
+  <zn-data-select provider="color" name="color" show-prefix></zn-data-select>
 </div>
 ```
 

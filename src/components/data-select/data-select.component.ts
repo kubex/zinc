@@ -16,6 +16,7 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './data-select.scss';
 import {ifDefined} from "lit/directives/if-defined.js";
+import ZnSelect from "../select";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -41,7 +42,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   private readonly localize = new LocalizeController(this);
   protected readonly formControlController = new FormControlController(this);
 
-  @query('#select') select: HTMLSelectElement;
+  @query('#select') select: ZnSelect;
   @query('#select__prefix') selectPrefix: HTMLElement;
 
   /** The name of the select. Used for form submission. */
@@ -53,8 +54,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country';
 
-  /** Should we hide the prefix of the options, and the select. */
-  @property({attribute: 'hide-prefix', type: Boolean}) hidePrefix: boolean;
+  /** Should we show the prefix of the options, and the select. */
+  @property({attribute: 'show-prefix', type: Boolean}) showPrefix: boolean;
 
   /** Should we show the clear button. */
   @property({type: Boolean}) clearable: boolean;
@@ -100,7 +101,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
     // Set the prefix of the select to the selected values prefix
     const selectedOption = this.select.selectedOptions[0];
-    if (selectedOption && !this.hidePrefix) {
+    if (selectedOption && this.showPrefix) {
       const prefix = selectedOption.querySelector('[slot="prefix"]');
 
       if (prefix) {
@@ -152,10 +153,11 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  @zn-clear="${this.handleClear}"
                  value="${this.value}"
                  placeholder="Choose a ${localProvider.getName}">
-        <div id="select__prefix" slot="prefix" class="select__prefix"></div>
+        ${this.showPrefix ? html`
+          <div id="select__prefix" slot="prefix" class="select__prefix"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`
           <zn-option class="select__option" value="${item.key}">
-            ${this.hidePrefix ? '' : html`<span slot="prefix">${item.prefix}</span>`}
+            ${this.showPrefix ? html`<span slot="prefix">${item.prefix}</span>` : ''}
             ${item.value}
           </zn-option>`)}
       </zn-select>

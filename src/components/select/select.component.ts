@@ -256,7 +256,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const root = this.getRootNode();
     root.addEventListener('focusin', this.handleDocumentFocusIn);
     root.addEventListener('keydown', this.handleDocumentKeyDown);
-    root.addEventListener('mousedown', this.handleDocumentMouseDown);
+    document.addEventListener('mousedown', this.handleDocumentMouseDown);
 
     if ('CloseWatcher' in window) {
       this.closeWatcher?.destroy();
@@ -274,7 +274,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const root = this.getRootNode();
     root.removeEventListener('focusin', this.handleDocumentFocusIn);
     root.removeEventListener('keydown', this.handleDocumentKeyDown);
-    root.removeEventListener('mousedown', this.handleDocumentMouseDown);
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown);
 
     this.closeWatcher?.destroy();
   }
@@ -308,8 +308,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
+    console.log('handleDocumentKeyDown', event.key);
     // Close when pressing escape
     if (event.key === 'Escape' && this.open && !this.closeWatcher) {
+      console.log('close');
       event.preventDefault();
       event.stopPropagation();
       this.hide();

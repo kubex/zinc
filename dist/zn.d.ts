@@ -1559,59 +1559,47 @@ declare module "components/empty-state/index" {
         }
     }
 }
-declare module "components/color-select/color-select.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import { FormControlController } from "internal/form";
-    export type Colors = 'red' | 'blue' | 'orange' | 'yellow' | 'indigo' | 'violet' | 'green' | 'pink' | 'gray';
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/color-select
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnColorSelect extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        protected readonly formControlController: FormControlController;
-        name: string;
-        value: string;
-        select: HTMLSelectElement;
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-        handleValueChange(): Promise<void>;
-        handleInput: (e: Event) => void;
-        protected render(): import("lit").TemplateResult<1>;
-    }
+declare module "components/data-select/providers/country-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDataProvider: LocalDataProvider<DataProviderOption>;
 }
-declare module "components/color-select/index" {
-    import ZnColorSelect from "components/color-select/color-select.component";
-    export * from "components/color-select/color-select.component";
-    export default ZnColorSelect;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-color-select': ZnColorSelect;
-        }
+declare module "components/data-select/providers/currency-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const currencyDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/provider" {
+    import type { HTMLTemplateResult } from "lit";
+    /**
+     * Providers are what the data select component uses to get data. They are
+     * responsible for defining the data.
+     */
+    export interface LocalDataProvider<T> {
+        getName: string;
+        getData: T[];
     }
+    export interface RemoteDataProvider<T> {
+        getName: string;
+        getData: () => Promise<T[]>;
+    }
+    export interface DataProviderOption {
+        key: string;
+        value: string;
+        prefix?: string | HTMLTemplateResult;
+    }
+    export const emptyDataProvider: LocalDataProvider<DataProviderOption>;
+    export * from "components/data-select/providers/country-data-provider";
+    export * from "components/data-select/providers/currency-data-provider";
+    export * from "components/data-select/providers/color-data-provider";
+}
+declare module "components/data-select/providers/color-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const colors: string[];
+    export const colorDataProvider: LocalDataProvider<DataProviderOption>;
 }
 declare module "components/note/note.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type { Colors } from "components/color-select/index";
+    import { type colors } from "components/data-select/providers/color-data-provider";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/note
@@ -1632,7 +1620,7 @@ declare module "components/note/note.component" {
      */
     export default class ZnNote extends ZincElement {
         static styles: CSSResultGroup;
-        color: Colors;
+        color: typeof colors[number];
         caption: string;
         date: string;
         body: string;
@@ -3564,7 +3552,7 @@ declare module "components/editor/modules/image-resize-module/image-resize-modul
         private _overlay;
         constructor(quill: Quill, options: ImageResizeModuleOptions);
         handleClick: (e: MouseEvent) => void;
-        handleScroll: (e: MouseEvent) => void;
+        handleScroll: () => void;
         show: (image: HTMLImageElement) => void;
         hide: () => void;
         showOverlay: () => void;
@@ -4528,6 +4516,70 @@ declare module "components/item/index" {
         }
     }
 }
+declare module "components/data-select/data-select.component" {
+    import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
+    import { type CSSResultGroup } from 'lit';
+    import { FormControlController } from "internal/form";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/data-select
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDataSelect extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        protected readonly formControlController: FormControlController;
+        select: HTMLSelectElement;
+        selectPrefix: HTMLElement;
+        /** The name of the select. Used for form submission. */
+        name: string;
+        /** The value of the select. Used for form submission. */
+        value: string;
+        /** The provider of the select. */
+        provider: 'color' | 'currency' | 'country';
+        /** Should we hide the prefix of the options, and the select. */
+        hidePrefix: boolean;
+        /** Should we show the clear button. */
+        clearable: boolean;
+        /** An array of keys to use for filtering the options in the selected provider. */
+        filter: string[];
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        handleValueChange(): Promise<void>;
+        handleInput: (e: Event) => void;
+        handleClear: () => void;
+        getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
+        protected render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/data-select/index" {
+    import ZnDataSelect from "components/data-select/data-select.component";
+    export * from "components/data-select/data-select.component";
+    export default ZnDataSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-select': ZnDataSelect;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -4646,7 +4698,6 @@ declare module "zinc" {
     export { default as Option } from "components/option/index";
     export { default as Textarea } from "components/textarea/index";
     export { default as Checkbox } from "components/checkbox/index";
-    export { default as ColorSelect } from "components/color-select/index";
     export { default as Datepicker } from "components/datepicker/index";
     export { default as FormGroup } from "components/form-group/index";
     export { default as LinkedSelect } from "components/linked-select/index";
@@ -4656,6 +4707,7 @@ declare module "zinc" {
     export { default as DragUpload } from "components/drag-upload/index";
     export { default as CheckboxGroup } from "components/checkbox-group/index";
     export { default as Item } from "components/item/index";
+    export { default as DataSelect } from "components/data-select/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

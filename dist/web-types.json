@@ -16,6 +16,44 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-bulk-actions",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "actions",
+              "value": { "type": "BulkActionData", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "HTMLSelectElement" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "actions", "type": "BulkActionData" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -61,44 +99,6 @@
                 "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-bulk-actions",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "actions",
-              "value": { "type": "BulkActionData", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "HTMLSelectElement" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "actions", "type": "BulkActionData" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
             ],
             "events": [
               {
@@ -854,38 +854,6 @@
           }
         },
         {
-          "name": "zn-color-select",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "select", "type": "HTMLSelectElement" },
-              { "name": "validationMessage" },
-              { "name": "validity", "type": "ValidityState" },
-              { "name": "handleInput" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-cols",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -1090,6 +1058,96 @@
               { "name": "value", "type": "string" },
               { "name": "copyLabel", "type": "string" },
               { "name": "src", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-data-select",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name of the select. Used for form submission.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "value",
+              "description": "The value of the select. Used for form submission.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "provider",
+              "description": "The provider of the select.",
+              "value": { "type": "'color' | 'currency' | 'country'" }
+            },
+            {
+              "name": "hide-prefix",
+              "description": "Should we hide the prefix of the options, and the select.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "clearable",
+              "description": "Should we show the clear button.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "filter",
+              "description": "An array of keys to use for filtering the options in the selected provider.",
+              "value": { "type": "string[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "select", "type": "HTMLSelectElement" },
+              { "name": "selectPrefix", "type": "HTMLElement" },
+              {
+                "name": "name",
+                "description": "The name of the select. Used for form submission.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The value of the select. Used for form submission.",
+                "type": "string"
+              },
+              {
+                "name": "provider",
+                "description": "The provider of the select.",
+                "type": "'color' | 'currency' | 'country'"
+              },
+              {
+                "name": "hidePrefix",
+                "description": "Should we hide the prefix of the options, and the select.",
+                "type": "boolean"
+              },
+              {
+                "name": "clearable",
+                "description": "Should we show the clear button.",
+                "type": "boolean"
+              },
+              {
+                "name": "filter",
+                "description": "An array of keys to use for filtering the options in the selected provider.",
+                "type": "string[]"
+              },
+              { "name": "validationMessage" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "handleInput" },
+              { "name": "handleClear" }
             ],
             "events": [
               {
@@ -2608,7 +2666,7 @@
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
-            { "name": "color", "value": { "type": "Colors" } },
+            { "name": "color", "value": { "type": "typeof colors[number]" } },
             {
               "name": "caption",
               "value": { "type": "string", "default": "''" }
@@ -2626,7 +2684,7 @@
           ],
           "js": {
             "properties": [
-              { "name": "color", "type": "Colors" },
+              { "name": "color", "type": "typeof colors[number]" },
               { "name": "caption", "type": "string" },
               { "name": "date", "type": "string" },
               { "name": "body", "type": "string" }

@@ -14,6 +14,21 @@
       ]
     },
     {
+      "name": "zn-bulk-actions",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/bulk-actions"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -43,21 +58,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-bulk-actions",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/bulk-actions"
         }
       ]
     },
@@ -394,20 +394,6 @@
       ]
     },
     {
-      "name": "zn-color-select",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/color-select"
-        }
-      ]
-    },
-    {
       "name": "zn-cols",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -498,6 +484,52 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/copy-button"
+        }
+      ]
+    },
+    {
+      "name": "zn-data-select",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "name",
+          "description": "The name of the select. Used for form submission.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The value of the select. Used for form submission.",
+          "values": []
+        },
+        {
+          "name": "provider",
+          "description": "The provider of the select.",
+          "values": [
+            { "name": "color" },
+            { "name": "currency" },
+            { "name": "country" }
+          ]
+        },
+        {
+          "name": "hide-prefix",
+          "description": "Should we hide the prefix of the options, and the select.",
+          "values": []
+        },
+        {
+          "name": "clearable",
+          "description": "Should we show the clear button.",
+          "values": []
+        },
+        {
+          "name": "filter",
+          "description": "An array of keys to use for filtering the options in the selected provider.",
+          "values": [{ "name": "string[]" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/data-select"
         }
       ]
     },
@@ -1201,7 +1233,7 @@
       "name": "zn-note",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
-        { "name": "color", "values": [{ "name": "Colors" }] },
+        { "name": "color", "values": [{ "name": "typeof colors[number]" }] },
         { "name": "caption", "values": [] },
         { "name": "date", "values": [] },
         { "name": "body", "values": [] }

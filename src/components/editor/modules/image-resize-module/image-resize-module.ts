@@ -46,7 +46,7 @@ class ImageResizeModule extends Module<ImageResizeModuleOptions>
     }
   };
 
-  handleScroll = (e: MouseEvent) =>
+  handleScroll = () =>
   {
     if(this._focusedImage)
     {

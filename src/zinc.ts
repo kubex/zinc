@@ -51,7 +51,6 @@ export {default as Select} from './components/select';
 export {default as Option} from './components/option';
 export {default as Textarea} from './components/textarea';
 export {default as Checkbox} from './components/checkbox';
-export {default as ColorSelect} from './components/color-select';
 export {default as Datepicker} from './components/datepicker';
 export {default as FormGroup} from './components/form-group';
 export {default as LinkedSelect} from './components/linked-select';
@@ -61,6 +60,7 @@ export {default as RadioGroup} from './components/radio-group';
 export {default as DragUpload} from './components/drag-upload';
 export {default as CheckboxGroup} from './components/checkbox-group';
 export {default as Item} from './components/item';
+export {default as DataSelect} from './components/data-select';
 /* plop:component */
 
 // Utilities

@@ -1,9 +1,10 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import {litToHTML} from "../../utilities/lit-to-html";
 import styles from './query-builder.scss';
 import ZnButton from "../button";
 import ZnInput from "../input";
@@ -94,8 +95,6 @@ export interface CreatedRule {
  * @dependency zn-input
  * @dependency zn-option
  * @dependency zn-select
- *
- * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
  * @slot example - An example slot.
@@ -274,7 +273,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     row.appendChild(comparator);
 
-    let input: ZnSelect | ZnInput;
+    let input: ZnSelect | ZnInput | null;
     switch (filter.type) {
       case 'bool':
       case 'boolean': {
@@ -286,7 +285,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         break;
       }
       case 'date': {
-        input = this._createDateInput(uniqueId)
+        input = this._createDateInput(uniqueId);
         break;
       }
       default: {
@@ -294,16 +293,19 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         break;
       }
     }
+    if (!input) return;
 
-    const remove: ZnButton = document.createElement('zn-button');
-    remove.setAttribute('icon', 'delete');
-    remove.setAttribute('icon-size', '24');
-    remove.setAttribute('color', 'transparent');
-    remove.setAttribute('size', 'square');
-    remove.addEventListener('click', (e: Event) => this._removeRule(uniqueId, e));
-    remove.classList.add('query-builder__remove');
+    const button = html`
+      <zn-button class="query-builder__remove"
+                 icon="delete"
+                 icon-size="24"
+                 color="transparent"
+                 size="square"
+                 @click="${(e: Event) => this._removeRule(uniqueId, e)}">
+      </zn-button>`;
+    const remove = litToHTML<ZnButton>(button);
+    if (!remove) return;
 
-    input.classList.add('query-builder__value');
     const wrapper = document.createElement('div');
     wrapper.classList.add('query-builder__wrapper');
     wrapper.appendChild(input);
@@ -320,62 +322,63 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._handleChange();
   }
 
-  private _createBooleanInput(uniqueId: string): ZnSelect {
-    const input = document.createElement('zn-select') as ZnSelect;
-    const option1: ZnOption = document.createElement('zn-option');
-    option1.value = '1';
-    option1.textContent = 'True';
-    input.appendChild(option1);
-    const option2: ZnOption = document.createElement('zn-option');
-    option2.value = '0';
-    option2.textContent = 'False';
-    input.appendChild(option2);
-    input.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
-    return input;
+  private _createBooleanInput(uniqueId: string): ZnSelect | null {
+    const input = html`
+      <zn-select class="query-builder__value"
+                 @zn-change="${(e: ZnChangeEvent) => this._updateValue(uniqueId, e)}">
+        <zn-option value="1">True</zn-option>
+        <zn-option value="0">False</zn-option>
+      </zn-select>`;
+    return litToHTML<ZnSelect>(input);
   }
 
-  private _createNumberInput(uniqueId: string): ZnInput {
-    const input = document.createElement('zn-input');
-    input.setAttribute('type', 'number');
-    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
-    return input;
+  private _createNumberInput(uniqueId: string): ZnInput | null {
+    const input = html`
+      <zn-input type="number"
+                class="query-builder__value"
+                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+      </zn-input>`;
+    return litToHTML<ZnInput>(input);
   }
 
-  private _createDateInput(uniqueId: string): ZnInput {
-    const input = document.createElement('zn-input');
-    input.setAttribute('type', 'date');
-    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
-    return input;
+  private _createDateInput(uniqueId: string): ZnInput | null {
+    const input = html`
+      <zn-input type="date"
+                class="query-builder__value"
+                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+      </zn-input>`;
+    return litToHTML<ZnInput>(input);
   }
 
-  private _createSelectInput(uniqueId: string, filter: QueryBuilderItem, selectedComparator: QueryBuilderOperators): ZnSelect {
-    const input = document.createElement('zn-select') as ZnSelect;
+  private _createSelectInput(uniqueId: string, filter: QueryBuilderItem, selectedComparator: QueryBuilderOperators): ZnSelect | null {
     const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
-    if (options !== undefined) {
-      this.createOptions(options, input);
-    }
 
-    if (selectedComparator === QueryBuilderOperators.In) {
-      input.setAttribute('name', 'value');
-      input.setAttribute('multiple', 'true');
-      if (filter.maxOptionsVisible !== undefined) {
-        input.setAttribute('max-options-visible', filter.maxOptionsVisible);
-      }
-      input.setAttribute('clearable', 'true');
-      input.setAttribute('selectedItems', JSON.stringify(options));
-    } else {
-      this._updateValue(uniqueId, {target: input});
-    }
+    if (options === undefined) return null;
 
-    input.addEventListener('zn-change', (e: ZnChangeEvent) => this.updateInValue(uniqueId, e));
-    return input;
+    const comparatorIn = selectedComparator === QueryBuilderOperators.In;
+    const input = html`
+      <zn-select class="query-builder__value"
+                 @zn-change="${(e: ZnChangeEvent) => this.updateInValue(uniqueId, e)}"
+                 name=${(comparatorIn ? 'value' : undefined) || nothing}
+                 multiple=${comparatorIn || nothing}
+                 clearable=${comparatorIn || nothing}
+                 max-options-visible=${filter.maxOptionsVisible || nothing}
+                 selectedItems=${(comparatorIn ? JSON.stringify(options) : undefined) || nothing}>
+        ${Object.keys(options).map(key => html`
+          <zn-option value="${key}">
+            ${options[key]}
+          </zn-option>`)}
+      </zn-select>`;
+    return litToHTML<ZnSelect>(input);
   }
 
-  private _createDefaultInput(uniqueId: string): ZnInput {
-    const input = document.createElement('zn-input');
-    input.setAttribute('type', 'text');
-    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
-    return input;
+  private _createDefaultInput(uniqueId: string): ZnInput | null {
+    const input = html`
+      <zn-input type="text"
+                class="query-builder__value"
+                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+      </zn-input>`;
+    return litToHTML<ZnInput>(input);
   }
 
   private _updateOperatorValue(id: string, event: ZnChangeEvent) {

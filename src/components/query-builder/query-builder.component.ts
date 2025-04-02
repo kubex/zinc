@@ -5,12 +5,12 @@ import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './query-builder.scss';
+import ZnButton from "../button";
+import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
-import type ZnButton from "../button";
-import type ZnInput from "../input";
 
 export type QueryBuilderData = QueryBuilderItem[];
 
@@ -90,6 +90,8 @@ export interface CreatedRule {
  * @status experimental
  * @since 1.0
  *
+ * @dependency zn-button
+ * @dependency zn-input
  * @dependency zn-option
  * @dependency zn-select
  *
@@ -105,6 +107,8 @@ export interface CreatedRule {
 export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
+    'zn-button': ZnButton,
+    'zn-input': ZnInput,
     'zn-option': ZnOption,
     'zn-select': ZnSelect,
   };

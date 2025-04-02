@@ -14,6 +14,7 @@ layout: component
   <zn-inline-edit caption="Something" value="1" action="#" method="GET"
                   options="{&quot;1&quot;: &quot;Option 1&quot;,&quot;2&quot;: &quot;Option 2&quot;}">
   </zn-inline-edit>
+  <zn-inline-edit provider="color" caption="Something" name="something" value="gb" edit-text="Edit"></zn-inline-edit>
 </zn-sp>
 ```
 

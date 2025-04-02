@@ -11,7 +11,6 @@ layout: component
   <zn-data-select label="Country" provider="country" name="country"></zn-data-select>
   <zn-data-select label="Currency" provider="currency" name="currency"></zn-data-select>
   <zn-data-select label="Color" provider="color" name="color"></zn-data-select>
-  <zn-data-select label="Common Countries "provider="common-countries" name="common-countries"></zn-data-select>
 </div>
 ```
 

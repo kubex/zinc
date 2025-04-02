@@ -1,15 +1,16 @@
-import {property, query, state} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-import {FormControlController} from "../../internal/form";
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type HTMLTemplateResult, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
+import {FormControlController} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property, query, state} from 'lit/decorators.js';
+import {watch} from "../../internal/watch";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
+import ZnSelect from "../select";
+import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';
-import {defaultValue} from "../../internal/default-value";
-import ZnInput from "../input";
-import ZnSelect from "../select";
-import {watch} from "../../internal/watch";
-import {ifDefined} from "lit/directives/if-defined.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -53,7 +54,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) required: boolean
 
+  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' = 'text';
+
   @property({type: Object}) options: { [key: string]: string } = {};
+
+  @property({attribute: 'provider'}) selectProvider: string;
+
+  @property({attribute: 'show-prefix', type: Boolean}) showPrefix: boolean;
 
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
   @property({attribute: 'help-text'}) helpText: string = '';
@@ -157,32 +164,26 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   protected render() {
     const hasEditText = this.editText;
 
-    let input = html`
-      <zn-input type="text"
-                class="ai__input"
-                name="${this.name}"
-                size="${this.size}"
-                value="${this.value}"
-                help-text="${ifDefined(this.helpText)}"
-                @zn-input="${this.handleInput}"
-                @zn-blur="${this.handleBlur}">
-      </zn-input>`;
-
+    // Default input type to select if options are provided
     if (Object.keys(this.options).length > 0) {
-      input = html`
-        <zn-select class="ai__input"
-                   name="${this.name}"
-                   value="${this.value}"
-                   help-text="${ifDefined(this.helpText)}"
-                   size="${this.size}"
-                   placeholder=" ${this.placeholder}"
-                   @zn-input="${this.handleInput}"
-                   @zn-blur="${this.handleBlur}">
-          ${Object.keys(this.options).map(key => html`
-            <zn-option value="${key}">
-              ${this.options[key]}
-            </zn-option>`)}
-        </zn-select>`;
+      this.inputType = 'select';
+    }
+
+    // Default to data-select if provider is provided
+    if (this.selectProvider) {
+      this.inputType = 'data-select';
+    }
+
+    let input: HTMLTemplateResult;
+    switch (this.inputType) {
+      case 'select':
+        input = this._getSelectInput();
+        break;
+      case 'data-select':
+        input = this._getDataSelectInput();
+        break;
+      default:
+        input = this._getTextInput();
     }
 
     return html`
@@ -215,5 +216,50 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                          color="secondary"></zn-button>`}
         </div>
       </div>`;
+  }
+
+
+  protected _getTextInput(): HTMLTemplateResult {
+    return html`
+      <zn-input type="text"
+                class="ai__input"
+                name="${this.name}"
+                size="${this.size}"
+                value="${this.value}"
+                help-text="${ifDefined(this.helpText)}"
+                @zn-input="${this.handleInput}"
+                @zn-blur="${this.handleBlur}">
+      </zn-input>`;
+  }
+
+  protected _getSelectInput(): HTMLTemplateResult {
+    return html`
+      <zn-select class="ai__input"
+                 name="${this.name}"
+                 value="${this.value}"
+                 help-text="${ifDefined(this.helpText)}"
+                 size="${this.size}"
+                 placeholder=" ${this.placeholder}"
+                 @zn-input="${this.handleInput}"
+                 @zn-blur="${this.handleBlur}">
+        ${Object.keys(this.options).map(key => html`
+          <zn-option value="${key}">
+            ${this.options[key]}
+          </zn-option>`)}
+      </zn-select>`
+  }
+
+  protected _getDataSelectInput(): HTMLTemplateResult {
+    return html`
+      <zn-data-select class="ai__input"
+                      name="${this.name}"
+                      value="${this.value}"
+                      show-prefix="${this.showPrefix}"
+                      help-text="${ifDefined(this.helpText)}"
+                      size="${this.size}"
+                      provider="${this.selectProvider}"
+                      @zn-input="${this.handleInput}"
+                      @zn-blur="${this.handleBlur}">
+      </zn-data-select>`;
   }
 }

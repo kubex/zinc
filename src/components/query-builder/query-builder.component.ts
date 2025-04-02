@@ -308,68 +308,23 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     row.appendChild(comparator);
 
-    let input: ZnSelect | ZnInput | HTMLDivElement;
+    let input: ZnSelect | ZnInput;
     switch (filter.type) {
       case 'bool':
       case 'boolean': {
-        input = document.createElement('zn-select') as ZnSelect;
-        const option1: ZnOption = document.createElement('zn-option');
-        option1.value = '1';
-        option1.textContent = 'True';
-        input.appendChild(option1);
-        const option2: ZnOption = document.createElement('zn-option');
-        option2.value = '0';
-        option2.textContent = 'False';
-        input.appendChild(option2);
-        input.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
+        input = this._createBooleanInput(uniqueId);
         break;
       }
       case 'number': {
-        input = document.createElement('zn-input');
-        input.setAttribute('type', 'number');
-        input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
+        input = this._createNumberInput(uniqueId);
         break;
       }
       case 'date': {
-        if (selectedComparator === 'before' || selectedComparator === 'after') {
-          input = this._getDateInput(uniqueId, '');
-        } else {
-          input = document.createElement('zn-input');
-          input.setAttribute('type', 'date');
-          input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
-        }
+        input = this._createDateInput(uniqueId)
         break;
       }
       default: {
-        if (selectedComparator === 'in') {
-          input = document.createElement('zn-select') as ZnSelect;
-          input.setAttribute('name', 'value');
-          input.setAttribute('multiple', 'true');
-          if (filter.maxOptionsVisible !== undefined) {
-            input.setAttribute('max-options-visible', filter.maxOptionsVisible);
-          }
-          input.setAttribute('clearable', 'true');
-          input.setAttribute('selectedItems', JSON.stringify(filter.options));
-          const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
-          if (options !== undefined) {
-            this.createOptions(options, input);
-          }
-
-          input.addEventListener('zn-change', (e: ZnChangeEvent) => this.updateInValue(uniqueId, e));
-        } else if (filter.options) {
-          input = document.createElement('zn-select') as ZnSelect;
-          const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
-          if (options !== undefined) {
-            this.createOptions(options, input);
-          }
-
-          this._updateValue(uniqueId, {target: input});
-          input.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
-        } else {
-          input = document.createElement('zn-input');
-          input.setAttribute('type', 'text');
-          input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
-        }
+        input = filter.options ? this._createSelectInput(uniqueId, filter, selectedComparator) : this._createDefaultInput(uniqueId);
         break;
       }
     }
@@ -397,6 +352,64 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     }
     this.addRule.value = '';
     this._handleChange();
+  }
+
+  private _createBooleanInput(uniqueId: string): ZnSelect {
+    const input = document.createElement('zn-select') as ZnSelect;
+    const option1: ZnOption = document.createElement('zn-option');
+    option1.value = '1';
+    option1.textContent = 'True';
+    input.appendChild(option1);
+    const option2: ZnOption = document.createElement('zn-option');
+    option2.value = '0';
+    option2.textContent = 'False';
+    input.appendChild(option2);
+    input.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
+    return input;
+  }
+
+  private _createNumberInput(uniqueId: string): ZnInput {
+    const input = document.createElement('zn-input');
+    input.setAttribute('type', 'number');
+    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
+    return input;
+  }
+
+  private _createDateInput(uniqueId: string): ZnInput {
+    const input = document.createElement('zn-input');
+    input.setAttribute('type', 'date');
+    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
+    return input;
+  }
+
+  private _createSelectInput(uniqueId: string, filter: QueryBuilderItem, selectedComparator: QueryBuilderOperators): ZnSelect {
+    const input = document.createElement('zn-select') as ZnSelect;
+    const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
+    if (options !== undefined) {
+      this.createOptions(options, input);
+    }
+
+    if (selectedComparator === 'in') {
+      input.setAttribute('name', 'value');
+      input.setAttribute('multiple', 'true');
+      if (filter.maxOptionsVisible !== undefined) {
+        input.setAttribute('max-options-visible', filter.maxOptionsVisible);
+      }
+      input.setAttribute('clearable', 'true');
+      input.setAttribute('selectedItems', JSON.stringify(options));
+    } else {
+      this._updateValue(uniqueId, {target: input});
+    }
+
+    input.addEventListener('zn-change', (e: ZnChangeEvent) => this.updateInValue(uniqueId, e));
+    return input;
+  }
+
+  private _createDefaultInput(uniqueId: string): ZnInput {
+    const input = document.createElement('zn-input');
+    input.setAttribute('type', 'text');
+    input.addEventListener('zn-input', (e: ZnInputEvent) => this._updateValue(uniqueId, e));
+    return input;
   }
 
   private _updateOperatorValue(id: string, event: ZnChangeEvent) {

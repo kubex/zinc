@@ -1925,212 +1925,6 @@ declare module "internal/default-value" {
     import type { ReactiveElement } from 'lit';
     export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
 }
-declare module "components/input/input.component" {
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnTooltip from "components/tooltip/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/input
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-blur - Emitted when the control loses focus.
-     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
-     * @event zn-clear - Emitted when the clear button is activated.
-     * @event zn-focus - Emitted when the control gains focus.
-     * @event zn-input - Emitted when the control receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
-     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
-     * @slot suffix - Used to append a presentational icon or similar element to the input.
-     * @slot clear-icon - An icon to use in lieu of the default clear icon.
-     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
-     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
-     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
-     *
-     * @csspart form-control - The form control that wraps the label, input, and help text.
-     * @csspart form-control-label - The label's wrapper.
-     * @csspart form-control-input - The input's wrapper.
-     * @csspart form-control-help-text - The help text's wrapper.
-     * @csspart base - The component's base wrapper.
-     * @csspart input - The internal `<input>` control.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart clear-button - The clear button.
-     * @csspart password-toggle-button - The password toggle button.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnInput extends ZincElement implements ZincFormControl {
-        static styles: import("lit").CSSResult;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        private readonly localize;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        private __numberInput;
-        private __dateInput;
-        /**
-         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
-         * to `text`
-         */
-        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
-        /** The name of the input, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the input, submitted as a name/value pair with form data. */
-        value: any;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
-        /** The inputs size **/
-        size: 'small' | 'medium' | 'large';
-        /** Draws a pill-styled input **/
-        pill: boolean;
-        /** The inputs label. If you need to display HTML, use the `label` slot. **/
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
-         * `label-tooltip` slot.
-         * **/
-        labelTooltip: string;
-        /**
-         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
-         * in this text, use the `context-note` slot instead
-         */
-        contextNote: string;
-        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-        helpText: string;
-        /** Adds a clear button when the input is not empty **/
-        clearable: boolean;
-        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
-         * optional icon.
-         */
-        optionalIcon: boolean;
-        /** Disables the input **/
-        disabled: boolean;
-        /** Placeholder text to show as a hint when the input is empty. */
-        placeholder: string;
-        /** Makes the input read-only **/
-        readonly: boolean;
-        /** Adds a button to toggle the passwords visibility, only applies to password types **/
-        passwordToggle: boolean;
-        /** Determines whether or no the password is currently visible. Only applies to password types **/
-        passwordVisible: boolean;
-        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
-        noSpinButtons: boolean;
-        /**
-         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
-         * in the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the input a required field. */
-        required: boolean;
-        /** A regular expression pattern to validate input against. */
-        pattern: string;
-        /** The minimum length of input that will be considered valid. */
-        minlength: number;
-        /** The maximum length of input that will be considered valid. */
-        maxlength: number;
-        /** The input's minimum value. Only applies to date and number input types. */
-        min: number | string;
-        /** The input's maximum value. Only applies to date and number input types. */
-        max: number | string;
-        /**
-         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
-         * implied, allowing any numeric value. Only applies to date and number input types.
-         */
-        step: number | 'any';
-        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
-        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
-        /** Indicates whether the browser's autocorrect feature is on or off. */
-        autocorrect: 'off' | 'on';
-        /**
-         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
-         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
-         */
-        autocomplete: string;
-        /** Indicates that the input should receive focus on page load. */
-        autofocus: boolean;
-        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
-        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
-        /** Enables spell checking on the input. */
-        spellcheck: boolean;
-        /**
-         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
-         * keyboard on supportive devices.
-         */
-        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
-        /**
-         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
-         * the native `<input type="{{type}}">` implementation and may result in an error.
-         */
-        get valueAsDate(): Date | null;
-        set valueAsDate(newValue: Date | null);
-        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
-        get valueAsNumber(): number;
-        set valueAsNumber(newValue: number);
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        private validateMinMax;
-        private handleBlur;
-        private handleChange;
-        private handleClearClick;
-        private handleFocus;
-        private handleInput;
-        private handleInvalid;
-        private handleKeyDown;
-        private handlePasswordToggle;
-        handleDisabledChange(): void;
-        handleStepChange(): void;
-        handleValueChange(): Promise<void>;
-        /** Sets focus on the input. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the input. */
-        blur(): void;
-        /** Selects all the text in the input. */
-        select(): void;
-        /** Sets the start and end positions of the text selection (0-based). */
-        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
-        /** Replaces a range of text with a new string. */
-        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
-        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
-        showPicker(): void;
-        /** Increments the value of a numeric input type by the value of the step attribute. */
-        stepUp(): void;
-        /** Decrements the value of a numeric input type by the value of the step attribute. */
-        stepDown(): void;
-        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/input/index" {
-    import ZnInput from "components/input/input.component";
-    export * from "components/input/input.component";
-    export default ZnInput;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-input': ZnInput;
-        }
-    }
-}
 declare module "internal/animate" {
     /**
      * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
@@ -2459,11 +2253,218 @@ declare module "components/select/index" {
         }
     }
 }
-declare module "components/inline-edit/inline-edit.component" {
-    import { type CSSResultGroup } from 'lit';
+declare module "components/input/input.component" {
     import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import ZnInput from "components/input/index";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/input
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-tooltip
+     *
+     * @event zn-blur - Emitted when the control loses focus.
+     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
+     * @event zn-clear - Emitted when the clear button is activated.
+     * @event zn-focus - Emitted when the control gains focus.
+     * @event zn-input - Emitted when the control receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
+     * @slot suffix - Used to append a presentational icon or similar element to the input.
+     * @slot clear-icon - An icon to use in lieu of the default clear icon.
+     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
+     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+     *
+     * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The input's wrapper.
+     * @csspart form-control-help-text - The help text's wrapper.
+     * @csspart base - The component's base wrapper.
+     * @csspart input - The internal `<input>` control.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart clear-button - The clear button.
+     * @csspart password-toggle-button - The password toggle button.
+     * @csspart suffix - The container that wraps the suffix.
+     */
+    export default class ZnInput extends ZincElement implements ZincFormControl {
+        static styles: import("lit").CSSResult;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        private readonly localize;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        private __numberInput;
+        private __dateInput;
+        /**
+         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
+         * to `text`
+         */
+        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        /** The name of the input, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'small' | 'medium' | 'large';
+        /** Draws a pill-styled input **/
+        pill: boolean;
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Adds a clear button when the input is not empty **/
+        clearable: boolean;
+        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
+         * optional icon.
+         */
+        optionalIcon: boolean;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /** Adds a button to toggle the passwords visibility, only applies to password types **/
+        passwordToggle: boolean;
+        /** Determines whether or no the password is currently visible. Only applies to password types **/
+        passwordVisible: boolean;
+        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
+        noSpinButtons: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** A regular expression pattern to validate input against. */
+        pattern: string;
+        /** The minimum length of input that will be considered valid. */
+        minlength: number;
+        /** The maximum length of input that will be considered valid. */
+        maxlength: number;
+        /** The input's minimum value. Only applies to date and number input types. */
+        min: number | string;
+        /** The input's maximum value. Only applies to date and number input types. */
+        max: number | string;
+        /**
+         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
+         * implied, allowing any numeric value. Only applies to date and number input types.
+         */
+        step: number | 'any';
+        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
+        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+        /** Indicates whether the browser's autocorrect feature is on or off. */
+        autocorrect: 'off' | 'on';
+        /**
+         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
+         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
+         */
+        autocomplete: string;
+        /** Indicates that the input should receive focus on page load. */
+        autofocus: boolean;
+        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
+        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
+        /** Enables spell checking on the input. */
+        spellcheck: boolean;
+        /**
+         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
+         * keyboard on supportive devices.
+         */
+        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+        /**
+         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
+         * the native `<input type="{{type}}">` implementation and may result in an error.
+         */
+        get valueAsDate(): Date | null;
+        set valueAsDate(newValue: Date | null);
+        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
+        get valueAsNumber(): number;
+        set valueAsNumber(newValue: number);
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        private validateMinMax;
+        private handleBlur;
+        private handleChange;
+        private handleClearClick;
+        private handleFocus;
+        private handleInput;
+        private handleInvalid;
+        private handleKeyDown;
+        private handlePasswordToggle;
+        handleDisabledChange(): void;
+        handleStepChange(): void;
+        handleValueChange(): Promise<void>;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Sets the start and end positions of the text selection (0-based). */
+        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
+        /** Replaces a range of text with a new string. */
+        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
+        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
+        showPicker(): void;
+        /** Increments the value of a numeric input type by the value of the step attribute. */
+        stepUp(): void;
+        /** Decrements the value of a numeric input type by the value of the step attribute. */
+        stepDown(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/input/index" {
+    import ZnInput from "components/input/input.component";
+    export * from "components/input/input.component";
+    export default ZnInput;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-input': ZnInput;
+        }
+    }
+}
+declare module "components/inline-edit/inline-edit.component" {
+    import { type CSSResultGroup, type HTMLTemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
+    import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/inline-edit
@@ -2493,9 +2494,12 @@ declare module "components/inline-edit/inline-edit.component" {
         padded: boolean;
         size: 'small' | 'medium' | 'large';
         required: boolean;
+        inputType: 'select' | 'text' | 'data-select';
         options: {
             [key: string]: string;
         };
+        selectProvider: string;
+        showPrefix: boolean;
         /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
         helpText: string;
         private hasFocus;
@@ -2520,6 +2524,9 @@ declare module "components/inline-edit/inline-edit.component" {
         handleBlur: () => void;
         handleInput: (e: Event) => void;
         protected render(): import("lit").TemplateResult<1>;
+        protected _getTextInput(): HTMLTemplateResult;
+        protected _getSelectInput(): HTMLTemplateResult;
+        protected _getDataSelectInput(): HTMLTemplateResult;
     }
 }
 declare module "components/inline-edit/index" {

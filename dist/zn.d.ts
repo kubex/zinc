@@ -4576,12 +4576,29 @@ declare module "components/data-select/data-select.component" {
         value: string;
         /** The provider of the select. */
         provider: 'color' | 'currency' | 'country';
-        /** Should we show the prefix of the options, and the select. */
+        /** Whether we should show the prefix of the options, and the select. */
         showPrefix: boolean;
-        /** Should we show the clear button. */
-        clearable: boolean;
         /** An array of keys to use for filtering the options in the selected provider. */
         filter: string[];
+        /** The selects size. */
+        size: 'small' | 'medium' | 'large';
+        /** Should we show the clear button */
+        clearable: boolean;
+        /** The selects label. If you need to display HTML, use the `label` slot instead. */
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
+        contextNote: string;
+        /**
+         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
+         * inside the viewport.
+         */
+        placement: 'top' | 'bottom';
+        /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /** The selects required attribute. */
+        required: boolean;
         get validationMessage(): string;
         get validity(): ValidityState;
         checkValidity(): boolean;

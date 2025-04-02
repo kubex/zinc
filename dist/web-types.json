@@ -16,6 +16,44 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-bulk-actions",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "actions",
+              "value": { "type": "BulkActionData", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "HTMLSelectElement" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "actions", "type": "BulkActionData" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -61,44 +99,6 @@
                 "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-bulk-actions",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "actions",
-              "value": { "type": "BulkActionData", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "HTMLSelectElement" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "actions", "type": "BulkActionData" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
             ],
             "events": [
               {
@@ -1089,18 +1089,56 @@
             },
             {
               "name": "show-prefix",
-              "description": "Should we show the prefix of the options, and the select.",
-              "value": { "type": "boolean" }
-            },
-            {
-              "name": "clearable",
-              "description": "Should we show the clear button.",
+              "description": "Whether we should show the prefix of the options, and the select.",
               "value": { "type": "boolean" }
             },
             {
               "name": "filter",
               "description": "An array of keys to use for filtering the options in the selected provider.",
               "value": { "type": "string[]" }
+            },
+            {
+              "name": "size",
+              "description": "The selects size.",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "clearable",
+              "description": "Should we show the clear button",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "label",
+              "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "label-tooltip",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "context-note",
+              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "placement",
+              "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
+              "value": { "type": "'top' | 'bottom'", "default": "'bottom'" }
+            },
+            {
+              "name": "help-text",
+              "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "required",
+              "description": "The selects required attribute.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -1131,18 +1169,53 @@
               },
               {
                 "name": "showPrefix",
-                "description": "Should we show the prefix of the options, and the select.",
-                "type": "boolean"
-              },
-              {
-                "name": "clearable",
-                "description": "Should we show the clear button.",
+                "description": "Whether we should show the prefix of the options, and the select.",
                 "type": "boolean"
               },
               {
                 "name": "filter",
                 "description": "An array of keys to use for filtering the options in the selected provider.",
                 "type": "string[]"
+              },
+              {
+                "name": "size",
+                "description": "The selects size.",
+                "type": "'small' | 'medium' | 'large'"
+              },
+              {
+                "name": "clearable",
+                "description": "Should we show the clear button",
+                "type": "boolean"
+              },
+              {
+                "name": "label",
+                "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "labelTooltip",
+                "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "contextNote",
+                "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "placement",
+                "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
+                "type": "'top' | 'bottom'"
+              },
+              {
+                "name": "helpText",
+                "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "required",
+                "description": "The selects required attribute.",
+                "type": "boolean"
               },
               { "name": "validationMessage" },
               { "name": "validity", "type": "ValidityState" },

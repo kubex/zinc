@@ -14,6 +14,21 @@
       ]
     },
     {
+      "name": "zn-bulk-actions",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/bulk-actions"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -43,21 +58,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-bulk-actions",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/bulk-actions"
         }
       ]
     },
@@ -512,18 +512,57 @@
         },
         {
           "name": "show-prefix",
-          "description": "Should we show the prefix of the options, and the select.",
-          "values": []
-        },
-        {
-          "name": "clearable",
-          "description": "Should we show the clear button.",
+          "description": "Whether we should show the prefix of the options, and the select.",
           "values": []
         },
         {
           "name": "filter",
           "description": "An array of keys to use for filtering the options in the selected provider.",
           "values": [{ "name": "string[]" }]
+        },
+        {
+          "name": "size",
+          "description": "The selects size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "clearable",
+          "description": "Should we show the clear button",
+          "values": []
+        },
+        {
+          "name": "label",
+          "description": "The selects label. If you need to display HTML, use the `label` slot instead.",
+          "values": []
+        },
+        {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+          "values": []
+        },
+        {
+          "name": "context-note",
+          "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead.",
+          "values": []
+        },
+        {
+          "name": "placement",
+          "description": "The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox\ninside the viewport.",
+          "values": [{ "name": "top" }, { "name": "bottom" }]
+        },
+        {
+          "name": "help-text",
+          "description": "The selects help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "The selects required attribute.",
+          "values": []
         }
       ],
       "references": [

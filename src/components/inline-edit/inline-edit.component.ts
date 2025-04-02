@@ -254,7 +254,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       <zn-data-select class="ai__input"
                       name="${this.name}"
                       value="${this.value}"
-                      show-prefix="${this.showPrefix}"
+                      show-prefix="${ifDefined(this.showPrefix)}"
                       help-text="${ifDefined(this.helpText)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"

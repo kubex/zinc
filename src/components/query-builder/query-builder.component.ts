@@ -29,27 +29,53 @@ export interface QueryBuilderOptions {
   [key: string | number]: string | number;
 }
 
-export type QueryBuilderOperators = 'eq' |
-  'neq' |
-  'before' |
-  'after' |
-  'in' |
-  'matchphrasepre' |
-  'nmatchphrasepre' |
-  'matchphrase' |
-  'nmatchphrase' |
-  'match' |
-  'nmatch' |
-  'starts' |
-  'nstarts' |
-  'wild' |
-  'nwild' |
-  'fuzzy' |
-  'nfuzzy' |
-  'gte' |
-  'gt' |
-  'lt' |
-  'lte';
+export enum QueryBuilderOperators {
+  Eq = 'eq',
+  Neq = 'neq',
+  Before = 'before',
+  After = 'after',
+  In = 'in',
+  MatchPhrasePre = 'matchphrasepre',
+  NMatchPhrasePre = 'nmatchphrasepre',
+  MatchPhrase = 'matchphrase',
+  NMatchPhrase = 'nmatchphrase',
+  Match = 'match',
+  NMatch = 'nmatch',
+  Starts = 'starts',
+  NStarts = 'nstarts',
+  Wild = 'wild',
+  NWild = 'nwild',
+  Fuzzy = 'fuzzy',
+  NFuzzy = 'nfuzzy',
+  Gte = 'gte',
+  Gt = 'gt',
+  Lt = 'lt',
+  Lte = 'lte'
+}
+
+const operatorText: { [key in QueryBuilderOperators]: string } = {
+  [QueryBuilderOperators.Eq]: 'Equals',
+  [QueryBuilderOperators.Neq]: 'Not Equals',
+  [QueryBuilderOperators.Before]: 'Was Before',
+  [QueryBuilderOperators.After]: 'Was After',
+  [QueryBuilderOperators.In]: 'In',
+  [QueryBuilderOperators.MatchPhrasePre]: 'Match Phrase Prefix',
+  [QueryBuilderOperators.NMatchPhrasePre]: 'Does Not Match Phrase Prefix',
+  [QueryBuilderOperators.MatchPhrase]: 'Match Phrase',
+  [QueryBuilderOperators.NMatchPhrase]: 'Does Not Match Phrase',
+  [QueryBuilderOperators.Match]: 'Match',
+  [QueryBuilderOperators.NMatch]: 'Does Not Match',
+  [QueryBuilderOperators.Starts]: 'Starts With',
+  [QueryBuilderOperators.NStarts]: 'Does Not Start With',
+  [QueryBuilderOperators.Wild]: 'Wildcard Match',
+  [QueryBuilderOperators.NWild]: 'Does Not Match Wildcard',
+  [QueryBuilderOperators.Fuzzy]: 'Fuzzy Match With',
+  [QueryBuilderOperators.NFuzzy]: 'Does Not Match Fuzzy With',
+  [QueryBuilderOperators.Gte]: 'Greater Than or Equals',
+  [QueryBuilderOperators.Gt]: 'Greater Than',
+  [QueryBuilderOperators.Lt]: 'Less Than',
+  [QueryBuilderOperators.Lte]: 'Less Than or Equals',
+};
 
 export interface CreatedRule {
   id: string;
@@ -188,76 +214,11 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     row.appendChild(select);
 
     const comparator = document.createElement('zn-select') as ZnSelect;
-    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : 'eq';
+    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
     filter.operators.forEach((item: QueryBuilderOperators) => {
       const option = document.createElement('zn-option') as ZnOption;
       option.value = item;
-      switch (item) {
-        case 'eq':
-          option.innerText = 'Equals';
-          break;
-        case 'neq':
-          option.innerText = 'Not Equals';
-          break;
-        case 'before':
-          option.innerText = 'Was Before';
-          break;
-        case 'after':
-          option.innerText = 'Was After';
-          break;
-        case 'in':
-          option.innerText = 'In';
-          break;
-        case 'matchphrasepre':
-          option.innerText = 'Match Phrase Prefix';
-          break;
-        case 'nmatchphrasepre':
-          option.innerText = 'Does Not Match Phrase Prefix';
-          break;
-        case 'matchphrase':
-          option.innerText = 'Match Phrase';
-          break;
-        case 'nmatchphrase':
-          option.innerText = 'Does Not Match Phrase';
-          break;
-        case 'match':
-          option.innerText = 'Match';
-          break;
-        case 'nmatch':
-          option.innerText = 'Does Not Match';
-          break;
-        case 'starts':
-          option.innerText = 'Starts With';
-          break;
-        case 'nstarts':
-          option.innerText = 'Does Not Start With';
-          break;
-        case 'wild':
-          option.innerText = 'Wildcard Match';
-          break;
-        case 'nwild':
-          option.innerText = 'Does Not Match Wildcard';
-          break;
-        case 'fuzzy':
-          option.innerText = 'Fuzzy Match With';
-          break;
-        case 'nfuzzy':
-          option.innerText = 'Does Not Match Fuzzy With';
-          break;
-        case 'gte':
-          option.innerText = 'Greater Than or Equals';
-          break;
-        case 'gt':
-          option.innerText = 'Greater Than';
-          break;
-        case 'lt':
-          option.innerText = 'Less Than';
-          break;
-        case 'lte':
-          option.innerText = 'Less Than or Equals';
-          break;
-
-      }
+      option.innerText = operatorText[item as QueryBuilderOperators];
       comparator.appendChild(option);
     });
     comparator.defaultValue = filter.operators[0];
@@ -390,7 +351,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       this.createOptions(options, input);
     }
 
-    if (selectedComparator === 'in') {
+    if (selectedComparator === QueryBuilderOperators.In) {
       input.setAttribute('name', 'value');
       input.setAttribute('multiple', 'true');
       if (filter.maxOptionsVisible !== undefined) {

@@ -267,76 +267,45 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       comparator.setAttribute('disabled', 'disabled');
     }
 
-    if (filter.type === 'date') {
-      // we need to re-render the filter options if the selected value is lt or gt
-      comparator.addEventListener('zn-change', (changeEvent: ZnChangeEvent) => {
-        const compareSelect = changeEvent.target as ZnSelect;
-        const input: ZnInput | null = row.querySelector('.query-builder__value');
-        const parent = input?.parentElement as HTMLDivElement;
-        const compareFilter: CreatedRule | undefined = this._selectedRules.get(uniqueId);
-        if (!isNull(input) && !isUndefined(compareFilter)) {
-          parent.removeChild(input);
+    comparator.addEventListener('zn-change', (changeEvent: ZnChangeEvent) => {
+      // Date comparisons do not need to change input
+      if (filter.type === 'date') return;
 
-          if (compareSelect.value === 'before' || compareSelect.value === 'after') {
-            const newInput = this._getDateInput(uniqueId, compareFilter.value);
-            newInput.setAttribute('type', 'number');
-            newInput.setAttribute('name', 'value');
-            newInput.classList.add('query-builder__value');
-            parent.appendChild(newInput);
-          } else {
-            const newInput = document.createElement('zn-input');
-            newInput.classList.add('query-builder__value');
-            newInput.value = compareFilter.value;
-            this._updateValue(uniqueId, {target: newInput});
-            newInput.setAttribute('type', 'date');
-            newInput.addEventListener('zn-input', (inputEvent: ZnInputEvent) => this._updateValue(uniqueId, inputEvent));
-            parent.appendChild(newInput);
-          }
+      const compareSelect = changeEvent.target as ZnSelect;
+
+      // Comparison the same - no change
+      if (compareSelect.value === this._previousOperator) return;
+
+      const input: ZnInput | null = row.querySelector('.query-builder__value');
+
+      // Cannot find input
+      if (!input) return;
+
+      const parent = input?.parentElement as HTMLDivElement;
+      const compareFilter: CreatedRule | undefined = this._selectedRules.get(uniqueId);
+      const newInput = document.createElement('zn-select') as ZnSelect;
+      newInput.classList.add('query-builder__value');
+      parent.removeChild(input);
+
+      if (compareSelect.value === 'in') {
+        newInput.setAttribute('name', 'value');
+        newInput.setAttribute('multiple', 'true');
+        if (filter.maxOptionsVisible !== undefined) {
+          newInput.setAttribute('max-options-visible', filter.maxOptionsVisible);
         }
-      });
-    } else {
-      comparator.addEventListener('zn-change', (changeEvent: ZnChangeEvent) => {
-        // if selected comparator is in
-        const compareSelect = changeEvent.target as ZnSelect;
-        const input: ZnInput | null = row.querySelector('.query-builder__value');
-        const parent = input?.parentElement as HTMLDivElement;
-        const compareFilter: CreatedRule | undefined = this._selectedRules.get(uniqueId);
-        if (!isNull(input)) {
-          if (compareSelect.value !== this._previousOperator && compareSelect.value === 'in') {
-            parent.removeChild(input);
-            const newInput = document.createElement('zn-select') as ZnSelect;
-            newInput.classList.add('query-builder__value');
-            newInput.setAttribute('name', 'value');
-            newInput.setAttribute('multiple', 'true');
-            if (!isUndefined(filter.maxOptionsVisible)) {
-              newInput.setAttribute('max-options-visible', filter.maxOptionsVisible);
-            }
-            newInput.setAttribute('clearable', 'true');
-            newInput.addEventListener('zn-change', (e: ZnChangeEvent) => this.updateInValue(uniqueId, e));
+        newInput.setAttribute('clearable', 'true');
+      } else {
+        this._updateValue(uniqueId, {target: newInput});
+      }
 
-            const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === compareFilter?.id)?.options;
-            if (!isUndefined(options)) {
-              this.createOptions(options, newInput);
-            }
+      const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === compareFilter?.id)?.options;
+      if (options !== undefined) {
+        this.createOptions(options, newInput);
+      }
 
-            parent.appendChild(newInput);
-          } else if (compareSelect.value !== this._previousOperator) {
-            parent.removeChild(input);
-            const newInput = document.createElement('zn-select') as ZnSelect;
-            newInput.classList.add('query-builder__value');
-
-            const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === compareFilter?.id)?.options;
-            if (!isUndefined(options)) {
-              this.createOptions(options, newInput);
-            }
-
-            this._updateValue(uniqueId, {target: newInput});
-            newInput.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
-            parent.appendChild(newInput);
-          }
-        }
-      });
-    }
+      newInput.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
+      parent.prepend(newInput);
+    });
 
     row.appendChild(comparator);
 

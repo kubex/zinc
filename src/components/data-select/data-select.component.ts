@@ -4,19 +4,19 @@ import {
   currencyDataProvider,
   type DataProviderOption,
   emptyDataProvider,
-  type LocalDataProvider
+  type LocalDataProvider,
 } from "./providers/provider";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from '../../utilities/localize';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import ZnSelect from "../select";
 
 import styles from './data-select.scss';
-import {ifDefined} from "lit/directives/if-defined.js";
-import ZnSelect from "../select";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -54,11 +54,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country';
 
-  /** Should we show the prefix of the options, and the select. */
+  /** Whether we should show the prefix of the options, and the select. */
   @property({attribute: 'show-prefix', type: Boolean}) showPrefix: boolean;
-
-  /** Should we show the clear button. */
-  @property({type: Boolean}) clearable: boolean;
 
   /** An array of keys to use for filtering the options in the selected provider. */
   @property({
@@ -68,6 +65,33 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       toAttribute: (value: string[]) => value.join(',')
     }
   }) filter: string[];
+
+  /** The selects size. */
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+
+  /** Should we show the clear button */
+  @property({type: Boolean}) clearable: boolean;
+
+  /** The selects label. If you need to display HTML, use the `label` slot instead. */
+  @property() label = '';
+
+  /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+  @property({attribute: 'label-tooltip'}) labelTooltip = '';
+
+  /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
+  @property({attribute: 'context-note'}) contextNote = '';
+
+  /**
+   * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
+   * inside the viewport.
+   */
+  @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
+
+  /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
+  @property({attribute: 'help-text'}) helpText = '';
+
+  /** The selects required attribute. */
+  @property({type: Boolean, reflect: true}) required = false;
 
 
   get validationMessage() {
@@ -148,6 +172,13 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     return html`
       <zn-select id="select"
                  clearable="${ifDefined(this.clearable)}"
+                 size="${this.size}"
+                 label="${this.label}"
+                 label-tooltip="${this.labelTooltip}"
+                 context-note="${this.contextNote}"
+                 help-text="${this.helpText}"
+                 required="${ifDefined(this.required)}"
+                 placement="${this.placement}"
                  name="${this.name}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"

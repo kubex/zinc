@@ -1,6 +1,6 @@
 import type {DataProviderOption, LocalDataProvider} from "./provider";
 
-const countryIsoToName: {[key: string]: string} = {
+const countryIsoToName: { [key: string]: string } = {
   "AD": "Andorra",
   "AE": "United Arab Emirates",
   "AF": "Afghanistan",
@@ -253,7 +253,7 @@ const countryIsoToName: {[key: string]: string} = {
   "ZW": "Zimbabwe"
 }
 
-const countryIsoToEmoji: {[key: string]: string} = {
+const countryIsoToEmoji: { [key: string]: string } = {
   "AD": "🇦🇩",
   "AE": "🇦🇪",
   "AF": "🇦🇫",

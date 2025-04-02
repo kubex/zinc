@@ -260,6 +260,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       }
       comparator.appendChild(option);
     });
+    comparator.defaultValue = filter.operators[0];
     comparator.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateOperatorValue(uniqueId, e));
     comparator.classList.add('query-builder__comparator');
     if (comparator.querySelectorAll('zn-option').length === 1) {

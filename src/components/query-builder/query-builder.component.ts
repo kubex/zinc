@@ -437,29 +437,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._handleChange();
   }
 
-  private _updateDateValue(id: string, event: Event) {
-    const filter = this._selectedRules.get(id);
-    if (!filter) return;
-
-    const parent = (event.target as HTMLElement).parentElement;
-    const number: ZnInput | null | undefined = parent?.querySelector('zn-input[name="number"]');
-    const date: ZnSelect | null | undefined = parent?.querySelector('zn-select[name="date"]');
-    const ago: ZnSelect | null | undefined = parent?.querySelector('zn-select[name="ago"]');
-
-    let value: string | undefined = number?.value as string;
-    if (date?.value !== '1') {
-      value = (parseInt(number?.value as string) * parseInt(date?.value as string)).toString();
-    }
-
-    if (ago?.value === '1') {
-      value = '-' + value;
-    }
-
-    filter.value = value;
-    this._selectedRules.set(id, filter);
-    this._handleChange();
-  }
-
   private updateInValue(id: string, event: Event) {
     const filter = this._selectedRules.get(id);
     if (!filter) return;
@@ -480,7 +457,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._removeRule(id, event);
     this._addRule(event, '', pos);
   }
-
 
   private _getRulePosition(id: string): number {
     const rules = this.container.querySelectorAll('.query-builder__row');
@@ -515,51 +491,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   setCustomValidity(message: string): void {
     this.input.setCustomValidity(message);
     this._formController.updateValidity();
-  }
-
-  protected _getDateInput(uniqueId: string, value: string): HTMLDivElement | HTMLInputElement | ZnSelect {
-    // split into group
-    const input = document.createElement('div');
-    input.classList.add('query-builder__date');
-
-    // number input
-    const numberInput = document.createElement('zn-input');
-    numberInput.setAttribute('type', 'number');
-    numberInput.setAttribute('name', 'number');
-    numberInput.value = value ?? '';
-    numberInput.addEventListener('zn-input', (e: ZnInputEvent) => this._updateDateValue(uniqueId, e));
-
-    // dropdown for minutes, hours, days, weeks
-    const dropdown = document.createElement('zn-select') as ZnSelect;
-    dropdown.setAttribute('name', 'date');
-    dropdown.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateDateValue(uniqueId, e));
-
-    const options: QueryBuilderOptions = {
-      '1': 'Minutes',
-      '60': 'Hours',
-      '1440': 'Days',
-      '10080': 'Weeks'
-    };
-
-    this.createOptions(options, dropdown);
-
-    // dropdown ago or from now
-    const ago = document.createElement('zn-select') as ZnSelect;
-    ago.setAttribute('name', 'ago');
-    ago.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateDateValue(uniqueId, e));
-
-    const agoOptions: QueryBuilderOptions = {
-      '-1': 'From Now',
-      '1': 'Ago'
-    };
-
-    this.createOptions(agoOptions, ago);
-
-    input.appendChild(numberInput);
-    input.appendChild(dropdown);
-    input.appendChild(ago);
-
-    return input;
   }
 
   protected createOptions(options: QueryBuilderOptions, selectElement: ZnSelect) {

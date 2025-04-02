@@ -4,7 +4,6 @@ import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
-import {isNull, isUndefined} from "lodash";
 import styles from './query-builder.scss';
 import ZnOption from "../option";
 import ZnSelect from "../select";
@@ -159,7 +158,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     if (id === '') return;
 
     const filter: QueryBuilderItem | undefined = this.filters.find(item => item.id === id);
-    if (isUndefined(filter)) return;
+    if (filter === undefined) return;
 
     const uniqueId = Math.random().toString(36).substring(7);
     this._selectedRules.set(uniqueId, {
@@ -346,13 +345,13 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
           input = document.createElement('zn-select') as ZnSelect;
           input.setAttribute('name', 'value');
           input.setAttribute('multiple', 'true');
-          if (!isUndefined(filter.maxOptionsVisible)) {
+          if (filter.maxOptionsVisible !== undefined) {
             input.setAttribute('max-options-visible', filter.maxOptionsVisible);
           }
           input.setAttribute('clearable', 'true');
           input.setAttribute('selectedItems', JSON.stringify(filter.options));
           const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
-          if (!isUndefined(options)) {
+          if (options !== undefined) {
             this.createOptions(options, input);
           }
 
@@ -360,7 +359,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         } else if (filter.options) {
           input = document.createElement('zn-select') as ZnSelect;
           const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === filter?.id)?.options;
-          if (!isUndefined(options)) {
+          if (options !== undefined) {
             this.createOptions(options, input);
           }
 
@@ -391,6 +390,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     row.appendChild(remove);
 
     if (!isUndefined(pos)) {
+    if (pos !== undefined) {
       this.container.insertBefore(row, this.container.children[pos]);
     } else {
       this.container.insertBefore(row, this.addRule);

@@ -311,7 +311,7 @@ export const currencyDataProvider: LocalDataProvider<DataProviderOption> = {
   getName: 'currency',
   getData: Object.entries(currencyCodeToName).map(([key, value]: [string, string]) => {
     return {
-      key: key.toLowerCase(),
+      key,
       value,
       prefix: currencyCodeToSymbol[key] ? currencyCodeToSymbol[key] : ''
     };

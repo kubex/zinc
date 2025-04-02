@@ -510,7 +510,7 @@ export const countryDataProvider: LocalDataProvider<DataProviderOption> = {
   getName: 'country',
   getData: Object.entries(countryIsoToName).map(([key, value]: [string, string]) => {
     return {
-      key: key.toLowerCase(),
+      key,
       value,
       prefix: countryIsoToEmoji[key] ? countryIsoToEmoji[key] : ''
     };

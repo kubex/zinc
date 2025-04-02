@@ -374,12 +374,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       }
     }
 
-    input.classList.add('query-builder__value');
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('query-builder__wrapper');
-    wrapper.appendChild(input);
-    row.appendChild(wrapper);
-
     const remove = document.createElement('zn-button');
     remove.setAttribute('icon', 'delete');
     remove.setAttribute('icon-size', '24');
@@ -387,9 +381,15 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     remove.setAttribute('size', 'square');
     remove.addEventListener('click', (e: Event) => this._removeRule(uniqueId, e));
     remove.classList.add('query-builder__remove');
-    row.appendChild(remove);
 
-    if (!isUndefined(pos)) {
+    input.classList.add('query-builder__value');
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('query-builder__wrapper');
+    wrapper.appendChild(input);
+    wrapper.appendChild(remove);
+
+    row.appendChild(wrapper);
+
     if (pos !== undefined) {
       this.container.insertBefore(row, this.container.children[pos]);
     } else {
@@ -482,7 +482,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
     const button = event.target as HTMLButtonElement;
-    button?.parentElement?.remove();
+    button?.closest('.query-builder__row')?.remove();
     this._handleChange();
   }
 

@@ -8,13 +8,14 @@
 }
 
 .add-rule {
-  max-width: 150px;
+  max-width: 250px;
   margin-bottom: 10px;
 }
 
 .query-builder {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 
   zn-button {
     align-self: flex-end;
@@ -29,7 +30,7 @@
 
   &__key,
   &__comparator {
-    max-width: 200px;
+    flex-basis: 25%;
   }
 
   &__value {
@@ -37,7 +38,9 @@
   }
 
   &__wrapper {
+    display: flex;
     width: 100%;
+    gap: 10px;
   }
 
   &__date {

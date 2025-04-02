@@ -9,6 +9,7 @@ import ZnOption from "../option";
 import ZnSelect from "../select";
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
+import type ZnButton from "../button";
 import type ZnInput from "../input";
 
 export type QueryBuilderData = QueryBuilderItem[];
@@ -329,7 +330,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       }
     }
 
-    const remove = document.createElement('zn-button');
+    const remove: ZnButton = document.createElement('zn-button');
     remove.setAttribute('icon', 'delete');
     remove.setAttribute('icon-size', '24');
     remove.setAttribute('color', 'transparent');

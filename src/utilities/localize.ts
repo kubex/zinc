@@ -17,13 +17,19 @@ export class LocalizeController extends DefaultLocalizationController<Translatio
 export {registerTranslation} from '@shoelace-style/localize';
 
 export interface Translation extends DefaultTranslation {
-  $code: string, // e.g. en, fr
-  $name: string, // e.g. English, French
-  $dir: 'ltr' | 'rtl',
+  $code: string; // e.g. en, fr
+  $name: string; // e.g. English, French
+  $dir: 'ltr' | 'rtl';
 
-  onChange: string
-  hidePassword: string
-  showPassword: string
-  clearEntry: string
+  onChange: string;
+  hidePassword: string;
+  showPassword: string;
+  clearEntry: string;
   numOptionsSelected: (num: number) => string;
+  fileButtonText: string;
+  fileButtonTextMultiple: string;
+  folderButtonText: string;
+  folderDragDrop: string;
+  fileDragDrop: string;
+  numFilesSelected: (num: number) => string;
 }

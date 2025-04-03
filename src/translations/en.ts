@@ -14,6 +14,16 @@ const translation: Translation = {
     if (num === 1) return '1 option selected';
     return `${num} options selected`;
   },
+  fileButtonText: 'Choose a file',
+  fileButtonTextMultiple: 'Choose files',
+  folderButtonText: 'Choose a folder',
+  fileDragDrop: 'Drop files here to upload',
+  folderDragDrop: 'Drop folder here to upload',
+  numFilesSelected: (num: number) => {
+    if (num === 0) return 'No files selected';
+    if (num === 1) return '1 file selected';
+    return `${num} files selected`;
+  }
 }
 
 registerTranslation(translation);

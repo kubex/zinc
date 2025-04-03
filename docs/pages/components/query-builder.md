@@ -56,6 +56,26 @@ This example will show the produced query string from the selected parameters.
       },
       {
         &quot;id&quot;:&quot;3&quot;,
+        &quot;name&quot;:&quot;Genre&quot;,
+        &quot;options&quot;:{
+          &quot;action&quot;:&quot;Action&quot;,
+          &quot;comedy&quot;:&quot;Comedy&quot;,
+          &quot;drama&quot;:&quot;Drama&quot;,
+          &quot;fantasy&quot;:&quot;Fantasy&quot;,
+          &quot;horror&quot;:&quot;Horror&quot;,
+          &quot;mystery&quot;:&quot;Mystery&quot;,
+          &quot;romance&quot;:&quot;Romance&quot;,
+          &quot;thriller&quot;:&quot;Thriller&quot;,
+          &quot;sci-fi&quot;:&quot;Science Fiction&quot;
+        },
+        &quot;maxOptionsVisible&quot;: &quot;3&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;,
+          &quot;in&quot;
+        ]
+      },
+      {
+        &quot;id&quot;:&quot;4&quot;,
         &quot;name&quot;:&quot;Rating&quot;,
         &quot;type&quot;:&quot;number&quot;,
         &quot;operators&quot;:[
@@ -67,7 +87,7 @@ This example will show the produced query string from the selected parameters.
         ]
       },
       {
-        &quot;id&quot;:&quot;4&quot;,
+        &quot;id&quot;:&quot;5&quot;,
         &quot;name&quot;:&quot;Created&quot;,
         &quot;type&quot;:&quot;date&quot;,
         &quot;operators&quot;:[

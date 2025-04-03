@@ -38,6 +38,15 @@ This example will show the produce query string from the selected parameters.
 <div style="word-wrap: break-word;"><b>Query String:</b> </span><span class="query-string"></span></div>
 ```
 
+## Types
+
+| Name      |
+|-----------|
+| `bool`    |
+| `boolean` |
+| `date`    |
+| `number`  |
+
 ## Comparators
 
 | Name              | Description                  |

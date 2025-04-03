@@ -10,14 +10,14 @@ layout: component
 <zn-query-builder
   filters="[
       {
-        &quot;id&quot;:&quot;1&quot;,
+        &quot;id&quot;:&quot;title&quot;,
         &quot;name&quot;:&quot;Title&quot;,
         &quot;operators&quot;:[
           &quot;eq&quot;
         ]
       },
       {
-        &quot;id&quot;:&quot;2&quot;,
+        &quot;id&quot;:&quot;author&quot;,
         &quot;name&quot;:&quot;Author&quot;,
         &quot;operators&quot;:[
           &quot;eq&quot;,
@@ -40,14 +40,14 @@ This example will show the produced query string from the selected parameters.
   id="query-string-example"
   filters="[
       {
-        &quot;id&quot;:&quot;1&quot;,
+        &quot;id&quot;:&quot;title&quot;,
         &quot;name&quot;:&quot;Title&quot;,
         &quot;operators&quot;:[
           &quot;eq&quot;
         ]
       },
       {
-        &quot;id&quot;:&quot;2&quot;,
+        &quot;id&quot;:&quot;author&quot;,
         &quot;name&quot;:&quot;Author&quot;,
         &quot;operators&quot;:[
           &quot;eq&quot;,
@@ -55,7 +55,7 @@ This example will show the produced query string from the selected parameters.
         ]
       },
       {
-        &quot;id&quot;:&quot;3&quot;,
+        &quot;id&quot;:&quot;genre&quot;,
         &quot;name&quot;:&quot;Genre&quot;,
         &quot;options&quot;:{
           &quot;action&quot;:&quot;Action&quot;,
@@ -75,7 +75,7 @@ This example will show the produced query string from the selected parameters.
         ]
       },
       {
-        &quot;id&quot;:&quot;4&quot;,
+        &quot;id&quot;:&quot;rating&quot;,
         &quot;name&quot;:&quot;Rating&quot;,
         &quot;type&quot;:&quot;number&quot;,
         &quot;operators&quot;:[
@@ -87,7 +87,7 @@ This example will show the produced query string from the selected parameters.
         ]
       },
       {
-        &quot;id&quot;:&quot;5&quot;,
+        &quot;id&quot;:&quot;created&quot;,
         &quot;name&quot;:&quot;Created&quot;,
         &quot;type&quot;:&quot;date&quot;,
         &quot;operators&quot;:[

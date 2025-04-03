@@ -197,31 +197,26 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       operator: filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq,
       value: ''
     });
-    const row = document.createElement('div');
-    row.classList.add('query-builder__row');
-    row.id = uniqueId;
 
-    const select = document.createElement('zn-select') as ZnSelect;
-    this.filters.forEach(item => {
-      const option = document.createElement('zn-option') as ZnOption;
-      option.value = item.id;
-      option.innerText = item.name.charAt(0).toUpperCase() + item.name.slice(1);
-      if (item.id === filter?.id) {
-        select.value = item.id;
-      }
-      select.appendChild(option);
-    });
-    select.addEventListener('zn-change', (e: ZnChangeEvent) => this._changeRule(uniqueId, e));
-    select.classList.add('query-builder__key');
+    const select = html`
+      <zn-select class="query-builder__key"
+                 @zn-change="${(e: ZnChangeEvent) => this._changeRule(uniqueId, e)}"
+                 value="${filter?.id}">
+        ${this.filters.map((item: QueryBuilderItem) => {
+          return html`
+            <zn-option value="${item.id}">
+              ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+            </zn-option>
+          `;
+        })}
+      </zn-select>
+    `;
 
-    row.appendChild(select);
-
-    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
-    const comparatorInput = html`
+    const comparator = html`
       <zn-select class="query-builder__comparator"
                  @zn-change="${(e: ZnChangeEvent) => {
                    this._updateOperatorValue(uniqueId, e)
-                   this._changeValueInput(filter, e, row, uniqueId);
+                   this._changeValueInput(uniqueId, e, filter);
                  }}"
                  value="${filter.operators[0]}"
                  ?disabled="${filter.operators.length === 1}">
@@ -230,15 +225,8 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
             <zn-option value="${item}">${operatorText[item as QueryBuilderOperators]}</zn-option>`;
         })}
       </zn-select>`;
-    const comparator = litToHTML<ZnSelect>(comparatorInput);
-    if (!comparator) return;
 
-    row.appendChild(comparator);
-
-    const input = this._createInput(filter, uniqueId, selectedComparator)
-    if (!input) return;
-
-    const button = html`
+    const remove = html`
       <zn-button class="query-builder__remove"
                  icon="delete"
                  icon-size="24"
@@ -246,15 +234,24 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                  size="square"
                  @click="${(e: Event) => this._removeRule(uniqueId, e)}">
       </zn-button>`;
-    const remove = litToHTML<ZnButton>(button);
-    if (!remove) return;
 
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('query-builder__wrapper');
-    wrapper.appendChild(input);
-    wrapper.appendChild(remove);
+    const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
+    const wrapper = html`
+      <div class="query-builder__wrapper">
+        ${this._createInput(filter, uniqueId, selectedComparator)}
+        ${remove}
+      </div>
+    `;
 
-    row.appendChild(wrapper);
+    const rowElement = html`
+      <div id="${uniqueId}" class="query-builder__row">
+        ${select}
+        ${comparator}
+        ${wrapper}
+      </div>
+    `;
+    const row = litToHTML<HTMLDivElement>(rowElement);
+    if (!row) return;
 
     if (pos !== undefined) {
       this.container.insertBefore(row, this.container.children[pos]);
@@ -289,16 +286,16 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     return input;
   }
 
-  private _changeValueInput(filter: QueryBuilderItem, changeEvent: ZnChangeEvent, row: HTMLDivElement, uniqueId: string) {
-    // Date comparisons do not need to change input
-    if (filter.type === 'date') return;
+  private _changeValueInput(uniqueId: string, changeEvent: ZnChangeEvent, filter: QueryBuilderItem) {
+    // Only comparisons with options need to change input
+    if (!filter.options) return;
 
     const compareSelect = changeEvent.target as ZnSelect;
 
     // Comparison the same - no change
     if (compareSelect.value === this._previousOperator) return;
 
-    const input: ZnInput | null = row.querySelector('.query-builder__value');
+    const input: ZnInput | null | undefined = compareSelect.parentElement?.querySelector('.query-builder__value');
 
     // Cannot find input
     if (!input) return;

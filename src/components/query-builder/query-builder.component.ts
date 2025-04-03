@@ -449,13 +449,4 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this.input.setCustomValidity(message);
     this._formController.updateValidity();
   }
-
-  protected createOptions(options: QueryBuilderOptions, selectElement: ZnSelect) {
-    Object.keys(options).forEach(item => {
-      const option = document.createElement('zn-option') as ZnOption;
-      option.value = item;
-      option.innerText = options[item] as string;
-      selectElement.appendChild(option);
-    });
-  }
 }

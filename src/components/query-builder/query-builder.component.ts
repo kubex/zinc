@@ -408,8 +408,9 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   private _changeRule(id: string, event: ZnChangeEvent) {
     // remove the element from the dom
     const pos: number = this._getRulePosition(id);
-    const button = event.target as ZnSelect;
-    button?.parentElement?.remove();
+    const select = event.target as ZnSelect;
+    select.popup.active = false;
+    select?.parentElement?.remove();
     // recreate the element based on the selected value;
     this._removeRule(id, event);
     this._addRule(event, '', pos);

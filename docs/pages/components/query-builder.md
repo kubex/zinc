@@ -12,12 +12,17 @@ layout: component
 
 ## Examples
 
-### First Example
+### Query String
 
-TODO
+This example will show the produce query string from the selected parameters.
 
-### Second Example
+```html:preview
 
-TODO
+<zn-query-builder id="query-string-example"
+                  filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Status&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
+</zn-query-builder>
 
+<br>
 
+<div style="word-wrap: break-word;"><b>Query String:</b> </span><span class="query-string"></span></div>
+```

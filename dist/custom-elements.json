@@ -5088,235 +5088,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/drag-upload/drag-upload.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDragUpload",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "types",
-              "type": {
-                "text": "string"
-              },
-              "default": "'image/*,application/pdf'",
-              "attribute": "types",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "string"
-              },
-              "default": "'10'",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "File | null"
-              },
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "uploadInput",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "description": "Gets the validity state object",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            },
-            {
-              "kind": "method",
-              "name": "getHumanTypes"
-            },
-            {
-              "kind": "field",
-              "name": "handleClearValue"
-            },
-            {
-              "kind": "field",
-              "name": "handleUpload"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "types",
-              "type": {
-                "text": "string"
-              },
-              "default": "'image/*,application/pdf'",
-              "fieldName": "types"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "string"
-              },
-              "default": "'10'",
-              "fieldName": "size"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "File | null"
-              },
-              "fieldName": "value"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "drag-upload",
-          "tagName": "zn-drag-upload",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/drag-upload",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDragUpload",
-            "module": "components/drag-upload/drag-upload.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/dropdown/dropdown.js",
       "declarations": [
         {
@@ -6131,6 +5902,712 @@
           "declaration": {
             "name": "ZnEmptyState",
             "module": "components/empty-state/empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/file/file.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFile",
+          "cssParts": [
+            {
+              "description": "The form control that wraps the label, input, and help text.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input's wrapper.",
+              "name": "form-control-input"
+            },
+            {
+              "description": "The help text's wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The wrapper around the button and text value.",
+              "name": "button-wrapper"
+            },
+            {
+              "description": "The zn-button acting as a file input.",
+              "name": "button"
+            },
+            {
+              "description": "The zn-button's exported `base` part.",
+              "name": "button__base"
+            },
+            {
+              "description": "The chosen files or placeholder text for the file input.",
+              "name": "value"
+            },
+            {
+              "description": "The element wrapping the drop zone.",
+              "name": "droparea"
+            },
+            {
+              "description": "The background of the drop zone.",
+              "name": "droparea-background"
+            },
+            {
+              "description": "The container that wraps the icon for the drop zone.",
+              "name": "droparea-icon"
+            },
+            {
+              "description": "The text for the drop zone.",
+              "name": "droparea-value"
+            },
+            {
+              "description": "The container that wraps the trigger.",
+              "name": "trigger"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The file control's label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Text that describes how to use the file control. Alternatively, you can use the `help-text` attribute.",
+              "name": "help-text"
+            },
+            {
+              "description": "Optional droparea icon to use instead of the default. Works best with `<zn-icon>`.",
+              "name": "droparea-icon"
+            },
+            {
+              "description": "Optional content to be used as trigger instead of the default content. Opening the file dialog on click and as well as drag and drop will work for this content. Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*, *hide-value*. Also if using the disabled attribute, the disabled styling will not be applied and must be taken care of yourself.",
+              "name": "trigger"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-change'], value: (el: ZnFile) => el.files })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "userIsDragging",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "button",
+              "type": {
+                "text": "ZnButton"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropareaWrapper",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dropareaIcon",
+              "type": {
+                "text": "HTMLSpanElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "inputChosen",
+              "type": {
+                "text": "HTMLSpanElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "files",
+              "description": "The selected files as a FileList object containing a list of File objects.\nThe FileList behaves like an array, so you can get the number of selected files\nvia its length property.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#getting_information_on_selected_files)",
+              "attribute": "files"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the file control, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "description": "The value of the file control contains a string that represents the path of the selected file.\nIf multiple files are selected, the value represents the first file in the list.\nIf no file is selected, the value is an empty string.\nBeware that the only valid value when setting a file control is an empty string!\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#value)",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The file control's size.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The file control's label. If you need to display HTML, use the `label` slot instead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The file control's help text.\nIf you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the file control.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "droparea",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draw the file control as a drop area",
+              "attribute": "droparea"
+            },
+            {
+              "kind": "field",
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma separated list of supported file types\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept)",
+              "attribute": "accept"
+            },
+            {
+              "kind": "field",
+              "name": "capture",
+              "type": {
+                "text": "'user' | 'environment'"
+              },
+              "description": "Specifies the types of files that the server accepts.\nCan be set either to user or environment.\nWorks only when not using a droparea!\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture)",
+              "attribute": "capture"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates whether the user can select more than one file.\nHas no effect if webkitdirectory is set.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "webkitdirectory",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates that the file control should let the user select directories instead of files.\nWhen a directory is selected, the directory and its entire hierarchy of contents are included\nin the set of selected items.\nNote: This is a non-standard attribute but is supported in the major browsers.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)",
+              "attribute": "webkitdirectory",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element.\nThis attribute allows you to place the form control outside of a form and associate it\nwith the form that has this `id`. The form must be in the same document\nor shadow root for this to work.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input a required field.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideValue",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Suppress the value from being displayed in the file control",
+              "attribute": "hide-value"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "description": "Gets the validity state object",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "description": "Checks for validity but does not show a validation message.\nReturns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Sets focus on the button or droparea."
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "description": "Removes focus from the button or droparea."
+            },
+            {
+              "kind": "field",
+              "name": "handleInvalid",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleFiles",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "files",
+                  "type": {
+                    "text": "FileList | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleTransferItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<FileList>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "DataTransferItemList | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getFilesFromEntry",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<File[]>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entry",
+                  "type": {
+                    "text": "FileSystemEntry | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "description": "Handles the change event of the native input"
+            },
+            {
+              "kind": "field",
+              "name": "handleDragOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDragLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDrop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleFocus",
+              "privacy": "private",
+              "description": "Handle the focus of the droparea and emit focus event"
+            },
+            {
+              "kind": "method",
+              "name": "handleBlur",
+              "privacy": "private",
+              "description": "Handle the blur of the droparea and emit blur event"
+            },
+            {
+              "kind": "method",
+              "name": "renderValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderDroparea",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderButton",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the control loses focus.",
+              "name": "zn-blur"
+            },
+            {
+              "description": "Emitted when an alteration to the control's value is committed by the user.",
+              "name": "zn-change"
+            },
+            {
+              "description": "Emitted when multiple files are selected via drag and drop, without the `multiple` property being set.",
+              "name": "zn-error"
+            },
+            {
+              "description": "Emitted when the control gains focus.",
+              "name": "zn-focus"
+            },
+            {
+              "description": "Emitted when the control receives input.",
+              "name": "zn-input"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "files",
+              "description": "The selected files as a FileList object containing a list of File objects.\nThe FileList behaves like an array, so you can get the number of selected files\nvia its length property.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#getting_information_on_selected_files)",
+              "fieldName": "files"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the file control, submitted as a name/value pair with form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "description": "The value of the file control contains a string that represents the path of the selected file.\nIf multiple files are selected, the value represents the first file in the list.\nIf no file is selected, the value is an empty string.\nBeware that the only valid value when setting a file control is an empty string!\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#value)",
+              "fieldName": "value"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The file control's size.",
+              "fieldName": "size"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The file control's label. If you need to display HTML, use the `label` slot instead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The file control's help text.\nIf you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the file control.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "droparea",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draw the file control as a drop area",
+              "fieldName": "droparea"
+            },
+            {
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Comma separated list of supported file types\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept)",
+              "fieldName": "accept"
+            },
+            {
+              "name": "capture",
+              "type": {
+                "text": "'user' | 'environment'"
+              },
+              "description": "Specifies the types of files that the server accepts.\nCan be set either to user or environment.\nWorks only when not using a droparea!\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture)",
+              "fieldName": "capture"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates whether the user can select more than one file.\nHas no effect if webkitdirectory is set.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#multiple)",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "webkitdirectory",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicates that the file control should let the user select directories instead of files.\nWhen a directory is selected, the directory and its entire hierarchy of contents are included\nin the set of selected items.\nNote: This is a non-standard attribute but is supported in the major browsers.\n[see MDN](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)",
+              "fieldName": "webkitdirectory"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element.\nThis attribute allows you to place the form control outside of a form and associate it\nwith the form that has this `id`. The form must be in the same document\nor shadow root for this to work.",
+              "fieldName": "form"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input a required field.",
+              "fieldName": "required"
+            },
+            {
+              "name": "hide-value",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Suppress the value from being displayed in the file control",
+              "fieldName": "hideValue"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "File controls allow selecting an arbitrary number of files for uploading.",
+          "tagNameWithoutPrefix": "file",
+          "tagName": "zn-file",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary File controls allow selecting an arbitrary number of files for uploading.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @slot label - The file control's label. Alternatively, you can use the `label` attribute.\n * @slot help-text - Text that describes how to use the file control.\n *    Alternatively, you can use the `help-text` attribute.\n * @slot droparea-icon - Optional droparea icon to use instead of the default.\n *    Works best with `<zn-icon>`.\n * @slot trigger - Optional content to be used as trigger instead of the default content.\n *    Opening the file dialog on click and as well as drag and drop will work for this content.\n *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,\n *    *hide-value*. Also if using the disabled attribute, the disabled styling will not be\n *    applied and must be taken care of yourself.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-error - Emitted when multiple files are selected via drag and drop, without\n * the `multiple` property being set.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart button-wrapper - The wrapper around the button and text value.\n * @csspart button - The zn-button acting as a file input.\n * @csspart button__base - The zn-button's exported `base` part.\n * @csspart value - The chosen files or placeholder text for the file input.\n * @csspart droparea - The element wrapping the drop zone.\n * @csspart droparea-background - The background of the drop zone.\n * @csspart droparea-icon - The container that wraps the icon for the drop zone.\n * @csspart droparea-value - The text for the drop zone.\n * @csspart trigger - The container that wraps the trigger.\n *\n * @animation file.iconDrop - The animation to use for the file icon\n * when a file is dropped\n * @animation file.text.disappear - The disappear animation to use for the file placeholder text\n * when a file is dropped\n * @animation file.text.appear - The appear animation to use for the file placeholder text\n * when a file is dropped\n */",
+          "documentation": "https://zinc.style/components/drag-upload",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-icon"
+          ],
+          "animations": [
+            {
+              "name": "file.iconDrop",
+              "description": "The animation to use for the file icon when a file is dropped"
+            },
+            {
+              "name": "file.text.disappear",
+              "description": "The disappear animation to use for the file placeholder text when a file is dropped"
+            },
+            {
+              "name": "file.text.appear",
+              "description": "The appear animation to use for the file placeholder text when a file is dropped"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFile",
+            "module": "components/file/file.js"
           }
         }
       ]

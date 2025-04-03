@@ -194,7 +194,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._selectedRules.set(uniqueId, {
       id: filter.id,
       name: filter.name,
-      operator: filter.operators.length > 0 ? filter.operators[0] : 'eq',
+      operator: filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq,
       value: ''
     });
     const row = document.createElement('div');
@@ -216,83 +216,26 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     row.appendChild(select);
 
-    const comparator = document.createElement('zn-select') as ZnSelect;
     const selectedComparator = filter.operators.length > 0 ? filter.operators[0] : QueryBuilderOperators.Eq;
-    filter.operators.forEach((item: QueryBuilderOperators) => {
-      const option = document.createElement('zn-option') as ZnOption;
-      option.value = item;
-      option.innerText = operatorText[item as QueryBuilderOperators];
-      comparator.appendChild(option);
-    });
-    comparator.defaultValue = filter.operators[0];
-    comparator.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateOperatorValue(uniqueId, e));
-    comparator.classList.add('query-builder__comparator');
-    if (comparator.querySelectorAll('zn-option').length === 1) {
-      comparator.setAttribute('disabled', 'disabled');
-    }
-
-    comparator.addEventListener('zn-change', (changeEvent: ZnChangeEvent) => {
-      // Date comparisons do not need to change input
-      if (filter.type === 'date') return;
-
-      const compareSelect = changeEvent.target as ZnSelect;
-
-      // Comparison the same - no change
-      if (compareSelect.value === this._previousOperator) return;
-
-      const input: ZnInput | null = row.querySelector('.query-builder__value');
-
-      // Cannot find input
-      if (!input) return;
-
-      const parent = input?.parentElement as HTMLDivElement;
-      const compareFilter: CreatedRule | undefined = this._selectedRules.get(uniqueId);
-      const newInput = document.createElement('zn-select') as ZnSelect;
-      newInput.classList.add('query-builder__value');
-      parent.removeChild(input);
-
-      if (compareSelect.value === 'in') {
-        newInput.setAttribute('name', 'value');
-        newInput.setAttribute('multiple', 'true');
-        if (filter.maxOptionsVisible !== undefined) {
-          newInput.setAttribute('max-options-visible', filter.maxOptionsVisible);
-        }
-        newInput.setAttribute('clearable', 'true');
-      } else {
-        this._updateValue(uniqueId, {target: newInput});
-      }
-
-      const options: QueryBuilderOptions | undefined = this.filters.find(item => item.id === compareFilter?.id)?.options;
-      if (options !== undefined) {
-        this.createOptions(options, newInput);
-      }
-
-      newInput.addEventListener('zn-change', (e: ZnChangeEvent) => this._updateValue(uniqueId, e));
-      parent.prepend(newInput);
-    });
+    const comparatorInput = html`
+      <zn-select class="query-builder__comparator"
+                 @zn-change="${(e: ZnChangeEvent) => {
+                   this._updateOperatorValue(uniqueId, e)
+                   this._changeValueInput(filter, e, row, uniqueId);
+                 }}"
+                 value="${filter.operators[0]}"
+                 ?disabled="${filter.operators.length === 1}">
+        ${filter.operators.map((item: QueryBuilderOperators) => {
+          return html`
+            <zn-option value="${item}">${operatorText[item as QueryBuilderOperators]}</zn-option>`;
+        })}
+      </zn-select>`;
+    const comparator = litToHTML<ZnSelect>(comparatorInput);
+    if (!comparator) return;
 
     row.appendChild(comparator);
 
-    let input: ZnSelect | ZnInput | null;
-    switch (filter.type) {
-      case 'bool':
-      case 'boolean': {
-        input = this._createBooleanInput(uniqueId);
-        break;
-      }
-      case 'number': {
-        input = this._createNumberInput(uniqueId);
-        break;
-      }
-      case 'date': {
-        input = this._createDateInput(uniqueId);
-        break;
-      }
-      default: {
-        input = filter.options ? this._createSelectInput(uniqueId, filter, selectedComparator) : this._createDefaultInput(uniqueId);
-        break;
-      }
-    }
+    const input = this._createInput(filter, uniqueId, selectedComparator)
     if (!input) return;
 
     const button = html`
@@ -320,6 +263,55 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     }
     this.addRule.value = '';
     this._handleChange();
+  }
+
+  private _createInput(filter: QueryBuilderItem, uniqueId: string, selectedComparator: QueryBuilderOperators) {
+    let input: ZnSelect | ZnInput | null;
+    switch (filter.type) {
+      case 'bool':
+      case 'boolean': {
+        input = this._createBooleanInput(uniqueId);
+        break;
+      }
+      case 'number': {
+        input = this._createNumberInput(uniqueId);
+        break;
+      }
+      case 'date': {
+        input = this._createDateInput(uniqueId);
+        break;
+      }
+      default: {
+        input = filter.options ? this._createSelectInput(uniqueId, filter, selectedComparator) : this._createDefaultInput(uniqueId);
+        break;
+      }
+    }
+    return input;
+  }
+
+  private _changeValueInput(filter: QueryBuilderItem, changeEvent: ZnChangeEvent, row: HTMLDivElement, uniqueId: string) {
+    // Date comparisons do not need to change input
+    if (filter.type === 'date') return;
+
+    const compareSelect = changeEvent.target as ZnSelect;
+
+    // Comparison the same - no change
+    if (compareSelect.value === this._previousOperator) return;
+
+    const input: ZnInput | null = row.querySelector('.query-builder__value');
+
+    // Cannot find input
+    if (!input) return;
+
+    const parent = input?.parentElement as HTMLDivElement;
+
+    parent.removeChild(input);
+
+    const newInput = this._createInput(filter, uniqueId, compareSelect.value as QueryBuilderOperators);
+
+    if (!newInput) return;
+
+    parent.prepend(newInput);
   }
 
   private _createBooleanInput(uniqueId: string): ZnSelect | null {

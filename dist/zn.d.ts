@@ -4450,6 +4450,8 @@ declare module "components/file/file.component" {
         size: 'small' | 'medium' | 'large';
         /** The file control's label. If you need to display HTML, use the `label` slot instead. */
         label: string;
+        /** If this is set, then the only way to remove files is to click the cross next to them. */
+        clearable: boolean;
         /**
          * The file control's help text.
          * If you need to display HTML, use the `help-text` slot instead.
@@ -4544,7 +4546,11 @@ declare module "components/file/file.component" {
          * Handle the blur of the droparea and emit blur event
          */
         private handleBlur;
-        private renderValue;
+        /**
+         * Remove a file from the list of files
+         */
+        private removeFile;
+        private renderFileValueWithDelete;
         private renderDroparea;
         private renderButton;
         render(): import("lit").TemplateResult<1>;
@@ -4685,6 +4691,7 @@ declare module "components/item/item.component" {
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         icon: string;
+        inline: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;

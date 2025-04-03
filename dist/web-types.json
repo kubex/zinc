@@ -16,6 +16,44 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-bulk-actions",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "actions",
+              "value": { "type": "BulkActionData", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "HTMLSelectElement" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "actions", "type": "BulkActionData" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -61,44 +99,6 @@
                 "type": "'primary' | 'error' | 'info' | 'success' | 'warning'"
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-bulk-actions",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "actions",
-              "value": { "type": "BulkActionData", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "HTMLSelectElement" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "actions", "type": "BulkActionData" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
             ],
             "events": [
               {
@@ -1746,6 +1746,11 @@
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "clearable",
+              "description": "If this is set, then the only way to remove files is to click the cross next to them.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "help-text",
               "description": "The file control's help text.\nIf you need to display HTML, use the `help-text` slot instead.",
               "value": { "type": "string", "default": "''" }
@@ -1870,6 +1875,11 @@
                 "name": "label",
                 "description": "The file control's label. If you need to display HTML, use the `label` slot instead.",
                 "type": "string"
+              },
+              {
+                "name": "clearable",
+                "description": "If this is set, then the only way to remove files is to click the cross next to them.",
+                "type": "boolean"
               },
               {
                 "name": "helpText",
@@ -2680,7 +2690,8 @@
               }
             },
             { "name": "edit-on-hover", "value": { "type": "boolean" } },
-            { "name": "icon", "value": { "type": "string" } }
+            { "name": "icon", "value": { "type": "string" } },
+            { "name": "inline", "value": { "type": "boolean" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2695,7 +2706,8 @@
               { "name": "stacked", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" },
               { "name": "editOnHover", "type": "boolean" },
-              { "name": "icon", "type": "string" }
+              { "name": "icon", "type": "string" },
+              { "name": "inline", "type": "boolean" }
             ],
             "events": [
               {

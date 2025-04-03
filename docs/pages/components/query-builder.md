@@ -8,29 +8,75 @@ layout: component
 ```html:preview
 
 <zn-query-builder
-  filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
+  filters="[
+      {
+        &quot;id&quot;:&quot;1&quot;,
+        &quot;name&quot;:&quot;Title&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;
+        ]
+      },
+      {
+        &quot;id&quot;:&quot;2&quot;,
+        &quot;name&quot;:&quot;Author&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;,
+          &quot;fuzzy&quot;
+        ]
+      }
+    ]">
 </zn-query-builder>
 ```
 
 ## Examples
 
-### Comparator Examples
+### Query String
+
+This example will show the produced query string from the selected parameters.
 
 ```html:preview
 
 <zn-query-builder
-  filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
-</zn-query-builder>
-```
-
-### Query String
-
-This example will show the produce query string from the selected parameters.
-
-```html:preview
-
-<zn-query-builder id="query-string-example"
-                  filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
+  id="query-string-example"
+  filters="[
+      {
+        &quot;id&quot;:&quot;1&quot;,
+        &quot;name&quot;:&quot;Title&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;
+        ]
+      },
+      {
+        &quot;id&quot;:&quot;2&quot;,
+        &quot;name&quot;:&quot;Author&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;,
+          &quot;fuzzy&quot;
+        ]
+      },
+      {
+        &quot;id&quot;:&quot;3&quot;,
+        &quot;name&quot;:&quot;Rating&quot;,
+        &quot;type&quot;:&quot;number&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;,
+          &quot;gt&quot;,
+          &quot;gte&quot;,
+          &quot;lt&quot;,
+          &quot;lte&quot;
+        ]
+      },
+      {
+        &quot;id&quot;:&quot;4&quot;,
+        &quot;name&quot;:&quot;Created&quot;,
+        &quot;type&quot;:&quot;date&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;,
+          &quot;before&quot;,
+          &quot;after&quot;
+        ]
+      }
+    ]">
 </zn-query-builder>
 
 <br>

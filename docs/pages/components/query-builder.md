@@ -6,7 +6,9 @@ layout: component
 ---
 
 ```html:preview
-<zn-query-builder filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
+
+<zn-query-builder
+  filters="[{&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;:[&quot;eq&quot;]}]">
 </zn-query-builder>
 ```
 

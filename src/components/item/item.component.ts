@@ -39,6 +39,8 @@ export default class ZnItem extends ZincElement {
 
   @property() icon: string;
 
+  @property({type: Boolean}) inline: boolean;
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -59,15 +61,21 @@ export default class ZnItem extends ZincElement {
         'description-item': true,
         'description-item--stacked': this.stacked,
         'description-item--edit-on-hover': this.editOnHover,
+        'description-item--inline': this.inline,
         'description-item--small': this.size === 'small',
         'description-item--medium': this.size === 'medium',
         'description-item--large': this.size === 'large',
       })}>
-        <div class="description-item__icon">
-          ${this.icon ? html`
-            <zn-icon src="${this.icon}" size="20"></zn-icon>` : ''}
-        </div>
-        <div class="description-item__caption">${this.caption}</div>
+
+        ${this.icon ? html`
+          <div class="description-item__header">
+            <div class="description-item__icon">
+              <zn-icon src="${this.icon}" size="20"></zn-icon>
+            </div>
+            <div class="description-item__caption">${this.caption}</div>
+          </div>` : html`
+          <div class="description-item__caption">${this.caption}</div>`}
+
         <div class="description-item__content">
           <div class="description-item__content-inner">
             <slot></slot>

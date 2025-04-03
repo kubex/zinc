@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-file></zn-file>
+<zn-file multiple clearable></zn-file>
 ```
 
 ## Examples

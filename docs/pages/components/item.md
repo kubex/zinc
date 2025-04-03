@@ -37,6 +37,20 @@ layout: component
 </zn-item>
 ```
 
+### Icons
+
+```html:preview
+
+<zn-item caption="Full name" icon="person">
+  This is the content
+</zn-item>
+
+<zn-cols layout="1, 1">
+  <zn-item inline icon="person">This is the content</zn-item>
+  <zn-item inline icon="person">This is the content</zn-item>
+</zn-cols>
+```
+
 ### Multiple Actions
 
 Example of multiple actions in a description item.
@@ -44,14 +58,14 @@ Example of multiple actions in a description item.
 ```html:preview
 
 <zn-item caption="Address">
-  <p><strong>Company</strong> Example here </p>
-  <p><strong>Line 1</strong> Example here </p>
-  <p><strong>Line 2</strong> Example here </p>
-  <p><strong>Line 3</strong> Example here </p>
-  <p><strong>Town</strong> Example here </p>
-  <p><strong>County</strong> Example here </p>
-  <p><strong>Postal Code</strong> Example here </p>
-  <p><strong>Country</strong> Example here </p>
+  <div><strong>Company</strong> Example here </div>
+  <div><strong>Line 1</strong> Example here </div>
+  <div><strong>Line 2</strong> Example here </div>
+  <div><strong>Line 3</strong> Example here </div>
+  <div><strong>Town</strong> Example here </div>
+  <div><strong>County</strong> Example here </div>
+  <div><strong>Postal Code</strong> Example here </div>
+  <div><strong>Country</strong> Example here </div>
   
   <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>
   <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>

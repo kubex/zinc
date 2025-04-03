@@ -8,6 +8,7 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
+import {repeat} from 'lit/directives/repeat.js';
 import {watch} from "../../internal/watch";
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import type ZnButton from "../button";
@@ -141,6 +142,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
 
   /** The file control's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
+
+  /** If this is set, then the only way to remove files is to click the cross next to them. */
+  @property({type: Boolean}) clearable = false;
 
   /**
    * The file control's help text.
@@ -413,30 +417,60 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     this.emit('zn-blur');
   }
 
-  private renderValue(): HTMLTemplateResult {
-    let hasFiles = false;
-    // @ts-expect-error variadic function
-    let fileChosenLabel = this.localize.term('numFilesSelected', 0, this.webkitdirectory);
+  /**
+   * Remove a file from the list of files
+   */
+  private removeFile = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (this.files && this.files?.length > 0) {
-      hasFiles = true;
-      fileChosenLabel = this.files.length === 1
-        ? this.files[0].name
-        // @ts-expect-error variadic function
-        : this.localize.term('numFilesSelected', this.files.length, this.webkitdirectory);
+    const files = Array.from(this.files || []);
+    const file = (e.target as ZnButton).parentElement?.getAttribute('data-file-name');
+
+    const index = files.findIndex(f => f.name === file);
+
+    if (index !== -1) {
+      files.splice(index, 1);
     }
 
+    const dataTransfer = new DataTransfer();
+    files.forEach(f => dataTransfer.items.add(f));
+    this.files = dataTransfer.files;
+    this.input.dispatchEvent(new Event('change'));
+  }
+
+  private renderFileValueWithDelete(): HTMLTemplateResult {
+    // files as an array
+    const files = Array.from(this.files || []);
+    const isClearable = this.clearable;
+
+    // @ts-expect-error variadic
+    const fileChosenLabel = this.localize.term('numFilesSelected', 0, this.webkitdirectory);
     return html`
-      <span
-        class=${classMap({
-          input__value: true,
-          'input__value--hidden': this.hideValue,
-          'input__value--placeholder': !hasFiles,
-        })}
-        part="value">
-        ${fileChosenLabel}
-      </span>
-    `;
+      ${files ? html`
+        <div class="file_wrapper">
+          ${repeat(files, (file: File) => html`
+            <zn-chip
+              class=${classMap({
+                'input__value': true,
+                'input__value--hidden': this.hideValue,
+              })}
+              data-file-name="${file.name}"
+              part="value">
+              ${file.name}
+              ${isClearable ? html`
+                <zn-button
+                  slot="action"
+                  class="input__delete"
+                  color="transparent"
+                  icon="close"
+                  size="content"
+                  icon-size="18"
+                  @click="${this.removeFile}"
+                  part="delete"></zn-button>` : ''}
+            </zn-chip>
+          `)}
+        </div>` : html`${fileChosenLabel}`}`;
   }
 
   private renderDroparea(): HTMLTemplateResult {
@@ -457,11 +491,10 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
               <zn-icon src="upload_file"></zn-icon>
             </slot>
           </span>
-          <p
-            class="droparea__text"
-            part="droparea-value">
+          <p class="droparea__text"
+             part="droparea-value">
             <strong>${this.localize.term(this.webkitdirectory ? 'folderDragDrop' : 'fileDragDrop')}</strong>
-            ${this.renderValue()}
+            ${this.renderFileValueWithDelete()}
           </p>
         </div>
       </div>
@@ -491,7 +524,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
           outline>
           ${buttonText}
         </zn-button>
-        ${this.renderValue()}
+        ${this.renderFileValueWithDelete()}
       </div>`;
   }
 

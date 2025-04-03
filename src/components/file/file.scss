@@ -51,12 +51,26 @@
  * The value of the chosen file(s) or the placeholder text
  */
 .input__value {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--zn-spacing-small);
   color: var(--zn-input-color);
   font-size: var(--zn-input-label-font-size-medium);
 }
 
 .input__value.input__value--hidden {
   display: none;
+}
+
+.input__delete {
+  cursor: pointer;
+  color: var(--zn-input-color);
+  font-size: var(--zn-input-label-font-size-medium);
+
+  &:hover {
+    color: var(--zn-color-primary-600);
+  }
 }
 
 .input__value--placeholder {
@@ -119,6 +133,12 @@
   color: var(--highlight-color);
   display: flex;
   font-size: var(--zn-spacing-3x-large);
+}
+
+.file-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .droparea__text {

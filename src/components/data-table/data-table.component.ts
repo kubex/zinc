@@ -248,32 +248,27 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  goToFirstPage() {
-    this.page = 1;
+  goToPage(page: number) {
+    this.page = page;
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this._dataTask.run().then(r => r);
+  }
+
+  goToFirstPage() {
+    this.goToPage(1);
   }
 
   goToPreviousPage() {
-    this.page = Math.max(this.page - 1, 1);
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(Math.max(this.page - 1, 1));
   }
 
   goToNextPage() {
-    this.page = Math.min(this.page + 1, this.totalPages);
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(Math.min(this.page + 1, this.totalPages));
   }
 
   goToLastPage() {
-    this.page = this.totalPages;
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(this.totalPages);
   }
 
   updateRowsPerPage(event: Event) {
@@ -281,7 +276,7 @@ export default class ZnDataTable extends ZincElement {
     this.itemsPerPage = parseInt(select.value);
     this.page = 1; // reset the page to 1 when changing the number of rows per page
     this.requestUpdate();
-    this._dataTask.run();
+    this._dataTask.run().then(r => r);
   }
 
   selectAll(event: Event) {
@@ -339,7 +334,7 @@ export default class ZnDataTable extends ZincElement {
     return () => {
       this.sortColumn = key;
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-      this._dataTask.run();
+      this._dataTask.run().then(r => r);
     };
   }
 

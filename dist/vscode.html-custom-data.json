@@ -14,21 +14,6 @@
       ]
     },
     {
-      "name": "zn-bulk-actions",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/bulk-actions"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -58,6 +43,21 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-bulk-actions",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "actions", "values": [{ "name": "BulkActionData" }] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/bulk-actions"
         }
       ]
     },
@@ -511,9 +511,8 @@
           ]
         },
         {
-          "name": "show-prefix",
-          "description": "Whether we should show the prefix of the options, and the select.",
-          "values": []
+          "name": "icon-position",
+          "values": [{ "name": "start" }, { "name": "end" }, { "name": "none" }]
         },
         {
           "name": "filter",
@@ -1008,7 +1007,10 @@
           "values": [{ "name": "{ [key: string]: string }" }]
         },
         { "name": "provider", "values": [] },
-        { "name": "show-prefix", "values": [] },
+        {
+          "name": "icon-position",
+          "values": [{ "name": "start" }, { "name": "end" }, { "name": "none" }]
+        },
         {
           "name": "help-text",
           "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",

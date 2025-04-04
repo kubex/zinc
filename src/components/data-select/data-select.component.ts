@@ -6,7 +6,7 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from '../../utilities/localize';
@@ -117,13 +117,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     return this.select.setCustomValidity(message);
   }
 
-  protected async firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    await this.updateComplete;
-
-    if (this.prefix) this._updatePrefix(); // Update the prefix on first update
-  }
-
   @watch('value', {waitUntilFirstUpdate: true})
   async handleValueChange() {
     await this.updateComplete;
@@ -204,7 +197,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
               slot="${this.iconPosition === 'end' ? 'suffix' : 'prefix'}">${item.prefix}</span>` : ''}
             ${item.value}
           </zn-option>`)}
-      </zn-select>
-    `;
+      </zn-select>`;
   }
 }

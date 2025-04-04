@@ -23,7 +23,7 @@ Icon position can be set to `start` or `end`. The default is `none`.
 ```html:preview
 
 <div class="form-spacing">
-  <zn-data-select provider="country" name="country" icon-position="start"></zn-data-select>
+  <zn-data-select provider="country" name="country" value="GB" icon-position="start"></zn-data-select>
   <zn-data-select provider="country" name="country" icon-position="end"></zn-data-select>
 </div>
 ```

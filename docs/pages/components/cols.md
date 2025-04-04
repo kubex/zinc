@@ -22,16 +22,17 @@ layout: component
 
 ```html:preview
 
-<zn-cols layout="1,1" sticky>
+<zn-cols layout="1,1">
+  
   <div>
-    <zn-panel style="position:sticky;">
+    <zn-panel style="position: -webkit-sticky; position: sticky; top:10px;">
       <div class="box" style="height: 100px; margin: 10px 0; background: purple"></div>
       <div class="box" style="height: 100px;"></div>
     </zn-panel>
   </div>
-  <div>
+  
     <zn-panel>
-      <div class="box" style="height: 100px;  margin: 10px 0; background: orange"></div>
+      <div class="box" style="height: 100px; margin: 10px 0; background: orange"></div>
       <div class="box" style="height: 100px; background: orange"></div>
       <div class="box" style="height: 100px; background: orange"></div>
       <div class="box" style="height: 100px; background: orange"></div>
@@ -46,7 +47,7 @@ layout: component
       <div class="box" style="height: 100px; background: orange"></div>
       <div class="box" style="height: 100px; background: orange"></div>
     </zn-panel>
-  </div>
+  
 </zn-cols>
 ```
 

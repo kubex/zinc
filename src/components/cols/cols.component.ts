@@ -26,14 +26,13 @@ export default class ZnCols extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
 
-  @property({reflect: true, attribute: "layout"}) layout: string = '';
+  @property({reflect: true, attribute: 'layout'}) layout: string = '';
 
   @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
 
-  @property({attribute: "no-gap", type: Boolean}) noGap: boolean = false;
+  @property({attribute: 'no-gap', type: Boolean}) noGap: boolean = false;
 
   @property({type: Boolean}) border: boolean = false;
-
 
   render() {
     const layout: number[] = this.layout.split(/[\s,]+/).map((a) => parseInt(a)).filter((item) => !!item);

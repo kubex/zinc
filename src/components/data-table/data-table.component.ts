@@ -120,7 +120,7 @@ export default class ZnDataTable extends ZincElement {
     this.page = data.page;
     this.totalPages = data.total_pages;
 
-    if (!data || !data.data || data.data.length === 0) {
+    if (!data?.data || data.data.length === 0) {
       return html`
         <div class="table--empty">No data available</div>`;
     }

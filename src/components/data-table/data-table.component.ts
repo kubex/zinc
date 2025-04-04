@@ -1,18 +1,18 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, TemplateResult, unsafeCSS } from 'lit';
+import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
-import { classMap } from "lit/directives/class-map.js";
-import { HasSlotController } from "../../internal/slot";
-import { Task } from "@lit/task";
+import {classMap} from "lit/directives/class-map.js";
+import {HasSlotController} from "../../internal/slot";
+import {Task} from "@lit/task";
 
 import styles from './data-table.scss';
 
-type TableData = {
-  page: 1,
-  per_page: 10,
-  total: 100,
-  total_pages: 10,
+interface TableData {
+  page: 1;
+  per_page: 10;
+  total: 100;
+  total_pages: 10;
   data: any[];
 }
 
@@ -36,15 +36,15 @@ type TableData = {
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'data-uri' }) dataUri: string;
-  @property({ attribute: 'sort-column' }) sortColumn: string = 'id';
-  @property({ attribute: 'sort-direction' }) sortDirection: string = 'asc';
+  @property({attribute: 'data-uri'}) dataUri: string;
+  @property({attribute: 'sort-column'}) sortColumn: string = 'id';
+  @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
 
-  @property({ attribute: 'wide-column' }) wideColumn: string;
-  @property({ attribute: 'key' }) key: string = 'id';
+  @property({attribute: 'wide-column'}) wideColumn: string;
+  @property({attribute: 'key'}) key: string = 'id';
 
-  @property({ attribute: 'headers', type: Object }) headers = '{}';
-  @property({ attribute: 'hide-headers', type: Object }) hiddenHeaders = '{}';
+  @property({attribute: 'headers', type: Object}) headers = '{}';
+  @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
 
   // Data Table Properties
   private itemsPerPage: number = 10;
@@ -78,7 +78,7 @@ export default class ZnDataTable extends ZincElement {
   });
 
   private _dataTask = new Task(this, {
-    task: async ([dataUri, uac], { signal }) => {
+    task: async ([dataUri, uac], {signal}) => {
       let url = dataUri;
 
       const params = new URLSearchParams();
@@ -133,7 +133,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       ${this.getTableHeader()}
-      <table class=${classMap({ 'table': true })}>
+      <table class=${classMap({'table': true})}>
         <thead>
         <tr>
           <th>
@@ -214,7 +214,7 @@ export default class ZnDataTable extends ZincElement {
           </div>
 
           <div class="table__footer__pagination-buttons">
-            <zn-button @click=${this.goToFirstPage} ?
+            <zn-button @click=${this.goToFirstPage}
                        ?disabled=${this.page === 1}
                        icon-size="16"
                        size="small"

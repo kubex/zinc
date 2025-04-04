@@ -16,14 +16,15 @@ layout: component
 
 ## Examples
 
-### Show Prefix
+### Icon Position
+
+Icon position can be set to `start` or `end`. The default is `none`.
 
 ```html:preview
 
 <div class="form-spacing">
-  <zn-data-select provider="country" name="country" show-prefix></zn-data-select>
-  <zn-data-select provider="currency" name="currency" show-prefix></zn-data-select>
-  <zn-data-select provider="color" name="color" show-prefix></zn-data-select>
+  <zn-data-select provider="country" name="country" icon-position="start"></zn-data-select>
+  <zn-data-select provider="country" name="country" icon-position="end"></zn-data-select>
 </div>
 ```
 

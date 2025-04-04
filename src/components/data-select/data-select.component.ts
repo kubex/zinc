@@ -6,7 +6,7 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from '../../utilities/localize';
@@ -54,8 +54,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country';
 
-  /** Whether we should show the prefix of the options, and the select. */
-  @property({attribute: 'show-prefix', type: Boolean}) showPrefix: boolean;
+  @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
 
   /** An array of keys to use for filtering the options in the selected provider. */
   @property({
@@ -118,19 +117,31 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     return this.select.setCustomValidity(message);
   }
 
+  protected async firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    await this.updateComplete;
+
+    if (this.prefix) this._updatePrefix(); // Update the prefix on first update
+  }
+
   @watch('value', {waitUntilFirstUpdate: true})
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
+    this._updatePrefix();
+  }
 
+  private _updatePrefix() {
     // Set the prefix of the select to the selected values prefix
     const selectedOption = this.select.selectedOptions[0];
-    if (selectedOption && this.showPrefix) {
-      const prefix = selectedOption.querySelector('[slot="prefix"]');
+    if (selectedOption && (this.iconPosition !== 'none')) {
+      const slot = this.iconPosition === 'start'
+        ? selectedOption.querySelector('[slot="prefix"]')
+        : selectedOption.querySelector('[slot="suffix"]');
 
-      if (prefix) {
+      if (slot) {
         this.selectPrefix.innerHTML = '';
-        this.selectPrefix.appendChild(prefix.cloneNode(true));
+        this.selectPrefix.appendChild(slot.cloneNode(true));
       } else {
         this.selectPrefix.innerHTML = '';
       }
@@ -185,11 +196,12 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  value="${this.value}"
                  placeholder="Choose a ${localProvider.getName}"
                  exportparts="combobox,expand-icon,form-control-help-text,form-control-input">
-        ${this.showPrefix ? html`
+        ${this.iconPosition !== 'none' ? html`
           <div id="select__prefix" slot="prefix" class="select__prefix"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`
           <zn-option class="select__option" value="${item.key}">
-            ${this.showPrefix ? html`<span slot="prefix">${item.prefix}</span>` : ''}
+            ${this.iconPosition !== 'none' ? html`<span
+              slot="${this.iconPosition === 'end' ? 'suffix' : 'prefix'}">${item.prefix}</span>` : ''}
             ${item.value}
           </zn-option>`)}
       </zn-select>

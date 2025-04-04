@@ -52,7 +52,8 @@ export default class ZnNote extends ZincElement {
             <small>${this.date}</small>
           </slot>
         </div>
-        <slot name="body" class="note__body">${this.body}</slot>
+        <slot class="note__body">${this.body}</slot>
+        <slot name="footer" class="note__footer"></slot>
       </div>
     `;
   }

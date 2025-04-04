@@ -50,7 +50,7 @@ export default class ZnChip extends ZincElement {
         ${this.hasSlotController.test('[default]') ? html`
           <slot></slot>` : ''}
         ${this.hasSlotController.test('action') ? html`
-          <slot name="action"></slot>` : ''}
+          <slot name="action" class="chip__action"></slot>` : ''}
       </div>
     `;
   }

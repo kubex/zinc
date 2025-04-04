@@ -60,7 +60,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({attribute: 'provider'}) selectProvider: string;
 
-  @property({attribute: 'show-prefix', type: Boolean}) showPrefix: boolean;
+  @property({attribute: 'icon-position', type: Boolean}) iconPosition: 'start' | 'end' | 'none' = 'none';
 
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
   @property({attribute: 'help-text'}) helpText: string = '';
@@ -254,7 +254,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       <zn-data-select class="ai__input"
                       name="${this.name}"
                       value="${this.value}"
-                      show-prefix="${ifDefined(this.showPrefix)}"
+                      icon-position="${ifDefined(this.iconPosition)}"
                       help-text="${ifDefined(this.helpText)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"

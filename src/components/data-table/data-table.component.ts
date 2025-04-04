@@ -7,6 +7,8 @@ import {HasSlotController} from "../../internal/slot";
 import {Task} from "@lit/task";
 
 import styles from './data-table.scss';
+import ZnButton from "../button";
+import ZnQueryBuilder from "../query-builder";
 
 interface TableData {
   page: 1;
@@ -22,7 +24,8 @@ interface TableData {
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-button
+ * @dependency zn-query-builder
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -35,6 +38,10 @@ interface TableData {
  */
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-button': ZnButton,
+    'zn-query-builder': ZnQueryBuilder,
+  };
 
   @property({attribute: 'data-uri'}) dataUri: string;
   @property({attribute: 'sort-column'}) sortColumn: string = 'id';
@@ -45,6 +52,9 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+  @property({attribute: 'caption'}) caption: string = '';
+
+  @property() filters: [] = [];
 
   // Data Table Properties
   private itemsPerPage: number = 10;
@@ -104,7 +114,6 @@ export default class ZnDataTable extends ZincElement {
   });
 
   render() {
-
     return this._dataTask.render({
       pending: () => html`
         <div>Loading...</div>`,
@@ -132,59 +141,43 @@ export default class ZnDataTable extends ZincElement {
     this._rows = this.getRows(keys, data);
 
     return html`
-      ${this.getTableHeader()}
-      <table class=${classMap({'table': true})}>
-        <thead>
-        <tr>
-          <th>
-            <div><input type="checkbox" @change=${this.selectAll}></div>
-          </th>
-          ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
-        </tr>
-        </thead>
-        <tbody>
-        ${this._filteredRows.map((row: any) => html`
-          <tr>
-            <td>
-              <div><input type="checkbox" @change=${this.selectRow}></div>
-            </td>
-            ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
-          </tr>`)}
-        </tbody>
-      </table>
+      <zn-panel caption="${this.caption}">
+        ${this.getTableHeader()}
 
-      ${this.getTableFooter()}
+        <table class=${classMap({'table': true})}>
+          <thead>
+          <tr>
+            <th>
+              <div><input type="checkbox" @change=${this.selectAll}></div>
+            </th>
+            ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
+          </tr>
+          </thead>
+          <tbody>
+          ${this._filteredRows.map((row: any) => html`
+            <tr>
+              <td>
+                <div><input type="checkbox" @change=${this.selectRow}></div>
+              </td>
+              ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
+            </tr>`)}
+          </tbody>
+        </table>
+
+        ${this.getTableFooter()}
+      </zn-panel>
     `;
   }
 
   getTableHeader() {
-    const actions = [];
-
-    if (this.selectedRows.length > 0) {
-      actions.push(html`
-        <zn-button @click=${this.clearSelectedRows} size="x-small" outline>
-          Clear Selection
-        </zn-button>`);
-
-      if (this.hasSlotController.test('delete-action')) {
-        actions.push(html`
-          <slot name="delete-action"></slot>`);
-      }
-
-      if (this.hasSlotController.test('modify-action')) {
-        actions.push(html`
-          <slot name="modify-action"></slot>`);
-      }
-    }
-
-    if (this.hasSlotController.test('create-action')) {
-      actions.push(html`
-        <slot name="create-action"></slot>`);
-    }
-
     return html`
       <div class="table__header">
-        ${actions}
+        <div class="table__header__query-builder">
+          ${this.getQueryBuilder()}
+        </div>
+        <div class="table__header__actions">
+          ${this.getActions()}
+        </div>
       </div>
     `;
   }
@@ -246,6 +239,50 @@ export default class ZnDataTable extends ZincElement {
 
         </div>
       </div>`;
+  }
+
+  getQueryBuilder() {
+    if (!this.filters) return html``;
+
+    return html`
+      <zn-dropdown>
+        <zn-menu>
+            <zn-query-builder filters="${this.filters}" size="small" outline>
+            </zn-query-builder>
+            <zn-button color="primary" type="submit">Search</zn-button>
+        </zn-menu>
+        <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" outline>
+          Filter
+        </zn-button>
+      </zn-dropdown>
+    `;
+  }
+
+  getActions() {
+    const actions = [];
+
+    if (this.selectedRows.length > 0) {
+      actions.push(html`
+        <zn-button @click=${this.clearSelectedRows} size="small" outline>
+          Clear Selection
+        </zn-button>`);
+
+      if (this.hasSlotController.test('delete-action')) {
+        actions.push(html`
+          <slot name="delete-action"></slot>`);
+      }
+
+      if (this.hasSlotController.test('modify-action')) {
+        actions.push(html`
+          <slot name="modify-action"></slot>`);
+      }
+    }
+
+    if (this.hasSlotController.test('create-action')) {
+      actions.push(html`
+        <slot name="create-action"></slot>`);
+    }
+    return actions;
   }
 
   goToPage(page: number) {

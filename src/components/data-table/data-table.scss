@@ -135,9 +135,24 @@ table {
   &__header {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: baseline;
     padding: var(--zn-spacing-small);
     gap: var(--zn-spacing-small);
+
+    &__query-builder zn-menu {
+      padding: 1rem;
+
+      .query-builder__row {
+        min-width: 600px; // Set minimum width when filters have been added
+      }
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: row;
+      gap: var(--zn-spacing-small);
+    }
   }
 
   &__footer {

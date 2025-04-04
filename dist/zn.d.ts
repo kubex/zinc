@@ -2549,21 +2549,10 @@ declare module "components/pagination/pagination.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Pagination component for navigating through pages of content.
      * @documentation https://zinc.style/components/pagination
      * @status experimental
      * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnPagination extends ZincElement {
         static styles: CSSResultGroup;

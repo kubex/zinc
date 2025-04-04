@@ -1,33 +1,22 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './pagination.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary Pagination component for navigating through pages of content.
  * @documentation https://zinc.style/components/pagination
  * @status experimental
  * @since 1.0
- *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnPagination extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'limit', type: Number, reflect: true }) limit: number = 10; // Per-page limit
-  @property({ attribute: 'total', type: Number, reflect: true }) total: number = 0; // Total number of items
-  @property({ attribute: 'page', type: Number, reflect: true }) page: number = 1; // Current page
-  @property({ attribute: 'uri', type: String, reflect: true }) uri: string = ""; // Uri to call replacing #page# with page number
+  @property({attribute: 'limit', type: Number, reflect: true}) limit: number = 10; // Per-page limit
+  @property({attribute: 'total', type: Number, reflect: true}) total: number = 0; // Total number of items
+  @property({attribute: 'page', type: Number, reflect: true}) page: number = 1; // Current page
+  @property({attribute: 'uri', type: String, reflect: true}) uri: string = ""; // Uri to call replacing #page# with page number
 
   protected _createLink(page: number): string {
     if (page === this.page) return "";
@@ -66,11 +55,11 @@ export default class ZnPagination extends ZincElement {
     let buttonStart = Math.max(1, this.page - 2);
     let buttonEnd = Math.min(numberOfPages, this.page + 2);
 
-    if (buttonStart == 1) {
+    if (buttonStart === 1) {
       buttonEnd = Math.min(numberOfPages, 5);
     }
 
-    if (buttonEnd == numberOfPages) {
+    if (buttonEnd === numberOfPages) {
       buttonStart = Math.max(1, numberOfPages - 4);
     }
 
@@ -80,11 +69,13 @@ export default class ZnPagination extends ZincElement {
     for (let i = buttonStart; i <= buttonEnd; i++) {
       pageButtons.push(html`
         <div class="pagination__item">
-          <a
-            class="pagination__button pagination__button--page ${this.page == i ? 'pagination__button--active' : ''}"
-            href="${this._createLink(i)}">
-            ${i}
-          </a>
+          ${this.page !== i ? html`
+            <a class="pagination__button pagination__button--page" href="${this._createLink(i)}">
+              ${i}
+            </a> ` : html`
+            <span class="pagination__button pagination__button--page pagination__button--active">
+              ${i}
+            </span>`}
         </div>`);
     }
 

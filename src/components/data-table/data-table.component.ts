@@ -3,11 +3,12 @@ import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
 import {Task} from "@lit/task";
-import styles from './data-table.scss';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnQueryBuilder from "../query-builder";
 import type {ZnSubmitEvent} from "../../events/zn-submit";
+
+import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;

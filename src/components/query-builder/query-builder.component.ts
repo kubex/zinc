@@ -3,15 +3,15 @@ import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
-
 import {litToHTML} from "../../utilities/lit-to-html";
-import styles from './query-builder.scss';
 import ZnButton from "../button";
 import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
+
+import styles from './query-builder.scss';
 
 export type QueryBuilderData = QueryBuilderItem[];
 

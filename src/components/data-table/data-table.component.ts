@@ -9,11 +9,16 @@ import ZnButton from "../button";
 import ZnQueryBuilder from "../query-builder";
 import type {ZnSubmitEvent} from "../../events/zn-submit";
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
+const DEFAULT_TOTAL = 100;
+const DEFAULT_TOTAL_PAGES = 10;
+
 interface TableData {
-  page: 1;
-  per_page: 10;
-  total: 100;
-  total_pages: 10;
+  page: typeof DEFAULT_PAGE;
+  per_page: typeof DEFAULT_PER_PAGE;
+  total: typeof DEFAULT_TOTAL;
+  total_pages: typeof DEFAULT_TOTAL_PAGES;
   data: any[];
 }
 
@@ -63,8 +68,8 @@ export default class ZnDataTable extends ZincElement {
   @property() filters: [] = [];
 
   // Data Table Properties
-  private itemsPerPage: number = 10;
-  private page: number = 1;
+  private itemsPerPage: number = DEFAULT_PER_PAGE;
+  private page: number = DEFAULT_PAGE;
   private totalPages: number;
 
   private _rows: any[] = [];
@@ -134,9 +139,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   renderTable(data: TableData) {
-    this.itemsPerPage = data.per_page;
-    this.page = data.page;
-    this.totalPages = data.total_pages;
+    this.itemsPerPage = data.per_page ?? DEFAULT_PER_PAGE;
+    this.page = data.page ?? DEFAULT_PAGE;
+    this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
 
     if (!data?.data || data.data.length === 0) {
       return html`

@@ -124,8 +124,10 @@ class DropdownModule {
   updateDropdownPosition(dropdown: ZnDropdownModule = this._dropdown) {
     const editorBounds = this._quill.container.getBoundingClientRect();
 
+    console.log(dropdown.offsetHeight);
+
     // position bottom of the dropdown at the top of the editor
-    const top = (editorBounds.top + this._quill.container.scrollTop);
+    const top = (editorBounds.top + this._quill.container.scrollTop) - dropdown.offsetHeight;
 
     // dropdown should be full width of the editor
     const left = editorBounds.left;
@@ -140,6 +142,14 @@ class DropdownModule {
   }
 
   addCommands() {
+    // Add close command
+    this._commands.push({
+      title: 'Close',
+      command: '',
+      content: '',
+    } satisfies DropdownModuleCannedResponse);
+
+
     this._dropdown.setAttribute('commands', JSON.stringify(this._commands));
   }
 

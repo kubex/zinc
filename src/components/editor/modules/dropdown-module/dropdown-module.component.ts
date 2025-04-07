@@ -59,6 +59,12 @@ export default class DropdownModuleComponent extends ZincElement {
       const activeItem = this.getCurrentItem();
       let index = activeItem ? items.indexOf(activeItem) : 0;
 
+      if (!activeItem) {
+        this.setCurrentItem(items[0]);
+        items[0].focus();
+        return;
+      }
+
       if (items.length > 0) {
         event.preventDefault();
         event.stopPropagation();
@@ -96,6 +102,15 @@ export default class DropdownModuleComponent extends ZincElement {
     return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
   }
 
+  unsetCurrentItem() {
+    const items = this.getAllItems();
+
+    // Update tab indexes
+    items.forEach(i => {
+      i.setAttribute('tabindex', '-1');
+    });
+  }
+
   setCurrentItem(item: HTMLElement) {
     const items = this.getAllItems();
 
@@ -123,6 +138,7 @@ export default class DropdownModuleComponent extends ZincElement {
   hide() {
     this.emit('zn-close');
     this.open = false;
+    this.unsetCurrentItem();
   }
 
   @watch('open', {waitUntilFirstUpdate: true})

@@ -7,26 +7,10 @@ layout: component
 
 ```html:preview
 
-<zn-editor></zn-editor>
+<zn-editor
+  canned-responses="[{&quot;title&quot;: &quot;Example With Data&quot;,&quot;content&quot;: &quot;Hi   \n\nThis is a message from Kyle Essex to test data. \n\n\nFrom    &quot;,&quot;labels&quot;: [&quot;test&quot;],&quot;command&quot;: &quot;example-with-data&quot;},{&quot;title&quot;: &quot;Styled Response&quot;,&quot;content&quot;: &quot;&lt;p&gt;It&apos;s for chat,&lt;/p&gt;\n\n&lt;p&gt;Try not to use any specific styling&lt;/p&gt;\n&quot;,&quot;labels&quot;: [&quot;styled, test&quot;],&quot;command&quot;: &quot;styled-response&quot;}]">
 
-
-<script>
-  let cannedResponses = [
-    {
-      title:   'Hello',
-      content: 'Hello, how can I help you?'
-      command: 'hello'
-    },
-    {
-      title:   'Goodbye',
-      content: 'Goodbye, have a nice day!'
-      command: 'goodbye'
-    }
-  ];
-
-  let editor = document.querySelector('zn-editor');
-  editor.setAttribute('canned-responses', JSON.stringify(cannedResponses));
-</script>
+</zn-editor>
 ```
 
 ## Examples

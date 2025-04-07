@@ -128,7 +128,7 @@ export default class ZnDataTable extends ZincElement {
   });
 
   render() {
-    return this._dataTask.render({
+    const tableBody = this._dataTask.render({
       pending: () => html`
         <div>Loading...</div>`,
       complete: (data) => html`
@@ -136,6 +136,14 @@ export default class ZnDataTable extends ZincElement {
       error: (error) => html`
         <div>Error: ${error}</div>`
     });
+
+    // Headers do not need to be re-rendered with new data
+    return html`
+      <zn-panel caption="${this.caption}">
+        ${this.getTableHeader()}
+        ${tableBody}
+      </zn-panel>
+    `;
   }
 
   renderTable(data: TableData) {
@@ -155,31 +163,27 @@ export default class ZnDataTable extends ZincElement {
     this._rows = this.getRows(keys, data);
 
     return html`
-      <zn-panel caption="${this.caption}">
-        ${this.getTableHeader()}
-
-        <table class=${classMap({'table': true})}>
-          <thead>
+      <table class=${classMap({'table': true})}>
+        <thead>
+        <tr>
+          <th>
+            <div><input type="checkbox" @change=${this.selectAll}></div>
+          </th>
+          ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
+        </tr>
+        </thead>
+        <tbody>
+        ${this._filteredRows.map((row: any) => html`
           <tr>
-            <th>
-              <div><input type="checkbox" @change=${this.selectAll}></div>
-            </th>
-            ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
-          </tr>
-          </thead>
-          <tbody>
-          ${this._filteredRows.map((row: any) => html`
-            <tr>
-              <td>
-                <div><input type="checkbox" @change=${this.selectRow}></div>
-              </td>
-              ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
-            </tr>`)}
-          </tbody>
-        </table>
+            <td>
+              <div><input type="checkbox" @change=${this.selectRow}></div>
+            </td>
+            ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
+          </tr>`)}
+        </tbody>
+      </table>
 
-        ${this.getTableFooter()}
-      </zn-panel>
+      ${this.getTableFooter()}
     `;
   }
 

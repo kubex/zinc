@@ -7,6 +7,7 @@ import styles from './data-table.scss';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnQueryBuilder from "../query-builder";
+import type {ZnSubmitEvent} from "../../events/zn-submit";
 
 interface TableData {
   page: 1;
@@ -50,6 +51,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'data-uri'}) dataUri: string;
   @property({attribute: 'sort-column'}) sortColumn: string = 'id';
   @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
+  @property({attribute: 'filter'}) filter: string = '';
 
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
@@ -100,6 +102,9 @@ export default class ZnDataTable extends ZincElement {
       params.append('per_page', this.itemsPerPage.toString());
       params.append('sort_column', this.sortColumn);
       params.append('sort_direction', this.sortDirection);
+      if (this.filter) {
+        params.append('filter', this.filter);
+      }
       url += '?' + params.toString();
 
       const response = await fetch(url, {
@@ -253,13 +258,29 @@ export default class ZnDataTable extends ZincElement {
         <zn-menu>
           <zn-query-builder filters="${this.filters}" size="small" outline>
           </zn-query-builder>
-          <zn-button color="primary" type="submit">Search</zn-button>
+          <zn-button @click=${this.queryData}
+                     color="primary"
+                     type="submit">
+            Search
+          </zn-button>
         </zn-menu>
         <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
           Filter
         </zn-button>
       </zn-dropdown>
     `;
+  }
+
+  queryData(event: ZnSubmitEvent) {
+    const submit = event.target as ZnButton;
+    const parent: HTMLElement = submit.parentElement!;
+    const queryBuilder: ZnQueryBuilder = parent.querySelector('zn-query-builder')!;
+    const queryString = queryBuilder.value as string;
+
+    if (queryString) {
+      this.filter = queryString;
+      this._dataTask.run().then(r => r);
+    }
   }
 
   getActions() {

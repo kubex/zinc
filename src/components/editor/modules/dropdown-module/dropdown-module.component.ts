@@ -38,6 +38,10 @@ export default class DropdownModuleComponent extends ZincElement {
     this.removeEventListener('keydown', this.handleKeyDown);
   }
 
+  focus() {
+    this.searchInput.focus();
+  }
+
   private handleKeyDown(event: KeyboardEvent) {
     // Make a selection when pressing enter or space
     if (event.key === 'Enter' || event.key === ' ') {
@@ -125,7 +129,7 @@ export default class DropdownModuleComponent extends ZincElement {
   handleOpenChange() {
     if (this.open) {
       this.addOpenListeners();
-      this.searchInput.focus();
+      setTimeout(() => this.focus(), 0);
     } else {
       this.removeOpenListeners();
     }

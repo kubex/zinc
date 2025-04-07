@@ -37,7 +37,7 @@ class DropdownModule {
     }
 
     if (this._commands.length > 0 || this._cannedResponsesUri !== '') {
-      quill.on(Quill.events.TEXT_CHANGE, this.onTextChange.bind(this));
+      quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
 
       // Create the dropdown element
       const dropdown = this.createDropdown();
@@ -105,11 +105,8 @@ class DropdownModule {
     if (this._cannedResponsesUri) {
       this.getDropdownContentFromUri();
     }
-
-
     // add to the document out of shadow dom
     this._dropdown.show();
-    this._dropdown.focus();
   }
 
   closeDropdown() {

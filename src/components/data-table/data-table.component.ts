@@ -79,7 +79,13 @@ export default class ZnDataTable extends ZincElement {
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
 
-  private hasSlotController = new HasSlotController(this, '[default], modify-action');
+  private hasSlotController = new HasSlotController(
+    this,
+    '[default]',
+    ActionSlots.delete.valueOf(),
+    ActionSlots.modify.valueOf(),
+    ActionSlots.create.valueOf(),
+  );
 
   // Horrible, don't like it, burn it, throw it in the garbage. Take the garbage out. Step on it. Burn it again.
   private _uacTask = new Task(this, {

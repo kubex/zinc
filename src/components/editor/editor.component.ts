@@ -3,7 +3,7 @@ import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 import Quill from "quill";
 import {FormControlController} from '../../internal/form';
-import DropdownModule, {dropdownOpen} from "./modules/dropdown-module";
+import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
 import AttachmentModule from "./modules/attachment-module";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import DragAndDropModule from "./modules/drag-drop-module";

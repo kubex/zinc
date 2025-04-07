@@ -1,19 +1,32 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, TemplateResult, unsafeCSS } from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {property} from 'lit/decorators.js';
+import {Task} from "@lit/task";
 import ZincElement from '../../internal/zinc-element';
-
-import { classMap } from "lit/directives/class-map.js";
-import { HasSlotController } from "../../internal/slot";
-import { Task } from "@lit/task";
+import ZnButton from "../button";
+import ZnQueryBuilder from "../query-builder";
+import type {ZnSubmitEvent} from "../../events/zn-submit";
 
 import styles from './data-table.scss';
 
-type TableData = {
-  page: 1,
-  per_page: 10,
-  total: 100,
-  total_pages: 10,
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
+const DEFAULT_TOTAL = 100;
+const DEFAULT_TOTAL_PAGES = 10;
+
+interface TableData {
+  page: typeof DEFAULT_PAGE;
+  per_page: typeof DEFAULT_PER_PAGE;
+  total: typeof DEFAULT_TOTAL;
+  total_pages: typeof DEFAULT_TOTAL_PAGES;
   data: any[];
+}
+
+export enum ActionSlots {
+  delete = 'delete-action',
+  modify = 'modify-action',
+  create = 'create-action',
 }
 
 /**
@@ -22,7 +35,8 @@ type TableData = {
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-button
+ * @dependency zn-query-builder
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -35,20 +49,28 @@ type TableData = {
  */
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-button': ZnButton,
+    'zn-query-builder': ZnQueryBuilder,
+  };
 
-  @property({ attribute: 'data-uri' }) dataUri: string;
-  @property({ attribute: 'sort-column' }) sortColumn: string = 'id';
-  @property({ attribute: 'sort-direction' }) sortDirection: string = 'asc';
+  @property({attribute: 'data-uri'}) dataUri: string;
+  @property({attribute: 'sort-column'}) sortColumn: string = 'id';
+  @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
+  @property({attribute: 'filter'}) filter: string = '';
 
-  @property({ attribute: 'wide-column' }) wideColumn: string;
-  @property({ attribute: 'key' }) key: string = 'id';
+  @property({attribute: 'wide-column'}) wideColumn: string;
+  @property({attribute: 'key'}) key: string = 'id';
 
-  @property({ attribute: 'headers', type: Object }) headers = '{}';
-  @property({ attribute: 'hide-headers', type: Object }) hiddenHeaders = '{}';
+  @property({attribute: 'headers', type: Object}) headers = '{}';
+  @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+  @property({attribute: 'caption'}) caption: string = '';
+
+  @property() filters: [] = [];
 
   // Data Table Properties
-  private itemsPerPage: number = 10;
-  private page: number = 1;
+  private itemsPerPage: number = DEFAULT_PER_PAGE;
+  private page: number = DEFAULT_PAGE;
   private totalPages: number;
 
   private _rows: any[] = [];
@@ -57,7 +79,13 @@ export default class ZnDataTable extends ZincElement {
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
 
-  private hasSlotController = new HasSlotController(this, '[default], modify-action');
+  private hasSlotController = new HasSlotController(
+    this,
+    '[default]',
+    ActionSlots.delete.valueOf(),
+    ActionSlots.modify.valueOf(),
+    ActionSlots.create.valueOf(),
+  );
 
   // Horrible, don't like it, burn it, throw it in the garbage. Take the garbage out. Step on it. Burn it again.
   private _uacTask = new Task(this, {
@@ -78,7 +106,7 @@ export default class ZnDataTable extends ZincElement {
   });
 
   private _dataTask = new Task(this, {
-    task: async ([dataUri, uac], { signal }) => {
+    task: async ([dataUri, uac], {signal}) => {
       let url = dataUri;
 
       const params = new URLSearchParams();
@@ -86,6 +114,9 @@ export default class ZnDataTable extends ZincElement {
       params.append('per_page', this.itemsPerPage.toString());
       params.append('sort_column', this.sortColumn);
       params.append('sort_direction', this.sortDirection);
+      if (this.filter) {
+        params.append('filter', this.filter);
+      }
       url += '?' + params.toString();
 
       const response = await fetch(url, {
@@ -104,8 +135,7 @@ export default class ZnDataTable extends ZincElement {
   });
 
   render() {
-
-    return this._dataTask.render({
+    const tableBody = this._dataTask.render({
       pending: () => html`
         <div>Loading...</div>`,
       complete: (data) => html`
@@ -113,14 +143,22 @@ export default class ZnDataTable extends ZincElement {
       error: (error) => html`
         <div>Error: ${error}</div>`
     });
+
+    // Headers do not need to be re-rendered with new data
+    return html`
+      <zn-panel caption="${this.caption}">
+        ${this.getTableHeader()}
+        ${tableBody}
+      </zn-panel>
+    `;
   }
 
   renderTable(data: TableData) {
-    this.itemsPerPage = data.per_page;
-    this.page = data.page;
-    this.totalPages = data.total_pages;
+    this.itemsPerPage = data.per_page ?? DEFAULT_PER_PAGE;
+    this.page = data.page ?? DEFAULT_PAGE;
+    this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
 
-    if (!data || !data.data || data.data.length === 0) {
+    if (!data?.data || data.data.length === 0) {
       return html`
         <div class="table--empty">No data available</div>`;
     }
@@ -132,8 +170,7 @@ export default class ZnDataTable extends ZincElement {
     this._rows = this.getRows(keys, data);
 
     return html`
-      ${this.getTableHeader()}
-      <table class=${classMap({ 'table': true })}>
+      <table class=${classMap({'table': true})}>
         <thead>
         <tr>
           <th>
@@ -158,33 +195,14 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getTableHeader() {
-    const actions = [];
-
-    if (this.selectedRows.length > 0) {
-      actions.push(html`
-        <zn-button @click=${this.clearSelectedRows} size="x-small" outline>
-          Clear Selection
-        </zn-button>`);
-
-      if (this.hasSlotController.test('delete-action')) {
-        actions.push(html`
-          <slot name="delete-action"></slot>`);
-      }
-
-      if (this.hasSlotController.test('modify-action')) {
-        actions.push(html`
-          <slot name="modify-action"></slot>`);
-      }
-    }
-
-    if (this.hasSlotController.test('create-action')) {
-      actions.push(html`
-        <slot name="create-action"></slot>`);
-    }
-
     return html`
       <div class="table__header">
-        ${actions}
+        <div class="table__header__query-builder">
+          ${this.getQueryBuilder()}
+        </div>
+        <div class="table__header__actions">
+          ${this.getActions()}
+        </div>
       </div>
     `;
   }
@@ -214,7 +232,7 @@ export default class ZnDataTable extends ZincElement {
           </div>
 
           <div class="table__footer__pagination-buttons">
-            <zn-button @click=${this.goToFirstPage} ?
+            <zn-button @click=${this.goToFirstPage}
                        ?disabled=${this.page === 1}
                        icon-size="16"
                        size="small"
@@ -248,32 +266,92 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  goToFirstPage() {
-    this.page = 1;
+  getQueryBuilder() {
+    if (!this.filters) return html``;
+
+    return html`
+      <zn-dropdown>
+        <zn-menu>
+          <zn-query-builder filters="${this.filters}" size="small" outline>
+          </zn-query-builder>
+          <zn-button @click=${this.queryData}
+                     color="primary"
+                     type="submit">
+            Search
+          </zn-button>
+        </zn-menu>
+        <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
+          Filter
+        </zn-button>
+      </zn-dropdown>
+    `;
+  }
+
+  queryData(event: ZnSubmitEvent) {
+    const submit = event.target as ZnButton;
+    const parent: HTMLElement = submit.parentElement!;
+    const queryBuilder: ZnQueryBuilder = parent.querySelector('zn-query-builder')!;
+    const queryString = queryBuilder.value as string;
+
+    if (queryString) {
+      this.filter = queryString;
+      this._dataTask.run().then(r => r);
+    }
+  }
+
+  getActions() {
+    const actions = [];
+
+    actions.push(html`
+      <zn-button @click=${this.clearSelectedRows}
+                 ?disabled="${this.selectedRows.length <= 0}"
+                 size="small"
+                 outline>
+        Clear Selection
+      </zn-button>`);
+
+    Object.values(ActionSlots).forEach((slot: string) => {
+      if (this.hasSlotController.test(slot)) {
+        this.toggleActionButton(slot);
+        actions.push(html`
+          <slot name="${slot}"></slot>`);
+      }
+    });
+
+    return actions;
+  }
+
+  toggleActionButton(slotName: string) {
+    const slot = this.hasSlotController.getSlot(slotName);
+    if (slot) {
+      const input = slot.querySelector('zn-button');
+      if (input && input instanceof ZnButton) {
+        input.disabled = this.selectedRows.length <= 0;
+      }
+    }
+  }
+
+  goToPage(page: number) {
+    this.page = page;
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this._dataTask.run().then(r => r);
+  }
+
+  goToFirstPage() {
+    this.goToPage(1);
   }
 
   goToPreviousPage() {
-    this.page = Math.max(this.page - 1, 1);
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(Math.max(this.page - 1, 1));
   }
 
   goToNextPage() {
-    this.page = Math.min(this.page + 1, this.totalPages);
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(Math.min(this.page + 1, this.totalPages));
   }
 
   goToLastPage() {
-    this.page = this.totalPages;
-    this.selectedRows = [];
-    this.numberOfRowsSelected = 0;
-    this._dataTask.run();
+    this.goToPage(this.totalPages);
   }
 
   updateRowsPerPage(event: Event) {
@@ -281,7 +359,7 @@ export default class ZnDataTable extends ZincElement {
     this.itemsPerPage = parseInt(select.value);
     this.page = 1; // reset the page to 1 when changing the number of rows per page
     this.requestUpdate();
-    this._dataTask.run();
+    this._dataTask.run().then(r => r);
   }
 
   selectAll(event: Event) {
@@ -323,7 +401,10 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-  clearSelectedRows() {
+  clearSelectedRows(event: Event) {
+    const button = event.target as ZnButton;
+    if (button.disabled) return;
+
     (this.renderRoot.querySelectorAll('thead input[type="checkbox"]')[0] as HTMLInputElement).checked = false;
     for (const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')) {
       (row as HTMLInputElement).checked = false;
@@ -339,7 +420,7 @@ export default class ZnDataTable extends ZincElement {
     return () => {
       this.sortColumn = key;
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-      this._dataTask.run();
+      this._dataTask.run().then(r => r);
     };
   }
 

@@ -3556,6 +3556,7 @@ declare module "components/editor/modules/dropdown-module/dropdown-module.compon
         private handleKeyDown;
         getAllItems(): HTMLElement[];
         getCurrentItem(): HTMLElement | undefined;
+        unsetCurrentItem(): void;
         setCurrentItem(item: HTMLElement): void;
         private handleFocus;
         private handleBlur;

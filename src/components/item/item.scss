@@ -26,14 +26,18 @@
     gap: var(--zn-spacing-small);
   }
 
-  &__icon:not(:empty) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: var(--zn-spacing-small);
-    color: rgb(var(--zn-text-heading));
-  }
+  &--has-icon {
+    align-items: flex-start !important;
 
+    .description-item__icon {
+      position: relative;
+      line-height: 33px;
+      display: flex;
+      justify-content: center;
+      margin-right: var(--zn-spacing-small);
+      color: rgb(var(--zn-text-heading));
+    }
+  }
 
   &__header {
     display: flex;

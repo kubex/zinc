@@ -46,7 +46,10 @@ layout: component
 </zn-item>
 
 <zn-cols layout="1, 1">
-  <zn-item inline icon="person">This is the content</zn-item>
+  <zn-item inline icon="person">
+    <div>First Name</div>
+    <div>Second Name</div>
+  </zn-item>
   <zn-item inline icon="person">This is the content</zn-item>
 </zn-cols>
 ```

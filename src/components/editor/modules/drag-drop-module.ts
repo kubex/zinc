@@ -1,6 +1,6 @@
 import Quill from 'quill';
 
-type DragAndDropModuleOptions = {
+interface DragAndDropModuleOptions {
   onDrop: (file: File, options: object) => void;
   draggableContentTypePattern: string;
   draggables: [];

@@ -1,12 +1,12 @@
 import Quill from 'quill';
 
-type DropdownModuleOptions = {
+interface DropdownModuleOptions {
   cannedResponses: DropdownModuleCannedResponse[];
   cannedResponsesUri: string;
 }
 
-type DropdownModuleCannedResponse = {
-  title: string
+interface DropdownModuleCannedResponse {
+  title: string;
   content: string;
   command: string;
   labels?: string[];
@@ -116,7 +116,7 @@ class DropdownModule {
       const char = index === 0 ? text.charAt(0) : text.charAt(index - 1); // Last input char
 
       // if there's no character before the forward slash, we will open the dropdown
-      if (char === '/' && !dropdownOpen &&
+      if (char === '#' && !dropdownOpen &&
         (text.charAt(index - 2) === ' '
           || text.charAt(index - 2) === '\n'
           || text.charAt(index - 2) === ''

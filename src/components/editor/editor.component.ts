@@ -1,14 +1,14 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
-import ZincElement, { ZincFormControl } from '../../internal/zinc-element';
+import {property, query} from 'lit/decorators.js';
+import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
 import Quill from "quill";
-import { FormControlController } from '../../internal/form';
-import DropdownModule, { dropdownOpen } from "./modules/dropdown-module";
+import {FormControlController} from '../../internal/form';
+import DropdownModule, {dropdownOpen} from "./modules/dropdown-module";
 import AttachmentModule from "./modules/attachment-module";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
-import { normalizeNative } from "./normalize-native";
+import {normalizeNative} from "./normalize-native";
 
 import styles from './editor.scss';
 
@@ -43,15 +43,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property() name: string;
   @property() value: string;
 
-  @property({ attribute: 'interaction-type', type: String })
+  @property({attribute: 'interaction-type', type: String})
   interactionType: 'ticket' | 'chat' = 'chat';
 
-  @property({ attribute: 'canned-responses', type: Array })
-  cannedResponses: Array<any>;
+  @property({attribute: 'canned-responses', type: Array})
+  cannedResponses: any[];
 
-  @property({ attribute: 'canned-responses-url' }) cannedResponsesUri: string;
+  @property({attribute: 'canned-responses-url'}) cannedResponsesUri: string;
 
-  @property({ attribute: 'attachment-url', type: String })
+  @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
   private quillElement: Quill;
@@ -101,7 +101,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const container = [
       ['bold', 'italic', 'underline', 'strike'],
       ['undo', 'redo'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{'list': 'ordered'}, {'list': 'bullet'}],
     ];
     container.push(this.interactionType === 'ticket' ? ['link', 'image', 'image-attachment'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);
@@ -161,7 +161,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
               xhr.onload = () => {
                 if (xhr.status === 200) {
                   const response = JSON.parse(xhr.responseText);
-                  resolve({ path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename });
+                  resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
                 }
               };
               xhr.send(fd);
@@ -195,10 +195,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._setupTitleAttributes(quill);
 
-    const html = quill.clipboard.convert({ html: this.value });
+    const html = quill.clipboard.convert({html: this.value});
     quill.setContents(html, Quill.sources.SILENT);
 
-    this.emit('zn-element-added', { detail: { element: this.editor } });
+    this.emit('zn-element-added', {detail: {element: this.editor}});
 
     super.firstUpdated(_changedProperties);
   }
@@ -234,7 +234,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const clipboard = context.event.clipboardData;
           const text = clipboard.getData('text/plain');
           const html = clipboard.getData('text/html');
-          const delta = this.quillElement.clipboard.convert({ html: html, text: text });
+          const delta = this.quillElement.clipboard.convert({html: html, text: text});
           this.quillElement.setContents(delta, 'silent');
           this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
         }
@@ -254,7 +254,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         handler: () => {
           const form = this.closest('form');
           if (form && !dropdownOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
-            this.emit('zn-submit', { detail: { value: this.value, element: this } });
+            this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();
             this.quillElement.setText('');
           }

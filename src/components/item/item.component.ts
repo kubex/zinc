@@ -56,6 +56,8 @@ export default class ZnItem extends ZincElement {
   }
 
   render() {
+    const hasIcon = this.icon && this.icon.length > 0;
+
     return html`
       <div class=${classMap({
         'description-item': true,
@@ -65,6 +67,7 @@ export default class ZnItem extends ZincElement {
         'description-item--small': this.size === 'small',
         'description-item--medium': this.size === 'medium',
         'description-item--large': this.size === 'large',
+        'description-item--has-icon': hasIcon,
       })}>
 
         ${this.icon ? html`

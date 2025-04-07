@@ -3552,6 +3552,7 @@ declare module "components/editor/modules/dropdown-module/dropdown-module.compon
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        focus(): void;
         private handleKeyDown;
         getAllItems(): HTMLElement[];
         getCurrentItem(): HTMLElement | undefined;

@@ -417,6 +417,26 @@
             <div class="code-preview__preview">
               <zn-editor></zn-editor>
 
+              <script>
+                (() => {
+                  let cannedResponses = [
+                    {
+                      title:   'Hello',
+                      content: 'Hello, how can I help you?'
+                      command: 'hello'
+                    },
+                    {
+                      title:   'Goodbye',
+                      content: 'Goodbye, have a nice day!'
+                      command: 'goodbye'
+                    }
+                  ];
+
+                  let editor = document.querySelector('zn-editor');
+                  editor.setAttribute('canned-responses', JSON.stringify(cannedResponses));
+                 })();
+              </script>
+
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
@@ -424,7 +444,27 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-68">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-129"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-editor</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-editor</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-129">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-editor</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-editor</span><span class="token punctuation">&gt;</span></span>
+
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">let</span> cannedResponses <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span>   <span class="token string">'Hello'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">content</span><span class="token operator">:</span> <span class="token string">'Hello, how can I help you?'</span>
+      <span class="token literal-property property">command</span><span class="token operator">:</span> <span class="token string">'hello'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span>   <span class="token string">'Goodbye'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">content</span><span class="token operator">:</span> <span class="token string">'Goodbye, have a nice day!'</span>
+      <span class="token literal-property property">command</span><span class="token operator">:</span> <span class="token string">'goodbye'</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">let</span> editor <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-editor'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  editor<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'canned-responses'</span><span class="token punctuation">,</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>cannedResponses<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-129"></zn-copy-button></pre>
               </div>
             </div>

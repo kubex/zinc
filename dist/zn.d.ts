@@ -3468,16 +3468,16 @@ declare module "components/bulk-actions/index" {
 }
 declare module "components/editor/modules/dropdown-module" {
     import Quill from 'quill';
-    type DropdownModuleOptions = {
+    interface DropdownModuleOptions {
         cannedResponses: DropdownModuleCannedResponse[];
         cannedResponsesUri: string;
-    };
-    type DropdownModuleCannedResponse = {
+    }
+    interface DropdownModuleCannedResponse {
         title: string;
         content: string;
         command: string;
         labels?: string[];
-    };
+    }
     export let dropdownOpen: boolean;
     class DropdownModule {
         private _quill;
@@ -3551,11 +3551,11 @@ declare module "components/editor/modules/time-tracking-module" {
 }
 declare module "components/editor/modules/drag-drop-module" {
     import Quill from 'quill';
-    type DragAndDropModuleOptions = {
+    interface DragAndDropModuleOptions {
         onDrop: (file: File, options: object) => void;
         draggableContentTypePattern: string;
         draggables: [];
-    };
+    }
     export default class DragAndDropModule {
         private _quill;
         private _options;
@@ -3630,7 +3630,7 @@ declare module "components/editor/editor.component" {
         name: string;
         value: string;
         interactionType: 'ticket' | 'chat';
-        cannedResponses: Array<any>;
+        cannedResponses: any[];
         cannedResponsesUri: string;
         uploadAttachmentUrl: string;
         private quillElement;

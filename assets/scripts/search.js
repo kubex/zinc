@@ -395,12 +395,12 @@
     }
   });
 
-  // Show the search dialog when slash (or CMD+K) is pressed and focus is not inside a form element
+  // Show the search dialog when (SHFT + ?) (or CMD+K) is pressed and focus is not inside a form element
   document.addEventListener('keydown', event =>
   {
     if(
       !isShowing &&
-      (event.key === '/' || (event.key === 'k' && (event.metaKey || event.ctrlKey))) &&
+      ((event.key === '?' && event.shiftKey) || (event.key === 'k' && (event.metaKey || event.ctrlKey))) &&
       !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
     )
     {

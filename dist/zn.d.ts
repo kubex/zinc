@@ -3536,13 +3536,58 @@ declare module "components/bulk-actions/index" {
         }
     }
 }
-declare module "components/editor/modules/dropdown-module" {
-    import Quill from 'quill';
+declare module "components/editor/modules/dropdown-module/dropdown-module.component" {
+    import type { PropertyValues } from "lit";
+    import { type CSSResultGroup, type TemplateResult } from "lit";
+    import ZincElement from "internal/zinc-element";
+    import type { DropdownModuleCannedResponse } from "components/editor/modules/dropdown-module/dropdown-module";
+    export default class DropdownModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        private hasFocus;
+        searchInput: HTMLInputElement;
+        commandList: HTMLElement;
+        commands: DropdownModuleCannedResponse[];
+        open: boolean;
+        private closeWatcher;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private handleKeyDown;
+        getAllItems(): HTMLElement[];
+        getCurrentItem(): HTMLElement | undefined;
+        setCurrentItem(item: HTMLElement): void;
+        private handleFocus;
+        private handleBlur;
+        show(): void;
+        hide(): void;
+        handleOpenChange(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private requestClose;
+        render(): TemplateResult<1>;
+        private handleClick;
+        private _createCommand;
+    }
+}
+declare module "components/editor/modules/dropdown-module/events/zn-command-select" {
+    export type ZnCommandSelectEvent = CustomEvent<{
+        item: HTMLElement;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-command-select': ZnCommandSelectEvent;
+        }
+    }
+}
+declare module "components/editor/modules/dropdown-module/dropdown-module" {
+    import "components/editor/modules/dropdown-module/dropdown-module.component";
+    import Quill, { type Delta } from 'quill';
+    import type ZnDropdownModule from "components/editor/modules/dropdown-module/dropdown-module.component";
     interface DropdownModuleOptions {
         cannedResponses: DropdownModuleCannedResponse[];
         cannedResponsesUri: string;
     }
-    interface DropdownModuleCannedResponse {
+    export interface DropdownModuleCannedResponse {
         title: string;
         content: string;
         command: string;
@@ -3551,25 +3596,16 @@ declare module "components/editor/modules/dropdown-module" {
     export let dropdownOpen: boolean;
     class DropdownModule {
         private _quill;
-        private _dropdown;
-        private _cannedResponsesUri;
-        private _command;
+        private readonly _dropdown;
+        private readonly _cannedResponsesUri;
         private _commands;
-        private _selectedIndex;
-        private _commandElements;
         constructor(quill: Quill, options: DropdownModuleOptions);
-        addEventListeners(): void;
-        onTextChange(_: any, _oldDelta: any, source: any): void;
+        onTextChange: (_: Delta, _oldDelta: Delta, source: string) => void;
         openDropdown(): void;
         closeDropdown(): void;
-        commandFilter(text: string): void;
-        createDropdown(): HTMLDivElement;
-        updateDropdownPosition(dropdown?: HTMLElement): void;
-        addCommands(dropdown?: HTMLElement): void;
-        moveCursor(index: number): void;
-        updateSelectedCommand(): void;
-        createCommandElement(command: DropdownModuleCannedResponse): HTMLDivElement;
-        createTagElement(tag: string): HTMLDivElement;
+        createDropdown(): ZnDropdownModule | null;
+        updateDropdownPosition(dropdown?: ZnDropdownModule): void;
+        addCommands(): void;
         triggerCommand(command: DropdownModuleCannedResponse): void;
         private getDropdownContentFromUri;
     }

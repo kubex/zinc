@@ -1,12 +1,10 @@
-import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
-import {property} from 'lit/decorators.js';
-import ZincElement from '../../internal/zinc-element';
-
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {property} from 'lit/decorators.js';
 import {Task} from "@lit/task";
-
 import styles from './data-table.scss';
+import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnQueryBuilder from "../query-builder";
 
@@ -16,6 +14,12 @@ interface TableData {
   total: 100;
   total_pages: 10;
   data: any[];
+}
+
+export enum ActionSlots {
+  delete = 'delete-action',
+  modify = 'modify-action',
+  create = 'create-action',
 }
 
 /**
@@ -247,11 +251,11 @@ export default class ZnDataTable extends ZincElement {
     return html`
       <zn-dropdown>
         <zn-menu>
-            <zn-query-builder filters="${this.filters}" size="small" outline>
-            </zn-query-builder>
-            <zn-button color="primary" type="submit">Search</zn-button>
+          <zn-query-builder filters="${this.filters}" size="small" outline>
+          </zn-query-builder>
+          <zn-button color="primary" type="submit">Search</zn-button>
         </zn-menu>
-        <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" outline>
+        <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
           Filter
         </zn-button>
       </zn-dropdown>
@@ -261,28 +265,33 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    if (this.selectedRows.length > 0) {
-      actions.push(html`
-        <zn-button @click=${this.clearSelectedRows} size="small" outline>
-          Clear Selection
-        </zn-button>`);
+    actions.push(html`
+      <zn-button @click=${this.clearSelectedRows}
+                 ?disabled="${this.selectedRows.length <= 0}"
+                 size="small"
+                 outline>
+        Clear Selection
+      </zn-button>`);
 
-      if (this.hasSlotController.test('delete-action')) {
+    Object.values(ActionSlots).forEach((slot: string) => {
+      if (this.hasSlotController.test(slot)) {
+        this.toggleActionButton(slot);
         actions.push(html`
-          <slot name="delete-action"></slot>`);
+          <slot name="${slot}"></slot>`);
       }
+    });
 
-      if (this.hasSlotController.test('modify-action')) {
-        actions.push(html`
-          <slot name="modify-action"></slot>`);
-      }
-    }
-
-    if (this.hasSlotController.test('create-action')) {
-      actions.push(html`
-        <slot name="create-action"></slot>`);
-    }
     return actions;
+  }
+
+  toggleActionButton(slotName: string) {
+    const slot = this.hasSlotController.getSlot(slotName);
+    if (slot) {
+      const input = slot.querySelector('zn-button');
+      if (input && input instanceof ZnButton) {
+        input.disabled = this.selectedRows.length <= 0;
+      }
+    }
   }
 
   goToPage(page: number) {
@@ -355,7 +364,10 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-  clearSelectedRows() {
+  clearSelectedRows(event: Event) {
+    const button = event.target as ZnButton;
+    if (button.disabled) return;
+
     (this.renderRoot.querySelectorAll('thead input[type="checkbox"]')[0] as HTMLInputElement).checked = false;
     for (const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')) {
       (row as HTMLInputElement).checked = false;

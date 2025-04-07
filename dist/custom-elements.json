@@ -3109,7 +3109,7 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "show"
             },
             {
@@ -3906,6 +3906,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-query-builder': ZnQueryBuilder, }"
+            },
+            {
+              "kind": "field",
               "name": "dataUri",
               "type": {
                 "text": "string"
@@ -3929,6 +3938,15 @@
               },
               "default": "'asc'",
               "attribute": "sort-direction"
+            },
+            {
+              "kind": "field",
+              "name": "filter",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "filter"
             },
             {
               "kind": "field",
@@ -3964,6 +3982,24 @@
               },
               "default": "'{}'",
               "attribute": "hide-headers"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "filters",
+              "type": {
+                "text": "[]"
+              },
+              "default": "[]",
+              "attribute": "filters"
             },
             {
               "kind": "field",
@@ -4031,7 +4067,7 @@
               "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
-              "default": "new HasSlotController(this, '[default], modify-action')"
+              "default": "new HasSlotController( this, '[default]', ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), )"
             },
             {
               "kind": "field",
@@ -4043,7 +4079,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri, uac], { signal }) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); params.append('sort_column', this.sortColumn); params.append('sort_direction', this.sortDirection); url += '?' + params.toString(); const response = await fetch(url, { signal, credentials: 'same-origin', headers: { 'x-requested-with': 'XMLHttpRequest', 'x-kx-uac': uac }, }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this._uacTask.value] })"
+              "default": "new Task(this, { task: async ([dataUri, uac], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); params.append('sort_column', this.sortColumn); params.append('sort_direction', this.sortDirection); if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); const response = await fetch(url, { signal, credentials: 'same-origin', headers: { 'x-requested-with': 'XMLHttpRequest', 'x-kx-uac': uac }, }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this._uacTask.value] })"
             },
             {
               "kind": "method",
@@ -4064,6 +4100,50 @@
             {
               "kind": "method",
               "name": "getTableFooter"
+            },
+            {
+              "kind": "method",
+              "name": "getQueryBuilder"
+            },
+            {
+              "kind": "method",
+              "name": "queryData",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "ZnSubmitEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getActions"
+            },
+            {
+              "kind": "method",
+              "name": "toggleActionButton",
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "goToPage",
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -4124,7 +4204,15 @@
             },
             {
               "kind": "method",
-              "name": "clearSelectedRows"
+              "name": "clearSelectedRows",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -4266,6 +4354,14 @@
               "fieldName": "sortDirection"
             },
             {
+              "name": "filter",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "filter"
+            },
+            {
               "name": "wide-column",
               "type": {
                 "text": "string"
@@ -4295,6 +4391,22 @@
               },
               "default": "'{}'",
               "fieldName": "hiddenHeaders"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "filters",
+              "type": {
+                "text": "[]"
+              },
+              "default": "[]",
+              "fieldName": "filters"
             }
           ],
           "superclass": {
@@ -4305,12 +4417,13 @@
           "tagNameWithoutPrefix": "data-table",
           "tagName": "zn-data-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-query-builder\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/data-table",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-button",
+            "zn-query-builder"
           ]
         }
       ],
@@ -11713,7 +11826,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
+              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
             },
             {
               "kind": "field",
@@ -11845,6 +11958,158 @@
             },
             {
               "kind": "method",
+              "name": "_createInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "QueryBuilderItem"
+                  }
+                },
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "selectedComparator",
+                  "type": {
+                    "text": "QueryBuilderOperators"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_changeValueInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "changeEvent",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "QueryBuilderItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createBooleanInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createNumberInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createDateInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createSelectInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "QueryBuilderItem"
+                  }
+                },
+                {
+                  "name": "selectedComparator",
+                  "type": {
+                    "text": "QueryBuilderOperators"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createDefaultInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "_updateOperatorValue",
               "privacy": "private",
               "parameters": [
@@ -11877,25 +12142,6 @@
                   "name": "event",
                   "type": {
                     "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateDateValue",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
                   }
                 }
               ]
@@ -12018,55 +12264,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "_getDateInput",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "HTMLDivElement | HTMLInputElement | ZnSelect"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "uniqueId",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "createOptions",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "options",
-                  "type": {
-                    "text": "QueryBuilderOptions"
-                  }
-                },
-                {
-                  "name": "selectElement",
-                  "type": {
-                    "text": "ZnSelect"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
             }
           ],
           "attributes": [
@@ -12109,11 +12306,13 @@
           "tagNameWithoutPrefix": "query-builder",
           "tagName": "zn-query-builder",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/query-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/query-builder\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/query-builder",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
+            "zn-button",
+            "zn-input",
             "zn-option",
             "zn-select"
           ]

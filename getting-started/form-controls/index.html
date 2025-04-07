@@ -488,23 +488,23 @@
             interface offers a standard way to serialize forms in the browser. You can create a
             <code>FormData</code> object from any <code>&lt;form&gt;</code> element like this.
           </p>
-          <pre><code class="language-js" id="code-block-5"><span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <pre><code class="language-js" id="code-block-4"><span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// All form control data is available in a FormData object</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-5"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-4"></zn-copy-button></pre>
           <p>
             However, some folks find <code>FormData</code> tricky to work with or they need to pass a JSON payload to
             their server. To accommodate this, Zinc offers a serialization utility that gathers form data and returns a
             simple JavaScript object instead.
           </p>
-          <pre><code class="language-js" id="code-block-6"><span class="token keyword">import</span> <span class="token punctuation">{</span>serialize<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc/dist/utilities/form.js'</span><span class="token punctuation">;</span>
+          <pre><code class="language-js" id="code-block-5"><span class="token keyword">import</span> <span class="token punctuation">{</span>serialize<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc/dist/utilities/form.js'</span><span class="token punctuation">;</span>
 
 <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token function">serialize</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// All form control data is available in a plain object</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-6"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-5"></zn-copy-button></pre>
           <p>
             This results in an object with name/value pairs that map to each form control. If more than one form control
             shares the same name, the values will be passed as an array, e.g.
@@ -612,9 +612,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-5">
+            <div class="code-preview__source-group" id="code-preview-source-group-4">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-7"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-required<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-6"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-required<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
@@ -657,7 +657,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-7"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-6"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -666,7 +666,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-5"
+                aria-controls="code-preview-source-group-4"
               >
                 Source
                 <svg
@@ -729,9 +729,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-6">
+            <div class="code-preview__source-group" id="code-preview-source-group-5">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-8"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-pattern<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-7"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-pattern<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>letters<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Letters<span class="token punctuation">"</span></span> <span class="token attr-name">pattern</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[A-Za-z]+<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
@@ -754,7 +754,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-8"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-7"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -763,7 +763,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-6"
+                aria-controls="code-preview-source-group-5"
               >
                 Source
                 <svg
@@ -822,9 +822,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-7">
+            <div class="code-preview__source-group" id="code-preview-source-group-6">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-9"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-type<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-8"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-type<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>you@example.com<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
@@ -851,7 +851,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-9"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-8"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -860,7 +860,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-7"
+                aria-controls="code-preview-source-group-6"
               >
                 Source
                 <svg
@@ -930,9 +930,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-8">
+            <div class="code-preview__source-group" id="code-preview-source-group-7">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-10"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-custom<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-9"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>input-validation-custom<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Type “zinc”<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
@@ -964,7 +964,7 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-10"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-9"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -973,7 +973,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-8"
+                aria-controls="code-preview-source-group-7"
               >
                 Source
                 <svg
@@ -1241,9 +1241,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-9">
+            <div class="code-preview__source-group" id="code-preview-source-group-8">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-11"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>validity-styles<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-10"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>validity-styles<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span>
     <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span>
     <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span>
@@ -1357,7 +1357,7 @@
     <span class="token property">box-shadow</span><span class="token punctuation">:</span> 0 0 0 <span class="token function">var</span><span class="token punctuation">(</span>--zn-focus-ring-width<span class="token punctuation">)</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-300<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-11"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-10"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1366,7 +1366,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-9"
+                aria-controls="code-preview-source-group-8"
               >
                 Source
                 <svg
@@ -1508,9 +1508,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-10">
+            <div class="code-preview__source-group" id="code-preview-source-group-9">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-12"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inline-validation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-11"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inline-validation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span>
     <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span>
     <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span>
@@ -1610,7 +1610,7 @@
     <span class="token property">box-shadow</span><span class="token punctuation">:</span> 0 0 0 <span class="token function">var</span><span class="token punctuation">(</span>--zn-focus-ring-width<span class="token punctuation">)</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-300<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-12"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-11"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1619,7 +1619,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-10"
+                aria-controls="code-preview-source-group-9"
               >
                 Source
                 <svg
@@ -1672,13 +1672,13 @@
               <code>HTMLFormControlsCollection</code></a
             >, it returns an array of HTML and Zinc form controls in the order they appear in the DOM.
           </p>
-          <pre><code class="language-js" id="code-block-13"><span class="token keyword">import</span> <span class="token punctuation">{</span>getFormControls<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc/dist/utilities/form.js'</span><span class="token punctuation">;</span>
+          <pre><code class="language-js" id="code-block-12"><span class="token keyword">import</span> <span class="token punctuation">{</span>getFormControls<span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@kubex/zinc/dist/utilities/form.js'</span><span class="token punctuation">;</span>
 
 <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#my-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> formControls <span class="token operator">=</span> <span class="token function">getFormControls</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>formControls<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// e.g. [input, zn-input, ...]</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-13"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-12"></zn-copy-button></pre>
           <div role="alert" class="callout callout--tip">
             <p>
               You probably don’t need this function! If you’re gathering form data for submission, you probably want to

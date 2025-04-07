@@ -347,3 +347,28 @@
 
   document.addEventListener('turbo:load', updateVersion);
 })();
+
+//
+// Show query on query builder example
+//
+(() =>
+{
+  ['click', 'keyup'].forEach(function (evt)
+  {
+    document.addEventListener(evt, function (e)
+    {
+      if(!document.getElementById('query-string-example'))
+      {
+        return;
+      }
+      const target = e.target;
+
+      if(target.id === 'query-string-example')
+      {
+        document.querySelector('.query-string').innerText = target.value;
+      }
+    });
+  });
+})();
+
+

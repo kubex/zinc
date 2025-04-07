@@ -1018,7 +1018,8 @@
                 "description": "The Dialogs footer text.",
                 "type": "string"
               },
-              { "name": "dialog", "type": "ZnDialog" }
+              { "name": "dialog", "type": "ZnDialog" },
+              { "name": "show" }
             ],
             "events": [
               {
@@ -1242,6 +1243,10 @@
               "name": "sort-direction",
               "value": { "type": "string", "default": "'asc'" }
             },
+            {
+              "name": "filter",
+              "value": { "type": "string", "default": "''" }
+            },
             { "name": "wide-column", "value": { "type": "string" } },
             { "name": "key", "value": { "type": "string", "default": "'id'" } },
             {
@@ -1251,7 +1256,12 @@
             {
               "name": "hide-headers",
               "value": { "type": "string", "default": "'{}'" }
-            }
+            },
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "filters", "value": { "type": "[]", "default": "[]" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -1265,10 +1275,13 @@
               { "name": "dataUri", "type": "string" },
               { "name": "sortColumn", "type": "string" },
               { "name": "sortDirection", "type": "string" },
+              { "name": "filter", "type": "string" },
               { "name": "wideColumn", "type": "string" },
               { "name": "key", "type": "string" },
               { "name": "headers", "type": "string" },
-              { "name": "hiddenHeaders", "type": "string" }
+              { "name": "hiddenHeaders", "type": "string" },
+              { "name": "caption", "type": "string" },
+              { "name": "filters", "type": "[]" }
             ],
             "events": [
               {
@@ -3472,7 +3485,7 @@
         },
         {
           "name": "zn-query-builder",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -3490,9 +3503,7 @@
             { "name": "", "description": "The default slot." },
             { "name": "example", "description": "An example slot." }
           ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "container", "type": "HTMLDivElement" },
@@ -3505,12 +3516,7 @@
               { "name": "validationMessage", "type": "string" },
               { "name": "validity", "type": "ValidityState" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {

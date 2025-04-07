@@ -87,12 +87,14 @@ export default class ZnConfirm extends ZincElement {
     if (this.trigger) {
       const trigger = this.parentElement?.querySelector('#' + this.trigger);
       if (trigger) {
-        trigger.addEventListener('click', () => this.show());
+        trigger.addEventListener('click', (event: Event) => this.show(event));
       }
     }
   }
 
-  show() {
+  show(event: Event | undefined = undefined) {
+    const trigger = event?.target as HTMLButtonElement
+    if (trigger?.disabled) return;
     this.dialog.show();
   }
 

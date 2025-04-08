@@ -131,14 +131,14 @@ export default class DropdownModuleComponent extends ZincElement {
   }
 
   show() {
-    this.emit('zn-show');
     this.open = true;
+    this.emit('zn-show');
   }
 
   hide() {
-    this.emit('zn-close');
     this.open = false;
     this.unsetCurrentItem();
+    this.emit('zn-close');
   }
 
   @watch('open', {waitUntilFirstUpdate: true})

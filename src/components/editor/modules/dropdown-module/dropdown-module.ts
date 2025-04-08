@@ -59,6 +59,9 @@ class DropdownModule {
           this.triggerCommand(this._commands.find((c) => c.title === command)!);
         }
       });
+      this._dropdown.addEventListener('zn-show', () => {
+        setTimeout(() => this.updateDropdownPosition(this._dropdown), 1);
+      })
     }
   }
 

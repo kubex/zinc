@@ -786,6 +786,7 @@ declare module "components/chip/chip.component" {
         static styles: CSSResultGroup;
         icon: string;
         type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'neutral';
+        size: 'small' | 'medium' | 'large';
         private readonly hasSlotController;
         render(): import("lit").TemplateResult<1>;
     }
@@ -3539,8 +3540,7 @@ declare module "components/bulk-actions/index" {
     }
 }
 declare module "components/editor/modules/dropdown-module/dropdown-module.component" {
-    import type { PropertyValues } from "lit";
-    import { type CSSResultGroup, type TemplateResult } from "lit";
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
     import type { DropdownModuleCannedResponse } from "components/editor/modules/dropdown-module/dropdown-module";
     export default class DropdownModuleComponent extends ZincElement {

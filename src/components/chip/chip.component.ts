@@ -26,10 +26,12 @@ import {classMap} from "lit/directives/class-map.js";
 export default class ZnChip extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({type: String}) icon: string = '';
+  @property() icon: string = '';
 
-  @property({type: String}) type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
+  @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
     'transparent' | 'neutral' = 'neutral';
+
+  @property() size: 'small' | 'medium' | 'large' = 'medium';
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
@@ -43,7 +45,10 @@ export default class ZnChip extends ZincElement {
         'chip--error': this.type === 'error',
         'chip--primary': this.type === 'primary',
         'chip--transparent': this.type === 'transparent',
-        'chip--neutral': this.type === 'neutral'
+        'chip--neutral': this.type === 'neutral',
+        'chip--small': this.size === 'small',
+        'chip--medium': this.size === 'medium',
+        'chip--large': this.size === 'large',
       })}>
         ${this.icon ? html`
           <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}

@@ -119,7 +119,7 @@ class DropdownModule {
 
   createDropdown() {
     const dropdown = html`
-      <zn-dropdown-module></zn-dropdown-module>`
+      <zn-dropdown-module anchor=${this._quill.container}></zn-dropdown-module>`
 
     return litToHTML<ZnDropdownModule>(dropdown);
   }

@@ -1,6 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import type {PropertyValues} from "lit";
-import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";

@@ -1,10 +1,11 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
-import { watch } from '../../internal/watch';
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
+import {FormControlController} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property, query} from 'lit/decorators.js';
+import {watch} from '../../internal/watch';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
-import { live } from "lit/directives/live.js";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { FormControlController } from "../../internal/form";
+import type ZnInput from "../input";
 
 import styles from './defined-label.scss';
 
@@ -25,22 +26,22 @@ import styles from './defined-label.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnDefinedLabel extends ZincElement {
+export default class ZnDefinedLabel extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   private readonly formControlController = new FormControlController(this, {
     value: (control: this) => control.value + (control.inputValue ? `:${control.inputValue}` : ''),
   });
 
-  @query('.input__control') input: HTMLInputElement;
-  @query('.input__control-value') valueInput: HTMLInputElement;
+  @query('.input__control') input: ZnInput;
+  @query('.input__control-value') valueInput: ZnInput;
 
   @property() value: string = '';
   @property() inputValue: string = '';
   @property() name: string = 'label';
   @property() title: string;
-  @property({ type: Boolean }) disabled: boolean = false;
-  @property({ type: Array, attribute: 'predefined-labels' }) predefinedLabels = [];
+  @property({type: Boolean}) disabled: boolean = false;
+  @property({type: Array, attribute: 'predefined-labels'}) predefinedLabels = [];
 
   get validationMessage() {
     return this.input.validationMessage;
@@ -67,13 +68,14 @@ export default class ZnDefinedLabel extends ZincElement {
     this.formControlController.updateValidity();
   }
 
-  @watch('value', { waitUntilFirstUpdate: true })
+  @watch('value', {waitUntilFirstUpdate: true})
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
+  protected firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties)
     this.formControlController.updateValidity();
   }
 
@@ -113,7 +115,7 @@ export default class ZnDefinedLabel extends ZincElement {
     if (this.predefinedLabels.length > 0) {
       this.predefinedLabels.forEach((label: { [key: string]: any } | string | null) => {
         // label = ['name' => 'label', 'options'=>['one', 'two', 'three']]
-        let options: any[] = [];
+        let options: string[] | undefined;
         if (label && typeof label !== 'string') {
           options = label.options;
           label = label.name;
@@ -127,30 +129,28 @@ export default class ZnDefinedLabel extends ZincElement {
         let selector: TemplateResult<1>;
         if (options && options.length > 0) {
           selector = html`
-            <select
+            <zn-select
               part="input-value"
               id="input-value input-value-${label}"
               class="input__control-value input__control-value--${label}"
               data-label="${label}"
-              @change="${this.handleInputValueChange}"
-              @input="${this.handleInputValueInput}"
-            >
-              <option value="">Select ${label}</option>
-              ${options.map((option: any) => html`
-                <option value="${option}">${option}</option>
+              @zn-change="${this.handleInputValueChange}"
+              @zn-input="${this.handleInputValueInput}">
+              <zn-option value="">Select ${label}</zn-option>
+              ${options.map((option: string) => html`
+                <zn-option value="${option}">${option}</zn-option>
               `)}
-            </select>`;
+            </zn-select>`;
         } else {
           selector = html`
-            <input
+            <zn-input
               part="input-value"
               id="input-value input-value-${label}"
               class="input__control-value input__control-value--${label}"
               type="text"
               data-label="${label}"
-              @change="${this.handleInputValueChange}"
-              @input="${this.handleInputValueInput}"
-            />`;
+              @zn-change="${this.handleInputValueChange}"
+              @zn-input="${this.handleInputValueInput}"></zn-input>`;
         }
 
 
@@ -173,7 +173,7 @@ export default class ZnDefinedLabel extends ZincElement {
 
     return html`
       <div class="defined-label">
-        <input
+        <zn-input
           part="input"
           id="input"
           class="input__control"
@@ -181,10 +181,9 @@ export default class ZnDefinedLabel extends ZincElement {
           title="${this.title}"
           name="${ifDefined(this.name)}"
           placeholder="Label"
-          .value="${live(this.value)}"
-          @change="${this.handleChange}"
-          @input="${this.handleInput}"
-        />
+          @zn-change="${this.handleChange}"
+          @zn-input="${this.handleInput}"
+        ></zn-input>
         ${this.value !== '' ? html`
           <div class="defined-label__wrap">
             <p class="defined-label__label"><small>Add Custom Label</small></p>

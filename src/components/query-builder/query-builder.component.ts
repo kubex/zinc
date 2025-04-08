@@ -351,7 +351,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const input = html`
       <zn-input type="date"
                 class="query-builder__value"
-                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+                @zn-input="${(e: ZnInputEvent) => this._updateDateValue(uniqueId, e)}">
       </zn-input>`;
     return litToHTML<ZnInput>(input);
   }
@@ -395,6 +395,21 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const select = event.target as ZnSelect;
     this._previousOperator = filter.operator as QueryBuilderOperators;
     filter.operator = select.value as QueryBuilderOperators;
+
+    this._selectedRules.set(id, filter);
+    this._handleChange();
+  }
+
+  private _updateDateValue(id: string, event: Event | { target: ZnSelect | ZnInput | HTMLDivElement }) {
+    const filter = this._selectedRules.get(id);
+    if (!filter) return;
+    const input = event.target as ZnSelect | ZnInput;
+    // Dodgy logic to offset backend filter comparator values
+    // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
+    const multiplier = filter.operator as QueryBuilderOperators === QueryBuilderOperators.Before ? -1 : 1;
+    const timestamp = (Math.floor((Date.now() - Date.parse(input.value as string)) / 1000 / 60) * multiplier).toString();
+
+    filter.value = timestamp as string;
 
     this._selectedRules.set(id, filter);
     this._handleChange();

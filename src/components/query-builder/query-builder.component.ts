@@ -1,3 +1,4 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {litToHTML} from "../../utilities/lit-to-html";
@@ -135,8 +136,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   @query('input#main-input') input: HTMLInputElement;
 
   @property({type: Array}) filters: QueryBuilderData = [];
-
-
+  @property({type: Boolean}) dropdown: boolean = false;
   @property() name: string;
   @property() value: PropertyKey;
   @property({
@@ -169,7 +169,10 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
   render() {
     return html`
-      <div class="query-builder">
+      <div class=${classMap({
+        "query-builder": true,
+        "query-builder--dropdown": this.dropdown,
+      })}>
         <zn-select class="add-rule"
                    size="medium"
                    placeholder="Select Filter"

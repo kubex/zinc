@@ -271,15 +271,15 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <zn-dropdown>
-        <zn-menu>
-          <zn-query-builder filters="${this.filters}" size="small" outline>
+        <div class="dropdown__query-builder">
+          <zn-query-builder filters="${this.filters}" size="small" dropdown outline>
           </zn-query-builder>
           <zn-button @click=${this.queryData}
                      color="primary"
                      type="submit">
             Search
           </zn-button>
-        </zn-menu>
+        </div>
         <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
           Filter
         </zn-button>

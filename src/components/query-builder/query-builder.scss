@@ -21,10 +21,18 @@
     align-self: flex-end;
   }
 
-  &__row {
+  &--popup:has(.query-builder__row) {
+    min-width: 990px;
+  }
+
+  &__row ,
+  &__wrapper {
     display: flex;
     width: 100%;
     gap: 10px;
+  }
+
+  &__row {
     padding-bottom: 10px;
   }
 
@@ -37,20 +45,9 @@
     flex-grow: 1;
   }
 
-  &__wrapper {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-  }
+}
 
-  &__date {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  input, select {
-    height: 40px;
-  }
-
+// Specifically for when a query builder is rendered within a dropdown
+.query-builder--dropdown:has(.query-builder__row) {
+  min-width: 900px;
 }

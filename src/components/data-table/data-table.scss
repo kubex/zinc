@@ -140,10 +140,6 @@ table {
     padding: var(--zn-spacing-small);
     gap: var(--zn-spacing-small);
 
-    &__query-builder zn-menu {
-      padding: var(--zn-spacing-large);
-    }
-
     &__actions {
       display: flex;
       flex-direction: row;
@@ -196,4 +192,18 @@ table {
 
   }
 
+}
+
+.dropdown__query-builder {
+  display: block;
+  position: relative;
+  padding: var(--zn-spacing-large);
+  border-width: 1px;
+  border-radius: 5px;
+  width: fit-content;
+  min-width: var(--zn-spacing-small-panel);
+  overflow: auto;
+  overscroll-behavior: none;
+  filter: drop-shadow(0 5px 4px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  background-color: rgb(var(--zn-panel, 255, 255, 255));
 }

@@ -47,32 +47,44 @@ export default class ZnTile extends ZincElement {
   render() {
     const isLink = this._isLink();
     const tag = isLink ? literal`a` : literal`div`;
+    const hasCaption = this.caption && this.caption.length > 0;
+    const hasDescription = this.description && this.description.length > 0;
+    const hasProperties = this.hasSlotController.test('properties');
+    const hasActions = this.hasSlotController.test('actions');
+    const hasImage = this.hasSlotController.test('image');
 
     return html`
       <div
         class="${classMap({
           tile: true,
-          'tile--has-image': this.hasSlotController.test('image'),
-          'tile--has-href': isLink
+          'tile--has-href': isLink,
+          'tile--has-caption': hasCaption,
+          'tile--has-description': hasDescription,
+          'tile--has-properties': hasProperties,
+          'tile--has-actions': hasActions,
+          'tile--has-image': hasImage,
         })}">
-        <${tag}
-          href="${ifDefined(this.href)}"
-          data-uri="${ifDefined(this.dataUri)}"
-          data-target="${ifDefined(this.dataTarget)}"
-          class="tile__link">
-          <div class="tile__left">
-            <slot name="image" part="image" class="tile__image"></slot>
-            <div class="tile__content">
-              <p part="caption" class="tile__caption">${this.caption}</p>
-              <p part="description" class="tile__description">${this.description}</p>
+        ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
+          <slot></slot>
+        ` : html`
+          <${tag}
+            href="${ifDefined(this.href)}"
+            data-uri="${ifDefined(this.dataUri)}"
+            data-target="${ifDefined(this.dataTarget)}"
+            class="tile__link">
+            <div class="tile__left">
+              <slot name="image" part="image" class="tile__image"></slot>
+              <div class="tile__content">
+                <p part="caption" class="tile__caption">${this.caption}</p>
+                <p part="description" class="tile__description">${this.description}</p>
+              </div>
             </div>
-          </div>
-        </${tag}>
+          </${tag}>
 
-        <div class="tile__right">
-          <slot name="properties" part="properties" class="tile__properties"></slot>
-          <slot name="actions" part="actions" class="tile__actions"></slot>
-        </div>
+          <div class="tile__right">
+            <slot name="properties" part="properties" class="tile__properties"></slot>
+            <slot name="actions" part="actions" class="tile__actions"></slot>
+          </div>`}
       </div>`;
   }
 }

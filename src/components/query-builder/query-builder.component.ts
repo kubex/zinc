@@ -171,7 +171,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         <zn-select class="add-rule"
                    size="medium"
                    placeholder="Select Filter"
-                   @click="${this._addRule}">
+                   @zn-change="${this._addRule}">
           ${this.filters.map(item => html`
             <zn-option value="${item.id}">
               ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}

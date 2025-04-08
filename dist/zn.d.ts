@@ -2184,8 +2184,10 @@ declare module "components/dropdown/index" {
     }
 }
 declare module "components/defined-label/defined-label.component" {
-    import { type CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/defined-label
@@ -2203,11 +2205,11 @@ declare module "components/defined-label/defined-label.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnDefinedLabel extends ZincElement {
+    export default class ZnDefinedLabel extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
-        input: HTMLInputElement;
-        valueInput: HTMLInputElement;
+        input: ZnInput;
+        valueInput: ZnInput;
         value: string;
         inputValue: string;
         name: string;
@@ -2221,7 +2223,7 @@ declare module "components/defined-label/defined-label.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         handleValueChange(): Promise<void>;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected firstUpdated(changedProperties: PropertyValues): void;
         private handleChange;
         private handleInput;
         private handleInputValueChange;

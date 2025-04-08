@@ -124,8 +124,6 @@ class DropdownModule {
   updateDropdownPosition(dropdown: ZnDropdownModule = this._dropdown) {
     const editorBounds = this._quill.container.getBoundingClientRect();
 
-    console.log(dropdown.offsetHeight);
-
     // position bottom of the dropdown at the top of the editor
     const top = (editorBounds.top + this._quill.container.scrollTop) - dropdown.offsetHeight;
 

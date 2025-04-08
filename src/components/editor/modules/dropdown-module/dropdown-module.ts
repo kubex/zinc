@@ -157,23 +157,9 @@ class DropdownModule {
   triggerCommand(command: DropdownModuleCannedResponse) {
     this.closeDropdown();
 
-    // Delete the forward slash and the command from the text
-    const selection = this._quill.getSelection()?.index;
-    if (!selection) {
-      return;
-    }
-
-    const text = this._quill.getText();
-    const commandIndex = text.lastIndexOf('/', selection);
-    const commandLength = selection - commandIndex;
-
-    this._quill.deleteText(commandIndex, commandLength);
-
     // insert the command content
-    this._quill.insertText(selection, command.content);
-
-    // add a space after the command
-    this._quill.insertText(selection, ' ');
+    const delta = this._quill.clipboard.convert({html: command.content});
+    this._quill.setContents(delta, 'user');
 
     // update the quill editor
     this._quill.update();

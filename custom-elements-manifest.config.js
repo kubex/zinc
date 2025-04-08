@@ -1,9 +1,9 @@
 import * as path from 'path';
-import { customElementJetBrainsPlugin } from 'custom-element-jet-brains-integration';
-import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
-import { customElementVuejsPlugin } from 'custom-element-vuejs-integration';
-import { parse } from 'comment-parser';
-import { pascalCase } from 'pascal-case';
+import {customElementJetBrainsPlugin} from 'custom-element-jet-brains-integration';
+import {customElementVsCodePlugin} from 'custom-element-vs-code-integration';
+import {customElementVuejsPlugin} from 'custom-element-vuejs-integration';
+import {parse} from 'comment-parser';
+import {pascalCase} from 'pascal-case';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 
@@ -32,29 +32,35 @@ function replace(string, terms)
 }
 
 export default {
-  globs: ['src/components/**/*.component.ts'],
-  exclude: ['**/*.scss', '**/*.test.ts'],
+  globs:   ['src/components/**/*.component.ts'],
+  // Exclude the components specifically for the editor
+  exclude: ['**/*.scss', '**/*.test.ts', 'src/components/editor/modules/**/*'],
   plugins: [
     // Append package data
     {
       name: 'zinc-package-data',
-      packageLinkPhase({ customElementsManifest }) {
-        customElementsManifest.package = { name, description, version, author, homepage, license };
+      packageLinkPhase({customElementsManifest})
+      {
+        customElementsManifest.package = {name, description, version, author, homepage, license};
       }
     },
     // Infer tag names because we no longer use @customElement decorators.
     {
       name: 'zinc-infer-tag-names',
-      analyzePhase({ ts, node, moduleDoc }) {
-        switch (node.kind) {
-          case ts.SyntaxKind.ClassDeclaration: {
+      analyzePhase({ts, node, moduleDoc})
+      {
+        switch(node.kind)
+        {
+          case ts.SyntaxKind.ClassDeclaration:
+          {
             const className = node.name.getText();
             const classDoc = moduleDoc?.declarations?.find(declaration => declaration.name === className);
 
             const importPath = moduleDoc.path;
 
             // This is kind of a best guess at components. "thing.component.ts"
-            if (!importPath.endsWith('.component.ts')) {
+            if(!importPath.endsWith('.component.ts'))
+            {
               return;
             }
 
@@ -73,19 +79,25 @@ export default {
     // Parse custom jsDoc tags
     {
       name: 'zinc-custom-tags',
-      analyzePhase({ ts, node, moduleDoc }) {
-        switch (node.kind) {
-          case ts.SyntaxKind.ClassDeclaration: {
+      analyzePhase({ts, node, moduleDoc})
+      {
+        switch(node.kind)
+        {
+          case ts.SyntaxKind.ClassDeclaration:
+          {
             const className = node.name.getText();
             const classDoc = moduleDoc?.declarations?.find(declaration => declaration.name === className);
             const customTags = ['animation', 'dependency', 'documentation', 'since', 'status', 'title'];
             let customComments = '/**';
 
-            node.jsDoc?.forEach(jsDoc => {
-              jsDoc?.tags?.forEach(tag => {
+            node.jsDoc?.forEach(jsDoc =>
+            {
+              jsDoc?.tags?.forEach(tag =>
+              {
                 const tagName = tag.tagName.getText();
 
-                if (customTags.includes(tagName)) {
+                if(customTags.includes(tagName))
+                {
                   customComments += `\n * @${tagName} ${tag.comment}`;
                 }
               });
@@ -95,22 +107,26 @@ export default {
             classDoc['jsDoc'] = node.jsDoc?.map(jsDoc => jsDoc.getFullText()).join('\n');
 
             const parsed = parse(`${customComments}\n */`);
-            parsed[0].tags?.forEach(t => {
-              switch (t.tag) {
+            parsed[0].tags?.forEach(t =>
+            {
+              switch(t.tag)
+              {
                 // Animations
                 case 'animation':
-                  if (!Array.isArray(classDoc['animations'])) {
+                  if(!Array.isArray(classDoc['animations']))
+                  {
                     classDoc['animations'] = [];
                   }
                   classDoc['animations'].push({
-                    name: t.name,
+                    name:        t.name,
                     description: noDash(t.description)
                   });
                   break;
 
                 // Dependencies
                 case 'dependency':
-                  if (!Array.isArray(classDoc['dependencies'])) {
+                  if(!Array.isArray(classDoc['dependencies']))
+                  {
                     classDoc['dependencies'] = [];
                   }
                   classDoc['dependencies'].push(t.name);
@@ -126,14 +142,15 @@ export default {
 
                 // All other tags
                 default:
-                  if (!Array.isArray(classDoc[t.tag])) {
+                  if(!Array.isArray(classDoc[t.tag]))
+                  {
                     classDoc[t.tag] = [];
                   }
 
                   classDoc[t.tag].push({
-                    name: t.name,
+                    name:        t.name,
                     description: t.description,
-                    type: t.type || undefined
+                    type:        t.type || undefined
                   });
               }
             });
@@ -143,8 +160,10 @@ export default {
     },
     {
       name: 'zinc-translate-module-paths',
-      packageLinkPhase({ customElementsManifest }) {
-        customElementsManifest?.modules?.forEach(mod => {
+      packageLinkPhase({customElementsManifest})
+      {
+        customElementsManifest?.modules?.forEach(mod =>
+        {
           //
           // CEM paths look like this:
           //
@@ -155,20 +174,25 @@ export default {
           //  components/button/button.js
           //
           const terms = [
-            { from: /^src\//, to: '' }, // Strip the src/ prefix
-            { from: /\.component.([tj])sx?$/, to: '.js' } // Convert .ts to .js
+            {from: /^src\//, to: ''}, // Strip the src/ prefix
+            {from: /\.component.([tj])sx?$/, to: '.js'} // Convert .ts to .js
           ];
 
           mod.path = replace(mod.path, terms);
 
-          for (const ex of mod.exports ?? []) {
+          for(const ex of mod.exports ?? [])
+          {
             ex.declaration.module = replace(ex.declaration.module, terms);
           }
 
-          for (const dec of mod.declarations ?? []) {
-            if (dec.kind === 'class') {
-              for (const member of dec.members ?? []) {
-                if (member.inheritedFrom) {
+          for(const dec of mod.declarations ?? [])
+          {
+            if(dec.kind === 'class')
+            {
+              for(const member of dec.members ?? [])
+              {
+                if(member.inheritedFrom)
+                {
                   member.inheritedFrom.module = replace(member.inheritedFrom.module, terms);
                 }
               }
@@ -181,25 +205,26 @@ export default {
     // Generate custom VS Code data
     customElementVsCodePlugin({
       outdir,
-      cssFileName: null,
+      cssFileName:        null,
       referencesTemplate: (_, tag) => [
         {
           name: 'Documentation',
-          url: `https://zinc.style/components/${tag.replace('zn-', '')}`
+          url:  `https://zinc.style/components/${tag.replace('zn-', '')}`
         }
       ]
     }),
 
     customElementJetBrainsPlugin({
-      outdir: './dist',
-      excludeCss: true,
-      packageJson: false,
-      referencesTemplate: (_, tag) => {
-        return {
-          name: 'Documentation',
-          url: `https://zinc.style/components/${tag.replace('zn-', '')}`
-        };
-      }
-    }),
+      outdir:             './dist',
+      excludeCss:         true,
+      packageJson:        false,
+      referencesTemplate: (_, tag) =>
+                          {
+                            return {
+                              name: 'Documentation',
+                              url:  `https://zinc.style/components/${tag.replace('zn-', '')}`
+                            };
+                          }
+    })
   ]
 };

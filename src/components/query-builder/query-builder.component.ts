@@ -38,6 +38,7 @@ export enum QueryBuilderOperators {
   Before = 'before',
   After = 'after',
   In = 'in',
+  Nin = 'nin',
   MatchPhrasePre = 'matchphrasepre',
   NMatchPhrasePre = 'nmatchphrasepre',
   MatchPhrase = 'matchphrase',
@@ -68,6 +69,7 @@ const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.Before]: 'Was Before',
   [QueryBuilderOperators.After]: 'Was After',
   [QueryBuilderOperators.In]: 'In',
+  [QueryBuilderOperators.Nin]: 'Not In',
   [QueryBuilderOperators.MatchPhrasePre]: 'Match Phrase Prefix',
   [QueryBuilderOperators.NMatchPhrasePre]: 'Does Not Match Phrase Prefix',
   [QueryBuilderOperators.MatchPhrase]: 'Match Phrase',
@@ -356,15 +358,15 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     if (options === undefined) return null;
 
-    const comparatorIn = selectedComparator === QueryBuilderOperators.In;
+    const multiSelect = selectedComparator === QueryBuilderOperators.In || selectedComparator === QueryBuilderOperators.Nin;
     const input = html`
       <zn-select class="query-builder__value"
                  @zn-change="${(e: ZnChangeEvent) => this.updateInValue(uniqueId, e)}"
-                 name=${(comparatorIn ? 'value' : undefined) || nothing}
-                 multiple=${comparatorIn || nothing}
-                 clearable=${comparatorIn || nothing}
+                 name=${(multiSelect ? 'value' : undefined) || nothing}
+                 multiple=${multiSelect || nothing}
+                 clearable=${multiSelect || nothing}
                  max-options-visible=${filter.maxOptionsVisible || nothing}
-                 selectedItems=${(comparatorIn ? JSON.stringify(options) : undefined) || nothing}>
+                 selectedItems=${(multiSelect ? JSON.stringify(options) : undefined) || nothing}>
         ${Object.keys(options).map(key => html`
           <zn-option value="${key}">
             ${options[key]}

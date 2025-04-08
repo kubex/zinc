@@ -1,13 +1,13 @@
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {litToHTML} from "../../utilities/lit-to-html";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import type {ZincFormControl} from '../../internal/zinc-element';
-import {litToHTML} from "../../utilities/lit-to-html";
 import ZnButton from "../button";
 import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
@@ -33,6 +33,8 @@ export interface QueryBuilderOptions {
 export enum QueryBuilderOperators {
   Eq = 'eq',
   Neq = 'neq',
+  Eqi = 'eqi',
+  Neqi = 'neqi',
   Before = 'before',
   After = 'after',
   In = 'in',
@@ -44,8 +46,12 @@ export enum QueryBuilderOperators {
   NMatch = 'nmatch',
   Starts = 'starts',
   NStarts = 'nstarts',
+  Ends = 'ends',
+  NEnds = 'nends',
   Wild = 'wild',
   NWild = 'nwild',
+  Like = 'like',
+  NLike = 'nlike',
   Fuzzy = 'fuzzy',
   NFuzzy = 'nfuzzy',
   Gte = 'gte',
@@ -57,6 +63,8 @@ export enum QueryBuilderOperators {
 const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.Eq]: 'Equals',
   [QueryBuilderOperators.Neq]: 'Not Equals',
+  [QueryBuilderOperators.Eqi]: 'Equals (Insensitive)',
+  [QueryBuilderOperators.Neqi]: 'Not Equals (Insensitive)',
   [QueryBuilderOperators.Before]: 'Was Before',
   [QueryBuilderOperators.After]: 'Was After',
   [QueryBuilderOperators.In]: 'In',
@@ -68,8 +76,12 @@ const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.NMatch]: 'Does Not Match',
   [QueryBuilderOperators.Starts]: 'Starts With',
   [QueryBuilderOperators.NStarts]: 'Does Not Start With',
+  [QueryBuilderOperators.Ends]: 'Ends With',
+  [QueryBuilderOperators.NEnds]: 'Does Not End With',
   [QueryBuilderOperators.Wild]: 'Wildcard Match',
   [QueryBuilderOperators.NWild]: 'Does Not Match Wildcard',
+  [QueryBuilderOperators.Like]: 'Like Match With',
+  [QueryBuilderOperators.NLike]: 'Does Not Like Match With',
   [QueryBuilderOperators.Fuzzy]: 'Fuzzy Match With',
   [QueryBuilderOperators.NFuzzy]: 'Does Not Match Fuzzy With',
   [QueryBuilderOperators.Gte]: 'Greater Than or Equals',

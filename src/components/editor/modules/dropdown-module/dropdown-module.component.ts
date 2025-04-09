@@ -25,7 +25,6 @@ export default class DropdownModuleComponent extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    console.log('search input', this.searchInput);
   }
 
   connectedCallback() {
@@ -212,7 +211,6 @@ export default class DropdownModuleComponent extends ZincElement {
 
     const item = target as HTMLElement;
     this.emit('zn-command-select', {detail: {item}});
-    console.log('Command clicked', target);
   }
 
   private _createCommand(command: DropdownModuleCannedResponse): TemplateResult {

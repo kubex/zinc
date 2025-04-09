@@ -2388,6 +2388,7 @@ declare module "components/tile/tile.component" {
         description: string;
         href: string;
         dataTarget: string;
+        gaid: string;
         dataUri: string;
         private _isLink;
         render(): import("lit").TemplateResult;

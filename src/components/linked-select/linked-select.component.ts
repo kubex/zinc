@@ -51,7 +51,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   });
 
   get validity() {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   get validationMessage() {

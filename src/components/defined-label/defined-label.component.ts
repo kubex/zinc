@@ -48,7 +48,7 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   }
 
   get validity() {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   checkValidity(): boolean {

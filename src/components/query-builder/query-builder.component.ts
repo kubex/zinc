@@ -139,7 +139,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   }
 
   get validity(): ValidityState {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

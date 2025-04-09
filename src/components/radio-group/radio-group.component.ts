@@ -202,7 +202,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   private updateCheckedRadio() {
     const radios = this.getAllRadios();
     radios.forEach(radio => (radio.checked = radio.value === this.value));
-    this.formControlController.setValidity(this.validity.valid);
+    this.formControlController.setValidity(this.validity?.valid);
   }
 
   @watch('size', {waitUntilFirstUpdate: true})
@@ -237,7 +237,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
 
   /** Checks for validity and shows the browser's validation message if the control is invalid. */
   reportValidity(): boolean {
-    const isValid = this.validity.valid;
+    const isValid = this.validity?.valid;
 
     this.errorMessage = this.customValidityMessage || isValid ? '' : this.validationInput.validationMessage;
     this.formControlController.setValidity(isValid);

@@ -70,7 +70,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
 
   get validity() {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   get validationMessage() {

@@ -103,7 +103,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
   /** Gets the validity state object */
   get validity() {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   /** Gets the validation message */

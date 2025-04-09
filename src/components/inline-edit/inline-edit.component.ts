@@ -75,7 +75,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @defaultValue('value') defaultValue: string;
 
   get validity(): ValidityState {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   get validationMessage(): string {

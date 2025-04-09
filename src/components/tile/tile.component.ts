@@ -38,6 +38,8 @@ export default class ZnTile extends ZincElement {
 
   @property({attribute: 'data-target'}) dataTarget: string;
 
+  @property({attribute: 'gaid'}) gaid: string;
+
   @property({attribute: 'data-uri'}) dataUri: string;
 
   private _isLink() {
@@ -70,6 +72,7 @@ export default class ZnTile extends ZincElement {
           <${tag}
             href="${ifDefined(this.href)}"
             data-uri="${ifDefined(this.dataUri)}"
+            gaid="${ifDefined(this.gaid)}"
             data-target="${ifDefined(this.dataTarget)}"
             class="tile__link">
             <div class="tile__left">

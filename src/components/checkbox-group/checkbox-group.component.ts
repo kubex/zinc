@@ -252,7 +252,7 @@ export default class ZnCheckboxGroup extends ZincElement implements ZincFormCont
 
   /** Checks for validity and shows the browser's validation message if the control is invalid. */
   reportValidity(): boolean {
-    const isValid = this.validity.valid;
+    const isValid = this.validity?.valid;
 
     this.errorMessage = this.customValidityMessage || isValid ? '' : this.validationInput.validationMessage;
     this.formControlController.setValidity(isValid);

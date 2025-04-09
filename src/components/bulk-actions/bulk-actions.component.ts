@@ -60,7 +60,7 @@ export default class ZnBulkActions extends ZincElement {
   }
 
   get validity(): ValidityState {
-    return this.input.validity;
+    return this.input?.validity;
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

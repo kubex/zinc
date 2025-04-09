@@ -225,12 +225,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Gets the validity state object */
   get validity() {
-    return this.valueInput.validity;
+    return this.valueInput?.validity;
   }
 
   /** Gets the validation message */
   get validationMessage() {
-    return this.valueInput.validationMessage;
+    return this.valueInput?.validationMessage;
   }
 
   connectedCallback() {

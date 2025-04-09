@@ -147,6 +147,7 @@ export default class ZnDataTable extends ZincElement {
     // Headers do not need to be re-rendered with new data
     return html`
       <zn-panel caption="${this.caption}">
+        <slot name="search-action" slot="actions"></slot>
         ${this.getTableHeader()}
         ${tableBody}
       </zn-panel>

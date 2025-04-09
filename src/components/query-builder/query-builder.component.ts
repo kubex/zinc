@@ -198,6 +198,13 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     });
 
     this.value = btoa(JSON.stringify(data));
+
+    if (this.parentElement?.classList.contains('dropdown__query-builder')) {
+      const parentElement = this.parentElement;
+      requestAnimationFrame(() => {
+        parentElement.scrollTop = parentElement.scrollHeight;
+      });
+    }
   }
 
   private _addRule(event: Event | null, value: string, pos?: number) {

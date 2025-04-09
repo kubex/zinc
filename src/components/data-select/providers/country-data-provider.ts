@@ -506,14 +506,22 @@ const countryIsoToEmoji: { [key: string]: string } = {
   "ZW": "🇿🇼"
 }
 
+const commonCountryCodes = [
+  'US', 'GB', 'CA', 'FR', 'DE', 'IT', 'ES', 'JP', 'CN', 'IN', 'BR', 'AU', 'MX', 'RU', 'ZA', 'KR', 'NL', 'SE', 'NO', 'FI',
+]
+
+const sortedCountryCodes = [...Object.keys(countryIsoToName)].sort((a, b) => a.localeCompare(b));
+const allCountryCodes = [...commonCountryCodes, ...sortedCountryCodes];
+const uniqueCountryCodes = Array.from(new Set(allCountryCodes));
+
 export const countryDataProvider: LocalDataProvider<DataProviderOption> = {
   getName: 'country',
-  getData: Object.entries(countryIsoToName).map(([key, value]: [string, string]) => {
+  getData: uniqueCountryCodes.map((code => {
     return {
-      key,
-      value,
-      prefix: countryIsoToEmoji[key] ? countryIsoToEmoji[key] : ''
-    };
-  })
+      key: code,
+      value: countryIsoToName[code],
+      prefix: countryIsoToEmoji[code] ? countryIsoToEmoji[code] : ''
+    }
+  }))
 };
 

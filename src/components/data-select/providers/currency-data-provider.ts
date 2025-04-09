@@ -307,14 +307,22 @@ const currencyCodeToSymbol: { [key: string]: string } = {
   'ZWL': '$'
 }
 
+const commonCurrencyCodes = [
+  'USD', 'EUR', 'GBP', 'CAD', 'AUD'
+];
+
+const sortedCurrencyCodes = [...Object.keys(currencyCodeToName)].sort((a, b) => a.localeCompare(b));
+const allCurrencyCodes = [...commonCurrencyCodes, ...sortedCurrencyCodes];
+const uniqueCurrencyCodes = Array.from(new Set(allCurrencyCodes));
+
 export const currencyDataProvider: LocalDataProvider<DataProviderOption> = {
   getName: 'currency',
-  getData: Object.entries(currencyCodeToName).map(([key, value]: [string, string]) => {
+  getData: uniqueCurrencyCodes.map((code => {
     return {
-      key,
-      value: key.concat(' - ').concat(value),
-      prefix: currencyCodeToSymbol[key] ? currencyCodeToSymbol[key] : ''
-    };
-  })
+      key: code,
+      value: code.concat(' - ').concat(currencyCodeToName[code]),
+      prefix: currencyCodeToSymbol[code] ? currencyCodeToSymbol[code] : ''
+    }
+  }))
 };
 

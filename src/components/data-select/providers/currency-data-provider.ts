@@ -312,7 +312,7 @@ export const currencyDataProvider: LocalDataProvider<DataProviderOption> = {
   getData: Object.entries(currencyCodeToName).map(([key, value]: [string, string]) => {
     return {
       key,
-      value,
+      value: key.concat(' - ').concat(value),
       prefix: currencyCodeToSymbol[key] ? currencyCodeToSymbol[key] : ''
     };
   })

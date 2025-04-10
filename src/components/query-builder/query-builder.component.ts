@@ -282,7 +282,11 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     } else {
       this.container.insertBefore(row, this.addRule);
     }
+
+    // Reset back to default placeholder
     this.addRule.value = '';
+    this.addRule.displayLabel = '';
+    this.addRule.selectedOptions[0].selected = false;
     this._handleChange();
   }
 

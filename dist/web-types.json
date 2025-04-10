@@ -2702,7 +2702,7 @@
         },
         {
           "name": "zn-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Used for listing items in a description list. Caption on the right, content on the left.\n---\n\n\n### **Slots:**\n - _default_ - The default slot. Can either be slotted or use the value attribute\n- **actions** - Used for adding actions to a zn-item.\n\n### **CSS Parts:**\n - **base** - The items base wrapper\n- **caption** - The items caption\n- **icon** - The items icon",
           "doc-url": "",
           "attributes": [
             { "name": "caption", "value": { "type": "string" } },
@@ -2716,15 +2716,21 @@
             },
             { "name": "edit-on-hover", "value": { "type": "boolean" } },
             { "name": "icon", "value": { "type": "string" } },
-            { "name": "inline", "value": { "type": "boolean" } }
+            { "name": "value", "value": { "type": "string" } },
+            { "name": "inline", "value": { "type": "boolean" } },
+            { "name": "no-padding", "value": { "type": "boolean" } }
           ],
           "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            {
+              "name": "",
+              "description": "The default slot. Can either be slotted or use the value attribute"
+            },
+            {
+              "name": "actions",
+              "description": "Used for adding actions to a zn-item."
+            }
           ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "caption", "type": "string" },
@@ -2732,14 +2738,11 @@
               { "name": "size", "type": "'small' | 'medium' | 'large'" },
               { "name": "editOnHover", "type": "boolean" },
               { "name": "icon", "type": "string" },
-              { "name": "inline", "type": "boolean" }
+              { "name": "value", "type": "string" },
+              { "name": "inline", "type": "boolean" },
+              { "name": "noPadding", "type": "boolean" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {

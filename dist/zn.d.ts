@@ -4764,34 +4764,37 @@ declare module "components/checkbox-group/index" {
     }
 }
 declare module "components/item/item.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
     /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/description-item
+     * @summary Used for listing items in a description list. Caption on the right, content on the left.
+     * @documentation https://zinc.style/components/item
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon
      *
-     * @event zn-event-name - Emitted as an example.
+     * @slot - The default slot. Can either be slotted or use the value attribute
+     * @slot actions - Used for adding actions to a zn-item.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart base - The items base wrapper
+     * @csspart caption - The items caption
+     * @csspart icon - The items icon
      */
     export default class ZnItem extends ZincElement {
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
         static styles: CSSResultGroup;
-        private readonly localize;
         caption: string;
         stacked: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         icon: string;
+        value: string;
         inline: boolean;
+        noPadding: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;

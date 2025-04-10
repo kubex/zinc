@@ -8862,35 +8862,39 @@
           "kind": "class",
           "description": "",
           "name": "ZnItem",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
           "cssParts": [
             {
-              "description": "The component's base wrapper.",
+              "description": "The items base wrapper",
               "name": "base"
+            },
+            {
+              "description": "The items caption",
+              "name": "caption"
+            },
+            {
+              "description": "The items icon",
+              "name": "icon"
             }
           ],
           "slots": [
             {
-              "description": "The default slot.",
+              "description": "The default slot. Can either be slotted or use the value attribute",
               "name": ""
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "Used for adding actions to a zn-item.",
+              "name": "actions"
             }
           ],
           "members": [
             {
               "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
             },
             {
               "kind": "field",
@@ -8936,17 +8940,27 @@
             },
             {
               "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
               "name": "inline",
               "type": {
                 "text": "boolean"
               },
               "attribute": "inline"
-            }
-          ],
-          "events": [
+            },
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "kind": "field",
+              "name": "noPadding",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "no-padding"
             }
           ],
           "attributes": [
@@ -8987,27 +9001,41 @@
               "fieldName": "icon"
             },
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "value"
+            },
+            {
               "name": "inline",
               "type": {
                 "text": "boolean"
               },
               "fieldName": "inline"
+            },
+            {
+              "name": "no-padding",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "noPadding"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Used for listing items in a description list. Caption on the right, content on the left.",
           "tagNameWithoutPrefix": "item",
           "tagName": "zn-item",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/description-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/description-item",
+          "jsDoc": "/**\n * @summary Used for listing items in a description list. Caption on the right, content on the left.\n * @documentation https://zinc.style/components/item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The default slot. Can either be slotted or use the value attribute\n * @slot actions - Used for adding actions to a zn-item.\n *\n * @csspart base - The items base wrapper\n * @csspart caption - The items caption\n * @csspart icon - The items icon\n */",
+          "documentation": "https://zinc.style/components/item",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-icon"
           ]
         }
       ],

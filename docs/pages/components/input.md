@@ -107,7 +107,7 @@ Use the `disabled` attribute to disable an input.
 Use the `size` attribute to change an input's size. Size `medium` is the input's default.
 
 ```html:preview
-<zn-input label="small input"></zn-input>
+<zn-input label="small input" size="small"></zn-input>
 <br />
 <zn-input label="Medium input" size="medium"></zn-input>
 <br />

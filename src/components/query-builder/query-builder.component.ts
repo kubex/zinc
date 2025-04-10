@@ -198,17 +198,11 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     });
 
     this.value = btoa(JSON.stringify(data));
-
-    if (this.parentElement?.classList.contains('dropdown__query-builder')) {
-      const parentElement = this.parentElement;
-      requestAnimationFrame(() => {
-        parentElement.scrollTop = parentElement.scrollHeight;
-      });
-    }
   }
 
   private _addRule(event: Event | null, value: string, pos?: number) {
-    const id = value ? value : (event?.target as ZnSelect).value;
+    const target = event?.target as ZnSelect;
+    const id = value ? value : target.value;
     if (id === '') return;
 
     const filter: QueryBuilderItem | undefined = this.filters.find(item => item.id === id);
@@ -287,6 +281,15 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this.addRule.value = '';
     this.addRule.displayLabel = '';
     this.addRule.selectedOptions[0].selected = false;
+
+    // Auto scroll to keep the add rule select in view
+    if (target === this.addRule && this.parentElement?.classList.contains('dropdown__query-builder')) {
+      const parentElement = this.parentElement;
+      requestAnimationFrame(() => {
+        parentElement.scrollTop = parentElement.scrollHeight;
+      });
+    }
+
     this._handleChange();
   }
 

@@ -475,7 +475,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
-    const button = event.target as HTMLButtonElement;
+    const button = event.target as ZnButton;
     button?.closest('.query-builder__row')?.remove();
     this._handleChange();
   }

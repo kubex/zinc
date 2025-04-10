@@ -194,11 +194,12 @@ export default class ZnDataTable extends ZincElement {
   getTableHeader() {
     return html`
       <div class="table__header">
-        <div class="table__header__query-builder">
-          ${this.getQueryBuilder()}
-        </div>
         <div class="table__header__actions">
           ${this.getActions()}
+        </div>
+        <div class="table__header__query-builder">
+          ${this.getQueryBuilder()}
+          <slot name="search-action"></slot>
         </div>
       </div>
     `;

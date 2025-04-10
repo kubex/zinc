@@ -300,33 +300,26 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    actions.push(html`
-      <zn-button @click=${this.clearSelectedRows}
-                 ?disabled="${this.selectedRows.length <= 0}"
-                 size="small"
-                 outline>
-        Clear Selection
-      </zn-button>`);
+    if (this.selectedRows.length > 0) {
+      actions.push(html`
+        <zn-button @click=${this.clearSelectedRows} size="small" outline>
+          Clear Selection
+        </zn-button>`);
 
-    Object.values(ActionSlots).forEach((slot: string) => {
-      if (this.hasSlotController.test(slot)) {
-        this.toggleActionButton(slot);
-        actions.push(html`
-          <slot name="${slot}"></slot>`);
+      if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {
+        actions.push(html`<slot name="${ActionSlots.delete.valueOf()}"></slot>`);
       }
-    });
 
-    return actions;
-  }
-
-  toggleActionButton(slotName: string) {
-    const slot = this.hasSlotController.getSlot(slotName);
-    if (slot) {
-      const input = slot.querySelector('zn-button');
-      if (input && input instanceof ZnButton) {
-        input.disabled = this.selectedRows.length <= 0;
+      if (this.hasSlotController.test(ActionSlots.modify.valueOf())) {
+        actions.push(html`<slot name="${ActionSlots.modify.valueOf()}"></slot>`);
       }
     }
+
+    if (this.hasSlotController.test(ActionSlots.create.valueOf())) {
+      actions.push(html`<slot name="${ActionSlots.create.valueOf()}"></slot>`);
+    }
+
+    return actions;
   }
 
   goToPage(page: number) {

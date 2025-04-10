@@ -134,7 +134,7 @@ export default class ZnBulkActions extends ZincElement {
     });
 
     const select = html`
-      <zn-select class="bulk-action__key"
+      <zn-select class="bulk-actions__key"
                  @zn-change="${(e: ZnChangeEvent) => this._changeRule(uniqueId, e)}"
                  value="${filter?.id}">
         ${this.actions.map((item: BulkActionItem) => {
@@ -148,7 +148,7 @@ export default class ZnBulkActions extends ZincElement {
     `;
 
     const remove = html`
-      <zn-button class="bulk-action__remove"
+      <zn-button class="bulk-actions__remove"
                  icon="delete"
                  icon-size="24"
                  color="transparent"
@@ -157,7 +157,7 @@ export default class ZnBulkActions extends ZincElement {
       </zn-button>`;
 
     const rowElement = html`
-      <div id="${uniqueId}" class="bulk-action__row">
+      <div id="${uniqueId}" class="bulk-actions__row">
         ${select}
         ${this._createInput(filter, uniqueId)}
         ${remove}
@@ -215,7 +215,7 @@ export default class ZnBulkActions extends ZincElement {
 
   private _createBooleanInput(uniqueId: string): ZnSelect | null {
     const input = html`
-      <zn-select class="bulk-action__value"
+      <zn-select class="bulk-actions__value"
                  @zn-change="${(e: ZnChangeEvent) => this._updateValue(uniqueId, e)}">
         <zn-option value="1">True</zn-option>
         <zn-option value="0">False</zn-option>
@@ -226,7 +226,7 @@ export default class ZnBulkActions extends ZincElement {
   private _createNumberInput(uniqueId: string): ZnInput | null {
     const input = html`
       <zn-input type="number"
-                class="bulk-action__value"
+                class="bulk-actions__value"
                 @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
       </zn-input>`;
     return litToHTML<ZnInput>(input);
@@ -235,7 +235,7 @@ export default class ZnBulkActions extends ZincElement {
   private _createDateInput(uniqueId: string): ZnInput | null {
     const input = html`
       <zn-input type="date"
-                class="bulk-action__value"
+                class="bulk-actions__value"
                 @zn-input="${(e: ZnInputEvent) => this._updateDateValue(uniqueId, e)}">
       </zn-input>`;
     return litToHTML<ZnInput>(input);
@@ -246,7 +246,7 @@ export default class ZnBulkActions extends ZincElement {
     if (options === undefined) return null;
 
     const input = html`
-      <zn-select class="bulk-action__value"
+      <zn-select class="bulk-actions__value"
                  @zn-change="${(e: ZnChangeEvent) => this.updateInValue(uniqueId, e)}">
         ${Object.keys(options).map(key => html`
           <zn-option value="${key}">
@@ -259,7 +259,7 @@ export default class ZnBulkActions extends ZincElement {
   private _createDefaultInput(uniqueId: string): ZnInput | null {
     const input = html`
       <zn-input type="text"
-                class="bulk-action__value"
+                class="bulk-actions__value"
                 @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
       </zn-input>`;
     return litToHTML<ZnInput>(input);
@@ -313,7 +313,7 @@ export default class ZnBulkActions extends ZincElement {
   }
 
   private _getRulePosition(id: string): number {
-    const rules = this.container.querySelectorAll('.bulk-action__row');
+    const rules = this.container.querySelectorAll('.bulk-actions__row');
     let position: number = -1;
     rules.forEach((item, index) => {
       if (item.id === id) {
@@ -326,7 +326,7 @@ export default class ZnBulkActions extends ZincElement {
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
     const button = event.target as ZnButton;
-    button?.closest('.bulk-action__row')?.remove();
+    button?.closest('.bulk-actions__row')?.remove();
     this._handleChange();
   }
 

@@ -53,6 +53,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) outline = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
+  @property({type: Boolean}) square = false;
 
   @property() verticalAlign: 'start' | 'center' | 'end';
 
@@ -182,6 +183,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--disabled': this.disabled,
           'button--with-icon': this.icon,
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
+          'button--square': this.square,
         })}
         .type=${this.type}
         href=${ifDefined(this.href)}

@@ -1,13 +1,14 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {litToHTML} from "../../utilities/lit-to-html";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import type {ZincFormControl} from '../../internal/zinc-element';
-import {litToHTML} from "../../utilities/lit-to-html";
 import ZnButton from "../button";
 import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
@@ -33,9 +34,12 @@ export interface QueryBuilderOptions {
 export enum QueryBuilderOperators {
   Eq = 'eq',
   Neq = 'neq',
+  Eqi = 'eqi',
+  Neqi = 'neqi',
   Before = 'before',
   After = 'after',
   In = 'in',
+  Nin = 'nin',
   MatchPhrasePre = 'matchphrasepre',
   NMatchPhrasePre = 'nmatchphrasepre',
   MatchPhrase = 'matchphrase',
@@ -44,8 +48,12 @@ export enum QueryBuilderOperators {
   NMatch = 'nmatch',
   Starts = 'starts',
   NStarts = 'nstarts',
+  Ends = 'ends',
+  NEnds = 'nends',
   Wild = 'wild',
   NWild = 'nwild',
+  Like = 'like',
+  NLike = 'nlike',
   Fuzzy = 'fuzzy',
   NFuzzy = 'nfuzzy',
   Gte = 'gte',
@@ -57,9 +65,12 @@ export enum QueryBuilderOperators {
 const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.Eq]: 'Equals',
   [QueryBuilderOperators.Neq]: 'Not Equals',
+  [QueryBuilderOperators.Eqi]: 'Equals (Insensitive)',
+  [QueryBuilderOperators.Neqi]: 'Not Equals (Insensitive)',
   [QueryBuilderOperators.Before]: 'Was Before',
   [QueryBuilderOperators.After]: 'Was After',
   [QueryBuilderOperators.In]: 'In',
+  [QueryBuilderOperators.Nin]: 'Not In',
   [QueryBuilderOperators.MatchPhrasePre]: 'Match Phrase Prefix',
   [QueryBuilderOperators.NMatchPhrasePre]: 'Does Not Match Phrase Prefix',
   [QueryBuilderOperators.MatchPhrase]: 'Match Phrase',
@@ -68,8 +79,12 @@ const operatorText: { [key in QueryBuilderOperators]: string } = {
   [QueryBuilderOperators.NMatch]: 'Does Not Match',
   [QueryBuilderOperators.Starts]: 'Starts With',
   [QueryBuilderOperators.NStarts]: 'Does Not Start With',
+  [QueryBuilderOperators.Ends]: 'Ends With',
+  [QueryBuilderOperators.NEnds]: 'Does Not End With',
   [QueryBuilderOperators.Wild]: 'Wildcard Match',
   [QueryBuilderOperators.NWild]: 'Does Not Match Wildcard',
+  [QueryBuilderOperators.Like]: 'Like Match With',
+  [QueryBuilderOperators.NLike]: 'Does Not Like Match With',
   [QueryBuilderOperators.Fuzzy]: 'Fuzzy Match With',
   [QueryBuilderOperators.NFuzzy]: 'Does Not Match Fuzzy With',
   [QueryBuilderOperators.Gte]: 'Greater Than or Equals',
@@ -121,8 +136,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   @query('input#main-input') input: HTMLInputElement;
 
   @property({type: Array}) filters: QueryBuilderData = [];
-
-
+  @property({type: Boolean}) dropdown: boolean = false;
   @property() name: string;
   @property() value: PropertyKey;
   @property({
@@ -155,11 +169,14 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
   render() {
     return html`
-      <div class="query-builder">
+      <div class=${classMap({
+        "query-builder": true,
+        "query-builder--dropdown": this.dropdown,
+      })}>
         <zn-select class="add-rule"
                    size="medium"
                    placeholder="Select Filter"
-                   @click="${this._addRule}">
+                   @zn-change="${this._addRule}">
           ${this.filters.map(item => html`
             <zn-option value="${item.id}">
               ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
@@ -184,7 +201,8 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   }
 
   private _addRule(event: Event | null, value: string, pos?: number) {
-    const id = value ? value : (event?.target as ZnSelect).value;
+    const target = event?.target as ZnSelect;
+    const id = value ? value : target.value;
     if (id === '') return;
 
     const filter: QueryBuilderItem | undefined = this.filters.find(item => item.id === id);
@@ -258,7 +276,20 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     } else {
       this.container.insertBefore(row, this.addRule);
     }
+
+    // Reset back to default placeholder
     this.addRule.value = '';
+    this.addRule.displayLabel = '';
+    this.addRule.selectedOptions[0].selected = false;
+
+    // Auto scroll to keep the add rule select in view
+    if (target === this.addRule && this.parentElement?.classList.contains('dropdown__query-builder')) {
+      const parentElement = this.parentElement;
+      requestAnimationFrame(() => {
+        parentElement.scrollTop = parentElement.scrollHeight;
+      });
+    }
+
     this._handleChange();
   }
 
@@ -334,7 +365,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const input = html`
       <zn-input type="date"
                 class="query-builder__value"
-                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+                @zn-input="${(e: ZnInputEvent) => this._updateDateValue(uniqueId, e)}">
       </zn-input>`;
     return litToHTML<ZnInput>(input);
   }
@@ -344,15 +375,15 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     if (options === undefined) return null;
 
-    const comparatorIn = selectedComparator === QueryBuilderOperators.In;
+    const multiSelect = selectedComparator === QueryBuilderOperators.In || selectedComparator === QueryBuilderOperators.Nin;
     const input = html`
       <zn-select class="query-builder__value"
                  @zn-change="${(e: ZnChangeEvent) => this.updateInValue(uniqueId, e)}"
-                 name=${(comparatorIn ? 'value' : undefined) || nothing}
-                 multiple=${comparatorIn || nothing}
-                 clearable=${comparatorIn || nothing}
+                 name=${(multiSelect ? 'value' : undefined) || nothing}
+                 multiple=${multiSelect || nothing}
+                 clearable=${multiSelect || nothing}
                  max-options-visible=${filter.maxOptionsVisible || nothing}
-                 selectedItems=${(comparatorIn ? JSON.stringify(options) : undefined) || nothing}>
+                 selectedItems=${(multiSelect ? JSON.stringify(options) : undefined) || nothing}>
         ${Object.keys(options).map(key => html`
           <zn-option value="${key}">
             ${options[key]}
@@ -378,6 +409,21 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const select = event.target as ZnSelect;
     this._previousOperator = filter.operator as QueryBuilderOperators;
     filter.operator = select.value as QueryBuilderOperators;
+
+    this._selectedRules.set(id, filter);
+    this._handleChange();
+  }
+
+  private _updateDateValue(id: string, event: Event | { target: ZnSelect | ZnInput | HTMLDivElement }) {
+    const filter = this._selectedRules.get(id);
+    if (!filter) return;
+    const input = event.target as ZnSelect | ZnInput;
+    // Dodgy logic to offset backend filter comparator values
+    // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
+    const multiplier = filter.operator as QueryBuilderOperators === QueryBuilderOperators.Before ? -1 : 1;
+    const timestamp = (Math.floor((Date.now() - Date.parse(input.value as string)) / 1000 / 60) * multiplier).toString();
+
+    filter.value = timestamp as string;
 
     this._selectedRules.set(id, filter);
     this._handleChange();
@@ -429,7 +475,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
-    const button = event.target as HTMLButtonElement;
+    const button = event.target as ZnButton;
     button?.closest('.query-builder__row')?.remove();
     this._handleChange();
   }

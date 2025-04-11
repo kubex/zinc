@@ -312,6 +312,18 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     this.passwordVisible = !this.passwordVisible;
   }
 
+  private focusInput(event: MouseEvent) {
+    if (this.hasFocus) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('input__prefix') || target.slot === 'prefix' || (target.hasAttribute('part') && target.getAttribute('part') === 'base')) {
+      this.handleFocus();
+      this.input.focus();
+    }
+  }
+
   @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
     // Disabled form controls are always valid
@@ -465,7 +477,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
             <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote}</slot></span>`
           : ''}
 
-        <div part="form-control-input" class="form-control-input">
+        <div part="form-control-input"
+             class="form-control-input"
+             @click=${this.focusInput}>
           <div part="base"
                class=${classMap({
                  'input': true,

@@ -64,7 +64,6 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
-  @property({attribute: 'caption'}) caption: string = '';
 
   @property() filters: [] = [];
 
@@ -146,10 +145,8 @@ export default class ZnDataTable extends ZincElement {
 
     // Headers do not need to be re-rendered with new data
     return html`
-      <zn-panel caption="${this.caption}">
-        ${this.getTableHeader()}
-        ${tableBody}
-      </zn-panel>
+      ${this.getTableHeader()}
+      ${tableBody}
     `;
   }
 
@@ -197,11 +194,12 @@ export default class ZnDataTable extends ZincElement {
   getTableHeader() {
     return html`
       <div class="table__header">
-        <div class="table__header__query-builder">
-          ${this.getQueryBuilder()}
-        </div>
         <div class="table__header__actions">
           ${this.getActions()}
+        </div>
+        <div class="table__header__query-builder">
+          ${this.getQueryBuilder()}
+          <slot name="search-action"></slot>
         </div>
       </div>
     `;
@@ -267,19 +265,19 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getQueryBuilder() {
-    if (!this.filters) return html``;
+    if (this.filters.length === 0) return html``;
 
     return html`
       <zn-dropdown>
-        <zn-menu>
-          <zn-query-builder filters="${this.filters}" size="small" outline>
+        <div class="dropdown__query-builder">
+          <zn-query-builder filters="${this.filters}" size="small" dropdown outline>
           </zn-query-builder>
           <zn-button @click=${this.queryData}
                      color="primary"
                      type="submit">
             Search
           </zn-button>
-        </zn-menu>
+        </div>
         <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
           Filter
         </zn-button>
@@ -302,33 +300,26 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    actions.push(html`
-      <zn-button @click=${this.clearSelectedRows}
-                 ?disabled="${this.selectedRows.length <= 0}"
-                 size="small"
-                 outline>
-        Clear Selection
-      </zn-button>`);
+    if (this.selectedRows.length > 0) {
+      actions.push(html`
+        <zn-button @click=${this.clearSelectedRows} size="small" outline>
+          Clear Selection
+        </zn-button>`);
 
-    Object.values(ActionSlots).forEach((slot: string) => {
-      if (this.hasSlotController.test(slot)) {
-        this.toggleActionButton(slot);
-        actions.push(html`
-          <slot name="${slot}"></slot>`);
+      if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {
+        actions.push(html`<slot name="${ActionSlots.delete.valueOf()}"></slot>`);
       }
-    });
 
-    return actions;
-  }
-
-  toggleActionButton(slotName: string) {
-    const slot = this.hasSlotController.getSlot(slotName);
-    if (slot) {
-      const input = slot.querySelector('zn-button');
-      if (input && input instanceof ZnButton) {
-        input.disabled = this.selectedRows.length <= 0;
+      if (this.hasSlotController.test(ActionSlots.modify.valueOf())) {
+        actions.push(html`<slot name="${ActionSlots.modify.valueOf()}"></slot>`);
       }
     }
+
+    if (this.hasSlotController.test(ActionSlots.create.valueOf())) {
+      actions.push(html`<slot name="${ActionSlots.create.valueOf()}"></slot>`);
+    }
+
+    return actions;
   }
 
   goToPage(page: number) {

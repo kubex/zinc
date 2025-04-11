@@ -308,10 +308,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
-    console.log('handleDocumentKeyDown', event.key);
     // Close when pressing escape
     if (event.key === 'Escape' && this.open && !this.closeWatcher) {
-      console.log('close');
       event.preventDefault();
       event.stopPropagation();
       this.hide();

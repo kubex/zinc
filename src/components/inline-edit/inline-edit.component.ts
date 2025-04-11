@@ -54,6 +54,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) required: boolean
 
+  @property() pattern: string;
+
   @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' = 'text';
 
   @property({type: Object}) options: { [key: string]: string } = {};
@@ -227,6 +229,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 size="${this.size}"
                 value="${this.value}"
                 help-text="${ifDefined(this.helpText)}"
+                pattern=${ifDefined(this.pattern)}
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;

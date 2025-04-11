@@ -181,7 +181,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  label-tooltip="${this.labelTooltip}"
                  context-note="${this.contextNote}"
                  help-text="${this.helpText}"
-                 required="${ifDefined(this.required)}"
+                 required=${ifDefined(this.required)}
                  placement="${this.placement}"
                  name="${this.name}"
                  @zn-input="${this.handleInput}"

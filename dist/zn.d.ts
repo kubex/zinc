@@ -2697,6 +2697,7 @@ declare module "components/inline-edit/inline-edit.component" {
         padded: boolean;
         size: 'small' | 'medium' | 'large';
         required: boolean;
+        pattern: string;
         inputType: 'select' | 'text' | 'data-select';
         options: {
             [key: string]: string;

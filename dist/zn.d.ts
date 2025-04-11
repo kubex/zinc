@@ -542,6 +542,7 @@ declare module "components/button/button.component" {
         outline: boolean;
         disabled: boolean;
         grow: boolean;
+        square: boolean;
         verticalAlign: 'start' | 'center' | 'end';
         content: string;
         icon: string;
@@ -1057,6 +1058,7 @@ declare module "components/input/input.component" {
         private handleInvalid;
         private handleKeyDown;
         private handlePasswordToggle;
+        private focusInput;
         handleDisabledChange(): void;
         handleStepChange(): void;
         handleValueChange(): Promise<void>;
@@ -1470,11 +1472,11 @@ declare module "events/zn-input" {
 declare module "components/query-builder/query-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnInput from "components/input/index";
     import ZnOption from "components/option/index";
     import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     export type QueryBuilderData = QueryBuilderItem[];
     export interface QueryBuilderItem {
         id: string;
@@ -1491,9 +1493,12 @@ declare module "components/query-builder/query-builder.component" {
     export enum QueryBuilderOperators {
         Eq = "eq",
         Neq = "neq",
+        Eqi = "eqi",
+        Neqi = "neqi",
         Before = "before",
         After = "after",
         In = "in",
+        Nin = "nin",
         MatchPhrasePre = "matchphrasepre",
         NMatchPhrasePre = "nmatchphrasepre",
         MatchPhrase = "matchphrase",
@@ -1502,8 +1507,12 @@ declare module "components/query-builder/query-builder.component" {
         NMatch = "nmatch",
         Starts = "starts",
         NStarts = "nstarts",
+        Ends = "ends",
+        NEnds = "nends",
         Wild = "wild",
         NWild = "nwild",
+        Like = "like",
+        NLike = "nlike",
         Fuzzy = "fuzzy",
         NFuzzy = "nfuzzy",
         Gte = "gte",
@@ -1550,6 +1559,7 @@ declare module "components/query-builder/query-builder.component" {
         addRule: ZnSelect;
         input: HTMLInputElement;
         filters: QueryBuilderData;
+        dropdown: boolean;
         name: string;
         value: PropertyKey;
         showValues: string[];
@@ -1567,6 +1577,7 @@ declare module "components/query-builder/query-builder.component" {
         private _createSelectInput;
         private _createDefaultInput;
         private _updateOperatorValue;
+        private _updateDateValue;
         private _updateValue;
         private updateInValue;
         private _changeRule;
@@ -1653,7 +1664,6 @@ declare module "components/data-table/data-table.component" {
         key: string;
         headers: string;
         hiddenHeaders: string;
-        caption: string;
         filters: [];
         private itemsPerPage;
         private page;
@@ -1672,7 +1682,6 @@ declare module "components/data-table/data-table.component" {
         getQueryBuilder(): TemplateResult<1>;
         queryData(event: ZnSubmitEvent): void;
         getActions(): TemplateResult<1>[];
-        toggleActionButton(slotName: string): void;
         goToPage(page: number): void;
         goToFirstPage(): void;
         goToPreviousPage(): void;

@@ -16,44 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-bulk-actions",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "PropertyKey" } },
-            {
-              "name": "actions",
-              "value": { "type": "BulkActionData", "default": "[]" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "container", "type": "HTMLDivElement" },
-              { "name": "addRule", "type": "HTMLSelectElement" },
-              { "name": "input", "type": "HTMLInputElement" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "PropertyKey" },
-              { "name": "actions", "type": "BulkActionData" },
-              { "name": "validationMessage", "type": "string" },
-              { "name": "validity", "type": "ValidityState" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -109,6 +71,44 @@
           }
         },
         {
+          "name": "zn-bulk-actions",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "PropertyKey" } },
+            {
+              "name": "actions",
+              "value": { "type": "BulkActionData", "default": "[]" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "container", "type": "HTMLDivElement" },
+              { "name": "addRule", "type": "HTMLSelectElement" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "PropertyKey" },
+              { "name": "actions", "type": "BulkActionData" },
+              { "name": "validationMessage", "type": "string" },
+              { "name": "validity", "type": "ValidityState" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-button",
           "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
           "doc-url": "",
@@ -137,6 +137,10 @@
             },
             {
               "name": "grow",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "square",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -232,6 +236,7 @@
               { "name": "outline", "type": "boolean" },
               { "name": "disabled", "type": "boolean" },
               { "name": "grow", "type": "boolean" },
+              { "name": "square", "type": "boolean" },
               { "name": "verticalAlign", "type": "'start' | 'center' | 'end'" },
               { "name": "content", "type": "string" },
               { "name": "icon", "type": "string" },
@@ -1275,10 +1280,6 @@
               "name": "hide-headers",
               "value": { "type": "string", "default": "'{}'" }
             },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
             { "name": "filters", "value": { "type": "[]", "default": "[]" } }
           ],
           "slots": [
@@ -1298,7 +1299,6 @@
               { "name": "key", "type": "string" },
               { "name": "headers", "type": "string" },
               { "name": "hiddenHeaders", "type": "string" },
-              { "name": "caption", "type": "string" },
               { "name": "filters", "type": "[]" }
             ],
             "events": [
@@ -3668,6 +3668,10 @@
               "name": "filters",
               "value": { "type": "QueryBuilderData", "default": "[]" }
             },
+            {
+              "name": "dropdown",
+              "value": { "type": "boolean", "default": "false" }
+            },
             { "name": "name", "value": { "type": "string" } },
             { "name": "value", "value": { "type": "PropertyKey" } },
             {
@@ -3686,6 +3690,7 @@
               { "name": "addRule", "type": "ZnSelect" },
               { "name": "input", "type": "HTMLInputElement" },
               { "name": "filters", "type": "QueryBuilderData" },
+              { "name": "dropdown", "type": "boolean" },
               { "name": "name", "type": "string" },
               { "name": "value", "type": "PropertyKey" },
               { "name": "showValues", "type": "string[]" },

@@ -1047,7 +1047,12 @@
               "name": "copy-label",
               "value": { "type": "string", "default": "''" }
             },
-            { "name": "src", "value": { "type": "string", "default": "''" } }
+            { "name": "src", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "from",
+              "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+              "value": { "type": "string", "default": "''" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -1066,7 +1071,12 @@
               { "name": "status", "type": "'rest' | 'success' | 'error'" },
               { "name": "value", "type": "string" },
               { "name": "copyLabel", "type": "string" },
-              { "name": "src", "type": "string" }
+              { "name": "src", "type": "string" },
+              {
+                "name": "from",
+                "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+                "type": "string"
+              }
             ],
             "events": [
               {

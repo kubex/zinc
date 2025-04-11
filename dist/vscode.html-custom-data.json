@@ -486,7 +486,12 @@
       "attributes": [
         { "name": "value", "values": [] },
         { "name": "copy-label", "values": [] },
-        { "name": "src", "values": [] }
+        { "name": "src", "values": [] },
+        {
+          "name": "from",
+          "description": "An id that references an element in the same document from which data will be copied. If both this and `value` are\npresent, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an\nattribute, append the attribute name wrapped in square brackets, e.g. `from=\"el[value]\"`. To copy a property,\nappend a dot and the property name, e.g. `from=\"el.value\"`.",
+          "values": []
+        }
       ],
       "references": [
         {

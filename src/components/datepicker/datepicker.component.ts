@@ -1,8 +1,10 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import AirDatepicker, {type AirDatepickerLocale} from "air-datepicker";
@@ -11,8 +13,6 @@ import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 
 import styles from './datepicker.scss';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {live} from "lit/directives/live.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -191,7 +191,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     this.emit('zn-input');
   }
 
-  private handleChange() {c
+  private handleChange() {
     this.value = this.input.value;
     this.emit('zn-change');
   }

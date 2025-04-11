@@ -33,6 +33,7 @@ export default class ZnDatepicker extends ZincElement {
   @property({type: Boolean}) range = false;
 
   private _instance: AirDatepicker<HTMLInputElement>;
+
   _inputElement: HTMLInputElement;
 
   initialiseDatepicker() {

@@ -27,17 +27,31 @@ export default class ZnCopyButton extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @query('slot[name="copy-icon"') copyIcon: HTMLSlotElement;
+
   @query('slot[name="success-icon"') successIcon: HTMLSlotElement;
+
   @query('slot[name="error-icon"') errorIcon: HTMLSlotElement;
 
   @query('zn-tooltip') tooltip: ZnTooltip;
 
   @state() isCopying = false;
+
   @state() status: 'rest' | 'success' | 'error' = 'rest';
 
   @property() value = '';
+
   @property({attribute: 'copy-label'}) copyLabel = '';
+
   @property() src = '';
+
+
+  /**
+   * An id that references an element in the same document from which data will be copied. If both this and `value` are
+   * present, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an
+   * attribute, append the attribute name wrapped in square brackets, e.g. `from="el[value]"`. To copy a property,
+   * append a dot and the property name, e.g. `from="el.value"`.
+   */
+  @property() from = '';
 
 
   render() {
@@ -87,13 +101,60 @@ export default class ZnCopyButton extends ZincElement {
     if (this.isCopying) {
       return;
     }
-
     this.isCopying = true;
+
+    let valueToCopy = this.value;
+
+    if (this.from) {
+      const root = this.getRootNode() as ShadowRoot | Document;
+
+      const isProperty = this.from.includes('.');
+      const isAttribute = this.from.includes('[') && this.from.includes(']');
+      let id = this.from;
+      let field = '';
+
+      if (isProperty) {
+        [id, field] = this.from.trim().split('.');
+      } else if (isAttribute) {
+        [id, field] = this.from.trim().replace(/]$/, '').split('[');
+      }
+
+      const target = 'getElementById' in root ? root.getElementById(id) : null;
+
+      if (target) {
+        if (isAttribute) {
+          valueToCopy = target.getAttribute(field) || '';
+        } else if (isProperty) {
+          // @ts-expect-error Not really an error tbh.
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          valueToCopy = target[field] || '';
+        } else {
+          valueToCopy = target.textContent || '';
+        }
+      } else {
+        this.showStatus('error');
+        this.emit('zn-error');
+      }
+    }
+
+    if (!valueToCopy) {
+      await this.showStatus('error');
+      this.emit('zn-error');
+      return;
+    }
+
     try {
-      await navigator.clipboard.writeText(this.value);
+      await navigator.clipboard.writeText(valueToCopy);
       await this.showStatus('success');
+      this.emit('zn-copy', {
+        detail: {
+          value: valueToCopy
+        }
+      })
     } catch (error) {
       await this.showStatus('error');
+      this.emit('zn-error');
     }
+
   }
 }

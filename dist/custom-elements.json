@@ -4507,11 +4507,61 @@
           "members": [
             {
               "kind": "field",
-              "name": "id",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon, 'zn-tooltip': ZnTooltip }"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label', 'label-tooltip')"
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hasFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "title",
               "type": {
                 "text": "string"
               },
-              "attribute": "id",
+              "default": "\"\"",
+              "attribute": "title"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+              },
+              "default": "'text'",
+              "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
+              "attribute": "type",
               "reflects": true
             },
             {
@@ -4520,7 +4570,131 @@
               "type": {
                 "text": "string"
               },
-              "attribute": "name",
+              "default": "\"\"",
+              "description": "The name of the input, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "any"
+              },
+              "default": "''",
+              "description": "The current value of the input, submitted as a name/value pair with form data.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The inputs size *",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The inputs label. If you need to display HTML, use the `label` slot. *",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot.\n*",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "contextNote",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML\nin this text, use the `context-note` slot instead",
+              "attribute": "context-note"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input *",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Placeholder text to show as a hint when the input is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input read-only *",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be\nin the same document or shadow root for this to work.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input a required field.",
+              "attribute": "required",
               "reflects": true
             },
             {
@@ -4530,6 +4704,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Makes the input a range picker. *",
               "attribute": "range"
             },
             {
@@ -4542,18 +4717,112 @@
             },
             {
               "kind": "field",
-              "name": "_inputElement",
-              "type": {
-                "text": "HTMLInputElement"
-              }
+              "name": "validity",
+              "description": "Gets the validity state object",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
             },
             {
               "kind": "method",
-              "name": "initialiseDatepicker"
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Sets focus on the input."
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "description": "Removes focus from the input."
+            },
+            {
+              "kind": "method",
+              "name": "select",
+              "description": "Selects all the text in the input."
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
             },
             {
               "kind": "method",
               "name": "init"
+            },
+            {
+              "kind": "method",
+              "name": "handleInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalid",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
             }
           ],
           "events": [
@@ -4564,18 +4833,128 @@
           ],
           "attributes": [
             {
-              "name": "id",
+              "name": "title",
               "type": {
                 "text": "string"
               },
-              "fieldName": "id"
+              "default": "\"\"",
+              "fieldName": "title"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+              },
+              "default": "'text'",
+              "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
+              "fieldName": "type"
             },
             {
               "name": "name",
               "type": {
                 "text": "string"
               },
+              "default": "\"\"",
+              "description": "The name of the input, submitted as a name/value pair with form data.",
               "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "any"
+              },
+              "default": "''",
+              "description": "The current value of the input, submitted as a name/value pair with form data.",
+              "fieldName": "value"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The inputs size *",
+              "fieldName": "size"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The inputs label. If you need to display HTML, use the `label` slot. *",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot.\n*",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "context-note",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML\nin this text, use the `context-note` slot instead",
+              "fieldName": "contextNote"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the input *",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Placeholder text to show as a hint when the input is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input read-only *",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be\nin the same document or shadow root for this to work.",
+              "fieldName": "form"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the input a required field.",
+              "fieldName": "required"
             },
             {
               "name": "range",
@@ -4583,6 +4962,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "Makes the input a range picker. *",
               "fieldName": "range"
             }
           ],

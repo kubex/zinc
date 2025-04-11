@@ -4112,7 +4112,9 @@ declare module "components/checkbox/index" {
 }
 declare module "components/datepicker/datepicker.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
+    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/datepicker
@@ -4130,15 +4132,84 @@ declare module "components/datepicker/datepicker.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnDatepicker extends ZincElement {
+    export default class ZnDatepicker extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        id: string;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        /**
+         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
+         * to `text`
+         */
+        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'small' | 'medium' | 'large';
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** Makes the input a range picker. **/
         range: boolean;
         private _instance;
-        _inputElement: HTMLInputElement;
-        initialiseDatepicker(): void;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        handleDisabledChange(): void;
+        handleValueChange(): Promise<void>;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
         init(): void;
+        private handleInput;
+        private handleChange;
+        private handleInvalid;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }

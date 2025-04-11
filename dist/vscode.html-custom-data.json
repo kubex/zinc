@@ -608,11 +608,95 @@
     },
     {
       "name": "zn-datepicker",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
-        { "name": "id", "values": [] },
-        { "name": "name", "values": [] },
-        { "name": "range", "values": [] }
+        { "name": "title", "values": [] },
+        {
+          "name": "type",
+          "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
+          "values": [
+            { "name": "currency" },
+            { "name": "date" },
+            { "name": "datetime-local" },
+            { "name": "email" },
+            { "name": "number" },
+            { "name": "password" },
+            { "name": "search" },
+            { "name": "tel" },
+            { "name": "text" },
+            { "name": "time" },
+            { "name": "url" }
+          ]
+        },
+        {
+          "name": "name",
+          "description": "The name of the input, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The current value of the input, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The inputs size *",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "label",
+          "description": "The inputs label. If you need to display HTML, use the `label` slot. *",
+          "values": []
+        },
+        {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot.\n*",
+          "values": []
+        },
+        {
+          "name": "context-note",
+          "description": "Text that appears above the input, on the right, to add additional context. If you need to display HTML\nin this text, use the `context-note` slot instead",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Disables the input *",
+          "values": []
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text to show as a hint when the input is empty.",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "Makes the input read-only *",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be\nin the same document or shadow root for this to work.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Makes the input a required field.",
+          "values": []
+        },
+        {
+          "name": "range",
+          "description": "Makes the input a range picker. *",
+          "values": []
+        }
       ],
       "references": [
         {

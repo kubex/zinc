@@ -482,17 +482,15 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
             <span part="prefix" class="input__prefix">
               ${this.type === 'currency'
-                ? html`<span class="input__prefix-default">$</span>`
-                : this.type === 'search'
+                ? html`
+                  <zn-icon class="input__prefix-default" src="search"></zn-icon>`
+                : this.type === 'email' && hasOptionalIcon
                   ? html`
-                    <zn-icon class="input__prefix-default" src="search"></zn-icon>`
-                  : this.type === 'email' && hasOptionalIcon
+                    <zn-icon class="input__prefix-default" src="mail"></zn-icon>`
+                  : this.type === 'tel' && hasOptionalIcon
                     ? html`
-                      <zn-icon class="input__prefix-default" src="mail"></zn-icon>`
-                    : this.type === 'tel' && hasOptionalIcon
-                      ? html`
-                        <zn-icon class="input__prefix-default" src="call"></zn-icon>`
-                      : ''}
+                      <zn-icon class="input__prefix-default" src="call"></zn-icon>`
+                    : ''}
               <slot name="prefix"></slot>
             </span>
 
@@ -572,7 +570,6 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
               : ''}
 
             <span part="suffix" class="input__suffix">
-              ${this.type === 'currency' ? html`<span class="input__suffix-default">USD</span>` : ''}
               <slot name="suffix"></slot>
             </span>
           </div>

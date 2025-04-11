@@ -265,7 +265,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getQueryBuilder() {
-    if (!this.filters) return html``;
+    if (this.filters.length === 0) return html``;
 
     return html`
       <zn-dropdown>

@@ -293,6 +293,7 @@ export default class ZnDataTable extends ZincElement {
 
     if (queryString) {
       this.filter = queryString;
+      this.selectedRows = [];
       this._dataTask.run().then(r => r);
     }
   }

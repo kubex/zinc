@@ -7,6 +7,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -91,7 +92,9 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   }
 
   private handleInput() {
-    //
+    this.value = this.input.value;
+    this.formControlController.updateValidity();
+    this.emit('zn-input');
   }
 
   private handleClick() {
@@ -157,10 +160,17 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
     }
 
     return html`
-      <div class="switch__wrapper">
+      <div class="${classMap({
+        'switch__wrapper': true,
+        'switch__wrapper--disabled': this.disabled,
+        'switch__wrapper--has-focus': this.hasFocus,
+        'switch__wrapper--small': this.size === 'small',
+        'switch__wrapper--medium': this.size === 'medium',
+        'switch__wrapper--large': this.size === 'large',
+      })}">
         <label>
-          <p class="switch-label">${this.label}</p>
-          <div class="switch__input-wrapper">
+          ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
+          <div class="switch__input-wrapper" part="base">
             ${fallback}
             <input
               class="switch__input"

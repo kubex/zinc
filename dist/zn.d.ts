@@ -64,8 +64,10 @@ declare module "internal/theme" {
         constructor(host: ReactiveControllerHost & HTMLElement);
         hostConnected(): void;
         hostDisconnected(): void;
-        handleThemeEventUpdate(e: CustomEvent): void;
-        getDefaultTheme(): void;
+        handleThemeEventUpdate: (e: CustomEvent & {
+            theme: string;
+        }) => void;
+        getDefaultTheme: () => void;
     }
 }
 declare module "internal/zinc-element" {

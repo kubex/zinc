@@ -1,4 +1,4 @@
-import type { ReactiveController, ReactiveControllerHost } from "lit";
+import type {ReactiveController, ReactiveControllerHost} from "lit";
 
 /**
  * ThemeController is a reactive controller that listens for theme changes
@@ -27,6 +27,7 @@ export class ThemeController implements ReactiveController {
 
   hostConnected() {
     this.getDefaultTheme();
+    this.host.setAttribute('t', this.t);
     window.addEventListener('theme-change', this.handleThemeEventUpdate.bind(this));
   }
 
@@ -34,21 +35,17 @@ export class ThemeController implements ReactiveController {
     window.removeEventListener('theme-change', this.handleThemeEventUpdate.bind(this));
   }
 
-  handleThemeEventUpdate(e: CustomEvent) {
-    if (e && e.detail['theme']) {
-      this.t = e.detail['theme'];
-      return;
-    }
-
+  handleThemeEventUpdate = (e: CustomEvent & { theme: string }) => {
     if (e && e.detail) {
-      this.t = e.detail;
+      this.t = e.detail as string;
+      this.host.setAttribute('t', this.t);
       return;
     }
 
     this.getDefaultTheme();
   }
 
-  getDefaultTheme() {
+  getDefaultTheme = () => {
     this.t = document.documentElement.getAttribute('t')
       || window.document.documentElement.getAttribute('t')
       || window.document.body.getAttribute('t')

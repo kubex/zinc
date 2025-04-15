@@ -1,5 +1,5 @@
-import { LitElement } from "lit";
-import { property } from "lit/decorators.js";
+import {LitElement} from "lit";
+import {property} from "lit/decorators.js";
 import {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -9,13 +9,13 @@ import {
   ValidEventTypeMap,
   ZincEventInit
 } from "./event";
-import { ThemeController } from "./theme";
+import {ThemeController} from "./theme";
 
 export default class ZincElement extends LitElement {
   @property() dir: string; // LTR or RTL direction
   @property() lang: string; // Language
-  @property() t: string; // Theme (light or dark)
-  
+  @property({reflect: true}) t: string; // Theme (light or dark)
+
   static define(name: string, elementConstructor = this, options: ElementDefinitionOptions = {}) {
     const currentRegisteredConstructor = customElements.get(name) as
       | CustomElementConstructor

@@ -2859,10 +2859,10 @@ declare module "utilities/query" {
     export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/tabs/tabs.component" {
+    import type { PropertyValues } from 'lit';
     import { type CSSResultGroup } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
-    import type { PropertyValues } from 'lit';
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/tabs
@@ -3219,6 +3219,7 @@ declare module "components/sp/sp.component" {
         flush: boolean;
         flushX: boolean;
         flushY: boolean;
+        widthContainer: boolean;
         connectedCallback(): void;
         protected render(): unknown;
     }

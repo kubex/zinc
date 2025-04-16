@@ -446,9 +446,9 @@ export default class ZnDataTable extends ZincElement {
         }
       }
 
-      if (value['icon']) {
+      if (value['icon'] && value['icon']['src']) {
         content = html`
-          <zn-icon src="${value['icon']}" size="16"></zn-icon> ${content}`;
+          <zn-icon src="${value['icon']['src']}" size="${value['icon']['size'] ?? 16}"></zn-icon> ${content}`;
       }
 
       return content;

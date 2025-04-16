@@ -34,6 +34,7 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
   @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
+  @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer: boolean = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -50,6 +51,7 @@ export default class ZnSp extends ZincElement {
         'sp--flush': this.flush,
         'sp--flush-y': this.flushY,
         'sp--flush-x': this.flushX,
+        'width-container': this.widthContainer,
       })}">
         <slot></slot>
       </div>`;

@@ -86,10 +86,7 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <ul class="${classMap({
-        'navbar': true,
-        'width-container': !this.fullWidth,
-      })}">
+      <ul class="${classMap({'navbar': true})}">
         ${this._preItems}
         ${this.navigation.map((item: any) => {
           let content = html`${item.title}`;

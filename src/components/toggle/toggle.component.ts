@@ -100,7 +100,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   private handleClick() {
     this.checked = !this.checked;
     if (this.triggerSubmit) {
-      this.formControlController.submit(this.input);
+      this.formControlController.submit();
     }
   }
 
@@ -139,7 +139,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   }
 
   getForm(): HTMLFormElement | null {
-    return this.input.form;
+    return this.formControlController.getForm();
   }
 
   reportValidity() {

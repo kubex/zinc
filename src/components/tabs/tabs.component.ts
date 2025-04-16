@@ -1,4 +1,4 @@
-import {classMap} from "lit/directives/class-map.js";
+import type {PropertyValues} from 'lit';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
@@ -7,7 +7,6 @@ import {md5} from "../../utilities/md5";
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
-import type { PropertyValues} from 'lit';
 
 import styles from './tabs.scss';
 
@@ -433,7 +432,7 @@ export default class ZnTabs extends ZincElement {
       <slot name="top"></slot>
       <div id="mid">
         <slot name="left"></slot>
-        <div id="content" class="${classMap({'width-container': !this.fullWidth})}">
+        <div id="content">
           <slot></slot>
         </div>
         <slot name="right"></slot>

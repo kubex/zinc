@@ -153,7 +153,7 @@ export default class ZnHeader extends ZincElement {
           </div>` : null}
 
 
-        <div class="width-container content" part="content">
+        <div class="content" part="content">
           ${hasBreadcrumb ? html`
             <div class="breadcrumb">
               ${breadcrumb}  <!--- Maybe make this into a component -->
@@ -184,7 +184,7 @@ export default class ZnHeader extends ZincElement {
         </div>
 
         ${hasNavigation ? html`
-          <div class="width-container" id="nav-container">
+          <div id="nav-container">
             <slot name="nav"></slot>
           </div>` : null}
 

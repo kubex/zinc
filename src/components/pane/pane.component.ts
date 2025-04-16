@@ -42,9 +42,7 @@ export default class ZnPane extends ZincElement {
     return html`
       ${this._header}
       <div class="pane__content">
-        <div class="width-container">
-          <slot></slot>
-        </div>
+        <slot></slot>
       </div>`;
   }
 }

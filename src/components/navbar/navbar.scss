@@ -2,18 +2,13 @@
 
 :host {
   display: block;
-  --zn-navbar-padding-top: var(--zn-spacing-small);
-  --zn-navbar-padding-left: 0;
-  --zn-navbar-padding-right: 0;
 }
 
 .navbar {
-  padding-left: var(--zn-navbar-padding-left);
-  padding-right: var(--zn-navbar-padding-right);
+  margin: 0 var(--zn-spacing-small);
 }
 
 ul {
-
   li {
     padding-top: 0;
     font-size: var(--zn-font-size-medium);
@@ -29,6 +24,7 @@ ul {
 :host([stacked]) {
   width: unset;
   height: 100%;
+  margin: 0 0;
 
   ul {
     padding: 0;
@@ -216,6 +212,7 @@ button[popovertarget] {
 }
 
 :host([highlight]) {
+  margin: 0 0;
   border-bottom: 1px solid rgb(var(--zn-border-color));
 
   &:host([dropdown]) li {

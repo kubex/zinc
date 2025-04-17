@@ -13,7 +13,7 @@ layout: component
 
 <zn-tile caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
   <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>
-  <div slot="actions">Action</div>
+  <div slot="actions"><zn-button href="#">Action</zn-button></div>
 </zn-tile>
 ```
 

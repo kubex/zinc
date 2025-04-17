@@ -133,7 +133,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     }
   }
 
-  private handleClick() {
+  handleClick = () => {
     if (this.disabled) {
       return;
     }

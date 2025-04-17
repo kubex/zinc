@@ -572,7 +572,7 @@ declare module "components/button/button.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
-        private handleClick;
+        handleClick: () => void;
         private _isLink;
         private _isButton;
         protected render(): unknown;

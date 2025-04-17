@@ -3,6 +3,7 @@ meta:
   title: Sp
   description:
 layout: component
+fullWidth: true
 ---
 
 ```html:preview
@@ -14,16 +15,19 @@ layout: component
 </zn-sp>
 ```
 
-@property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
-@property({attribute: 'row', type: Boolean, reflect: true}) row: boolean = false;
-@property({attribute: 'grow', type: Boolean, reflect: true}) grow: boolean = false;
-@property({attribute: 'pad-x', type: Boolean, reflect: true}) padX: boolean = false;
-@property({attribute: 'pad-y', type: Boolean, reflect: true}) padY: boolean = false;
-@property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
-@property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
-@property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
-
 ## Examples
+
+### Restricted Width
+
+```html:preview
+
+<zn-sp width-container>
+  <p>Hello Wsorld</p>
+  <p>Hello World</p>
+  <p>Hello World</p>
+  <p>Hello World</p>
+</zn-sp>
+  ```
 
 ### Divided
 

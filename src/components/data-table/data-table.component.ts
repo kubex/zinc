@@ -55,6 +55,7 @@ export default class ZnDataTable extends ZincElement {
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
+  @property({attribute: 'data', type: Object, reflect: true}) data: any;
   @property({attribute: 'sort-column'}) sortColumn: string = 'id';
   @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
   @property({attribute: 'filter'}) filter: string = '';
@@ -133,15 +134,42 @@ export default class ZnDataTable extends ZincElement {
     args: () => [this.dataUri, this._uacTask.value]
   });
 
+  private getData() {
+    if (this.data === null || this.data === undefined) {
+      if (this.childNodes.length > 0 && this.childNodes[0].nodeType === 3) {
+        // merge all nodes into one
+        const nodes = this.childNodes;
+        let text = '';
+        for (const node of nodes) {
+          text += node.textContent;
+        }
+
+        // remove all \n
+        text = text.replace(/\n/g, '');
+
+        try {
+          return JSON.parse(text) as TableData;
+        } catch (e) { /* empty */
+          console.error('Error parsing JSON', e);
+        }
+      }
+    }
+
+    return this.data as TableData;
+  }
+
   render() {
-    const tableBody = this._dataTask.render({
-      pending: () => html`
-        <div>Loading...</div>`,
-      complete: (data) => html`
-        <div>${this.renderTable(data as TableData)}</div>`,
-      error: (error) => html`
-        <div>Error: ${error}</div>`
-    });
+    const tableBody = this.dataUri ?
+      this._dataTask.render({
+        pending: () => html`
+          <div>Loading...</div>`,
+        complete: (data) => html`
+          <div>${this.renderTable(data as TableData)}</div>`,
+        error: (error) => html`
+          <div>Error: ${error}</div>`
+      }) :
+      html`
+        <div>${this.renderTable(this.getData())}</div>`;
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -308,16 +336,19 @@ export default class ZnDataTable extends ZincElement {
         </zn-button>`);
 
       if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {
-        actions.push(html`<slot name="${ActionSlots.delete.valueOf()}"></slot>`);
+        actions.push(html`
+          <slot name="${ActionSlots.delete.valueOf()}"></slot>`);
       }
 
       if (this.hasSlotController.test(ActionSlots.modify.valueOf())) {
-        actions.push(html`<slot name="${ActionSlots.modify.valueOf()}"></slot>`);
+        actions.push(html`
+          <slot name="${ActionSlots.modify.valueOf()}"></slot>`);
       }
     }
 
     if (this.hasSlotController.test(ActionSlots.create.valueOf())) {
-      actions.push(html`<slot name="${ActionSlots.create.valueOf()}"></slot>`);
+      actions.push(html`
+        <slot name="${ActionSlots.create.valueOf()}"></slot>`);
     }
 
     return actions;

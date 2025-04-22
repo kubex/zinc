@@ -135,6 +135,8 @@ export default class ZnDataTable extends ZincElement {
             return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1;
           });
 
+          this.selectRow();
+
           const start = (this.page - 1) * this.itemsPerPage;
           const end = start + this.itemsPerPage;
           localData = localData.slice(start, end);

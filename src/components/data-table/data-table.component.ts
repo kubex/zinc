@@ -479,6 +479,11 @@ export default class ZnDataTable extends ZincElement {
           <zn-chip type="${type}">${content}</zn-chip>`;
       }
 
+      if (value['tag'] === 'code') {
+        content = html`
+          <code>${content}</code>`;
+      }
+
       if (value['url']) {
         if (value['target']) {
           content = html`

@@ -9,6 +9,18 @@ layout: component
 <zn-collapsible caption="This is the caption" label="label">
   Boo <zn-icon src="android"></zn-icon>
 </zn-collapsible>
+
+<zn-collapsible caption="This is the caption" label="label">
+  Boo <zn-icon src="android"></zn-icon>
+</zn-collapsible>
+
+<zn-collapsible caption="This is the caption" label="label">
+  Boo <zn-icon src="android"></zn-icon>
+</zn-collapsible>
+
+<zn-collapsible caption="This is the caption" label="label">
+  Boo <zn-icon src="android"></zn-icon>
+</zn-collapsible>
 ```
 
 ## Examples

@@ -12,14 +12,13 @@ import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
-const DEFAULT_TOTAL = 100;
 const DEFAULT_TOTAL_PAGES = 10;
 
 interface TableData {
-  page: typeof DEFAULT_PAGE;
-  per_page: typeof DEFAULT_PER_PAGE;
-  total: typeof DEFAULT_TOTAL;
-  total_pages: typeof DEFAULT_TOTAL_PAGES;
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
   data: any[];
 }
 
@@ -119,6 +118,35 @@ export default class ZnDataTable extends ZincElement {
       }
       url += '?' + params.toString();
 
+      if (!this.dataUri) {
+        return new Promise<TableData>((resolve) => {
+          if (!this.data) throw new Error('No data provided, please provide data or dataUri');
+          let localData = this.data.data as any[];
+          const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
+
+          // TODO: Add hide sort columns for unsortable columns e.g. RAW
+          localData.sort((a, b) => {
+            if (this.sortDirection === 'asc') {
+              return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1;
+            }
+
+            return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1;
+          });
+
+          const start = (this.page - 1) * this.itemsPerPage;
+          const end = start + this.itemsPerPage;
+          localData = localData.slice(start, end);
+
+          resolve({
+            page: this.page,
+            per_page: this.itemsPerPage,
+            total: this.totalPages,
+            total_pages: totalPages,
+            data: localData,
+          } satisfies TableData);
+        });
+      }
+
       const response = await fetch(url, {
         signal,
         credentials: 'same-origin',
@@ -134,42 +162,16 @@ export default class ZnDataTable extends ZincElement {
     args: () => [this.dataUri, this._uacTask.value]
   });
 
-  private getData() {
-    if (this.data === null || this.data === undefined) {
-      if (this.childNodes.length > 0 && this.childNodes[0].nodeType === 3) {
-        // merge all nodes into one
-        const nodes = this.childNodes;
-        let text = '';
-        for (const node of nodes) {
-          text += node.textContent;
-        }
-
-        // remove all \n
-        text = text.replace(/\n/g, '');
-
-        try {
-          return JSON.parse(text) as TableData;
-        } catch (e) { /* empty */
-          console.error('Error parsing JSON', e);
-        }
-      }
-    }
-
-    return this.data as TableData;
-  }
-
   render() {
-    const tableBody = this.dataUri ?
+    const tableBody =
       this._dataTask.render({
         pending: () => html`
           <div>Loading...</div>`,
         complete: (data) => html`
           <div>${this.renderTable(data as TableData)}</div>`,
         error: (error) => html`
-          <div>Error: ${error}</div>`
-      }) :
-      html`
-        <div>${this.renderTable(this.getData())}</div>`;
+          <div>${error}</div>`
+      });
 
     // Headers do not need to be re-rendered with new data
     return html`

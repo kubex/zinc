@@ -3975,6 +3975,15 @@
             },
             {
               "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "any"
+              },
+              "attribute": "data",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "sortColumn",
               "type": {
                 "text": "string"
@@ -4034,6 +4043,31 @@
               },
               "default": "'{}'",
               "attribute": "hide-headers"
+            },
+            {
+              "kind": "field",
+              "name": "unsortableHeaders",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{}'",
+              "attribute": "unsortable-headers"
+            },
+            {
+              "kind": "field",
+              "name": "hidePagination",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "hide-pagination"
+            },
+            {
+              "kind": "field",
+              "name": "hideCheckboxes",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "hide-checkboxes"
             },
             {
               "kind": "field",
@@ -4122,7 +4156,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri, uac], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); params.append('sort_column', this.sortColumn); params.append('sort_direction', this.sortDirection); if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); const response = await fetch(url, { signal, credentials: 'same-origin', headers: { 'x-requested-with': 'XMLHttpRequest', 'x-kx-uac': uac }, }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this._uacTask.value] })"
+              "default": "new Task(this, { task: async ([dataUri, uac], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); params.append('sort_column', this.sortColumn); params.append('sort_direction', this.sortDirection); if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); if (!this.dataUri) { return new Promise<TableData>((resolve) => { if (!this.data) throw new Error('No data provided, please provide data or dataUri'); let localData = this.data.data as any[]; const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage); localData.sort((a, b) => { if (this.sortDirection === 'asc') { return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1; } return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1; }); this.selectRow(); const start = (this.page - 1) * this.itemsPerPage; const end = start + this.itemsPerPage; localData = localData.slice(start, end); resolve({ page: this.page, per_page: this.itemsPerPage, total: this.totalPages, total_pages: totalPages, data: localData, } satisfies TableData); }); } const response = await fetch(url, { signal, credentials: 'same-origin', headers: { 'x-requested-with': 'XMLHttpRequest', 'x-kx-uac': uac }, }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this._uacTask.value] })"
             },
             {
               "kind": "method",
@@ -4143,6 +4177,10 @@
             {
               "kind": "method",
               "name": "getTableFooter"
+            },
+            {
+              "kind": "method",
+              "name": "getPagination"
             },
             {
               "kind": "method",
@@ -4369,6 +4407,13 @@
               "fieldName": "dataUri"
             },
             {
+              "name": "data",
+              "type": {
+                "text": "any"
+              },
+              "fieldName": "data"
+            },
+            {
               "name": "sort-column",
               "type": {
                 "text": "string"
@@ -4422,6 +4467,28 @@
               },
               "default": "'{}'",
               "fieldName": "hiddenHeaders"
+            },
+            {
+              "name": "unsortable-headers",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{}'",
+              "fieldName": "unsortableHeaders"
+            },
+            {
+              "name": "hide-pagination",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "hidePagination"
+            },
+            {
+              "name": "hide-checkboxes",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "hideCheckboxes"
             },
             {
               "name": "filters",

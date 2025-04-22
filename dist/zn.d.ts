@@ -1620,15 +1620,11 @@ declare module "components/data-table/data-table.component" {
     import ZnButton from "components/button/index";
     import ZnQueryBuilder from "components/query-builder/index";
     import type { ZnSubmitEvent } from "events/zn-submit";
-    const DEFAULT_PAGE = 1;
-    const DEFAULT_PER_PAGE = 10;
-    const DEFAULT_TOTAL = 100;
-    const DEFAULT_TOTAL_PAGES = 10;
     interface TableData {
-        page: typeof DEFAULT_PAGE;
-        per_page: typeof DEFAULT_PER_PAGE;
-        total: typeof DEFAULT_TOTAL;
-        total_pages: typeof DEFAULT_TOTAL_PAGES;
+        page: number;
+        per_page: number;
+        total: number;
+        total_pages: number;
         data: any[];
     }
     export enum ActionSlots {
@@ -1661,6 +1657,7 @@ declare module "components/data-table/data-table.component" {
             'zn-query-builder': typeof ZnQueryBuilder;
         };
         dataUri: string;
+        data: any;
         sortColumn: string;
         sortDirection: string;
         filter: string;
@@ -1668,6 +1665,9 @@ declare module "components/data-table/data-table.component" {
         key: string;
         headers: string;
         hiddenHeaders: string;
+        unsortableHeaders: string;
+        hidePagination: boolean;
+        hideCheckboxes: boolean;
         filters: [];
         private itemsPerPage;
         private page;
@@ -1683,6 +1683,7 @@ declare module "components/data-table/data-table.component" {
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
+        getPagination(): TemplateResult<1>;
         getQueryBuilder(): TemplateResult<1>;
         queryData(event: ZnSubmitEvent): void;
         getActions(): TemplateResult<1>[];

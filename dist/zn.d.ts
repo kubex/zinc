@@ -1507,6 +1507,8 @@ declare module "components/query-builder/query-builder.component" {
         NMatchPhrase = "nmatchphrase",
         Match = "match",
         NMatch = "nmatch",
+        Contains = "contains",
+        DoesNotContain = "doesnotcontain",
         Starts = "starts",
         NStarts = "nstarts",
         Ends = "ends",

@@ -12,14 +12,13 @@ import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
-const DEFAULT_TOTAL = 100;
 const DEFAULT_TOTAL_PAGES = 10;
 
 interface TableData {
-  page: typeof DEFAULT_PAGE;
-  per_page: typeof DEFAULT_PER_PAGE;
-  total: typeof DEFAULT_TOTAL;
-  total_pages: typeof DEFAULT_TOTAL_PAGES;
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
   data: any[];
 }
 
@@ -55,6 +54,7 @@ export default class ZnDataTable extends ZincElement {
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
+  @property({attribute: 'data', type: Object, reflect: true}) data: any;
   @property({attribute: 'sort-column'}) sortColumn: string = 'id';
   @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
   @property({attribute: 'filter'}) filter: string = '';
@@ -64,7 +64,10 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+  @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
+  @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
+  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
 
   // Data Table Properties
@@ -118,6 +121,36 @@ export default class ZnDataTable extends ZincElement {
       }
       url += '?' + params.toString();
 
+      if (!this.dataUri) {
+        return new Promise<TableData>((resolve) => {
+          if (!this.data) throw new Error('No data provided, please provide data or dataUri');
+          let localData = this.data.data as any[];
+          const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
+
+          localData.sort((a, b) => {
+            if (this.sortDirection === 'asc') {
+              return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1;
+            }
+
+            return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1;
+          });
+
+          this.selectRow();
+
+          const start = (this.page - 1) * this.itemsPerPage;
+          const end = start + this.itemsPerPage;
+          localData = localData.slice(start, end);
+
+          resolve({
+            page: this.page,
+            per_page: this.itemsPerPage,
+            total: this.totalPages,
+            total_pages: totalPages,
+            data: localData,
+          } satisfies TableData);
+        });
+      }
+
       const response = await fetch(url, {
         signal,
         credentials: 'same-origin',
@@ -134,14 +167,15 @@ export default class ZnDataTable extends ZincElement {
   });
 
   render() {
-    const tableBody = this._dataTask.render({
-      pending: () => html`
-        <div>Loading...</div>`,
-      complete: (data) => html`
-        <div>${this.renderTable(data as TableData)}</div>`,
-      error: (error) => html`
-        <div>Error: ${error}</div>`
-    });
+    const tableBody =
+      this._dataTask.render({
+        pending: () => html`
+          <div>Loading...</div>`,
+        complete: (data) => html`
+          <div>${this.renderTable(data as TableData)}</div>`,
+        error: (error) => html`
+          <div>${error}</div>`
+      });
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -170,18 +204,20 @@ export default class ZnDataTable extends ZincElement {
       <table class=${classMap({'table': true})}>
         <thead>
         <tr>
-          <th>
-            <div><input type="checkbox" @change=${this.selectAll}></div>
-          </th>
+          ${this.hideCheckboxes ? html`` : html`
+            <th>
+              <div><input type="checkbox" @change=${this.selectAll}></div>
+            </th>`}
           ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
         </tr>
         </thead>
         <tbody>
         ${this._filteredRows.map((row: any) => html`
           <tr>
-            <td>
-              <div><input type="checkbox" @change=${this.selectRow}></div>
-            </td>
+            ${this.hideCheckboxes ? html`` : html`
+              <td>
+                <div><input type="checkbox" @change=${this.selectRow}></div>
+              </td>`}
             ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
           </tr>`)}
         </tbody>
@@ -206,8 +242,6 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getTableFooter() {
-    const optionsRowsPerPage = [10, 20, 30, 40, 50];
-
     return html`
       <div class="table__footer">
         <div class="table__footer__left">
@@ -215,53 +249,61 @@ export default class ZnDataTable extends ZincElement {
         </div>
 
         <div class="table__footer__right">
-
-          <div class="table__footer__rows-per-page">
-            <p>Rows per page</p>
-            <select name="rowPerPage" @change=${this.updateRowsPerPage}>
-              ${optionsRowsPerPage.map((option) => html`
-                <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
-              )}
-            </select>
-          </div>
-
-          <div class="table__footer__pagination-count">
-            <p>Page ${this.page} of ${this.totalPages}</p>
-          </div>
-
-          <div class="table__footer__pagination-buttons">
-            <zn-button @click=${this.goToFirstPage}
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_left"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToPreviousPage}
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_left"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToNextPage}
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_right"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToLastPage}
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_right"
-                       outline>
-            </zn-button>
-          </div>
-
+          ${this.getPagination()}
         </div>
       </div>`;
+  }
+
+  getPagination() {
+    if (this.hidePagination) return html``;
+
+    const optionsRowsPerPage = [10, 20, 30, 40, 50];
+
+    return html`
+      <div class="table__footer__rows-per-page">
+        <p>Rows per page</p>
+        <select name="rowPerPage" @change=${this.updateRowsPerPage}>
+          ${optionsRowsPerPage.map((option) => html`
+            <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
+          )}
+        </select>
+      </div>
+
+      <div class="table__footer__pagination-count">
+        <p>Page ${this.page} of ${this.totalPages}</p>
+      </div>
+
+      <div class="table__footer__pagination-buttons">
+        <zn-button @click=${this.goToFirstPage}
+                   ?disabled=${this.page === 1}
+                   icon-size="16"
+                   size="small"
+                   icon="keyboard_double_arrow_left"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToPreviousPage}
+                   ?disabled=${this.page === 1}
+                   icon-size="16"
+                   size="small"
+                   icon="chevron_left"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToNextPage}
+                   ?disabled=${this.page === this.totalPages}
+                   icon-size="16"
+                   size="small"
+                   icon="chevron_right"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToLastPage}
+                   ?disabled=${this.page === this.totalPages}
+                   icon-size="16"
+                   size="small"
+                   icon="keyboard_double_arrow_right"
+                   outline>
+        </zn-button>
+      </div>
+    `
   }
 
   getQueryBuilder() {
@@ -308,16 +350,19 @@ export default class ZnDataTable extends ZincElement {
         </zn-button>`);
 
       if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {
-        actions.push(html`<slot name="${ActionSlots.delete.valueOf()}"></slot>`);
+        actions.push(html`
+          <slot name="${ActionSlots.delete.valueOf()}"></slot>`);
       }
 
       if (this.hasSlotController.test(ActionSlots.modify.valueOf())) {
-        actions.push(html`<slot name="${ActionSlots.modify.valueOf()}"></slot>`);
+        actions.push(html`
+          <slot name="${ActionSlots.modify.valueOf()}"></slot>`);
       }
     }
 
     if (this.hasSlotController.test(ActionSlots.create.valueOf())) {
-      actions.push(html`<slot name="${ActionSlots.create.valueOf()}"></slot>`);
+      actions.push(html`
+        <slot name="${ActionSlots.create.valueOf()}"></slot>`);
     }
 
     return actions;
@@ -436,6 +481,11 @@ export default class ZnDataTable extends ZincElement {
           <zn-chip type="${type}">${content}</zn-chip>`;
       }
 
+      if (value['tag'] === 'code') {
+        content = html`
+          <code>${content}</code>`;
+      }
+
       if (value['url']) {
         if (value['target']) {
           content = html`
@@ -476,6 +526,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(key: any) {
+    const sortable = !Object.values(this.unsortableHeaders).includes(key);
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
     return html`
@@ -485,10 +536,13 @@ export default class ZnDataTable extends ZincElement {
           'table__head--wide': key === this.wideColumn,
           'table__head--last': key === headerKeys[headerKeys.length - 1]
         })}
-        @click="${this.updateSort(key)}">
+        @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
           ${this.headers[key]}
-          <div class="table__head__sort">${this.getTableSortIcon(key)}</div>
+          ${sortable ?
+            html`
+              <div class="table__head__sort">${this.getTableSortIcon(key)}</div>` :
+            html``}
         </div>
       </th>`;
   }

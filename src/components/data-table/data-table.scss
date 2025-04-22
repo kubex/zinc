@@ -88,13 +88,22 @@ table {
       align-items: center;
       width: 100%;
       gap: var(--zn-spacing-x-small);
+
+      > code {
+        font-size: 10px;
+        display: block;
+        max-width: 420px;
+        float: right;
+        max-height: 100px;
+        white-space: pre;
+        overflow-x: scroll;
+      }
     }
 
-    // assume checkbox is the first column
-    &:first-of-type > div {
+    &:first-of-type > div:has(input[type="checkbox"]) {
       justify-content: center;
 
-      input {
+      input[type="checkbox"] {
         margin: 0;
       }
     }
@@ -142,7 +151,7 @@ table {
     gap: var(--zn-spacing-small);
 
     &__actions,
-    &__query-builder{
+    &__query-builder {
       display: flex;
       flex-direction: row;
       align-items: baseline;

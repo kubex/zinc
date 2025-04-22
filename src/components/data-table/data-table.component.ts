@@ -64,6 +64,7 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+  @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
   @property() filters: [] = [];
@@ -125,7 +126,6 @@ export default class ZnDataTable extends ZincElement {
           let localData = this.data.data as any[];
           const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
 
-          // TODO: Add hide sort columns for unsortable columns e.g. RAW
           localData.sort((a, b) => {
             if (this.sortDirection === 'asc') {
               return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1;
@@ -516,6 +516,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(key: any) {
+    const sortable = !Object.values(this.unsortableHeaders).includes(key);
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
     return html`
@@ -525,10 +526,13 @@ export default class ZnDataTable extends ZincElement {
           'table__head--wide': key === this.wideColumn,
           'table__head--last': key === headerKeys[headerKeys.length - 1]
         })}
-        @click="${this.updateSort(key)}">
+        @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
           ${this.headers[key]}
-          <div class="table__head__sort">${this.getTableSortIcon(key)}</div>
+          ${sortable ?
+            html`
+              <div class="table__head__sort">${this.getTableSortIcon(key)}</div>` :
+            html``}
         </div>
       </th>`;
   }

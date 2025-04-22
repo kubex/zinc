@@ -90,11 +90,10 @@ table {
       gap: var(--zn-spacing-x-small);
     }
 
-    // assume checkbox is the first column
-    &:first-of-type > div {
+    &:first-of-type > div:has(input[type="checkbox"]) {
       justify-content: center;
 
-      input {
+      input[type="checkbox"] {
         margin: 0;
       }
     }

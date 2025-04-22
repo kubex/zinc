@@ -67,6 +67,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
+  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
 
   // Data Table Properties
@@ -201,18 +202,20 @@ export default class ZnDataTable extends ZincElement {
       <table class=${classMap({'table': true})}>
         <thead>
         <tr>
-          <th>
-            <div><input type="checkbox" @change=${this.selectAll}></div>
-          </th>
+          ${this.hideCheckboxes ? html`` : html`
+            <th>
+              <div><input type="checkbox" @change=${this.selectAll}></div>
+            </th>`}
           ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
         </tr>
         </thead>
         <tbody>
         ${this._filteredRows.map((row: any) => html`
           <tr>
-            <td>
-              <div><input type="checkbox" @change=${this.selectRow}></div>
-            </td>
+            ${this.hideCheckboxes ? html`` : html`
+              <td>
+                <div><input type="checkbox" @change=${this.selectRow}></div>
+              </td>`}
             ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
           </tr>`)}
         </tbody>

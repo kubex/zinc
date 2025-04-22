@@ -65,6 +65,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
 
+  @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
   @property() filters: [] = [];
 
   // Data Table Properties
@@ -236,8 +237,6 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getTableFooter() {
-    const optionsRowsPerPage = [10, 20, 30, 40, 50];
-
     return html`
       <div class="table__footer">
         <div class="table__footer__left">
@@ -245,53 +244,61 @@ export default class ZnDataTable extends ZincElement {
         </div>
 
         <div class="table__footer__right">
-
-          <div class="table__footer__rows-per-page">
-            <p>Rows per page</p>
-            <select name="rowPerPage" @change=${this.updateRowsPerPage}>
-              ${optionsRowsPerPage.map((option) => html`
-                <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
-              )}
-            </select>
-          </div>
-
-          <div class="table__footer__pagination-count">
-            <p>Page ${this.page} of ${this.totalPages}</p>
-          </div>
-
-          <div class="table__footer__pagination-buttons">
-            <zn-button @click=${this.goToFirstPage}
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_left"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToPreviousPage}
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_left"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToNextPage}
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_right"
-                       outline>
-            </zn-button>
-            <zn-button @click=${this.goToLastPage}
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_right"
-                       outline>
-            </zn-button>
-          </div>
-
+          ${this.getPagination()}
         </div>
       </div>`;
+  }
+
+  getPagination() {
+    if (this.hidePagination) return html``;
+
+    const optionsRowsPerPage = [10, 20, 30, 40, 50];
+
+    return html`
+      <div class="table__footer__rows-per-page">
+        <p>Rows per page</p>
+        <select name="rowPerPage" @change=${this.updateRowsPerPage}>
+          ${optionsRowsPerPage.map((option) => html`
+            <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
+          )}
+        </select>
+      </div>
+
+      <div class="table__footer__pagination-count">
+        <p>Page ${this.page} of ${this.totalPages}</p>
+      </div>
+
+      <div class="table__footer__pagination-buttons">
+        <zn-button @click=${this.goToFirstPage}
+                   ?disabled=${this.page === 1}
+                   icon-size="16"
+                   size="small"
+                   icon="keyboard_double_arrow_left"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToPreviousPage}
+                   ?disabled=${this.page === 1}
+                   icon-size="16"
+                   size="small"
+                   icon="chevron_left"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToNextPage}
+                   ?disabled=${this.page === this.totalPages}
+                   icon-size="16"
+                   size="small"
+                   icon="chevron_right"
+                   outline>
+        </zn-button>
+        <zn-button @click=${this.goToLastPage}
+                   ?disabled=${this.page === this.totalPages}
+                   icon-size="16"
+                   size="small"
+                   icon="keyboard_double_arrow_right"
+                   outline>
+        </zn-button>
+      </div>
+    `
   }
 
   getQueryBuilder() {

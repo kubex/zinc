@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
+import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -71,6 +72,8 @@ export default class ZnDataTable extends ZincElement {
   @property() filters: [] = [];
 
   // Data Table Properties
+  private resizeObserver: ResizeObserver;
+
   private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
   private totalPages: number;
@@ -80,6 +83,7 @@ export default class ZnDataTable extends ZincElement {
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
+  private tableContainer: Element | undefined;
 
   private hasSlotController = new HasSlotController(
     this,
@@ -179,9 +183,27 @@ export default class ZnDataTable extends ZincElement {
 
     // Headers do not need to be re-rendered with new data
     return html`
-      ${this.getTableHeader()}
-      ${tableBody}
+      <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
+        ${this.getTableHeader()}
+        ${tableBody}
+      </div>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.tableContainer) {
+        this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
   renderTable(data: TableData) {
@@ -373,6 +395,10 @@ export default class ZnDataTable extends ZincElement {
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
     this._dataTask.run().then(r => r);
+
+    if (this.resizeObserver) {
+      this.resizeObserver.observe(this);
+    }
   }
 
   goToFirstPage() {

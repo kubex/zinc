@@ -274,28 +274,28 @@ export default class ZnDataTable extends ZincElement {
       </div>
 
       <div class="table__footer__pagination-buttons">
-        <zn-button @click=${this.goToFirstPage}
+        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled=${this.page === 1}
                    icon-size="16"
                    size="small"
                    icon="keyboard_double_arrow_left"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToPreviousPage}
+        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                    ?disabled=${this.page === 1}
                    icon-size="16"
                    size="small"
                    icon="chevron_left"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToNextPage}
+        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                    ?disabled=${this.page === this.totalPages}
                    icon-size="16"
                    size="small"
                    icon="chevron_right"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToLastPage}
+        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled=${this.page === this.totalPages}
                    icon-size="16"
                    size="small"

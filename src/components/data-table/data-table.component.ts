@@ -213,10 +213,10 @@ export default class ZnDataTable extends ZincElement {
         </thead>
         <tbody>
         ${this._filteredRows.map((row: any) => html`
-          <tr>
+          <tr @click="${this.selectRow}">
             ${this.hideCheckboxes ? html`` : html`
               <td>
-                <div><input type="checkbox" @change=${this.selectRow}></div>
+                <div><input type="checkbox"></div>
               </td>`}
             ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
           </tr>`)}
@@ -430,7 +430,20 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
-  selectRow() {
+  selectRow(event: Event | undefined) {
+    const el = event?.target as HTMLElement;
+    const row = el.closest('tr');
+
+    if (row) {
+      const checkbox: HTMLInputElement | null = row.querySelector('input[type="checkbox"]');
+
+      row.classList.toggle('highlight');
+
+      if (checkbox) {
+        checkbox.checked = row.classList.contains('highlight');
+      }
+    }
+
     this.selectedRows = this._rows.filter((_, index) => {
       return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement)?.checked;
     });

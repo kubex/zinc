@@ -25,6 +25,10 @@ table {
     }
   }
 
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+
   tbody tr td {
     border-top: 1px solid rgb(var(--zn-border-color)) !important;
   }
@@ -33,7 +37,11 @@ table {
     border-top: 0 !important;
   }
 
-  tbody tr:nth-of-type(even) {
+  tbody tr.highlight {
+    background-color: rgba(var(--zn-primary), 0.1);
+  }
+
+  tbody tr:nth-of-type(even):not(.highlight) {
     background-color: rgba(var(--zn-body));
   }
 

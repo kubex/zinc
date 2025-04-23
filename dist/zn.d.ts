@@ -198,6 +198,7 @@ declare module "internal/slot" {
         hostConnected(): void;
         hostDisconnected(): void;
         getSlot(slotName: string): HTMLElement;
+        getSlots(slotName: string): NodeListOf<HTMLElement>;
         private handleSlotChange;
     }
     /**

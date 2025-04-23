@@ -617,11 +617,11 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private sortData(a: string | number | object, b: string | number | object) {
-    if (typeof a === 'object') {
+    if (typeof a === 'object' && 'value' in a) {
       a = a.value as string | number;
     }
 
-    if (typeof b === 'object') {
+    if (typeof b === 'object' && 'value' in b) {
       b = b.value as string | number;
     }
 

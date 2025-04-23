@@ -639,8 +639,8 @@ declare module "internal/storage" {
 }
 declare module "components/collapsible/collapsible.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
     import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/collapsible
@@ -668,6 +668,7 @@ declare module "components/collapsible/collapsible.component" {
         localStorage: boolean;
         storeKey: string;
         storeTtl: number;
+        flush: boolean;
         protected _store: Store;
         connectedCallback(): void;
         handleCollapse: (e: MouseEvent) => void;

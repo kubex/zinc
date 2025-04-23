@@ -418,12 +418,14 @@ export default class ZnDataTable extends ZincElement {
   private updateActionKeys(slotName: string) {
     if (this.hasSlotController.test(slotName)) {
       // we need to look into the slot controller for the keys input
-      const slot = this.hasSlotController.getSlot(slotName);
-      if (slot) {
-        const input = slot.querySelector('input[name="keys"]');
-        if (input && input instanceof HTMLInputElement) {
-          input.value = this.getSelectedKeys().join(',');
-        }
+      const slots = this.hasSlotController.getSlots(slotName);
+      if (slots) {
+        slots.forEach((slot) => {
+          const input = slot.querySelector('input[name="keys"]');
+          if (input && input instanceof HTMLInputElement) {
+            input.value = this.getSelectedKeys().join(',');
+          }
+        });
       }
     }
   }

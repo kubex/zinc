@@ -430,7 +430,7 @@ export default class ZnDataTable extends ZincElement {
 
   selectRow() {
     this.selectedRows = this._rows.filter((_, index) => {
-      return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement).checked;
+      return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement)?.checked;
     });
 
     this.numberOfRowsSelected = this.selectedRows.length;

@@ -55,6 +55,10 @@ export class HasSlotController implements ReactiveController {
     return this.host.querySelector(`:scope > [slot="${slotName}"]`) as HTMLElement;
   }
 
+  getSlots(slotName: string) {
+    return this.host.querySelectorAll(`:scope > [slot="${slotName}"]`) as NodeListOf<HTMLElement>;
+  }
+
   private handleSlotChange = (event: Event) => {
     const slot = event.target as HTMLSlotElement;
 

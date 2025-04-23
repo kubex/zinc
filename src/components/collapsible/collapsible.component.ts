@@ -1,7 +1,8 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
+import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './collapsible.scss';
 
@@ -41,6 +42,8 @@ export default class ZnCollapsible extends ZincElement {
 
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
+  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+
   protected _store: Store;
 
   connectedCallback() {
@@ -68,7 +71,9 @@ export default class ZnCollapsible extends ZincElement {
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
         <slot name="header" class="header" @click="${this.handleCollapse}">
           <div>
-            <p class="caption"><slot name="caption">${this.caption}</slot></p>
+            <p class="caption">
+              <slot name="caption">${this.caption}</slot>
+            </p>
             <p class="description">${this.description}</p>
           </div>
           <div class="header__right">
@@ -76,7 +81,10 @@ export default class ZnCollapsible extends ZincElement {
             <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>
           </div>
         </slot>
-        <div class="content">
+        <div class="${classMap({
+          'content': true,
+          'content--flush': this.flush,
+        })}">
           <slot></slot>
         </div>
       </div>`;

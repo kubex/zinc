@@ -132,14 +132,8 @@ export default class ZnDataTable extends ZincElement {
           const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
 
           localData.sort((a, b) => {
-            if (this.sortDirection === 'asc') {
-              return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1;
-            }
-
-            return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1;
+            return this.sortData(a[this.sortColumn], b[this.sortColumn]);
           });
-
-          this.selectRow();
 
           const start = (this.page - 1) * this.itemsPerPage;
           const end = start + this.itemsPerPage;
@@ -594,14 +588,12 @@ export default class ZnDataTable extends ZincElement {
       return keys.map((header: any) => row[header]);
     });
 
-    // sort the rows by the key
-    rows = rows.sort((a, b) => {
-      if (this.sortDirection === 'asc') {
-        return a[keys.indexOf(this.sortColumn)] > b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-      }
-
-      return a[keys.indexOf(this.sortColumn)] < b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-    });
+    if (this.dataUri) {
+      // sort the rows by the key
+      rows = rows.sort((a, b) => {
+        return this.sortData(a[keys.indexOf(this.sortColumn)], b[keys.indexOf(this.sortColumn)]);
+      });
+    }
 
     return rows;
   }
@@ -622,5 +614,29 @@ export default class ZnDataTable extends ZincElement {
 
   private updateDeleteKeys() {
     this.updateActionKeys('delete-action');
+  }
+
+  private sortData(a: string | number | object, b: string | number | object) {
+    if (typeof a === 'object') {
+      a = a.value as string | number;
+    }
+
+    if (typeof b === 'object') {
+      b = b.value as string | number;
+    }
+
+    if (typeof a === 'string') {
+      a = a.toLowerCase();
+    }
+
+    if (typeof b === 'string') {
+      b = b.toLowerCase();
+    }
+
+    if (this.sortDirection === 'asc') {
+      return a > b ? 1 : -1;
+    }
+
+    return a < b ? 1 : -1;
   }
 }

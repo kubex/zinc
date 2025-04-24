@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
@@ -30,6 +30,7 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
+  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
 
@@ -86,7 +87,10 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <ul class="${classMap({'navbar': true})}">
+      <ul class="${classMap({
+        'navbar': true,
+        'navbar--flush': this.flush
+      })}">
         ${this._preItems}
         ${this.navigation.map((item: any) => {
           let content = html`${item.title}`;

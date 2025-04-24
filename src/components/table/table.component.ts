@@ -183,6 +183,7 @@ export default class ZnTable extends ZincElement {
       const id: string = row.hasOwnProperty('id') ? row['id'] : '';
       const color = row.hasOwnProperty('color') ? row['color'] : '';
       const nested: boolean = row.hasOwnProperty('nested') ? row['nested'] === 'true' : false;
+      const dropdownPlacement: string = row.hasOwnProperty('actions-placement') ? row['actions-placement'] as string : 'bottom-start';
 
       this.hasActions = this.hasActions || (actions && actions.length > 0);
 
@@ -205,7 +206,7 @@ export default class ZnTable extends ZincElement {
       if (actions && actions.length > 0) {
         actionsHtml = html`
           <div class="actions">
-            <zn-dropdown>
+            <zn-dropdown placement="${dropdownPlacement}">
               <zn-menu actions="${JSON.stringify(actions)}"></zn-menu>
               <button slot="trigger">
                 <zn-icon src="more_vert"></zn-icon>

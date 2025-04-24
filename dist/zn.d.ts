@@ -2566,7 +2566,7 @@ declare module "events/zn-menu-select" {
     }
 }
 declare module "components/navbar/navbar.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -2591,6 +2591,7 @@ declare module "components/navbar/navbar.component" {
         fullWidth: boolean;
         iconBar: boolean;
         hideOne: boolean;
+        flush: boolean;
         stacked: boolean;
         dropdown: never[];
         private _preItems;

@@ -1,11 +1,11 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
-import {ifDefined} from "lit/directives/if-defined.js";
 
 /**
  * @summary Short summary of the component's intended use.

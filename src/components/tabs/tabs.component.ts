@@ -425,19 +425,21 @@ export default class ZnTabs extends ZincElement {
     }
 
     return html`
-      ${hasHeader ? html`
-        <zn-header caption="${ifDefined(this.caption)}" description="${ifDefined(this.description)}">
-          <slot name="actions" slot="actions"></slot>
-        </zn-header>` : null}
-      <slot name="top"></slot>
-      <div id="mid">
-        <slot name="left"></slot>
-        <div id="content">
-          <slot></slot>
+      <div class="tabs">
+        ${hasHeader ? html`
+          <zn-header caption="${ifDefined(this.caption)}" description="${ifDefined(this.description)}">
+            <slot name="actions" slot="actions"></slot>
+          </zn-header>` : null}
+        <slot name="top"></slot>
+        <div id="mid">
+          <slot name="left"></slot>
+          <div id="content">
+            <slot></slot>
+          </div>
+          <slot name="right"></slot>
         </div>
-        <slot name="right"></slot>
+        <slot name="bottom"></slot>
       </div>
-      <slot name="bottom"></slot>
     `;
   }
 }

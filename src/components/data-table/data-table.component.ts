@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
+import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
@@ -71,6 +72,8 @@ export default class ZnDataTable extends ZincElement {
   @property() filters: [] = [];
 
   // Data Table Properties
+  private resizeObserver: ResizeObserver;
+
   private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
   private totalPages: number;
@@ -80,6 +83,7 @@ export default class ZnDataTable extends ZincElement {
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
+  private tableContainer: Element | undefined;
 
   private hasSlotController = new HasSlotController(
     this,
@@ -128,14 +132,8 @@ export default class ZnDataTable extends ZincElement {
           const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
 
           localData.sort((a, b) => {
-            if (this.sortDirection === 'asc') {
-              return a[this.sortColumn] > b[this.sortColumn] ? 1 : -1;
-            }
-
-            return a[this.sortColumn] < b[this.sortColumn] ? 1 : -1;
+            return this.sortData(a[this.sortColumn], b[this.sortColumn]);
           });
-
-          this.selectRow();
 
           const start = (this.page - 1) * this.itemsPerPage;
           const end = start + this.itemsPerPage;
@@ -179,9 +177,27 @@ export default class ZnDataTable extends ZincElement {
 
     // Headers do not need to be re-rendered with new data
     return html`
-      ${this.getTableHeader()}
-      ${tableBody}
+      <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
+        ${this.getTableHeader()}
+        ${tableBody}
+      </div>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.tableContainer) {
+        this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
   renderTable(data: TableData) {
@@ -274,28 +290,28 @@ export default class ZnDataTable extends ZincElement {
       </div>
 
       <div class="table__footer__pagination-buttons">
-        <zn-button @click=${this.goToFirstPage}
+        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                    ?disabled=${this.page === 1}
                    icon-size="16"
                    size="small"
                    icon="keyboard_double_arrow_left"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToPreviousPage}
+        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                    ?disabled=${this.page === 1}
                    icon-size="16"
                    size="small"
                    icon="chevron_left"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToNextPage}
+        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                    ?disabled=${this.page === this.totalPages}
                    icon-size="16"
                    size="small"
                    icon="chevron_right"
                    outline>
         </zn-button>
-        <zn-button @click=${this.goToLastPage}
+        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                    ?disabled=${this.page === this.totalPages}
                    icon-size="16"
                    size="small"
@@ -373,6 +389,10 @@ export default class ZnDataTable extends ZincElement {
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
     this._dataTask.run().then(r => r);
+
+    if (this.resizeObserver) {
+      this.resizeObserver.observe(this);
+    }
   }
 
   goToFirstPage() {
@@ -568,14 +588,12 @@ export default class ZnDataTable extends ZincElement {
       return keys.map((header: any) => row[header]);
     });
 
-    // sort the rows by the key
-    rows = rows.sort((a, b) => {
-      if (this.sortDirection === 'asc') {
-        return a[keys.indexOf(this.sortColumn)] > b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-      }
-
-      return a[keys.indexOf(this.sortColumn)] < b[keys.indexOf(this.sortColumn)] ? 1 : -1;
-    });
+    if (this.dataUri) {
+      // sort the rows by the key
+      rows = rows.sort((a, b) => {
+        return this.sortData(a[keys.indexOf(this.sortColumn)], b[keys.indexOf(this.sortColumn)]);
+      });
+    }
 
     return rows;
   }
@@ -596,5 +614,29 @@ export default class ZnDataTable extends ZincElement {
 
   private updateDeleteKeys() {
     this.updateActionKeys('delete-action');
+  }
+
+  private sortData(a: string | number | object, b: string | number | object) {
+    if (typeof a === 'object' && 'value' in a) {
+      a = a.value as string | number;
+    }
+
+    if (typeof b === 'object' && 'value' in b) {
+      b = b.value as string | number;
+    }
+
+    if (typeof a === 'string') {
+      a = a.toLowerCase();
+    }
+
+    if (typeof b === 'string') {
+      b = b.toLowerCase();
+    }
+
+    if (this.sortDirection === 'asc') {
+      return a > b ? 1 : -1;
+    }
+
+    return a < b ? 1 : -1;
   }
 }

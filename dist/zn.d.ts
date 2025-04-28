@@ -2344,9 +2344,9 @@ declare module "components/data-select/providers/color-data-provider" {
     export const colorDataProvider: LocalDataProvider<DataProviderOption>;
 }
 declare module "components/note/note.component" {
+    import { type colors } from "components/data-select/providers/color-data-provider";
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import { type colors } from "components/data-select/providers/color-data-provider";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/note

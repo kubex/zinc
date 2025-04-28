@@ -1,8 +1,8 @@
 import {classMap} from "lit/directives/class-map.js";
+import {type colors} from "../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
-import {type colors} from "../data-select/providers/color-data-provider";
 
 import styles from './note.scss';
 
@@ -52,7 +52,7 @@ export default class ZnNote extends ZincElement {
             <small>${this.date}</small>
           </slot>
         </div>
-        <slot class="note__body">${this.body}</slot>
+        <slot class="note__body"></slot>
         <slot name="footer" class="note__footer"></slot>
       </div>
     `;

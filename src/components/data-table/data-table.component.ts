@@ -521,9 +521,10 @@ export default class ZnDataTable extends ZincElement {
       if (value['icon']) {
         const icon = value['icon']?.['src'] ?? value['icon'];
         const size = value['icon']?.['size'] ?? 16;
+        const color = value['icon']?.['color'] ?? '';
 
         content = html`
-          <zn-icon src="${icon}" size="${size}"></zn-icon> ${content}`;
+          <zn-icon src="${icon}" size="${size}" color="${color}"></zn-icon> ${content}`;
       }
 
       return content;

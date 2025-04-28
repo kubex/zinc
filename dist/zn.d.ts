@@ -1671,6 +1671,7 @@ declare module "components/data-table/data-table.component" {
         hidePagination: boolean;
         hideCheckboxes: boolean;
         filters: [];
+        private resizeObserver;
         private itemsPerPage;
         private page;
         private totalPages;
@@ -1678,10 +1679,13 @@ declare module "components/data-table/data-table.component" {
         private _filteredRows;
         private numberOfRowsSelected;
         private selectedRows;
+        private tableContainer;
         private hasSlotController;
         private _uacTask;
         private _dataTask;
         render(): TemplateResult<1>;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
@@ -1709,6 +1713,7 @@ declare module "components/data-table/data-table.component" {
         private updateKeys;
         private updateModifyKeys;
         private updateDeleteKeys;
+        private sortData;
     }
 }
 declare module "components/data-table/index" {

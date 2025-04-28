@@ -2951,7 +2951,7 @@ declare module "components/tabs/index" {
     }
 }
 declare module "components/panel/panel.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.

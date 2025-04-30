@@ -11,32 +11,32 @@ layout: component
 
 ```html:preview
 
-<zn-alert caption="This is an alert" description="This is a description"></zn-alert>
+<zn-alert caption="This is an alert">This is the Description</zn-alert>
 ```
 
 ### With Icon
 
 ```html:preview
 
-<zn-alert caption="This is an alert" description="This is a description" icon="House"></zn-alert>
+<zn-alert caption="This is an alert" icon="House">This is the Description</zn-alert>
 ```
 
 ### Levels
 
 ```html:preview
 
-<zn-alert caption="This is an alert" description="This is a description" level="primary"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" level="error"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" level="info"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" level="success"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" level="warning"></zn-alert>
+<zn-alert caption="This is an alert" level="primary">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" level="error">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" level="info">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" level="success">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" level="warning">This is the Description</zn-alert>
 ```
 
 ### sizes
 
 ```html:preview
 
-<zn-alert caption="This is an alert" description="This is a description" size="small"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" size="medium"></zn-alert>
-<zn-alert caption="This is an alert" description="This is a description" size="large"></zn-alert>
+<zn-alert caption="This is an alert" size="small">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" size="medium">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" size="large">This is the Description</zn-alert>
 ```

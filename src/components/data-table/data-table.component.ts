@@ -36,8 +36,16 @@ interface RenderDataValue {
   tag: string;
   url: string;
   target: string;
+  caption: CaptionConfig;
   buttons: ButtonConfig[];
   icon: IconConfig;
+}
+
+interface CaptionConfig {
+  title: string;
+  summary: string;
+  uri: string;
+  target: string;
 }
 
 interface IconConfig {
@@ -556,6 +564,24 @@ export default class ZnDataTable extends ZincElement {
         } else {
           content = html`
             <a href="${data['url']}">${content}</a>`;
+        }
+      }
+
+      if (data['caption']) {
+        if (data['caption'].target && data['caption'].uri) {
+          content = html`
+            <div class="caption">
+              <a data-target="${ifDefined(data['caption'].target)}" href="${data['caption'].uri}" class="title">
+                ${data['caption'].title}
+              </a>
+              <span class="summary">${data['caption'].summary}</span>
+            </div>
+          `
+        } else {
+          content = html`
+            <div class="caption"><span class="title">${data['caption'].title}</span><span
+              class="summary">${data['caption'].summary}</span></div>
+          `
         }
       }
 

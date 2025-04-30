@@ -594,8 +594,8 @@ export default class ZnDataTable extends ZincElement {
                   icon="${button.icon}"
                   icon-size="${button.iconSize}"
                   tooltip=${button.tooltip}
-                  data-target="${button.target === 'modal' ? button.target : nothing}"
-                  target="${button.target !== 'modal' ? button.target : nothing}"
+                  data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
+                  target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
                   outline=${ifDefined(button.outline)}>
                   ${button.label || nothing}
                 </zn-button>`;

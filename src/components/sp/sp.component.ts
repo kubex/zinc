@@ -51,7 +51,10 @@ export default class ZnSp extends ZincElement {
   connectedCallback() {
     if (this.gap) {
       const size = defaultSizes[this.gap];
-      this.style.setProperty('--zn-divide-gap', `${size}px`);
+      if (size) {
+        const gap = parseInt(size) * 4;
+        this.style.setProperty('--zn-divide-gap', `${gap}px`);
+      }
     }
     super.connectedCallback();
   }

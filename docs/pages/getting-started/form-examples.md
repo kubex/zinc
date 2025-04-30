@@ -18,14 +18,14 @@ components.
 
 ```html:preview
 <form class="input-validation-required">
-  <zn-sp pad-y divide gap="50">
+  <zn-sp pad-y divide gap="md">
     <zn-form-group 
       label="Profile" 
       label-tooltip="huh"
       help-text="This information will be displayed publicly so be careful what you share">
       
       <div class="form-spacing">
-        <zn-input type="text" name="name" label="Name" required></zn-input>
+        <zn-input type="text" name="name" label="Name" help-text="Hello World" required></zn-input>
         <zn-select label="Favorite Animal" clearable required>
           <zn-option value="birds">Birds</zn-option>
           <zn-option value="cats">Cats</zn-option>

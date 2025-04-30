@@ -105,6 +105,7 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+  @property({attribute: 'hide-columns', type: Object}) hiddenColumns = '{}';
   @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
@@ -251,7 +252,7 @@ export default class ZnDataTable extends ZincElement {
     }
 
     const keys = Object.entries(this.headers).map(([key, _]) => key);
-    const filteredKeys = keys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
+    const filteredKeys = keys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
 
     this._filteredRows = this.getRows(filteredKeys, data);
     this._rows = this.getRows(keys, data);
@@ -635,7 +636,7 @@ export default class ZnDataTable extends ZincElement {
   private renderCellHeader(key: any) {
     const sortable = !Object.values(this.unsortableHeaders).includes(key);
     let headerKeys = Object.keys(this.headers);
-    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
+    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     return html`
       <th
         class=${classMap({
@@ -656,7 +657,7 @@ export default class ZnDataTable extends ZincElement {
 
   private renderCellBody(index: number, value: RenderDataValue) {
     let headerKeys = Object.keys(this.headers);
-    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
+    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     const header = headerKeys[index];
     return html`
       <td class=${classMap({

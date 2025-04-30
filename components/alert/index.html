@@ -397,13 +397,9 @@
             <li class="top"><a href="#">Alert</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#basic-alert">Basic Alert</a></li>
-            <li data-level="3"><a href="#variants">Variants</a></li>
-            <li data-level="3"><a href="#closable">Closable</a></li>
-            <li data-level="3"><a href="#without-icons">Without Icons</a></li>
-            <li data-level="3"><a href="#duration">Duration</a></li>
-            <li data-level="3"><a href="#toast-notifications">Toast Notifications</a></li>
-            <li data-level="3"><a href="#creating-toasts-imperatively">Creating Toasts Imperatively</a></li>
-            <li data-level="3"><a href="#the-toast-stack">The Toast Stack</a></li>
+            <li data-level="3"><a href="#with-icon">With Icon</a></li>
+            <li data-level="3"><a href="#levels">Levels</a></li>
+            <li data-level="3"><a href="#sizes">sizes</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
@@ -438,9 +434,7 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-alert open="" icon="info" caption="This is the alert">
-                This is the alert message. Keep it simple!
-              </zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description"></zn-alert>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -449,9 +443,8 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-16">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-22"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">open</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is the alert<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  This is the alert message. Keep it simple!
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-22">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-22"></zn-copy-button></pre>
               </div>
             </div>
@@ -478,45 +471,13 @@
             </div>
           </div>
 
-          <div role="alert" class="callout callout--tip">
-            <p>Alerts will not be visible if the <code>open</code> attribute is not present.</p>
-          </div>
-          <h3 id="variants" class="anchor-heading">
-            Variants<a href="#variants" aria-label='Direct link to "Variants"'></a>
+          <h3 id="with-icon" class="anchor-heading">
+            With Icon<a href="#with-icon" aria-label='Direct link to "With Icon"'></a>
           </h3>
-          <p>Set the <code>variant</code> attribute to change the alert’s variant.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-alert variant="primary" open="">
-                <sl-icon slot="icon" library="fa" name="fas-circle-info"></sl-icon>
-                <div slot="header">We’ve simplified your login experience</div>
-                You can now log in to both apps with one set of credentials.
-              </zn-alert>
-
-              <br />
-
-              <zn-alert variant="success" open="">
-                <sl-icon slot="icon" library="fa" name="fas-circle-check"></sl-icon>
-                <div slot="header">Request approved</div>
-                This request was approved on April 25, 2024.
-              </zn-alert>
-
-              <br />
-
-              <zn-alert variant="warning" open="">
-                <sl-icon slot="icon" library="fa" name="fas-triangle-exclamation"></sl-icon>
-                <div slot="header">This view is currently hidden from shareholders</div>
-                Go to <a class="ts-text-link" href="#">Company settings</a> to edit the visibility of this page.
-              </zn-alert>
-
-              <br />
-
-              <zn-alert variant="danger" open="">
-                <sl-icon slot="icon" library="fa" name="fas-circle-exclamation"></sl-icon>
-                <div slot="header">Your payment is past due</div>
-                To avoid late fees, pay your minimum amount due today.
-              </zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" icon="House"></zn-alert>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -525,35 +486,8 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-17">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-23"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>We’ve simplified your login experience<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  You can now log in to both apps with one set of credentials.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-check<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Request approved<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  This request was approved on April 25, 2024.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-triangle-exclamation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>This view is currently hidden from shareholders<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  Go to <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ts-text-link<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Company settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span> to edit the visibility of this page.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>danger<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-exclamation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Your payment is past due<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  To avoid late fees, pay your minimum amount due today.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-23">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>House<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-23"></zn-copy-button></pre>
               </div>
             </div>
@@ -580,26 +514,15 @@
             </div>
           </div>
 
-          <h3 id="closable" class="anchor-heading">
-            Closable<a href="#closable" aria-label='Direct link to "Closable"'></a>
-          </h3>
-          <p>Add the <code>closable</code> attribute to show a close button that will hide the alert.</p>
+          <h3 id="levels" class="anchor-heading">Levels<a href="#levels" aria-label='Direct link to "Levels"'></a></h3>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-alert variant="primary" open="" closable="" class="alert-closable">
-                <sl-icon slot="icon" library="fa" name="fas-circle-info"></sl-icon>
-                You can close this alert any time!
-              </zn-alert>
-
-              <script>
-                (() => {
-                  const alert = document.querySelector('.alert-closable');
-                  alert.addEventListener('sl-after-hide', () => {
-                    setTimeout(() => (alert.open = true), 2000);
-                  });
-                })();
-              </script>
+              <zn-alert caption="This is an alert" description="This is a description" level="primary"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" level="error"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" level="info"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" level="success"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" level="warning"></zn-alert>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -608,17 +531,12 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-18">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-24"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token attr-name">open</span> <span class="token attr-name">closable</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alert-closable<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  You can close this alert any time!
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">const</span> alert <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.alert-closable'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  alert<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'sl-after-hide'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span>alert<span class="token punctuation">.</span>open <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-24">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">level</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">level</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">level</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">level</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">level</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-24"></zn-copy-button></pre>
               </div>
             </div>
@@ -645,14 +563,13 @@
             </div>
           </div>
 
-          <h3 id="without-icons" class="anchor-heading">
-            Without Icons<a href="#without-icons" aria-label='Direct link to "Without Icons"'></a>
-          </h3>
-          <p>Icons are optional. Simply omit the <code>icon</code> slot if you don’t want them.</p>
+          <h3 id="sizes" class="anchor-heading">sizes<a href="#sizes" aria-label='Direct link to "sizes"'></a></h3>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-alert variant="primary" open=""> Nothing fancy here, just a simple alert. </zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" size="small"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" size="medium"></zn-alert>
+              <zn-alert caption="This is an alert" description="This is a description" size="large"></zn-alert>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -661,7 +578,10 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-19">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-25"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span> Nothing fancy here, just a simple alert. <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-25">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is an alert<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is a description<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-25"></zn-copy-button></pre>
               </div>
             </div>
@@ -688,370 +608,6 @@
             </div>
           </div>
 
-          <h3 id="duration" class="anchor-heading">
-            Duration<a href="#duration" aria-label='Direct link to "Duration"'></a>
-          </h3>
-          <p>
-            Set the <code>duration</code> attribute to automatically hide an alert after a period of time. This is
-            useful for alerts that don’t require acknowledgement.
-          </p>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <div class="alert-duration">
-                <zn-button variant="primary">Show Alert</zn-button>
-
-                <zn-alert variant="primary" duration="3000" closable="">
-                  <sl-icon slot="icon" library="fa" name="fas-circle-info"></sl-icon>
-                  This alert will automatically hide itself after three seconds, unless you interact with it.
-                </zn-alert>
-              </div>
-
-              <script>
-                (() => {
-                  const container = document.querySelector('.alert-duration');
-                  const button = container.querySelector('zn-button');
-                  const alert = container.querySelector('zn-alert');
-
-                  button.addEventListener('click', () => alert.show());
-                })();
-              </script>
-
-              <style>
-                .alert-duration zn-alert {
-                  margin-top: var(--sl-spacing-medium);
-                }
-              </style>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-20">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-26"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alert-duration<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Show Alert<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span> <span class="token attr-name">closable</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-    This alert will automatically hide itself after three seconds, unless you interact with it.
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.alert-duration'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> button <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> alert <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-alert'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  button<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> alert<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
-  <span class="token selector">.alert-duration zn-alert</span> <span class="token punctuation">{</span>
-    <span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--sl-spacing-medium<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-26"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-20"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 id="toast-notifications" class="anchor-heading">
-            Toast Notifications<a href="#toast-notifications" aria-label='Direct link to "Toast Notifications"'></a>
-          </h3>
-          <p>
-            To display an alert as a toast notification, or “toast”, create the alert and call its
-            <code>toast()</code> method. This will move the alert out of its position in the DOM and into
-            <a href="#the-toast-stack">the toast stack</a> where it will be shown. Once dismissed, it will be removed
-            from the DOM completely. To reuse a toast, store a reference to it and call <code>toast()</code> again later
-            on.
-          </p>
-          <p>
-            You should always use the <code>closable</code> attribute so users can dismiss the notification. It’s also
-            common to set a reasonable <code>duration</code> when the notification doesn’t require acknowledgement.
-          </p>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <div class="alert-toast">
-                <zn-button variant="primary">Primary</zn-button>
-                <zn-button variant="success">Success</zn-button>
-                <zn-button variant="danger">Danger</zn-button>
-
-                <zn-alert variant="primary" duration="3000" closable="">
-                  <sl-icon slot="icon" library="fa" name="fas-circle-info"></sl-icon>
-                  <div slot="header">We’ve simplified your login experience</div>
-                  You can now log in to both apps with one set of credentials.
-                </zn-alert>
-
-                <zn-alert variant="success" duration="3000" closable="">
-                  <sl-icon slot="icon" library="fa" name="fas-circle-check"></sl-icon>
-                  <div slot="header">Request submitted</div>
-                  Your request to issue 1,000 shares to Grace Hopper has been submitted.
-                </zn-alert>
-
-                <zn-alert variant="danger" duration="3000" closable="">
-                  <sl-icon slot="icon" library="fa" name="fas-circle-exclamation"></sl-icon>
-                  <div slot="header">Your settings couldn’t be updated</div>
-                  Please <a class="ts-text-link" href="#">contact support</a> for help with this issue.
-                </zn-alert>
-              </div>
-
-              <script>
-                (() => {
-                  const container = document.querySelector('.alert-toast');
-
-                  ['primary', 'success', 'danger'].map(variant => {
-                    const button = container.querySelector(`zn-button[variant="${variant}"]`);
-                    const alert = container.querySelector(`zn-alert[variant="${variant}"]`);
-
-                    button.addEventListener('click', () => alert.toast());
-                  });
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-21">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-27"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alert-toast<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Primary<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Success<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>danger<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Danger<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span> <span class="token attr-name">closable</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>We’ve simplified your login experience<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  You can now log in to both apps with one set of credentials.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span> <span class="token attr-name">closable</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-check<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Request submitted<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  Your request to issue 1,000 shares to Grace Hopper has been submitted.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>danger<span class="token punctuation">"</span></span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span> <span class="token attr-name">closable</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sl-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">library</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fa<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fas-circle-exclamation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sl-icon</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>header<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Your settings couldn’t be updated<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-  Please <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ts-text-link<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>contact support<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span> for help with this issue.
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.alert-toast'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token punctuation">[</span><span class="token string">'primary'</span><span class="token punctuation">,</span> <span class="token string">'success'</span><span class="token punctuation">,</span> <span class="token string">'danger'</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">variant</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> button <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">zn-button[variant="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>variant<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"]</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> alert <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">zn-alert[variant="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>variant<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"]</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    button<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> alert<span class="token punctuation">.</span><span class="token function">toast</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-27"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-21"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 id="creating-toasts-imperatively" class="anchor-heading">
-            Creating Toasts Imperatively<a
-              href="#creating-toasts-imperatively"
-              aria-label='Direct link to "Creating Toasts Imperatively"'
-            ></a>
-          </h3>
-          <p>
-            For convenience, you can create a utility that emits toast notifications with a function call rather than
-            composing them in your HTML. To do this, generate the alert with JavaScript, append it to the body, and call
-            the <code>toast()</code> method as shown in the example below.
-          </p>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <div class="alert-toast-wrapper">
-                <zn-button variant="primary">Create Toast</zn-button>
-              </div>
-
-              <script>
-                (() => {
-                  const container = document.querySelector('.alert-toast-wrapper');
-                  const button = container.querySelector('zn-button');
-                  let count = 0;
-
-                  // Always escape HTML for text arguments!
-                  function escapeHtml(html) {
-                    const div = document.createElement('div');
-                    div.textContent = html;
-                    return div.innerHTML;
-                  }
-
-                  // Custom function to emit toast notifications
-                  function notify(message, variant = 'primary', icon = 'fas-circle-info', duration = 3000) {
-                    const alert = Object.assign(document.createElement('zn-alert'), {
-                      variant,
-                      closable: true,
-                      duration: duration,
-                      innerHTML: `
-        <sl-icon name="${icon}" library="fa" slot="icon"></sl-icon>
-        ${escapeHtml(message)}
-      `
-                    });
-
-                    document.body.append(alert);
-                    return alert.toast();
-                  }
-
-                  button.addEventListener('click', () => {
-                    notify(`This is custom toast #${++count}`);
-                  });
-                })();
-              </script>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-22">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-28"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alert-toast-wrapper<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Create Toast<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
-  <span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.alert-toast-wrapper'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> button <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// Always escape HTML for text arguments!</span>
-  <span class="token keyword">function</span> <span class="token function">escapeHtml</span><span class="token punctuation">(</span><span class="token parameter">html</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> div <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    div<span class="token punctuation">.</span>textContent <span class="token operator">=</span> html<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> div<span class="token punctuation">.</span>innerHTML<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// Custom function to emit toast notifications</span>
-  <span class="token keyword">function</span> <span class="token function">notify</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span> variant <span class="token operator">=</span> <span class="token string">'primary'</span><span class="token punctuation">,</span> icon <span class="token operator">=</span> <span class="token string">'fas-circle-info'</span><span class="token punctuation">,</span> duration <span class="token operator">=</span> <span class="token number">3000</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> alert <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'zn-alert'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
-      variant<span class="token punctuation">,</span>
-      <span class="token literal-property property">closable</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-      <span class="token literal-property property">duration</span><span class="token operator">:</span> duration<span class="token punctuation">,</span>
-      <span class="token literal-property property">innerHTML</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
-        &lt;sl-icon name="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>icon<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">" library="fa" slot="icon"&gt;&lt;/sl-icon&gt;
-        </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">escapeHtml</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
-      </span><span class="token template-punctuation string">`</span></span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>alert<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> alert<span class="token punctuation">.</span><span class="token function">toast</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  button<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
-    <span class="token function">notify</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">This is custom toast #</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token operator">++</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-28"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-22"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 id="the-toast-stack" class="anchor-heading">
-            The Toast Stack<a href="#the-toast-stack" aria-label='Direct link to "The Toast Stack"'></a>
-          </h3>
-          <p>
-            The toast stack is a fixed position singleton element created and managed internally by the alert component.
-            It will be added and removed from the DOM as needed when toasts are shown. When more than one toast is
-            visible, they will stack vertically in the toast stack.
-          </p>
-          <p>
-            By default, the toast stack is positioned at the bottom-right of the viewport. You can change its position
-            by targeting <code>.sl-toast-stack</code> in your stylesheet. To make toasts appear at the top-left of the
-            viewport, for example, use the following styles.
-          </p>
-          <div role="alert" class="callout callout--warning">
-            <p>
-              <strong>Note:</strong> The standard position for toast alerts in our apps is the bottom-right. Please
-              check with the design team before using this method to change the stack position.
-            </p>
-          </div>
-          <pre><code class="language-css" id="code-block-29"><span class="token selector">.zn-toast-stack</span> <span class="token punctuation">{</span>
-  <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
-  <span class="token property">right</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-29"></zn-copy-button></pre>
-          <div role="alert" class="callout callout--tip">
-            <p>
-              By design, it is not possible to show toasts in more than one stack simultaneously. Such behavior is
-              confusing and makes for a poor user experience.
-            </p>
-          </div>
-
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
           </h2>
@@ -1073,7 +629,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-30"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/alert/alert.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-30"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-26"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/alert/alert.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-26"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1088,12 +644,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-31"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/alert/alert.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-31"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-27"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/alert/alert.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-27"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-32"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/alert/alert.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-32"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-28"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/alert/alert.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-28"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

@@ -72,7 +72,8 @@ export default class ZnPanel extends ZincElement {
         'panel--has-header': hasHeader,
       })}>
 
-        ${hasHeader ? html`
+        <div class="panel__inner">
+          ${hasHeader ? html`
           <zn-header class="panel__header"
                      caption="${this.caption}"
                      description="${this.description}"
@@ -81,12 +82,14 @@ export default class ZnPanel extends ZincElement {
               <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
           </zn-header>` : null}
 
-        <div class="panel__body">
-          <slot></slot>
+          <div class="panel__body">
+            <slot></slot>
+          </div>
+
+          ${hasFooterSlot ? html`
+          <slot name="footer" class="panel__footer"></slot>` : null}
         </div>
 
-        ${hasFooterSlot ? html`
-          <slot name="footer" class="panel__footer"></slot>` : null}
       </div>`;
   }
 }

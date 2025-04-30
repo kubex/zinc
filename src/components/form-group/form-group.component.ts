@@ -84,7 +84,6 @@ export default class ZnFormGroup extends ZincElement {
             </div>
           </div>
 
-
           <div part="form-control-input" class="form-control-input">
             <slot></slot>
           </div>

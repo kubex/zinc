@@ -140,6 +140,31 @@ table {
     &--last div {
       justify-content: flex-end;
     }
+
+    .caption {
+      flex-grow: 1;
+      flex-direction: column;
+
+      span {
+        display: block;
+      }
+
+      .title:empty, .summary:empty {
+        display: none;
+      }
+
+      .title {
+        font-weight: 600;
+        color: rgb(var(--zn-text-heading));
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .summary {
+        font-size: 90%;
+        text-wrap: initial;
+      }
+    }
   }
 
   &--empty {

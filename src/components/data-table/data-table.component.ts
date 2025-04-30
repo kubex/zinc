@@ -634,7 +634,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(key: any) {
-    const sortable = !Object.values(this.unsortableHeaders).includes(key);
+    const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key);
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     return html`
@@ -642,7 +642,8 @@ export default class ZnDataTable extends ZincElement {
         class=${classMap({
           'table__head': true,
           'table__head--wide': key === this.wideColumn,
-          'table__head--last': key === headerKeys[headerKeys.length - 1]
+          'table__head--last': key === headerKeys[headerKeys.length - 1],
+          'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
         })}
         @click="${sortable ? this.updateSort(key) : undefined}">
         <div>

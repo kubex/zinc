@@ -1640,8 +1640,15 @@ declare module "components/data-table/data-table.component" {
         tag: string;
         url: string;
         target: string;
+        caption: CaptionConfig;
         buttons: ButtonConfig[];
         icon: IconConfig;
+    }
+    interface CaptionConfig {
+        title: string;
+        summary: string;
+        uri: string;
+        target: string;
     }
     interface IconConfig {
         src: string;

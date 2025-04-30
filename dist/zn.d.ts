@@ -1634,6 +1634,41 @@ declare module "components/data-table/data-table.component" {
         modify = "modify-action",
         create = "create-action"
     }
+    interface RenderDataValue {
+        value: string | number;
+        type: string;
+        tag: string;
+        url: string;
+        target: string;
+        buttons: ButtonConfig[];
+        icon: IconConfig;
+    }
+    interface IconConfig {
+        src: string;
+        size: number;
+        color: string;
+    }
+    interface ButtonConfig {
+        id: string;
+        href: string;
+        size: string;
+        color: string;
+        icon: string;
+        iconSize: string;
+        tooltip: string;
+        target: string;
+        label: string;
+        outline: boolean;
+        confirm: ConfirmConfig;
+    }
+    interface ConfirmConfig {
+        type: string;
+        trigger: string;
+        fid: string;
+        caption: string;
+        content: string;
+        action: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-table
@@ -1667,6 +1702,7 @@ declare module "components/data-table/data-table.component" {
         key: string;
         headers: string;
         hiddenHeaders: string;
+        hiddenColumns: string;
         unsortableHeaders: string;
         hidePagination: boolean;
         hideCheckboxes: boolean;
@@ -1704,7 +1740,7 @@ declare module "components/data-table/data-table.component" {
         selectRow(): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
-        renderData(value: any): any;
+        renderData(data: RenderDataValue): TemplateResult;
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;

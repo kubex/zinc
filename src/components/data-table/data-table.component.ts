@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
@@ -27,6 +28,45 @@ export enum ActionSlots {
   delete = 'delete-action',
   modify = 'modify-action',
   create = 'create-action',
+}
+
+interface RenderDataValue {
+  value: string | number;
+  type: string;
+  tag: string;
+  url: string;
+  target: string;
+  buttons: ButtonConfig[];
+  icon: IconConfig;
+}
+
+interface IconConfig {
+  src: string;
+  size: number;
+  color: string;
+}
+
+interface ButtonConfig {
+  id: string;
+  href: string;
+  size: string;
+  color: string;
+  icon: string;
+  iconSize: string;
+  tooltip: string;
+  target: string;
+  label: string;
+  outline: boolean;
+  confirm: ConfirmConfig;
+}
+
+interface ConfirmConfig {
+  type: string;
+  trigger: string;
+  fid: string;
+  caption: string;
+  content: string;
+  action: string;
 }
 
 /**
@@ -234,7 +274,7 @@ export default class ZnDataTable extends ZincElement {
               <td>
                 <div><input type="checkbox" @change=${this.selectRow}></div>
               </td>`}
-            ${row.map((value: any, index: number) => this.renderCellBody(index, value))}
+            ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
           </tr>`)}
         </tbody>
       </table>
@@ -483,45 +523,89 @@ export default class ZnDataTable extends ZincElement {
     };
   }
 
-  renderData(value: any) {
-    if (value && typeof value === 'object') {
-      let content: TemplateResult = html`${value['value']}`;
+  renderData(data: RenderDataValue) {
+    if (data && typeof data === 'object') {
+      let content: TemplateResult = html`${data['value']}`;
 
-      if (value['type'] === 'timestamp') {
-        value = parseInt(value['value']);
+      if (data['type'] === 'timestamp') {
+        const timestamp = typeof data['value'] === 'string' ? parseInt(data['value']) : data['value'];
         content = html`${new Intl.DateTimeFormat('en-GB', {
           dateStyle: 'medium',
           timeStyle: 'short',
           hourCycle: 'h12',
           timeZone: 'UTC'
-        }).format(new Date(value < 10000000000 ? value * 1000 : value))}`;
+        }).format(new Date(timestamp < 10000000000 ? timestamp * 1000 : timestamp))}`;
       }
 
-      if (value['tag'] === 'zn-chip') {
-        const type = value['type'];
+      if (data['tag'] === 'zn-chip') {
+        const type = data['type'];
         content = html`
           <zn-chip type="${type}">${content}</zn-chip>`;
       }
 
-      if (value['tag'] === 'code') {
+      if (data['tag'] === 'code') {
         content = html`
           <code>${content}</code>`;
       }
 
-      if (value['url']) {
-        if (value['target']) {
+      if (data['url']) {
+        if (data['target']) {
           content = html`
-            <a href="${value['url']}" data-target="${value['target']}">${content}</a>`;
+            <a href="${data['url']}" data-target="${data['target']}">${content}</a>`;
         } else {
           content = html`
-            <a href="${value['url']}">${content}</a>`;
+            <a href="${data['url']}">${content}</a>`;
         }
       }
 
-      if (value['icon']) {
-        const icon = value['icon']?.['src'] ?? value['icon'];
-        const size = value['icon']?.['size'] ?? 16;
-        const color = value['icon']?.['color'] ?? '';
+      if (data['buttons']) {
+        content = html`
+          <zn-button-group>
+            ${Object.values(data['buttons']).map((button) => {
+              if (button.confirm) {
+                return html`
+                  <div>
+                    <zn-button
+                      id="${button.id}"
+                      size="${button.size}"
+                      color="${button.color}"
+                      icon="${button.icon}"
+                      icon-size="${button.iconSize}"
+                      tooltip=${button.tooltip}
+                      outline=${ifDefined(button.outline)}>
+                      ${button.label || nothing}
+                    </zn-button>
+                    <zn-confirm
+                      fid="${button.confirm.fid}"
+                      trigger="${button.confirm.trigger}"
+                      type="${button.confirm.type}"
+                      caption="${button.confirm.caption}"
+                      content="${button.confirm.content}"
+                      action="${button.confirm.action}"></zn-confirm>
+                  </div>`;
+              }
+              return html`
+                <zn-button
+                  id="${button.id}"
+                  href=${button.href}
+                  size="${button.size}"
+                  color="${button.color}"
+                  icon="${button.icon}"
+                  icon-size="${button.iconSize}"
+                  tooltip=${button.tooltip}
+                  data-target="${button.target === 'modal' ? button.target : nothing}"
+                  target="${button.target !== 'modal' ? button.target : nothing}"
+                  outline=${ifDefined(button.outline)}>
+                  ${button.label || nothing}
+                </zn-button>`;
+            })}
+          </zn-button-group>`;
+      }
+
+      if (data['icon']) {
+        const icon = data['icon']?.['src'] ?? data['icon'];
+        const size = data['icon']?.['size'] ?? 16;
+        const color = data['icon']?.['color'] ?? '';
 
         content = html`
           <zn-icon src="${icon}" size="${size}" color="${color}"></zn-icon> ${content}`;
@@ -530,7 +614,7 @@ export default class ZnDataTable extends ZincElement {
       return content;
     }
 
-    return value;
+    return data;
   }
 
   private getTableSortIcon(key: any) {
@@ -570,7 +654,7 @@ export default class ZnDataTable extends ZincElement {
       </th>`;
   }
 
-  private renderCellBody(index: number, value: any) {
+  private renderCellBody(index: number, value: RenderDataValue) {
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenHeaders).includes(key));
     const header = headerKeys[index];

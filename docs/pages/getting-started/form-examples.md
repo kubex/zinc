@@ -18,7 +18,7 @@ components.
 
 ```html:preview
 <form class="input-validation-required">
-  <zn-sp pad-y divide>
+  <zn-sp pad-y divide gap="50">
     <zn-form-group 
       label="Profile" 
       label-tooltip="huh"

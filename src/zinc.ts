@@ -61,6 +61,7 @@ export {default as File} from './components/file';
 export {default as CheckboxGroup} from './components/checkbox-group';
 export {default as Item} from './components/item';
 export {default as DataSelect} from './components/data-select';
+export {default as ButtonMenu} from './components/button-menu';
 /* plop:component */
 
 // Utilities

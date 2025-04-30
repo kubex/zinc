@@ -1,9 +1,20 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './sp.scss';
-import {classMap} from "lit/directives/class-map.js";
+
+// TODO Move this somewhere shared
+export const defaultSizes = {
+  px: '1',
+  xxs: '3',
+  xs: '5',
+  sm: '10',
+  md: '15',
+  lg: '20',
+  xl: '25'
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -26,6 +37,7 @@ export default class ZnSp extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
+  @property({attribute: 'gap', reflect: true}) gap: keyof typeof defaultSizes;
   @property({attribute: 'row', type: Boolean, reflect: true}) row: boolean = false;
   @property({attribute: 'grow', type: Boolean, reflect: true}) grow: boolean = false;
   @property({attribute: 'pad-x', type: Boolean, reflect: true}) padX: boolean = false;
@@ -37,6 +49,10 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer: boolean = false;
 
   connectedCallback() {
+    if (this.gap) {
+      const size = defaultSizes[this.gap];
+      this.style.setProperty('--zn-divide-gap', `${size}px`);
+    }
     super.connectedCallback();
   }
 

@@ -1253,6 +1253,154 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/button-menu/button-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnButtonMenu",
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "maxWidth",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "attribute": "max-width"
+            },
+            {
+              "kind": "field",
+              "name": "containerWidth",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "attribute": "containerWidth"
+            },
+            {
+              "kind": "field",
+              "name": "limitButtons",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "public",
+              "attribute": "limit-buttons"
+            },
+            {
+              "kind": "field",
+              "name": "_buttons",
+              "type": {
+                "text": "CustomButtonWidths[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_originalButtons",
+              "type": {
+                "text": "CustomButtonWidths[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "watchContainerMaxWidth"
+            },
+            {
+              "kind": "field",
+              "name": "handleResize"
+            },
+            {
+              "kind": "method",
+              "name": "calculateVisibleButtons"
+            },
+            {
+              "kind": "method",
+              "name": "calculateMenuButtons",
+              "parameters": [
+                {
+                  "name": "visibleButtons",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "buttons",
+                  "type": {
+                    "text": "CustomButtonWidths[]"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "max-width",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxWidth"
+            },
+            {
+              "name": "containerWidth",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "containerWidth"
+            },
+            {
+              "name": "limit-buttons",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "limitButtons"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Automatically hides buttons in a menu when the screen is too small.",
+          "tagNameWithoutPrefix": "button-menu",
+          "tagName": "zn-button-menu",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Automatically hides buttons in a menu when the screen is too small.\n * @documentation https://zinc.style/components/button-menu\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n *\n */",
+          "documentation": "https://zinc.style/components/button-menu",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnButtonMenu",
+            "module": "components/button-menu/button-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/chart/chart.js",
       "declarations": [
         {
@@ -15349,6 +15497,14 @@
       "path": "components/sp/sp.js",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "defaultSizes",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ px: '1', xxs: '3', xs: '5', sm: '10', md: '15', lg: '20', xl: '25' }"
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "ZnSp",
@@ -15383,6 +15539,15 @@
               },
               "default": "false",
               "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "keyof typeof defaultSizes"
+              },
+              "attribute": "gap",
               "reflects": true
             },
             {
@@ -15492,6 +15657,13 @@
               "fieldName": "divide"
             },
             {
+              "name": "gap",
+              "type": {
+                "text": "keyof typeof defaultSizes"
+              },
+              "fieldName": "gap"
+            },
+            {
               "name": "row",
               "type": {
                 "text": "boolean"
@@ -15582,6 +15754,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "defaultSizes",
+          "declaration": {
+            "name": "defaultSizes",
+            "module": "components/sp/sp.js"
+          }
+        },
         {
           "kind": "js",
           "name": "default",

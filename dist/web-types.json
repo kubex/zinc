@@ -335,6 +335,27 @@
           }
         },
         {
+          "name": "zn-button-menu",
+          "description": "Automatically hides buttons in a menu when the screen is too small.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "max-width", "value": { "type": "number" } },
+            { "name": "containerWidth", "value": { "type": "number" } },
+            { "name": "limit-buttons", "value": { "type": "number" } }
+          ],
+          "slots": [{ "name": "", "description": "The default slot." }],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "maxWidth", "type": "number" },
+              { "name": "containerWidth", "type": "number" },
+              { "name": "limitButtons", "type": "number" },
+              { "name": "handleResize" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-chart",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -4394,6 +4415,7 @@
               "name": "divide",
               "value": { "type": "boolean", "default": "false" }
             },
+            { "name": "gap", "value": { "type": "keyof typeof defaultSizes" } },
             {
               "name": "row",
               "value": { "type": "boolean", "default": "false" }
@@ -4441,6 +4463,7 @@
           "js": {
             "properties": [
               { "name": "divide", "type": "boolean" },
+              { "name": "gap", "type": "keyof typeof defaultSizes" },
               { "name": "row", "type": "boolean" },
               { "name": "grow", "type": "boolean" },
               { "name": "padX", "type": "boolean" },

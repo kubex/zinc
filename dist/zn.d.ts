@@ -3245,6 +3245,15 @@ declare module "components/sidebar/index" {
 declare module "components/sp/sp.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    export const defaultSizes: {
+        px: string;
+        xxs: string;
+        xs: string;
+        sm: string;
+        md: string;
+        lg: string;
+        xl: string;
+    };
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/sp
@@ -3265,6 +3274,7 @@ declare module "components/sp/sp.component" {
     export default class ZnSp extends ZincElement {
         static styles: CSSResultGroup;
         divide: boolean;
+        gap: keyof typeof defaultSizes;
         row: boolean;
         grow: boolean;
         padX: boolean;
@@ -5037,6 +5047,51 @@ declare module "components/data-select/index" {
         }
     }
 }
+declare module "components/button-menu/button-menu.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type ZnButton from "components/button/index";
+    interface CustomButtonWidths {
+        button: ZnButton;
+        width: number;
+    }
+    /**
+     * @summary Automatically hides buttons in a menu when the screen is too small.
+     * @documentation https://zinc.style/components/button-menu
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot.
+     *
+     */
+    export default class ZnButtonMenu extends ZincElement {
+        static styles: CSSResultGroup;
+        maxWidth: number;
+        containerWidth: number;
+        limitButtons: number;
+        private _buttons;
+        private _originalButtons;
+        private resizeObserver;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        watchContainerMaxWidth(): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        handleResize: () => void;
+        calculateVisibleButtons(): void;
+        calculateMenuButtons(visibleButtons: number, buttons: CustomButtonWidths[]): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/button-menu/index" {
+    import ZnButtonMenu from "components/button-menu/button-menu.component";
+    export * from "components/button-menu/button-menu.component";
+    export default ZnButtonMenu;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-button-menu': ZnButtonMenu;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5157,6 +5212,7 @@ declare module "zinc" {
     export { default as CheckboxGroup } from "components/checkbox-group/index";
     export { default as Item } from "components/item/index";
     export { default as DataSelect } from "components/data-select/index";
+    export { default as ButtonMenu } from "components/button-menu/index";
     export * from "events/events";
 }
 declare module "events/zn-after-collapse" {

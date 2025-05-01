@@ -1,15 +1,15 @@
-import {property, query} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {getTextContent, HasSlotController} from '../../internal/slot';
+import {html, literal} from "lit/static-html.js";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from '../../utilities/localize';
+import {property, query} from 'lit/decorators.js';
+import {SubmenuController} from './submenu-controller';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
-import ZnPopup from "../popup";
 import ZnIcon from "../icon";
-import {getTextContent, HasSlotController} from '../../internal/slot';
-import {SubmenuController} from './submenu-controller';
-import {html, literal} from "lit/static-html.js";
-import {classMap} from "lit/directives/class-map.js";
-import {ifDefined} from "lit/directives/if-defined.js";
+import ZnPopup from "../popup";
 
 import styles from './menu-item.scss';
 
@@ -68,6 +68,8 @@ export default class ZnMenuItem extends ZincElement {
   @property({attribute: 'data-target'}) dataTarget: 'modal' | 'slide' | string;
 
   @property() rel: string = 'noreferrer noopener';
+
+  @property({attribute: 'gaid'}) gaid: string;
 
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
@@ -175,6 +177,7 @@ export default class ZnMenuItem extends ZincElement {
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}
+        gaid=${ifDefined(this.gaid)}
         class=${classMap({
           'menu-item': true,
           'menu-item--rtl': isRtl,

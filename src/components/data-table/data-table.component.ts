@@ -122,6 +122,8 @@ export default class ZnDataTable extends ZincElement {
   // Specify individual unsortable headers
   @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
+  // Make table unsortable
+  @property({attribute: 'unsortable', type: Boolean}) unsortable: boolean = false;
 
   // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
@@ -665,7 +667,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(key: any) {
-    const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key);
+    const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key) && !this.unsortable;
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     return html`

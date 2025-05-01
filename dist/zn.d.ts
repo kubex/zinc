@@ -2032,8 +2032,8 @@ declare module "components/menu-item/submenu-controller" {
 declare module "components/menu-item/menu-item.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import ZnPopup from "components/popup/index";
     import ZnIcon from "components/icon/index";
+    import ZnPopup from "components/popup/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/menu-item
@@ -2075,6 +2075,7 @@ declare module "components/menu-item/menu-item.component" {
         target: '_self' | '_blank' | '_parent' | '_top' | string;
         dataTarget: 'modal' | 'slide' | string;
         rel: string;
+        gaid: string;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;

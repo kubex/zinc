@@ -41,7 +41,7 @@ export default class ZnCols extends ZincElement {
       layout.push(1, 1, 1, 1);
     }
 
-    this.layout = layout.join('');
+    this.layout = layout.join(',');
 
     this.maxColumns = Math.min(5, layout.reduce((a, b) => a + b, 0));
 

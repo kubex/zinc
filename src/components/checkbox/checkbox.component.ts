@@ -122,6 +122,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     if (this.disabled) {
       return;
     }
+
     this.checked = !this.checked;
     this.indeterminate = false;
     this.emit('zn-change');
@@ -226,7 +227,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
           'form-control--has-label': hasLabel,
         })}>
 
-        <label
+        <div
           part="form-control-label"
           id="label"
           class="form-control__label"
@@ -241,9 +242,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
                 <zn-icon src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
-        </label>
+        </div>
 
-        <div
+        <label
           part="base"
           class=${classMap({
             checkbox: true,
@@ -258,8 +259,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--large': this.size === 'large',
             'checkbox--has-description': hasDescription,
             'checkbox--has-selected-content': this.hasSlotController.test('selected-content')
-          })}
-          @click=${this.handleClick}>
+          })}>
+
           <input
             class="checkbox__input"
             type="checkbox"
@@ -317,7 +318,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
                 </zn-animation>`
               : ''}
           </div>
-        </div>
+        </label>
       </div>
     `;
   }

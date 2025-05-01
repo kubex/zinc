@@ -26,7 +26,7 @@ Add descriptive help text to individual checkbox items with the `description` at
 HTML, use the `description` slot instead.
 
 ```html:preview
-<zn-checkbox description="Grants access to cash account and charge card features">Financial products access</zn-checkbox>
+<zn-checkbox label="Awesome" description="Grants access to cash account and charge card features">Financial products access</zn-checkbox>
 ```
 
 ### Contained

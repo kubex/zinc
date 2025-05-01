@@ -100,6 +100,10 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
   @property({attribute: 'description'}) description = '';
 
+  @property() label: string;
+
+  @property({attribute: 'label-tooltip'}) labelTooltip: string;
+
 
   /** Gets the validity state object */
   get validity() {
@@ -200,6 +204,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   render() {
     const hasDescriptionSlot = this.hasSlotController.test('description');
     const hasDescription = this.description ? true : hasDescriptionSlot;
+    const hasLabelSlot = this.hasSlotController.test('label');
+    const hasLabelTooltip = this.hasSlotController.test('label-tooltip');
+    const hasLabel = this.label || hasLabelSlot;
 
     //
     // NOTE: we use a <div> around the label slot because of this Chrome bug.
@@ -213,9 +220,28 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
           'form-control--small': this.size === 'small',
           'form-control--medium': this.size === 'medium',
           'form-control--large': this.size === 'large',
-          'form-control--checkbox-contained-wrapper': this.contained
+          'form-control--checkbox-contained-wrapper': this.contained,
+          'form-control--has-label': hasLabel,
         })}>
+
         <label
+          part="form-control-label"
+          id="label"
+          class="form-control__label"
+          aria-hidden=${hasLabel ? 'false' : 'true'}>
+          <slot name="label">${this.label}</slot>
+          ${hasLabelTooltip
+            ? html`
+              <zn-tooltip class="form-control--label-tooltip">
+                <div slot="content">
+                  <slot name="label-tooltip">${this.labelTooltip}</slot>
+                </div>
+                <zn-icon src="info"></zn-icon>
+              </zn-tooltip>`
+            : ''}
+        </label>
+
+        <div
           part="base"
           class=${classMap({
             checkbox: true,
@@ -288,7 +314,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
                 </zn-animation>`
               : ''}
           </div>
-        </label>
+        </div>
       </div>
     `;
   }

@@ -112,11 +112,21 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'key'}) key: string = 'id';
 
   @property({attribute: 'headers', type: Object}) headers = '{}';
+
+  // Hide header text keeping the content - e.g. Action buttons without a header
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
+
+  // Hide entire columns of data - e.g IDs
   @property({attribute: 'hide-columns', type: Object}) hiddenColumns = '{}';
+
+  // Specify individual unsortable headers
   @property({attribute: 'unsortable-headers', type: Object}) unsortableHeaders = '{}';
 
+
+  // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
+
+  // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
 

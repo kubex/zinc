@@ -104,7 +104,6 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
   @property({attribute: 'label-tooltip'}) labelTooltip: string;
 
-
   /** Gets the validity state object */
   get validity() {
     return this.input?.validity;
@@ -120,6 +119,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   }
 
   private handleClick() {
+    if (this.disabled) {
+      return;
+    }
     this.checked = !this.checked;
     this.indeterminate = false;
     this.emit('zn-change');
@@ -256,7 +258,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--large': this.size === 'large',
             'checkbox--has-description': hasDescription,
             'checkbox--has-selected-content': this.hasSlotController.test('selected-content')
-          })}>
+          })}
+          @click=${this.handleClick}>
           <input
             class="checkbox__input"
             type="checkbox"

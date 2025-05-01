@@ -118,9 +118,10 @@ Use the `setCustomValidity()` method to set a custom validation message. This wi
 make the browser display the error message you provide. To clear the error, call this function with an empty string.
 
 ```html:preview
+
 <form class="custom-validity">
   <zn-checkbox>Check me</zn-checkbox>
-  <br />
+  <br/>
   <zn-button type="submit" variant="primary" style="margin-top: 1rem;">Submit</zn-button>
 </form>
 <script type="module">
@@ -129,21 +130,25 @@ make the browser display the error message you provide. To clear the error, call
   const errorMessage = `Do not forget to check me!`;
 
   // Set initial validity as soon as the element is defined
-  customElements.whenDefined(zn-checkbox').then(async () => {
+  customElements.whenDefined('zn-checkbox').then(async () =>
+  {
     await checkbox.updateComplete;
     checkbox.setCustomValidity(errorMessage);
   });
 
   // Update validity on change
-  checkbox.addEventListener('zn-change', () => {
+  checkbox.addEventListener('zn-change', () =>
+  {
     checkbox.setCustomValidity(checkbox.checked ? '' : errorMessage);
   });
 
   // Wait for controls to be defined before attaching form listeners
   await Promise.all([
-    customElements.whenDefined(zn-checkbox'),
-  ]).then(() => {
-    form.addEventListener('submit', event => {
+    customElements.whenDefined('zn-checkbox')
+  ]).then(() =>
+  {
+    form.addEventListener('submit', event =>
+    {
       event.preventDefault();
       alert('All fields are valid!');
     });

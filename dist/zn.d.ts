@@ -4144,6 +4144,8 @@ declare module "components/checkbox/checkbox.component" {
         required: boolean;
         /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
         description: string;
+        label: string;
+        labelTooltip: string;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */

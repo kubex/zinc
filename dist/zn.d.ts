@@ -1711,6 +1711,7 @@ declare module "components/data-table/data-table.component" {
         hiddenHeaders: string;
         hiddenColumns: string;
         unsortableHeaders: string;
+        unsortable: boolean;
         hidePagination: boolean;
         hideCheckboxes: boolean;
         filters: [];

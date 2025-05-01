@@ -59,7 +59,7 @@ export default class ZnCols extends ZincElement {
         'cols': true,
         'cols--no-gap': this.noGap,
         'cols--border': this.border,
-        [`cols--layout-${this.layout}`]: !!this.layout,
+        [`cols--layout-${this.layout.replace(',', '')}`]: !!this.layout,
         [`cols--mc-${this.maxColumns}`]: !!this.maxColumns,
       })}">
         <slot></slot>

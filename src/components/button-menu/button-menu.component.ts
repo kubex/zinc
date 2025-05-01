@@ -93,8 +93,6 @@ export default class ZnButtonMenu extends ZincElement {
     let visibleButtons = 0;
     let remainingWidth = containerWidth; // Some default padding
 
-    console.log('remainig width', remainingWidth);
-
     this._buttons = [...this._originalButtons];
 
 
@@ -102,7 +100,7 @@ export default class ZnButtonMenu extends ZincElement {
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (remainingWidth >= button.width) {
         // remove button width and some default padding and spacing
-        remainingWidth -= (button.width + (20 * index));
+        remainingWidth -= (Math.min(200, button.width) + (20 * index));
         visibleButtons++;
       }
     })
@@ -115,7 +113,6 @@ export default class ZnButtonMenu extends ZincElement {
     // Remove all buttons from the ui and menu
     const container = this.shadowRoot?.querySelector('.zn-button-menu__container');
     if (container) {
-      console.log('Removing buttons from container');
       container.innerHTML = '';
     }
 
@@ -145,7 +142,6 @@ export default class ZnButtonMenu extends ZincElement {
       }
     });
 
-    console.log('visibleButtons', visibleButtons);
     this.calculateMenuButtons(visibleButtons, this._buttons);
   }
 

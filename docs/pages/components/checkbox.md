@@ -43,7 +43,7 @@ useful for giving more emphasis to a checkbox or list of checkboxes.
   <zn-checkbox description="Requires separate initiators and approvers">Initiate outbound transfers</zn-checkbox>
   <zn-checkbox description="Requires separate initiators and approvers">Approve outbound transfers </zn-checkbox>
   <zn-checkbox description="Applies to both cash account and charge card" disabled>Export transactions</zn-checkbox>
-<zn-checkbox-group>
+</zn-checkbox-group>
 ```
 
 :::tip

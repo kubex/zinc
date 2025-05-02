@@ -60,11 +60,9 @@ export default class ZnButtonMenu extends ZincElement {
     if (this.maxWidth) {
       this.containerWidth = Math.min(this.containerWidth, this.maxWidth);
     }
-
   }
 
-
-  @watch('containerWidth', {waitUntilFirstUpdate: false})
+  @watch('containerWidth', {waitUntilFirstUpdate: true})
   watchContainerMaxWidth() {
     if (this.maxWidth) {
       this.containerWidth = Math.min(this.containerWidth, this.maxWidth);
@@ -161,6 +159,16 @@ export default class ZnButtonMenu extends ZincElement {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
             menuItem.innerText = button.button.innerText;
+
+            const icon = button.button.getAttribute('icon');
+            if (icon) {
+              const iconElement = document.createElement('zn-icon');
+              iconElement.setAttribute('src', icon);
+              iconElement.setAttribute('size', '18');
+              iconElement.setAttribute('slot', 'prefix');
+              menuItem.appendChild(iconElement);
+            }
+
             menu.appendChild(menuItem);
           }
         });

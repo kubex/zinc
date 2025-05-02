@@ -8,18 +8,18 @@ layout: component
 ```html:preview
 
 <zn-button-menu>
-  <zn-button primary color="error">Something sdf</zn-button>
-  <zn-button>sd</zn-button>
-  <zn-button secondary color="success">fdf</zn-button>
-  <zn-button secondary>fsdsfdf</zn-button>
-  <zn-button>fd</zn-button>
+  <zn-button primary color="error" icon="house">Something sdf</zn-button>
+  <zn-button  icon="house">sd</zn-button>
+  <zn-button  icon="house" secondary color="success">fdf</zn-button>
+  <zn-button  icon="house" secondary>fsdsfdf</zn-button>
+  <zn-button  icon="house">fd</zn-button>
   <zn-button category="edit" icon="Home">Home</zn-button>
   <zn-button color="warning" category="edit">WARNING</zn-button>
-  <zn-button primary category="edit">ddsfdsfdsf</zn-button>
-  <zn-button category="edit">34kjnsdfkjdsnf</zn-button>
+  <zn-button  icon="house" primary category="edit">ddsfdsfdsf</zn-button>
+  <zn-button  icon="house" category="edit">34kjnsdfkjdsnf</zn-button>
   <zn-button primary category="edit">dsfdf</zn-button>
-  <zn-button category="view">dfsf</zn-button>
-  <zn-button category="view">sdfdsfdsfds</zn-button>
+  <zn-button  icon="house" category="view">dfsf</zn-button>
+  <zn-button  icon="house" category="view">sdfdsfdsfds</zn-button>
   <zn-button category="view">dfsdfdsfdsfdsfsf</zn-button>
 </zn-button-menu>
 ```

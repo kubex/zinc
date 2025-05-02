@@ -1,5 +1,5 @@
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS, type PropertyValues} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
 import {watch} from "../../internal/watch";
@@ -38,14 +38,16 @@ export default class ZnButtonMenu extends ZincElement {
 
   private resizeObserver: ResizeObserver | null = null;
 
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
 
     const buttons = this.querySelectorAll<ZnButton>('zn-button');
     this._originalButtons = Array.from(buttons).map((button: ZnButton) => {
       return {
         button: button,
-        width: button.offsetWidth
+        width: Math.max(button.offsetWidth, 100)
       }
     });
 
@@ -58,9 +60,11 @@ export default class ZnButtonMenu extends ZincElement {
     if (this.maxWidth) {
       this.containerWidth = Math.min(this.containerWidth, this.maxWidth);
     }
+
   }
 
-  @watch('containerWidth', {waitUntilFirstUpdate: true})
+
+  @watch('containerWidth', {waitUntilFirstUpdate: false})
   watchContainerMaxWidth() {
     if (this.maxWidth) {
       this.containerWidth = Math.min(this.containerWidth, this.maxWidth);

@@ -5052,7 +5052,7 @@ declare module "components/data-select/index" {
     }
 }
 declare module "components/button-menu/button-menu.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type ZnButton from "components/button/index";
     interface CustomButtonWidths {

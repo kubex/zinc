@@ -108,3 +108,35 @@
     color: #8967ef !important;
   }
 }
+
+@each $spacing-key, $spacing-value in variables.$spacing {
+  .ml-#{$spacing-key} {
+    margin-left: $spacing-value;
+  }
+
+  .mr-#{$spacing-key} {
+    margin-right: $spacing-value;
+  }
+
+  .mt-#{$spacing-key} {
+    margin-top: $spacing-value;
+  }
+
+  .mb-#{$spacing-key} {
+    margin-bottom: $spacing-value;
+  }
+
+  .mx-#{$spacing-key} {
+    margin-left: $spacing-value;
+    margin-right: $spacing-value;
+  }
+
+  .my-#{$spacing-key} {
+    margin-top: $spacing-value;
+    margin-bottom: $spacing-value;
+  }
+
+  .m-#{$spacing-key} {
+    margin: $spacing-value;
+  }
+}

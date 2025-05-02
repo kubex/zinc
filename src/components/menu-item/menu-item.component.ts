@@ -200,7 +200,7 @@ export default class ZnMenuItem extends ZincElement {
         <slot name="suffix" part="suffix" class="menu-item__suffix"></slot>
 
         <span part="submenu-icon" class="menu-item__chevron">
-          <zn-icon src=${isRtl ? 'chevron-left' : 'chevron-right'} aria-hidden="true"></zn-icon>
+          <zn-icon src=${isRtl ? 'chevron_left' : 'chevron_right'} aria-hidden="true"></zn-icon>
         </span>
 
         ${this.submenuController.renderSubmenu()}

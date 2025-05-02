@@ -152,6 +152,10 @@ export default class ZnButtonMenu extends ZincElement {
     const dropdown = this.shadowRoot?.querySelector('zn-dropdown');
 
     if (menu && dropdown) {
+      const categories = new Set<string>();
+      // list of menu items ID by category
+      const menuItems: { [key: string]: Element[] } = {};
+
       // if there's any buttons to add to the menu
       if (visibleButtons !== buttons.length && visibleButtons > 0) {
         dropdown.removeAttribute('hidden');
@@ -169,9 +173,39 @@ export default class ZnButtonMenu extends ZincElement {
               menuItem.appendChild(iconElement);
             }
 
-            menu.appendChild(menuItem);
+            const category: string = button.button.getAttribute('category') || 'default'
+            categories.add(category);
+
+            if (!menuItems[category]) {
+              menuItems[category] = [];
+            }
+
+            menuItems[category].push(menuItem);
           }
         });
+
+        categories.forEach((category: string) => {
+          if (category === 'default') {
+            menuItems[category].forEach((item: Element) => {
+              menu.appendChild(item);
+            });
+          } else {
+            const menuItem = document.createElement('zn-menu-item');
+            // uppercase the first letter of the category
+            menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1);
+            const submenu = document.createElement('zn-menu');
+            submenu.setAttribute('slot', 'submenu');
+
+            menuItems[category].forEach((item: Element) => {
+              submenu.appendChild(item);
+            });
+
+            menuItem.appendChild(submenu);
+            menu.appendChild(menuItem);
+          }
+        })
+
+
       } else {
         dropdown.setAttribute('hidden', '');
       }

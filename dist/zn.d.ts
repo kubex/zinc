@@ -1649,6 +1649,7 @@ declare module "components/data-table/data-table.component" {
         summary: string;
         uri: string;
         target: string;
+        gaid: string;
     }
     interface IconConfig {
         src: string;
@@ -1658,6 +1659,7 @@ declare module "components/data-table/data-table.component" {
     interface ButtonConfig {
         id: string;
         href: string;
+        gaid: string;
         size: string;
         color: string;
         icon: string;

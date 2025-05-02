@@ -46,6 +46,7 @@ interface CaptionConfig {
   summary: string;
   uri: string;
   target: string;
+  gaid: string;
 }
 
 interface IconConfig {
@@ -57,6 +58,7 @@ interface IconConfig {
 interface ButtonConfig {
   id: string;
   href: string;
+  gaid: string;
   size: string;
   color: string;
   icon: string;
@@ -578,7 +580,9 @@ export default class ZnDataTable extends ZincElement {
         let title = html`<span class="title">${data['caption'].title}</span>`;
 
         if (data['caption'].target && data['caption'].uri) {
-          title = html` <a data-target="${ifDefined(data['caption'].target)}" href="${data['caption'].uri}"
+          title = html` <a data-target="${ifDefined(data['caption'].target)}"
+                           href="${data['caption'].uri}"
+                           gaid=${ifDefined(data['caption'].gaid)}
                            class="title">
             ${data['caption'].title}
           </a>`
@@ -622,6 +626,7 @@ export default class ZnDataTable extends ZincElement {
                 <zn-button
                   id="${button.id}"
                   href=${button.href}
+                  gaid=${button.gaid}
                   size="${button.size}"
                   color="${button.color}"
                   icon="${button.icon}"

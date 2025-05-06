@@ -1,7 +1,7 @@
 import {property, query} from 'lit/decorators.js';
 import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-import Quill from "quill";
+import Quill, {Range} from "quill";
 import {FormControlController} from '../../internal/form';
 import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
 import AttachmentModule from "./modules/attachment-module";
@@ -110,14 +110,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         toolbar: {
           container,
           handlers: {
-            'placeholder': function (value: any) {
+            'placeholder': function (value: string) {
               if (value) {
                 const editor: Quill | null = this.quill;
-                if (!editor) return;
-
-                const cursorPosition = editor.getSelection().index;
-                editor.insertText(cursorPosition, value);
-                editor.setSelection(cursorPosition + value.length);
+                if (editor) {
+                  const cursorPosition = editor.getSelection()?.index;
+                  if (cursorPosition) {
+                    editor.insertText(cursorPosition, value);
+                    editor.setSelection(new Range(cursorPosition, value.length));
+                  }
+                }
               }
             },
             'redo': () => this.quillElement.history.redo(),

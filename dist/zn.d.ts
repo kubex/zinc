@@ -2245,7 +2245,7 @@ declare module "components/dropdown/dropdown.component" {
         reposition(): void;
         /** Aria related method */
         private updateAccessibleTrigger;
-        handleOpenChange(): Promise<void>;
+        handleOpenChange(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -3629,7 +3629,7 @@ declare module "components/bulk-actions/index" {
     }
 }
 declare module "components/editor/modules/dropdown-module/dropdown-module.component" {
-    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
+    import { type CSSResultGroup, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
     import type { DropdownModuleCannedResponse } from "components/editor/modules/dropdown-module/dropdown-module";
     export default class DropdownModuleComponent extends ZincElement {
@@ -3637,13 +3637,12 @@ declare module "components/editor/modules/dropdown-module/dropdown-module.compon
         private hasFocus;
         searchInput: HTMLInputElement;
         commandList: HTMLElement;
+        dropdownModule: HTMLElement;
         commands: DropdownModuleCannedResponse[];
         open: boolean;
         private closeWatcher;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        focus(): void;
         private handleKeyDown;
         getAllItems(): HTMLElement[];
         getCurrentItem(): HTMLElement | undefined;
@@ -3651,15 +3650,16 @@ declare module "components/editor/modules/dropdown-module/dropdown-module.compon
         setCurrentItem(item: HTMLElement): void;
         private handleFocus;
         private handleBlur;
+        focus(): void;
         show(): void;
         hide(): void;
         handleOpenChange(): void;
         private addOpenListeners;
         private removeOpenListeners;
         private requestClose;
-        render(): TemplateResult<1>;
         private handleClick;
         private _createCommand;
+        render(): TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/dropdown-module/events/zn-command-select" {
@@ -5054,7 +5054,7 @@ declare module "components/data-select/index" {
     }
 }
 declare module "components/button-menu/button-menu.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type ZnButton from "components/button/index";
     interface CustomButtonWidths {

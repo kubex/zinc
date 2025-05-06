@@ -105,7 +105,6 @@ export default class ZnDialog extends ZincElement {
 
     if (this.trigger) {
       const trigger = this.parentNode?.querySelector('#' + this.trigger);
-      console.log('trigger', trigger);
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }

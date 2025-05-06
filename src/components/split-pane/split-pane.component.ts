@@ -60,7 +60,7 @@ export default class ZnSplitPane extends ZincElement {
     super.connectedCallback();
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znsp:", this.storeTtl);
     this.primaryFull = this.calculatePixels ? this.initialSize + 'px' : this.initialSize + '%';
-    on(this, 'click', '[split-pane-focus]', (e: any) => {
+    on(this, 'click', '[split-pane-focus]', (e: Event & { selectedTarget: EventTarget }) => {
       e.preventDefault();
       e.stopPropagation();
       this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus') as string));

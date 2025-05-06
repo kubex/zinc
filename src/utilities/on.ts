@@ -1,15 +1,15 @@
-type OnEvent = Event & { selectedTarget: EventTarget };
+type OnEvent = Event & { selectedTarget: EventTarget, path: EventTarget[] };
 
 interface OnEventListener {
   (evt: OnEvent): void;
 }
 
 export function on(delegate: EventTarget, eventName: string, targetSelector: string, callback: OnEventListener) {
-  function _fn(e: any) {
-    const path = e.path || (e.composedPath && e.composedPath());
-    let t = path && path[0] || e.target;
+  function _fn(e: OnEvent) {
+    const path = e.path || (e.composedPath?.());
+    let t: Element | null = (path?.[0] || e.target) as Element;
     do {
-      if ((!targetSelector) || (t.matches && t.matches(targetSelector))) {
+      if (!targetSelector || (t.matches && t.matches(targetSelector))) {
         e.selectedTarget = t;
         return callback(e);
       }
@@ -19,7 +19,9 @@ export function on(delegate: EventTarget, eventName: string, targetSelector: str
         break;
       }
     }
-    while ((t = t.parentElement || (t.getRootNode() && t.getRootNode().host)));
+    while ((t = t.parentElement));
+
+    return false;
   }
 
   delegate.addEventListener(eventName, _fn);

@@ -1,7 +1,7 @@
-import { getBasePath } from "./utilities/base-path";
+import {getBasePath} from "./utilities/base-path";
 
 const observer = new MutationObserver((mutations) => {
-  for (const { addedNodes } of mutations) {
+  for (const {addedNodes} of mutations) {
     for (const node of addedNodes) {
       if (node.nodeType === Node.ELEMENT_NODE) {
         discover(node as Element);
@@ -45,7 +45,8 @@ function register(tagName: string): Promise<void> {
 
   // Register it
   return new Promise((resolve, reject) => {
-    // @ts-ignore
+    // @ts-expect-error  Dynamic imports are only supported when the --module flag is set to es2020, es2022, esnext,
+    // commonjs, amd, system, umd, node16, or nodenext
     import(path).then(() => resolve()).catch(() => reject(new Error(`Unable to autoload <${tagName}> from ${path}`)));
   });
 }
@@ -54,4 +55,4 @@ function register(tagName: string): Promise<void> {
 discover(document.body);
 
 // Listen for new undefined elements
-observer.observe(document.documentElement, { subtree: true, childList: true });
+observer.observe(document.documentElement, {subtree: true, childList: true});

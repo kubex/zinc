@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function md5(string: string): string {
 
   function RotateLeft(lValue: number, iShiftBits: number) {

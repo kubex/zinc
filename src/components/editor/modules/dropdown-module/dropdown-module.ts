@@ -160,10 +160,8 @@ class DropdownModule {
     // insert the command content
     const delta = this._quill.clipboard.convert({html: command.content});
     this._quill.setContents(delta, 'silent');
-
     // update the quill editor
     this._quill.update();
-
     // Set cursor position to the end of the inserted content
     const range = this._quill.getSelection();
     if (range) {

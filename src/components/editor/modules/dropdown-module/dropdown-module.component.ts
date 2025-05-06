@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
@@ -7,7 +7,6 @@ import ZincElement from "../../../../internal/zinc-element";
 import type {DropdownModuleCannedResponse} from "./dropdown-module";
 
 import styles from './dropdown-module.scss';
-
 
 export default class DropdownModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -17,14 +16,12 @@ export default class DropdownModuleComponent extends ZincElement {
   @query('zn-input#search-input') searchInput!: HTMLInputElement;
   @query('.dropdown-module__content') commandList!: HTMLElement;
 
+  @query('.dropdown-module') dropdownModule!: HTMLElement;
+
   @property({type: Array}) commands: DropdownModuleCannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
   private closeWatcher: CloseWatcher | null;
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -34,10 +31,6 @@ export default class DropdownModuleComponent extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  focus() {
-    this.searchInput.focus();
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -91,6 +84,10 @@ export default class DropdownModuleComponent extends ZincElement {
   }
 
   getAllItems() {
+    if (!this.commandList) {
+      return [];
+    }
+
     return [...this.commandList.children].filter((el: HTMLElement) => {
       return el.getAttribute('data-command') !== null;
     }) as HTMLElement[];
@@ -120,23 +117,31 @@ export default class DropdownModuleComponent extends ZincElement {
 
   private handleFocus() {
     this.hasFocus = true;
+    this.dropdownModule?.focus();
     this.emit('zn-focus');
   }
 
   private handleBlur() {
     this.hasFocus = false;
+    this.dropdownModule?.blur();
     this.emit('zn-blur');
+  }
+
+  focus() {
+    this.searchInput.focus();
   }
 
   show() {
     this.open = true;
     this.emit('zn-show');
+    this.searchInput.focus();
   }
 
   hide() {
     this.open = false;
     this.unsetCurrentItem();
     this.emit('zn-close');
+    this.blur();
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
@@ -172,33 +177,6 @@ export default class DropdownModuleComponent extends ZincElement {
     }
 
     this.hide();
-  }
-
-  render() {
-    return html`
-      <div class="${classMap({
-        'dropdown-module': true,
-        'dropdown-module--has-focus': this.hasFocus,
-        'dropdown-module--has-results': this.commands.length > 0,
-        'dropdown-module--open': this.open,
-      })}">
-
-        <div class="dropdown-module__header">
-          Canned Responses
-        </div>
-
-        <zn-input id="search-input" type="search" placeholder="Search..." class="search-input"
-                  autocomplete="off" autocorrect="off" spellcheck="false"
-                  @focus="${this.handleFocus}" @blur="${this.handleBlur}"></zn-input>
-
-        <div class="dropdown-module__content">
-          ${repeat(this.commands, (command: DropdownModuleCannedResponse) => this._createCommand(command))}
-        </div>
-
-        <slot></slot>
-
-      </div>
-    `;
   }
 
   private handleClick = (event: MouseEvent) => {
@@ -247,6 +225,34 @@ export default class DropdownModuleComponent extends ZincElement {
         </div>
       </div>`
   }
+
+  render() {
+    return html`
+      <div class="${classMap({
+        'dropdown-module': true,
+        'dropdown-module--has-focus': this.hasFocus,
+        'dropdown-module--has-results': this.commands.length > 0,
+        'dropdown-module--open': this.open,
+      })}">
+
+        <div class="dropdown-module__header">
+          Canned Responses
+        </div>
+
+        <zn-input id="search-input" type="search" placeholder="Search..." class="search-input"
+                  autocomplete="off" autocorrect="off" spellcheck="false"
+                  @focus="${this.handleFocus}" @blur="${this.handleBlur}"></zn-input>
+
+        <div class="dropdown-module__content">
+          ${repeat(this.commands, (command: DropdownModuleCannedResponse) => this._createCommand(command))}
+        </div>
+
+        <slot></slot>
+
+      </div>
+    `;
+  }
+
 }
 
 DropdownModuleComponent.define('zn-dropdown-module');

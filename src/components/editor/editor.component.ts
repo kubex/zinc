@@ -86,7 +86,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    Quill.debug('error');
     Quill.register('modules/dropdownModule', DropdownModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
@@ -209,17 +208,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _updateIcons() {
-    const icons = Quill.import("ui/icons");
+    const icons: { [key: string]: string } = Quill.import("ui/icons");
     if (icons) {
-      // @ts-ignore
       icons["undo"] = `<zn-icon src="undo" size="20"></zn-icon>`;
-      // @ts-ignore
       icons["redo"] = `<zn-icon src="redo" size="20"></zn-icon>`;
-      // @ts-ignore
       icons["remove-formatting"] = `<zn-icon src="format_clear" size="20"></zn-icon>`;
 
       if (this.interactionType === 'ticket') {
-        // @ts-ignore
         icons["image-attachment"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
       }
     }
@@ -247,7 +242,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     };
 
     if (this.interactionType === 'chat') {
-      // @ts-ignore
       bindings['enter'] = {
         key: 'Enter',
         shiftKey: false,
@@ -266,8 +260,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _supplyPlaceholderDropdown() {
-    const placeholderItems: Array<HTMLElement> = Array.prototype.slice.call(this.shadowRoot?.querySelectorAll('.ql-placeholder .ql-picker-item'));
-    placeholderItems.forEach((item) => item.textContent = item.dataset.value ?? '');
+    const placeholderItems: HTMLElement[] = Array.prototype.slice.call(this.shadowRoot?.querySelectorAll('.ql-placeholder .ql-picker-item'));
+    placeholderItems.forEach((item) => {
+      item.textContent = item.dataset.value ?? ''
+    });
     placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 

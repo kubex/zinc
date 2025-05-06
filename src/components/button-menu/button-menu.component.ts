@@ -1,8 +1,8 @@
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
-import {watch} from "../../internal/watch";
 
 import styles from './button-menu.scss';
 
@@ -96,7 +96,6 @@ export default class ZnButtonMenu extends ZincElement {
     let remainingWidth = containerWidth; // Some default padding
 
     this._buttons = [...this._originalButtons];
-
 
     // Calculate the number of visible buttons
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {

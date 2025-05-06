@@ -210,7 +210,7 @@ Use the `type="submit"` attribute to create a submit button as a Suffix to the i
 
 ```html:preview
 <zn-input label="Search" placeholder="Search">
-  <zn-button slot="suffix" type="submit" variant="primary">Search</zn-button>
+  <zn-button slot="suffix" type="submit" variant="primary" outline>Search</zn-button>
 </zn-input>
 ```
 

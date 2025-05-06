@@ -1,7 +1,7 @@
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
-import ZincElement from '../../internal/zinc-element';
 import ApexCharts from "apexcharts";
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './chart.scss';
 
@@ -78,7 +78,7 @@ export default class ZnChart extends ZincElement {
       },
       yaxis: {
         labels: {
-          formatter: (value: any) => {
+          formatter: (value: number) => {
             if (this.yAxisAppend) {
               return value + this.yAxisAppend;
             }
@@ -89,7 +89,7 @@ export default class ZnChart extends ZincElement {
       tooltip: {
         theme: theme,
         y: {
-          formatter: (value: any, _: any) => {
+          formatter: (value: number,) => {
             if (this.yAxisAppend) {
               return value + this.yAxisAppend;
             }
@@ -119,7 +119,7 @@ export default class ZnChart extends ZincElement {
       },
       fill: {
         type: 'solid',
-        opacity: this.type === 'area' ? 0.1 : .8
+        opacity: this.type === 'area' ? 0.1 : 0.8
       },
       series: this.data,
       xaxis: {},

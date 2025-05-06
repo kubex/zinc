@@ -1,5 +1,5 @@
-import {PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
+import type {PropertyValues} from 'lit';
 
 /**
  * @summary The absolute container will take the total inner height of the content (positioned absolute), and set that

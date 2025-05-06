@@ -1,26 +1,26 @@
-import {property, query} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
-import {FormControlController} from "../../internal/form";
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {FormControlController} from "../../internal/form";
+import {property, query} from 'lit/decorators.js';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './bulk-actions.scss';
 
-export type CreatedRule = {
+export interface CreatedRule {
   id: string;
   name: string;
   value: string;
 }
 
-export type BulkActionData = Array<BulkActionItem>;
+export type BulkActionData = BulkActionItem[];
 
-export type BulkActionItem = {
-  id: string,
-  name: string,
+export interface BulkActionItem {
+  id: string;
+  name: string;
   type?: 'bool' | 'boolean' | 'date' | 'number';
   options?: {
-    [key: string]: string
-  },
+    [key: string]: string;
+  };
 }
 
 /**
@@ -75,7 +75,7 @@ export default class ZnBulkActions extends ZincElement {
       })}">
         <select class="add-rule" @change="${this._addRule}">
           <option value="">Select Filter</option>
-          ${this.actions.map((item: any) => html`
+          ${this.actions.map((item: BulkActionItem) => html`
             <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
         </select>
         <input id="main-input" name="${this.name}" value="${this.value}" type="hidden">
@@ -84,8 +84,8 @@ export default class ZnBulkActions extends ZincElement {
   }
 
   private _handleChange() {
-    const data: any = [];
-    [...this._selectedRules].forEach(([_, value]) => {
+    const data: { key: string; value: string }[] = [];
+    [...this._selectedRules].forEach(([, value]) => {
       data.push({
         key: value.id,
         value: value.value

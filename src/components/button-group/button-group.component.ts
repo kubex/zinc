@@ -1,7 +1,7 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import { classMap } from "lit/directives/class-map.js";
 
 import styles from './button-group.scss';
 
@@ -26,9 +26,9 @@ export default class ZnButtonGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({}) direction: 'horizontal' | 'vertical' = 'horizontal';
-  @property({ type: Boolean }) grow = false;
-  @property({ type: Boolean }) wrap = false;
-  @property({ type: Boolean }) start = false;
+  @property({type: Boolean}) grow = false;
+  @property({type: Boolean}) wrap = false;
+  @property({type: Boolean}) start = false;
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
@@ -37,7 +37,7 @@ export default class ZnButtonGroup extends ZincElement {
       return;
     }
 
-    let slottedElements = [...this.defaultSlot.assignedElements({ flatten: true })] as HTMLElement[];
+    let slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
     slottedElements = slottedElements.filter(el => el.tagName === 'ZN-BUTTON');
     slottedElements.forEach(el => {

@@ -1,9 +1,9 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './alert.scss';
-import { classMap } from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -25,11 +25,11 @@ import { classMap } from "lit/directives/class-map.js";
 export default class ZnAlert extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: String }) icon: string = '';
-  @property({ type: String }) caption: string = '';
-  @property({ type: Boolean }) collapse: boolean = false;
-  @property({ type: String }) level: 'primary' | 'error' | 'info' | 'success' | 'warning' = 'info';
-  @property({ type: String }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({type: String}) icon: string = '';
+  @property({type: String}) caption: string = '';
+  @property({type: Boolean}) collapse: boolean = false;
+  @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' = 'info';
+  @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
 
   render() {
     let icon;

@@ -1,6 +1,7 @@
 import {LitElement} from "lit";
 import {property} from "lit/decorators.js";
-import {
+import {ThemeController} from "./theme";
+import type {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
   EventTypesWithoutRequiredDetail,
@@ -9,7 +10,6 @@ import {
   ValidEventTypeMap,
   ZincEventInit
 } from "./event";
-import {ThemeController} from "./theme";
 
 export default class ZincElement extends LitElement {
   @property() dir: string; // LTR or RTL direction
@@ -54,7 +54,8 @@ export default class ZincElement extends LitElement {
   constructor() {
     super();
 
-    // All Zinc components should have a theme controller
+    // All Zinc components should have a theme controller  /
+    /* eslint-disable no-new */
     new ThemeController(this);
 
     // Make sure we have access to all dependencies and they are defined

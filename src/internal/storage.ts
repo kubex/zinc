@@ -23,12 +23,12 @@ export class Store {
     if (value === null) {
       return null;
     }
-    let parts = value.split(",");
+    const parts = value.split(",");
     if (parts.length === 1) {
       return parts[0];
     }
     const i = parts.shift()
-    let ttl = i ? parseInt(i) : 0;
+    const ttl = i ? parseInt(i) : 0;
     if (ttl > 0 && ttl < Date.now()) {
       return null;
     }
@@ -53,13 +53,13 @@ export class Store {
 
   public cleanup() {
     for (let i = 0; i < this.storage.length; i++) {
-      let key = this.storage.key(i);
+      const key = this.storage.key(i);
       if (key === null) {
         continue;
       }
 
       if (key.startsWith(this.prefix)) {
-        let value = this.stripTtl(this.storage.getItem(key));
+        const value = this.stripTtl(this.storage.getItem(key));
         if (value === null) // Check for TTLed values
         {
           this.storage.removeItem(key);

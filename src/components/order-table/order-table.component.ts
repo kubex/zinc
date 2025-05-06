@@ -184,7 +184,7 @@ export default class ZnOrderTable extends ZincElement {
 
   getSummary() {
     let tax = html``;
-    if (this.modifiedData['tax']) {
+    if (this.modifiedData && this.modifiedData['tax']) {
       tax = html`
         <div class="summary-item">
           <div class="summary-item-title">Tax</div>
@@ -193,7 +193,7 @@ export default class ZnOrderTable extends ZincElement {
     }
 
     let discount = html``;
-    if (this.modifiedData['discount']) {
+    if (this.modifiedData && this.modifiedData['discount']) {
       discount = html`
         <div class="summary-item">
           <div class="summary-item-title">Discount</div>
@@ -202,7 +202,7 @@ export default class ZnOrderTable extends ZincElement {
     }
 
     let total = html``;
-    if (this.modifiedData['total']) {
+    if (this.modifiedData && this.modifiedData['total']) {
       total = html`
         <div class="summary-item">
           <div class="summary-item-title">Grand Total</div>
@@ -212,7 +212,7 @@ export default class ZnOrderTable extends ZincElement {
 
 
     let paid = html``;
-    if (this.modifiedData['paid']) {
+    if (this.modifiedData && this.modifiedData['paid']) {
       paid = html`
         <div class="summary-item">
           <div class="summary-item-title">Paid</div>
@@ -222,7 +222,7 @@ export default class ZnOrderTable extends ZincElement {
 
 
     let remaining = html``;
-    if (this.modifiedData['remaining']) {
+    if (this.modifiedData && this.modifiedData['remaining']) {
       remaining = html`
         <div class="summary-item">
           <div class="summary-item-title">Remaining Balance</div>

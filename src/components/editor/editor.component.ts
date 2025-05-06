@@ -112,9 +112,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           handlers: {
             'placeholder': function (value: any) {
               if (value) {
-                const cursorPosition = this.quill.getSelection().index;
-                this.quill.insertText(cursorPosition, value);
-                this.quill.setSelection(cursorPosition + value.length);
+                const editor: Quill | null = this.quill;
+                if (!editor) return;
+
+                const cursorPosition = editor.getSelection().index;
+                editor.insertText(cursorPosition, value);
+                editor.setSelection(cursorPosition + value.length);
               }
             },
             'redo': () => this.quillElement.history.redo(),
@@ -184,8 +187,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     };
 
     quill.selection.getNativeRange = () => {
-      const dom = quill.root.getRootNode() as Document;
-      const selection = dom.getSelection();
+      const dom = quill.root.getRootNode() as Document | null | Element;
+      let selection;
+      if (dom instanceof Document) {
+        selection = dom.getSelection();
+      }
       return normalizeNative(selection);
     };
 

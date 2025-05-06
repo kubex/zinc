@@ -1,10 +1,18 @@
 import {property, query} from 'lit/decorators.js';
 import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
 import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
+import {FormControlController} from "../../internal/form";
+import ZnSelect from "../select";
 
 import styles from './linked-select.scss';
-import ZnSelect from "../select";
-import {FormControlController} from "../../internal/form";
+
+interface linkedSelectOption {
+  [key: string]: string;
+}
+
+interface linkedSelectOptions {
+  [key: string]: linkedSelectOption[];
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -30,7 +38,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   @property() value: string;
 
   @property({type: Boolean, reflect: true}) checked = false;
-  @property({type: Array}) options: any;
+  @property({type: Array}) options: linkedSelectOptions;
   @property({attribute: 'linked-select'}) linkedSelect: string = "";
 
   @property({attribute: 'cache-key'}) cacheKey: string = "";
@@ -40,7 +48,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   private linkedSelectElement: HTMLSelectElement | ZnSelect;
   private readonly formControlController = new FormControlController(this, {
-    value: (input: any) => {
+    value: (input) => {
       const selectElement = this.input;
       if (selectElement) {
         return selectElement.value;
@@ -62,8 +70,8 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     super.connectedCallback();
 
     let level = 0;
-    let currentElement: any = this.parentElement;
-    while (level < 10 && currentElement.tagName !== 'DOCUMENT') {
+    let currentElement: Element | null = this.parentElement;
+    while (level < 10 && currentElement && currentElement.tagName !== 'DOCUMENT') {
       const element = currentElement.querySelector(`[id="${this.linkedSelect}"]`);
       if (element instanceof ZnSelect) {
         this.linkedSelectElement = element as ZnSelect;
@@ -79,13 +87,15 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
-    this.linkedSelectElement.addEventListener('zn-change', this.handleLinkedSelectChange);
+    this.linkedSelectElement?.addEventListener('zn-change', this.handleLinkedSelectChange);
     this.input.addEventListener('zn-change', this.handleChange);
     this.formControlController.updateValidity();
+
+    super.firstUpdated(_changedProperties);
   }
 
   disconnectedCallback() {
-    this.linkedSelectElement.removeEventListener('zn-change', this.handleLinkedSelectChange);
+    this.linkedSelectElement?.removeEventListener('zn-change', this.handleLinkedSelectChange);
     super.disconnectedCallback();
   }
 
@@ -106,7 +116,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     this.formControlController.updateValidity();
   }
 
-  public handleLinkedSelectChange = (_: Event) => {
+  public handleLinkedSelectChange = () => {
     this.requestUpdate();
     this.formControlController.updateValidity();
   };
@@ -118,20 +128,21 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
 
   render() {
     let selected = this.linkedSelectElement?.value as string;
-    if (!selected) {
+    if (!selected && this.options) {
       selected = Object.keys(this.options)[0];
     }
 
-    const options = this.options[selected];
+    const options: linkedSelectOption[] = selected ? this.options[selected]: [];
     return html`
       <zn-select part="select"
                  class="linked-select"
                  name="${this.name}"
                  id="main-input"
                  cache-key="${this.cacheKey}"
+                 value="${this.value}"
                  label="${this.label}">
-        ${Object.entries(options).map(([key, value]) => html`
-          <zn-option value="${key}" ?selected="${key === this.value}">${value}</zn-option>
+        ${options && Object.entries(options).map(([key, value]) => html`
+          <zn-option value="${key}">${value}</zn-option>
         `)}
       </zn-select>`;
   }

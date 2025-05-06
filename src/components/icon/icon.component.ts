@@ -47,7 +47,7 @@ export default class ZnIcon extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    if (this.src.includes('@')) {
+    if (this.src && this.src.includes('@')) {
       const split = this.src.split('@');
       if (split[1].includes('.')) {
         this.library = "gravatar";

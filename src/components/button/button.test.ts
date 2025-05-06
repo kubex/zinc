@@ -26,7 +26,7 @@ describe('<zn-button>', () => {
     const el = await fixture<ZnButton>(html`<zn-button>Button Label</zn-button>`);
 
     expect(el.title).to.equal('');
-    expect(el.variant).to.equal('default');
+    expect(el.color).to.equal('default');
   });
 
 });

@@ -208,6 +208,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _updateIcons() {
+    // @ts-expect-error icons has no type
     const icons: { [key: string]: string } = Quill.import("ui/icons");
     if (icons) {
       icons["undo"] = `<zn-icon src="undo" size="20"></zn-icon>`;
@@ -242,6 +243,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     };
 
     if (this.interactionType === 'chat') {
+      // @ts-expect-error bindings has no type
       bindings['enter'] = {
         key: 'Enter',
         shiftKey: false,

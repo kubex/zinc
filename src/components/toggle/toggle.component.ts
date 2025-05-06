@@ -1,13 +1,13 @@
-import {property, query, state} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-
-import styles from './toggle.scss';
-import {ifDefined} from "lit/directives/if-defined.js";
-import {live} from "lit/directives/live.js";
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
-import {classMap} from "lit/directives/class-map.js";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {live} from "lit/directives/live.js";
+import {property, query, state} from 'lit/decorators.js';
+import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
+
+import styles from './toggle.scss';
 
 /**
  * @summary Short summary of the component's intended use.
@@ -80,6 +80,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   firstUpdated(_changedProperties: PropertyValues) {
     this.formControlController.updateValidity();
+    super.firstUpdated(_changedProperties);
   }
 
   private handleBlur() {
@@ -156,7 +157,11 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   render() {
     let fallback = html``;
     if (this.fallbackValue !== '') {
-      fallback = html`<input type="hidden" name=${this.name} value=${this.fallbackValue}/>`;
+      fallback = html`
+        <input type="hidden"
+               name=${this.name}
+               value=${this.fallbackValue}
+        />`;
     }
 
     return html`
@@ -189,7 +194,8 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
               @invalid=${this.handleInvalid}
               @blur=${this.handleBlur}
               @focus=${this.handleFocus}
-              @keydown=${this.handleKeyDown}/>
+              @keydown=${this.handleKeyDown}
+            />
             <span part="control" class="switch__control"></span>
           </div>
         </label>

@@ -1,4 +1,4 @@
-export type ZnMenuSelectEvent = CustomEvent<{ value: string, element: HTMLElement }>;
+export type ZnMenuSelectEvent = CustomEvent<{ value: string; element: HTMLElement }>;
 
 declare global
 {

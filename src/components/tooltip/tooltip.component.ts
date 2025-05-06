@@ -1,10 +1,10 @@
-import { property, query } from 'lit/decorators.js';
-import { type CSSResultGroup, html, PropertyValues, unsafeCSS } from 'lit';
-import { watch } from '../../internal/watch';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {property, query} from 'lit/decorators.js';
+import {waitForEvent} from "../../internal/event";
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import type Popup from "../popup";
-import { classMap } from "lit/directives/class-map.js";
-import { waitForEvent } from "../../internal/event";
 
 import styles from './tooltip.scss';
 
@@ -39,17 +39,17 @@ export default class ZnTooltip extends ZincElement {
   @property() placement: | 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |
     'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' = 'top';
 
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
-  @property({ type: Number }) distance = 4;
+  @property({type: Number}) distance = 4;
 
-  @property({ type: Boolean, reflect: true }) open = false;
+  @property({type: Boolean, reflect: true}) open = false;
 
-  @property({ type: Number }) skidding = 0;
+  @property({type: Number}) skidding = 0;
 
   @property() trigger = 'hover focus';
 
-  @property({ type: Boolean }) hoist = true;
+  @property({type: Boolean}) hoist = true;
 
   constructor() {
     super();
@@ -72,6 +72,8 @@ export default class ZnTooltip extends ZincElement {
       this.popup.active = true;
       this.popup.reposition();
     }
+
+    super.firstUpdated(_changedProperties);
   }
 
   private hasTrigger(triggerType: string) {
@@ -118,7 +120,7 @@ export default class ZnTooltip extends ZincElement {
     }
   }
 
-  @watch('open', { waitUntilFirstUpdate: true })
+  @watch('open', {waitUntilFirstUpdate: true})
   async handleOpenChange() {
     if (this.open) {
       if (this.disabled) {

@@ -52,7 +52,7 @@ export class HasSlotController implements ReactiveController {
   }
 
   getSlot(slotName: string) {
-    return this.host.querySelector(`:scope > [slot="${slotName}"]`) as HTMLElement;
+    return this.host.querySelector(`:scope > [slot="${slotName}"]`)!;
   }
 
   getSlots(slotName: string) {

@@ -1,6 +1,6 @@
 export type ZnHoverEvent = CustomEvent<{
   phase: 'start' | 'move' | 'end';
-  value: number
+  value: number;
 }>;
 
 declare global {

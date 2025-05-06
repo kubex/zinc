@@ -197,7 +197,7 @@ declare module "internal/slot" {
         test(slotName: string): boolean;
         hostConnected(): void;
         hostDisconnected(): void;
-        getSlot(slotName: string): HTMLElement;
+        getSlot(slotName: string): Element;
         getSlots(slotName: string): NodeListOf<HTMLElement>;
         private handleSlotChange;
     }
@@ -440,7 +440,7 @@ declare module "components/popup/index" {
     }
 }
 declare module "components/tooltip/tooltip.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type Popup from "components/popup/index";
     /**
@@ -3861,8 +3861,8 @@ declare module "components/editor/index" {
     }
 }
 declare module "components/toggle/toggle.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/toggle

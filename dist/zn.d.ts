@@ -4350,6 +4350,12 @@ declare module "components/form-group/index" {
 declare module "components/linked-select/linked-select.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    interface linkedSelectOption {
+        [key: string]: string;
+    }
+    interface linkedSelectOptions {
+        [key: string]: linkedSelectOption[];
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/linked-select
@@ -4372,7 +4378,7 @@ declare module "components/linked-select/linked-select.component" {
         name: string;
         value: string;
         checked: boolean;
-        options: any;
+        options: linkedSelectOptions;
         linkedSelect: string;
         cacheKey: string;
         label: string;
@@ -4388,7 +4394,7 @@ declare module "components/linked-select/linked-select.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
-        handleLinkedSelectChange: (_: Event) => void;
+        handleLinkedSelectChange: () => void;
         handleChange(e: Event): void;
         render(): import("lit").TemplateResult<1>;
     }

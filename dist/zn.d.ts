@@ -3131,6 +3131,7 @@ declare module "components/pane/index" {
 declare module "utilities/on" {
     type OnEvent = Event & {
         selectedTarget: EventTarget;
+        path: EventTarget[];
     };
     interface OnEventListener {
         (evt: OnEvent): void;

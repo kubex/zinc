@@ -212,6 +212,54 @@ declare module "internal/slot" {
      */
     export function getTextContent(slot: HTMLSlotElement | undefined | null): string;
 }
+declare module "utilities/md5" {
+    export function md5(string: string): string;
+}
+declare module "components/icon/icon.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/icon
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnIcon extends ZincElement {
+        static styles: CSSResultGroup;
+        src: string;
+        alt: string;
+        size: number;
+        round: boolean;
+        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
+        gravatarOptions: string;
+        connectedCallback(): void;
+        ravatarOptions(): void;
+        render(): import("lit").TemplateResult<1>;
+        private getAvatarInitials;
+    }
+}
+declare module "components/icon/index" {
+    import ZnIcon from "components/icon/icon.component";
+    export * from "components/icon/icon.component";
+    export default ZnIcon;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-icon': ZnIcon;
+        }
+    }
+}
 declare module "internal/watch" {
     import type { LitElement } from "lit";
     type UpdateHandler = (prev?: unknown, next?: unknown) => void;
@@ -454,59 +502,12 @@ declare module "components/tooltip/index" {
         }
     }
 }
-declare module "utilities/md5" {
-    export function md5(string: string): string;
-}
-declare module "components/icon/icon.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/icon
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnIcon extends ZincElement {
-        static styles: CSSResultGroup;
-        src: string;
-        alt: string;
-        size: number;
-        round: boolean;
-        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
-        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
-        gravatarOptions: string;
-        connectedCallback(): void;
-        ravatarOptions(): void;
-        render(): import("lit").TemplateResult<1>;
-        private getAvatarInitials;
-    }
-}
-declare module "components/icon/index" {
-    import ZnIcon from "components/icon/icon.component";
-    export * from "components/icon/icon.component";
-    export default ZnIcon;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-icon': ZnIcon;
-        }
-    }
-}
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import ZnTooltip from "components/tooltip/index";
+    import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
      * @documentation https://inc.style/components/button
@@ -590,8 +591,8 @@ declare module "components/button/index" {
     }
 }
 declare module "components/absolute-container/absolute-container.component" {
-    import { PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { PropertyValues } from 'lit';
     /**
      * @summary The absolute container will take the total inner height of the content (positioned absolute), and set that
      * as it's min height, Creating enough space to show the content.
@@ -2517,7 +2518,7 @@ declare module "components/tile-property/index" {
     }
 }
 declare module "components/chart/chart.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -3560,22 +3561,22 @@ declare module "components/order-table/index" {
     }
 }
 declare module "components/bulk-actions/bulk-actions.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    export type CreatedRule = {
+    export interface CreatedRule {
         id: string;
         name: string;
         value: string;
-    };
-    export type BulkActionData = Array<BulkActionItem>;
-    export type BulkActionItem = {
+    }
+    export type BulkActionData = BulkActionItem[];
+    export interface BulkActionItem {
         id: string;
         name: string;
         type?: 'bool' | 'boolean' | 'date' | 'number';
         options?: {
             [key: string]: string;
         };
-    };
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/bulk-actions

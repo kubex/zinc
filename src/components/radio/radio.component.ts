@@ -1,10 +1,10 @@
-import {property, state} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './radio.scss';
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.

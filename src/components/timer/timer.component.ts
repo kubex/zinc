@@ -1,5 +1,5 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './timer.scss';
@@ -24,16 +24,8 @@ import styles from './timer.scss';
 export default class ZnTimer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ type: Number })
+  @property({type: Number})
   private timestamp = '';
-
-  @property()
-  // @ts-ignore
-  private type: string = '';
-
-  @property({ type: Number })
-  // @ts-ignore
-  private upperLimit: number = 0;
 
   private _getLastMessage() {
     const time = new Date(parseInt(this.timestamp) * 1000);

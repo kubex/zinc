@@ -89,7 +89,10 @@ export default class ZnTooltip extends ZincElement {
 
   private handleClick = () => {
     if (this.hasTrigger('click')) {
-      this.open ? this.hide() : this.show();
+      if (this.open) {
+        this.hide()
+      }
+      this.show();
     }
   };
 
@@ -121,7 +124,7 @@ export default class ZnTooltip extends ZincElement {
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
-  async handleOpenChange() {
+  handleOpenChange() {
     if (this.open) {
       if (this.disabled) {
         return;
@@ -174,13 +177,13 @@ export default class ZnTooltip extends ZincElement {
     return waitForEvent(this, 'zn-after-show');
   }
 
-  async hide() {
+  hide() {
     if (!this.open) {
       return;
     }
 
     this.open = false;
-    return waitForEvent(this, 'zn-after-hide');
+    waitForEvent(this, 'zn-after-hide');
   }
 
   render() {
@@ -200,8 +203,11 @@ export default class ZnTooltip extends ZincElement {
         shift
         arrow
         hover-bridge>
-        <slot slot="anchor" aria-describedby="tooltip"></slot>
-        <div part="body" id="tooltip" class="tooltip__body" role="tooltip" aria-live=${this.open ? 'polite' : 'off'}>
+        <slot slot="anchor"></slot>
+        <div part="body" id="tooltip" class="tooltip__body"
+             role="tooltip"
+             aria-live=${this.open ? 'polite' : 'off'}
+             aria-label="tooltip">
           <slot name="content">${this.content}</slot>
         </div>
       </zn-popup>`;

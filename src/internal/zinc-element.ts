@@ -30,11 +30,11 @@ export default class ZincElement extends LitElement {
     let newVersion = ' (unknown version)';
     let existingVersion = newVersion;
 
-    if ('version' in elementConstructor && elementConstructor.version) {
+    if ('version' in elementConstructor && elementConstructor.version && typeof elementConstructor.version === 'string') {
       newVersion = ` v${elementConstructor.version}`;
     }
 
-    if ('version' in currentRegisteredConstructor && currentRegisteredConstructor.version) {
+    if ('version' in currentRegisteredConstructor && currentRegisteredConstructor.version && typeof currentRegisteredConstructor.version === 'string') {
       existingVersion = ` v${currentRegisteredConstructor.version}`;
     }
 

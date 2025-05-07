@@ -1,7 +1,7 @@
-import { property } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import ZincElement from '../../internal/zinc-element';
 import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './tile-property.scss';
 

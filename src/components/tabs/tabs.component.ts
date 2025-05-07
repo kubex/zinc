@@ -1,5 +1,4 @@
-import type {PropertyValues} from 'lit';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
@@ -30,7 +29,7 @@ import styles from './tabs.scss';
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private _panel: HTMLElement | any;
+  private _panel: Element | null | undefined;
   private _panels: Map<string, Element[]>;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
@@ -40,14 +39,14 @@ export default class ZnTabs extends ZincElement {
 
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
-  @property({attribute: 'default-uri', type: String, reflect: true}) defaultUri = '';
+  @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
 
-  @property({attribute: 'active', type: String, reflect: true}) _current = '';
-  @property({attribute: 'split', type: Number, reflect: true}) _split: any;
+  @property({attribute: 'active', reflect: true}) _current = '';
+  @property({attribute: 'split', type: Number, reflect: true}) _split: number;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
 
-  @property({attribute: 'primary-caption', type: String, reflect: true}) primaryCaption = 'Navigation';
-  @property({attribute: 'secondary-caption', type: String, reflect: true}) secondaryCaption = 'Content';
+  @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
+  @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
 
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
@@ -87,7 +86,7 @@ export default class ZnTabs extends ZincElement {
     this.observerDom();
     this._registerTabs();
 
-    if (this.storeKey && this.storeTtl == 0) {
+    if (this.storeKey && this.storeTtl === 0) {
       // Default tab storage to 5 minutes
       this.storeTtl = 300;
     }
@@ -96,7 +95,7 @@ export default class ZnTabs extends ZincElement {
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) => {
-      if (element.slot == '') {
+      if (element.slot === '') {
         this._panels.set(element.getAttribute('id') || defaultID, [element]);
       }
     });
@@ -132,7 +131,7 @@ export default class ZnTabs extends ZincElement {
       this._registerTabs();
 
       const storedValue = this._store.get(this.storeKey);
-      if (storedValue != null) {
+      if (storedValue !== null) {
         this._prepareTab(storedValue);
         this.setActiveTab(storedValue, false, false);
         return;
@@ -179,16 +178,15 @@ export default class ZnTabs extends ZincElement {
   _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement {
     if (!tabEle.hasAttribute('tab')) {
       tabEle.setAttribute('tab', tabId);
-      this._setTabEleActive(tabEle, this._current == tabId);
+      this._setTabEleActive(tabEle, this._current === tabId);
     }
 
     if (!this._knownUri.has(tabUri)) {
       this._knownUri.set(tabUri, tabId);
     }
 
-    if (this._panels.has(tabId)) {
-      // @ts-expect-error
-      return this._panels.get(tabId)[0] as HTMLDivElement;
+    if (this._panels.has(tabId) && this._panels.get(tabId) !== undefined) {
+      return this._panels.get(tabId)![0] as HTMLDivElement;
     }
 
     const tabNode = document.createElement('div');
@@ -216,7 +214,7 @@ export default class ZnTabs extends ZincElement {
 
   fetchUriTab(target: HTMLElement) {
     if (!target.hasAttribute('tab') && target.hasAttribute('tab-uri')) {
-      const tabUri: any = target.getAttribute("tab-uri");
+      const tabUri: string | null = target.getAttribute("tab-uri") ?? "";
       this._createUriPanel(target, tabUri, this._uriToId(tabUri));
     }
   }
@@ -226,7 +224,7 @@ export default class ZnTabs extends ZincElement {
 
     if (target.hasAttribute('tab')) {
       setTimeout(() => {
-        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target) as any);
+        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));
       }, 10);
     }
   }
@@ -234,28 +232,28 @@ export default class ZnTabs extends ZincElement {
   getRefTab(target: HTMLElement) {
     let parent: Element = target;
     while (parent) {
-      if (parent == this) {
+      if (parent === this) {
         return null;
       }
       if (parent.hasAttribute('ref-tab')) {
         return parent.getAttribute('ref-tab');
       }
-      // @ts-expect-error
-      parent = parent?.parentElement || parent?.getRootNode()?.host;
+      // @ts-expect-error host might exist
+      parent = (parent?.parentElement as Element) || parent?.getRootNode()?.host;
     }
     return null;
   }
 
-  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: any = null) {
+  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
     let hasActive = false;
     this._tabs.forEach(tab => {
-      if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri') as any)) {
-        tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri') as any) as any);
+      if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri')!)) {
+        tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri')!)!);
       }
 
-      let setActive = tabName == tab.getAttribute('tab');
+      let setActive = tabName === tab.getAttribute('tab');
       if (!setActive && refTab && !this.getRefTab(tab)) {
-        setActive = refTab == tab.getAttribute('tab');
+        setActive = refTab === tab.getAttribute('tab');
       }
       hasActive = hasActive || setActive;
       this._setTabEleActive(tab, setActive);
@@ -269,12 +267,12 @@ export default class ZnTabs extends ZincElement {
     //Set on the element as a failsafe before TabPanel is loaded
     //This must be done AFTER selectTab to avoid panel bugs
 
-    if (store && this._store != null) {
+    if (store && this._store !== null) {
       this._store.set(this.storeKey, tabName);
     }
   }
 
-  _setTabEleActive(ele: any, active: boolean) {
+  _setTabEleActive(ele: Element, active: boolean) {
     ele.classList.toggle('zn-tb-active', active);
     ele.classList.toggle('active', active);
   }
@@ -285,7 +283,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     // Multi click on an active tab will refresh the tab
-    if (this._current == tabName) {
+    if (this._current === tabName) {
       this._activeClicks++;
       if (this._activeClicks > 2) {
         refresh = true;
@@ -299,7 +297,7 @@ export default class ZnTabs extends ZincElement {
     this._panels.forEach((elements, key) => {
       const isActive = key === tabName;
       elements.forEach((element) => {
-        if (isActive && element.parentNode != this) {
+        if (isActive && element.parentNode !== this) {
           inSlot = false;
         }
         element.toggleAttribute('selected', isActive);
@@ -311,7 +309,9 @@ export default class ZnTabs extends ZincElement {
       });
     });
 
-    this._panel.classList.toggle('contents-slot', !inSlot);
+    if (this._panel) {
+      this._panel.classList.toggle('contents-slot', !inSlot);
+    }
 
     this._current = tabName;
 

@@ -125,6 +125,8 @@ module.exports = {
     'default-param-last':                        'error',
     eqeqeq:                                      'error',
     'lit-a11y/click-events-have-key-events':     'off',
+    'lit/binding-positions':                     'off',
+    'lit/no-invalid-html':                       'off',
     'no-constructor-return':                     'error',
     'no-empty-function':                         'warn',
     'no-eval':                                   'error',

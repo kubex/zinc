@@ -1,15 +1,15 @@
-import {property, query, state} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {watch} from '../../internal/watch';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-
-import styles from './textarea.scss';
+import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
-import {HasSlotController} from "../../internal/slot";
-import {defaultValue} from "../../internal/default-value";
-import {classMap} from "lit/directives/class-map.js";
+import {property, query, state} from 'lit/decorators.js';
+import {watch} from '../../internal/watch';
+import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
+
+import styles from './textarea.scss';
 
 /**
  * @summary Textareas collect data from the user and allow multiple lines of text.

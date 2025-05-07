@@ -2,8 +2,8 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {html, literal} from "lit/static-html.js";
-import {property} from 'lit/decorators.js';
 import {ifDefined} from "lit/directives/if-defined.js";
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tile.scss';

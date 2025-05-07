@@ -1,10 +1,10 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {eventOptions, property} from 'lit/decorators.js';
-import {on} from "../../utilities/on";
-import {Store} from "../../internal/storage";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './split-pane.scss';
+import {Store} from "../../internal/storage";
+import {on} from "../../utilities/on";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -27,8 +27,8 @@ export default class ZnSplitPane extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   storage: Storage;
-  mouseMoveHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void) = null;
-  mouseUpHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void) = null;
+  mouseMoveHandler: null | EventListener = null;
+  mouseUpHandler: null | EventListener = null;
 
   private currentPixelSize: number = 0;
   private currentPercentSize: number = 0;
@@ -41,7 +41,7 @@ export default class ZnSplitPane extends ZincElement {
   @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
   @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
-  @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical: boolean = false;
+  @property({attribute: 'vertical', type: Boolean, reflect: true}) vertical = false;
 
   @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Primary';
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Secondary';
@@ -67,7 +67,7 @@ export default class ZnSplitPane extends ZincElement {
     });
   }
 
-  firstUpdated(changedProperties: PropertyValues) {
+  firstUpdated(changedProperties: any) {
     setTimeout(this.applyStoredSize.bind(this), 100);
     super.firstUpdated(changedProperties);
   }
@@ -79,14 +79,14 @@ export default class ZnSplitPane extends ZincElement {
 
 
     const storedValue = this._store.get(this.storeKey);
-    if (storedValue !== null) {
+    if (storedValue != null) {
       const parts = storedValue.split(",");
       if (parts.length >= 3) {
         applyPixels = parseInt(parts[0]);
         applyPercent = parseInt(parts[1]);
         const storedBasis = parseInt(parts[2]);
         if (this.preferSecondarySize && this.calculatePixels) {
-          applyPixels *= (this.currentContainerSize / storedBasis);
+          applyPixels = (this.currentContainerSize / storedBasis) * applyPixels;
         }
       }
     }
@@ -94,8 +94,8 @@ export default class ZnSplitPane extends ZincElement {
   }
 
   @eventOptions({passive: true})
-  resize = (e: MouseEvent)  => {
-    if (this.mouseUpHandler !== null) {
+  resize(e: any) {
+    if (this.mouseUpHandler != null) {
       // @ts-expect-error this context of type this is not assignable to methods
       this.mouseUpHandler(e);
     }
@@ -104,15 +104,15 @@ export default class ZnSplitPane extends ZincElement {
     this.currentContainerSize = this.vertical ? this.getBoundingClientRect().height : this.getBoundingClientRect().width;
     const pageOffset = this.vertical ? this.getBoundingClientRect().top : this.getBoundingClientRect().left;
 
-    this.mouseMoveHandler = (mouseEvent: MouseEvent) => {
-      let offset: number = (this.vertical ? mouseEvent.y : mouseEvent.x);
-      if (mouseEvent instanceof TouchEvent) {
-        offset = (this.vertical ? mouseEvent.touches[0].clientY : mouseEvent.touches[0].clientX);
+    this.mouseMoveHandler = function (e: any) {
+      let offset = (this.vertical ? e.y : e.x);
+      if (e instanceof TouchEvent) {
+        offset = (this.vertical ? e.touches[0].clientY : e.touches[0].clientX);
       }
       this.setSize(offset - pageOffset);
-    };
+    }.bind(this);
 
-    this.mouseUpHandler = () => {
+    this.mouseUpHandler = function () {
       this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
       this.classList.remove('resizing');
       // @ts-expect-error no overload matches this type
@@ -124,7 +124,7 @@ export default class ZnSplitPane extends ZincElement {
       window.removeEventListener('touchend', this.mouseUpHandler);
       // @ts-expect-error no overload matches this type
       window.removeEventListener('mouseup', this.mouseUpHandler);
-    };
+    }.bind(this);
 
     window.addEventListener('touchmove', this.mouseMoveHandler);
     window.addEventListener('touchend', this.mouseUpHandler);
@@ -149,14 +149,14 @@ export default class ZnSplitPane extends ZincElement {
     this.primaryFull = this.calculatePixels ? (this.currentPixelSize + 'px') : (this.currentPercentSize + '%');
   }
 
-  _togglePane(e: MouseEvent) {
-    this._setFocusPane(parseInt((e.target as Element).getAttribute('idx')!));
+  _togglePane(e: any) {
+    this._setFocusPane(e.target.getAttribute('idx'));
   }
 
   _setFocusPane(idx: number) {
     this._focusPane = idx;
     this.querySelectorAll('ul#split-nav li').forEach((el) => {
-      el.classList.toggle('active', parseInt(el.getAttribute('idx') as string) === idx);
+      el.classList.toggle('active', parseInt(el.getAttribute('idx') as string) == idx);
     });
   }
 
@@ -171,10 +171,10 @@ export default class ZnSplitPane extends ZincElement {
         --resize-margin: ${resizeMargin};
       }</style>
       <ul id="split-nav">
-        <li idx="0" class="${this._focusPane === 0 ? 'active' : ''}" @click="${this._togglePane}">
+        <li idx="0" class="${this._focusPane == 0 ? 'active' : ''}" @click="${this._togglePane}">
           ${this.primaryCaption}
         </li>
-        <li idx="1" class="${this._focusPane === 1 ? 'active' : ''}" @click="${this._togglePane}">
+        <li idx="1" class="${this._focusPane == 1 ? 'active' : ''}" @click="${this._togglePane}">
           ${this.secondaryCaption}
         </li>
       </ul>

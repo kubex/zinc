@@ -1,9 +1,9 @@
-import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
-import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import {ifDefined} from "lit/directives/if-defined.js";
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property} from 'lit/decorators.js';
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './table.scss';
 
@@ -103,18 +103,14 @@ export default class ZnTable extends ZincElement {
     return super.connectedCallback();
   }
 
-  render() {
-    return html`
-      <div class="table-wrapper">
-        <table class="${classMap({
-          'table': true,
-          'table--last-right': !this.allLeft,
-        })}">
-          ${this.tableHead()}
-          ${this.tableBody()}
-        </table>
-      </div>
-    `;
+  _handleMenu(e: any) {
+    e.target.closest('.actions').querySelector('zn-menu').toggleAttribute('hidden');
+  }
+
+  menuClick(e: any) {
+    const menu = e.target.closest('.actions').querySelector('zn-menu');
+    menu.style.top = (e.clientY - this.clientTop) + 'px';
+    menu.style.left = (e.clientX - this.clientLeft) + 'px';
   }
 
   tableHead() {
@@ -123,11 +119,11 @@ export default class ZnTable extends ZincElement {
     const headers: any = [];
     this.columns.forEach((col: any, k: number) => {
 
-      if (col == "") {
+      if (col === "") {
         return;
       }
 
-      if (col == "_") {
+      if (col === "_") {
         col = "";
       }
 
@@ -154,12 +150,6 @@ export default class ZnTable extends ZincElement {
       <thead>
       <tr>${headers}</tr>
       </thead>`;
-  }
-
-  public menuClick(e: any) {
-    const menu = e.target.closest('.actions').querySelector('zn-menu');
-    menu.style.top = (e.clientY - this.clientTop) + 'px';
-    menu.style.left = (e.clientX - this.clientLeft) + 'px';
   }
 
   tableBody() {
@@ -240,22 +230,18 @@ export default class ZnTable extends ZincElement {
 
       rows.push(html`
         <tr .id=${ifDefined(id)} class="${classMap({
-          'table-row': true,
-          'table-row--nested': nested,
-          'table-row--error': color === 'error',
-          'table-row--info': color === 'info',
-          'table-row--warning': color === 'warning',
-          'table-row--success': color === 'success',
-        })}">${rowHtml}
+        'table-row': true,
+        'table-row--nested': nested,
+        'table-row--error': color === 'error',
+        'table-row--info': color === 'info',
+        'table-row--warning': color === 'warning',
+        'table-row--success': color === 'success',
+      })}">${rowHtml}
         </tr>`);
     });
 
     return html`
       <tbody>${rows}</tbody>`;
-  }
-
-  _handleMenu(e: any) {
-    e.target.closest('.actions').querySelector('zn-menu').toggleAttribute('hidden');
   }
 
   columnContent(col: any) {
@@ -293,5 +279,19 @@ export default class ZnTable extends ZincElement {
     }
 
     return col;
+  }
+
+  render() {
+    return html`
+      <div class="table-wrapper">
+        <table class="${classMap({
+          'table': true,
+          'table--last-right': !this.allLeft,
+        })}">
+          ${this.tableHead()}
+          ${this.tableBody()}
+        </table>
+      </div>
+    `;
   }
 }

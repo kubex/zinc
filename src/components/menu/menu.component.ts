@@ -1,12 +1,14 @@
-import {property, query} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import type ZnMenuItem from "../menu-item";
-import type ZnDropdown from "../dropdown";
+import ZnConfirm from "../confirm";
+import ZnDropdown from "../dropdown";
+import ZnIcon from "../icon";
+import ZnMenuItem from "../menu-item";
+import ZnTooltip from "../tooltip";
 
 import styles from './menu.scss';
-import ZnConfirm from "../confirm";
-import {ifDefined} from "lit/directives/if-defined.js";
 
 interface NavItem {
   title: string;
@@ -44,6 +46,13 @@ interface NavItem {
  */
 export default class ZnMenu extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-confirm': ZnConfirm,
+    'zn-dropdown': ZnDropdown,
+    'zn-icon': ZnIcon,
+    'zn-menu-item': ZnMenuItem,
+    'zn-tooltip': ZnTooltip,
+  };
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
@@ -178,21 +187,13 @@ export default class ZnMenu extends ZincElement {
     });
   }
 
-  private handleConfirm(triggerId: string) {
-    const confirm = this.shadowRoot?.querySelector('zn-confirm[trigger="' + triggerId + '"]') as ZnConfirm;
-    if (confirm) {
-      confirm.addEventListener('zn-close', (e) => this.handleClick(e as any));
-      confirm.show();
-    }
-  }
-
   render() {
     return html`
-      <slot
+      <div
         @slotchange=${this.handleSlotChange}
-        @click=${this.handleClick}
         @keydown=${this.handleKeyDown}
         @mousedown=${this.handleMouseDown}>
+        <slot></slot>
         ${this.actions.map((item: NavItem) => {
           if (item.confirm) {
             return html`
@@ -203,9 +204,7 @@ export default class ZnMenu extends ZincElement {
                           action="${item.confirm.action}"></zn-confirm>
               <zn-menu-item @mousedown=${this.handleMouseDown}
                             @keydown=${this.handleKeyDown}
-                            @click="${this.handleConfirm.bind(this, item.confirm.trigger)}"
-                            id="${item.confirm.trigger}"
-                            value="paste">
+                            id="${item.confirm.trigger}">
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                 ${item.title}
@@ -235,6 +234,6 @@ export default class ZnMenu extends ZincElement {
             }
           }
         })}
-      </slot>`;
+      </div>`;
   }
 }

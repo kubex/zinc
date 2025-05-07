@@ -4562,8 +4562,14 @@
           "js": {
             "properties": [
               { "name": "storage", "type": "Storage" },
-              { "name": "mouseMoveHandler", "type": "null | EventListener" },
-              { "name": "mouseUpHandler", "type": "null | EventListener" },
+              {
+                "name": "mouseMoveHandler",
+                "type": "null | ((this: Window, ev: TouchEvent | MouseEvent) => void)"
+              },
+              {
+                "name": "mouseUpHandler",
+                "type": "null | ((this: Window, ev: TouchEvent | MouseEvent) => void)"
+              },
               { "name": "calculatePixels", "type": "boolean" },
               { "name": "preferSecondarySize", "type": "boolean" },
               { "name": "minimumPaneSize", "type": "number" },
@@ -4577,7 +4583,8 @@
               { "name": "padded", "type": "boolean" },
               { "name": "paddedRight", "type": "boolean" },
               { "name": "localStorage", "type": "boolean" },
-              { "name": "storeTtl", "type": "number" }
+              { "name": "storeTtl", "type": "number" },
+              { "name": "resize" }
             ],
             "events": [
               {
@@ -4745,7 +4752,7 @@
               "name": "active",
               "value": { "type": "string", "default": "''" }
             },
-            { "name": "split", "value": { "type": "any" } },
+            { "name": "split", "value": { "type": "number" } },
             {
               "name": "split-min",
               "value": { "type": "number", "default": "60" }
@@ -4795,7 +4802,7 @@
               { "name": "masterId", "type": "string" },
               { "name": "defaultUri", "type": "string" },
               { "name": "_current", "type": "string" },
-              { "name": "_split", "type": "any" },
+              { "name": "_split", "type": "number" },
               { "name": "_splitMin", "type": "number" },
               { "name": "primaryCaption", "type": "string" },
               { "name": "secondaryCaption", "type": "string" },
@@ -5221,11 +5228,6 @@
             {
               "name": "timestamp",
               "value": { "type": "string", "default": "''" }
-            },
-            { "name": "type", "value": { "type": "string", "default": "''" } },
-            {
-              "name": "upperLimit",
-              "value": { "type": "number", "default": "0" }
             }
           ],
           "slots": [

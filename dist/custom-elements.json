@@ -15876,7 +15876,7 @@
               "kind": "field",
               "name": "mouseMoveHandler",
               "type": {
-                "text": "null | EventListener"
+                "text": "null | ((this: Window, ev: TouchEvent | MouseEvent) => void)"
               },
               "default": "null"
             },
@@ -15884,7 +15884,7 @@
               "kind": "field",
               "name": "mouseUpHandler",
               "type": {
-                "text": "null | EventListener"
+                "text": "null | ((this: Window, ev: TouchEvent | MouseEvent) => void)"
               },
               "default": "null"
             },
@@ -16075,16 +16075,8 @@
               "name": "applyStoredSize"
             },
             {
-              "kind": "method",
-              "name": "resize",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
+              "kind": "field",
+              "name": "resize"
             },
             {
               "kind": "method",
@@ -16105,7 +16097,7 @@
                 {
                   "name": "e",
                   "type": {
-                    "text": "any"
+                    "text": "MouseEvent"
                   }
                 }
               ]
@@ -16915,7 +16907,7 @@
               "kind": "field",
               "name": "_panel",
               "type": {
-                "text": "HTMLElement | any"
+                "text": "Element | null | undefined"
               },
               "privacy": "private"
             },
@@ -16995,7 +16987,7 @@
               "kind": "field",
               "name": "_split",
               "type": {
-                "text": "any"
+                "text": "number"
               },
               "attribute": "split",
               "reflects": true
@@ -17306,7 +17298,7 @@
                   "name": "refTab",
                   "default": "null",
                   "type": {
-                    "text": "any"
+                    "text": "string | null"
                   }
                 }
               ]
@@ -17318,7 +17310,7 @@
                 {
                   "name": "ele",
                   "type": {
-                    "text": "any"
+                    "text": "Element"
                   }
                 },
                 {
@@ -17406,7 +17398,7 @@
             {
               "name": "split",
               "type": {
-                "text": "any"
+                "text": "number"
               },
               "fieldName": "_split"
             },
@@ -18633,26 +18625,6 @@
               "attribute": "timestamp"
             },
             {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "upperLimit",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0",
-              "attribute": "upperLimit"
-            },
-            {
               "kind": "method",
               "name": "_getLastMessage",
               "privacy": "private"
@@ -18690,22 +18662,6 @@
               },
               "default": "''",
               "fieldName": "timestamp"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "type"
-            },
-            {
-              "name": "upperLimit",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "upperLimit"
             }
           ],
           "superclass": {

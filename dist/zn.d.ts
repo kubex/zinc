@@ -484,11 +484,11 @@ declare module "components/tooltip/tooltip.component" {
         private handleDocumentKeyDown;
         private handleMouseOver;
         private handleMouseOut;
-        handleOpenChange(): Promise<void>;
+        handleOpenChange(): void;
         handleOptionsChange(): Promise<void>;
         handleDisabledChange(): void;
         show(): Promise<void>;
-        hide(): Promise<void>;
+        hide(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -2897,8 +2897,6 @@ declare module "components/timer/timer.component" {
     export default class ZnTimer extends ZincElement {
         static styles: CSSResultGroup;
         private timestamp;
-        private type;
-        private upperLimit;
         private _getLastMessage;
         render(): import("lit").TemplateResult<1>;
         private _getTimes;
@@ -2918,8 +2916,7 @@ declare module "utilities/query" {
     export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/tabs/tabs.component" {
-    import type { PropertyValues } from 'lit';
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     /**
@@ -2950,7 +2947,7 @@ declare module "components/tabs/tabs.component" {
         masterId: string;
         defaultUri: string;
         _current: string;
-        _split: any;
+        _split: number;
         _splitMin: number;
         primaryCaption: string;
         secondaryCaption: string;
@@ -2979,8 +2976,8 @@ declare module "components/tabs/tabs.component" {
         fetchUriTab(target: HTMLElement): void;
         clickTab(target: HTMLElement, refresh: boolean): void;
         getRefTab(target: HTMLElement): string | null;
-        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: any): void;
-        _setTabEleActive(ele: any, active: boolean): void;
+        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
+        _setTabEleActive(ele: Element, active: boolean): void;
         selectTab(tabName: string, refresh: boolean): boolean;
         observerDom(): void;
         removeTabAndPanel(tabId: string): void;
@@ -3139,9 +3136,9 @@ declare module "utilities/on" {
     export function on(delegate: EventTarget, eventName: string, targetSelector: string, callback: OnEventListener): () => void;
 }
 declare module "components/split-pane/split-pane.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/split-pane
@@ -3162,8 +3159,8 @@ declare module "components/split-pane/split-pane.component" {
     export default class ZnSplitPane extends ZincElement {
         static styles: CSSResultGroup;
         storage: Storage;
-        mouseMoveHandler: null | EventListener;
-        mouseUpHandler: null | EventListener;
+        mouseMoveHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void);
+        mouseUpHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void);
         private currentPixelSize;
         private currentPercentSize;
         private currentContainerSize;
@@ -3184,11 +3181,11 @@ declare module "components/split-pane/split-pane.component" {
         storeTtl: number;
         protected _store: Store;
         connectedCallback(): void;
-        firstUpdated(changedProperties: any): void;
+        firstUpdated(changedProperties: PropertyValues): void;
         applyStoredSize(): void;
-        resize(e: any): void;
+        resize: (e: MouseEvent) => void;
         setSize(primaryPanelPixels: number): void;
-        _togglePane(e: any): void;
+        _togglePane(e: MouseEvent): void;
         _setFocusPane(idx: number): void;
         protected render(): unknown;
     }
@@ -3931,7 +3928,7 @@ declare module "components/toggle/index" {
 }
 declare module "components/textarea/textarea.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Textareas collect data from the user and allow multiple lines of text.
      * @documentation https://zinc.style/components/textarea

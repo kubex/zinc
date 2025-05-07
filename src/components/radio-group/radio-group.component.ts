@@ -1,10 +1,5 @@
-import {property, query, state} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import {watch} from '../../internal/watch';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-
-import styles from './radio-group.scss';
-import ZnRadio from "../radio";
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {
   customErrorValidityState,
   FormControlController,
@@ -12,7 +7,13 @@ import {
   valueMissingValidityState
 } from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
-import {classMap} from "lit/directives/class-map.js";
+import {property, query, state} from 'lit/decorators.js';
+import {watch} from '../../internal/watch';
+import ZincElement from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type ZnRadio from "../radio";
+
+import styles from './radio-group.scss';
 
 /**
  * @summary Short summary of the component's intended use.

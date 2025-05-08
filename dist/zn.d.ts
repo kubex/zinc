@@ -2111,7 +2111,11 @@ declare module "components/menu-item/index" {
 declare module "components/menu/menu.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type ZnMenuItem from "components/menu-item/index";
+    import ZnConfirm from "components/confirm/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnIcon from "components/icon/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/menu
@@ -2131,6 +2135,13 @@ declare module "components/menu/menu.component" {
      */
     export default class ZnMenu extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-confirm': typeof ZnConfirm;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-icon': typeof ZnIcon;
+            'zn-menu-item': typeof ZnMenuItem;
+            'zn-tooltip': typeof ZnTooltip;
+        };
         defaultSlot: HTMLSlotElement;
         actions: never[];
         connectedCallback(): void;
@@ -2151,7 +2162,6 @@ declare module "components/menu/menu.component" {
          * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
          */
         setCurrentItem(item: ZnMenuItem): void;
-        private handleConfirm;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -3069,12 +3079,12 @@ declare module "components/table/table.component" {
         private rows;
         resizing(): void;
         connectedCallback(): void;
-        render(): import("lit").TemplateResult<1>;
-        tableHead(): import("lit").TemplateResult<1> | undefined;
-        menuClick(e: any): void;
-        tableBody(): import("lit").TemplateResult<1>;
         _handleMenu(e: any): void;
+        menuClick(e: any): void;
+        tableHead(): import("lit").TemplateResult<1> | undefined;
+        tableBody(): import("lit").TemplateResult<1>;
         columnContent(col: any): any;
+        render(): import("lit").TemplateResult<1>;
     }
 }
 declare module "components/table/index" {
@@ -3136,9 +3146,9 @@ declare module "utilities/on" {
     export function on(delegate: EventTarget, eventName: string, targetSelector: string, callback: OnEventListener): () => void;
 }
 declare module "components/split-pane/split-pane.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import { Store } from "internal/storage";
+    import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import { Store } from "internal/storage";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/split-pane
@@ -3159,8 +3169,8 @@ declare module "components/split-pane/split-pane.component" {
     export default class ZnSplitPane extends ZincElement {
         static styles: CSSResultGroup;
         storage: Storage;
-        mouseMoveHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void);
-        mouseUpHandler: null | ((this: Window, ev: TouchEvent | MouseEvent) => void);
+        mouseMoveHandler: null | EventListener;
+        mouseUpHandler: null | EventListener;
         private currentPixelSize;
         private currentPercentSize;
         private currentContainerSize;
@@ -3181,11 +3191,11 @@ declare module "components/split-pane/split-pane.component" {
         storeTtl: number;
         protected _store: Store;
         connectedCallback(): void;
-        firstUpdated(changedProperties: PropertyValues): void;
+        firstUpdated(changedProperties: any): void;
         applyStoredSize(): void;
-        resize: (e: MouseEvent) => void;
+        resize(e: any): void;
         setSize(primaryPanelPixels: number): void;
-        _togglePane(e: MouseEvent): void;
+        _togglePane(e: any): void;
         _setFocusPane(idx: number): void;
         protected render(): unknown;
     }
@@ -4076,8 +4086,9 @@ declare module "components/textarea/index" {
 }
 declare module "components/checkbox/checkbox.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/checkbox
@@ -4532,9 +4543,10 @@ declare module "components/rating/index" {
     }
 }
 declare module "components/radio-group/radio-group.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/radio-group
@@ -4834,8 +4846,9 @@ declare module "components/file/index" {
 }
 declare module "components/checkbox-group/checkbox-group.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
     import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Shotrt summary of the component's intended use.
      * @documentation https://zinc.style/components/checkbox-group

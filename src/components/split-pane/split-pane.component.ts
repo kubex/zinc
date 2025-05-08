@@ -96,7 +96,6 @@ export default class ZnSplitPane extends ZincElement {
   @eventOptions({passive: true})
   resize(e: any) {
     if (this.mouseUpHandler != null) {
-      // @ts-expect-error this context of type this is not assignable to methods
       this.mouseUpHandler(e);
     }
 
@@ -115,14 +114,10 @@ export default class ZnSplitPane extends ZincElement {
     this.mouseUpHandler = function () {
       this._store.set(this.storeKey, Math.round(this.currentPixelSize) + "," + Math.round(this.currentPercentSize) + "," + this.currentContainerSize);
       this.classList.remove('resizing');
-      // @ts-expect-error no overload matches this type
       window.removeEventListener('touchmove', this.mouseMoveHandler);
-      // @ts-expect-error no overload matches this type
       window.removeEventListener('mousemove', this.mouseMoveHandler);
 
-      // @ts-expect-error no overload matches this type
       window.removeEventListener('touchend', this.mouseUpHandler);
-      // @ts-expect-error no overload matches this type
       window.removeEventListener('mouseup', this.mouseUpHandler);
     }.bind(this);
 

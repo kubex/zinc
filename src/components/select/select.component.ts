@@ -191,7 +191,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
    * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
-  @property({reflect: true}) form = '';
+  @property({reflect: true}) form: string;
 
 
   /** The select's required attribute. */

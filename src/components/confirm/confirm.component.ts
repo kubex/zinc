@@ -92,7 +92,7 @@ export default class ZnConfirm extends ZincElement {
     }
   }
 
-  show = (event: Event | undefined = undefined) =>{
+  show = (event: Event | undefined = undefined) => {
     const trigger = event?.target as HTMLButtonElement
     if (trigger?.disabled) return;
     this.dialog.show();
@@ -128,8 +128,10 @@ export default class ZnConfirm extends ZincElement {
             <zn-icon slot="header-icon" color="${this.type}" src="${src[this.type]}"></zn-icon>`
           : ''}
 
-        ${this.content ? html`<p class="confirm-dialog__content">${this.content}</p>` : ''}
-        <slot></slot>
+        <div class="confirm-dialog__content">
+          ${this.content ? html`${this.content}` : ''}
+          <slot></slot>
+        </div>
 
         <zn-button outline color="${this.type}" slot="footer" dialog-closer>${this.cancelText}</zn-button>
         <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>

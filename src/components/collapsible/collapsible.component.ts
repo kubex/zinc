@@ -70,7 +70,7 @@ export default class ZnCollapsible extends ZincElement {
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
         <slot name="header" class="header" @click="${this.handleCollapse}">
-          <div>
+          <div class="header__left">
             <p class="caption">
               <slot name="caption">${this.caption}</slot>
             </p>

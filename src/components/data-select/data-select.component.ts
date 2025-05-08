@@ -92,6 +92,15 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** The selects required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this.closeOnTab);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this.closeOnTab);
+  }
 
   get validationMessage() {
     return this.select.validationMessage;
@@ -115,6 +124,12 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   setCustomValidity(message: string): void {
     return this.select.setCustomValidity(message);
+  }
+
+  closeOnTab = (e: KeyboardEvent) => {
+    if (this.select.open && e.key === 'Tab') {
+      this.select.hide();
+    }
   }
 
   @watch('value', {waitUntilFirstUpdate: true})

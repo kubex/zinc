@@ -309,7 +309,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     // Close when pressing escape
-    if (event.key === 'Escape' && this.open && !this.closeWatcher) {
+    if ((event.key === 'Escape' || event.key === 'Tab') && this.open && !this.closeWatcher) {
       event.preventDefault();
       event.stopPropagation();
       this.hide();
@@ -793,7 +793,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Removes focus from the control. */
   blur() {
     this.displayInput.blur();
-    this.hide();
   }
 
   render() {

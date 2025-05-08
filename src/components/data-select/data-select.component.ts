@@ -164,6 +164,10 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     }
   }
 
+  blur = () => {
+    this.select.blur();
+  }
+
   protected render() {
     const localProvider = this.getLocalProvider(this.provider);
     const filterKeys = this.filter || [];
@@ -186,6 +190,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  name="${this.name}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
+                 @blur=${this.blur}
                  value="${this.value}"
                  placeholder="Choose a ${localProvider.getName}"
                  exportparts="combobox,expand-icon,form-control-help-text,form-control-input">

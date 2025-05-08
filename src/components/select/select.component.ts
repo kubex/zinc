@@ -793,6 +793,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Removes focus from the control. */
   blur() {
     this.displayInput.blur();
+    this.hide();
   }
 
   render() {

@@ -5047,12 +5047,15 @@ declare module "components/data-select/data-select.component" {
         helpText: string;
         /** The selects required attribute. */
         required: boolean;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         get validationMessage(): string;
         get validity(): ValidityState;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
+        closeOnTab: (e: KeyboardEvent) => void;
         handleValueChange(): Promise<void>;
         private _updatePrefix;
         handleInput: (e: Event) => void;

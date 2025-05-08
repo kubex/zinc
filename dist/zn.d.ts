@@ -5058,6 +5058,7 @@ declare module "components/data-select/data-select.component" {
         handleInput: (e: Event) => void;
         handleClear: () => void;
         getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
+        blur: () => void;
         protected render(): import("lit").TemplateResult<1>;
     }
 }

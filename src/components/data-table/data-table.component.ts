@@ -324,13 +324,19 @@ export default class ZnDataTable extends ZincElement {
     return html`
       <div class="table__footer">
         <div class="table__footer__left">
-          <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>
+          ${this.getRowsSelected()}
         </div>
 
         <div class="table__footer__right">
           ${this.getPagination()}
         </div>
       </div>`;
+  }
+
+  getRowsSelected() {
+    if (this.hideCheckboxes) return html``;
+
+    return html`<p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
   }
 
   getPagination() {

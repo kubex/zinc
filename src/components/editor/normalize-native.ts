@@ -1,4 +1,8 @@
 export const normalizeNative = (nativeRange: any) => {
+  // document.getSelection model has properties startContainer and endContainer
+  // shadow.getSelection model has baseNode and focusNode
+  // Unify formats to always look like document.getSelection
+
   if (nativeRange) {
     const range = nativeRange;
     if (range.baseNode) {

@@ -1736,6 +1736,7 @@ declare module "components/data-table/data-table.component" {
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
+        getRowsSelected(): TemplateResult<1>;
         getPagination(): TemplateResult<1>;
         getQueryBuilder(): TemplateResult<1>;
         queryData(event: ZnSubmitEvent): void;

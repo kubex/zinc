@@ -5,6 +5,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnQueryBuilder from "../query-builder";
@@ -39,6 +40,7 @@ interface RenderDataValue {
   caption: CaptionConfig;
   buttons: ButtonConfig[];
   icon: IconConfig;
+  hover: HoverContainerConfig;
 }
 
 interface CaptionConfig {
@@ -53,6 +55,26 @@ interface IconConfig {
   src: string;
   size: number;
   color: string;
+}
+
+interface HoverContainerConfig {
+  label: string;
+  content: string;
+  anchor: string;
+  placement:
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'right'
+    | 'right-start'
+    | 'right-end'
+    | 'left'
+    | 'left-start'
+    | 'left-end';
+  icon: IconConfig;
 }
 
 interface ButtonConfig {
@@ -601,6 +623,34 @@ export default class ZnDataTable extends ZincElement {
           </div>`;
       }
 
+      if (data['hover']) {
+        const placement = data['hover'].placement ?? 'top';
+
+        if (data['hover'].icon) {
+          const icon = data['hover'].icon;
+          const src = icon['src'] ?? icon;
+          const size = icon['size'] ?? 16;
+          const color = icon['color'] ?? '';
+
+          return html`
+            ${data['hover'].label}
+            <zn-hover-container placement="${placement}"
+                                flip>
+              <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>
+              <div slot="content">
+                ${unsafeHTML(data['hover'].content)}
+              </div>
+            </zn-hover-container>`;
+        }
+
+        return html`
+          ${data['hover'].label}
+          <zn-hover-container placement="${placement}"
+                              flip>
+            <div slot="anchor">${data['hover'].anchor}</div>
+            ${unsafeHTML(data['hover'].content)}
+          </zn-hover-container>`;
+      }
 
       if (data['buttons']) {
         content = html`

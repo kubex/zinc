@@ -1816,20 +1816,65 @@
     },
     {
       "name": "zn-radio",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
       "attributes": [
+        { "name": "title", "values": [] },
+        {
+          "name": "name",
+          "description": "The name of the radio, submitted as a name/value pair with form data.",
+          "values": []
+        },
         {
           "name": "value",
-          "description": "The radio's value. When selected, the radio group will receive this value.",
+          "description": "The current value of the radio, submitted as a name/value pair with form data.",
           "values": []
+        },
+        {
+          "name": "size",
+          "description": "The radio's size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
         },
         {
           "name": "disabled",
           "description": "Disables the radio.",
           "values": []
         },
+        {
+          "name": "checked",
+          "description": "Draws the radio in a checked state.",
+          "values": []
+        },
+        {
+          "name": "contained",
+          "description": "Draws a container around the radio.",
+          "values": []
+        },
+        {
+          "name": "horizontal",
+          "description": "Applies styles relevant to radios in a horizontal layout.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Makes the radio a required field.",
+          "values": []
+        },
+        {
+          "name": "description",
+          "description": "The radio's help text. If you need to display HTML, use the `description` slot instead.",
+          "values": []
+        },
         { "name": "label", "values": [] },
-        { "name": "size", "values": [] }
+        { "name": "label-tooltip", "values": [] }
       ],
       "references": [
         {
@@ -1848,8 +1893,13 @@
           "values": []
         },
         {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+          "values": []
+        },
+        {
           "name": "help-text",
-          "description": "The radio groups's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
           "values": []
         },
         {
@@ -1872,8 +1922,18 @@
           ]
         },
         {
+          "name": "horizontal",
+          "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+          "values": []
+        },
+        {
+          "name": "contained",
+          "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+          "values": []
+        },
+        {
           "name": "form",
-          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
           "values": []
         },
         {

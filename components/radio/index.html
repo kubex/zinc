@@ -400,7 +400,7 @@
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -431,10 +431,10 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-131">
+            <div class="code-preview__source-group" id="code-preview-source-group-137">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-267"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-267"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-273"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-273"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -443,7 +443,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-131"
+                aria-controls="code-preview-source-group-137"
               >
                 Source
                 <svg
@@ -493,7 +493,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-268"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/radio/radio.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-268"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-274"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/radio/radio.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-274"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -508,12 +508,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-269"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/radio/radio.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-269"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-275"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/radio/radio.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-275"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-270"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/radio/radio.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-270"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-276"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/radio/radio.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-276"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -529,14 +529,27 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
+                  <td>The radio’s label.</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
-                    <code>example</code>
+                    <code>description</code>
                   </td>
-                  <td>An example slot.</td>
+                  <td>
+                    A description of the radio’s label. Serves as help text for a radio item. Alternatively, you can use
+                    the <code>description</code> attribute.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>selected-content</code>
+                  </td>
+                  <td>
+                    Use to nest rich content (like an input) inside a selected radio item. Use only with the contained
+                    style.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -564,14 +577,44 @@
               <tbody>
                 <tr>
                   <td>
+                    <code class="nowrap">name</code>
+                  </td>
+                  <td>The name of the radio, submitted as a name/value pair with form data.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">value</code>
                   </td>
-                  <td>The radio’s value. When selected, the radio group will receive this value.</td>
+                  <td>The current value of the radio, submitted as a name/value pair with form data.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
                   </td>
                   <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">size</code>
+                  </td>
+                  <td>The radio’s size.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>'small' | 'medium' | 'large'</code>
+                  </td>
+                  <td>
+                    <code>'medium'</code>
+                  </td>
                 </tr>
 
                 <tr>
@@ -588,6 +631,141 @@
                   <td>
                     <code>false</code>
                   </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">checked</code>
+                  </td>
+                  <td>Draws the radio in a checked state.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">contained</code>
+                  </td>
+                  <td>Draws a container around the radio.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">horizontal</code>
+                  </td>
+                  <td>Applies styles relevant to radios in a horizontal layout.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">defaultChecked</code>
+                  </td>
+                  <td>The default value of the form control. Primarily used for resetting the form control.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">form</code>
+                  </td>
+                  <td>
+                    By default, form controls are associated with the nearest containing
+                    <code>&lt;form&gt;</code> element. This attribute allows you to place the form control outside a
+                    form and associate it with the form that has this <code>id</code>. The form must be in the same
+                    document or shadow root for this to work.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">required</code>
+                  </td>
+                  <td>Makes the radio a required field.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">description</code>
+                  </td>
+                  <td>
+                    The radio’s help text. If you need to display HTML, use the <code>description</code> slot instead.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">validity</code>
+                  </td>
+                  <td>Gets the validity state object</td>
+                  <td style="text-align: center"></td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">validationMessage</code>
+                  </td>
+                  <td>Gets the validation message</td>
+                  <td style="text-align: center"></td>
+                  <td>-</td>
+                  <td>-</td>
                 </tr>
 
                 <tr>
@@ -625,9 +803,39 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-blur</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the radio loses focus.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the checked state changes.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-focus</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the radio gains focus.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-input</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the radio receives input.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-invalid</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>
+                    Emitted when the form control has been checked for validity and its constraints aren’t satisfied.
+                  </td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -638,8 +846,8 @@
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
           </p>
 
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
           </h2>
 
           <div class="table-scroll">
@@ -648,24 +856,67 @@
                 <tr>
                   <th class="table-name">Name</th>
                   <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
+                  <th class="table-arguments">Arguments</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
+                  <td class="nowrap"><code>click()</code></td>
+                  <td>Simulates a click on the radio.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>focus()</code></td>
+                  <td>Sets focus on the radio.</td>
+                  <td>
+                    <code> options: FocusOptions </code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>blur()</code></td>
+                  <td>Removes focus from the radio.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>checkValidity()</code></td>
+                  <td>
+                    Checks for validity but does not show a validation message. Returns <code>true</code> when valid and
+                    <code>false</code> when invalid.
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>getForm()</code></td>
+                  <td>Gets the associated form, if one exists.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>reportValidity()</code></td>
+                  <td>Checks for validity and shows the browser’s validation message if the control is invalid.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>setCustomValidity()</code></td>
+                  <td>
+                    Sets a custom validation message. The value provided will be shown to the user when the form is
+                    submitted. To clear the custom validation message, call this method with an empty string.
+                  </td>
+                  <td>
+                    <code> message: string </code>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
@@ -683,6 +934,36 @@
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>control</code></td>
+                  <td>The square container that wraps the radio’s checked state.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>control--checked</code></td>
+                  <td>Matches the control part when the radio is checked.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>checked-icon</code></td>
+                  <td>The checked icon, an <code>&lt;zn-icon&gt;</code> element.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>label</code></td>
+                  <td>The container that wraps the radio’s label.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>description</code></td>
+                  <td>The container that wraps the radio’s description.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>selected-content</code></td>
+                  <td>The container that wraps optional content that appears when a radio is checked.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -699,6 +980,8 @@
 
           <ul>
             <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
           </ul>
         </div>
       </article>

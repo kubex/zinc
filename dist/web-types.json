@@ -3868,49 +3868,189 @@
         },
         {
           "name": "zn-radio",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
           "doc-url": "",
           "attributes": [
+            { "name": "title", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "name",
+              "description": "The name of the radio, submitted as a name/value pair with form data.",
+              "value": { "type": "string", "default": "''" }
+            },
             {
               "name": "value",
-              "description": "The radio's value. When selected, the radio group will receive this value.",
+              "description": "The current value of the radio, submitted as a name/value pair with form data.",
               "value": { "type": "string" }
+            },
+            {
+              "name": "size",
+              "description": "The radio's size.",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
             },
             {
               "name": "disabled",
               "description": "Disables the radio.",
               "value": { "type": "boolean", "default": "false" }
             },
+            {
+              "name": "checked",
+              "description": "Draws the radio in a checked state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "contained",
+              "description": "Draws a container around the radio.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "horizontal",
+              "description": "Applies styles relevant to radios in a horizontal layout.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "form",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "required",
+              "description": "Makes the radio a required field.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "description",
+              "description": "The radio's help text. If you need to display HTML, use the `description` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
             { "name": "label", "value": { "type": "string" } },
-            { "name": "size", "value": { "type": "string" } }
+            { "name": "label-tooltip", "value": { "type": "string" } }
           ],
           "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            { "name": "", "description": "The radio's label." },
+            {
+              "name": "description",
+              "description": "A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute."
+            },
+            {
+              "name": "selected-content",
+              "description": "Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style."
+            }
           ],
           "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
+            {
+              "name": "zn-blur",
+              "description": "Emitted when the radio loses focus."
+            },
+            {
+              "name": "zn-change",
+              "description": "Emitted when the checked state changes."
+            },
+            {
+              "name": "zn-focus",
+              "description": "Emitted when the radio gains focus."
+            },
+            {
+              "name": "zn-input",
+              "description": "Emitted when the radio receives input."
+            },
+            {
+              "name": "zn-invalid",
+              "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+            }
           ],
           "js": {
             "properties": [
-              { "name": "checked", "type": "boolean" },
+              { "name": "input", "type": "HTMLInputElement" },
+              { "name": "title", "type": "string" },
+              {
+                "name": "name",
+                "description": "The name of the radio, submitted as a name/value pair with form data.",
+                "type": "string"
+              },
               {
                 "name": "value",
-                "description": "The radio's value. When selected, the radio group will receive this value.",
+                "description": "The current value of the radio, submitted as a name/value pair with form data.",
                 "type": "string"
+              },
+              {
+                "name": "size",
+                "description": "The radio's size.",
+                "type": "'small' | 'medium' | 'large'"
               },
               {
                 "name": "disabled",
                 "description": "Disables the radio.",
                 "type": "boolean"
               },
+              {
+                "name": "checked",
+                "description": "Draws the radio in a checked state.",
+                "type": "boolean"
+              },
+              {
+                "name": "contained",
+                "description": "Draws a container around the radio.",
+                "type": "boolean"
+              },
+              {
+                "name": "horizontal",
+                "description": "Applies styles relevant to radios in a horizontal layout.",
+                "type": "boolean"
+              },
+              {
+                "name": "defaultChecked",
+                "description": "The default value of the form control. Primarily used for resetting the form control.",
+                "type": "boolean"
+              },
+              {
+                "name": "form",
+                "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+                "type": "string"
+              },
+              {
+                "name": "required",
+                "description": "Makes the radio a required field.",
+                "type": "boolean"
+              },
+              {
+                "name": "description",
+                "description": "The radio's help text. If you need to display HTML, use the `description` slot instead.",
+                "type": "string"
+              },
               { "name": "label", "type": "string" },
-              { "name": "size", "type": "string" }
+              { "name": "labelTooltip", "type": "string" },
+              {
+                "name": "validity",
+                "description": "Gets the validity state object"
+              },
+              {
+                "name": "validationMessage",
+                "description": "Gets the validation message"
+              }
             ],
             "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "zn-blur",
+                "description": "Emitted when the radio loses focus."
+              },
+              {
+                "name": "zn-change",
+                "description": "Emitted when the checked state changes."
+              },
+              {
+                "name": "zn-focus",
+                "description": "Emitted when the radio gains focus."
+              },
+              {
+                "name": "zn-input",
+                "description": "Emitted when the radio receives input."
+              },
+              {
+                "name": "zn-invalid",
+                "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
               }
             ]
           }
@@ -3926,14 +4066,19 @@
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "label-tooltip",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
               "name": "help-text",
-              "description": "The radio groups's help text. If you need to display HTML, use the `help-text` slot instead.",
+              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
               "value": { "type": "string", "default": "''" }
             },
             {
               "name": "name",
               "description": "The name of the radio group, submitted as a name/value pair with form data.",
-              "value": { "type": "string", "default": "'option'" }
+              "value": { "type": "string", "default": "''" }
             },
             {
               "name": "value",
@@ -3949,8 +4094,18 @@
               }
             },
             {
+              "name": "horizontal",
+              "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "contained",
+              "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "form",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
               "value": { "type": "string", "default": "''" }
             },
             {
@@ -3977,8 +4132,13 @@
                 "type": "string"
               },
               {
+                "name": "labelTooltip",
+                "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+                "type": "string"
+              },
+              {
                 "name": "helpText",
-                "description": "The radio groups's help text. If you need to display HTML, use the `help-text` slot instead.",
+                "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
                 "type": "string"
               },
               {
@@ -3997,8 +4157,18 @@
                 "type": "'small' | 'medium' | 'large'"
               },
               {
+                "name": "horizontal",
+                "description": "The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+                "type": "boolean"
+              },
+              {
+                "name": "contained",
+                "description": "The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes.",
+                "type": "boolean"
+              },
+              {
                 "name": "form",
-                "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside of a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+                "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
                 "type": "string"
               },
               {

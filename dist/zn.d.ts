@@ -4419,41 +4419,102 @@ declare module "components/linked-select/index" {
 declare module "components/radio/radio.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/radio
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon
      *
-     * @event zn-event-name - Emitted as an example.
+     * @slot - The radio's label.
+     * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.
+     * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @event zn-blur - Emitted when the radio loses focus.
+     * @event zn-change - Emitted when the checked state changes.
+     * @event zn-focus - Emitted when the radio gains focus.
+     * @event zn-input - Emitted when the radio receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
      *
      * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart control - The square container that wraps the radio's checked state.
+     * @csspart control--checked - Matches the control part when the radio is checked.
+     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart label - The container that wraps the radio's label.
+     * @csspart description - The container that wraps the radio's description.
+     * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.
      */
-    export default class ZnRadio extends ZincElement {
+    export default class ZnRadio extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        checked: boolean;
-        protected hasFocus: boolean;
-        /** The radio's value. When selected, the radio group will receive this value. */
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        /** The name of the radio, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the radio, submitted as a name/value pair with form data. */
         value: string;
+        /** The radio's size. */
+        size: 'small' | 'medium' | 'large';
         /** Disables the radio. */
         disabled: boolean;
+        /** Draws the radio in a checked state. */
+        checked: boolean;
+        /** Draws a container around the radio. */
+        contained: boolean;
+        /** Applies styles relevant to radios in a horizontal layout. */
+        horizontal: boolean;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultChecked: boolean;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the radio a required field. */
+        required: boolean;
+        /** The radio's help text. If you need to display HTML, use the `description` slot instead. */
+        description: string;
         label: string;
-        size: string;
-        constructor();
-        connectedCallback(): void;
-        private handleBlur;
+        labelTooltip: string;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        firstUpdated(): void;
         private handleClick;
+        private handleBlur;
+        private handleInput;
+        private handleInvalid;
         private handleFocus;
-        private setInitialAttributes;
-        handleCheckedChange(): void;
+        private handleSelectedContentClick;
         handleDisabledChange(): void;
+        handleStateChange(): void;
+        /** Simulates a click on the radio. */
+        click(): void;
+        /** Sets focus on the radio. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the radio. */
+        blur(): void;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /**
+         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
+         * the custom validation message, call this method with an empty string.
+         */
+        setCustomValidity(message: string): void;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -4576,7 +4637,9 @@ declare module "components/radio-group/radio-group.component" {
          * instead.
          */
         label: string;
-        /** The radio groups's help text. If you need to display HTML, use the `help-text` slot instead. */
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** The radio groups' help text. If you need to display HTML, use the `help-text` slot instead. */
         helpText: string;
         /** The name of the radio group, submitted as a name/value pair with form data. */
         name: string;
@@ -4584,9 +4647,13 @@ declare module "components/radio-group/radio-group.component" {
         value: string;
         /** The radio group's size. This size will be applied to all child radios */
         size: 'small' | 'medium' | 'large';
+        /** The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
+        horizontal: boolean;
+        /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
+        contained: boolean;
         /**
          * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
          * the same document or shadow root for this to work.
          */
         form: string;

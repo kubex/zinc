@@ -1,0 +1,60 @@
+@use "../../wc";
+
+
+:host {
+  --width: 30rem;
+  --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
+  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
+  --footer-spacing: var(--zn-spacing-large);
+  --icon-background-color: var(--zn-color-primary-200);
+  --icon-color: var(--zn-color-primary-600);
+  --caption-color: var(--zn-color-primary-600);
+
+  display: contents;
+}
+
+.hover-container[placement^='top']::part(popup) {
+  transform-origin: bottom;
+}
+
+.hover-container[placement^='bottom']::part(popup) {
+  transform-origin: top;
+}
+
+.hover-container[placement^='left']::part(popup) {
+  transform-origin: right;
+}
+
+.hover-container[placement^='right']::part(popup) {
+  transform-origin: left;
+}
+
+slot[slot='anchor'] {
+  cursor: pointer;
+}
+
+.hover-container__body {
+  flex-direction: column;
+  z-index: 2;
+  background-color: var(--zn-panel-background-color);
+  border-radius: var(--zn-border-radius-large);
+  border: 1px solid rgb(var(--zn-border-color));
+  box-shadow: var(--zn-shadow-x-large);
+  width: var(--width);
+  max-width: calc(100% - var(--zn-spacing-2x-large));
+  max-height: calc(100% - var(--zn-spacing-2x-large));
+
+  ::slotted(*) {
+    flex: 1 1 auto;
+    display: block;
+    padding: var(--body-spacing);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    color: var(--zn-color-text-default);
+    font-size: var(--zn-font-size-medium);
+    font-weight: var(--zn-font-weight-normal);
+    letter-spacing: var(--zn-tracking-normal);
+    line-height: var(--zn-line-height-dense);
+  }
+}
+

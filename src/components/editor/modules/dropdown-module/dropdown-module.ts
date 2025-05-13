@@ -109,8 +109,6 @@ class DropdownModule {
       this.getDropdownContentFromUri();
     }
     // add to the document out of shadow dom
-    console.log('open dropdown');
-    console.log('dropdown', this._dropdown);
     this._dropdown.show();
   }
 

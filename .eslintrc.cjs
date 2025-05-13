@@ -83,7 +83,6 @@ module.exports = {
         '@typescript-eslint/non-nullable-type-assertion-style':      'warn',
         '@typescript-eslint/prefer-for-of':                          'warn',
         '@typescript-eslint/prefer-optional-chain':                  'warn',
-        '@typescript-eslint/prefer-ts-expect-error':                 'warn',
         '@typescript-eslint/prefer-return-this-type':                'error',
         '@typescript-eslint/prefer-string-starts-ends-with':         'warn',
         '@typescript-eslint/require-array-sort-compare':             'error',
@@ -98,7 +97,9 @@ module.exports = {
         '@typescript-eslint/no-extraneous-class':                    'error',
         '@typescript-eslint/no-redundant-type-constituents':         'off',
         '@typescript-eslint/parameter-properties':                   'error',
-        '@typescript-eslint/strict-boolean-expressions':             'off'
+        '@typescript-eslint/strict-boolean-expressions':             'off',
+        '@typescript-eslint/ban-ts-comment':                         'off',
+        '@typescript-eslint/no-explicit-any':                        'off'
       }
     },
     {

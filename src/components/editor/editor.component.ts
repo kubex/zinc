@@ -1,14 +1,14 @@
-import {property, query} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-import Quill, {Range} from "quill";
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import {FormControlController} from '../../internal/form';
-import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
+import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
-import TimeTrackingModule from "./modules/time-tracking-module";
 import DragAndDropModule from "./modules/drag-drop-module";
+import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
-import {normalizeNative} from "./normalize-native";
+import Quill, {Range} from "quill";
+import TimeTrackingModule from "./modules/time-tracking-module";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './editor.scss';
 
@@ -183,21 +183,106 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._supplyPlaceholderDropdown();
 
-    quill.selection.hasFocus = function () {
-      const rootNode = quill.root.getRootNode() as Document;
-      return rootNode.activeElement === quill.root;
-    };
-
-    quill.selection.getNativeRange = () => {
-      const dom = quill.root.getRootNode() as Document | null | Element;
-      let selection;
-      if (dom instanceof Document) {
-        selection = dom.getSelection();
+    // @ts-expect-error getSelection is available it lies.
+    const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
+    // Each browser engine has a different implementation for retrieving the Range
+    const getNativeRange = (rootNode: any): any => {
+      try {
+        if (hasShadowRootSelection) {
+          // In Chromium, the shadow root has a getSelection function which returns the range
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+          return rootNode?.getSelection()?.getRangeAt(0);
+        } else {
+          const selection = window.getSelection();
+          // @ts-expect-error getComposedRanges is available it lies.
+          if (selection.getComposedRanges) {
+            // Webkit range retrieval is done with getComposedRanges (see: https://bugs.webkit.org/show_bug.cgi?id=163921)
+            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            return selection?.getComposedRanges(rootNode)[0];
+          } else {
+            // Gecko implements the range API properly in Native Shadow: https://developer.mozilla.org/en-US/docs/Web/API/Selection/getRangeAt
+            // @ts-ignore
+            return selection.getRangeAt(0);
+          }
+        }
+      } catch {
+        return null;
       }
-      return normalizeNative(selection);
+      //
+    }
+
+    /**
+     * Original implementation uses document.active element which does not work in Native Shadow.
+     * Replace document.activeElement with shadowRoot.activeElement
+     **/
+    quill.selection.hasFocus = function () {
+      const rootNode = quill.root.getRootNode() as Document | ShadowRoot;
+      return rootNode.activeElement === quill.root;
+    }
+
+    /**
+     * Original implementation uses document.getSelection which does not work in Native Shadow.
+     * Replace document.getSelection with shadow dom equivalent (different for each browser)
+     **/
+    quill.selection.getNativeRange = function () {
+      const rootNode = quill.root.getRootNode();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const nativeRange = getNativeRange(rootNode);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      return nativeRange ? quill.selection.normalizeNative(nativeRange) : null;
     };
 
+    /**
+     * Original implementation relies on Selection.addRange to programmatically set the range, which does not work
+     * in Webkit with Native Shadow. Selection.addRange works fine in Chromium and Gecko.
+     **/
+    quill.selection.setNativeRange = function (startNode: Element, startOffset: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,prefer-rest-params
+      let endNode: any = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : startNode;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,prefer-rest-params
+      let endOffset: any = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : startOffset;
+      // eslint-disable-next-line prefer-rest-params,@typescript-eslint/no-unsafe-assignment
+      const force: any = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (startNode !== null && (quill.selection.root.parentNode === null || startNode.parentNode === null || endNode.parentNode === null)) {
+        return;
+      }
+      const selection = document.getSelection();
+      if (selection === null) return;
+      if (startNode !== null) {
+        if (!quill.selection.hasFocus()) quill.selection.root.focus();
+        const native = (quill.selection.getNativeRange() || {}).native;
+        // @ts-ignore
+        if (native === null || force || startNode !== native.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
+          if (startNode.tagName === "BR") {
+            // @ts-ignore
+            startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
+            startNode = startNode.parentNode as Element;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          if (endNode.tagName === "BR") {
+            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
+            endOffset = [].indexOf.call(endNode.parentNode.childNodes, endNode);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+            endNode = endNode.parentNode;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          selection.setBaseAndExtent(startNode, startOffset, endNode, endOffset);
+        }
+      } else {
+        selection.removeAllRanges();
+        quill.selection.root.blur();
+        document.body.focus();
+      }
+    }
+
+    /**
+     * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM
+     **/
     document.addEventListener('selectionchange', () => this.quillElement.selection.update());
+
     quill.on('text-change', this._handleTextChange.bind(this));
 
     this._setupTitleAttributes(quill);
@@ -206,7 +291,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     quill.setContents(html, Quill.sources.SILENT);
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
-
     super.firstUpdated(_changedProperties);
   }
 

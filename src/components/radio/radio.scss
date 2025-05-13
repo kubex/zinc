@@ -1,26 +1,51 @@
 @use "../../wc";
+@use "../../form-control";
 
 :host {
   display: block;
-  padding: 5px 10px;
 }
 
-:host(:focus-visible) {
-  outline: 0;
+.form-control {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control .form-control__label {
+  padding-bottom: var(--zn-spacing-small);
 }
 
 .radio {
+  position: relative;
   display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
+  align-items: flex-start;
+  font-family: var(--zn-input-font-family), sans-serif;
+  font-weight: var(--zn-input-font-weight);
+  color: var(--zn-input-label-color);
   cursor: pointer;
-  gap: 10px;
 }
 
-.radio__checked-icon {
-  display: inline-flex;
-  width: 1rem;
-  height: 1rem;
+.radio--small {
+  --toggle-size: var(--zn-toggle-size-small);
+  font-size: var(--zn-input-font-size-small);
+}
+
+.radio--small .radio__description {
+  font-size: var(--zn-font-size-x-small);
+}
+
+.radio--medium {
+  --toggle-size: var(--zn-toggle-size-medium);
+  font-size: var(--zn-input-font-size-medium);
+}
+
+.radio--medium .radio__description,
+.radio--large .radio__description {
+  font-size: var(--zn-input-font-size-small);
+}
+
+.radio--large {
+  --toggle-size: var(--zn-toggle-size-large);
+  font-size: var(--zn-input-font-size-large);
 }
 
 .radio__control {
@@ -29,13 +54,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid rgb(var(--zn-border-color));
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  box-shadow: var(--zn-shadow-medium);
+  border: solid var(--zn-input-border-width) var(--zn-input-border-color);
   border-radius: 50%;
-  background-color: rgb(var(--zn-background));
-  color: transparent;
-  transition: background-color 0.2s, border-color 0.2s;
+  background-color: var(--zn-input-background-color);
+  color: var(--zn-color-neutral-0);
+  transition: var(--zn-transition-fast) border-color,
+  var(--zn-transition-fast) background-color,
+  var(--zn-transition-fast) color,
+  var(--zn-transition-fast) box-shadow;
 }
 
 .radio__input {
@@ -44,6 +73,13 @@
   padding: 0;
   margin: 0;
   pointer-events: none;
+}
+
+.radio__checked-icon {
+  --icon-size: var(--toggle-size);
+  --icon-color: var(--zn-color-primary);
+
+  display: inline-flex;
 }
 
 /* Hover */
@@ -60,7 +96,7 @@
 
 /* Checked + hover */
 .radio.radio--checked:not(.radio--disabled) .radio__control:hover {
-  color: rgba(var(--zn-primary), .2);
+  color: rgba(var(--zn-primary), .6);
   border: none;
 }
 
@@ -81,13 +117,81 @@
   opacity: 0;
 }
 
-.radio__label-wrapper {
-  font-size: 90%;
+:host-context([required]) .radio__label::after {
+  display: none;
+}
+
+:host([required]) .radio__label::after {
+  display: none;
+}
+
+/* If parent Radio Group has 'data-user-invalid', style all radios in the group as 'data-user-invalid' by targeting with a class ('radio-user-invalid'), since the radios can't be targeted using ::slotted */
+:host(.radio-user-invalid) .radio__control {
+  border-color: var(--zn-color-danger-600);
+}
+
+:host(.radio-user-invalid) .radio:not(.radio--checked):not(.radio--disabled) .radio__input:focus-visible ~ .radio__control {
+  border-color: var(--zn-color-danger-600);
+  outline: var(--zn-focus-ring-style) var(--zn-focus-ring-width) var(--zn-error-focus-ring-color);
+  outline-offset: var(--zn-focus-ring-offset);
+}
+
+/* Handle spacing for radio groups rendered with Simple Form */
+:host(.groupedRadio) {
+  margin-top: var(--zn-spacing-medium);
+}
+
+:host(.groupedRadio[horizontal]),
+:host(.groupedRadio[contained]) {
+  margin-top: var(--zn-spacing-small);
+}
+
+:host(.groupedRadio[horizontal][contained]) {
+  margin-top: 0;
+  height: 100%;
 }
 
 .radio__label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+  display: inline-block;
+  color: var(--zn-input-label-color);
+  line-height: var(--toggle-size);
+  margin-inline-start: 0.75em;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Contained */
+.radio--contained {
+  padding: 1.375rem var(--zn-spacing-large) 1.375rem var(--zn-spacing-medium);
+  border: 1px solid var(--zn-color-gray-400);
+  width: 100%;
+  height: 100%;
+}
+
+:not(.radio--disabled).radio--contained:hover,
+:not(.radio--disabled).radio--contained.radio--checked:hover {
+  background-color: var(--zn-color-purple-50);
+  transition: var(--zn-transition-medium) all;
+}
+
+.radio--contained.radio--checked .radio__label {
+  color: var(--zn-color-purple-600);
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+.radio--contained.radio--checked .radio__description {
+  color: var(--zn-color-gray-900);
+  font-weight: var(--zn-font-weight-normal);
+}
+
+.radio--contained.radio--checked {
+  background-color: var(--zn-color-purple-100);
+  border: 1px solid var(--zn-color-purple-600);
+  outline: 1px solid var(--zn-color-purple-600);
+  transition: var(--zn-transition-medium) all;
+}
+
+/* When the control isn't checked, hide the circle for Windows High Contrast mode a11y */
+.radio:not(.radio--checked) svg circle {
+  opacity: 0;
 }

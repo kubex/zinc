@@ -52,11 +52,14 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
    */
   @property() label = '';
 
-  /** The radio groups's help text. If you need to display HTML, use the `help-text` slot instead. */
+  /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+  @property({attribute: 'label-tooltip'}) labelTooltip = '';
+
+  /** The radio groups' help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
 
   /** The name of the radio group, submitted as a name/value pair with form data. */
-  @property() name = 'option';
+  @property() name = '';
 
   /** The current value of the radio group, submitted as a name/value pair with form data. */
   @property({reflect: true}) value = '';
@@ -64,9 +67,15 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   /** The radio group's size. This size will be applied to all child radios */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
+  /** The checkbox group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
+  @property({type: Boolean, reflect: true}) horizontal = false;
+
+  /** The checkbox group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child checkboxes. */
+  @property({type: Boolean, reflect: true}) contained = false;
+
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-   * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+   * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
   @property({reflect: true}) form = '';
@@ -179,6 +188,8 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         await radio.updateComplete;
         radio.checked = radio.value === this.value;
         radio.size = this.size;
+        radio.horizontal = this.horizontal;
+        radio.contained = this.contained;
       })
     );
 
@@ -278,8 +289,10 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
 
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
+    const hasLabelTooltipSlot = this.hasSlotController.test('label-tooltip');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
     const hasLabel = this.label ? true : !!hasLabelSlot;
+    const hasLabelTooltip = this.labelTooltip ? true : hasLabelTooltipSlot;
     const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
     const defaultSlot = html`
       <slot @slotchange=${this.syncRadios} @click=${this.handleRadioClick} @keydown=${this.handleKeyDown}></slot>
@@ -295,6 +308,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
           'form-control--large': this.size === 'large',
           'form-control--radio-group': true,
           'form-control--has-label': hasLabel,
+          'form-control--has-label-tooltip': hasLabelTooltip,
           'form-control--has-help-text': hasHelpText
         })}
         role="radiogroup"
@@ -308,6 +322,15 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
           aria-hidden=${hasLabel ? 'false' : 'true'}
           @click=${this.handleLabelClick}>
           <slot name="label">${this.label}</slot>
+          ${hasLabelTooltip
+            ? html`
+              <zn-tooltip class="form-control--label-tooltip">
+                <div slot="content">
+                  <slot name="label-tooltip">${this.labelTooltip}</slot>
+                </div>
+                <zn-icon src="info"></zn-icon>
+              </zn-tooltip>`
+            : ''}
         </label>
 
         <div part="form-control-input" class="form-control-input">

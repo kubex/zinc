@@ -1,7 +1,39 @@
 @use "../../wc";
+@use "../../form-control";
 
 :host {
   display: block;
+  line-height: var(--zn-line-height-dense);
+}
+
+:host([horizontal]) .form-control-input {
+  display: flex;
+  column-gap: var(--zn-spacing-2x-large);
+}
+
+:host([contained]) .form-control-input {
+  margin-top: var(--zn-spacing-medium);
+}
+
+:host([horizontal][contained]) .form-control-input {
+  margin-top: var(--zn-spacing-medium);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  gap: var(--zn-spacing-x-small);
+}
+
+::slotted(zn-radio) {
+  margin-top: var(--zn-spacing-medium);
+}
+
+::slotted(zn-radio[horizontal]),
+::slotted(zn-radio[contained]) {
+  margin-top: var(--zn-spacing-small);
+}
+
+::slotted(zn-radio[horizontal][contained]) {
+  margin-top: 0;
+  height: 100%;
 }
 
 .form-control {
@@ -13,11 +45,6 @@
 
 .form-control__label {
   padding: 0;
-}
-
-.radio-group--required .radio-group__label::after {
-  content: var(--zn-input-required-content);
-  margin-inline-start: var(--zn-input-required-content-offset);
 }
 
 .visually-hidden {

@@ -3638,6 +3638,52 @@ declare module "components/bulk-actions/index" {
         }
     }
 }
+declare module "components/editor/modules/attachment-module" {
+    import Quill from 'quill';
+    type AttachmentModuleOptions = {
+        upload: (file: File) => Promise<{
+            path: any;
+            url: any;
+            filename: any;
+        }>;
+        onFileUploaded?: (node: HTMLElement, { url }: {
+            url: string;
+        }) => void;
+        attachmentInput?: HTMLInputElement;
+    };
+    export default class AttachmentModule {
+        private _quill;
+        private _options;
+        private _fileHolder;
+        constructor(quill: Quill, options: AttachmentModuleOptions);
+        private _selectLocalImage;
+        private _fileChanged;
+        private _attachmentContainer;
+        private _createAttachmentContainer;
+        private _insertAttachment;
+        private _updateAttachment;
+        private _createAttachment;
+        private _removeAttachment;
+    }
+}
+declare module "components/editor/modules/drag-drop-module" {
+    import Quill from 'quill';
+    interface DragAndDropModuleOptions {
+        onDrop: (file: File, options: object) => void;
+        draggableContentTypePattern: string;
+        draggables: [];
+    }
+    export default class DragAndDropModule {
+        private _quill;
+        private _options;
+        private _container;
+        private _draggables;
+        constructor(quill: Quill, options: DragAndDropModuleOptions);
+        nullReturner: () => null;
+        handleDrop: (e: DragEvent) => void;
+    }
+    export const getFileDataUrl: (file: any) => Promise<unknown>;
+}
 declare module "components/editor/modules/dropdown-module/dropdown-module.component" {
     import { type CSSResultGroup, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
@@ -3714,68 +3760,6 @@ declare module "components/editor/modules/dropdown-module/dropdown-module" {
     }
     export default DropdownModule;
 }
-declare module "components/editor/modules/attachment-module" {
-    import Quill from 'quill';
-    type AttachmentModuleOptions = {
-        upload: (file: File) => Promise<{
-            path: any;
-            url: any;
-            filename: any;
-        }>;
-        onFileUploaded?: (node: HTMLElement, { url }: {
-            url: string;
-        }) => void;
-        attachmentInput?: HTMLInputElement;
-    };
-    export default class AttachmentModule {
-        private _quill;
-        private _options;
-        private _fileHolder;
-        constructor(quill: Quill, options: AttachmentModuleOptions);
-        private _selectLocalImage;
-        private _fileChanged;
-        private _attachmentContainer;
-        private _createAttachmentContainer;
-        private _insertAttachment;
-        private _updateAttachment;
-        private _createAttachment;
-        private _removeAttachment;
-    }
-}
-declare module "components/editor/modules/time-tracking-module" {
-    import Quill from 'quill';
-    type TimeTrackingModuleOptions = {
-        startTimeInput?: HTMLInputElement;
-        openTimeInput?: HTMLInputElement;
-    };
-    export default class TimeTrackingModule {
-        private _quill;
-        private _options;
-        private _startTime;
-        private _openTime;
-        constructor(quill: Quill, options: TimeTrackingModuleOptions);
-        private _updateOpenTime;
-        private _updateStartTime;
-    }
-}
-declare module "components/editor/modules/drag-drop-module" {
-    import Quill from 'quill';
-    interface DragAndDropModuleOptions {
-        onDrop: (file: File, options: object) => void;
-        draggableContentTypePattern: string;
-        draggables: [];
-    }
-    export default class DragAndDropModule {
-        private _quill;
-        private _options;
-        private _container;
-        private _draggables;
-        constructor(quill: Quill, options: DragAndDropModuleOptions);
-        nullReturner: () => null;
-        handleDrop: (e: DragEvent) => void;
-    }
-    export const getFileDataUrl: (file: any) => Promise<unknown>;
-}
 declare module "components/editor/modules/image-resize-module/image-resize-module" {
     import Quill, { Module } from "quill";
     type ImageResizeModuleOptions = {
@@ -3798,22 +3782,26 @@ declare module "components/editor/modules/image-resize-module/image-resize-modul
     }
     export default ImageResizeModule;
 }
-declare module "components/editor/normalize-native" {
-    export const normalizeNative: (nativeRange: any) => {
-        start: {
-            node: any;
-            offset: any;
-        };
-        end: {
-            node: any;
-            offset: any;
-        };
-        native: any;
-    } | null;
+declare module "components/editor/modules/time-tracking-module" {
+    import Quill from 'quill';
+    type TimeTrackingModuleOptions = {
+        startTimeInput?: HTMLInputElement;
+        openTimeInput?: HTMLInputElement;
+    };
+    export default class TimeTrackingModule {
+        private _quill;
+        private _options;
+        private _startTime;
+        private _openTime;
+        constructor(quill: Quill, options: TimeTrackingModuleOptions);
+        private _updateOpenTime;
+        private _updateStartTime;
+    }
 }
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/editor

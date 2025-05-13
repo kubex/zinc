@@ -173,6 +173,7 @@ export default class ZnDataTable extends ZincElement {
   private hasSlotController = new HasSlotController(
     this,
     '[default]',
+    'search-action',
     ActionSlots.delete.valueOf(),
     ActionSlots.modify.valueOf(),
     ActionSlots.create.valueOf(),
@@ -260,10 +261,16 @@ export default class ZnDataTable extends ZincElement {
           <div>${error}</div>`
       });
 
+    const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
+      || this.hasSlotController.test(ActionSlots.modify.valueOf())
+      || this.hasSlotController.test(ActionSlots.create.valueOf());
+    const hasQueryBuilder = this.hasSlotController.test('search-action') || this.filters.length > 0;
+    const hasHeader = hasActions || hasQueryBuilder;
+
     // Headers do not need to be re-rendered with new data
     return html`
       <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
-        ${this.getTableHeader()}
+        ${hasHeader ? this.getTableHeader() : html``}
         ${tableBody}
       </div>
     `;

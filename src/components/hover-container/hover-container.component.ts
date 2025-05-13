@@ -192,7 +192,8 @@ export default class ZnHoverContainer extends ZincElement {
         exportparts="popup:base__popup,arrow:base__arrow"
         class=${classMap({
           'hover-container': true,
-          'hover-container--open': this.open
+          'hover-container--open': this.open,
+          [`hover-container--${this.placement}`]: this.placement
         })}
         placement=${this.placement}
         distance=${this.distance}

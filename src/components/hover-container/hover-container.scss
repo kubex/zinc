@@ -2,7 +2,7 @@
 
 
 :host {
-  --width: 30rem;
+  --width: 20rem;
   --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
   --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
   --footer-spacing: var(--zn-spacing-large);
@@ -13,19 +13,19 @@
   display: contents;
 }
 
-.hover-container[placement^='top']::part(popup) {
+.hover-container--top::part(popup) {
   transform-origin: bottom;
 }
 
-.hover-container[placement^='bottom']::part(popup) {
+.hover-container--bottom::part(popup) {
   transform-origin: top;
 }
 
-.hover-container[placement^='left']::part(popup) {
+.hover-container--left::part(popup) {
   transform-origin: right;
 }
 
-.hover-container[placement^='right']::part(popup) {
+.hover-container--right::part(popup) {
   transform-origin: left;
 }
 
@@ -47,7 +47,6 @@ slot[slot='anchor'] {
   ::slotted(*) {
     flex: 1 1 auto;
     display: block;
-    padding: var(--body-spacing);
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     color: var(--zn-color-text-default);

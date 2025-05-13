@@ -2310,6 +2310,109 @@
           }
         },
         {
+          "name": "zn-hover-container",
+          "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "content",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "placement",
+              "value": {
+                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'",
+                "default": "'top'"
+              }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "distance",
+              "value": { "type": "number", "default": "4" }
+            },
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "skidding",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "trigger",
+              "value": { "type": "string", "default": "'hover focus'" }
+            },
+            {
+              "name": "hoist",
+              "value": { "type": "boolean", "default": "true" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The content of the hover-container" },
+            {
+              "name": "anchor",
+              "description": "The anchor the hover-container is attached to."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-show",
+              "description": "Emitted when the hover-container is shown."
+            },
+            {
+              "name": "zn-after-show",
+              "description": "Emitted after the hover-container is shown."
+            },
+            {
+              "name": "zn-hide",
+              "description": "Emitted when the hover-container is hidden."
+            },
+            {
+              "name": "zn-after-hide",
+              "description": "Emitted after the hover-container is hidden."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "body", "type": "HTMLElement" },
+              { "name": "popup", "type": "Popup" },
+              { "name": "content", "type": "string" },
+              {
+                "name": "placement",
+                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              { "name": "disabled", "type": "boolean" },
+              { "name": "distance", "type": "number" },
+              { "name": "open", "type": "boolean" },
+              { "name": "skidding", "type": "number" },
+              { "name": "trigger", "type": "string" },
+              { "name": "hoist", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-show",
+                "description": "Emitted when the hover-container is shown."
+              },
+              {
+                "name": "zn-after-show",
+                "description": "Emitted after the hover-container is shown."
+              },
+              {
+                "name": "zn-hide",
+                "description": "Emitted when the hover-container is hidden."
+              },
+              {
+                "name": "zn-after-hide",
+                "description": "Emitted after the hover-container is hidden."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-icon",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",

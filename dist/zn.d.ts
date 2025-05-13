@@ -1644,6 +1644,7 @@ declare module "components/data-table/data-table.component" {
         caption: CaptionConfig;
         buttons: ButtonConfig[];
         icon: IconConfig;
+        hover: HoverContainerConfig;
     }
     interface CaptionConfig {
         title: string;
@@ -1656,6 +1657,13 @@ declare module "components/data-table/data-table.component" {
         src: string;
         size: number;
         color: string;
+    }
+    interface HoverContainerConfig {
+        label: string;
+        content: string;
+        anchor: string;
+        placement: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'right' | 'right-start' | 'right-end' | 'left' | 'left-start' | 'left-end';
+        icon: IconConfig;
     }
     interface ButtonConfig {
         id: string;
@@ -5109,6 +5117,69 @@ declare module "components/button-menu/index" {
         }
     }
 }
+declare module "components/hover-container/hover-container.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type Popup from "components/popup/index";
+    /**
+     * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks
+     * on an element.
+     *
+     * @documentation https://zinc.style/components/hover-container
+     * @status experimental
+     * @since 1.0
+     *
+     * @event zn-show - Emitted when the hover-container is shown.
+     * @event zn-after-show - Emitted after the hover-container is shown.
+     * @event zn-hide - Emitted when the hover-container is hidden.
+     * @event zn-after-hide - Emitted after the hover-container is hidden.
+     *
+     * @slot - The content of the hover-container
+     * @slot anchor - The anchor the hover-container is attached to.
+     */
+    export default class ZnHoverContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        private hoverTimeout;
+        private closeWatcher;
+        defaultSlot: HTMLSlotElement;
+        body: HTMLElement;
+        popup: Popup;
+        content: string;
+        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
+        disabled: boolean;
+        distance: number;
+        open: boolean;
+        skidding: number;
+        trigger: string;
+        hoist: boolean;
+        constructor();
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private hasTrigger;
+        private handleBlur;
+        private handleClick;
+        private handleFocus;
+        private handleDocumentKeyDown;
+        private handleMouseOver;
+        private handleMouseOut;
+        handleOpenChange(): void;
+        handleOptionsChange(): Promise<void>;
+        handleDisabledChange(): void;
+        show(): Promise<void>;
+        hide(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/hover-container/index" {
+    import ZnHoverContainer from "components/hover-container/hover-container.component";
+    export * from "components/hover-container/hover-container.component";
+    export default ZnHoverContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-hover-container': ZnHoverContainer;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5230,7 +5301,11 @@ declare module "zinc" {
     export { default as Item } from "components/item/index";
     export { default as DataSelect } from "components/data-select/index";
     export { default as ButtonMenu } from "components/button-menu/index";
+    export { default as HoverContainer } from "components/hover-container/index";
     export * from "events/events";
+}
+declare module "components/hover-container/hover-container" {
+    import '../../../dist/zn.min.js';
 }
 declare module "events/zn-after-collapse" {
     export type ZnAfterExpandEvent = CustomEvent<Record<PropertyKey, never>>;

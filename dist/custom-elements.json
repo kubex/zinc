@@ -7877,6 +7877,309 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/hover-container/hover-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnHoverContainer",
+          "slots": [
+            {
+              "description": "The content of the hover-container",
+              "name": ""
+            },
+            {
+              "description": "The anchor the hover-container is attached to.",
+              "name": "anchor"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hoverTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "body",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "popup",
+              "type": {
+                "text": "Popup"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "content"
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "attribute": "placement"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "skidding"
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "attribute": "trigger"
+            },
+            {
+              "kind": "field",
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "hoist"
+            },
+            {
+              "kind": "method",
+              "name": "hasTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "triggerType",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocus",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleOpenChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleOptionsChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the hover-container is shown.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted after the hover-container is shown.",
+              "name": "zn-after-show"
+            },
+            {
+              "description": "Emitted when the hover-container is hidden.",
+              "name": "zn-hide"
+            },
+            {
+              "description": "Emitted after the hover-container is hidden.",
+              "name": "zn-after-hide"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "content"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "fieldName": "placement"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "fieldName": "distance"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "skidding"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "fieldName": "trigger"
+            },
+            {
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "hoist"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.",
+          "tagNameWithoutPrefix": "hover-container",
+          "tagName": "zn-hover-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/hover-container\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the hover-container is shown.\n * @event zn-after-show - Emitted after the hover-container is shown.\n * @event zn-hide - Emitted when the hover-container is hidden.\n * @event zn-after-hide - Emitted after the hover-container is hidden.\n *\n * @slot - The content of the hover-container\n * @slot anchor - The anchor the hover-container is attached to.\n */",
+          "documentation": "https://zinc.style/components/hover-container",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnHoverContainer",
+            "module": "components/hover-container/hover-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/icon/icon.js",
       "declarations": [
         {

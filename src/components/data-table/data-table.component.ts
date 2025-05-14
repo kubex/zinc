@@ -638,7 +638,7 @@ export default class ZnDataTable extends ZincElement {
         content = html`
           <div class=${classMap({
             'caption': true,
-            'caption--icon': data['caption'].icon !== null,
+            'caption--icon': data['caption'].icon !== undefined,
           })}>
             ${captionIcon}
             ${title}

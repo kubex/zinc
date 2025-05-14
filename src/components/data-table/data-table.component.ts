@@ -49,6 +49,7 @@ interface CaptionConfig {
   uri: string;
   target: string;
   gaid: string;
+  icon: IconConfig;
 }
 
 interface IconConfig {
@@ -613,6 +614,17 @@ export default class ZnDataTable extends ZincElement {
 
       if (data['caption']) {
         let title = html`<span class="title">${data['caption'].title}</span>`;
+        let captionIcon = html``;
+
+        if (data['caption'].icon) {
+          const icon = data['caption'].icon;
+          const src = icon['src'] ?? icon;
+          const size = icon['size'] ?? 16;
+          const color = icon['color'] ?? '';
+
+          captionIcon = html`
+            <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>`;
+        }
 
         if (data['caption'].target && data['caption'].uri) {
           title = html` <a data-target="${ifDefined(data['caption'].target)}"
@@ -624,7 +636,11 @@ export default class ZnDataTable extends ZincElement {
         }
 
         content = html`
-          <div class="caption">
+          <div class=${classMap({
+            'caption': true,
+            'caption--icon': data['caption'].icon !== null,
+          })}>
+            ${captionIcon}
             ${title}
             <span class="summary">${data['caption'].summary}</span>
           </div>`;

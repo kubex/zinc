@@ -497,7 +497,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
             <span part="prefix" class="input__prefix">
               ${this.type === 'currency'
                 ? html`
-                  <zn-icon class="input__prefix-default" src="search"></zn-icon>`
+                  <zn-icon class="input__prefix-default" src="payments"></zn-icon>`
                 : this.type === 'email' && hasOptionalIcon
                   ? html`
                     <zn-icon class="input__prefix-default" src="mail"></zn-icon>`

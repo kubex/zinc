@@ -280,7 +280,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    spellcheck=${this.spellcheck}
                    aria-describedby="help-text"
                    @change=${this.handleChange}
-                   @input="${this.handleInput}"
+                   @input=${this.handleInput}
                    @invalid=${this.handleInvalid}>
 
             <span part="suffix" class="input__suffix">

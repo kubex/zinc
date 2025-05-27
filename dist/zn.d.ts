@@ -4203,9 +4203,10 @@ declare module "components/checkbox/index" {
 }
 declare module "components/datepicker/datepicker.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/datepicker
@@ -4234,11 +4235,6 @@ declare module "components/datepicker/datepicker.component" {
         input: HTMLInputElement;
         private hasFocus;
         title: string;
-        /**
-         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
-         * to `text`
-         */
-        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
         /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
         /** The current value of the input, submitted as a name/value pair with form data. */

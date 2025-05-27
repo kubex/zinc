@@ -8,9 +8,10 @@ import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import AirDatepicker, {type AirDatepickerLocale} from "air-datepicker";
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
+import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './datepicker.scss';
 

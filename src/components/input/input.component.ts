@@ -264,7 +264,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   }
 
   private handleChange() {
-    this.value = this.input.value;
+    if (this.type === 'currency') {
+      this.value = parseFloat(this.input.value as string).toFixed(2)
+    } else {
+      this.value = this.input.value;
+    }
+
     this.emit('zn-change');
   }
 

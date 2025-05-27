@@ -1643,6 +1643,7 @@ declare module "components/data-table/data-table.component" {
         target: string;
         caption: CaptionConfig;
         buttons: ButtonConfig[];
+        menu: MenuConfig[];
         icon: IconConfig;
         hover: HoverContainerConfig;
     }
@@ -1679,6 +1680,13 @@ declare module "components/data-table/data-table.component" {
         label: string;
         outline: boolean;
         confirm: ConfirmConfig;
+    }
+    interface MenuConfig {
+        id: string;
+        href: string;
+        gaid: string;
+        target: string;
+        label: string;
     }
     interface ConfirmConfig {
         type: string;

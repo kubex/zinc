@@ -271,6 +271,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    type="text"
                    title=${this.title /* An empty title prevents browser validation tooltips from appearing on hover */}
                    name=${ifDefined(this.name)}
+                   autocomplete="off"
                    ?disabled=${this.disabled}
                    ?readonly=${this.readonly}
                    ?required=${this.required}

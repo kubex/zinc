@@ -174,7 +174,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     if (inputElement) {
       this._instance = new AirDatepicker(inputElement, {
         locale: enLocale,
-        range: this.range
+        range: this.range,
+        onSelect: () => {
+          this.handleChange();
+        }
       });
     }
   }

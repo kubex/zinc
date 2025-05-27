@@ -39,6 +39,7 @@ interface RenderDataValue {
   target: string;
   caption: CaptionConfig;
   buttons: ButtonConfig[];
+  menu: MenuConfig[];
   icon: IconConfig;
   hover: HoverContainerConfig;
 }
@@ -91,6 +92,14 @@ interface ButtonConfig {
   label: string;
   outline: boolean;
   confirm: ConfirmConfig;
+}
+
+interface MenuConfig {
+  id: string;
+  href: string;
+  gaid: string;
+  target: string;
+  label: string;
 }
 
 interface ConfirmConfig {
@@ -673,6 +682,24 @@ export default class ZnDataTable extends ZincElement {
             <div slot="anchor">${data['hover'].anchor}</div>
             ${unsafeHTML(data['hover'].content)}
           </zn-hover-container>`;
+      }
+
+      if (data['menu']) {
+        return html`
+          <zn-dropdown>
+            <zn-button slot="trigger" icon="more_horiz" icon-size="24" color="transparent" size="content"></zn-button>
+            <zn-menu>
+              ${data['menu'].map((item: MenuConfig) => {
+                return html`
+                  <zn-menu-item id="${item.id}"
+                                href="${item.href}"
+                                gaid="${item.gaid}"
+                                data-target="${ifDefined(item.target)}">
+                    ${item.label}
+                  </zn-menu-item>`;
+              })}
+            </zn-menu>
+          </zn-dropdown>`
       }
 
       if (data['buttons']) {

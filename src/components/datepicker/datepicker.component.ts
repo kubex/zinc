@@ -51,13 +51,6 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   @property() title = "" // make reactive pass through
 
-  /**
-   * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
-   * to `text`
-   */
-  @property({reflect: true}) type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |
-    'search' | 'tel' | 'text' | 'time' | 'url' = 'text';
-
   /** The name of the input, submitted as a name/value pair with form data. */
   @property() name: string = "";
 

@@ -241,7 +241,7 @@ declare module "components/icon/icon.component" {
         alt: string;
         size: number;
         round: boolean;
-        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "kubex-brands" | "kubex-solid";
         color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
         gravatarOptions: string;
         connectedCallback(): void;
@@ -1641,6 +1641,7 @@ declare module "components/data-table/data-table.component" {
         tag: string;
         url: string;
         target: string;
+        gaid?: string;
         caption: CaptionConfig;
         buttons: ButtonConfig[];
         menu: MenuConfig[];

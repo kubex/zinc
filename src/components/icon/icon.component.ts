@@ -4,9 +4,12 @@ import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
 import {md5} from '../../utilities/md5';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import {LineIcon} from "lineicons/src/lineicons.js"
 import {styleMap} from "lit/directives/style-map.js";
-
 import styles from './icon.scss';
+
+type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" |
+  "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "line" | ""
 
 /**
  * @summary Short summary of the component's intended use.
@@ -36,8 +39,45 @@ export default class ZnIcon extends ZincElement {
 
   @property({type: Boolean, reflect: true}) round = false;
 
-  @property({reflect: true}) library: "material" | "material-outlined" | "material-round" | "material-sharp" |
-    "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+  @property({reflect: true}) library: IconLibrary;
+
+  defaultLibrary: IconLibrary = "material-symbols-outlined";
+
+  convertToLibrary(input: string): IconLibrary {
+    switch (input) {
+      case "material":
+      case "mat":
+      case "m":
+        return "material";
+      case "material-outlined":
+      case "mo":
+        return "material-outlined";
+      case "material-round":
+      case "mr":
+        return "material-round";
+      case "material-sharp":
+      case "ms":
+        return "material-sharp";
+      case "material-two-tone":
+      case "mt":
+      case "m2":
+        return "material-two-tone";
+      case "material-symbols-outlined":
+      case "mso":
+        return "material-symbols-outlined";
+      case "gravatar":
+      case "grav":
+        return "gravatar";
+      case "libravatar":
+        return "libravatar";
+      case "avatar":
+      case "av":
+        return "avatar";
+      case "line":
+        return "line";
+    }
+    return this.defaultLibrary
+  }
 
   @property({reflect: true}) color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" |
     "disabled";
@@ -46,27 +86,32 @@ export default class ZnIcon extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-
     if (this.src && this.src.includes('@')) {
       const split = this.src.split('@');
       if (split[1].includes('.')) {
         this.library = "gravatar";
+      } else if ((this.library === undefined) && split[1] !== "") {
+        // if split[1] is a valid library name, set it
+        this.library = this.convertToLibrary(split[1]);
+        this.src = split[0];
       }
 
       if (this.library === "gravatar" || this.library === "libravatar") {
         this.ravatarOptions();
         this.src = md5(this.src);
       }
+
     } else if (!this.library && this.src && !this.src.includes('/')) {
-      this.library = "material-symbols-outlined";
+      this.library = this.defaultLibrary;
     }
 
-    // load the material icons font if the library is set to material
-    render(html`
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet">`, document.head);
-
+    if (this.library.startsWith("material")) {
+      // load the material icons font if the library is set to material
+      render(html`
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          rel="stylesheet">`, document.head);
+    }
     this.ravatarOptions();
   }
 
@@ -96,6 +141,8 @@ export default class ZnIcon extends ZincElement {
         })}" style="${styleMap({'--icon-size': this.library === "avatar" ? "40px" : this.size + "px"})}">
           ${this.library ? html`
             ${choose(this.library, [
+              ["line", () => html`
+                <line-icon part="icon" type="regular" name="${this.src}"></line-icon>`],
               ["material", () => html`<i part="icon" class="mi mi">${this.src}</i>`],
               ["material-outlined", () => html`<i part="icon" class="mi mi--outlined">${this.src}</i>`],
               ["material-round", () => html`<i part="icon" class="mi mi--round">${this.src}</i>`],

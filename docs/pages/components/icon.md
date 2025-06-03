@@ -41,6 +41,20 @@ layout: component
 <zn-icon src="test1@example.com" size="32"></zn-icon>
 ```
 
+## libravatar
+
+```html:preview
+
+<zn-icon src="test1@example.com" library="libravatar" size="32"></zn-icon>
+```
+
+## line
+
+```html:preview
+
+<zn-icon src="paypal@line" size="32"></zn-icon>
+```
+
 ## Default  icons
 
 Our icons are taken directly from Material Icons. Click or tap on any icon to copy its name, then you can use it in

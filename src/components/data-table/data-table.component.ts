@@ -37,6 +37,7 @@ interface RenderDataValue {
   tag: string;
   url: string;
   target: string;
+  gaid?: string;
   caption: CaptionConfig;
   buttons: ButtonConfig[];
   menu: MenuConfig[];
@@ -618,7 +619,9 @@ export default class ZnDataTable extends ZincElement {
 
       if (data['url']) {
         content = html`
-          <a href="${data['url']}" data-target=${ifDefined(data['target'])}>${content}</a>`;
+          <a href="${data['url']}"
+             data-target=${ifDefined(data['target'])}
+             gaid=${ifDefined(data['gaid'])}>${content}</a>`;
       }
 
       if (data['caption']) {

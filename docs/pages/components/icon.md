@@ -41,6 +41,14 @@ layout: component
 <zn-icon src="test1@example.com" size="32"></zn-icon>
 ```
 
+## Kubex Brands
+
+```html:preview
+
+<zn-icon src="adyen" size="32" library="kubex-brands"></zn-icon>
+```
+
+
 ## Default  icons
 
 Our icons are taken directly from Material Icons. Click or tap on any icon to copy its name, then you can use it in

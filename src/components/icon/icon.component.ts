@@ -37,7 +37,7 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean, reflect: true}) round = false;
 
   @property({reflect: true}) library: "material" | "material-outlined" | "material-round" | "material-sharp" |
-    "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar";
+    "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "kubex-brands" | "kubex-solid";
 
   @property({reflect: true}) color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" |
     "disabled";
@@ -66,6 +66,12 @@ export default class ZnIcon extends ZincElement {
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
+
+    render(html`
+      <link
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.3/dist/kubex-icons.css"
+        rel="stylesheet">`, document.head);
+
 
     this.ravatarOptions();
   }
@@ -96,11 +102,13 @@ export default class ZnIcon extends ZincElement {
         })}" style="${styleMap({'--icon-size': this.library === "avatar" ? "40px" : this.size + "px"})}">
           ${this.library ? html`
             ${choose(this.library, [
-              ["material", () => html`<i part="icon" class="mi mi">${this.src}</i>`],
+              ["material", () => html`<i part="icon" class="mi">${this.src}</i>`],
               ["material-outlined", () => html`<i part="icon" class="mi mi--outlined">${this.src}</i>`],
               ["material-round", () => html`<i part="icon" class="mi mi--round">${this.src}</i>`],
               ["material-sharp", () => html`<i part="icon" class="mi mi--sharp">${this.src}</i>`],
               ["material-two-tone", () => html`<i part="icon" class="mi mi--two-tone">${this.src}</i>`],
+              ["kubex-brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
+              ["kubex-solid", () => html`<i part="icon" class="ks">${this.src}</i>`],
               ["material-symbols-outlined", () => html`<i part="icon"
                                                           class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"

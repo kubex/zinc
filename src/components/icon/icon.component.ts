@@ -64,14 +64,11 @@ export default class ZnIcon extends ZincElement {
     // load the material icons font if the library is set to material
     render(html`
       <link
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.3/dist/kubex-icons.css"
+        rel="stylesheet">
+      <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
-
-    render(html`
-      <link
-        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.3/dist/kubex-icons.css"
-        rel="stylesheet">`, document.head);
-
 
     this.ravatarOptions();
   }

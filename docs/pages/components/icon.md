@@ -41,13 +41,25 @@ layout: component
 <zn-icon src="test1@example.com" size="32"></zn-icon>
 ```
 
-## Kubex Brands
+## libravatar
+
+```html:preview
+<zn-icon src="test1@example.com" library="libravatar" size="32"></zn-icon>
+```
+
+## Lineicons
 
 ```html:preview
 
-<zn-icon src="flexpay" size="16" library="kubex-brands"></zn-icon>
+<zn-icon src="bookmark-1" size="32" library="line"></zn-icon>
 ```
 
+## Brands
+
+```html:preview
+
+<zn-icon src="flexpay" size="32" library="brands"></zn-icon>
+```
 
 ## Default  icons
 

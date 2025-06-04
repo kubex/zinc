@@ -218,6 +218,7 @@ declare module "utilities/md5" {
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -241,9 +242,11 @@ declare module "components/icon/icon.component" {
         alt: string;
         size: number;
         round: boolean;
-        library: "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "kubex-brands" | "kubex-solid";
+        library: IconLibrary;
         color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
         gravatarOptions: string;
+        defaultLibrary: IconLibrary;
+        convertToLibrary(input: string): IconLibrary;
         connectedCallback(): void;
         ravatarOptions(): void;
         render(): import("lit").TemplateResult<1>;

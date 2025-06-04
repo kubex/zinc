@@ -64,7 +64,7 @@ export default class ZnIcon extends ZincElement {
     // load the material icons font if the library is set to material
     render(html`
       <link
-        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.3/dist/kubex-icons.css"
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.6/dist/kubex-icons.css"
         rel="stylesheet">
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
@@ -106,8 +106,7 @@ export default class ZnIcon extends ZincElement {
               ["material-two-tone", () => html`<i part="icon" class="mi mi--two-tone">${this.src}</i>`],
               ["kubex-brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
               ["kubex-solid", () => html`<i part="icon" class="ks">${this.src}</i>`],
-              ["material-symbols-outlined", () => html`<i part="icon"
-                                                          class="mi mi--symbol-outlined">${this.src}</i>`],
+              ["material-symbols-outlined", () => html`<i part="icon" class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
               ["libravatar", () => html`<img part="icon" alt="${this.alt}"

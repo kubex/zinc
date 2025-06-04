@@ -45,7 +45,7 @@ layout: component
 
 ```html:preview
 
-<zn-icon src="adyen" size="32" library="kubex-brands"></zn-icon>
+<zn-icon src="flexpay" size="16" library="kubex-brands"></zn-icon>
 ```
 
 

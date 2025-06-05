@@ -148,12 +148,12 @@ export default class ZnConfirm extends ZincElement {
       form.action = this.action;
       form.method = 'POST';
       this.appendChild(form);
-      document.dispatchEvent(new CustomEvent('zn-register-element', {
-        detail: {element: form}
-      }));
     }
 
     if (form && form.reportValidity()) {
+      document.dispatchEvent(new CustomEvent('zn-register-element', {
+        detail: {element: form}
+      }))
       form.requestSubmit();
       this.hide();
     }

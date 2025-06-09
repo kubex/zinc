@@ -4,9 +4,9 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
+import {HasSlotController} from "../../internal/slot";
 
 import styles from './confirm.scss';
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.

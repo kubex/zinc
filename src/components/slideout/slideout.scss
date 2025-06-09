@@ -1,0 +1,92 @@
+@use "../../wc";
+
+:host {
+  --width: var(--zn-spacing-sidenav);
+  --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
+  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
+  --footer-spacing: var(--zn-spacing-large);
+  --icon-background-color: var(--zn-color-primary-200);
+  --icon-color: var(--zn-color-primary-600);
+  --caption-color: var(--zn-color-primary-600);
+
+  display: contents;
+}
+
+.slideout {
+  left: unset;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  max-height: 100%;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  flex-direction: column;
+  z-index: 2;
+  padding: 0;
+  width: var(--width);
+  background-color: var(--zn-panel-background-color);
+  box-shadow: var(--zn-shadow-x-large);
+
+
+  &__header {
+    flex: 0 0 auto;
+    display: flex;
+  }
+
+  &__title {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    font: inherit;
+    margin: 0;
+    color: rgb(var(--zn-text-panel-title));
+    font-size: var(--zn-font-size-x-large);
+    font-weight: var(--zn-font-weight-semibold);
+    letter-spacing: var(--zn-letter-spacing-normal);
+    line-height: var(--zn-font-size-x-large);
+    padding: var(--header-spacing);
+  }
+
+  &__header-actions {
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+    align-items: center;
+    margin-left: auto;
+    gap: var(--zn-spacing-x-small);
+    padding: var(--header-spacing);
+
+    zn-button,
+    &::slotted(zn-button) {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      font-size: var(--zn-font-size-medium);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    display: block;
+    padding: var(--body-spacing);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    color: var(--zn-color-text-default);
+    font-size: var(--zn-font-size-medium);
+    font-weight: var(--zn-font-weight-normal);
+    letter-spacing: var(--zn-tracking-normal);
+    line-height: var(--zn-line-height-dense);
+  }
+
+  &__footer {
+    flex: 0 0 auto;
+    padding: var(--footer-spacing);
+
+    ::slotted(zn-button:not(:first-of-type)) {
+      margin-inline-start: var(--zn-spacing-x-small);
+    }
+  }
+}

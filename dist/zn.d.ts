@@ -5256,6 +5256,87 @@ declare module "components/hover-container/index" {
         }
     }
 }
+declare module "components/slideout/slideout.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/slideout
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     *
+     * @event zn-show - Emitted when the slideout is opens.
+     * @event zn-close - Emitted when the slideout is closed.
+     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
+     * close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling
+     * `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in
+     * destructive behavior such as data loss.
+     *
+     * @slot - The default slot.
+     * @slot label - The slideout's label. Alternatively you can use the `label` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The slideout's header. This element wraps the title and header actions.
+     * @csspart close-button - The slideout's close button.
+     * @csspart close-button__base - The close buttons exported `base` part.
+     * @csspart body - The slideout's body.
+     *
+     * @cssproperty --width - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.
+     * @cssproperty --header-spacing - The amount of padding to use for the header.
+     * @cssproperty --body-spacing - The amount of padding to use for the body.
+     */
+    export default class ZnSlideout extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+        };
+        private readonly localize;
+        private closeWatcher;
+        slideout: HTMLDialogElement;
+        panel: HTMLElement;
+        overlay: HTMLElement;
+        /**
+         * Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the slideout's state.
+         */
+        open: boolean;
+        /**
+         * The slideout's label as displayed in the header. You should always include a relevant label even when using
+         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
+         */
+        label: string;
+        /**
+         * The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you
+         * will need to manually open the slideout using the `show()` method.
+         */
+        trigger: string;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private requestClose;
+        private addOpenListeners;
+        private removeOpenListeners;
+        /** Shows the slideout. */
+        show(): Promise<void>;
+        /** Hides the slideout. */
+        hide(): Promise<void>;
+        private closeClickHandler;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/slideout/index" {
+    import ZnSlideout from "components/slideout/slideout.component";
+    export * from "components/slideout/slideout.component";
+    export default ZnSlideout;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-slideout': ZnSlideout;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5378,6 +5459,7 @@ declare module "zinc" {
     export { default as DataSelect } from "components/data-select/index";
     export { default as ButtonMenu } from "components/button-menu/index";
     export { default as HoverContainer } from "components/hover-container/index";
+    export { default as Slideout } from "components/slideout/index";
     export * from "events/events";
 }
 declare module "components/hover-container/hover-container" {

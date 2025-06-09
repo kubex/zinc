@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <title>Split Pane</title>
+    <meta
+      name="description"
+      content="Slideouts, appear from the side of the screen and are used to display additional content without navigating away from the current page."
+    />
+    <title>Slideout</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,9 +15,12 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/split-pane" />
-    <meta property="og:title" content="Split Pane" />
-    <meta property="og:description" content="" />
+    <meta property="og:url" content="https://zinc.style/components/slideout" />
+    <meta property="og:title" content="Slideout" />
+    <meta
+      property="og:description"
+      content="Slideouts, appear from the side of the screen and are used to display additional content without navigating away from the current page."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -331,7 +337,7 @@
               </li>
 
               <li>
-                <a href="/components/slideout"> Slideout </a>
+                <a href="/components/slideout" class="active-link"> Slideout </a>
               </li>
 
               <li>
@@ -339,7 +345,7 @@
               </li>
 
               <li>
-                <a href="/components/split-pane" class="active-link"> Split Pane </a>
+                <a href="/components/split-pane"> Split Pane </a>
               </li>
 
               <li>
@@ -396,13 +402,14 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Split Pane</a></li>
+            <li class="top"><a href="#">Slideout</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-slideout">Basic Slideout</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
@@ -411,10 +418,10 @@
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Split Pane</h1>
+            <h1>Slideout</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-split-pane&gt; | ZnSplitPane</code>
+              <code>&lt;zn-slideout&gt; | ZnSlideout</code>
             </div>
 
             <div class="component-header__info">
@@ -425,19 +432,43 @@
 
           <p class="component-summary">Short summary of the component’s intended use.</p>
 
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="basic-slideout" class="anchor-heading">
+            Basic Slideout<a href="#basic-slideout" aria-label='Direct link to "Basic Slideout"'></a>
+          </h3>
+          <p>
+            This is a basic sliding out component that can be triggered by a button. It includes a footer with action
+            buttons.
+          </p>
+
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-split-pane></zn-split-pane>
+              <zn-button id="slideout-trigger">Open Basic slideout</zn-button>
+              <zn-slideout class="slideout-basic" trigger="slideout-trigger" label="Slideout">
+                This is the slideout’s body.
+
+                <zn-button color="default" slot="footer">Do Something</zn-button>
+                <zn-button color="secondary" slot="footer" slideout-closer="">Close Slideout</zn-button>
+              </zn-slideout>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-169">
+            <div class="code-preview__source-group" id="code-preview-source-group-161">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-329"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-329"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-315">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slideout-trigger<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Open Basic slideout<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-slideout</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slideout-basic<span class="token punctuation">"</span></span> <span class="token attr-name">trigger</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slideout-trigger<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Slideout<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  This is the slideout’s body.
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>default<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Do Something<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span> <span class="token attr-name">slideout-closer</span><span class="token punctuation">&gt;</span></span>Close Slideout<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-slideout</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-315"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -446,7 +477,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-169"
+                aria-controls="code-preview-source-group-161"
               >
                 Source
                 <svg
@@ -462,18 +493,6 @@
               </button>
             </div>
           </div>
-
-          <h2 id="examples" class="anchor-heading">
-            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
-          </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
-          </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
-          </h3>
-          <p>TODO</p>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -496,7 +515,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-330"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/split-pane/split-pane.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-330"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-316"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/slideout/slideout.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-316"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -511,12 +530,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-331"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-331"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-317"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/slideout/slideout.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-317"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-332"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-332"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-318"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/slideout/slideout.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-318"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -537,9 +556,9 @@
 
                 <tr>
                   <td class="nowrap">
-                    <code>example</code>
+                    <code>label</code>
                   </td>
-                  <td>An example slot.</td>
+                  <td>The slideout’s label. Alternatively you can use the <code>label</code> attribute.</td>
                 </tr>
               </tbody>
             </table>
@@ -547,6 +566,99 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">open</code>
+                  </td>
+                  <td>
+                    Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the
+                    slideout, or you can use the <code>show()</code> and <code>hide()</code> methods and this attribute
+                    will reflect the slideout’s state.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">label</code>
+                  </td>
+                  <td>
+                    The slideout’s label as displayed in the header. You should always include a relevant label even
+                    when using
+                    <code>no-header</code>, as it is required for proper accessibility. If you need to display HTML, use
+                    the <code>label</code> slot instead.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">trigger</code>
+                  </td>
+                  <td>
+                    The slideout’s trigger element. This is used to open the slideout when clicked. If you do not
+                    provide a trigger, you will need to manually open the slideout using the <code>show()</code> method.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
           </p>
 
           <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
@@ -563,10 +675,31 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-show</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the slideout is opens.</td>
                   <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-close</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the slideout is closed.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-request-close</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>
+                    Emitted when the user attempts to close the slideout by clicking the close button, clicking the
+                    overlay, or pressing escape. Calling <code>event.preventDefault()</code> will keep the slideout
+                    open. Avoid using this unless closing the slideout will result in destructive behavior such as data
+                    loss.
+                  </td>
+                  <td>
+                    <code>{ source: 'close-button' | 'keyboard' | 'overlay' }</code>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -574,6 +707,39 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>show()</code></td>
+                  <td>Shows the slideout.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hide()</code></td>
+                  <td>Hides the slideout.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
           </p>
 
           <h2 id="custom-properties" class="anchor-heading">
@@ -591,8 +757,22 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td class="nowrap"><code>--width</code></td>
+                  <td>
+                    The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--header-spacing</code></td>
+                  <td>The amount of padding to use for the header.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--body-spacing</code></td>
+                  <td>The amount of padding to use for the body.</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -621,6 +801,26 @@
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The slideout’s header. This element wraps the title and header actions.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>close-button</code></td>
+                  <td>The slideout’s close button.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>close-button__base</code></td>
+                  <td>The close buttons exported <code>base</code> part.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>body</code></td>
+                  <td>The slideout’s body.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -636,7 +836,13 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

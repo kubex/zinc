@@ -57,8 +57,23 @@ layout: component
 ## Brands
 
 ```html:preview
-
-<zn-icon src="flexpay" size="32" library="brands"></zn-icon>
+<style>.icncont{ width:40px; height:40px; background:#efefef; display:inline-flex; align-items: center; justify-content: center; margin:3px;}</style>
+<span class=icncont><zn-icon src="adyen" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="bottomline" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="chargehive" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="checkout" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="clearhaus" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="cwams" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="epx" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="flexpay" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="gpayments" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="kount" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="qualpay" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="recaptcha" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="tokenex" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="trustpayments" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="worldpay" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="yapstone" size="32" library="brands"></zn-icon></span>
 ```
 
 ## Default  icons

@@ -15,6 +15,10 @@ table {
   max-width: 100%;
   table-layout: auto;
   text-align: left;
+  background-color: rgb(var(--zn-panel));
+  border-radius: var(--zn-border-radius-large);
+  box-shadow: var(--zn-shadow-medium);
+  border: 1px solid rgb(var(--zn-border-color));
 
   thead {
     color: rgb(var(--zn-text-heading));
@@ -193,6 +197,14 @@ table {
       flex-direction: row;
       align-items: baseline;
       gap: var(--zn-spacing-small);
+    }
+
+    &__right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--zn-spacing-x-small);
+      margin-left: auto;
     }
   }
 

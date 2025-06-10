@@ -5,10 +5,10 @@ import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query} from 'lit/decorators.js';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
-import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './button.scss';
 
@@ -55,6 +55,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
+
+  @property({type: Number}) notification: number;
 
   @property() verticalAlign: 'start' | 'center' | 'end';
 
@@ -183,8 +185,11 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--standard': !this.outline,
           'button--disabled': this.disabled,
           'button--with-icon': this.icon,
+          'button--icon-left': this.iconPosition === 'left',
+          'button--icon-right': this.iconPosition === 'right',
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
           'button--square': this.square,
+          'button--has-notification': this.notification !== undefined && this.notification > 0,
         })}
         .type=${this.type}
         href=${ifDefined(this.href)}
@@ -192,6 +197,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
         rel=${ifDefined(isLink ? this.rel : undefined)}
         gaid=${ifDefined(this.gaid)}
+        data-notification=${ifDefined(this.notification)}
         @click=${this.handleClick}>
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label" class="button__label">${this.content}</slot>

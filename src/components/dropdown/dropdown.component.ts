@@ -1,17 +1,17 @@
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS, type PropertyValues} from 'lit';
+import {getTabbableBoundary} from "../../internal/tabbable";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
+import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
-import {classMap} from "lit/directives/class-map.js";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {getTabbableBoundary} from "../../internal/tabbable";
-import {waitForEvent} from "../../internal/event";
+import type {ZnSelectEvent} from "../../events/zn-select";
 import type ZnButton from "../button";
-import type ZnPopup from "../popup";
 import type ZnMenu from "../menu";
+import type ZnPopup from "../popup";
 
 import styles from './dropdown.scss';
-import {ZnSelectEvent} from "../../events/zn-select";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -333,9 +333,9 @@ export default class ZnDropdown extends ZincElement {
         auto-size-padding="10"
         sync=${ifDefined(this.sync ? this.sync : undefined)}
         class=${classMap({
-      dropdown: true,
-      'dropdown--open': this.open
-    })}>
+          dropdown: true,
+          'dropdown--open': this.open
+        })}>
         <slot
           name="trigger"
           slot="anchor"

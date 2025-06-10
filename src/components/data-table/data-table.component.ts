@@ -390,8 +390,10 @@ export default class ZnDataTable extends ZincElement {
         <div class="table__header__actions">
           ${this.getActions()}
         </div>
-        <slot name="${ActionSlots.sort.valueOf()}"></slot>
-        <slot name="${ActionSlots.filter.valueOf()}"></slot>
+        <div class="table__header__right">
+          <slot name="${ActionSlots.sort.valueOf()}"></slot>
+          <slot name="${ActionSlots.filter.valueOf()}"></slot>
+        </div>
       </div>
     `;
   }

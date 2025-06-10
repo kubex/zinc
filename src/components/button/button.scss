@@ -22,6 +22,26 @@
   display: inline-flex;
 }
 
+.button--has-notification {
+  position: relative;
+
+  &::after {
+    content: attr(data-notification);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    inset-inline-end: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    font-size: 10px;
+    color: white;
+    background-color: rgb(var(--zn-color-error));
+  }
+}
+
 .button::-moz-focus-inner {
   border: 0;
 }
@@ -253,24 +273,56 @@
   &.button--small {
     padding-left: 10px;
 
-    zn-icon {
-      margin-right: 4px;
+    &.button--icon-left {
+      padding-left: 10px;
+
+      zn-icon {
+        margin-right: 4px;
+      }
+    }
+
+    &.button--icon-right {
+      padding-right: 10px;
+
+      zn-icon {
+        margin-left: 4px;
+      }
     }
   }
 
   &.button--medium {
-    padding-left: 10px;
+    &.button--icon-left {
+      padding-left: 10px;
 
-    zn-icon {
-      margin-right: 6px;
+      zn-icon {
+        margin-right: 6px;
+      }
+    }
+
+    &.button--icon-right {
+      padding-right: 10px;
+
+      zn-icon {
+        margin-left: 6px;
+      }
     }
   }
 
   &.button--large {
-    padding-left: 14px;
+    &.button--icon-left {
+      padding-left: 14px;
 
-    zn-icon {
-      margin-right: 8px;
+      zn-icon {
+        margin-right: 8px;
+      }
+    }
+
+    &.button--icon-right {
+      padding-right: 14px;
+
+      zn-icon {
+        margin-left: 8px;
+      }
     }
   }
 }

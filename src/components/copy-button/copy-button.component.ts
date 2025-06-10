@@ -103,7 +103,7 @@ export default class ZnCopyButton extends ZincElement {
     }
     this.isCopying = true;
 
-    let valueToCopy = this.value;
+    let valueToCopy = this.value||this.textContent;
 
     if (this.from) {
       const root = this.getRootNode() as ShadowRoot | Document;
@@ -132,12 +132,14 @@ export default class ZnCopyButton extends ZincElement {
           valueToCopy = target.textContent || '';
         }
       } else {
+        console.error("No target element found with id:", id);
         this.showStatus('error');
         this.emit('zn-error');
       }
     }
 
     if (!valueToCopy) {
+      console.error('No value to copy. Please provide a value or a valid "from" attribute.');
       await this.showStatus('error');
       this.emit('zn-error');
       return;
@@ -152,6 +154,7 @@ export default class ZnCopyButton extends ZincElement {
         }
       })
     } catch (error) {
+      console.error('Failed to copy text: ', error);
       await this.showStatus('error');
       this.emit('zn-error');
     }

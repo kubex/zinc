@@ -1611,14 +1611,55 @@ declare module "components/query-builder/index" {
         }
     }
 }
-declare module "events/zn-submit" {
-    export type ZnSubmitEvent = CustomEvent<{
+declare module "components/data-table-filter/data-table-filter.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    import type { ZnChangeEvent } from "events/zn-change";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/data-table-filter
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private _formController;
+        filters: string;
+        name: string;
         value: string;
-        element: HTMLElement;
-    }>;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        handleQBChange: (event: ZnChangeEvent) => void;
+        handleQBClear: () => void;
+        handleQBReset: () => void;
+        handleQBUpdate: () => void;
+        closeSlideout(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/data-table-filter/index" {
+    import ZnDataTableFilter from "components/data-table-filter/data-table-filter.component";
+    export * from "components/data-table-filter/data-table-filter.component";
+    export default ZnDataTableFilter;
     global {
-        interface GlobalEventHandlersEventMap {
-            'zn-submit': ZnSubmitEvent;
+        interface HTMLElementTagNameMap {
+            'zn-data-table-filter': ZnDataTableFilter;
         }
     }
 }
@@ -1626,8 +1667,7 @@ declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
-    import ZnQueryBuilder from "components/query-builder/index";
-    import type { ZnSubmitEvent } from "events/zn-submit";
+    import type { ZnChangeEvent } from "events/zn-change";
     interface TableData {
         page: number;
         per_page: number;
@@ -1726,7 +1766,6 @@ declare module "components/data-table/data-table.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-button': typeof ZnButton;
-            'zn-query-builder': typeof ZnQueryBuilder;
         };
         dataUri: string;
         data: any;
@@ -1758,13 +1797,12 @@ declare module "components/data-table/data-table.component" {
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        changeEventListener: (e: ZnChangeEvent) => void;
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1>;
         getPagination(): TemplateResult<1>;
-        getQueryBuilder(): TemplateResult<1>;
-        queryData(event: ZnSubmitEvent): void;
         getActions(): TemplateResult<1>[];
         goToPage(page: number): void;
         goToFirstPage(): void;
@@ -5341,58 +5379,6 @@ declare module "components/slideout/index" {
         }
     }
 }
-declare module "components/data-table-filter/data-table-filter.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
-    import type { ZnChangeEvent } from "events/zn-change";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/data-table-filter
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        private _formController;
-        filters: string;
-        name: string;
-        value: PropertyKey;
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(_: string): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        handleQBChange: (event: ZnChangeEvent) => void;
-        handleQBClear: () => void;
-        handleQBReset: () => void;
-        handleQBUpdate: () => void;
-        closeSlideout(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/data-table-filter/index" {
-    import ZnDataTableFilter from "components/data-table-filter/data-table-filter.component";
-    export * from "components/data-table-filter/data-table-filter.component";
-    export default ZnDataTableFilter;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-data-table-filter': ZnDataTableFilter;
-        }
-    }
-}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5670,6 +5656,17 @@ declare module "events/zn-request-close" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-request-close': ZnRequestCloseEvent;
+        }
+    }
+}
+declare module "events/zn-submit" {
+    export type ZnSubmitEvent = CustomEvent<{
+        value: string;
+        element: HTMLElement;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-submit': ZnSubmitEvent;
         }
     }
 }

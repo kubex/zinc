@@ -9,7 +9,15 @@ import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
+import ZnButtonGroup from "../button-group";
+import ZnChip from "../chip";
+import ZnConfirm from "../confirm";
 import ZnDataTableFilter from "../data-table-filter";
+import ZnDropdown from "../dropdown";
+import ZnEmptyState from "../empty-state";
+import ZnHoverContainer from "../hover-container";
+import ZnMenu from "../menu";
+import ZnMenuItem from "../menu-item";
 
 import styles from './data-table.scss';
 
@@ -135,7 +143,15 @@ interface ConfirmConfig {
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
-    'zn-button': ZnButton
+    'zn-button': ZnButton,
+    'zn-empty-state': ZnEmptyState,
+    'zn-chip': ZnChip,
+    'zn-hover-container': ZnHoverContainer,
+    'zn-dropdown': ZnDropdown,
+    'zn-menu': ZnMenu,
+    'zn-menu-item': ZnMenuItem,
+    'zn-button-group': ZnButtonGroup,
+    'zn-confirm': ZnConfirm
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;

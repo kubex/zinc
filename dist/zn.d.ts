@@ -1479,12 +1479,12 @@ declare module "events/zn-input" {
 }
 declare module "components/query-builder/query-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnInput from "components/input/index";
     import ZnOption from "components/option/index";
     import ZnSelect from "components/select/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     export type QueryBuilderData = QueryBuilderItem[];
     export interface QueryBuilderItem {
         id: string;
@@ -1593,6 +1593,8 @@ declare module "components/query-builder/query-builder.component" {
         private _changeRule;
         private _getRulePosition;
         private _removeRule;
+        clear(): void;
+        reset(): void;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
@@ -1636,7 +1638,9 @@ declare module "components/data-table/data-table.component" {
     export enum ActionSlots {
         delete = "delete-action",
         modify = "modify-action",
-        create = "create-action"
+        create = "create-action",
+        filter = "filter",
+        sort = "sort"
     }
     interface RenderDataValue {
         value: string | number;
@@ -5337,6 +5341,58 @@ declare module "components/slideout/index" {
         }
     }
 }
+declare module "components/data-table-filter/data-table-filter.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    import type { ZnChangeEvent } from "events/zn-change";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/data-table-filter
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private _formController;
+        filters: string;
+        name: string;
+        value: PropertyKey;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(_: string): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        handleQBChange: (event: ZnChangeEvent) => void;
+        handleQBClear: () => void;
+        handleQBReset: () => void;
+        handleQBUpdate: () => void;
+        closeSlideout(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/data-table-filter/index" {
+    import ZnDataTableFilter from "components/data-table-filter/data-table-filter.component";
+    export * from "components/data-table-filter/data-table-filter.component";
+    export default ZnDataTableFilter;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table-filter': ZnDataTableFilter;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5460,6 +5516,7 @@ declare module "zinc" {
     export { default as ButtonMenu } from "components/button-menu/index";
     export { default as HoverContainer } from "components/hover-container/index";
     export { default as Slideout } from "components/slideout/index";
+    export { default as DataTableFilter } from "components/data-table-filter/index";
     export * from "events/events";
 }
 declare module "components/hover-container/hover-container" {

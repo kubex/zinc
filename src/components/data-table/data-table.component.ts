@@ -8,8 +8,8 @@ import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
-import ZnQueryBuilder from "../query-builder";
-import type {ZnSubmitEvent} from "../../events/zn-submit";
+import ZnDataTableFilter from "../data-table-filter";
+import type {ZnChangeEvent} from "../../events/zn-change";
 
 import styles from './data-table.scss';
 
@@ -135,8 +135,7 @@ interface ConfirmConfig {
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
-    'zn-button': ZnButton,
-    'zn-query-builder': ZnQueryBuilder,
+    'zn-button': ZnButton
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
@@ -194,7 +193,7 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.sort.valueOf()
   );
 
-  // Horrible, don't like it, burn it, throw it in the garbage. Take the garbage out. Step on it. Burn it again.
+  // Get the UAC from the workspace - Rubix Dependent. This will not work for your application.
   private _uacTask = new Task(this, {
     task: async () => {
       const response = await fetch('/_/workspace', {
@@ -250,6 +249,7 @@ export default class ZnDataTable extends ZincElement {
         });
       }
 
+      // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(url, {
         signal,
         credentials: 'same-origin',
@@ -281,13 +281,11 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
       || this.hasSlotController.test(ActionSlots.filter.valueOf());
-    const hasQueryBuilder = this.hasSlotController.test('search-action') || this.filters.length > 0;
-    const hasHeader = hasActions || hasQueryBuilder;
 
     // Headers do not need to be re-rendered with new data
     return html`
       <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
-        ${hasHeader ? this.getTableHeader() : html``}
+        ${hasActions ? this.getTableHeader() : html``}
         ${tableBody}
       </div>
     `;
@@ -300,12 +298,24 @@ export default class ZnDataTable extends ZincElement {
         this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
       }
     });
+
+    this.addEventListener('zn-change', this.changeEventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
+    }
+    this.removeEventListener('zn-change', this.changeEventListener);
+  }
+
+  changeEventListener = (e: ZnChangeEvent) => {
+    if (e.target instanceof ZnDataTableFilter) {
+      this.filter = (e.target as ZnDataTableFilter).value as string;
+      if (this.filter) {
+        this._dataTask.run().then(r => r);
+      }
     }
   }
 
@@ -360,10 +370,6 @@ export default class ZnDataTable extends ZincElement {
         </div>
         <slot name="${ActionSlots.sort.valueOf()}"></slot>
         <slot name="${ActionSlots.filter.valueOf()}"></slot>
-        <div class="table__header__query-builder">
-          ${this.getQueryBuilder()}
-          <slot name="search-action"></slot>
-        </div>
       </div>
     `;
   }
@@ -437,40 +443,6 @@ export default class ZnDataTable extends ZincElement {
         </zn-button>
       </div>
     `
-  }
-
-  getQueryBuilder() {
-    if (this.filters.length === 0) return html``;
-
-    return html`
-      <zn-dropdown>
-        <div class="dropdown__query-builder">
-          <zn-query-builder filters="${this.filters}" size="small" dropdown outline>
-          </zn-query-builder>
-          <zn-button @click=${this.queryData}
-                     color="primary"
-                     type="submit">
-            Search
-          </zn-button>
-        </div>
-        <zn-button slot="trigger" size="small" icon="filter_alt" icon-size="16" color="secondary">
-          Filter
-        </zn-button>
-      </zn-dropdown>
-    `;
-  }
-
-  queryData(event: ZnSubmitEvent) {
-    const submit = event.target as ZnButton;
-    const parent: HTMLElement = submit.parentElement!;
-    const queryBuilder: ZnQueryBuilder = parent.querySelector('zn-query-builder')!;
-    const queryString = queryBuilder.value as string;
-
-    if (queryString) {
-      this.filter = queryString;
-      this.selectedRows = [];
-      this._dataTask.run().then(r => r);
-    }
   }
 
   getActions() {

@@ -34,7 +34,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   @property() name: string = "data-table-filter";
 
-  @property() value: PropertyKey;
+  @property() value: string;
 
   get validationMessage(): string {
     return '';
@@ -56,7 +56,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     return true;
   }
 
-  setCustomValidity(_: string): void {
+  setCustomValidity(): void {
     this._formController.updateValidity();
   }
 
@@ -67,7 +67,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   handleQBChange = (event: ZnChangeEvent) => {
     const target = event.target as ZnQueryBuilder;
-    this.value = target.value;
+    this.value = target.value as string;
     this._formController.updateValidity();
     this.emit('zn-change');
   }
@@ -96,7 +96,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
       return;
     }
 
-    this.value = builder.value;
+    this.value = builder.value as string;
 
     this.closeSlideout();
     this._formController.updateValidity();
@@ -112,9 +112,9 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
 
   render() {
     return html`
-      <zn-button id="slideout-trigger" color="transparent" size="content" icon="filter_alt" icon-size="22"
+      <zn-button id="slideout-trigger" color="transparent" size="x-small" icon="filter_alt" icon-size="22"
                  slot="trigger"
-                 tooltip="Open Filter"></zn-button>
+                 tooltip="Open Filter">Filter</zn-button>
       <zn-slideout class="slideout-basic" trigger="slideout-trigger" label="Filters">
 
         <div class="data-table-filter">

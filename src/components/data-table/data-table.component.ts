@@ -325,7 +325,14 @@ export default class ZnDataTable extends ZincElement {
 
     if (!data?.data || data.data.length === 0) {
       return html`
-        <div class="table--empty">No data available</div>`;
+        <div class="table--empty">
+          <zn-empty-state
+            caption="No Data"
+            description="We couldn't find any data to display."
+            type="info"
+            icon="data_alert">
+          </zn-empty-state>
+        </div>`;
     }
 
     const keys = Object.entries(this.headers).map(([key, _]) => key);

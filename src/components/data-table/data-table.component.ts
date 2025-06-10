@@ -6,10 +6,10 @@ import {property} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnDataTableFilter from "../data-table-filter";
-import type {ZnChangeEvent} from "../../events/zn-change";
 
 import styles from './data-table.scss';
 
@@ -299,7 +299,7 @@ export default class ZnDataTable extends ZincElement {
       }
     });
 
-    this.addEventListener('zn-change', this.changeEventListener);
+    this.addEventListener('zn-filter-change', this.changeEventListener);
   }
 
   disconnectedCallback() {
@@ -307,15 +307,14 @@ export default class ZnDataTable extends ZincElement {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-    this.removeEventListener('zn-change', this.changeEventListener);
+    this.removeEventListener('zn-filter-change', this.changeEventListener);
   }
 
-  changeEventListener = (e: ZnChangeEvent) => {
+  changeEventListener = (e: ZnFilterChangeEvent) => {
+    console.log('zn-filter-change event', e);
     if (e.target instanceof ZnDataTableFilter) {
       this.filter = (e.target as ZnDataTableFilter).value as string;
-      if (this.filter) {
-        this._dataTask.run().then(r => r);
-      }
+      this._dataTask.run().then(r => r);
     }
   }
 

@@ -864,757 +864,17 @@ declare module "components/copy-button/index" {
         }
     }
 }
-declare module "utilities/lit-to-html" {
-    import { type TemplateResult } from "lit";
-    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
-}
-declare module "translations/en" {
-    import { type Translation } from "utilities/localize";
-    const translation: Translation;
-    export default translation;
-}
-declare module "utilities/localize" {
-    import { LocalizeController as DefaultLocalizationController } from '@shoelace-style/localize';
-    import type { Translation as DefaultTranslation } from '@shoelace-style/localize';
-    export class LocalizeController extends DefaultLocalizationController<Translation> {
-    }
-    export { registerTranslation } from '@shoelace-style/localize';
-    export interface Translation extends DefaultTranslation {
-        $code: string;
-        $name: string;
-        $dir: 'ltr' | 'rtl';
-        onChange: string;
-        hidePassword: string;
-        showPassword: string;
-        clearEntry: string;
-        numOptionsSelected: (num: number) => string;
-        fileButtonText: string;
-        fileButtonTextMultiple: string;
-        folderButtonText: string;
-        folderDragDrop: string;
-        fileDragDrop: string;
-        numFilesSelected: (num: number) => string;
-    }
-}
-declare module "internal/default-value" {
-    import type { ReactiveElement } from 'lit';
-    export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
-}
-declare module "components/input/input.component" {
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnTooltip from "components/tooltip/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/input
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-blur - Emitted when the control loses focus.
-     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
-     * @event zn-clear - Emitted when the clear button is activated.
-     * @event zn-focus - Emitted when the control gains focus.
-     * @event zn-input - Emitted when the control receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
-     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
-     * @slot suffix - Used to append a presentational icon or similar element to the input.
-     * @slot clear-icon - An icon to use in lieu of the default clear icon.
-     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
-     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
-     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
-     *
-     * @csspart form-control - The form control that wraps the label, input, and help text.
-     * @csspart form-control-label - The label's wrapper.
-     * @csspart form-control-input - The input's wrapper.
-     * @csspart form-control-help-text - The help text's wrapper.
-     * @csspart base - The component's base wrapper.
-     * @csspart input - The internal `<input>` control.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart clear-button - The clear button.
-     * @csspart password-toggle-button - The password toggle button.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnInput extends ZincElement implements ZincFormControl {
-        static styles: import("lit").CSSResult;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        private readonly localize;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        private __numberInput;
-        private __dateInput;
-        /**
-         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
-         * to `text`
-         */
-        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
-        /** The name of the input, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the input, submitted as a name/value pair with form data. */
-        value: any;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
-        /** The inputs size **/
-        size: 'small' | 'medium' | 'large';
-        /** Draws a pill-styled input **/
-        pill: boolean;
-        /** The inputs label. If you need to display HTML, use the `label` slot. **/
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
-         * `label-tooltip` slot.
-         * **/
-        labelTooltip: string;
-        /**
-         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
-         * in this text, use the `context-note` slot instead
-         */
-        contextNote: string;
-        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-        helpText: string;
-        /** Adds a clear button when the input is not empty **/
-        clearable: boolean;
-        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
-         * optional icon.
-         */
-        optionalIcon: boolean;
-        /** Disables the input **/
-        disabled: boolean;
-        /** Placeholder text to show as a hint when the input is empty. */
-        placeholder: string;
-        /** Makes the input read-only **/
-        readonly: boolean;
-        /** Adds a button to toggle the passwords visibility, only applies to password types **/
-        passwordToggle: boolean;
-        /** Determines whether or no the password is currently visible. Only applies to password types **/
-        passwordVisible: boolean;
-        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
-        noSpinButtons: boolean;
-        /**
-         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
-         * in the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the input a required field. */
-        required: boolean;
-        /** A regular expression pattern to validate input against. */
-        pattern: string;
-        /** The minimum length of input that will be considered valid. */
-        minlength: number;
-        /** The maximum length of input that will be considered valid. */
-        maxlength: number;
-        /** The input's minimum value. Only applies to date and number input types. */
-        min: number | string;
-        /** The input's maximum value. Only applies to date and number input types. */
-        max: number | string;
-        /**
-         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
-         * implied, allowing any numeric value. Only applies to date and number input types.
-         */
-        step: number | 'any';
-        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
-        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
-        /** Indicates whether the browser's autocorrect feature is on or off. */
-        autocorrect: 'off' | 'on';
-        /**
-         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
-         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
-         */
-        autocomplete: string;
-        /** Indicates that the input should receive focus on page load. */
-        autofocus: boolean;
-        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
-        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
-        /** Enables spell checking on the input. */
-        spellcheck: boolean;
-        /**
-         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
-         * keyboard on supportive devices.
-         */
-        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
-        /**
-         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
-         * the native `<input type="{{type}}">` implementation and may result in an error.
-         */
-        get valueAsDate(): Date | null;
-        set valueAsDate(newValue: Date | null);
-        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
-        get valueAsNumber(): number;
-        set valueAsNumber(newValue: number);
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        private validateMinMax;
-        private handleBlur;
-        private handleChange;
-        private handleClearClick;
-        private handleFocus;
-        private handleInput;
-        private handleInvalid;
-        private handleKeyDown;
-        private handlePasswordToggle;
-        private focusInput;
-        handleDisabledChange(): void;
-        handleStepChange(): void;
-        handleValueChange(): Promise<void>;
-        /** Sets focus on the input. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the input. */
-        blur(): void;
-        /** Selects all the text in the input. */
-        select(): void;
-        /** Sets the start and end positions of the text selection (0-based). */
-        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
-        /** Replaces a range of text with a new string. */
-        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
-        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
-        showPicker(): void;
-        /** Increments the value of a numeric input type by the value of the step attribute. */
-        stepUp(): void;
-        /** Decrements the value of a numeric input type by the value of the step attribute. */
-        stepDown(): void;
-        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/input/index" {
-    import ZnInput from "components/input/input.component";
-    export * from "components/input/input.component";
-    export default ZnInput;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-input': ZnInput;
-        }
-    }
-}
-declare module "components/option/option.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/option
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The option's label.
-     * @slot prefix - Used to prepend an icon or similar element to the menu item.
-     * @slot suffix - Used to append an icon or similar element to the menu item.
-     *
-     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
-     * @csspart base - The component's base wrapper.
-     * @csspart label - The option's label.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnOption extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private cachedTextLabel;
-        private readonly localize;
-        defaultSlot: HTMLSlotElement;
-        current: boolean;
-        selected: boolean;
-        hasHover: boolean;
-        /**
-         * The option's value. When selected, the containing form control will receive this value. The value must be unique
-         * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
-         * multiple values.
-         */
-        value: string;
-        /** Draws the option in a disabled state, preventing selection. */
-        disabled: boolean;
-        connectedCallback(): void;
-        private handleDefaultSlotChange;
-        private handleMouseEnter;
-        private handleMouseLeave;
-        handleDisabledChange(): void;
-        handleSelectedChange(): void;
-        handleValueChange(): void;
-        /** Returns a plain text label based on the option's content. */
-        getTextLabel(): string;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/option/index" {
-    import ZnOption from "components/option/option.component";
-    export * from "components/option/option.component";
-    export default ZnOption;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-option': ZnOption;
-        }
-    }
-}
-declare module "internal/animate" {
-    /**
-     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
-     */
-    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
-    /** Parses a CSS duration and returns the number of milliseconds. */
-    export function parseDuration(delay: number | string): number;
-    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
-    export function prefersReducedMotion(): boolean;
-    /**
-     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
-     */
-    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
-    /**
-     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
-     * element's scrollHeight before the animation.
-     */
-    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
-        height: string | number | null | undefined;
-        composite?: CompositeOperationOrAuto;
-        easing?: string;
-        offset?: number | null;
-    }[];
-}
-declare module "utilities/animation-registry" {
-    export interface ElementAnimation {
-        keyframes: Keyframe[];
-        rtlKeyframes?: Keyframe[];
-        options?: KeyframeAnimationOptions;
-    }
-    export interface ElementAnimationMap {
-        [animationName: string]: ElementAnimation;
-    }
-    export interface GetAnimationOptions {
-        /**
-         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
-         * available using getAnimation().
-         */
-        dir: string;
-    }
-    /**
-     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
-     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
-     */
-    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
-    /** Sets a custom animation for the specified element. */
-    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
-    /** Gets an element's animation. Falls back to the default if no animation is found. */
-    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
-}
-declare module "internal/offset" {
-    /**
-     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
-     * parent doesn't have to be positioned relative or absolute.
-     *
-     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
-     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
-     */
-    export function getOffset(element: HTMLElement, parent: HTMLElement): {
-        top: number;
-        left: number;
-    };
-}
-declare module "internal/scroll" {
-    /**
-     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
-     * without premature unlocking.
-     */
-    export function lockBodyScrolling(lockingEl: HTMLElement): void;
-    /**
-     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
-     */
-    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
-    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
-    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
-}
-declare module "events/zn-remove" {
-    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
+declare module "events/zn-filter-change" {
+    export type ZnFilterChangeEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
         interface GlobalEventHandlersEventMap {
-            'zn-remove': ZnRemoveEvent;
-        }
-    }
-}
-declare module "components/select/select.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
-    import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
-    import ZnChip from "components/chip/index";
-    import ZnIcon from "components/icon/index";
-    import ZnPopup from "components/popup/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnOption from "components/option/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/select
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-popup
-     * @dependency zn-tag
-     *
-     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
-     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
-     * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
-     * @slot clear-icon - An icon to use in lieu of the default clear icon.
-     * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
-     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
-     *
-     * @event zn-change - Emitted when the control's value changes.
-     * @event zn-clear - Emitted when the control's value is cleared.
-     * @event zn-input - Emitted when the control receives input.
-     * @event zn-focus - Emitted when the control gains focus.
-     * @event zn-blur - Emitted when the control loses focus.
-     * @event zn-show - Emitted when the select's menu opens.
-     * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.
-     * @event zn-hide - Emitted when the select's menu closes.
-     * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @csspart form-control - The form control that wraps the label, input, and help text.
-     * @csspart form-control-label - The label's wrapper.
-     * @csspart form-control-input - The select's wrapper.
-     * @csspart form-control-help-text - The help text's wrapper.
-     * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
-     * @csspart prefix - The container that wraps the prefix slot.
-     * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
-     * @csspart listbox - The listbox container where options are slotted.
-     * @csspart tags - The container that houses option tags when `multiselect` is used.
-     * @csspart tag - The individual tags that represent each multiselect option.
-     * @csspart tag__base - The tag's base part.
-     * @csspart tag__content - The tag's content part.
-     * @csspart tag__remove-button - The tag's remove button.
-     * @csspart tag__remove-button__base - The tag's remove button base part.
-     * @csspart clear-button - The clear button.
-     * @csspart expand-icon - The container that wraps the expand icon.
-     */
-    export default class ZnSelect extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-popup': typeof ZnPopup;
-            'zn-tag': typeof ZnChip;
-        };
-        protected readonly formControlController: FormControlController;
-        private readonly hasSlotController;
-        private readonly localize;
-        private typeToSelectString;
-        private typeToSelectTimeout;
-        private closeWatcher;
-        popup: ZnPopup;
-        combobox: HTMLSlotElement;
-        displayInput: HTMLInputElement;
-        valueInput: HTMLInputElement;
-        listbox: HTMLSlotElement;
-        private hasFocus;
-        displayLabel: string;
-        currentOption: ZnOption;
-        selectedOptions: ZnOption[];
-        private valueHasChanged;
-        /** The name of the select, submitted as a name/value pair with form data. */
-        name: string;
-        private _value;
-        get value(): string | string[];
-        /**
-         * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-         * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-         * be an array. **For this reason, values must not contain spaces.**
-         */
-        set value(val: string | string[]);
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string | string[];
-        /** The select's size. */
-        size: 'small' | 'medium' | 'large';
-        /** Placeholder text to show as a hint when the select is empty. */
-        placeholder: string;
-        /** Allows more than one option to be selected. */
-        multiple: boolean;
-        /**
-         * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
-         * indicate the number of additional items that are selected. Set to 0 to remove the limit.
-         */
-        maxOptionsVisible: number;
-        /** Disables the select control. */
-        disabled: boolean;
-        /** Adds a clear button when the select is not empty. */
-        clearable: boolean;
-        /**
-         * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
-         * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
-         */
-        open: boolean;
-        /**
-         * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
-         * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
-         */
-        hoist: boolean;
-        /** Draws a pill-style select with rounded edges. */
-        pill: boolean;
-        /** The select's label. If you need to display HTML, use the `label` slot instead. */
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-        labelTooltip: string;
-        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
-        contextNote: string;
-        /**
-         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
-         * inside the viewport.
-         */
-        placement: 'top' | 'bottom';
-        /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
-        helpText: string;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** The select's required attribute. */
-        required: boolean;
-        cacheKey: string;
-        /**
-         * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
-         * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
-         * the specified value.
-         */
-        getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        connectedCallback(): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private handleFocus;
-        private handleBlur;
-        private handleDocumentFocusIn;
-        private handleDocumentKeyDown;
-        private handleDocumentMouseDown;
-        private handleLabelClick;
-        private handleComboboxMouseDown;
-        private handleComboboxKeyDown;
-        private handleClearClick;
-        private handleClearMouseDown;
-        private handleOptionClick;
-        private handleDefaultSlotChange;
-        private handleTagRemove;
-        private getAllOptions;
-        getFirstOption(): ZnOption | null;
-        private setCurrentOption;
-        private setSelectedOptions;
-        private toggleOptionSelection;
-        private selectionChanged;
-        protected get tags(): TemplateResult<1>[];
-        private handleInvalid;
-        handleDisabledChange(): void;
-        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
-        handleValueChange(): void;
-        handleOpenChange(): Promise<void>;
-        /** Shows the listbox. */
-        show(): Promise<void>;
-        /** Hides the listbox. */
-        hide(): Promise<void>;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        /** Sets focus on the control. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the control. */
-        blur(): void;
-        render(): TemplateResult<1>;
-    }
-}
-declare module "components/select/index" {
-    import ZnSelect from "components/select/select.component";
-    export * from "components/select/select.component";
-    export default ZnSelect;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-select': ZnSelect;
-        }
-    }
-}
-declare module "events/zn-change" {
-    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-change': ZnChangeEvent;
-        }
-    }
-}
-declare module "events/zn-input" {
-    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-input': ZnInputEvent;
-        }
-    }
-}
-declare module "components/query-builder/query-builder.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
-    import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    import ZnInput from "components/input/index";
-    import ZnOption from "components/option/index";
-    import ZnSelect from "components/select/index";
-    export type QueryBuilderData = QueryBuilderItem[];
-    export interface QueryBuilderItem {
-        id: string;
-        name: string;
-        type?: QueryBuilderType;
-        options?: QueryBuilderOptions;
-        operators: QueryBuilderOperators[];
-        maxOptionsVisible?: string;
-    }
-    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
-    export interface QueryBuilderOptions {
-        [key: string | number]: string | number;
-    }
-    export enum QueryBuilderOperators {
-        Eq = "eq",
-        Neq = "neq",
-        Eqi = "eqi",
-        Neqi = "neqi",
-        Before = "before",
-        After = "after",
-        In = "in",
-        Nin = "nin",
-        MatchPhrasePre = "matchphrasepre",
-        NMatchPhrasePre = "nmatchphrasepre",
-        MatchPhrase = "matchphrase",
-        NMatchPhrase = "nmatchphrase",
-        Match = "match",
-        NMatch = "nmatch",
-        Contains = "contains",
-        DoesNotContain = "doesnotcontain",
-        Starts = "starts",
-        NStarts = "nstarts",
-        Ends = "ends",
-        NEnds = "nends",
-        Wild = "wild",
-        NWild = "nwild",
-        Like = "like",
-        NLike = "nlike",
-        Fuzzy = "fuzzy",
-        NFuzzy = "nfuzzy",
-        Gte = "gte",
-        Gt = "gt",
-        Lt = "lt",
-        Lte = "lte"
-    }
-    export interface CreatedRule {
-        id: string;
-        name: string;
-        operator: string;
-        value: string;
-    }
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/query-builder
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     * @dependency zn-input
-     * @dependency zn-option
-     * @dependency zn-select
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-input': typeof ZnInput;
-            'zn-option': typeof ZnOption;
-            'zn-select': typeof ZnSelect;
-        };
-        private _selectedRules;
-        private _formController;
-        private _previousOperator;
-        container: HTMLDivElement;
-        addRule: ZnSelect;
-        input: HTMLInputElement;
-        filters: QueryBuilderData;
-        dropdown: boolean;
-        name: string;
-        value: PropertyKey;
-        showValues: string[];
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
-        private _handleChange;
-        private _addRule;
-        private _createInput;
-        private _changeValueInput;
-        private _createBooleanInput;
-        private _createNumberInput;
-        private _createDateInput;
-        private _createSelectInput;
-        private _createDefaultInput;
-        private _updateOperatorValue;
-        private _updateDateValue;
-        private _updateValue;
-        private updateInValue;
-        private _changeRule;
-        private _getRulePosition;
-        private _removeRule;
-        clear(): void;
-        reset(): void;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-    }
-}
-declare module "components/query-builder/index" {
-    import ZnQueryBuilder from "components/query-builder/query-builder.component";
-    export * from "components/query-builder/query-builder.component";
-    export default ZnQueryBuilder;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-query-builder': ZnQueryBuilder;
+            'zn-filter-change': ZnFilterChangeEvent;
         }
     }
 }
 declare module "components/data-table-filter/data-table-filter.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
-    import type { ZnChangeEvent } from "events/zn-change";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-table-filter
@@ -1645,7 +905,6 @@ declare module "components/data-table-filter/data-table-filter.component" {
         reportValidity(): boolean;
         setCustomValidity(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        handleQBChange: (event: ZnChangeEvent) => void;
         handleQBClear: () => void;
         handleQBReset: () => void;
         handleQBUpdate: () => void;
@@ -1665,9 +924,9 @@ declare module "components/data-table-filter/index" {
 }
 declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
-    import type { ZnChangeEvent } from "events/zn-change";
     interface TableData {
         page: number;
         per_page: number;
@@ -1797,7 +1056,7 @@ declare module "components/data-table/data-table.component" {
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        changeEventListener: (e: ZnChangeEvent) => void;
+        changeEventListener: (e: ZnFilterChangeEvent) => void;
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
@@ -1875,6 +1134,32 @@ declare module "components/cols/index" {
             'zn-cols': ZnCols;
         }
     }
+}
+declare module "internal/offset" {
+    /**
+     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
+     * parent doesn't have to be positioned relative or absolute.
+     *
+     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
+     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
+     */
+    export function getOffset(element: HTMLElement, parent: HTMLElement): {
+        top: number;
+        left: number;
+    };
+}
+declare module "internal/scroll" {
+    /**
+     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
+     * without premature unlocking.
+     */
+    export function lockBodyScrolling(lockingEl: HTMLElement): void;
+    /**
+     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
+     */
+    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
+    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
+    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
 }
 declare module "components/dialog/dialog.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
@@ -2058,6 +1343,34 @@ declare module "internal/tabbable" {
         end: HTMLElement;
     };
     export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
+}
+declare module "translations/en" {
+    import { type Translation } from "utilities/localize";
+    const translation: Translation;
+    export default translation;
+}
+declare module "utilities/localize" {
+    import { LocalizeController as DefaultLocalizationController } from '@shoelace-style/localize';
+    import type { Translation as DefaultTranslation } from '@shoelace-style/localize';
+    export class LocalizeController extends DefaultLocalizationController<Translation> {
+    }
+    export { registerTranslation } from '@shoelace-style/localize';
+    export interface Translation extends DefaultTranslation {
+        $code: string;
+        $name: string;
+        $dir: 'ltr' | 'rtl';
+        onChange: string;
+        hidePassword: string;
+        showPassword: string;
+        clearEntry: string;
+        numOptionsSelected: (num: number) => string;
+        fileButtonText: string;
+        fileButtonTextMultiple: string;
+        folderButtonText: string;
+        folderDragDrop: string;
+        fileDragDrop: string;
+        numFilesSelected: (num: number) => string;
+    }
 }
 declare module "components/menu-item/submenu-controller" {
     import { type HasSlotController } from "internal/slot";
@@ -2331,6 +1644,217 @@ declare module "components/dropdown/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-dropdown': ZnDropdown;
+        }
+    }
+}
+declare module "internal/default-value" {
+    import type { ReactiveElement } from 'lit';
+    export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
+}
+declare module "components/input/input.component" {
+    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/input
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-tooltip
+     *
+     * @event zn-blur - Emitted when the control loses focus.
+     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
+     * @event zn-clear - Emitted when the clear button is activated.
+     * @event zn-focus - Emitted when the control gains focus.
+     * @event zn-input - Emitted when the control receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
+     * @slot suffix - Used to append a presentational icon or similar element to the input.
+     * @slot clear-icon - An icon to use in lieu of the default clear icon.
+     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
+     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+     *
+     * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The input's wrapper.
+     * @csspart form-control-help-text - The help text's wrapper.
+     * @csspart base - The component's base wrapper.
+     * @csspart input - The internal `<input>` control.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart clear-button - The clear button.
+     * @csspart password-toggle-button - The password toggle button.
+     * @csspart suffix - The container that wraps the suffix.
+     */
+    export default class ZnInput extends ZincElement implements ZincFormControl {
+        static styles: import("lit").CSSResult;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        private readonly localize;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        private __numberInput;
+        private __dateInput;
+        /**
+         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
+         * to `text`
+         */
+        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        /** The name of the input, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'small' | 'medium' | 'large';
+        /** Draws a pill-styled input **/
+        pill: boolean;
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Adds a clear button when the input is not empty **/
+        clearable: boolean;
+        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
+         * optional icon.
+         */
+        optionalIcon: boolean;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /** Adds a button to toggle the passwords visibility, only applies to password types **/
+        passwordToggle: boolean;
+        /** Determines whether or no the password is currently visible. Only applies to password types **/
+        passwordVisible: boolean;
+        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
+        noSpinButtons: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** A regular expression pattern to validate input against. */
+        pattern: string;
+        /** The minimum length of input that will be considered valid. */
+        minlength: number;
+        /** The maximum length of input that will be considered valid. */
+        maxlength: number;
+        /** The input's minimum value. Only applies to date and number input types. */
+        min: number | string;
+        /** The input's maximum value. Only applies to date and number input types. */
+        max: number | string;
+        /**
+         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
+         * implied, allowing any numeric value. Only applies to date and number input types.
+         */
+        step: number | 'any';
+        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
+        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+        /** Indicates whether the browser's autocorrect feature is on or off. */
+        autocorrect: 'off' | 'on';
+        /**
+         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
+         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
+         */
+        autocomplete: string;
+        /** Indicates that the input should receive focus on page load. */
+        autofocus: boolean;
+        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
+        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
+        /** Enables spell checking on the input. */
+        spellcheck: boolean;
+        /**
+         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
+         * keyboard on supportive devices.
+         */
+        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+        /**
+         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
+         * the native `<input type="{{type}}">` implementation and may result in an error.
+         */
+        get valueAsDate(): Date | null;
+        set valueAsDate(newValue: Date | null);
+        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
+        get valueAsNumber(): number;
+        set valueAsNumber(newValue: number);
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        private validateMinMax;
+        private handleBlur;
+        private handleChange;
+        private handleClearClick;
+        private handleFocus;
+        private handleInput;
+        private handleInvalid;
+        private handleKeyDown;
+        private handlePasswordToggle;
+        private focusInput;
+        handleDisabledChange(): void;
+        handleStepChange(): void;
+        handleValueChange(): Promise<void>;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Sets the start and end positions of the text selection (0-based). */
+        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
+        /** Replaces a range of text with a new string. */
+        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
+        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
+        showPicker(): void;
+        /** Increments the value of a numeric input type by the value of the step attribute. */
+        stepUp(): void;
+        /** Decrements the value of a numeric input type by the value of the step attribute. */
+        stepDown(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/input/index" {
+    import ZnInput from "components/input/input.component";
+    export * from "components/input/input.component";
+    export default ZnInput;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-input': ZnInput;
         }
     }
 }
@@ -2794,6 +2318,334 @@ declare module "components/header/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-header': ZnHeader;
+        }
+    }
+}
+declare module "internal/animate" {
+    /**
+     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
+     */
+    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
+    /** Parses a CSS duration and returns the number of milliseconds. */
+    export function parseDuration(delay: number | string): number;
+    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+    export function prefersReducedMotion(): boolean;
+    /**
+     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
+     */
+    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
+    /**
+     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
+     * element's scrollHeight before the animation.
+     */
+    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
+        height: string | number | null | undefined;
+        composite?: CompositeOperationOrAuto;
+        easing?: string;
+        offset?: number | null;
+    }[];
+}
+declare module "utilities/animation-registry" {
+    export interface ElementAnimation {
+        keyframes: Keyframe[];
+        rtlKeyframes?: Keyframe[];
+        options?: KeyframeAnimationOptions;
+    }
+    export interface ElementAnimationMap {
+        [animationName: string]: ElementAnimation;
+    }
+    export interface GetAnimationOptions {
+        /**
+         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
+         * available using getAnimation().
+         */
+        dir: string;
+    }
+    /**
+     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
+     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
+     */
+    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
+    /** Sets a custom animation for the specified element. */
+    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
+    /** Gets an element's animation. Falls back to the default if no animation is found. */
+    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
+}
+declare module "events/zn-remove" {
+    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-remove': ZnRemoveEvent;
+        }
+    }
+}
+declare module "components/option/option.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/option
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The option's label.
+     * @slot prefix - Used to prepend an icon or similar element to the menu item.
+     * @slot suffix - Used to append an icon or similar element to the menu item.
+     *
+     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
+     * @csspart base - The component's base wrapper.
+     * @csspart label - The option's label.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart suffix - The container that wraps the suffix.
+     */
+    export default class ZnOption extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private cachedTextLabel;
+        private readonly localize;
+        defaultSlot: HTMLSlotElement;
+        current: boolean;
+        selected: boolean;
+        hasHover: boolean;
+        /**
+         * The option's value. When selected, the containing form control will receive this value. The value must be unique
+         * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
+         * multiple values.
+         */
+        value: string;
+        /** Draws the option in a disabled state, preventing selection. */
+        disabled: boolean;
+        connectedCallback(): void;
+        private handleDefaultSlotChange;
+        private handleMouseEnter;
+        private handleMouseLeave;
+        handleDisabledChange(): void;
+        handleSelectedChange(): void;
+        handleValueChange(): void;
+        /** Returns a plain text label based on the option's content. */
+        getTextLabel(): string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/option/index" {
+    import ZnOption from "components/option/option.component";
+    export * from "components/option/option.component";
+    export default ZnOption;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-option': ZnOption;
+        }
+    }
+}
+declare module "components/select/select.component" {
+    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import ZnChip from "components/chip/index";
+    import ZnIcon from "components/icon/index";
+    import ZnPopup from "components/popup/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnOption from "components/option/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/select
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-popup
+     * @dependency zn-tag
+     *
+     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
+     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
+     * @slot clear-icon - An icon to use in lieu of the default clear icon.
+     * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+     *
+     * @event zn-change - Emitted when the control's value changes.
+     * @event zn-clear - Emitted when the control's value is cleared.
+     * @event zn-input - Emitted when the control receives input.
+     * @event zn-focus - Emitted when the control gains focus.
+     * @event zn-blur - Emitted when the control loses focus.
+     * @event zn-show - Emitted when the select's menu opens.
+     * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.
+     * @event zn-hide - Emitted when the select's menu closes.
+     * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The select's wrapper.
+     * @csspart form-control-help-text - The help text's wrapper.
+     * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
+     * @csspart prefix - The container that wraps the prefix slot.
+     * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
+     * @csspart listbox - The listbox container where options are slotted.
+     * @csspart tags - The container that houses option tags when `multiselect` is used.
+     * @csspart tag - The individual tags that represent each multiselect option.
+     * @csspart tag__base - The tag's base part.
+     * @csspart tag__content - The tag's content part.
+     * @csspart tag__remove-button - The tag's remove button.
+     * @csspart tag__remove-button__base - The tag's remove button base part.
+     * @csspart clear-button - The clear button.
+     * @csspart expand-icon - The container that wraps the expand icon.
+     */
+    export default class ZnSelect extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-popup': typeof ZnPopup;
+            'zn-tag': typeof ZnChip;
+        };
+        protected readonly formControlController: FormControlController;
+        private readonly hasSlotController;
+        private readonly localize;
+        private typeToSelectString;
+        private typeToSelectTimeout;
+        private closeWatcher;
+        popup: ZnPopup;
+        combobox: HTMLSlotElement;
+        displayInput: HTMLInputElement;
+        valueInput: HTMLInputElement;
+        listbox: HTMLSlotElement;
+        private hasFocus;
+        displayLabel: string;
+        currentOption: ZnOption;
+        selectedOptions: ZnOption[];
+        private valueHasChanged;
+        /** The name of the select, submitted as a name/value pair with form data. */
+        name: string;
+        private _value;
+        get value(): string | string[];
+        /**
+         * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
+         * value attribute will be a space-delimited list of values based on the options selected, and the value property will
+         * be an array. **For this reason, values must not contain spaces.**
+         */
+        set value(val: string | string[]);
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string | string[];
+        /** The select's size. */
+        size: 'small' | 'medium' | 'large';
+        /** Placeholder text to show as a hint when the select is empty. */
+        placeholder: string;
+        /** Allows more than one option to be selected. */
+        multiple: boolean;
+        /**
+         * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
+         * indicate the number of additional items that are selected. Set to 0 to remove the limit.
+         */
+        maxOptionsVisible: number;
+        /** Disables the select control. */
+        disabled: boolean;
+        /** Adds a clear button when the select is not empty. */
+        clearable: boolean;
+        /**
+         * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
+         */
+        open: boolean;
+        /**
+         * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
+         * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
+         */
+        hoist: boolean;
+        /** Draws a pill-style select with rounded edges. */
+        pill: boolean;
+        /** The select's label. If you need to display HTML, use the `label` slot instead. */
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
+        contextNote: string;
+        /**
+         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
+         * inside the viewport.
+         */
+        placement: 'top' | 'bottom';
+        /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** The select's required attribute. */
+        required: boolean;
+        cacheKey: string;
+        /**
+         * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
+         * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
+         * the specified value.
+         */
+        getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        connectedCallback(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private handleFocus;
+        private handleBlur;
+        private handleDocumentFocusIn;
+        private handleDocumentKeyDown;
+        private handleDocumentMouseDown;
+        private handleLabelClick;
+        private handleComboboxMouseDown;
+        private handleComboboxKeyDown;
+        private handleClearClick;
+        private handleClearMouseDown;
+        private handleOptionClick;
+        private handleDefaultSlotChange;
+        private handleTagRemove;
+        private getAllOptions;
+        getFirstOption(): ZnOption | null;
+        private setCurrentOption;
+        private setSelectedOptions;
+        private toggleOptionSelection;
+        private selectionChanged;
+        protected get tags(): TemplateResult<1>[];
+        private handleInvalid;
+        handleDisabledChange(): void;
+        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
+        handleValueChange(): void;
+        handleOpenChange(): Promise<void>;
+        /** Shows the listbox. */
+        show(): Promise<void>;
+        /** Hides the listbox. */
+        hide(): Promise<void>;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        /** Sets focus on the control. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the control. */
+        blur(): void;
+        render(): TemplateResult<1>;
+    }
+}
+declare module "components/select/index" {
+    import ZnSelect from "components/select/select.component";
+    export * from "components/select/select.component";
+    export default ZnSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-select': ZnSelect;
         }
     }
 }
@@ -3494,6 +3346,160 @@ declare module "components/scroll-container/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-scroll-container': ZnScrollContainer;
+        }
+    }
+}
+declare module "utilities/lit-to-html" {
+    import { type TemplateResult } from "lit";
+    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
+}
+declare module "events/zn-change" {
+    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-change': ZnChangeEvent;
+        }
+    }
+}
+declare module "events/zn-input" {
+    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-input': ZnInputEvent;
+        }
+    }
+}
+declare module "components/query-builder/query-builder.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    export type QueryBuilderData = QueryBuilderItem[];
+    export interface QueryBuilderItem {
+        id: string;
+        name: string;
+        type?: QueryBuilderType;
+        options?: QueryBuilderOptions;
+        operators: QueryBuilderOperators[];
+        maxOptionsVisible?: string;
+    }
+    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
+    export interface QueryBuilderOptions {
+        [key: string | number]: string | number;
+    }
+    export enum QueryBuilderOperators {
+        Eq = "eq",
+        Neq = "neq",
+        Eqi = "eqi",
+        Neqi = "neqi",
+        Before = "before",
+        After = "after",
+        In = "in",
+        Nin = "nin",
+        MatchPhrasePre = "matchphrasepre",
+        NMatchPhrasePre = "nmatchphrasepre",
+        MatchPhrase = "matchphrase",
+        NMatchPhrase = "nmatchphrase",
+        Match = "match",
+        NMatch = "nmatch",
+        Contains = "contains",
+        DoesNotContain = "doesnotcontain",
+        Starts = "starts",
+        NStarts = "nstarts",
+        Ends = "ends",
+        NEnds = "nends",
+        Wild = "wild",
+        NWild = "nwild",
+        Like = "like",
+        NLike = "nlike",
+        Fuzzy = "fuzzy",
+        NFuzzy = "nfuzzy",
+        Gte = "gte",
+        Gt = "gt",
+        Lt = "lt",
+        Lte = "lte"
+    }
+    export interface CreatedRule {
+        id: string;
+        name: string;
+        operator: string;
+        value: string;
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/query-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
+        private _selectedRules;
+        private _formController;
+        private _previousOperator;
+        container: HTMLDivElement;
+        addRule: ZnSelect;
+        input: HTMLInputElement;
+        filters: QueryBuilderData;
+        dropdown: boolean;
+        name: string;
+        value: PropertyKey;
+        showValues: string[];
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+        private _handleChange;
+        private _addRule;
+        private _createInput;
+        private _changeValueInput;
+        private _createBooleanInput;
+        private _createNumberInput;
+        private _createDateInput;
+        private _createSelectInput;
+        private _createDefaultInput;
+        private _updateOperatorValue;
+        private _updateDateValue;
+        private _updateValue;
+        private updateInValue;
+        private _changeRule;
+        private _getRulePosition;
+        private _removeRule;
+        clear(): void;
+        reset(): void;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+    }
+}
+declare module "components/query-builder/index" {
+    import ZnQueryBuilder from "components/query-builder/query-builder.component";
+    export * from "components/query-builder/query-builder.component";
+    export default ZnQueryBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-query-builder': ZnQueryBuilder;
         }
     }
 }

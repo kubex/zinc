@@ -507,10 +507,10 @@ declare module "components/tooltip/index" {
 }
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
      * @documentation https://inc.style/components/button
@@ -550,6 +550,7 @@ declare module "components/button/button.component" {
         disabled: boolean;
         grow: boolean;
         square: boolean;
+        notification: number;
         verticalAlign: 'start' | 'center' | 'end';
         content: string;
         icon: string;
@@ -1272,6 +1273,17 @@ declare module "components/menu-item/index" {
         }
     }
 }
+declare module "events/zn-select" {
+    import type ZnMenuItem from "components/menu-item/index";
+    export type ZnSelectEvent = CustomEvent<{
+        item: ZnMenuItem;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-select': ZnSelectEvent;
+        }
+    }
+}
 declare module "components/menu/menu.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -1339,22 +1351,11 @@ declare module "components/menu/index" {
         }
     }
 }
-declare module "events/zn-select" {
-    import type ZnMenuItem from "components/menu-item/index";
-    export type ZnSelectEvent = CustomEvent<{
-        item: ZnMenuItem;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-select': ZnSelectEvent;
-        }
-    }
-}
 declare module "components/dropdown/dropdown.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { ZnSelectEvent } from "events/zn-select";
     import type ZnPopup from "components/popup/index";
-    import { ZnSelectEvent } from "events/zn-select";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/dropdown
@@ -5526,6 +5527,42 @@ declare module "zinc" {
     export { default as Slideout } from "components/slideout/index";
     export { default as DataTableFilter } from "components/data-table-filter/index";
     export * from "events/events";
+}
+declare module "components/action-bar/action-bar.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/action-bar
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnActionBar extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/action-bar/index" {
+    import ZnActionBar from "components/action-bar/action-bar.component";
+    export * from "components/action-bar/action-bar.component";
+    export default ZnActionBar;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-action-bar': ZnActionBar;
+        }
+    }
 }
 declare module "components/hover-container/hover-container" {
     import '../../../dist/zn.min.js';

@@ -29,6 +29,8 @@ export enum ActionSlots {
   delete = 'delete-action',
   modify = 'modify-action',
   create = 'create-action',
+  filter = 'filter',
+  sort = 'sort',
 }
 
 interface RenderDataValue {
@@ -188,6 +190,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.delete.valueOf(),
     ActionSlots.modify.valueOf(),
     ActionSlots.create.valueOf(),
+    ActionSlots.filter.valueOf(),
+    ActionSlots.sort.valueOf()
   );
 
   // Horrible, don't like it, burn it, throw it in the garbage. Take the garbage out. Step on it. Burn it again.
@@ -274,7 +278,9 @@ export default class ZnDataTable extends ZincElement {
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
-      || this.hasSlotController.test(ActionSlots.create.valueOf());
+      || this.hasSlotController.test(ActionSlots.create.valueOf())
+      || this.hasSlotController.test(ActionSlots.sort.valueOf())
+      || this.hasSlotController.test(ActionSlots.filter.valueOf());
     const hasQueryBuilder = this.hasSlotController.test('search-action') || this.filters.length > 0;
     const hasHeader = hasActions || hasQueryBuilder;
 
@@ -352,6 +358,8 @@ export default class ZnDataTable extends ZincElement {
         <div class="table__header__actions">
           ${this.getActions()}
         </div>
+        <slot name="${ActionSlots.sort.valueOf()}"></slot>
+        <slot name="${ActionSlots.filter.valueOf()}"></slot>
         <div class="table__header__query-builder">
           ${this.getQueryBuilder()}
           <slot name="search-action"></slot>

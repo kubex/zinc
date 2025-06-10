@@ -3,12 +3,12 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {FormControlController} from "../../internal/form";
 import {litToHTML} from "../../utilities/lit-to-html";
 import {property, query} from 'lit/decorators.js';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
@@ -202,6 +202,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     });
 
     this.value = btoa(JSON.stringify(data));
+    this.emit("zn-change");
   }
 
   private _addRule(event: Event | null, value: string, pos?: number) {
@@ -482,6 +483,31 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const button = event.target as ZnButton;
     button?.closest('.query-builder__row')?.remove();
     this._handleChange();
+  }
+
+  clear() {
+    this._selectedRules.clear();
+    this.value = '';
+
+    // remove all added rows
+    const rows = this.container.querySelectorAll('.query-builder__row');
+    rows.forEach(row => {
+      row.remove();
+    });
+
+    this.requestUpdate();
+    this._formController.updateValidity();
+  }
+
+  reset() {
+    // reset the form back to the initial value
+    this.clear();
+    this.showValues.forEach(item => {
+      this._addRule(null, item);
+    });
+
+    this._handleChange();
+    this._formController.updateValidity();
   }
 
   checkValidity(): boolean {

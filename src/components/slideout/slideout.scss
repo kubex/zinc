@@ -1,9 +1,9 @@
 @use "../../wc";
 
 :host {
-  --width: var(--zn-spacing-sidenav);
+  --width: min(100vw, 46rem);
   --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
-  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
+  --body-spacing: var(--zn-spacing-medium) var(--zn-spacing-large);
   --footer-spacing: var(--zn-spacing-large);
   --icon-background-color: var(--zn-color-primary-200);
   --icon-color: var(--zn-color-primary-600);
@@ -33,6 +33,7 @@
   &__header {
     flex: 0 0 auto;
     display: flex;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 
   &__title {
@@ -82,8 +83,11 @@
   }
 
   &__footer {
+    display: flex;
+    justify-content: space-between;
     flex: 0 0 auto;
     padding: var(--footer-spacing);
+    border-top: 1px solid rgb(var(--zn-border-color));
 
     ::slotted(zn-button:not(:first-of-type)) {
       margin-inline-start: var(--zn-spacing-x-small);

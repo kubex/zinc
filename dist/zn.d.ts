@@ -2525,11 +2525,11 @@ declare module "components/option/index" {
 declare module "components/select/select.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -4494,6 +4494,7 @@ declare module "components/form-group/index" {
 declare module "components/linked-select/linked-select.component" {
     import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import { ZnSelectEvent } from "events/zn-select";
     interface linkedSelectOption {
         [key: string]: string;
     }
@@ -4540,6 +4541,7 @@ declare module "components/linked-select/linked-select.component" {
         setCustomValidity(message: string): void;
         handleLinkedSelectChange: () => void;
         handleChange(e: Event): void;
+        handleSelectChange: (e: ZnSelectEvent) => void;
         render(): import("lit").TemplateResult<1>;
     }
 }

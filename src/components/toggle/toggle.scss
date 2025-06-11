@@ -1,5 +1,9 @@
 @use "../../wc";
 
+:host {
+  --zn-toggle-margin: 8px 0;
+}
+
 .switch__wrapper {
   display: inline-flex;
 }
@@ -16,7 +20,7 @@
   align-items: center;
   background: rgba(0, 0, 0, 0.15);
   border-width: 1px !important;
-  margin: 8px 0;
+  margin: var(--zn-toggle-margin);
   transition: color .2s ease-in-out, background-color .4s ease-in-out, border-color .2s ease-in-out;
 }
 
@@ -74,7 +78,13 @@
 // sizes
 .switch__wrapper--small .switch__input-wrapper {
   height: 20px;
-  width: 40px;
+  width: 35px;
+}
+
+:host([checked])  .switch__wrapper--small .switch__input-wrapper {
+  .switch__control {
+    transform: translateX(calc(100% - 7px)) scale(0.8);
+  }
 }
 
 .switch__wrapper--small .switch__control {

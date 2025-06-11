@@ -5,6 +5,7 @@ import {FormControlController} from "../../internal/form";
 import ZnSelect from "../select";
 
 import styles from './linked-select.scss';
+import {ZnSelectEvent} from "../../events/zn-select";
 
 interface linkedSelectOption {
   [key: string]: string;
@@ -126,13 +127,17 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
     this.formControlController.updateValidity();
   }
 
+  handleSelectChange = (e: ZnSelectEvent) => {
+    this.value = (e.target as ZnSelect).value as string;
+  }
+
   render() {
     let selected = this.linkedSelectElement?.value as string;
     if (!selected && this.options) {
       selected = Object.keys(this.options)[0];
     }
 
-    const options: linkedSelectOption[] = selected ? this.options[selected]: [];
+    const options: linkedSelectOption[] = selected ? this.options[selected] : [];
     return html`
       <zn-select part="select"
                  class="linked-select"
@@ -140,6 +145,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
                  id="main-input"
                  cache-key="${this.cacheKey}"
                  value="${this.value}"
+                 @zn-change=${this.handleSelectChange}
                  label="${this.label}">
         ${options && Object.entries(options).map(([key, value]) => html`
           <zn-option value="${key}">${value}</zn-option>

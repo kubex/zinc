@@ -131,21 +131,25 @@ export default class ZnExpandingAction extends ZincElement {
   render() {
     return html`
       <div class="expanding-action" style=${styleMap({
-        '--expanding-action-min-width': this.minWidth.replace('px', '') + 'px',
+        '--expanding-action-min-width':  this.minWidth.replace('px', '') + 'px',
         '--expanding-action-max-height': this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : 'none',
       })}>
-        <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
-          <zn-button slot="trigger"
-                     color="transparent"
-                     size="x-small"
-                     @click=${this.handleIconClicked}
-                     icon=${this.icon}
-                     icon-size="24">
-          </zn-button>
+        ${this.method === 'fill' ? html`
+          <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
+            <zn-button slot="trigger"
+                       color="transparent"
+                       size="x-small"
+                       @click=${this.handleIconClicked}
+                       icon=${this.icon}
+                       icon-size="24">
+            </zn-button>
+            <div class="expanding-action__content">
+              <slot></slot>
+            </div>
+          </zn-dropdown>` : html`
           <div class="expanding-action__content">
             <slot></slot>
-          </div>
-        </zn-dropdown>
+          </div>`}
       </div>`;
   }
 }

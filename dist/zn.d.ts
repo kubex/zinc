@@ -5438,6 +5438,57 @@ declare module "components/action-bar/index" {
         }
     }
 }
+declare module "components/expanding-action/expanding-action.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/expanding-action
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnExpandingAction extends ZincElement {
+        static styles: CSSResultGroup;
+        icon: string;
+        contentUri: string;
+        method: 'drop' | 'fill';
+        countUri: string;
+        prefetch: boolean;
+        minWidth: string;
+        maxHeight: string;
+        private uac;
+        private lastUpdate;
+        private updateThreshold;
+        connectedCallback(): Promise<void>;
+        prefetchUat(): Promise<void>;
+        fetchCount(): void;
+        fetchContent(): void;
+        updateCount(): void;
+        handleIconClicked: () => void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/expanding-action/index" {
+    import ZnExpandingAction from "components/expanding-action/expanding-action.component";
+    export * from "components/expanding-action/expanding-action.component";
+    export default ZnExpandingAction;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-expanding-action': ZnExpandingAction;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5563,6 +5614,7 @@ declare module "zinc" {
     export { default as Slideout } from "components/slideout/index";
     export { default as DataTableFilter } from "components/data-table-filter/index";
     export { default as ActionBar } from "components/action-bar/index";
+    export { default as ExpandingAction } from "components/expanding-action/index";
     export * from "events/events";
 }
 declare module "components/hover-container/hover-container" {

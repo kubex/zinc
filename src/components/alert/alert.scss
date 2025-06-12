@@ -12,6 +12,10 @@
   background-color: rgba(var(--zn-panel), 0.8);
 }
 
+.alert-icon {
+  padding: var(--zn-spacing-2x-small) var(--zn-spacing-x-small) 0;
+}
+
 p {
   margin: 0;
 }
@@ -130,6 +134,21 @@ p {
 
   zn-icon {
     --icon-color: rgb(var(--zn-color-success));
+  }
+}
+
+
+
+:host([level="grey"]) .wrapper {
+  h6 {
+    color: var(--zn-color-gray-800);
+  }
+
+  border-color:  var(--zn-color-gray-500) !important;
+  background:  var(--zn-color-gray-100);
+
+  zn-icon {
+    --icon-color: var(--zn-color-gray-800) ;
   }
 }
 

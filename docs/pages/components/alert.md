@@ -18,7 +18,10 @@ layout: component
 
 ```html:preview
 
-<zn-alert caption="This is an alert" icon="House">This is the Description</zn-alert>
+<zn-alert caption="This is an alert" icon="House" level="grey">
+This is the Description
+  <zn-button slot="actions" color="transparent">View All</zn-button>
+</zn-alert>
 ```
 
 ### Levels

@@ -28,7 +28,7 @@ export default class ZnAlert extends ZincElement {
   @property({type: String}) icon: string = '';
   @property({type: String}) caption: string = '';
   @property({type: Boolean}) collapse: boolean = false;
-  @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' = 'info';
+  @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'grey' = 'info';
   @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
 
   render() {
@@ -37,11 +37,11 @@ export default class ZnAlert extends ZincElement {
     if (this.icon) {
       if (this.collapse) {
         icon = this.icon ? html`
-          <zn-icon src="${this.icon}" id="xy2" @click="${this.hideAlert}"
+          <zn-icon class="alert-icon" src="${this.icon}" id="xy2" @click="${this.hideAlert}"
                    style="cursor: pointer"></zn-icon>` : "";
       } else {
         icon = this.icon ? html`
-          <zn-icon src="${this.icon}" id="xy2"></zn-icon>` : '';
+          <zn-icon class="alert-icon" src="${this.icon}" id="xy2"></zn-icon>` : '';
       }
     }
 

@@ -4,6 +4,7 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './expanding-action.scss';
 import {styleMap} from "lit/directives/style-map.js";
+import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -37,6 +38,8 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property({attribute: 'min-width'}) minWidth: string = '300';
   @property({attribute: 'max-height'}) maxHeight: string;
+
+  @property({reflect: true, type: Boolean}) open = false;
 
   private uac: string = '';
 
@@ -126,30 +129,66 @@ export default class ZnExpandingAction extends ZincElement {
     if (this.contentUri && clearTimeout) {
       this.fetchContent()
     }
+
+    this.open = !this.open;
+  }
+
+  handleIconCloseClicked = () => {
+    this.open = false;
   }
 
   render() {
     return html`
-      <div class="expanding-action" style=${styleMap({
-        '--expanding-action-min-width':  this.minWidth.replace('px', '') + 'px',
-        '--expanding-action-max-height': this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : 'none',
-      })}>
-        ${this.method === 'fill' ? html`
-          <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
-            <zn-button slot="trigger"
-                       color="transparent"
-                       size="x-small"
-                       @click=${this.handleIconClicked}
-                       icon=${this.icon}
-                       icon-size="24">
-            </zn-button>
-            <div class="expanding-action__content">
-              <slot></slot>
-            </div>
-          </zn-dropdown>` : html`
-          <div class="expanding-action__content">
-            <slot></slot>
-          </div>`}
+      <div
+        class=${classMap({
+          "expanding-action": true,
+          'expanding-action--open': this.open,
+          'expanding-action--closed': !this.open,
+          'expanding-action--drop': this.method === 'drop',
+          'expanding-action--fill': this.method === 'fill',
+        })}
+        style=${styleMap({
+          '--expanding-action-min-width': this.method === "drop" && this.minWidth ? this.minWidth.replace('px', '') + 'px' : 'none',
+          '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : 'none',
+        })}>
+        ${this.method === 'drop' ? this.renderDropdown() : this.renderFill()}
       </div>`;
+  }
+
+  protected renderDropdown() {
+    return html`
+      <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   color="transparent"
+                   size="x-small"
+                   @click=${this.handleIconClicked}
+                   icon=${this.icon}
+                   icon-size="24">
+        </zn-button>
+        <div class="expanding-action__content">
+          <slot></slot>
+        </div>
+      </zn-dropdown>`
+  }
+
+  protected renderFill() {
+    return html`
+      <zn-button color="transparent"
+                 size="x-small"
+                 @click=${this.handleIconClicked}
+                 icon=${this.icon}
+                 icon-size="24">
+      </zn-button>
+      <div class='expanding-action__content'>
+        <slot></slot>
+      </div>
+      <zn-button slot="trigger"
+                 class="expanding-action__close-icon"
+                 color="transparent"
+                 size="x-small"
+                 @click=${this.handleIconCloseClicked}
+                 icon="close"
+                 icon-size="24">
+      </zn-button>`
   }
 }

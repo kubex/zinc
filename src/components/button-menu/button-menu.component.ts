@@ -188,6 +188,12 @@ export default class ZnButtonMenu extends ZincElement {
             menuItems[category].forEach((item: Element) => {
               menu.appendChild(item);
             });
+            // if only 1 catefory item
+          } else if (menuItems[category].length === 1) {
+            const menuItem = menuItems[category][0];
+            // uppercase the first letter of the category
+            menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1) + ' - ' + menuItem.innerText;
+            menu.appendChild(menuItem);
           } else {
             const menuItem = document.createElement('zn-menu-item');
             // uppercase the first letter of the category

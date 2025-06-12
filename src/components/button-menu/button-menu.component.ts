@@ -5,6 +5,7 @@ import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
 
 import styles from './button-menu.scss';
+import ZnMenuItem from "../menu-item";
 
 
 interface CustomButtonWidths {
@@ -41,7 +42,6 @@ export default class ZnButtonMenu extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-
 
     const buttons = this.querySelectorAll<ZnButton>('zn-button');
     this._originalButtons = Array.from(buttons).map((button: ZnButton) => {
@@ -99,7 +99,7 @@ export default class ZnButtonMenu extends ZincElement {
 
     // Calculate the number of visible buttons
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
-      if (remainingWidth >= button.width) {
+      if (remainingWidth > 0 && (remainingWidth - button.width > 0)) {
         // remove button width and some default padding and spacing
         remainingWidth -= (Math.min(200, button.width) + (20 * index));
         visibleButtons++;
@@ -190,7 +190,7 @@ export default class ZnButtonMenu extends ZincElement {
             });
             // if only 1 catefory item
           } else if (menuItems[category].length === 1) {
-            const menuItem = menuItems[category][0];
+            const menuItem = menuItems[category][0] as ZnMenuItem;
             // uppercase the first letter of the category
             menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1) + ' - ' + menuItem.innerText;
             menu.appendChild(menuItem);

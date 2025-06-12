@@ -17,20 +17,16 @@
   padding: var(--zn-spacing-small) var(--zn-spacing-medium);
   justify-items: center;
 
-  > div {
-    display: flex;
-    align-items: center;
-  }
-
   .caption {
     font-weight: 600;
     margin: 0;
     color: rgb(var(--zn-text-heading));
-    flex-grow: 1;
   }
 
   .description {
     text-align: right;
+    padding: 0;
+    margin: 0;
   }
 
   .summary {
@@ -45,6 +41,10 @@
 
   &__left {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   &__right {

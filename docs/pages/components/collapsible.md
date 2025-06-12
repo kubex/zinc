@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-collapsible caption="This is the caption" label="label">
+<zn-collapsible caption="This is the caption" label="label" description="This is the description to accompany the caption">
   Boo <zn-icon src="android"></zn-icon>
 </zn-collapsible>
 

@@ -179,6 +179,7 @@ export default class ZnExpandingAction extends ZincElement {
                  icon=${this.icon}
                  icon-size="24">
       </zn-button>
+      <zn-icon src=${this.icon} size="24"></zn-icon>
       <div class='expanding-action__content'>
         <slot></slot>
       </div>

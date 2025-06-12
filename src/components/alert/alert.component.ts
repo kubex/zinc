@@ -28,7 +28,7 @@ export default class ZnAlert extends ZincElement {
   @property({type: String}) icon: string = '';
   @property({type: String}) caption: string = '';
   @property({type: Boolean}) collapse: boolean = false;
-  @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'grey' = 'info';
+  @property({type: String}) level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' = 'info';
   @property({type: String}) size: 'small' | 'medium' | 'large' = 'medium';
 
   render() {

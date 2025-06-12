@@ -5469,6 +5469,7 @@ declare module "components/expanding-action/expanding-action.component" {
         prefetch: boolean;
         minWidth: string;
         maxHeight: string;
+        open: boolean;
         private uac;
         private lastUpdate;
         private updateThreshold;
@@ -5478,7 +5479,10 @@ declare module "components/expanding-action/expanding-action.component" {
         fetchContent(): void;
         updateCount(): void;
         handleIconClicked: () => void;
+        handleIconCloseClicked: () => void;
         render(): import("lit").TemplateResult<1>;
+        protected renderDropdown(): import("lit").TemplateResult<1>;
+        protected renderFill(): import("lit").TemplateResult<1>;
     }
 }
 declare module "components/expanding-action/index" {

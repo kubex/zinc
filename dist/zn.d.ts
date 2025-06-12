@@ -715,7 +715,7 @@ declare module "components/alert/alert.component" {
         icon: string;
         caption: string;
         collapse: boolean;
-        level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'grey';
+        level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note';
         size: 'small' | 'medium' | 'large';
         render(): import("lit").TemplateResult<1>;
         hideAlert(): void;

@@ -5303,7 +5303,7 @@ declare module "components/button-menu/button-menu.component" {
         private _buttons;
         private _originalButtons;
         private resizeObserver;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
         watchContainerMaxWidth(): void;
         connectedCallback(): void;
         disconnectedCallback(): void;

@@ -2045,6 +2045,10 @@ declare module "components/data-select/providers/currency-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
     export const currencyDataProvider: LocalDataProvider<DataProviderOption>;
 }
+declare module "components/data-select/providers/country-code-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
+}
 declare module "components/data-select/providers/provider" {
     import type { HTMLTemplateResult } from "lit";
     /**
@@ -2068,6 +2072,7 @@ declare module "components/data-select/providers/provider" {
     export * from "components/data-select/providers/country-data-provider";
     export * from "components/data-select/providers/currency-data-provider";
     export * from "components/data-select/providers/color-data-provider";
+    export * from "components/data-select/providers/country-code-data-provider";
 }
 declare module "components/data-select/providers/color-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
@@ -5196,9 +5201,9 @@ declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
     import { type CSSResultGroup } from 'lit';
     import { FormControlController } from "internal/form";
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
-    import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-select
@@ -5218,7 +5223,6 @@ declare module "components/data-select/data-select.component" {
      */
     export default class ZnDataSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        private readonly localize;
         protected readonly formControlController: FormControlController;
         select: ZnSelect;
         selectPrefix: HTMLElement;
@@ -5227,7 +5231,7 @@ declare module "components/data-select/data-select.component" {
         /** The value of the select. Used for form submission. */
         value: string;
         /** The provider of the select. */
-        provider: 'color' | 'currency' | 'country';
+        provider: 'color' | 'currency' | 'country' | 'phone';
         iconPosition: 'start' | 'end' | 'none';
         /** An array of keys to use for filtering the options in the selected provider. */
         filter: string[];

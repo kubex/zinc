@@ -40,10 +40,16 @@ export default class ZnButtonMenu extends ZincElement {
   private resizeObserver: ResizeObserver | null = null;
 
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
+  protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
     const buttons = this.querySelectorAll<ZnButton>('zn-button');
+
+    for (const button of buttons) {
+      // wait for the buttons to finish rendering
+      await button.updateComplete;
+    }
+
     this._originalButtons = Array.from(buttons).map((button: ZnButton) => {
       return {
         button: button,
@@ -97,6 +103,14 @@ export default class ZnButtonMenu extends ZincElement {
 
     this._buttons = [...this._originalButtons];
 
+    // Sort the buttons
+    this._buttons.sort((a, b) => {
+      const aWidth = a.button.hasAttribute('primary') ? 1 : a.button.hasAttribute('secondary') ? 2 : 3;
+      const bWidth = b.button.hasAttribute('primary') ? 1 : b.button.hasAttribute('secondary') ? 2 : 3;
+
+      return aWidth - bWidth;
+    });
+
     // Calculate the number of visible buttons
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (remainingWidth > 0 && (remainingWidth - button.width > 0)) {
@@ -121,14 +135,6 @@ export default class ZnButtonMenu extends ZincElement {
     if (menu) {
       menu.innerHTML = '';
     }
-
-    // Sort the buttons
-    this._buttons.sort((a, b) => {
-      const aWidth = a.button.hasAttribute('primary') ? 1 : a.button.hasAttribute('secondary') ? 2 : 3;
-      const bWidth = b.button.hasAttribute('primary') ? 1 : b.button.hasAttribute('secondary') ? 2 : 3;
-
-      return aWidth - bWidth;
-    });
 
 
     // Add colors to the buttons depending on type

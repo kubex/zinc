@@ -10,6 +10,8 @@ layout: component
 <zn-button-menu>
   <zn-button primary color="error" icon="house">Something sdf</zn-button>
   <zn-button  icon="house">sd</zn-button>
+  <zn-button  icon="person" primary>One</zn-button>
+  <zn-button  icon="person" primary>Two</zn-button>
   <zn-button  icon="house" secondary color="success">fdf</zn-button>
   <zn-button  icon="house" secondary>fsdsfdf</zn-button>
   <zn-button  icon="house">fd</zn-button>

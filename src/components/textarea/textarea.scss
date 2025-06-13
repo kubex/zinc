@@ -5,6 +5,17 @@
   display: block;
 }
 
+.form-control {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.form-control-input {
+  display: flex;
+  flex-grow: 1;
+}
+
 .textarea {
   display: flex;
   align-items: center;
@@ -16,11 +27,10 @@
   line-height: var(--zn-line-height-normal);
   letter-spacing: var(--zn-input-letter-spacing);
   vertical-align: middle;
-  transition:
-    var(--zn-transition-fast) color,
-    var(--zn-transition-fast) border,
-    var(--zn-transition-fast) box-shadow,
-    var(--zn-transition-fast) background-color;
+  transition: var(--zn-transition-fast) color,
+  var(--zn-transition-fast) border,
+  var(--zn-transition-fast) box-shadow,
+  var(--zn-transition-fast) background-color;
   cursor: text;
 }
 
@@ -34,6 +44,7 @@
   background-color: var(--zn-input-background-color-hover);
   border-color: var(--zn-input-border-color-hover);
 }
+
 .textarea--standard:hover:not(.textarea--disabled) .textarea__control {
   color: var(--zn-input-color-hover);
 }
@@ -76,6 +87,7 @@
   box-shadow: var(--zn-shadow-small);
   cursor: inherit;
   -webkit-appearance: none;
+  height: 100%;
 }
 
 .textarea__control::-webkit-search-decoration,

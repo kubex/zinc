@@ -115,7 +115,7 @@ export default class ZnButtonMenu extends ZincElement {
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (remainingWidth > 0 && (remainingWidth - button.width > 0)) {
         // remove button width and some default padding and spacing
-        remainingWidth -= (Math.min(200, button.width) + (20 * index));
+        remainingWidth -= (Math.min(200, button.width) + (40 * index));
         visibleButtons++;
       }
     })

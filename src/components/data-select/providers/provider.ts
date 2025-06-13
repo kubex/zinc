@@ -29,3 +29,4 @@ export const emptyDataProvider: LocalDataProvider<DataProviderOption> = {
 export * from './country-data-provider';
 export * from './currency-data-provider';
 export * from './color-data-provider';
+export * from './country-code-data-provider';

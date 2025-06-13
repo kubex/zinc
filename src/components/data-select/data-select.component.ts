@@ -1,6 +1,7 @@
 import {
   colorDataProvider,
   countryDataProvider,
+  countryDialPrefixDataProvider,
   currencyDataProvider,
   type DataProviderOption,
   emptyDataProvider,
@@ -9,12 +10,11 @@ import {
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {LocalizeController} from '../../utilities/localize';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
-import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
 
@@ -38,8 +38,6 @@ import styles from './data-select.scss';
 export default class ZnDataSelect extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  // @ts-expect-error unused property
-  private readonly localize = new LocalizeController(this);
   protected readonly formControlController = new FormControlController(this);
 
   @query('#select') select: ZnSelect;
@@ -52,7 +50,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   @property() value: string;
 
   /** The provider of the select. */
-  @property() provider: 'color' | 'currency' | 'country';
+  @property() provider: 'color' | 'currency' | 'country' | 'phone';
 
   @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
 
@@ -174,6 +172,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
         return currencyDataProvider;
       case 'country':
         return countryDataProvider;
+      case 'phone':
+        return countryDialPrefixDataProvider;
       default:
         return emptyDataProvider;
     }

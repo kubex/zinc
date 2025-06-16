@@ -3,9 +3,8 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
 import {md5} from '../../utilities/md5';
 import {property} from 'lit/decorators.js';
-import ZincElement from '../../internal/zinc-element';
 import {styleMap} from "lit/directives/style-map.js";
-
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './icon.scss';
 

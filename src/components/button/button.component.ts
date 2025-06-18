@@ -51,6 +51,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
     'transparent' | 'star' = 'default';
   @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
+  @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
@@ -181,8 +182,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--medium': this.size === 'medium',
           'button--large': this.size === 'large',
           'button--outline': this.outline,
+          'button--text': (this.text && !this.outline),
           'button--grow': this.grow,
-          'button--standard': !this.outline,
+          'button--standard': !this.outline && !this.text,
           'button--disabled': this.disabled,
           'button--with-icon': this.icon,
           'button--icon-left': this.iconPosition === 'left',

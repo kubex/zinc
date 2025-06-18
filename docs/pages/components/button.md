@@ -23,7 +23,6 @@ Use the `color` attribute to set the button's color.
 <zn-button color="warning">Warning</zn-button>
 <zn-button color="error">Error</zn-button>
 <zn-button color="transparent">Transparent</zn-button>
-<zn-button color="star">Star</zn-button>
 ```
 
 ### Sizes
@@ -50,5 +49,18 @@ Use the `outline` attribute to set the button's outline.
 <zn-button outline color="warning">Outline</zn-button>
 <zn-button outline color="error">Outline</zn-button>
 <zn-button outline color="transparent">Outline</zn-button>
-<zn-button outline color="star">Outline</zn-button>
+```
+
+### Text
+
+Use the `text` attribute to set the button's style to text.
+
+```html:preview
+<zn-button text>Outline</zn-button>
+<zn-button text color="secondary">Text</zn-button>
+<zn-button text color="success">Text</zn-button>
+<zn-button text color="info">Text</zn-button>
+<zn-button text color="warning">Text</zn-button>
+<zn-button text color="error">Text</zn-button>
+<zn-button text color="transparent">Text</zn-button>
 ```

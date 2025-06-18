@@ -4,6 +4,11 @@
   display: block;
 }
 
+.navbar__container {
+  display: flex;
+  flex-direction: row;
+}
+
 .navbar {
   margin: 0;
   padding-left: var(--zn-spacing-medium);
@@ -21,7 +26,7 @@ ul {
 }
 
 :host([baseless]) {
-  ul {
+  .navbar__container {
     border-bottom: none;
   }
 }
@@ -110,12 +115,15 @@ ul {
   display: block;
   width: 100%;
 
+  .navbar__container{
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+  }
+
   ul {
     display: flex;
     flex-basis: 100%;
     gap: 30px;
     list-style: none;
-    border-bottom: 1px solid rgb(var(--zn-border-color));
 
     li {
       .closer {

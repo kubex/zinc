@@ -36,12 +36,14 @@ export default class ZnNavbar extends ZincElement {
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
+  private _expanding: NodeListOf<Element>;
   private _openedTabs: string[] = [];
 
   connectedCallback() {
     super.connectedCallback();
     this._preItems = this.querySelectorAll('li:not([suffix])');
     this._postItems = this.querySelectorAll('li[suffix]');
+    this._expanding = this.querySelectorAll('zn-expanding-action');
   }
 
   public addItem(item: any) {
@@ -87,34 +89,37 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <ul class="${classMap({
-        'navbar': true,
-        'navbar--flush': this.flush
-      })}">
-        ${this._preItems}
-        ${this.navigation.map((item: any) => {
-          let content = html`${item.title}`;
-          if (item.icon != undefined && item.icon != '') {
-            content = html`
-              <zn-icon src="${item.icon}"></zn-icon>${content}`;
-          }
-          if (item.path != undefined) {
+      <div class="navbar__container">
+        <ul class="${classMap({
+          'navbar': true,
+          'navbar--flush': this.flush
+        })}">
+          ${this._preItems}
+          ${this.navigation.map((item: any) => {
+            let content = html`${item.title}`;
+            if (item.icon != undefined && item.icon != '') {
+              content = html`
+                <zn-icon src="${item.icon}"></zn-icon>${content}`;
+            }
+            if (item.path != undefined) {
+              return html`
+                <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
+            }
             return html`
-              <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
-          }
-          return html`
-            <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
-        })}
-        ${this.dropdown && this.dropdown.length > 0 ? html`
-          <li id="dropdown-item">
-            <zn-dropdown>
-              <button slot="trigger">
-                <zn-icon src="add" size="18"></zn-icon>
-              </button>
-              <zn-menu actions="${JSON.stringify(this.dropdown)}"></zn-menu>
-            </zn-dropdown>
-          </li>` : ''}
-        ${this._postItems}
-      </ul>`;
+              <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
+          })}
+          ${this.dropdown && this.dropdown.length > 0 ? html`
+            <li id="dropdown-item">
+              <zn-dropdown>
+                <button slot="trigger">
+                  <zn-icon src="add" size="18"></zn-icon>
+                </button>
+                <zn-menu actions="${JSON.stringify(this.dropdown)}"></zn-menu>
+              </zn-dropdown>
+            </li>` : ''}
+          ${this._postItems}
+        </ul>
+        ${this._expanding}
+      </div>`;
   }
 }

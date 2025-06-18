@@ -8,7 +8,6 @@ layout: component
 ```html:preview
 
 <zn-navbar
-  stacked
   navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Dashboard&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Another&quot;}]">
 </zn-navbar>
 ```
@@ -27,16 +26,24 @@ layout: component
   </zn-navbar>
   
   <div id="">
-
+000000
   </div>
   <div id="1">
-
+111111
   </div>
 </zn-tabs>
 ```
 
 ### Second Example
 
-TODO
+```html:preview
 
+  <zn-navbar
+  navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Dashboard&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Another&quot;}]">
+    
+  <zn-expanding-action icon="new_label"
+                       content-uri="/test"
+                       method="drop"></zn-expanding-action>
+  </zn-navbar>
+```
 

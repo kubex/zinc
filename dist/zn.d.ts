@@ -5305,7 +5305,7 @@ declare module "components/button-menu/button-menu.component" {
         static styles: CSSResultGroup;
         maxWidth: number;
         containerWidth: number;
-        limitButtons: number;
+        limit: number;
         private _buttons;
         private _originalButtons;
         private resizeObserver;

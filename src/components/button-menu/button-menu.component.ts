@@ -35,6 +35,7 @@ export default class ZnButtonMenu extends ZincElement {
   public limit: number;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
+  @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
 
   private _buttons: CustomButtonWidths[] = [];
   private _originalButtons: CustomButtonWidths[] = [];
@@ -225,8 +226,10 @@ export default class ZnButtonMenu extends ZincElement {
 
   render() {
     return html`
-      <div class="zn-button-menu">
-        <div class="zn-button-menu__container ${this.noGap ? ' no-gap' : ''}"></div>
+      <div class="zn-button-menu
+${this.noPadding ? ' zn-button-menu--no-padding' : ''}
+${this.noGap ? ' zn-button-menu--no-gap' : ''}">
+        <div class="zn-button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent" size="content"></zn-button>
           <zn-menu></zn-menu>

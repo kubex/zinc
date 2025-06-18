@@ -3,6 +3,12 @@
 :host {
   display: block;
   max-width: 100%;
+  --menu-gap: var(--zn-spacing-x-small);
+}
+
+
+.zn-button-menu--no-gap {
+  --menu-gap: 0;
 }
 
 .zn-button-menu {
@@ -15,18 +21,18 @@
   min-width: 35px;
   max-width: var(--zn-max-width);
 
-  gap: var(--zn-spacing-x-small);
+  gap: var(--menu-gap);
+
+  &--no-padding {
+    padding: 0;
+  }
 
 
   &__container {
     display: flex;
     flex-direction: row;
-    gap: var(--zn-spacing-x-small);
+    gap: var(--menu-gap);
     margin: 0;
-
-    &.no-gap {
-      gap: 0 !important;
-    }
   }
 
   zn-button {

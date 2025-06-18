@@ -2,12 +2,14 @@
 
 :host {
   display: block;
+  padding-bottom: var(--zn-spacing-2x-small);
 }
 
 .expanding-action--open.expanding-action--fill {
+  padding-bottom: var(--zn-spacing-2x-small);
   position: absolute;
   top: 0;
-  left: 0;
+  left: auto;
   right: 0;
   bottom: 0;
   height: 100%;
@@ -15,6 +17,7 @@
   background-color: rgb(var(--zn-panel));
   overflow: hidden;
   z-index: 100;
+  border-bottom: 1px solid rgb(var(--zn-primary));
 }
 
 .expanding-action--closed.expanding-action--fill .expanding-action__content,
@@ -31,13 +34,16 @@
 }
 
 .expanding-action--open.expanding-action--fill > zn-icon {
-  display: block
+  display: block;
+  color: rgb(var(--zn-primary));
 }
 
 .expanding-action--fill {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 35px;
+  transition: width 0.5s ease-in-out;
 }
 
 .expanding-action--fill .expanding-action__content {

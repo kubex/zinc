@@ -119,7 +119,7 @@ export default class ZnNavbar extends ZincElement {
             </li>` : ''}
           ${this._postItems}
         </ul>
-        ${this._expanding}
+        <div class="expandables">${this._expanding}</div>
       </div>`;
   }
 }

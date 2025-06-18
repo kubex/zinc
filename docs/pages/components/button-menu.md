@@ -64,3 +64,18 @@ buttons inside it are wider.
   <zn-button secondary category="view">dfsf</zn-button>
 </zn-button-menu>
 ```
+
+### No Gap
+```html:preview
+
+<zn-button-menu no-gap max-width="200">
+  <zn-button primary>Something sdf</zn-button>
+  <zn-button >sd</zn-button>
+  <zn-button secondary>fdf</zn-button>
+  <zn-button secondary>fsdsfdf</zn-button>
+  <zn-button >fd</zn-button>
+  <zn-button category="edit">fdsfdf</zn-button>
+  <zn-button primary category="edit">d</zn-button>
+  <zn-button secondary category="view">dfsf</zn-button>
+</zn-button-menu>
+```

@@ -93,15 +93,17 @@ export default class ZnButtonMenu extends ZincElement {
   }
 
   handleResize = () => {
-    this.containerWidth = this.parentNode ? (this.parentNode as HTMLElement).offsetWidth : 0;
+    this.containerWidth = this.clientWidth || this.parentNode ? (this.parentNode as HTMLElement).offsetWidth : 0;
   }
 
   calculateVisibleButtons() {
-    const containerWidth = this.containerWidth;
+    const containerWidth = this.clientWidth;
     let visibleButtons = 0;
-    let remainingWidth = containerWidth; // Some default padding
-
+    let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
+    if (this._buttons.length > 1) {
+      remainingWidth -= 35; // Allow for more-vert button
+    }
 
     // Sort the buttons
     this._buttons.sort((a, b) => {
@@ -112,11 +114,13 @@ export default class ZnButtonMenu extends ZincElement {
     });
 
     // Calculate the number of visible buttons
-    this._buttons.forEach((button: CustomButtonWidths, index: number) => {
-      if (remainingWidth > 0 && (remainingWidth - button.width > 0)) {
-        // remove button width and some default padding and spacing
-        remainingWidth -= (Math.min(200, button.width) + (40 * index));
+    this._buttons.forEach((button: CustomButtonWidths) => {
+      // remove button width and some default padding and spacing
+      if ((remainingWidth - button.width) > 0) {
+        remainingWidth -= button.width;
         visibleButtons++;
+      } else {
+        remainingWidth = 0
       }
     })
 
@@ -135,7 +139,6 @@ export default class ZnButtonMenu extends ZincElement {
     if (menu) {
       menu.innerHTML = '';
     }
-
 
     // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
@@ -161,9 +164,10 @@ export default class ZnButtonMenu extends ZincElement {
       // list of menu items ID by category
       const menuItems: { [key: string]: Element[] } = {};
 
+      dropdown.toggleAttribute('hidden', buttons.length === 0)
+
       // if there's any buttons to add to the menu
       if (visibleButtons !== buttons.length && visibleButtons > 0) {
-        dropdown.removeAttribute('hidden');
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
@@ -213,10 +217,6 @@ export default class ZnButtonMenu extends ZincElement {
             menu.appendChild(menuItem);
           }
         })
-
-
-      } else {
-        dropdown.setAttribute('hidden', '');
       }
     }
   }

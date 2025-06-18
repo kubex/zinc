@@ -546,6 +546,7 @@ declare module "components/button/button.component" {
         button: HTMLButtonElement;
         color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
         size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
+        text: boolean;
         outline: boolean;
         disabled: boolean;
         grow: boolean;

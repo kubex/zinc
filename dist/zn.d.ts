@@ -5307,6 +5307,7 @@ declare module "components/button-menu/button-menu.component" {
         maxWidth: number;
         containerWidth: number;
         limit: number;
+        noGap: boolean;
         private _buttons;
         private _originalButtons;
         private resizeObserver;

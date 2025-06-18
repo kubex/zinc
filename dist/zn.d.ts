@@ -2187,6 +2187,7 @@ declare module "components/tile-property/tile-property.component" {
         static styles: CSSResultGroup;
         caption: string;
         description: string;
+        icon: string;
         render(): import("lit").TemplateResult<1>;
     }
 }

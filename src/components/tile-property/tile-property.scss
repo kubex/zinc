@@ -1,64 +1,26 @@
 @use "../../wc";
 
-.tile {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  padding-top: var(--zn-spacing-medium);
-  padding-bottom: var(--zn-spacing-medium);
-}
 
-.tile__left {
-  display: flex;
-  column-gap: var(--zn-spacing-medium);
-  padding-right: var(--zn-spacing-medium);
-  width: 50%;
-  max-width: 400px;
-
-  @include wc.container-query(null, md) {
-    max-width: 320px;
-  }
-}
-
-.tile__right {
+.tile__property {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 50%;
-  flex-grow: 1;
-  column-gap: var(--zn-spacing-large);
-}
-
-.tile__properties {
-  display: flex;
   flex-direction: row;
-  column-gap: 30px;
-  overflow: auto;
+  width: 150px;
+  flex-basis: 150px;
+  max-width: 200px;
 
-  @include wc.container-query(null, md) {
-    display: none;
+  .tile__property_container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-}
 
-.tile__content {
-  flex: auto;
-  min-width: 0;
+  .tile__icon {
+    margin-right: 15px;
+  }
 
-  @extend %property;
-
-}
-
-.tile__actions {
-  display: flex;
-  column-gap: var(--zn-spacing-medium);
-  margin-left: auto;
-}
-
-.tile__link {
-  margin-left: var(--zn-spacing-medium);
-}
-
-%property {
   .tile__caption {
     display: block;
     font-weight: 500;
@@ -72,22 +34,10 @@
   .tile__description {
     display: block;
     font-weight: 400;
-    margin: var(--zn-spacing-x-small) 0 0;
+    margin: var(--zn-spacing-2x-small) 0 0;
     font-size: var(--zn-font-size-medium);
     color: rgb(var(--zn-text-color));
     text-overflow: ellipsis;
     overflow: hidden;
   }
-}
-
-// Tile property
-.tile__property {
-  display: flex;
-  flex-direction: column;
-  max-width: 150px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-
-  @extend %property;
 }

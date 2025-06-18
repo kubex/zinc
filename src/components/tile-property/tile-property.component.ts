@@ -27,12 +27,17 @@ export default class ZnTileProperty extends ZincElement {
 
   @property({ attribute: 'caption', reflect: true }) caption: string;
   @property({ attribute: 'description', reflect: true }) description: string;
+  @property({ attribute: 'icon', reflect: true }) icon: string;
 
   render() {
     return html`
-      <div class="${classMap({ 'tile__property': true })}">
-        <p part="caption" class="tile__caption">${this.caption}</p>
-        <slot part="description" class="tile__description">${this.description}</slot>
+      <div class="${classMap({'tile__property': true})}">
+        ${this.icon ? html`
+          <zn-icon part="icon" class="tile__icon" src="${this.icon}"></zn-icon>` : ''}
+        <div class="tile__property_container">
+          <p part="caption" class="tile__caption">${this.caption}</p>
+          <slot part="description" class="tile__description">${this.description}</slot>
+        </div>
       </div>`;
   }
 }

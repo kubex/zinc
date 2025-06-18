@@ -31,8 +31,8 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number})
   public containerWidth: number;
 
-  @property({type: Number, attribute: 'limit-buttons'})
-  public limitButtons: number;
+  @property({type: Number, attribute: 'limit'})
+  public limit: number;
 
   private _buttons: CustomButtonWidths[] = [];
   private _originalButtons: CustomButtonWidths[] = [];
@@ -124,9 +124,9 @@ export default class ZnButtonMenu extends ZincElement {
       }
     })
 
-    if (this.limitButtons) {
+    if (this.limit) {
       // Limit the number of buttons to show
-      visibleButtons = Math.min(visibleButtons, this.limitButtons);
+      visibleButtons = Math.min(visibleButtons, this.limit);
     }
 
     // Remove all buttons from the ui and menu
@@ -164,7 +164,7 @@ export default class ZnButtonMenu extends ZincElement {
       // list of menu items ID by category
       const menuItems: { [key: string]: Element[] } = {};
 
-      dropdown.toggleAttribute('hidden', buttons.length === 0)
+      dropdown.toggleAttribute('hidden', buttons.length === 0 || buttons.length <= visibleButtons)
 
       // if there's any buttons to add to the menu
       if (visibleButtons !== buttons.length && visibleButtons > 0) {

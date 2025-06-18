@@ -34,7 +34,7 @@ You can limit the number of buttons that are shown in the menu. The rest will be
 
 ```html:preview
 
-<zn-button-menu limit-buttons="2">
+<zn-button-menu limit="2">
   <zn-button primary>Something sdf</zn-button>
   <zn-button >sd</zn-button>
   <zn-button secondary>fdf</zn-button>

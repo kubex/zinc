@@ -36,3 +36,23 @@ layout: component
 ```
 
 
+### Simple Header with actions
+
+```html:preview
+<div style="background-color: #f5f5f5; padding: 20px;">
+  <zn-header caption="John Jones" description="This is the description of the header">
+  <zn-button-menu slot="actions">
+    <zn-button primary>Something sdf</zn-button>
+    <zn-button >sd</zn-button>
+    <zn-button secondary>fdf</zn-button>
+    <zn-button secondary>fsdsfdf</zn-button>
+    <zn-button >fd</zn-button>
+    <zn-button category="edit">fdsfdf</zn-button>
+    <zn-button primary category="edit">d</zn-button>
+    <zn-button secondary category="view">dfsf</zn-button>
+  </zn-button-menu>
+</zn-header>
+</div>
+```
+
+

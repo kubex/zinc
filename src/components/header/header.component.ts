@@ -127,7 +127,7 @@ export default class ZnHeader extends ZincElement {
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
-      <div class=${classMap({
+      <div class="${classMap({
         'header': true,
         'header--transparent': this.transparent,
         'header--full-width': this.fullWidth,
@@ -136,7 +136,7 @@ export default class ZnHeader extends ZincElement {
         'header--has-previous': hasPreviousPath,
         'header--has-entity-id': hasEntityId,
         'header--has-full-location': hasFullLocation,
-      })} part="base">
+      })}" part="base">
 
         ${hasFullLocation || hasEntityId ? html`
           <div class="alt-overlay">

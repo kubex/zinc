@@ -119,11 +119,15 @@
     flex-direction: column;
     gap: 1px;
     min-height: 43px;
+    flex-shrink: 0;
   }
 
   .header__right {
     padding-top: 7px;
     align-self: baseline;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
   }
 
   .header__description {
@@ -215,7 +219,12 @@
     flex-basis: 100%;
   }
 
-  .actions {
-    display: flex;
+  slot[name="actions"] {
+    justify-content: end;
+  }
+
+  slot[name="actions"]::slotted(zn-button-menu) {
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 }

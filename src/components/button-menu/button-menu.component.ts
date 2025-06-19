@@ -149,7 +149,7 @@ export default class ZnButtonMenu extends ZincElement {
         this.shadowRoot?.querySelector('.zn-button-menu__container')?.appendChild(button.button);
 
         if (!button.button.hasAttribute('color')) {
-          button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'warning');
+          button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
         }
 
       }

@@ -648,21 +648,15 @@ declare module "components/collapsible/collapsible.component" {
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Toggles between showing and hiding content when clicked
      * @documentation https://zinc.style/components/collapsible
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon - The icon element
      *
-     * @event zn-event-name - Emitted as an example.
+     * @slot header - Clicking will toggle the show state of the data
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnCollapsible extends ZincElement {
         static styles: CSSResultGroup;

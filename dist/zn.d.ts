@@ -5476,7 +5476,7 @@ declare module "components/expanding-action/expanding-action.component" {
         method: 'drop' | 'fill';
         countUri: string;
         prefetch: boolean;
-        minWidth: string;
+        basis: string;
         maxHeight: string;
         open: boolean;
         private uac;

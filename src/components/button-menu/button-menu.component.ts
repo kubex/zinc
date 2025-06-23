@@ -176,6 +176,15 @@ export default class ZnButtonMenu extends ZincElement {
             const menuItem = document.createElement('zn-menu-item');
             menuItem.innerText = button.button.innerText;
 
+            const attr = button.button.attributes;
+            // Copy all attributes from the button to the menu item
+            for (let i = 0; i < attr.length; i++) {
+              const attribute = attr[i];
+              if (attribute.name !== 'icon' && attribute.name !== 'category') {
+                menuItem.setAttribute(attribute.name, attribute.value);
+              }
+            }
+
             const icon = button.button.getAttribute('icon');
             if (icon) {
               const iconElement = document.createElement('zn-icon');

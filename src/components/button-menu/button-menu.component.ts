@@ -104,9 +104,7 @@ export default class ZnButtonMenu extends ZincElement {
     let visibleButtons = 0;
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
-    if (this._buttons.length > 1) {
-      remainingWidth -= 45; // Allow for more-vert button
-    }
+    remainingWidth -= 50; // Allow for more-vert button
 
     // Sort the buttons
     this._buttons.sort((a, b) => {

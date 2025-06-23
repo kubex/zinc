@@ -36,7 +36,8 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property({type: Boolean}) prefetch = false;
 
-  @property({attribute: 'min-width'}) minWidth: string = '300';
+  @property() basis: string = '300';
+
   @property({attribute: 'max-height'}) maxHeight: string;
 
   @property({reflect: true, type: Boolean}) open = false;
@@ -148,7 +149,7 @@ export default class ZnExpandingAction extends ZincElement {
           'expanding-action--fill': this.method === 'fill',
         })}
         style=${styleMap({
-          '--expanding-action-min-width': this.method === "drop" && this.minWidth ? this.minWidth.replace('px', '') + 'px' : 'none',
+          '--expanding-action-basis': this.method === "drop" && this.basis ? this.basis.replace('px', '') + 'px' : 'none',
           '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : 'none',
         })}>
         ${this.method === 'drop' ? this.renderDropdown() : this.renderFill()}

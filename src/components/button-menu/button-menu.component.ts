@@ -56,7 +56,7 @@ export default class ZnButtonMenu extends ZincElement {
     this._originalButtons = Array.from(buttons).map((button: ZnButton) => {
       return {
         button: button,
-        width: Math.max(button.offsetWidth, 100)
+        width: Math.max(button.offsetWidth, 150)
       }
     });
 
@@ -81,6 +81,7 @@ export default class ZnButtonMenu extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    this.containerWidth = this.offsetWidth;
 
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
@@ -96,11 +97,12 @@ export default class ZnButtonMenu extends ZincElement {
   }
 
   handleResize = () => {
-    this.containerWidth = this.clientWidth || this.parentNode ? (this.parentNode as HTMLElement).offsetWidth : 0;
+    this.containerWidth = this.offsetWidth;
   }
 
   calculateVisibleButtons() {
-    const containerWidth = this.clientWidth;
+    const containerWidth = this.containerWidth;
+
     let visibleButtons = 0;
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];

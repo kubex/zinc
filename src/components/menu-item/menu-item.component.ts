@@ -12,6 +12,7 @@ import ZnIcon from "../icon";
 import ZnPopup from "../popup";
 
 import styles from './menu-item.scss';
+import ZnDropdown from "../dropdown";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -108,6 +109,12 @@ export default class ZnMenuItem extends ZincElement {
     if (this.disabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
+    }
+
+    if (!this.isSubmenu()) {
+      const composedPath = event.composedPath();
+      const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
+      (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
     }
   };
 

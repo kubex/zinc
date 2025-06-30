@@ -121,7 +121,7 @@ export default class ZnTabs extends ZincElement {
     tab.addEventListener('click', this._handleClick.bind(this));
   }
 
-  public reRegisterTabs() {
+  reRegisterTabs = () => {
     this._registerTabs();
   }
 
@@ -361,7 +361,7 @@ export default class ZnTabs extends ZincElement {
     }
   }
 
-  _registerTabs() {
+  _registerTabs = () => {
     deepQuerySelectorAll('[tab]', this, 'zn-tabs').forEach(ele => {
       this._addTab(ele as HTMLElement);
     });

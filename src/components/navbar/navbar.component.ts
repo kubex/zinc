@@ -68,7 +68,7 @@ export default class ZnNavbar extends ZincElement {
           if (element.hasAttribute('data-path')) {
             const li = document.createElement('li');
             li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path')!);
-            li.innerText = (e.detail.element as HTMLElement).innerText;
+            li.innerText = e.detail.value;
             this.addItem(li);
             setTimeout(() => {
               li.click();

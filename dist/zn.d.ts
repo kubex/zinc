@@ -2975,7 +2975,7 @@ declare module "components/tabs/tabs.component" {
         connectedCallback(): Promise<void>;
         _addPanel(panel: HTMLElement): void;
         _addTab(tab: HTMLElement): void;
-        reRegisterTabs(): void;
+        reRegisterTabs: () => void;
         firstUpdated(_changedProperties: PropertyValues): void;
         _prepareTab(tabId: string): void;
         _uriToId(tabUri: string): string;
@@ -2989,7 +2989,7 @@ declare module "components/tabs/tabs.component" {
         selectTab(tabName: string, refresh: boolean): boolean;
         observerDom(): void;
         removeTabAndPanel(tabId: string): void;
-        _registerTabs(): void;
+        _registerTabs: () => void;
         render(): import("lit").TemplateResult<1>;
     }
 }

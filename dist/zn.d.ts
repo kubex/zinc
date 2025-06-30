@@ -507,10 +507,10 @@ declare module "components/tooltip/index" {
 }
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
      * @documentation https://inc.style/components/button

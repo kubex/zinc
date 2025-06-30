@@ -6,17 +6,37 @@ layout: component
 ---
 
 ```html:preview
-<zn-button-group></zn-button-group>
+
+<zn-button-group>
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
 ```
 
 ## Examples
 
-### First Example
+### Grow Example
 
-TODO
+```html:preview
 
-### Second Example
+<zn-button-group grow>
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
+```
 
-TODO
+### Start Example
 
+```html:preview
 
+<zn-button-group start>
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
+```

@@ -16,11 +16,11 @@ import styles from './button-group.scss';
  * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --grow - Use flex-grow to fill available space.
+ * @cssproperty --start - Justify content at the start of the flex space.
  */
 export default class ZnButtonGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -60,7 +60,6 @@ export default class ZnButtonGroup extends ZincElement {
            class="${classMap({
              'button-group': true,
              'button-group--grow': this.grow,
-             'button-group--wrap': this.wrap,
              'button-group--start': this.start,
            })}"
            role="group">

@@ -410,8 +410,8 @@
           <ul>
             <li class="top"><a href="#">Button Group</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#grow-example">Grow Example</a></li>
+            <li data-level="3"><a href="#start-example">Start Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
@@ -439,7 +439,12 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-button-group></zn-button-group>
+              <zn-button-group>
+                <zn-button>First</zn-button>
+                <zn-button>Inner 1</zn-button>
+                <zn-button>Inner 2</zn-button>
+                <zn-button>Last</zn-button>
+              </zn-button-group>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -448,7 +453,13 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-22">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-37"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button-group</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button-group</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-37">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>First<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Last<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button-group</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-37"></zn-copy-button></pre>
               </div>
             </div>
@@ -478,14 +489,111 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="grow-example" class="anchor-heading">
+            Grow Example<a href="#grow-example" aria-label='Direct link to "Grow Example"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-button-group grow="">
+                <zn-button>First</zn-button>
+                <zn-button>Inner 1</zn-button>
+                <zn-button>Inner 2</zn-button>
+                <zn-button>Last</zn-button>
+              </zn-button-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-23">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-38">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button-group</span> <span class="token attr-name">grow</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>First<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Last<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-38"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-23"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="start-example" class="anchor-heading">
+            Start Example<a href="#start-example" aria-label='Direct link to "Start Example"'></a>
           </h3>
-          <p>TODO</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-button-group start="">
+                <zn-button>First</zn-button>
+                <zn-button>Inner 1</zn-button>
+                <zn-button>Inner 2</zn-button>
+                <zn-button>Last</zn-button>
+              </zn-button-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-24">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-39">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button-group</span> <span class="token attr-name">start</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>First<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Inner 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Last<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-39"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-24"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -508,7 +616,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-38"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/button-group/button-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-38"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-40"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/button-group/button-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-40"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -523,12 +631,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-39"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/button-group/button-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-39"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-41"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/button-group/button-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-41"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-40"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/button-group/button-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-40"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-42"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/button-group/button-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-42"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -545,13 +653,6 @@
                 <tr>
                   <td class="nowrap">(default)</td>
                   <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
                 </tr>
               </tbody>
             </table>
@@ -603,8 +704,14 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td class="nowrap"><code>--grow</code></td>
+                  <td>Use flex-grow to fill available space.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--start</code></td>
+                  <td>Justify content at the start of the flex space.</td>
                   <td></td>
                 </tr>
               </tbody>

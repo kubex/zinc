@@ -740,11 +740,11 @@ declare module "components/button-group/button-group.component" {
      * @event zn-event-name - Emitted as an example.
      *
      * @slot - The default slot.
-     * @slot example - An example slot.
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --grow - Use flex-grow to fill available space.
+     * @cssproperty --start - Justify content at the start of the flex space.
      */
     export default class ZnButtonGroup extends ZincElement {
         static styles: CSSResultGroup;

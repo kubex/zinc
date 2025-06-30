@@ -166,7 +166,15 @@ ul {
       &#dropdown-item {
         flex-grow: 1;
         justify-content: flex-start;
-        padding: 0 0 0 10px;
+        padding: 0;
+
+        zn-dropdown {
+          height: 100%;
+
+          zn-button {
+            height: 100%;
+          }
+        }
       }
 
       &::before {
@@ -311,21 +319,6 @@ button[popovertarget] {
 
     &#dropdown-item {
       border-right: 0;
-
-      .dropdown-wrap:hover::before {
-        content: '';
-        left: 50%;
-        right: 50%;
-        bottom: 50%;
-        top: 50%;
-        position: absolute;
-        transform: translateY(-50%) translateX(-50%);
-        background-color: rgba(var(--zn-primary), 0.2);
-        border-radius: 50%;
-        height: var(--zn-spacing-large);
-        width: var(--zn-spacing-large);
-        pointer-events: none;
-      }
     }
   }
 }

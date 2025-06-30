@@ -111,9 +111,9 @@ export default class ZnNavbar extends ZincElement {
           ${this.dropdown && this.dropdown.length > 0 ? html`
             <li id="dropdown-item">
               <zn-dropdown>
-                <button slot="trigger">
+                <zn-button slot="trigger" color="secondary" square grow>
                   <zn-icon src="add" size="18"></zn-icon>
-                </button>
+                </zn-button>
                 <zn-menu actions="${JSON.stringify(this.dropdown)}"></zn-menu>
               </zn-dropdown>
             </li>` : ''}

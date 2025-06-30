@@ -316,13 +316,13 @@
   flex-basis: 0;
 }
 
-:host([data-zn-button-group__button--grow][data-zn-button-group__button--inner]) .button {
+:host([data-zn-button-group__button--inner]) .button {
   border-radius: 0 !important;
   border-left: 0 !important;
   border-right: 0 !important;
 }
 
-:host([data-zn-button-group__button--grow][data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
+:host([data-zn-button-group__button]:not([data-zn-button-group__button--first]):not(:hover)) {
   .button:after {
     content: '';
     position: absolute;
@@ -334,12 +334,12 @@
   }
 }
 
-:host([data-zn-button-group__button--grow][data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
+:host([data-zn-button-group__button--first]:not([data-zn-button-group__button--last])) .button {
   border-radius: 5px 0 0 5px !important;
   border-right: 0 !important;
 }
 
-:host([data-zn-button-group__button--grow][data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
+:host([data-zn-button-group__button--last]:not([data-zn-button-group__button--first])) .button {
   border-radius: 0 5px 5px 0 !important;
   border-left: 0 !important;
 }

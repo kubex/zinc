@@ -1,8 +1,8 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './pane.scss';
-import {property} from "lit/decorators.js";
 
 /**
  * @summary Short summary of the component's intended use.

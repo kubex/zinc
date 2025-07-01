@@ -1,12 +1,13 @@
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, TemplateResult, unsafeCSS} from 'lit';
+import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
+import type { PropertyValues, TemplateResult} from 'lit';
 import type ZnNavbar from "../navbar";
 
 import styles from './header.scss';
-import {HasSlotController} from "../../internal/slot";
-import {watch} from "../../internal/watch";
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -70,7 +71,7 @@ export default class ZnHeader extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    this.navbar = this.querySelector('zn-navbar') as ZnNavbar;
+    this.navbar = this.querySelector('zn-navbar')!;
     this.updateNav();
   }
 

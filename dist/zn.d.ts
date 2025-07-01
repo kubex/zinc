@@ -2347,8 +2347,9 @@ declare module "components/navbar/index" {
     }
 }
 declare module "components/header/header.component" {
-    import { type CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { PropertyValues, TemplateResult } from 'lit';
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/header

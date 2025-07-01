@@ -174,7 +174,7 @@ export default class ZnHeader extends ZincElement {
           <div class="caption">
             <div class="header__left">
               <span class="header__caption" part="header-caption">${this.caption}</span>
-              <span class="header__description">${this.description}</span>
+              <span class="header__description" part="header-description">${this.description}</span>
             </div>
 
             <div class="header__right">

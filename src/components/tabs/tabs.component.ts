@@ -431,7 +431,7 @@ export default class ZnTabs extends ZincElement {
             <slot name="actions" slot="actions"></slot>
           </zn-header>` : null}
         <slot name="top"></slot>
-        <div id="mid">
+        <div id="mid" part="mid">
           <slot name="left"></slot>
           <div id="content">
             <slot></slot>

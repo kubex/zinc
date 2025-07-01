@@ -193,8 +193,11 @@ export default class ZnHeader extends ZincElement {
     `;
     if (this.fullWidth) {
       return html`
-        <style>:host {
-          --max-width: 100%; </style>${header}`;
+        <style>
+          :host {
+            --max-width: 100%;
+          }
+        </style>${header}`;
     }
 
     return header;

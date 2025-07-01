@@ -74,20 +74,20 @@ export default class ZnPanel extends ZincElement {
 
         <div class="panel__inner">
           ${hasHeader ? html`
-          <zn-header class="panel__header"
-                     caption="${this.caption}"
-                     description="${this.description}"
-                     transparent>
-            ${hasActionSlot ? html`
-              <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
-          </zn-header>` : null}
+            <zn-header class="panel__header"
+                       caption="${this.caption}"
+                       description="${this.description}"
+                       transparent>
+              ${hasActionSlot ? html`
+                <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
+            </zn-header>` : null}
 
           <div class="panel__body">
             <slot></slot>
           </div>
 
           ${hasFooterSlot ? html`
-          <slot name="footer" class="panel__footer"></slot>` : null}
+            <slot name="footer" class="panel__footer"></slot>` : null}
         </div>
 
       </div>`;

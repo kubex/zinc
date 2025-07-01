@@ -47,3 +47,11 @@ layout: component
   </zn-navbar>
 ```
 
+
+### Third Example
+
+```html:preview
+
+<zn-navbar small icon-bar rounded  navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;HTML&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Text&quot;}]">>
+</zn-navbar>
+```

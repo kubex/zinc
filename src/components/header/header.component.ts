@@ -172,7 +172,7 @@ export default class ZnHeader extends ZincElement {
             </div>` : ''}
 
           <div class="caption">
-            <div class="header__left">
+            <div part="header-left" class="header__left">
               <span class="header__caption" part="header-caption">${this.caption}</span>
               <span class="header__description" part="header-description">${this.description}</span>
             </div>

@@ -180,6 +180,8 @@ export default class ZnDataTable extends ZincElement {
   // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
 
+  @property({type: Boolean}) standalone: boolean = false;
+
   // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
@@ -312,9 +314,6 @@ export default class ZnDataTable extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    // Are we inside a zn-panel
-    this.inPanel = this.parentElement.tagName.toLowerCase() === 'zn-panel';
-
     this.resizeObserver = new ResizeObserver(() => {
       if (this.tableContainer) {
         this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
@@ -367,7 +366,7 @@ export default class ZnDataTable extends ZincElement {
     return html`
       <table class=${classMap({
         'table': true,
-        'table--in-panel': this.inPanel,
+        'table--standalone': this.standalone,
         'with-hover': !this.unsortable,
       })}>
         <thead>
@@ -409,33 +408,40 @@ export default class ZnDataTable extends ZincElement {
     `;
   }
 
-  getTableFooter() {
-    return html`
-      <div class="table__footer">
-        <div class="table__footer__left">
-          ${this.getRowsSelected()}
-        </div>
 
-        <div class="table__footer__right">
+  getTableFooter() {
+
+    const rowSelected = this.getRowsSelected();
+    const pagination = this.getPagination();
+
+    if (rowSelected || pagination) {
+      return html`
+        <div class="table__footer">
+          ${this.getRowsSelected()}
           ${this.getPagination()}
-        </div>
-      </div>`;
+        </div>`;
+    }
+
+    return html``;
   }
 
   getRowsSelected() {
-    if (this.hideCheckboxes || this.selectedRows <= 0) return html``;
+    if (this.hideCheckboxes || this.selectedRows <= 0) return null;
 
-    return html`<p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
+    return html`
+      <div class="table__footer__left">
+        <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>
+      </div>`
   }
 
   getPagination() {
-    if (this.hidePagination) return html``;
+    if (this.hidePagination || this._rows.length <= 10) return null;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
     optionsRowsPerPage.filter((option) => option <= this._rows.length);
 
     return html`
-      ${this._rows.length <= 10 ? html`` : html`
+      <div class="table__footer__right">
         <div class="table__footer__rows-per-page">
           <p>Rows per page</p>
           <select name="rowPerPage" @change=${this.updateRowsPerPage}>
@@ -443,46 +449,46 @@ export default class ZnDataTable extends ZincElement {
               <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
             )}
           </select>
-        </div>`}
+        </div>
 
-      ${this.totalPages <= 1
-        ? html``
-        : html`
-          <div class="table__footer__pagination-count">
-            <p>Page ${this.page} of ${this.totalPages}</p>
-          </div>
+        ${this.totalPages <= 1
+          ? html``
+          : html`
+            <div class="table__footer__pagination-count">
+              <p>Page ${this.page} of ${this.totalPages}</p>
+            </div>
 
-          <div class="table__footer__pagination-buttons">
-            <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_left"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                       ?disabled=${this.page === 1}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_left"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="chevron_right"
-                       outline>
-            </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
-                       ?disabled=${this.page === this.totalPages}
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_right"
-                       outline>
-            </zn-button>`}
-      </div>
-    `
+            <div class="table__footer__pagination-buttons">
+              <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
+                         ?disabled=${this.page === 1}
+                         icon-size="16"
+                         size="small"
+                         icon="keyboard_double_arrow_left"
+                         outline>
+              </zn-button>
+              <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
+                         ?disabled=${this.page === 1}
+                         icon-size="16"
+                         size="small"
+                         icon="chevron_left"
+                         outline>
+              </zn-button>
+              <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
+                         ?disabled=${this.page === this.totalPages}
+                         icon-size="16"
+                         size="small"
+                         icon="chevron_right"
+                         outline>
+              </zn-button>
+              <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+                         ?disabled=${this.page === this.totalPages}
+                         icon-size="16"
+                         size="small"
+                         icon="keyboard_double_arrow_right"
+                         outline>
+              </zn-button>
+            </div>`}
+      </div>`;
   }
 
   getActions() {
@@ -809,14 +815,14 @@ export default class ZnDataTable extends ZincElement {
     if (this.sortColumn !== key) {
       return html`
         <div class="table__head__sort">
-        <zn-icon src="unfold_more" size="14"></zn-icon>
-      </div>`;
+          <zn-icon src="unfold_more" size="14"></zn-icon>
+        </div>`;
     }
 
     if (this.sortDirection === 'asc') {
       return html`
         <div class="table__head__sort table__head__sort--active">
-        <zn-icon src="arrow_downward_alt" size="16"></zn-icon>
+          <zn-icon src="arrow_downward_alt" size="16"></zn-icon>
         </div>`;
     }
 
@@ -843,7 +849,7 @@ export default class ZnDataTable extends ZincElement {
           ${this.headers[key]}
           ${sortable ?
             html`
-             ${this.getTableSortIcon(key)}` :
+              ${this.getTableSortIcon(key)}` :
             html``}
         </div>
       </th>`;

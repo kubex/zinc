@@ -16,7 +16,7 @@ table {
   table-layout: auto;
   text-align: left;
 
-  &:not(.table--in-panel) {
+  &.table--standalone {
     background-color: rgb(var(--zn-panel));
     border-radius: var(--zn-border-radius-large);
     box-shadow: var(--zn-shadow-medium);
@@ -159,7 +159,9 @@ table {
     }
 
     &--hidden {
-      visibility: hidden;
+      > div {
+        visibility: hidden;
+      }
     }
   }
 

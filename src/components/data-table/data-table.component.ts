@@ -422,10 +422,10 @@ export default class ZnDataTable extends ZincElement {
     if (this.hidePagination) return html``;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
-    optionsRowsPerPage.filter((option) => option >= this._rows.length);
+    optionsRowsPerPage.filter((option) => option <= this._rows.length);
 
     return html`
-      ${this._rows.length < 10 ? html`` : html`
+      ${this._rows.length <= 10 ? html`` : html`
         <div class="table__footer__rows-per-page">
           <p>Rows per page</p>
           <select name="rowPerPage" @change=${this.updateRowsPerPage}>

@@ -15,15 +15,24 @@ table {
   max-width: 100%;
   table-layout: auto;
   text-align: left;
-  background-color: rgb(var(--zn-panel));
-  border-radius: var(--zn-border-radius-large);
-  box-shadow: var(--zn-shadow-medium);
-  border: 1px solid rgb(var(--zn-border-color));
+
+  &:not(.table--in-panel) {
+    background-color: rgb(var(--zn-panel));
+    border-radius: var(--zn-border-radius-large);
+    box-shadow: var(--zn-shadow-medium);
+    border: 1px solid rgb(var(--zn-border-color));
+    overflow: hidden;
+  }
 
   thead {
     color: rgb(var(--zn-text-heading));
     font-weight: 500;
   }
+
+  thead tr th {
+    border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
+  }
+
 
   tbody {
     //background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
@@ -86,12 +95,8 @@ table {
 .table { // The container element that holds the table and the filters
 
   tr th {
-    padding-bottom: var(--zn-spacing-x-small);
-
-    // assume checkbox is the first column
-    &:first-of-type {
-      padding-bottom: var(--zn-spacing-2x-small);
-    }
+    padding-top: var(--zn-spacing-large);
+    padding-bottom: var(--zn-spacing-large);
   }
 
   tr th, tr td {
@@ -125,13 +130,24 @@ table {
   }
 
   &__head {
+    &:hover {
+      .table__head__sort {
+        opacity: 1;
+      }
+    }
+
     &__sort {
       margin-left: var(--zn-spacing-small);
+      opacity: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       cursor: pointer;
+
+      &--active {
+        opacity: 1 !important;
+      }
     }
 
     &--wide {

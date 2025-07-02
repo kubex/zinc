@@ -209,6 +209,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.sort.valueOf()
   );
 
+  private inPanel = false;
+
   // Get the UAC from the workspace - Rubix Dependent. This will not work for your application.
   private _uacTask = new Task(this, {
     task: async () => {
@@ -309,6 +311,10 @@ export default class ZnDataTable extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+
+    // Are we inside a zn-panel
+    this.inPanel = this.parentElement.tagName.toLowerCase() === 'zn-panel';
+
     this.resizeObserver = new ResizeObserver(() => {
       if (this.tableContainer) {
         this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
@@ -359,7 +365,11 @@ export default class ZnDataTable extends ZincElement {
     const hasSelectedRows = this.selectedRows.length > 0;
 
     return html`
-      <table class=${classMap({'table': true})}>
+      <table class=${classMap({
+        'table': true,
+        'table--in-panel': this.inPanel,
+        'with-hover': !this.unsortable,
+      })}>
         <thead>
         <tr>
           ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
@@ -798,16 +808,22 @@ export default class ZnDataTable extends ZincElement {
   private getTableSortIcon(key: any) {
     if (this.sortColumn !== key) {
       return html`
-        <zn-icon src="unfold_more" size="14"></zn-icon>`;
+        <div class="table__head__sort">
+        <zn-icon src="unfold_more" size="14"></zn-icon>
+      </div>`;
     }
 
     if (this.sortDirection === 'asc') {
       return html`
-        <zn-icon src="arrow_downward_alt" size="16"></zn-icon>`;
+        <div class="table__head__sort table__head__sort--active">
+        <zn-icon src="arrow_downward_alt" size="16"></zn-icon>
+        </div>`;
     }
 
     return html`
-      <zn-icon src="arrow_upward_alt" size="16"></zn-icon>`;
+      <div class="table__head__sort table__head__sort--active">
+        <zn-icon src="arrow_upward_alt" size="16"></zn-icon>
+      </div>`;
   }
 
   private renderCellHeader(key: any) {
@@ -827,7 +843,7 @@ export default class ZnDataTable extends ZincElement {
           ${this.headers[key]}
           ${sortable ?
             html`
-              <div class="table__head__sort">${this.getTableSortIcon(key)}</div>` :
+             ${this.getTableSortIcon(key)}` :
             html``}
         </div>
       </th>`;

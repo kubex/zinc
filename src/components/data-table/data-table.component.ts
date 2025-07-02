@@ -327,7 +327,6 @@ export default class ZnDataTable extends ZincElement {
   }
 
   changeEventListener = (e: ZnFilterChangeEvent) => {
-    console.log('zn-filter-change event', e);
     if (e.target instanceof ZnDataTableFilter) {
       this.filter = (e.target as ZnDataTableFilter).value as string;
       this._dataTask.run().then(r => r);
@@ -591,7 +590,6 @@ export default class ZnDataTable extends ZincElement {
     }
 
     const checkbox = target.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    console.log('checkbox', checkbox);
     checkbox.checked = !checkbox.checked;
 
     this.selectedRows = this._rows.filter((_, index) => {

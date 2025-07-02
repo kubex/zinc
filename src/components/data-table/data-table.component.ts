@@ -363,31 +363,33 @@ export default class ZnDataTable extends ZincElement {
     const hasSelectedRows = this.selectedRows.length > 0;
 
     return html`
-      <table class=${classMap({
-        'table': true,
-        'table--standalone': this.standalone,
-        'with-hover': !this.unsortable,
-      })}>
-        <thead>
-        <tr>
-          ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
-            <th>
-              <div><input type="checkbox" @change=${this.selectAll}></div>
-            </th>`}
-          ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
-        </tr>
-        </thead>
-        <tbody>
-        ${this._filteredRows.map((row: any) => html`
+      <div style="overflow-x: auto">
+        <table class=${classMap({
+          'table': true,
+          'table--standalone': this.standalone,
+          'with-hover': !this.unsortable,
+        })}>
+          <thead>
           <tr>
-            ${this.hideCheckboxes ? html`` : html`
-              <td class=${classMap({'hidden': !hasSelectedRows})}>
-                <div><input type="checkbox" @change=${this.selectRow}></div>
-              </td>`}
-            ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
-          </tr>`)}
-        </tbody>
-      </table>
+            ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
+              <th>
+                <div><input type="checkbox" @change=${this.selectAll}></div>
+              </th>`}
+            ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
+          </tr>
+          </thead>
+          <tbody>
+          ${this._filteredRows.map((row: any) => html`
+            <tr>
+              ${this.hideCheckboxes ? html`` : html`
+                <td class=${classMap({'hidden': !hasSelectedRows})}>
+                  <div><input type="checkbox" @change=${this.selectRow}></div>
+                </td>`}
+              ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
+            </tr>`)}
+          </tbody>
+        </table>
+      </div>
 
       ${this.getTableFooter()}
     `;

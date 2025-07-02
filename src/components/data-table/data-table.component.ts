@@ -357,11 +357,13 @@ export default class ZnDataTable extends ZincElement {
     this._filteredRows = this.getRows(filteredKeys, data);
     this._rows = this.getRows(keys, data);
 
+    const hasSelectedRows = this.selectedRows.length > 0;
+
     return html`
       <table class=${classMap({'table': true})}>
         <thead>
         <tr>
-          ${this.hideCheckboxes ? html`` : html`
+          ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
             <th>
               <div><input type="checkbox" @change=${this.selectAll}></div>
             </th>`}
@@ -372,7 +374,7 @@ export default class ZnDataTable extends ZincElement {
         ${this._filteredRows.map((row: any) => html`
           <tr>
             ${this.hideCheckboxes ? html`` : html`
-              <td>
+              <td class=${classMap({'hidden': !hasSelectedRows})}>
                 <div><input type="checkbox" @change=${this.selectRow}></div>
               </td>`}
             ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
@@ -412,7 +414,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getRowsSelected() {
-    if (this.hideCheckboxes) return html``;
+    if (this.hideCheckboxes || this.selectedRows <= 0) return html``;
 
     return html`<p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
   }
@@ -421,50 +423,55 @@ export default class ZnDataTable extends ZincElement {
     if (this.hidePagination) return html``;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
+    optionsRowsPerPage.filter((option) => option >= this._rows.length);
 
     return html`
-      <div class="table__footer__rows-per-page">
-        <p>Rows per page</p>
-        <select name="rowPerPage" @change=${this.updateRowsPerPage}>
-          ${optionsRowsPerPage.map((option) => html`
-            <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
-          )}
-        </select>
-      </div>
+      ${this._rows.length < 10 ? html`` : html`
+        <div class="table__footer__rows-per-page">
+          <p>Rows per page</p>
+          <select name="rowPerPage" @change=${this.updateRowsPerPage}>
+            ${optionsRowsPerPage.map((option) => html`
+              <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
+            )}
+          </select>
+        </div>`}
 
-      <div class="table__footer__pagination-count">
-        <p>Page ${this.page} of ${this.totalPages}</p>
-      </div>
+      ${this.totalPages <= 1
+        ? html``
+        : html`
+          <div class="table__footer__pagination-count">
+            <p>Page ${this.page} of ${this.totalPages}</p>
+          </div>
 
-      <div class="table__footer__pagination-buttons">
-        <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
-                   ?disabled=${this.page === 1}
-                   icon-size="16"
-                   size="small"
-                   icon="keyboard_double_arrow_left"
-                   outline>
-        </zn-button>
-        <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                   ?disabled=${this.page === 1}
-                   icon-size="16"
-                   size="small"
-                   icon="chevron_left"
-                   outline>
-        </zn-button>
-        <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                   ?disabled=${this.page === this.totalPages}
-                   icon-size="16"
-                   size="small"
-                   icon="chevron_right"
-                   outline>
-        </zn-button>
-        <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
-                   ?disabled=${this.page === this.totalPages}
-                   icon-size="16"
-                   size="small"
-                   icon="keyboard_double_arrow_right"
-                   outline>
-        </zn-button>
+          <div class="table__footer__pagination-buttons">
+            <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
+                       ?disabled=${this.page === 1}
+                       icon-size="16"
+                       size="small"
+                       icon="keyboard_double_arrow_left"
+                       outline>
+            </zn-button>
+            <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
+                       ?disabled=${this.page === 1}
+                       icon-size="16"
+                       size="small"
+                       icon="chevron_left"
+                       outline>
+            </zn-button>
+            <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
+                       ?disabled=${this.page === this.totalPages}
+                       icon-size="16"
+                       size="small"
+                       icon="chevron_right"
+                       outline>
+            </zn-button>
+            <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+                       ?disabled=${this.page === this.totalPages}
+                       icon-size="16"
+                       size="small"
+                       icon="keyboard_double_arrow_right"
+                       outline>
+            </zn-button>`}
       </div>
     `
   }
@@ -563,7 +570,30 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
-  selectRow() {
+  selectRow(e: PointerEvent) {
+    if (!(e.target && (e.target instanceof Element))) {
+      return;
+    }
+
+    let target: HTMLElement = e.target as HTMLElement;
+    // if is a button or a link continue
+    if (target.tagName === 'ZN-BUTTON' || target.tagName === 'A' || target.tagName === 'BUTTON') {
+      return
+    }
+
+    // traverse parent until we reach a tr
+    while (target && target.tagName !== 'TR') {
+      target = target.parentElement as HTMLElement;
+    }
+
+    if (target === null) {
+      return;
+    }
+
+    const checkbox = target.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    console.log('checkbox', checkbox);
+    checkbox.checked = !checkbox.checked;
+
     this.selectedRows = this._rows.filter((_, index) => {
       return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement)?.checked;
     });
@@ -711,47 +741,45 @@ export default class ZnDataTable extends ZincElement {
 
       if (data['buttons']) {
         content = html`
-          <zn-button-group>
-            ${Object.values(data['buttons']).map((button) => {
-              if (button.confirm) {
-                return html`
-                  <div>
-                    <zn-button
-                      id="${button.id}"
-                      size="${button.size}"
-                      color="${button.color}"
-                      icon="${button.icon}"
-                      icon-size="${button.iconSize}"
-                      tooltip=${button.tooltip}
-                      outline=${ifDefined(button.outline)}>
-                      ${button.label || nothing}
-                    </zn-button>
-                    <zn-confirm
-                      fid="${button.confirm.fid}"
-                      trigger="${button.confirm.trigger}"
-                      type="${button.confirm.type}"
-                      caption="${button.confirm.caption}"
-                      content="${button.confirm.content}"
-                      action="${button.confirm.action}"></zn-confirm>
-                  </div>`;
-              }
+          ${Object.values(data['buttons']).map((button) => {
+            if (button.confirm) {
               return html`
-                <zn-button
-                  id="${button.id}"
-                  href=${button.href}
-                  gaid=${button.gaid}
-                  size="${button.size}"
-                  color="${button.color}"
-                  icon="${button.icon}"
-                  icon-size="${button.iconSize}"
-                  tooltip=${button.tooltip}
-                  data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
-                  target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
-                  outline=${ifDefined(button.outline)}>
-                  ${button.label || nothing}
-                </zn-button>`;
-            })}
-          </zn-button-group>`;
+                <div>
+                  <zn-button
+                    id="${button.id}"
+                    size="${button.size}"
+                    color="${button.color}"
+                    icon="${button.icon}"
+                    icon-size="${button.iconSize}"
+                    tooltip=${button.tooltip}
+                    outline=${ifDefined(button.outline)}>
+                    ${button.label || nothing}
+                  </zn-button>
+                  <zn-confirm
+                    fid="${button.confirm.fid}"
+                    trigger="${button.confirm.trigger}"
+                    type="${button.confirm.type}"
+                    caption="${button.confirm.caption}"
+                    content="${button.confirm.content}"
+                    action="${button.confirm.action}"></zn-confirm>
+                </div>`;
+            }
+            return html`
+              <zn-button
+                id="${button.id}"
+                href=${button.href}
+                gaid=${button.gaid}
+                size="${button.size}"
+                color="${button.color}"
+                icon="${button.icon}"
+                icon-size="${button.iconSize}"
+                tooltip=${button.tooltip}
+                data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
+                target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
+                outline=${ifDefined(button.outline)}>
+                ${button.label || nothing}
+              </zn-button>`;
+          })}`;
       }
 
       if (data['icon']) {
@@ -812,11 +840,13 @@ export default class ZnDataTable extends ZincElement {
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     const header = headerKeys[index];
     return html`
-      <td class=${classMap({
-        'table__cell': true,
-        'table__cell--wide': header === this.wideColumn,
-        'table__cell--last': header === headerKeys[headerKeys.length - 1]
-      })}>
+      <td
+        @click=${this.selectRow}
+        class=${classMap({
+          'table__cell': true,
+          'table__cell--wide': header === this.wideColumn,
+          'table__cell--last': header === headerKeys[headerKeys.length - 1]
+        })}>
         <div>${this.renderData(value)}</div>
       </td>`;
   }

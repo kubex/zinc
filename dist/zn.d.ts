@@ -1666,6 +1666,7 @@ declare module "components/data-table/data-table.component" {
         unsortableHeaders: string;
         unsortable: boolean;
         hidePagination: boolean;
+        standalone: boolean;
         hideCheckboxes: boolean;
         filters: [];
         private resizeObserver;
@@ -1687,8 +1688,8 @@ declare module "components/data-table/data-table.component" {
         renderTable(data: TableData): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
-        getRowsSelected(): TemplateResult<1>;
-        getPagination(): TemplateResult<1>;
+        getRowsSelected(): TemplateResult<1> | null;
+        getPagination(): TemplateResult<1> | null;
         getActions(): TemplateResult<1>[];
         goToPage(page: number): void;
         goToFirstPage(): void;
@@ -1698,7 +1699,7 @@ declare module "components/data-table/data-table.component" {
         updateRowsPerPage(event: Event): void;
         selectAll(event: Event): void;
         private updateActionKeys;
-        selectRow(): void;
+        selectRow(e: PointerEvent): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
         renderData(data: RenderDataValue): TemplateResult;

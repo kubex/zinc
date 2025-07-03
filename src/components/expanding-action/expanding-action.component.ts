@@ -1,10 +1,10 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
+import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './expanding-action.scss';
-import {styleMap} from "lit/directives/style-map.js";
-import {classMap} from "lit/directives/class-map.js";
 
 /**
  * @summary Short summary of the component's intended use.

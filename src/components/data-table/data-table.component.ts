@@ -20,7 +20,6 @@ import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
 
 import styles from './data-table.scss';
-import {ZnChangeEvent} from "../../events/zn-change";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -430,7 +429,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getRowsSelected() {
-    if (this.hideCheckboxes || this.selectedRows <= 0) return null;
+    if (this.hideCheckboxes || this.selectedRows.length <= 0) return null;
 
     return html`
       <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`

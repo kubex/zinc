@@ -117,8 +117,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
         <zn-button color="secondary" slot="footer" slideout-closer @click=${this.handleQBReset}>Cancel
         </zn-button>
         <div slot="footer">
-          <zn-button color="transparent" size="x-small" slot="footer" @click=${this.handleQBClear}>Clear
-          </zn-button>
+          <zn-button color="transparent" slot="footer" @click=${this.handleQBClear}>Clear</zn-button>
           <zn-button color="default" slot="footer" @click=${this.handleQBUpdate}>Show Results</zn-button>
         </div>
       </zn-slideout>

@@ -64,3 +64,15 @@ layout: component
   <zn-button>Last</zn-button>
 </zn-button-group>
 ```
+
+### Vertical Example
+
+```html:preview
+
+<zn-button-group direction="vertical">
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
+```

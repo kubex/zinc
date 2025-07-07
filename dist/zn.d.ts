@@ -5310,6 +5310,7 @@ declare module "components/button-menu/button-menu.component" {
         maxWidth: number;
         containerWidth: number;
         limit: number;
+        maxLevel: number;
         noGap: boolean;
         noPadding: boolean;
         private _buttons;

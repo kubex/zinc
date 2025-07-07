@@ -5322,7 +5322,7 @@ declare module "components/button-menu/button-menu.component" {
         disconnectedCallback(): void;
         handleResize: () => void;
         calculateVisibleButtons(): void;
-        calculateMenuButtons(visibleButtons: number, buttons: CustomButtonWidths[]): void;
+        calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

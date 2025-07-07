@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -1618,13 +1618,20 @@
         },
         {
           "name": "zn-defined-label",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "This component provides a labeled input with support for predefined and custom labels,\nallowing users to select or enter label-value pairs within a dropdown interface.\n---\n\n\n### **CSS Parts:**\n - **input** - The component's main input.\n- **input-value** - The label's value inputs.",
           "doc-url": "",
           "attributes": [
             { "name": "value", "value": { "type": "string", "default": "''" } },
             {
               "name": "inputValue",
               "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "input-size",
+              "value": {
+                "type": "'x-small' | 'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
             },
             {
               "name": "name",
@@ -1636,36 +1643,34 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
+              "name": "allow-custom",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "predefined-labels",
               "value": { "type": "array", "default": "[]" }
             }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "input", "type": "ZnInput" },
-              { "name": "valueInput", "type": "ZnInput" },
+              { "name": "dropdown", "type": "ZnDropdown" },
               { "name": "value", "type": "string" },
               { "name": "inputValue", "type": "string" },
+              {
+                "name": "inputSize",
+                "type": "'x-small' | 'small' | 'medium' | 'large'"
+              },
               { "name": "name", "type": "string" },
               { "name": "title", "type": "string" },
               { "name": "disabled", "type": "boolean" },
+              { "name": "allowCustom", "type": "boolean" },
               { "name": "predefinedLabels", "type": "array" },
               { "name": "validationMessage" },
               { "name": "validity" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {

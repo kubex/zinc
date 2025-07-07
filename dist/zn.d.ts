@@ -1978,36 +1978,40 @@ declare module "components/input/index" {
 }
 declare module "components/defined-label/defined-label.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnDropdown from "components/dropdown/index";
     import type ZnInput from "components/input/index";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary This component provides a labeled input with support for predefined and custom labels,
+     * allowing users to select or enter label-value pairs within a dropdown interface.
      * @documentation https://zinc.style/components/defined-label
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-button
+     * @dependency zn-dropdown
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-panel
+     * @dependency zn-select
+     * @dependency zn-sp
      *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart input - The component's main input.
+     * @csspart input-value - The label's value inputs.
      */
     export default class ZnDefinedLabel extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
         input: ZnInput;
-        valueInput: ZnInput;
+        dropdown: ZnDropdown;
         value: string;
         inputValue: string;
+        inputSize: 'x-small' | 'small' | 'medium' | 'large';
         name: string;
         title: string;
         disabled: boolean;
+        allowCustom: boolean;
         predefinedLabels: never[];
         get validationMessage(): string;
         get validity(): ValidityState;
@@ -2019,6 +2023,7 @@ declare module "components/defined-label/defined-label.component" {
         protected firstUpdated(changedProperties: PropertyValues): void;
         private handleChange;
         private handleInput;
+        private handleClick;
         private handleInputValueChange;
         private handleInputValueInput;
         private handleFormSubmit;

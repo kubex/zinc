@@ -47,6 +47,7 @@ You can limit the number of buttons that are shown in the menu. The rest will be
 ```
 
 ### Button Max (1)
+
 ```html:preview
 
 <zn-button-menu max-level="1">
@@ -56,7 +57,9 @@ You can limit the number of buttons that are shown in the menu. The rest will be
   <zn-button>Default 2</zn-button>
 </zn-button-menu>
 ```
+
 ### Button Max (2)
+
 ```html:preview
 
 <zn-button-menu max-level="2">
@@ -66,12 +69,24 @@ You can limit the number of buttons that are shown in the menu. The rest will be
   <zn-button>Default 2</zn-button>
 </zn-button-menu>
 ```
+
 ### Button Max (3)
+
 ```html:preview
 
 <zn-button-menu max-level="3">
   <zn-button primary>Primary</zn-button>
   <zn-button secondary>Secondary</zn-button>
+  <zn-button>Default</zn-button>
+  <zn-button>Default 2</zn-button>
+</zn-button-menu>
+```
+
+### Button Max (2) - No Primary / Secondary
+
+```html:preview
+
+<zn-button-menu max-level="2">
   <zn-button>Default</zn-button>
   <zn-button>Default 2</zn-button>
 </zn-button-menu>
@@ -84,7 +99,7 @@ buttons inside it are wider.
 
 ```html:preview
 
-<zn-button-menu max-width="200">
+<zn-button-menu max-width="300">
   <zn-button primary>Something sdf</zn-button>
   <zn-button >sd</zn-button>
   <zn-button secondary>fdf</zn-button>

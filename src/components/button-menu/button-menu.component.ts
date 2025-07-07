@@ -32,7 +32,10 @@ export default class ZnButtonMenu extends ZincElement {
   public containerWidth: number;
 
   @property({type: Number, attribute: 'limit'})
-  public limit: number;
+  public limit: number = -1;
+
+  @property({type: Number, attribute: 'max-level'})
+  public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
   @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
@@ -103,7 +106,11 @@ export default class ZnButtonMenu extends ZincElement {
   calculateVisibleButtons() {
     const containerWidth = this.containerWidth;
 
+    let primaryButtons = 0;
+    let secondaryButtons = 0;
+
     let visibleButtons = 0;
+    let totalButtons = 0;
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
     remainingWidth -= 50; // Allow for more-vert button
@@ -118,6 +125,12 @@ export default class ZnButtonMenu extends ZincElement {
 
     // Calculate the number of visible buttons
     this._buttons.forEach((button: CustomButtonWidths) => {
+      totalButtons++;
+      if (button.button.hasAttribute('primary')) {
+        primaryButtons++;
+      } else if (button.button.hasAttribute('secondary')) {
+        secondaryButtons++;
+      }
       // remove button width and some default padding and spacing
       if ((remainingWidth - button.width) > 0) {
         remainingWidth -= button.width;
@@ -127,7 +140,13 @@ export default class ZnButtonMenu extends ZincElement {
       }
     })
 
-    if (this.limit) {
+    if (this.maxLevel < 2) {
+      this.limit = this.limit > 0 ? Math.min(this.limit, primaryButtons) : primaryButtons;
+    } else if (this.maxLevel < 3) {
+      this.limit = this.limit > 0 ? Math.min(this.limit, primaryButtons + secondaryButtons) : primaryButtons + secondaryButtons;
+    }
+
+    if (this.limit > -1) {
       // Limit the number of buttons to show
       visibleButtons = Math.min(visibleButtons, this.limit);
     }
@@ -155,10 +174,10 @@ export default class ZnButtonMenu extends ZincElement {
       }
     });
 
-    this.calculateMenuButtons(visibleButtons, this._buttons);
+    this.calculateMenuButtons(totalButtons, visibleButtons, this._buttons);
   }
 
-  calculateMenuButtons(visibleButtons: number, buttons: CustomButtonWidths[]) {
+  calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]) {
     const menu = this.shadowRoot?.querySelector('zn-menu');
     const dropdown = this.shadowRoot?.querySelector('zn-dropdown');
 
@@ -170,7 +189,7 @@ export default class ZnButtonMenu extends ZincElement {
       dropdown.toggleAttribute('hidden', buttons.length === 0 || buttons.length <= visibleButtons)
 
       // if there's any buttons to add to the menu
-      if (visibleButtons !== buttons.length && visibleButtons > 0) {
+      if (visibleButtons !== buttons.length && totalButtons > 0) {
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');

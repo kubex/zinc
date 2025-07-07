@@ -46,6 +46,52 @@ You can limit the number of buttons that are shown in the menu. The rest will be
 </zn-button-menu>
 ```
 
+### Button Max (1)
+
+```html:preview
+
+<zn-button-menu max-level="1">
+  <zn-button primary>Primary</zn-button>
+  <zn-button secondary>Secondary</zn-button>
+  <zn-button>Default</zn-button>
+  <zn-button>Default 2</zn-button>
+</zn-button-menu>
+```
+
+### Button Max (2)
+
+```html:preview
+
+<zn-button-menu max-level="2">
+  <zn-button primary>Primary</zn-button>
+  <zn-button secondary>Secondary</zn-button>
+  <zn-button>Default</zn-button>
+  <zn-button>Default 2</zn-button>
+</zn-button-menu>
+```
+
+### Button Max (3)
+
+```html:preview
+
+<zn-button-menu max-level="3">
+  <zn-button primary>Primary</zn-button>
+  <zn-button secondary>Secondary</zn-button>
+  <zn-button>Default</zn-button>
+  <zn-button>Default 2</zn-button>
+</zn-button-menu>
+```
+
+### Button Max (2) - No Primary / Secondary
+
+```html:preview
+
+<zn-button-menu max-level="2">
+  <zn-button>Default</zn-button>
+  <zn-button>Default 2</zn-button>
+</zn-button-menu>
+```
+
 ### Max Width
 
 Below is an example of a button menu with a maximum width of 200px. The menu will not exceed this width, even if the
@@ -53,7 +99,7 @@ buttons inside it are wider.
 
 ```html:preview
 
-<zn-button-menu max-width="200">
+<zn-button-menu max-width="300">
   <zn-button primary>Something sdf</zn-button>
   <zn-button >sd</zn-button>
   <zn-button secondary>fdf</zn-button>
@@ -66,6 +112,7 @@ buttons inside it are wider.
 ```
 
 ### No Gap
+
 ```html:preview
 
 <zn-button-menu no-gap max-width="200">

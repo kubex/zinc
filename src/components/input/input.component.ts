@@ -1,16 +1,17 @@
-import {property, query, state} from 'lit/decorators.js';
-import {html, unsafeCSS} from 'lit';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
-import {FormControlController} from "../../internal/form";
-import ZnIcon from "../icon";
-import {HasSlotController} from "../../internal/slot";
-import {LocalizeController} from "../../utilities/localize";
-import {defaultValue} from "../../internal/default-value";
-import {watch} from "../../internal/watch";
 import {classMap} from "lit/directives/class-map.js";
+import {defaultValue} from "../../internal/default-value";
+import {FormControlController} from "../../internal/form";
+import {HasSlotController} from "../../internal/slot";
+import {html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
+import {LocalizeController} from "../../utilities/localize";
+import {property, query, state} from 'lit/decorators.js';
+import {watch} from "../../internal/watch";
+import ZincElement from '../../internal/zinc-element';
+import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
+import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './input.scss';
 

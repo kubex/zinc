@@ -90,7 +90,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   @defaultValue() defaultValue: string = '';
 
   /** The inputs size **/
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'x-small' | 'small' | 'medium' | 'large' = 'medium';
 
   /** Draws a pill-styled input **/
   @property({type: Boolean, reflect: true}) pill: boolean = false;
@@ -453,6 +453,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       <div part="form-control"
            class="${classMap({
              'form-control': true,
+             'form-control--x-small': this.size === 'x-small',
              'form-control--small': this.size === 'small',
              'form-control--medium': this.size === 'medium',
              'form-control--large': this.size === 'large',
@@ -490,6 +491,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                class=${classMap({
                  'input': true,
                  'input--standard': true,
+                 'input--x-small': this.size === 'x-small',
                  'input--small': this.size === 'small',
                  'input--medium': this.size === 'medium',
                  'input--large': this.size === 'large',

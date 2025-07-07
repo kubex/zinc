@@ -38,7 +38,14 @@
 .input--standard.input--focused:not(.input--disabled) {
   background-color: var(--zn-input-background-color-focus);
   border-color: var(--zn-input-border-color-focus);
-  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+
+  &:not(.input--x-small) {
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+
+  &.input--x-small {
+    box-shadow: 0 0 0 var(--zn-focus-ring-width-x-small) var(--zn-input-focus-ring-color);
+  }
 }
 
 .input--standard.input--focused:not(.input--disabled) .input__control {
@@ -134,6 +141,38 @@
  * Size modifiers
  */
 
+.input--x-small {
+  border-radius: var(--zn-input-border-radius-x-small);
+  font-size: var(--zn-input-font-size-small);
+  height: var(--zn-input-height-x-small);
+}
+
+.input--x-small .input__control {
+  height: calc(var(--zn-input-height-x-small) - var(--zn-input-border-width) * 2);
+  padding: 0 var(--zn-input-spacing-x-small);
+}
+
+.input--x-small .input__clear,
+.input--x-small .input__password-toggle {
+  width: calc(1em + var(--zn-input-spacing-x-small) * 2);
+}
+
+.input--x-small .input__prefix ::slotted(*),
+.input__prefix-default {
+  margin-inline-start: var(--zn-input-spacing-x-small);
+}
+
+.input--x-small .input__suffix ::slotted(*),
+.input__suffix-default {
+  margin-inline-end: var(--zn-input-spacing-x-small);
+}
+
+.input--x-small .input__suffix ::slotted(zn-button),
+.input--x-small .input__prefix ::slotted(zn-button) {
+  margin-inline-end: 0;
+  margin-inline-start: 0;
+}
+
 .input--small {
   border-radius: var(--zn-input-border-radius-small);
   font-size: var(--zn-input-font-size-small);
@@ -224,6 +263,11 @@
 /*
  * Pill modifier
  */
+
+.input--pill.input--x-small {
+  border-radius: var(--zn-input-height-small);
+  padding: 0 var(--zn-spacing-x-small);
+}
 
 .input--pill.input--small {
   border-radius: var(--zn-input-height-small);

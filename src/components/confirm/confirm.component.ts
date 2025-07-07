@@ -83,13 +83,15 @@ export default class ZnConfirm extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    let trigger;
 
-    if (this.trigger) {
-      const trigger = this.parentElement?.querySelector('#' + this.trigger);
-      if (trigger) {
-        trigger.addEventListener('click', this.show);
-      }
+    if (this.hasSlotController.test('trigger')) {
+      trigger = this.hasSlotController.getSlot('trigger');
+    } else if (this.trigger) {
+      trigger = this.parentElement?.querySelector('#' + this.trigger);
     }
+
+    trigger?.addEventListener('click', this.show);
   }
 
   show = (event: Event | undefined = undefined) => {
@@ -112,6 +114,7 @@ export default class ZnConfirm extends ZincElement {
     };
 
     return html`
+      <slot name="trigger" slot="trigger"></slot>
       <zn-dialog size="${this.size}" variant="${this.variant}" label=${ifDefined(this.caption)} trigger=${this.trigger}
                  class=${classMap({
                    'confirm-dialog': true,

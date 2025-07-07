@@ -29,6 +29,7 @@ export default class ZnButtonGroup extends ZincElement {
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) wrap = false;
   @property({type: Boolean}) start = false;
+  @property({type: Boolean}) gap = false;
 
   @query('slot') defaultSlot: HTMLSlotElement;
 
@@ -46,10 +47,13 @@ export default class ZnButtonGroup extends ZincElement {
 
       if (button) {
         button.toggleAttribute('data-zn-button-group__button', true);
-        button.toggleAttribute('data-zn-button-group__button--first', index === 0);
         button.toggleAttribute('data-zn-button-group__button--grow', this.grow);
-        button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
-        button.toggleAttribute('data-zn-button-group__button--last', index === slottedElements.length - 1);
+
+        if (!this.gap) {
+          button.toggleAttribute('data-zn-button-group__button--first', index === 0);
+          button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
+          button.toggleAttribute('data-zn-button-group__button--last', index === slottedElements.length - 1);
+        }
       }
     });
   }
@@ -61,6 +65,7 @@ export default class ZnButtonGroup extends ZincElement {
              'button-group': true,
              'button-group--grow': this.grow,
              'button-group--start': this.start,
+             'button-group--gap': this.gap,
            })}"
            role="group">
         <slot @slotchange=${this.handleSlotChange}></slot>

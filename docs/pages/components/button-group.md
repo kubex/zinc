@@ -40,3 +40,27 @@ layout: component
   <zn-button>Last</zn-button>
 </zn-button-group>
 ```
+
+### Gap Example
+
+```html:preview
+
+<zn-button-group gap>
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
+```
+
+### Grow Gap Example
+
+```html:preview
+
+<zn-button-group gap grow>
+  <zn-button>First</zn-button>
+  <zn-button>Inner 1</zn-button>
+  <zn-button>Inner 2</zn-button>
+  <zn-button>Last</zn-button>
+</zn-button-group>
+```

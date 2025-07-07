@@ -34,6 +34,9 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'limit'})
   public limit: number;
 
+  @property({type: Number, attribute: 'max-level'})
+  public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
+
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
   @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
 
@@ -103,6 +106,9 @@ export default class ZnButtonMenu extends ZincElement {
   calculateVisibleButtons() {
     const containerWidth = this.containerWidth;
 
+    let primaryButtons = 0;
+    let secondaryButtons = 0;
+
     let visibleButtons = 0;
     let remainingWidth = containerWidth;
     this._buttons = [...this._originalButtons];
@@ -118,6 +124,11 @@ export default class ZnButtonMenu extends ZincElement {
 
     // Calculate the number of visible buttons
     this._buttons.forEach((button: CustomButtonWidths) => {
+      if (button.button.hasAttribute('primary')) {
+        primaryButtons++;
+      } else if (button.button.hasAttribute('secondary')) {
+        secondaryButtons++;
+      }
       // remove button width and some default padding and spacing
       if ((remainingWidth - button.width) > 0) {
         remainingWidth -= button.width;
@@ -126,6 +137,12 @@ export default class ZnButtonMenu extends ZincElement {
         remainingWidth = 0
       }
     })
+
+    if (this.maxLevel < 2) {
+      this.limit = this.limit ? Math.min(this.limit, primaryButtons) : primaryButtons;
+    } else if (this.maxLevel < 3) {
+      this.limit = this.limit ? Math.min(this.limit, primaryButtons + secondaryButtons) : primaryButtons + secondaryButtons;
+    }
 
     if (this.limit) {
       // Limit the number of buttons to show

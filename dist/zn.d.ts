@@ -752,6 +752,7 @@ declare module "components/button-group/button-group.component" {
         grow: boolean;
         wrap: boolean;
         start: boolean;
+        gap: boolean;
         defaultSlot: HTMLSlotElement;
         private handleSlotChange;
         render(): import("lit").TemplateResult<1>;

@@ -46,10 +46,10 @@ export default class ZnButtonGroup extends ZincElement {
       const button = el.closest('zn-button') ?? el.querySelector('zn-button');
 
       if (button) {
-        button.toggleAttribute('data-zn-button-group__button', true);
         button.toggleAttribute('data-zn-button-group__button--grow', this.grow);
 
         if (!this.gap) {
+          button.toggleAttribute('data-zn-button-group__button', true);
           button.toggleAttribute('data-zn-button-group__button--first', index === 0);
           button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
           button.toggleAttribute('data-zn-button-group__button--last', index === slottedElements.length - 1);

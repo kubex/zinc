@@ -1768,9 +1768,10 @@ declare module "internal/default-value" {
     export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
 }
 declare module "components/input/input.component" {
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/input

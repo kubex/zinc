@@ -1,10 +1,10 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
-import {HasSlotController} from "../../internal/slot";
 
 import styles from './confirm.scss';
 

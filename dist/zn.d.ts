@@ -1835,7 +1835,7 @@ declare module "components/input/input.component" {
         /** The default value of the form control. Primarily used for resetting the form control. */
         defaultValue: string;
         /** The inputs size **/
-        size: 'small' | 'medium' | 'large';
+        size: 'x-small' | 'small' | 'medium' | 'large';
         /** Draws a pill-styled input **/
         pill: boolean;
         /** The inputs label. If you need to display HTML, use the `label` slot. **/

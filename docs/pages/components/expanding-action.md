@@ -37,3 +37,19 @@ layout: component
       if prefetch is set, we need to lod the uri which should have the count with it.</p>
   </zn-expanding-action>
 ```
+
+## Header Example
+
+```html:preview
+<zn-header caption="Expanding Action Example"
+           navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Dashboard&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Another&quot;}]">
+  <zn-navbar slot="nav">
+    <zn-expanding-action icon="new_label" method="fill">
+      <zn-defined-label
+        allow-custom
+        predefined-labels="[{&quot;name&quot;:&quot;asc2&quot;,&quot;options&quot;:[]},{&quot;name&quot;:&quot;one&quot;,&quot;options&quot;:[]},{&quot;name&quot;:&quot;outbound&quot;,&quot;options&quot;:[]},{&quot;name&quot;:&quot;two&quot;,&quot;options&quot;:[]},{&quot;name&quot;:&quot;another&quot;,&quot;options&quot;:[&quot;one&quot;,&quot;two&quot;,&quot;three&quot;]},{&quot;name&quot;:&quot;awesome&quot;,&quot;options&quot;:[&quot;one&quot;,&quot;two&quot;,&quot;three&quot;,&quot;four&quot;]}]">
+      </zn-defined-label>
+    </zn-expanding-action>
+  </zn-navbar>
+</zn-header>
+```

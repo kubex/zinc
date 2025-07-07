@@ -1,30 +1,32 @@
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
-import {FormControlController} from "../../internal/form";
-import {ifDefined} from "lit/directives/if-defined.js";
+import {FormControlController} from '../../internal/form';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
-import type ZnInput from "../input";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type ZnDropdown from '../dropdown';
+import type ZnInput from '../input';
 
 import styles from './defined-label.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary This component provides a labeled input with support for predefined and custom labels,
+ * allowing users to select or enter label-value pairs within a dropdown interface.
  * @documentation https://zinc.style/components/defined-label
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-button
+ * @dependency zn-dropdown
+ * @dependency zn-input
+ * @dependency zn-option
+ * @dependency zn-panel
+ * @dependency zn-select
+ * @dependency zn-sp
  *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
+ * @csspart input - The component's main input.
+ * @csspart input-value - The label's value inputs.
  */
 export default class ZnDefinedLabel extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -34,13 +36,15 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   });
 
   @query('.input__control') input: ZnInput;
-  @query('.input__control-value') valueInput: ZnInput;
+  @query('.defined-label__dropdown') dropdown: ZnDropdown;
 
   @property() value: string = '';
   @property() inputValue: string = '';
+  @property({attribute: 'input-size', reflect: true}) inputSize: 'x-small' | 'small' | 'medium' | 'large' = 'medium';
   @property() name: string = 'label';
   @property() title: string;
   @property({type: Boolean}) disabled: boolean = false;
+  @property({attribute: 'allow-custom', type: Boolean}) allowCustom: boolean = false;
   @property({type: Array, attribute: 'predefined-labels'}) predefinedLabels = [];
 
   get validationMessage() {
@@ -80,14 +84,30 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   }
 
   private handleChange() {
-    this.input.value = this.input.value.toLowerCase();
-    this.value = this.input.value;
+    if (!this.dropdown.open) {
+      this.dropdown.show().then(r => r);
+    }
+
+    if (this.dropdown.open && this.input.value === '') {
+      this.dropdown.hide().then(r => r);
+    }
+
+    if (typeof this.input.value === 'string') {
+      this.input.value = this.input.value.toLowerCase();
+    }
+
+    this.value = this.input.value as string;
   }
 
   private handleInput() {
-    this.input.value = this.input.value.toLowerCase();
-    this.value = this.input.value;
+    this.handleChange();
     this.formControlController.updateValidity();
+  }
+
+  private handleClick(e: MouseEvent) {
+    if (this.input.value === '' || (this.dropdown.open && this.input.value !== '')) {
+      e.stopImmediatePropagation();
+    }
   }
 
   private handleInputValueChange(e: Event) {
@@ -105,22 +125,27 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
   }
 
   private handleFormSubmit() {
-    this.formControlController.submit();
+    const form = this.formControlController.getForm();
+
+    if (form && form.reportValidity()) {
+      document.dispatchEvent(new CustomEvent('zn-register-element', {
+        detail: {element: form}
+      }))
+      form.requestSubmit();
+    }
   }
 
   render() {
     let predefinedLabels = html``;
-    let identifiedLabels = 0;
 
     if (this.predefinedLabels.length > 0) {
       this.predefinedLabels.forEach((label: { [key: string]: any } | string | null) => {
         // label = ['name' => 'label', 'options'=>['one', 'two', 'three']]
         let options: string[] | undefined;
         if (label && typeof label !== 'string') {
-          options = label.options;
-          label = label.name;
+          options = label.options as string[];
+          label = label.name as string;
         }
-
 
         if (this.value && !label?.toLowerCase().includes(this.value.toLowerCase())) {
           return;
@@ -135,7 +160,8 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
               class="input__control-value input__control-value--${label}"
               data-label="${label}"
               @zn-change="${this.handleInputValueChange}"
-              @zn-input="${this.handleInputValueInput}">
+              @zn-input="${this.handleInputValueInput}"
+              size="small">
               <zn-option value="">Select ${label}</zn-option>
               ${options.map((option: string) => html`
                 <zn-option value="${option}">${option}</zn-option>
@@ -150,74 +176,66 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
               type="text"
               data-label="${label}"
               @zn-change="${this.handleInputValueChange}"
-              @zn-input="${this.handleInputValueInput}"></zn-input>`;
+              @zn-input="${this.handleInputValueInput}"
+              size="small"></zn-input>`;
         }
 
-
-        identifiedLabels++;
         predefinedLabels = html`
-          <div class="defined-label__container">
-            <div class="defined-label__left">
-              ${label}
-            </div>
-            <div class="defined-label__right">
+          <div class="defined-label__input">
+            <small>${label}</small>
+            <div class="defined-label__input-wrap">
               ${selector}
-            </div>
-            <div class="defined-label__submit">
-              <zn-button type="submit" icon="add" slot="submit" size="small"
-                         @click="${this.handleFormSubmit}"></zn-button>
+              <zn-button type="submit" icon="add"></zn-button>
             </div>
           </div>`;
       });
     }
 
     return html`
-      <zn-button id="add-new-label" size="small">Add New Label</zn-button>
-      <zn-dialog trigger="add-new-label" label="Add Label">
-        <div class="defined-label">
-          <zn-input
-            part="input"
-            id="input"
-            class="input__control"
-            type="text"
-            title="${this.title}"
-            name="${ifDefined(this.name)}"
-            placeholder="Label"
-            autocomplete="off"
-            @zn-change="${this.handleChange}"
-            @zn-input="${this.handleInput}"
-          ></zn-input>
-          ${this.value !== '' ? html`
-            <div class="defined-label__wrap">
-              <p class="defined-label__label"><small>Add Custom Label</small></p>
-              <div class="defined-label__container">
-                <div class="defined-label__left">
-                  ${this.value}
+      <zn-dropdown class="defined-label__dropdown">
+        <zn-input
+          part="input"
+          id="input"
+          class="input__control"
+          type="text"
+          title="${this.title}"
+          value="${this.value}"
+          name="${ifDefined(this.name)}"
+          placeholder="Add a Label"
+          maxlength="60"
+          autocomplete="off"
+          size="${this.inputSize}"
+          @zn-change="${this.handleChange}"
+          @zn-input="${this.handleInput}"
+          @click="${this.handleClick}"
+          slot="trigger"
+        ></zn-input>
+
+        <zn-panel class="defined-label__container">
+          <zn-sp flush divide>
+            ${predefinedLabels.values.length > 0 ? predefinedLabels : html`
+              <div class="defined-label__input">
+                <small>Cannot find any predefined labels</small>
+              </div>`}
+
+            ${this.allowCustom && this.value !== '' ? html`
+              <div class="defined-label__input">
+                <small>${this.value}</small>
+                <div class="defined-label__input-wrap">
+                  <zn-input part="input-value"
+                            placeholder="Label Value"
+                            type="text"
+                            size="small"
+                            maxlength="60"
+                            @zn-change="${this.handleInputValueChange}"
+                            @zn-input="${this.handleInputValueInput}"></zn-input>
+                  <zn-button type="submit" icon="add" @click="${this.handleFormSubmit}"></zn-button>
                 </div>
-                <div class="defined-label__right">
-                  <zn-input
-                    part="input-value"
-                    id="input-value"
-                    class="input__control-value"
-                    type="text"
-                    @change="${this.handleInputValueChange}"
-                    @input="${this.handleInputValueInput}"
-                  ></zn-input>
-                </div>
-                <div class="defined-label__submit">
-                  <zn-button type="submit" icon="add" slot="submit" size="small"
-                             @click="${this.handleFormSubmit}"></zn-button>
-                </div>
-              </div>
-            </div>
-            <div class="defined-label__wrap">
-              ${identifiedLabels > 0 ? html`
-                <p class="defined-label__label"><small>Add Predefined Label</small></p>` : ''}
-              ${predefinedLabels}
-          ` : ''}
-            </div>
-        </div>
-      </zn-dialog>
+              </div>` : ''}
+
+          </zn-sp>
+        </zn-panel>
+      </zn-dropdown>
     `;
   }
 }

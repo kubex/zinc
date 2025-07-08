@@ -2973,6 +2973,7 @@ declare module "components/tabs/tabs.component" {
         storeKey: string;
         storeTtl: number;
         padded: boolean;
+        pageContainer: boolean;
         fullWidth: boolean;
         paddedRight: boolean;
         caption: string;

@@ -55,7 +55,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
-  @property({attribute: 'page-container', type: Boolean, reflect: true}) pageContainer = false;
+  @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
 
@@ -192,7 +192,9 @@ export default class ZnTabs extends ZincElement {
 
     const tabNode = document.createElement('div');
     tabNode.setAttribute("id", tabId);
-    tabNode.setAttribute("data-fetch-style", this.pageContainer ? 'page' : 'default');
+    if (this.fetchStyle !== "") {
+      tabNode.setAttribute("data-fetch-style", this.fetchStyle);
+    }
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
     if (this._panel instanceof HTMLElement) {

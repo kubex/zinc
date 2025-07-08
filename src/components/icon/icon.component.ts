@@ -80,6 +80,7 @@ export default class ZnIcon extends ZincElement {
       case "line":
         return "line";
       case 'brand':
+      case 'brands':
         return "brands";
     }
 

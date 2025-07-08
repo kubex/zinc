@@ -1,3 +1,4 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
@@ -152,7 +153,7 @@ export default class ZnButtonMenu extends ZincElement {
     }
 
     // Remove all buttons from the ui and menu
-    const container = this.shadowRoot?.querySelector('.zn-button-menu__container');
+    const container = this.shadowRoot?.querySelector('.button-menu__container');
     if (container) {
       container.innerHTML = '';
     }
@@ -165,7 +166,7 @@ export default class ZnButtonMenu extends ZincElement {
     // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
-        this.shadowRoot?.querySelector('.zn-button-menu__container')?.appendChild(button.button);
+        this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
 
         if (!button.button.hasAttribute('color')) {
           button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
@@ -254,10 +255,12 @@ export default class ZnButtonMenu extends ZincElement {
 
   render() {
     return html`
-      <div class="zn-button-menu
-${this.noPadding ? ' zn-button-menu--no-padding' : ''}
-${this.noGap ? ' zn-button-menu--no-gap' : ''}">
-        <div class="zn-button-menu__container"></div>
+      <div class=${classMap({
+        'button-menu': true,
+        'button-menu--no-padding': this.noPadding,
+        'button-menu--no-gap': this.noGap,
+      })}>
+        <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent" size="content"></zn-button>
           <zn-menu></zn-menu>

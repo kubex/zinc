@@ -3,9 +3,9 @@ import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
+import type ZnMenuItem from "../menu-item";
 
 import styles from './button-menu.scss';
-import ZnMenuItem from "../menu-item";
 
 
 interface CustomButtonWidths {

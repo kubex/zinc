@@ -29,9 +29,13 @@ export default class ZnChip extends ZincElement {
   @property() icon: string = '';
 
   @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
-    'transparent' | 'neutral' = 'neutral';
+    'transparent' | 'custom' | 'neutral' = 'neutral';
 
-  @property() size: 'small' | 'medium' | 'large' = 'medium';
+  @property() size: 'small' | 'medium' | 'large'; // Defaults to base chip styling
+
+  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
+  @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
@@ -39,12 +43,16 @@ export default class ZnChip extends ZincElement {
     return html`
       <div class=${classMap({
         'chip': true,
+        'chip--flush': this.flush,
+        'chip--flush-x': this.flushX,
+        'chip--flush-y': this.flushY,
         'chip--info': this.type === 'info',
         'chip--success': this.type === 'success',
         'chip--warning': this.type === 'warning',
         'chip--error': this.type === 'error',
         'chip--primary': this.type === 'primary',
         'chip--transparent': this.type === 'transparent',
+        'chip--custom': this.type === 'custom',
         'chip--neutral': this.type === 'neutral',
         'chip--small': this.size === 'small',
         'chip--medium': this.size === 'medium',

@@ -18,6 +18,18 @@
   align-items: center;
   border: 1px solid transparent;
   line-height: 24px;
+
+  &--flush {
+    padding: 0;
+  }
+
+  &--flush-x {
+    padding-inline: 0;
+  }
+
+  &--flush-y {
+    padding-block: 0;
+  }
 }
 
 .chip--primary {
@@ -62,14 +74,25 @@
   background: transparent;
 }
 
+.chip--custom {
+  color: rgb(var(--zn-text));
+  border-color: hsl(from var(--chip-color-override, inherit) h s l / 0.6);
+  background-color: hsl(from var(--chip-color-override, inherit) h s l / 0.1);
+}
+
 .chip__action {
   text-transform: unset;
 }
 
 .chip--small {
   font-size: var(--zn-font-size-small);
-  padding: var(--zn-spacing-2x-small) var(--zn-spacing-3x-small);
+  padding: var(--zn-spacing-2x-small) var(--zn-spacing-x-small);
   line-height: var(--zn-line-height-dense);
+}
+
+.chip--medium {
+  font-size: var(--zn-font-size-medium);
+  padding: var(--zn-spacing-2x-small) var(--zn-spacing-small);
 }
 
 .chip--large {

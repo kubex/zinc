@@ -185,7 +185,7 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
             <small>${label}</small>
             <div class="defined-label__input-wrap">
               ${selector}
-              <zn-button type="submit" icon="add"></zn-button>
+              <zn-button type="submit" icon="add" @click="${this.handleFormSubmit}"></zn-button>
             </div>
           </div>`;
       });

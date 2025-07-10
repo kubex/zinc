@@ -2155,6 +2155,9 @@ declare module "components/tile/tile.component" {
         dataTarget: string;
         gaid: string;
         dataUri: string;
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
         private _isLink;
         render(): import("lit").TemplateResult;
     }

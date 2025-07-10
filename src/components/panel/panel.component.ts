@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -76,7 +77,7 @@ export default class ZnPanel extends ZincElement {
           ${hasHeader ? html`
             <zn-header class="panel__header"
                        caption="${this.caption}"
-                       description="${this.description}"
+                       description=${ifDefined(this.description)}
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

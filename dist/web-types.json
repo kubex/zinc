@@ -840,16 +840,25 @@
             {
               "name": "type",
               "value": {
-                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'",
+                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'",
                 "default": "'neutral'"
               }
             },
             {
               "name": "size",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
+              "value": { "type": "'small' | 'medium' | 'large'" }
+            },
+            {
+              "name": "flush",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-x",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-y",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -864,9 +873,12 @@
               { "name": "icon", "type": "string" },
               {
                 "name": "type",
-                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'"
+                "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
               },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" }
+              { "name": "size", "type": "'small' | 'medium' | 'large'" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" }
             ],
             "events": [
               {

@@ -791,8 +791,11 @@ declare module "components/chip/chip.component" {
     export default class ZnChip extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
-        type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'neutral';
+        type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'custom' | 'neutral';
         size: 'small' | 'medium' | 'large';
+        flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
         private readonly hasSlotController;
         render(): import("lit").TemplateResult<1>;
     }

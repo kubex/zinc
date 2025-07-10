@@ -2879,7 +2879,7 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'"
+                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
               },
               "default": "'neutral'",
               "attribute": "type"
@@ -2890,8 +2890,37 @@
               "type": {
                 "text": "'small' | 'medium' | 'large'"
               },
-              "default": "'medium'",
               "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush-x",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "flush-y",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2919,7 +2948,7 @@
             {
               "name": "type",
               "type": {
-                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'neutral'"
+                "text": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
               },
               "default": "'neutral'",
               "fieldName": "type"
@@ -2929,8 +2958,31 @@
               "type": {
                 "text": "'small' | 'medium' | 'large'"
               },
-              "default": "'medium'",
               "fieldName": "size"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "flushY"
             }
           ],
           "superclass": {

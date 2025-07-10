@@ -2,7 +2,8 @@
 @use "../../../scss/boot"; // Tabs load in such a way we need to include the global styles on them again
 
 :host {
-  display: contents;;
+  @include wc.scrollbars;
+  display: contents;
 }
 
 //::slotted(zn-sp) {
@@ -109,6 +110,10 @@ h1, h2 {
 
   #header ~ slot[name="top"]::slotted(zn-navbar) {
     padding-top: 0
+  }
+
+  slot[name="right"]::slotted(*) {
+    border-left: 1px solid rgb(var(--zn-border-color));
   }
 
   #header:not(:empty) {

@@ -42,6 +42,12 @@ export default class ZnTile extends ZincElement {
 
   @property({attribute: 'data-uri'}) dataUri: string;
 
+  @property({type: Boolean}) flush: boolean;
+
+  @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
+
+  @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
+
   private _isLink() {
     return this.href || this.dataUri;
   }
@@ -63,6 +69,9 @@ export default class ZnTile extends ZincElement {
         data-target="${ifDefined(this.dataTarget)}"
         class="${classMap({
           tile: true,
+          'tile--flush': this.flush,
+          'tile--flush-x': this.flushX,
+          'tile--flush-y': this.flushY,
           'tile--has-href': isLink,
           'tile--has-caption': hasCaption,
           'tile--has-description': hasDescription,

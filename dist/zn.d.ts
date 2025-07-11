@@ -1671,6 +1671,7 @@ declare module "components/data-table/data-table.component" {
         unsortable: boolean;
         hidePagination: boolean;
         standalone: boolean;
+        caption: string;
         hideCheckboxes: boolean;
         filters: [];
         private resizeObserver;
@@ -5424,6 +5425,41 @@ declare module "components/slideout/index" {
         }
     }
 }
+declare module "components/data-table-sort/data-table-sort.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/data-table-sort
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDataTableSort extends ZincElement {
+        static styles: CSSResultGroup;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/data-table-sort/index" {
+    import ZnDataTableSort from "components/data-table-sort/data-table-sort.component";
+    export * from "components/data-table-sort/data-table-sort.component";
+    export default ZnDataTableSort;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table-sort': ZnDataTableSort;
+        }
+    }
+}
 declare module "components/action-bar/action-bar.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -5639,6 +5675,7 @@ declare module "zinc" {
     export { default as HoverContainer } from "components/hover-container/index";
     export { default as Slideout } from "components/slideout/index";
     export { default as DataTableFilter } from "components/data-table-filter/index";
+    export { default as DataTableSort } from "components/data-table-sort/index";
     export { default as ActionBar } from "components/action-bar/index";
     export { default as ExpandingAction } from "components/expanding-action/index";
     export * from "events/events";
@@ -5794,6 +5831,14 @@ declare module "events/zn-request-close" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-request-close': ZnRequestCloseEvent;
+        }
+    }
+}
+declare module "events/zn-sort-change" {
+    export type ZnSortChangeEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-sort-change': ZnSortChangeEvent;
         }
     }
 }

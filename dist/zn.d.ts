@@ -4125,6 +4125,7 @@ declare module "components/textarea/textarea.component" {
         private readonly formControlController;
         private readonly hasSlotController;
         private resizeObserver;
+        formControl: HTMLElement;
         input: HTMLTextAreaElement;
         hasFocus: boolean;
         title: string;

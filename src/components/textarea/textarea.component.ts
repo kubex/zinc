@@ -44,6 +44,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private resizeObserver: ResizeObserver;
 
+  @query('.form-control-input') formControl: HTMLElement;
   @query('.textarea__control') input: HTMLTextAreaElement;
 
   @state() hasFocus = false;
@@ -156,8 +157,11 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     this.resizeObserver = new ResizeObserver(() => this.setTextareaHeight());
 
     this.updateComplete.then(() => {
-      this.setTextareaHeight();
       this.resizeObserver.observe(this.input);
+
+      // Set the initial textarea height to maximum available space
+      this.formControl.style.display = 'flex';
+      this.formControl.style.flexGrow = '1';
     });
   }
 
@@ -202,6 +206,14 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
       this.input.style.height = `${this.input.scrollHeight}px`;
     } else {
       (this.input.style.height as string | undefined) = undefined;
+    }
+
+    // Force the form control to take up the full height of the textarea
+    this.formControl.style.height = this.input.style.height;
+
+    // Unset flex grow on initial resize
+    if (this.formControl.style.height !== '') {
+      this.formControl.style.flexGrow = '0';
     }
   }
 

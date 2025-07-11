@@ -65,6 +65,7 @@ export {default as ButtonMenu} from './components/button-menu';
 export {default as HoverContainer} from './components/hover-container';
 export {default as Slideout} from './components/slideout';
 export {default as DataTableFilter} from './components/data-table-filter';
+export {default as DataTableSort} from './components/data-table-sort';
 export {default as ActionBar} from './components/action-bar';
 export {default as ExpandingAction} from './components/expanding-action';
 /* plop:component */

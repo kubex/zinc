@@ -1,0 +1,37 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+
+.data-table-sort {
+  &__dropdown {
+    background-color: rgb(var(--zn-panel));
+    border: solid 1px rgb(var(--zn-border-color));
+    border-radius: var(--zn-border-radius-large);
+    box-shadow: var(--zn-shadow-large);
+    padding: var(--zn-spacing-medium);
+    width: 300px;
+  }
+
+  &__header {
+    font-weight: 500;
+    color: rgb(var(--zn-text-heading));
+    font-size: var(--zn-font-size-medium);
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--zn-spacing-small);
+    margin: var(--zn-spacing-small) 0;
+  }
+
+  &__btn-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--zn-spacing-small);
+  }
+}

@@ -182,6 +182,8 @@ export default class ZnDataTable extends ZincElement {
 
   @property({type: Boolean}) standalone: boolean = false;
 
+  @property() caption: string;
+
   // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
@@ -345,9 +347,7 @@ export default class ZnDataTable extends ZincElement {
       return html`
         <div class="table--empty">
           <zn-empty-state
-            caption="No Data"
-            description="We couldn't find any data to display."
-            type="info"
+            caption=${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}
             icon="data_alert">
           </zn-empty-state>
         </div>`;

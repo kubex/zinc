@@ -5,54 +5,66 @@
   padding-bottom: var(--zn-spacing-2x-small);
 }
 
-.expanding-action--open.expanding-action--fill {
+.expanding-action--fill {
+  padding-inline: var(--zn-spacing-medium);
   padding-bottom: var(--zn-spacing-2x-small);
   position: absolute;
   top: 0;
   left: auto;
   right: 0;
   bottom: 0;
-  height: 100%;
-  width: 100%;
   background-color: rgb(var(--zn-panel));
-  overflow: hidden;
-  z-index: 100;
-  border-bottom: 1px solid rgb(var(--zn-primary));
-  max-width: 800px;
-}
+  width: 0;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), display 0.5s ease-in-out allow-discrete;
 
-.expanding-action--closed.expanding-action--fill .expanding-action__content,
-.expanding-action--closed.expanding-action--fill .expanding-action__close-icon {
-  display: none;
-}
+  &.expanding-action--open {
+    @starting-style {
+      width: 0;
+    }
 
-.expanding-action--open.expanding-action--fill > zn-button:first-of-type {
-  display: none;
-}
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    width: 800px;
+    overflow: hidden;
+    z-index: 100;
+    max-width: 800px;
 
-.expanding-action--closed.expanding-action--fill > zn-icon {
-  display: none;
-}
+    &::before {
+      content: "";
+      position: absolute;
+      left: calc(var(--zn-spacing-medium) * -1);
+      right: calc(var(--zn-spacing-medium) * -1);
+      bottom: 6px; // Magic number to add space for tabs
+      background-color: rgb(var(--zn-primary));
+      height: 2px;
+    }
 
-.expanding-action--open.expanding-action--fill > zn-icon {
-  display: block;
-  color: rgb(var(--zn-primary));
-}
+    & > zn-icon {
+      display: block;
+      color: rgb(var(--zn-primary));
+    }
+  }
 
-.expanding-action--fill {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 35px;
-  transition: width 0.5s ease-in-out;
-}
+  &.expanding-action--closed {
+    display: none;
+    opacity: 0;
+  }
 
-.expanding-action--fill .expanding-action__content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0;
+  .expanding-action__content {
+    @starting-style {
+      opacity: 0;
+    }
+
+    opacity: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+  }
 }
 
 .expanding-action--drop .expanding-action__content {

@@ -140,13 +140,13 @@ export default class ZnExpandingAction extends ZincElement {
 
   render() {
     return html`
-      <zn-button color="transparent"
-                 size="x-small"
-                 @click=${this.handleIconClicked}
-                 icon=${this.icon}
-                 icon-size="24"
-                 slot=${this.method === 'drop' ? 'trigger' : nothing}>
-      </zn-button>
+        ${this.method === 'fill' ? html`
+          <zn-button color = "transparent"
+                     size="x-small"
+                     @click=${this.handleIconClicked}
+                     icon=${this.icon}
+                     icon-size="24">
+          </zn-button>` : nothing}
       <div
         class=${classMap({
           "expanding-action": true,
@@ -166,6 +166,12 @@ export default class ZnExpandingAction extends ZincElement {
   protected renderDropdown() {
     return html`
       <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   color="transparent"
+                   size="x-small"
+                   @click=${this.handleIconClicked}
+                   icon=${this.icon}
+                   icon-size="24">
         </zn-button>
         <div class="expanding-action__content">
           <slot></slot>

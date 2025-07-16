@@ -90,6 +90,18 @@ export default class ZnIcon extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
+
+    if (this.src && this.src.includes('#')) {
+      const split = this.src.split('#');
+      this.src = split[0];
+      const attributes = split[1].split(',');
+      attributes.forEach(attr => {
+        if (attr === "round") {
+          this.round = true;
+        }
+      });
+    }
+
     if (this.src && this.src.includes('@')) {
       const split = this.src.split('@');
       if (split[1].includes('.')) {

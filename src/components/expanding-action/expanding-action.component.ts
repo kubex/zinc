@@ -40,16 +40,37 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property({reflect: true, type: Boolean}) open = false;
 
-  updateCount() {
-    const contentElement = this.shadowRoot?.querySelector('.expanding-action__content');
-    const metaCount = contentElement?.querySelector('meta[name="count"]');
-    if (metaCount) {
+  private observer?: MutationObserver;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.observeMetaCount();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.observer?.disconnect();
+  }
+
+  observeMetaCount() {
+    const appContent = this.querySelector('app-content');
+
+    this.observer = new MutationObserver(() => {
+      const metaCount = appContent?.shadowRoot?.querySelector('meta[name="count"]');
+      if (!metaCount) {
+        return;
+      }
       const count = metaCount.getAttribute('content');
       const notification = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button');
-      if (notification && count) {
+      if (count && notification) {
         notification.setAttribute('notification', count);
       }
-    }
+    });
+
+    this.observer.observe(this, {
+      subtree: true,
+      attributes: true
+    });
   }
 
   handleIconClicked = () => {

@@ -5526,7 +5526,10 @@ declare module "components/expanding-action/expanding-action.component" {
         basis: string;
         maxHeight: string;
         open: boolean;
-        updateCount(): void;
+        private observer?;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        observeMetaCount(): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;
         render(): import("lit").TemplateResult<1>;

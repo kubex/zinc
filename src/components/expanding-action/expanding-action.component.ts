@@ -28,11 +28,9 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property() icon: string;
 
-  @property({attribute: 'content-uri'}) contentUri: string;
-
   @property() method: 'drop' | 'fill' = 'drop';
 
-  @property({attribute: 'count-uri'}) countUri: string;
+  @property({reflect: true}) count: string;
 
   @property({type: Boolean}) prefetch = false;
 
@@ -41,76 +39,6 @@ export default class ZnExpandingAction extends ZincElement {
   @property({attribute: 'max-height'}) maxHeight: string;
 
   @property({reflect: true, type: Boolean}) open = false;
-
-  private uac: string = '';
-
-  private lastUpdate: number = 0;
-  private updateThreshold: number = 3000; // 1 second
-
-  async connectedCallback() {
-    super.connectedCallback();
-    await this.prefetchUat();
-
-    if (this.countUri && !this.prefetch) {
-      this.fetchCount();
-    }
-
-    if (this.contentUri && this.prefetch) {
-      this.fetchContent();
-    }
-  }
-
-  async prefetchUat() {
-    const response = await fetch('/_/workspace', {
-      credentials: 'same-origin',
-      headers: {
-        'x-requested-with': 'XMLHttpRequest',
-        'x-rubix': 'startup'
-      }
-    });
-
-    if (!response.ok) throw new Error(response.statusText);
-    const json: { uac: string } = await response.json() as { uac: string };
-    this.uac = json.uac || '';
-  }
-
-  fetchCount() {
-    fetch(this.countUri, {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then((data: { count: string }) => {
-        const notification = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button');
-        if (notification) {
-          notification.setAttribute('notification', data.count.toString());
-        }
-      })
-      .catch(error => console.error('Error fetching count:', error));
-  }
-
-  fetchContent() {
-    console.log('Fetching content from:', this.contentUri);
-    fetch(this.contentUri, {
-      method: 'get',
-      headers: {
-        'x-requested-with': 'XMLHttpRequest',
-        'x-kx-uac': this.uac
-      },
-    })
-      .then(response => response.text())
-      .then(content => {
-        const contentElement = this.shadowRoot?.querySelector('.expanding-action__content');
-        if (contentElement) {
-          contentElement.innerHTML = content;
-          this.updateCount();
-        }
-        this.lastUpdate = Date.now();
-      })
-      .catch(error => console.error('Error fetching content:', error));
-  }
 
   updateCount() {
     const contentElement = this.shadowRoot?.querySelector('.expanding-action__content');
@@ -125,12 +53,6 @@ export default class ZnExpandingAction extends ZincElement {
   }
 
   handleIconClicked = () => {
-    // Fetch the content
-    const clearTimeout = Date.now() - this.lastUpdate > this.updateThreshold;
-    if (this.contentUri && clearTimeout) {
-      this.fetchContent()
-    }
-
     this.open = !this.open;
   }
 
@@ -140,13 +62,13 @@ export default class ZnExpandingAction extends ZincElement {
 
   render() {
     return html`
-        ${this.method === 'fill' ? html`
-          <zn-button color = "transparent"
-                     size="x-small"
-                     @click=${this.handleIconClicked}
-                     icon=${this.icon}
-                     icon-size="24">
-          </zn-button>` : nothing}
+      ${this.method === 'fill' ? html`
+        <zn-button color="transparent"
+                   size="x-small"
+                   @click=${this.handleIconClicked}
+                   icon=${this.icon}
+                   icon-size="24">
+        </zn-button>` : nothing}
       <div
         class=${classMap({
           "expanding-action": true,
@@ -165,13 +87,15 @@ export default class ZnExpandingAction extends ZincElement {
 
   protected renderDropdown() {
     return html`
-      <zn-dropdown class="expanding-action__dropdown" placement="bottom-end">
+      <zn-dropdown class="expanding-action__dropdown"
+                   placement="bottom-end">
         <zn-button slot="trigger"
                    color="transparent"
                    size="x-small"
-                   @click=${this.handleIconClicked}
                    icon=${this.icon}
-                   icon-size="24">
+                   icon-size="24"
+                   notification="${this.count || nothing}"
+                   @click=${this.handleIconClicked}>
         </zn-button>
         <div class="expanding-action__content">
           <slot></slot>

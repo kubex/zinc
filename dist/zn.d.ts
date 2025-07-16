@@ -5520,20 +5520,12 @@ declare module "components/expanding-action/expanding-action.component" {
     export default class ZnExpandingAction extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
-        contentUri: string;
         method: 'drop' | 'fill';
-        countUri: string;
+        count: string;
         prefetch: boolean;
         basis: string;
         maxHeight: string;
         open: boolean;
-        private uac;
-        private lastUpdate;
-        private updateThreshold;
-        connectedCallback(): Promise<void>;
-        prefetchUat(): Promise<void>;
-        fetchCount(): void;
-        fetchContent(): void;
         updateCount(): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;

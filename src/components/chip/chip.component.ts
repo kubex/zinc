@@ -59,7 +59,7 @@ export default class ZnChip extends ZincElement {
         'chip--large': this.size === 'large',
       })}>
         ${this.icon ? html`
-          <zn-icon library="material-outlined" src="${this.icon}" size="18"></zn-icon>` : ''}
+          <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
         ${this.hasSlotController.test('[default]') ? html`
           <slot></slot>` : ''}
         ${this.hasSlotController.test('action') ? html`

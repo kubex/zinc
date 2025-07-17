@@ -63,6 +63,11 @@
       border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
       margin-bottom: -1px;
       margin-top: 1px;
+      padding-bottom: var(--zn-spacing-small); // Add spacing between element and border
     }
   }
+}
+
+.cols:not(.cols--no-gap) ::slotted(*:last-child) {
+  padding-bottom: var(--zn-spacing-small); // For last element not affected by gap
 }

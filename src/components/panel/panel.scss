@@ -77,7 +77,7 @@
     }
   }
 
-  &:not(.panel--flush) {
+  &:not(.panel--flush, .panel--flush-x, .panel--flush-y) {
     ::slotted(zn-sp) {
       --zn-sp-padding: 0 !important
     }
@@ -96,13 +96,25 @@
   }
 
 
-  &:not(.panel--has-header):not(.panel--flush) &__body {
+  &:not(.panel--has-header):not(.panel--flush, .panel--flush-y) &__body {
     padding-top: var(--zn-spacing-medium);
   }
 
   &--flush {
     .panel__body {
       padding: 0;
+    }
+  }
+
+  &--flush-x {
+    .panel__body {
+      padding-inline: 0;
+    }
+  }
+
+  &--flush-y {
+    .panel__body {
+      padding-block: 0;
     }
   }
 

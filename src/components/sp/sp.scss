@@ -68,3 +68,7 @@
   }
 
 }
+
+.sp:not(.sp--no-gap) ::slotted(*:last-child) {
+  padding-bottom: var(--zn-sp-gap); // For last element not affected by gap
+}

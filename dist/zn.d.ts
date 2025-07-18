@@ -1755,6 +1755,9 @@ declare module "components/cols/cols.component" {
         maxColumns: number;
         noGap: boolean;
         border: boolean;
+        pad: boolean;
+        padX: boolean;
+        padY: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -3045,6 +3048,8 @@ declare module "components/panel/panel.component" {
         description: string;
         tabbed: boolean;
         flush: boolean;
+        flushX: boolean;
+        flushY: boolean;
         transparent: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): unknown;

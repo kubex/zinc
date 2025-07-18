@@ -58,13 +58,32 @@
     gap: 0;
   }
 
-  &--border {
-    ::slotted(*) {
-      border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
-      margin-bottom: -1px;
-      margin-top: 1px;
-      padding-bottom: var(--zn-spacing-small); // Add spacing between element and border
-    }
+  &--border ::slotted(*) {
+    position: relative;
+    padding-bottom: var(--zn-spacing-small); // Add spacing between element and border
+  }
+
+  // Adds full-width lines between bordered cols
+  &--border ::slotted(*:not(:last-child)):before {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: -100vw;
+    right: -5px;
+    z-index: 1111;
+    border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
+  }
+
+  // Stops the last child/row having a border
+  &--border ::slotted(*:last-child):before {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: -100vw;
+    right: -5px;
+    z-index: 1111;
+    border-bottom: 1px solid var(--zn-panel-background-color) !important;
+  }
 
   &--pad {
     padding: var(--zn-spacing-2x-small);

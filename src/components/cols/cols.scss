@@ -65,9 +65,16 @@
       margin-top: 1px;
       padding-bottom: var(--zn-spacing-small); // Add spacing between element and border
     }
-  }
-}
 
-.cols:not(.cols--no-gap) ::slotted(*:last-child) {
-  padding-bottom: var(--zn-spacing-small); // For last element not affected by gap
+  &--pad {
+    padding: var(--zn-spacing-2x-small);
+  }
+
+  &--pad-x {
+    padding-inline: var(--zn-spacing-2x-small);
+  }
+
+  &--pad-y {
+    padding-block: var(--zn-spacing-2x-small);
+  }
 }

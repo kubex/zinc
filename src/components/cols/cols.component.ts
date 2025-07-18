@@ -34,6 +34,10 @@ export default class ZnCols extends ZincElement {
 
   @property({type: Boolean}) border: boolean = false;
 
+  @property({type: Boolean}) pad: boolean;
+  @property({attribute: 'pad-x', type: Boolean}) padX: boolean;
+  @property({attribute: 'pad-y', type: Boolean}) padY: boolean;
+
   render() {
     const layout: number[] = this.layout.split(/[\s,]+/).map((a) => parseInt(a)).filter((item) => !!item);
 
@@ -59,6 +63,9 @@ export default class ZnCols extends ZincElement {
         'cols': true,
         'cols--no-gap': this.noGap,
         'cols--border': this.border,
+        'cols--pad': this.pad,
+        'cols--pad-x': this.padX,
+        'cols--pad-y': this.padY,
         [`cols--layout-${this.layout.replace(',', '')}`]: !!this.layout,
         [`cols--mc-${this.maxColumns}`]: !!this.maxColumns,
       })}">

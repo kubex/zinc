@@ -1,10 +1,10 @@
-import {property} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './form-group.scss';
-import {classMap} from "lit/directives/class-map.js";
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.

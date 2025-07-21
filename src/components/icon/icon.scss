@@ -78,14 +78,15 @@
   }
 
   &--avatar {
-    background-color: var(--icon-color);
+    background-color: var(--avatar-color, --icon-color);
+    color: hsl(from var(--avatar-color, --icon-color) h s 20);
     display: flex;
     justify-content: center;
     align-items: center;
 
     .avatar__text {
       font-size: var(--zn-font-size-medium);
-      color: rgb(var(--zn-text-heading));
+      color: hsl(from var(--avatar-color, --icon-color) h s 20);
       font-weight: var(--zn-font-weight-semibold);
     }
   }

@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
@@ -7,8 +7,8 @@ import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-m
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './editor.scss';
 
@@ -209,7 +209,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       } catch {
         return null;
       }
-      //
     }
 
     /**

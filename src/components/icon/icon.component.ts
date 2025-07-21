@@ -158,7 +158,10 @@ export default class ZnIcon extends ZincElement {
           'icon--white': this.color === "white",
           'icon--disabled': this.color === "disabled",
           'icon--avatar': this.library === "avatar"
-        })}" style="${styleMap({'--icon-size': this.library === "avatar" ? "40px" : this.size + "px"})}">
+        })}" style="${styleMap({
+          '--icon-size': this.library === "avatar" ? "40px" : this.size + "px",
+          '--avatar-color': this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null
+        })}">
           ${this.library ? html`
             ${choose(this.library, [
               ["material", () => html`<i part="icon" class="mi">${this.src}</i>`],
@@ -193,5 +196,19 @@ export default class ZnIcon extends ZincElement {
     } else {
       return avatar.slice(0, 2).toUpperCase();
     }
+  }
+
+
+  protected getColorForAvatar(avatarInitials: string) {
+    const colors = [
+      '#d1573a', '#4fbf62', '#3357FF', '#F1C40F', '#E67E22', '#9B59B6',
+      '#1ABC9C', '#2ECC71', '#3498DB', '#E74C3C', '#8E44AD', '#34495E'
+    ];
+
+    // Generate a hash from the initials
+    const hash = Array.from(avatarInitials).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+    // Use the hash to select a color
+    return colors[hash % colors.length];
   }
 }

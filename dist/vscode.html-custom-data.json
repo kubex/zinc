@@ -985,59 +985,6 @@
       ]
     },
     {
-      "name": "zn-form-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-          "values": []
-        },
-        {
-          "name": "label-tooltip",
-          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/form-group"
-        }
-      ]
-    },
-    {
-      "name": "zn-header",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "full-location", "values": [] },
-        { "name": "entity-id", "values": [] },
-        { "name": "entity-id-show", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "description", "values": [] },
-        { "name": "navigation", "values": [{ "name": "array" }] },
-        {
-          "name": "breadcrumb",
-          "values": [{ "name": "{ path: string; title: string }[]" }]
-        },
-        { "name": "full-width", "values": [] },
-        { "name": "previous-path", "values": [] },
-        { "name": "previous-target", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/header"
-        }
-      ]
-    },
-    {
       "name": "zn-file",
       "description": "File controls allow selecting an arbitrary number of files for uploading.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-error** - Emitted when multiple files are selected via drag and drop, without the `multiple` property being set.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message.\nReturns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the button or droparea.\n- **blur()** - Removes focus from the button or droparea.\n\n### **Slots:**\n - **label** - The file control's label. Alternatively, you can use the `label` attribute.\n- **help-text** - Text that describes how to use the file control. Alternatively, you can use the `help-text` attribute.\n- **droparea-icon** - Optional droparea icon to use instead of the default. Works best with `<zn-icon>`.\n- **trigger** - Optional content to be used as trigger instead of the default content. Opening the file dialog on click and as well as drag and drop will work for this content. Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*, *hide-value*. Also if using the disabled attribute, the disabled styling will not be applied and must be taken care of yourself.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **button-wrapper** - The wrapper around the button and text value.\n- **button** - The zn-button acting as a file input.\n- **button__base** - The zn-button's exported `base` part.\n- **value** - The chosen files or placeholder text for the file input.\n- **droparea** - The element wrapping the drop zone.\n- **droparea-background** - The background of the drop zone.\n- **droparea-icon** - The container that wraps the icon for the drop zone.\n- **droparea-value** - The text for the drop zone.\n- **trigger** - The container that wraps the trigger.",
       "attributes": [
@@ -1128,6 +1075,59 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/file" }
+      ]
+    },
+    {
+      "name": "zn-form-group",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+          "values": []
+        },
+        {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/form-group"
+        }
+      ]
+    },
+    {
+      "name": "zn-header",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "full-location", "values": [] },
+        { "name": "entity-id", "values": [] },
+        { "name": "entity-id-show", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "description", "values": [] },
+        { "name": "navigation", "values": [{ "name": "array" }] },
+        {
+          "name": "breadcrumb",
+          "values": [{ "name": "{ path: string; title: string }[]" }]
+        },
+        { "name": "full-width", "values": [] },
+        { "name": "previous-path", "values": [] },
+        { "name": "previous-target", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/header"
+        }
       ]
     },
     {
@@ -1565,19 +1565,6 @@
       ]
     },
     {
-      "name": "zn-note",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "color", "values": [{ "name": "typeof colors[number]" }] },
-        { "name": "caption", "values": [] },
-        { "name": "date", "values": [] },
-        { "name": "body", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/note" }
-      ]
-    },
-    {
       "name": "zn-navbar",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -1593,6 +1580,41 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/navbar"
+        }
+      ]
+    },
+    {
+      "name": "zn-note",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "color", "values": [{ "name": "typeof colors[number]" }] },
+        { "name": "caption", "values": [] },
+        { "name": "date", "values": [] },
+        { "name": "body", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/note" }
+      ]
+    },
+    {
+      "name": "zn-option",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
+      "attributes": [
+        {
+          "name": "value",
+          "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Draws the option in a disabled state, preventing selection.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/option"
         }
       ]
     },
@@ -1629,28 +1651,6 @@
       "attributes": [{ "name": "flush", "values": [] }],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/pane" }
-      ]
-    },
-    {
-      "name": "zn-option",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
-      "attributes": [
-        {
-          "name": "value",
-          "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
-          "values": []
-        },
-        {
-          "name": "disabled",
-          "description": "Draws the option in a disabled state, preventing selection.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/option"
-        }
       ]
     },
     {
@@ -2280,6 +2280,23 @@
       ]
     },
     {
+      "name": "zn-stepper",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "label", "values": [] },
+        { "name": "steps", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "show-progress", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/stepper"
+        }
+      ]
+    },
+    {
       "name": "zn-table",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2321,23 +2338,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
-      ]
-    },
-    {
-      "name": "zn-stepper",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "label", "values": [] },
-        { "name": "steps", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "show-progress", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/stepper"
-        }
       ]
     },
     {

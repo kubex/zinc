@@ -5574,7 +5574,7 @@ declare module "components/expanding-action/expanding-action.component" {
         connectedCallback(): Promise<void>;
         disconnectedCallback(): void;
         firstUpdated(_changedProperties: PropertyValues): void;
-        observeMetaCount(): void;
+        _observeMetaCount(): void;
         _registerActions(): void;
         _addAction(action: HTMLElement): void;
         _uriToId(actionUri: string): string;

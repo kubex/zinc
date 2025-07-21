@@ -251,6 +251,7 @@ declare module "components/icon/icon.component" {
         ravatarOptions(): void;
         render(): import("lit").TemplateResult<1>;
         private getAvatarInitials;
+        protected getColorForAvatar(avatarInitials: string): string;
     }
 }
 declare module "components/icon/index" {
@@ -3972,9 +3973,9 @@ declare module "components/editor/modules/time-tracking-module" {
     }
 }
 declare module "components/editor/editor.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/editor

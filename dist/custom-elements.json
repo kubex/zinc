@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -7731,6 +7731,379 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/form-group/form-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnFormGroup",
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "form-group",
+          "tagName": "zn-form-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n *\n */",
+          "documentation": "https://zinc.style/components/form-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnFormGroup",
+            "module": "components/form-group/form-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/header/header.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnHeader",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'nav')"
+            },
+            {
+              "kind": "field",
+              "name": "fullLocation",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "full-location"
+            },
+            {
+              "kind": "field",
+              "name": "entityId",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "entity-id"
+            },
+            {
+              "kind": "field",
+              "name": "entityIdShow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "entity-id-show"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "navigation",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "attribute": "navigation"
+            },
+            {
+              "kind": "field",
+              "name": "breadcrumb",
+              "type": {
+                "text": "{ path: string; title: string }[]"
+              },
+              "default": "[]",
+              "attribute": "breadcrumb"
+            },
+            {
+              "kind": "field",
+              "name": "fullWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "full-width"
+            },
+            {
+              "kind": "field",
+              "name": "previousPath",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "previous-path"
+            },
+            {
+              "kind": "field",
+              "name": "previousTarget",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "previous-target"
+            },
+            {
+              "kind": "field",
+              "name": "navbar",
+              "type": {
+                "text": "ZnNavbar"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleAltPress"
+            },
+            {
+              "kind": "field",
+              "name": "handleAltUp"
+            },
+            {
+              "kind": "method",
+              "name": "updateNav"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "full-location",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "fullLocation"
+            },
+            {
+              "name": "entity-id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "entityId"
+            },
+            {
+              "name": "entity-id-show",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "entityIdShow"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "transparent"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "navigation",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "fieldName": "navigation"
+            },
+            {
+              "name": "breadcrumb",
+              "type": {
+                "text": "{ path: string; title: string }[]"
+              },
+              "default": "[]",
+              "fieldName": "breadcrumb"
+            },
+            {
+              "name": "full-width",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "fullWidth"
+            },
+            {
+              "name": "previous-path",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "previousPath"
+            },
+            {
+              "name": "previous-target",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "previousTarget"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "header",
+          "tagName": "zn-header",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/header",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnHeader",
+            "module": "components/header/header.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/file/file.js",
       "declarations": [
         {
@@ -8456,379 +8829,6 @@
           "declaration": {
             "name": "ZnFile",
             "module": "components/file/file.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/form-group/form-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnFormGroup",
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text', 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "labelTooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-              "attribute": "label-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "label-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-              "fieldName": "labelTooltip"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "form-group",
-          "tagName": "zn-form-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n *\n */",
-          "documentation": "https://zinc.style/components/form-group",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnFormGroup",
-            "module": "components/form-group/form-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/header/header.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnHeader",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'nav')"
-            },
-            {
-              "kind": "field",
-              "name": "fullLocation",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "full-location"
-            },
-            {
-              "kind": "field",
-              "name": "entityId",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "entity-id"
-            },
-            {
-              "kind": "field",
-              "name": "entityIdShow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "entity-id-show"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "navigation",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "attribute": "navigation"
-            },
-            {
-              "kind": "field",
-              "name": "breadcrumb",
-              "type": {
-                "text": "{ path: string; title: string }[]"
-              },
-              "default": "[]",
-              "attribute": "breadcrumb"
-            },
-            {
-              "kind": "field",
-              "name": "fullWidth",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "full-width"
-            },
-            {
-              "kind": "field",
-              "name": "previousPath",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "previous-path"
-            },
-            {
-              "kind": "field",
-              "name": "previousTarget",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "previous-target"
-            },
-            {
-              "kind": "field",
-              "name": "navbar",
-              "type": {
-                "text": "ZnNavbar"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleAltPress"
-            },
-            {
-              "kind": "field",
-              "name": "handleAltUp"
-            },
-            {
-              "kind": "method",
-              "name": "updateNav"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "full-location",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "fullLocation"
-            },
-            {
-              "name": "entity-id",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "entityId"
-            },
-            {
-              "name": "entity-id-show",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "entityIdShow"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "transparent"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "navigation",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "fieldName": "navigation"
-            },
-            {
-              "name": "breadcrumb",
-              "type": {
-                "text": "{ path: string; title: string }[]"
-              },
-              "default": "[]",
-              "fieldName": "breadcrumb"
-            },
-            {
-              "name": "full-width",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "fullWidth"
-            },
-            {
-              "name": "previous-path",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "previousPath"
-            },
-            {
-              "name": "previous-target",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "previousTarget"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "header",
-          "tagName": "zn-header",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/header\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/header",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnHeader",
-            "module": "components/header/header.js"
           }
         }
       ]
@@ -11902,6 +11902,148 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/note/note.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnNote",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The note's caption.",
+              "name": "caption"
+            },
+            {
+              "description": "The note's date.",
+              "name": "date"
+            },
+            {
+              "description": "The note's body.",
+              "name": "body"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "typeof colors[number]"
+              },
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "date",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "body",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "body",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "typeof colors[number]"
+              },
+              "fieldName": "color"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "date",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "date"
+            },
+            {
+              "name": "body",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "body"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "note",
+          "tagName": "zn-note",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/note\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot caption - The note's caption.\n * @slot date - The note's date.\n * @slot body - The note's body.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/note",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnNote",
+            "module": "components/note/note.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/navbar/navbar.js",
       "declarations": [
         {
@@ -12125,351 +12267,6 @@
           "declaration": {
             "name": "ZnNavbar",
             "module": "components/navbar/navbar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/note/note.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnNote",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The note's caption.",
-              "name": "caption"
-            },
-            {
-              "description": "The note's date.",
-              "name": "date"
-            },
-            {
-              "description": "The note's body.",
-              "name": "body"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "typeof colors[number]"
-              },
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "date",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "date",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "body",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "body",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "color",
-              "type": {
-                "text": "typeof colors[number]"
-              },
-              "fieldName": "color"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "date",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "date"
-            },
-            {
-              "name": "body",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "body"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "note",
-          "tagName": "zn-note",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/note\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot caption - The note's caption.\n * @slot date - The note's date.\n * @slot body - The note's body.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/note",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnNote",
-            "module": "components/note/note.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/option/option.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnOption",
-          "cssParts": [
-            {
-              "description": "The checked option icon, an `<zn-icon>` element.",
-              "name": "checked-option-icon"
-            },
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The option's label.",
-              "name": "label"
-            },
-            {
-              "description": "The container that wraps the prefix.",
-              "name": "prefix"
-            },
-            {
-              "description": "The container that wraps the suffix.",
-              "name": "suffix"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The option's label.",
-              "name": ""
-            },
-            {
-              "description": "Used to prepend an icon or similar element to the menu item.",
-              "name": "prefix"
-            },
-            {
-              "description": "Used to append an icon or similar element to the menu item.",
-              "name": "suffix"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-icon': ZnIcon}"
-            },
-            {
-              "kind": "field",
-              "name": "cachedTextLabel",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "current",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasHover",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "handleDefaultSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseEnter",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseLeave",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleSelectedChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
-              "name": "getTextLabel",
-              "description": "Returns a plain text label based on the option's content."
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "option",
-          "tagName": "zn-option",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/option\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The option's label.\n * @slot prefix - Used to prepend an icon or similar element to the menu item.\n * @slot suffix - Used to append an icon or similar element to the menu item.\n *\n * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.\n * @csspart base - The component's base wrapper.\n * @csspart label - The option's label.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart suffix - The container that wraps the suffix.\n */",
-          "documentation": "https://zinc.style/components/option",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnOption",
-            "module": "components/option/option.js"
           }
         }
       ]
@@ -12866,6 +12663,209 @@
           "declaration": {
             "name": "ZnPane",
             "module": "components/pane/pane.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/option/option.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOption",
+          "cssParts": [
+            {
+              "description": "The checked option icon, an `<zn-icon>` element.",
+              "name": "checked-option-icon"
+            },
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The option's label.",
+              "name": "label"
+            },
+            {
+              "description": "The container that wraps the prefix.",
+              "name": "prefix"
+            },
+            {
+              "description": "The container that wraps the suffix.",
+              "name": "suffix"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The option's label.",
+              "name": ""
+            },
+            {
+              "description": "Used to prepend an icon or similar element to the menu item.",
+              "name": "prefix"
+            },
+            {
+              "description": "Used to append an icon or similar element to the menu item.",
+              "name": "suffix"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-icon': ZnIcon}"
+            },
+            {
+              "kind": "field",
+              "name": "cachedTextLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasHover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "handleDefaultSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseEnter",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleSelectedChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "getTextLabel",
+              "description": "Returns a plain text label based on the option's content."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "option",
+          "tagName": "zn-option",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/option\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The option's label.\n * @slot prefix - Used to prepend an icon or similar element to the menu item.\n * @slot suffix - Used to append an icon or similar element to the menu item.\n *\n * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.\n * @csspart base - The component's base wrapper.\n * @csspart label - The option's label.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart suffix - The container that wraps the suffix.\n */",
+          "documentation": "https://zinc.style/components/option",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOption",
+            "module": "components/option/option.js"
           }
         }
       ]
@@ -18471,154 +18471,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/stepper/stepper.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStepper",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "steps",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "label"
-            },
-            {
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "steps"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "stepper",
-          "tagName": "zn-stepper",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/stepper",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStepper",
-            "module": "components/stepper/stepper.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/table/table.js",
       "declarations": [
         {
@@ -19538,6 +19390,154 @@
           "declaration": {
             "name": "ZnTabs",
             "module": "components/tabs/tabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/stepper/stepper.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStepper",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "steps",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "label"
+            },
+            {
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "steps"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "stepper",
+          "tagName": "zn-stepper",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/stepper",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStepper",
+            "module": "components/stepper/stepper.js"
           }
         }
       ]
@@ -21677,6 +21677,89 @@
           "declaration": {
             "name": "ZnVerticalStepper",
             "module": "components/vertical-stepper/vertical-stepper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/well/well.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnWell",
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'action')"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "inline"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "well",
+          "tagName": "zn-well",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/well\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n */",
+          "documentation": "https://zinc.style/components/well",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnWell",
+            "module": "components/well/well.js"
           }
         }
       ]

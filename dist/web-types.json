@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2131,6 +2131,113 @@
           }
         },
         {
+          "name": "zn-form-group",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "label-tooltip",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "help-text",
+              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [{ "name": "", "description": "The default slot." }],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "label",
+                "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+                "type": "string"
+              },
+              {
+                "name": "labelTooltip",
+                "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "helpText",
+                "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
+                "type": "string"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-header",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "full-location", "value": { "type": "string" } },
+            { "name": "entity-id", "value": { "type": "string" } },
+            { "name": "entity-id-show", "value": { "type": "boolean" } },
+            {
+              "name": "transparent",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } },
+            {
+              "name": "navigation",
+              "value": { "type": "array", "default": "[]" }
+            },
+            {
+              "name": "breadcrumb",
+              "value": {
+                "type": "{ path: string; title: string }[]",
+                "default": "[]"
+              }
+            },
+            { "name": "full-width", "value": { "type": "boolean" } },
+            { "name": "previous-path", "value": { "type": "string" } },
+            { "name": "previous-target", "value": { "type": "string" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "fullLocation", "type": "string" },
+              { "name": "entityId", "type": "string" },
+              { "name": "entityIdShow", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "navigation", "type": "array" },
+              {
+                "name": "breadcrumb",
+                "type": "{ path: string; title: string }[]"
+              },
+              { "name": "fullWidth", "type": "boolean" },
+              { "name": "previousPath", "type": "string" },
+              { "name": "previousTarget", "type": "string" },
+              { "name": "handleAltPress" },
+              { "name": "handleAltUp" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-file",
           "description": "File controls allow selecting an arbitrary number of files for uploading.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-error** - Emitted when multiple files are selected via drag and drop, without the `multiple` property being set.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message.\nReturns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the button or droparea.\n- **blur()** - Removes focus from the button or droparea.\n\n### **Slots:**\n - **label** - The file control's label. Alternatively, you can use the `label` attribute.\n- **help-text** - Text that describes how to use the file control. Alternatively, you can use the `help-text` attribute.\n- **droparea-icon** - Optional droparea icon to use instead of the default. Works best with `<zn-icon>`.\n- **trigger** - Optional content to be used as trigger instead of the default content. Opening the file dialog on click and as well as drag and drop will work for this content. Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*, *hide-value*. Also if using the disabled attribute, the disabled styling will not be applied and must be taken care of yourself.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **button-wrapper** - The wrapper around the button and text value.\n- **button** - The zn-button acting as a file input.\n- **button__base** - The zn-button's exported `base` part.\n- **value** - The chosen files or placeholder text for the file input.\n- **droparea** - The element wrapping the drop zone.\n- **droparea-background** - The background of the drop zone.\n- **droparea-icon** - The container that wraps the icon for the drop zone.\n- **droparea-value** - The text for the drop zone.\n- **trigger** - The container that wraps the trigger.",
           "doc-url": "",
@@ -2378,113 +2485,6 @@
               {
                 "name": "zn-input",
                 "description": "Emitted when the control receives input."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-form-group",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "label",
-              "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "label-tooltip",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "help-text",
-              "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [{ "name": "", "description": "The default slot." }],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "label",
-                "description": "The form group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-                "type": "string"
-              },
-              {
-                "name": "labelTooltip",
-                "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the\n`label-tooltip` slot instead.",
-                "type": "string"
-              },
-              {
-                "name": "helpText",
-                "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
-                "type": "string"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-header",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "full-location", "value": { "type": "string" } },
-            { "name": "entity-id", "value": { "type": "string" } },
-            { "name": "entity-id-show", "value": { "type": "boolean" } },
-            {
-              "name": "transparent",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
-            {
-              "name": "navigation",
-              "value": { "type": "array", "default": "[]" }
-            },
-            {
-              "name": "breadcrumb",
-              "value": {
-                "type": "{ path: string; title: string }[]",
-                "default": "[]"
-              }
-            },
-            { "name": "full-width", "value": { "type": "boolean" } },
-            { "name": "previous-path", "value": { "type": "string" } },
-            { "name": "previous-target", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "fullLocation", "type": "string" },
-              { "name": "entityId", "type": "string" },
-              { "name": "entityIdShow", "type": "boolean" },
-              { "name": "transparent", "type": "boolean" },
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "navigation", "type": "array" },
-              {
-                "name": "breadcrumb",
-                "type": "{ path: string; title: string }[]"
-              },
-              { "name": "fullWidth", "type": "boolean" },
-              { "name": "previousPath", "type": "string" },
-              { "name": "previousTarget", "type": "string" },
-              { "name": "handleAltPress" },
-              { "name": "handleAltUp" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
               }
             ]
           }
@@ -3433,6 +3433,42 @@
           }
         },
         {
+          "name": "zn-note",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "color", "value": { "type": "typeof colors[number]" } },
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "date", "value": { "type": "string", "default": "''" } },
+            { "name": "body", "value": { "type": "string", "default": "''" } }
+          ],
+          "slots": [
+            { "name": "caption", "description": "The note's caption." },
+            { "name": "date", "description": "The note's date." },
+            { "name": "body", "description": "The note's body." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "color", "type": "typeof colors[number]" },
+              { "name": "caption", "type": "string" },
+              { "name": "date", "type": "string" },
+              { "name": "body", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-navbar",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -3477,90 +3513,6 @@
                 "description": "Emitted as an example."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-note",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "color", "value": { "type": "typeof colors[number]" } },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "date", "value": { "type": "string", "default": "''" } },
-            { "name": "body", "value": { "type": "string", "default": "''" } }
-          ],
-          "slots": [
-            { "name": "caption", "description": "The note's caption." },
-            { "name": "date", "description": "The note's date." },
-            { "name": "body", "description": "The note's body." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "color", "type": "typeof colors[number]" },
-              { "name": "caption", "type": "string" },
-              { "name": "date", "type": "string" },
-              { "name": "body", "type": "string" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-option",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "value",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "disabled",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The option's label." },
-            {
-              "name": "prefix",
-              "description": "Used to prepend an icon or similar element to the menu item."
-            },
-            {
-              "name": "suffix",
-              "description": "Used to append an icon or similar element to the menu item."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "current", "type": "boolean" },
-              { "name": "selected", "type": "boolean" },
-              { "name": "hasHover", "type": "boolean" },
-              {
-                "name": "value",
-                "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
-                "type": "string"
-              },
-              {
-                "name": "disabled",
-                "description": "Draws the option in a disabled state, preventing selection.",
-                "type": "boolean"
-              }
-            ],
-            "events": []
           }
         },
         {
@@ -3626,6 +3578,54 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-option",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "value",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "disabled",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The option's label." },
+            {
+              "name": "prefix",
+              "description": "Used to prepend an icon or similar element to the menu item."
+            },
+            {
+              "name": "suffix",
+              "description": "Used to append an icon or similar element to the menu item."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "current", "type": "boolean" },
+              { "name": "selected", "type": "boolean" },
+              { "name": "hasHover", "type": "boolean" },
+              {
+                "name": "value",
+                "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+                "type": "string"
+              },
+              {
+                "name": "disabled",
+                "description": "Draws the option in a disabled state, preventing selection.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
           }
         },
         {
@@ -5181,40 +5181,6 @@
           }
         },
         {
-          "name": "zn-stepper",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "label", "value": { "type": "string" } },
-            { "name": "steps", "value": { "type": "number" } },
-            { "name": "value", "value": { "type": "number" } },
-            { "name": "show-progress", "value": { "type": "boolean" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "label", "type": "string" },
-              { "name": "steps", "type": "number" },
-              { "name": "value", "type": "number" },
-              { "name": "showProgress", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-table",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -5349,6 +5315,40 @@
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" },
               { "name": "_registerTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-stepper",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "label", "value": { "type": "string" } },
+            { "name": "steps", "value": { "type": "number" } },
+            { "name": "value", "value": { "type": "number" } },
+            { "name": "show-progress", "value": { "type": "boolean" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "label", "type": "string" },
+              { "name": "steps", "type": "number" },
+              { "name": "value", "type": "number" },
+              { "name": "showProgress", "type": "boolean" }
             ],
             "events": [
               {
@@ -6027,6 +6027,24 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-well",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "icon", "value": { "type": "string", "default": "''" } },
+            { "name": "inline", "value": { "type": "boolean" } }
+          ],
+          "slots": [{ "name": "", "description": "The default slot." }],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "icon", "type": "string" },
+              { "name": "inline", "type": "boolean" }
+            ],
+            "events": []
           }
         }
       ]

@@ -811,6 +811,35 @@ declare module "components/chip/index" {
         }
     }
 }
+declare module "components/well/well.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/well
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot.
+     */
+    export default class ZnWell extends ZincElement {
+        static styles: CSSResultGroup;
+        icon: string;
+        inline: boolean;
+        private readonly hasSlotController;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/well/index" {
+    import ZnWell from "components/well/well.component";
+    export * from "components/well/well.component";
+    export default ZnWell;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-well': ZnWell;
+        }
+    }
+}
 declare module "components/copy-button/copy-button.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -5637,6 +5666,7 @@ declare module "zinc" {
     export { default as Alert } from "components/alert/index";
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as Chip } from "components/chip/index";
+    export { default as Well } from "components/well/index";
     export { default as CopyButton } from "components/copy-button/index";
     export { default as DataTable } from "components/data-table/index";
     export { default as Cols } from "components/cols/index";

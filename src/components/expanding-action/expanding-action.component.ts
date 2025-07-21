@@ -66,7 +66,6 @@ export default class ZnExpandingAction extends ZincElement {
 
     await this.updateComplete;
     this._panel = this.shadowRoot?.querySelector('#content');
-    this.observeMetaCount();
     this._registerActions();
   }
 
@@ -83,8 +82,8 @@ export default class ZnExpandingAction extends ZincElement {
     }, 10);
   }
 
-  observeMetaCount() {
-    const appContent = this.querySelector('app-content');
+  _observeMetaCount() {
+    const appContent = deepQuerySelectorAll('app-content', this, '')[0];
 
     this._observer = new MutationObserver(() => {
       const metaCount = appContent?.shadowRoot?.querySelector('meta[name="count"]');
@@ -98,10 +97,12 @@ export default class ZnExpandingAction extends ZincElement {
       }
     });
 
-    this._observer.observe(this, {
-      subtree: true,
-      attributes: true
-    });
+    if (appContent.shadowRoot) {
+      this._observer.observe(appContent.shadowRoot, {
+        subtree: true,
+        attributeFilter: ['content'],
+      });
+    }
   }
 
   _registerActions() {
@@ -174,6 +175,9 @@ export default class ZnExpandingAction extends ZincElement {
     if (!target.hasAttribute('action') && target.hasAttribute('action-uri')) {
       const actionUri: string | null = target.getAttribute("action-uri") ?? "";
       this._createUriPanel(target, actionUri, this._uriToId(actionUri));
+
+      // Observer must wait until the panel is created
+      this._observeMetaCount();
     }
   }
 

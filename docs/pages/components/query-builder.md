@@ -17,6 +17,14 @@ layout: component
         ]
       },
       {
+        &quot;id&quot;:&quot;active&quot;,
+        &quot;name&quot;:&quot;Active&quot;,
+        &quot;type&quot;:&quot;boolean&quot;,
+        &quot;operators&quot;:[
+          &quot;eq&quot;
+        ]
+      },
+      {
         &quot;id&quot;:&quot;author&quot;,
         &quot;name&quot;:&quot;Author&quot;,
         &quot;operators&quot;:[

@@ -235,19 +235,27 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
       </zn-select>
     `;
 
-    const comparator = html`
-      <zn-select class="query-builder__comparator"
-                 @zn-change="${(e: ZnChangeEvent) => {
-                   this._updateOperatorValue(uniqueId, e)
-                   this._changeValueInput(uniqueId, e, filter);
-                 }}"
-                 value="${filter.operators[0]}"
-                 ?disabled="${filter.operators.length === 1}">
-        ${filter.operators.map((item: QueryBuilderOperators) => {
-          return html`
-            <zn-option value="${item}">${operatorText[item as QueryBuilderOperators]}</zn-option>`;
-        })}
-      </zn-select>`;
+    let comparator = null;
+    // if operators are defined and only equals remove the comparator
+    const isBoolFilterOnly = filter.operators.length === 1
+      && filter.operators[0] === QueryBuilderOperators.Eq
+      && (filter.type === 'bool' || filter.type === 'boolean');
+
+    if (!isBoolFilterOnly) {
+      comparator = html`
+        <zn-select class="query-builder__comparator"
+                   @zn-change="${(e: ZnChangeEvent) => {
+                     this._updateOperatorValue(uniqueId, e)
+                     this._changeValueInput(uniqueId, e, filter);
+                   }}"
+                   value="${filter.operators[0]}"
+                   ?disabled="${filter.operators.length === 1}">
+          ${filter.operators.map((item: QueryBuilderOperators) => {
+            return html`
+              <zn-option value="${item}">${operatorText[item as QueryBuilderOperators]}</zn-option>`;
+          })}
+        </zn-select>`;
+    }
 
     const remove = html`
       <zn-button class="query-builder__remove"

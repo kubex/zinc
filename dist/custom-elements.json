@@ -7417,7 +7417,80 @@
             },
             {
               "kind": "field",
-              "name": "observer",
+              "name": "masterId",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "master-id",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "fetchStyle",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "fetch-style",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noPrefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-prefetch",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_panel",
+              "type": {
+                "text": "Element | null | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_panels",
+              "type": {
+                "text": "Map<string, Element[]>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, Element[]>()"
+            },
+            {
+              "kind": "field",
+              "name": "_knownUri",
+              "type": {
+                "text": "Map<string, string>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, string>()"
+            },
+            {
+              "kind": "field",
+              "name": "_actions",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_preload",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "_observer",
               "type": {
                 "text": "MutationObserver | undefined"
               },
@@ -7426,6 +7499,104 @@
             {
               "kind": "method",
               "name": "observeMetaCount"
+            },
+            {
+              "kind": "method",
+              "name": "_registerActions"
+            },
+            {
+              "kind": "method",
+              "name": "_addAction",
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_uriToId",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "actionUri",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createUriPanel",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "actionEle",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "actionUri",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "actionId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fetchUri",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "clickAction",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -7505,6 +7676,29 @@
               },
               "default": "false",
               "fieldName": "open"
+            },
+            {
+              "name": "master-id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "masterId"
+            },
+            {
+              "name": "fetch-style",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "fetchStyle"
+            },
+            {
+              "name": "no-prefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noPrefetch"
             }
           ],
           "superclass": {

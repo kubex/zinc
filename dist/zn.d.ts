@@ -5504,7 +5504,7 @@ declare module "components/action-bar/index" {
     }
 }
 declare module "components/expanding-action/expanding-action.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -5532,10 +5532,27 @@ declare module "components/expanding-action/expanding-action.component" {
         basis: string;
         maxHeight: string;
         open: boolean;
-        private observer?;
-        connectedCallback(): void;
+        masterId: string;
+        fetchStyle: string;
+        noPrefetch: boolean;
+        private _panel;
+        private _panels;
+        private _knownUri;
+        private _actions;
+        private _preload;
+        private _observer?;
+        constructor();
+        connectedCallback(): Promise<void>;
         disconnectedCallback(): void;
+        firstUpdated(_changedProperties: PropertyValues): void;
         observeMetaCount(): void;
+        _registerActions(): void;
+        _addAction(action: HTMLElement): void;
+        _uriToId(actionUri: string): string;
+        _handleClick(event: PointerEvent): void;
+        _createUriPanel(actionEle: Element, actionUri: string, actionId: string): HTMLDivElement;
+        fetchUri(target: HTMLElement): void;
+        clickAction(target: HTMLElement): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;
         render(): import("lit").TemplateResult<1>;

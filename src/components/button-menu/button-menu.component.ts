@@ -40,13 +40,14 @@ export default class ZnButtonMenu extends ZincElement {
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
+
   @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
 
   private _buttons: CustomButtonWidths[] = [];
+
   private _originalButtons: CustomButtonWidths[] = [];
 
   private resizeObserver: ResizeObserver | null = null;
-
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);

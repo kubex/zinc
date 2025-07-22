@@ -1901,6 +1901,8 @@ declare module "components/input/input.component" {
         optionalIcon: boolean;
         /** Disables the input **/
         disabled: boolean;
+        /** Fills the input background white **/
+        filled: boolean;
         /** Placeholder text to show as a hint when the input is empty. */
         placeholder: string;
         /** Makes the input read-only **/

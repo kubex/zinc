@@ -162,11 +162,11 @@ class DropdownModule {
     this._quill.setContents(delta, 'silent');
     // update the quill editor
     this._quill.update();
+
+    this._quill.focus();
     // Set cursor position to the end of the inserted content
-    const range = this._quill.getSelection();
-    if (range) {
-      setTimeout(() => this._quill.setSelection(range.index + 10, 0), 0)
-    }
+    const range = this._quill.getSelection()?.index || 0;
+    setTimeout(() => range + 10, 1000);
   }
 
   private getDropdownContentFromUri() {

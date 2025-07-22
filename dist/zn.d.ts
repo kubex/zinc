@@ -1028,6 +1028,9 @@ declare module "components/dialog/index" {
         }
     }
 }
+declare module "utilities/query" {
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
+}
 declare module "components/confirm/confirm.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -1084,6 +1087,7 @@ declare module "components/confirm/confirm.component" {
         dialog: ZnDialog;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
+        updateTriggers(): void;
         show: (event?: Event | undefined) => void;
         hide(): void;
         render(): import("lit").TemplateResult<1>;
@@ -2968,9 +2972,6 @@ declare module "components/timer/index" {
             'zn-timer': ZnTimer;
         }
     }
-}
-declare module "utilities/query" {
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';

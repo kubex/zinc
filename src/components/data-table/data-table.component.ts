@@ -685,8 +685,8 @@ export default class ZnDataTable extends ZincElement {
             <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>`;
         }
 
-        if (data['caption'].target && data['caption'].uri) {
-          title = html` <a data-target="${ifDefined(data['caption'].target)}"
+        if (data['caption'].uri) {
+          title = html` <a data-target=${ifDefined(data['caption'].target || nothing)}
                            href="${data['caption'].uri}"
                            gaid=${ifDefined(data['caption'].gaid)}
                            class="title">

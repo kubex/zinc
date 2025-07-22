@@ -123,6 +123,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** Disables the input **/
   @property({type: Boolean, reflect: true}) disabled: boolean = false;
 
+  /** Fills the input background white **/
+  @property({type: Boolean, reflect: true}) filled: boolean = false;
+
   /** Placeholder text to show as a hint when the input is empty. */
   @property() placeholder: string = '';
 
@@ -497,6 +500,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--large': this.size === 'large',
                  'input--pill': this.pill,
                  'input--disabled': this.disabled,
+                 'input--filled': this.filled,
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
                  'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',

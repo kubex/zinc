@@ -30,8 +30,13 @@
   border: solid var(--zn-input-border-width) var(--zn-input-border-color);
 }
 
-.input--standard:hover:not(.input--disabled) {
+.input--standard:hover:not(.input--disabled, .input--filled) {
   background-color: var(--zn-input-background-color-hover);
+  border-color: var(--zn-input-border-color-hover);
+}
+
+.input--filled:hover:not(.input--disabled) {
+  background-color: var(--zn-color-neutral-50);
   border-color: var(--zn-input-border-color-hover);
 }
 
@@ -57,6 +62,10 @@
   border-color: var(--zn-input-border-color-disabled);
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.input--standard.input--filled {
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
 }
 
 .input--standard.input--disabled .input__control {

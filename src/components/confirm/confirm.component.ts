@@ -7,6 +7,7 @@ import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
 
 import styles from './confirm.scss';
+import {deepQuerySelectorAll} from "../../utilities/query";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -83,15 +84,26 @@ export default class ZnConfirm extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    let trigger;
+
 
     if (this.hasSlotController.test('trigger')) {
-      trigger = this.hasSlotController.getSlot('trigger');
+      const trigger = this.hasSlotController.getSlot('trigger');
+      trigger?.addEventListener('click', this.show);
     } else if (this.trigger) {
-      trigger = this.parentElement?.querySelector('#' + this.trigger);
+      const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+      triggers.forEach((el: HTMLButtonElement) => {
+        el.addEventListener('click', this.show);
+      });
     }
+  }
 
-    trigger?.addEventListener('click', this.show);
+  updateTriggers() {
+    const triggers = deepQuerySelectorAll('#' + this.trigger, this.parentElement as Element, '');
+    triggers.forEach((el: HTMLButtonElement) => {
+      // if already has a click listener, remove it
+      el.removeEventListener('click', this.show);
+      el.addEventListener('click', this.show);
+    });
   }
 
   show = (event: Event | undefined = undefined) => {
@@ -117,19 +129,19 @@ export default class ZnConfirm extends ZincElement {
       <slot name="trigger" slot="trigger"></slot>
       <zn-dialog size="${this.size}" variant="${this.variant}" label=${ifDefined(this.caption)} trigger=${this.trigger}
                  class=${classMap({
-                   'confirm-dialog': true,
-                   'confirm-dialog--warning': this.type === 'warning',
-                   'confirm-dialog--error': this.type === 'error',
-                   'confirm-dialog--success': this.type === 'success',
-                   'confirm-dialog--info': this.type === 'info',
-                   'confirm-dialog--has-default-slot': this.hasSlotController.test('[default]'),
-                 })}>
+      'confirm-dialog': true,
+      'confirm-dialog--warning': this.type === 'warning',
+      'confirm-dialog--error': this.type === 'error',
+      'confirm-dialog--success': this.type === 'success',
+      'confirm-dialog--info': this.type === 'info',
+      'confirm-dialog--has-default-slot': this.hasSlotController.test('[default]'),
+    })}>
 
         <slot name="announcement-intro" slot="announcement-intro">${this.announcement}</slot>
 
         ${!this.hideIcon ? html`
             <zn-icon slot="header-icon" color="${this.type}" src="${src[this.type]}"></zn-icon>`
-          : ''}
+      : ''}
 
         <div class="confirm-dialog__content">
           ${this.content ? html`${this.content}` : ''}

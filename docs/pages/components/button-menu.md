@@ -7,22 +7,21 @@ layout: component
 
 ```html:preview
 
-<zn-button-menu>
+<zn-button-menu limit="4">
+  <zn-button id="trigger-something" color="error" primary>Cancel</zn-button>
+  <zn-confirm type="error"
+              trigger="trigger-something"
+              caption="Cancel Action"
+              content="Are you sure you want to cancel this action">
+  </zn-confirm>
+
   <zn-button primary color="error" icon="house">Something sdf</zn-button>
-  <zn-button  icon="house">sd</zn-button>
-  <zn-button  icon="person" primary>One</zn-button>
-  <zn-button  icon="person" primary>Two</zn-button>
-  <zn-button  icon="house" secondary color="success">fdf</zn-button>
-  <zn-button  icon="house" secondary>fsdsfdf</zn-button>
-  <zn-button  icon="house">fd</zn-button>
-  <zn-button category="edit" icon="Home">Home</zn-button>
-  <zn-button color="warning" category="edit">WARNING</zn-button>
-  <zn-button  icon="house" primary category="edit">ddsfdsfdsf</zn-button>
-  <zn-button  icon="house" category="edit">34kjnsdfkjdsnf</zn-button>
-  <zn-button primary category="edit">dsfdf</zn-button>
-  <zn-button  icon="house" category="view">dfsf</zn-button>
-  <zn-button  icon="house" category="view">sdfdsfdsfds</zn-button>
-  <zn-button category="view">dfsdfdsfdsfdsfsf</zn-button>
+  <zn-button id="trigger-anotherone" color="warning"  icon="house">Another One</zn-button>
+  <zn-confirm type="error"
+              trigger="trigger-anotherone"
+              caption="Another Action"
+              content="Are you sure you?">
+  </zn-confirm>
 </zn-button-menu>
 ```
 

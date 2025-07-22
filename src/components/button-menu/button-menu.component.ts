@@ -7,6 +7,7 @@ import type ZnButton from "../button";
 import type ZnMenuItem from "../menu-item";
 
 import styles from './button-menu.scss';
+import ZnConfirm from "../confirm";
 
 
 interface CustomButtonWidths {
@@ -251,15 +252,21 @@ export default class ZnButtonMenu extends ZincElement {
         })
       }
     }
+
+    // check if there are an zn-confirms attached
+    const confirms: NodeListOf<ZnConfirm> = this.querySelectorAll('zn-confirm');
+    confirms.forEach(confirm => {
+      confirm.updateTriggers(); // update the triggers for the confirm dialog
+    })
   }
 
   render() {
     return html`
       <div class=${classMap({
-        'button-menu': true,
-        'button-menu--no-padding': this.noPadding,
-        'button-menu--no-gap': this.noGap,
-      })}>
+      'button-menu': true,
+      'button-menu--no-padding': this.noPadding,
+      'button-menu--no-gap': this.noGap,
+    })}>
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent" size="content"></zn-button>

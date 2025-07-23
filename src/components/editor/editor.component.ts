@@ -102,7 +102,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       ['undo', 'redo'],
       [{'list': 'ordered'}, {'list': 'bullet'}],
     ];
-    container.push(this.interactionType === 'ticket' ? ['link', 'image', 'image-attachment'] : ['link', 'image', 'video']);
+    container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);
 
     const quill = new Quill(this.editor, {
@@ -110,6 +110,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         toolbar: {
           container,
           handlers: {
+            'attachment': () => null,
             'placeholder': function (value: string) {
               if (value) {
                 const editor: Quill | null = this.quill;
@@ -307,7 +308,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       icons["remove-formatting"] = `<zn-icon src="format_clear" size="20"></zn-icon>`;
 
       if (this.interactionType === 'ticket') {
-        icons["image-attachment"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
+        icons["attachment"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
       }
     }
   }

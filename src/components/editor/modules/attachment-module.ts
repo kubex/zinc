@@ -29,7 +29,7 @@ export default class AttachmentModule {
 
     (this._quill
       .getModule('toolbar') as Toolbar)
-      .addHandler('image-attachment', this._selectLocalImage.bind(this));
+      .addHandler('attachment', this._selectLocalImage.bind(this));
 
     this._createAttachmentContainer();
   }

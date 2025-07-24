@@ -3870,6 +3870,7 @@ declare module "components/editor/modules/attachment-module" {
         private _updateAttachment;
         private _createAttachment;
         private _removeAttachment;
+        private _uploadAttachment;
     }
 }
 declare module "components/editor/modules/drag-drop-module" {

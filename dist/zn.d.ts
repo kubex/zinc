@@ -840,6 +840,41 @@ declare module "components/well/index" {
         }
     }
 }
+declare module "components/page-nav/page-nav.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/sp
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnPageNav extends ZincElement {
+        static styles: CSSResultGroup;
+        protected render(): unknown;
+    }
+}
+declare module "components/page-nav/index" {
+    import ZnPageNav from "components/page-nav/page-nav.component";
+    export * from "components/page-nav/page-nav.component";
+    export default ZnPageNav;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-page-nav': ZnPageNav;
+        }
+    }
+}
 declare module "components/copy-button/copy-button.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -5674,6 +5709,7 @@ declare module "zinc" {
     export { default as ButtonGroup } from "components/button-group/index";
     export { default as Chip } from "components/chip/index";
     export { default as Well } from "components/well/index";
+    export { default as PageNav } from "components/page-nav/index";
     export { default as CopyButton } from "components/copy-button/index";
     export { default as DataTable } from "components/data-table/index";
     export { default as Cols } from "components/cols/index";

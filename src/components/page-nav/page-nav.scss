@@ -1,76 +1,139 @@
-@use "sass:map";
 @use "../../wc";
-@use "../../../scss/mixins";
-
 
 :host {
   display: block;
-  --zn-sp-padding: var(--zn-spacing-medium);
-  --zn-sp-gap: var(--zn-divide-gap, var(--zn-spacing-medium));
+  container-type: inline-size;
+  position: relative;
 }
 
-.sp {
+.breadcrumb {
+  display: none;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-overlay {
+  display: none;
+}
+
+.navigation {
   display: flex;
   flex-direction: column;
-  flex-grow: 0;
-  padding: var(--zn-sp-padding);
-  gap: var(--zn-sp-gap);
-  width: 100%;
-  //max-width: var(--zn-container-hd); //don't worry about max width just yet
-  margin: 0 auto;
-
-  &--divide.sp--no-gap {
-    ::slotted(*:not(:last-child)) {
-      border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
-    }
-  }
-
-  &--divide:not(.sp--no-gap) {
-    ::slotted(*:not(:last-child)) {
-      position: relative;
-
-      &:after {
-        content: "";
-        position: absolute;
-        display: block;
-        height: 1px;
-        left: 0;
-        width: 100%;
-        max-width: 100%;
-        bottom: calc((var(--zn-sp-gap) / 2) * -1);
-        background-color: rgb(var(--zn-border-color));
-      }
-    }
-  }
-
-  &--row {
-    flex-direction: row;
-  }
-
-  &--no-gap {
-    gap: 0;
-  }
-
-  &--grow {
-    flex-grow: 1;
-  }
-
-  &--flush {
-    padding: 0;
-  }
-
-  &--flush-y {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  &--flush-x {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  border-right: 1px solid rgb(var(--zn-border-color));
+  max-width: var(--zn-size-sidenav);
+  width: var(--zn-size-sidenav);
+  background-color: rgb(var(--zn-body));
+  overflow-y: auto;
+  padding: var(--zn-spacing-small);
+  @include wc.scrollbars;
 }
 
-.sp:not(.sp--no-gap) ::slotted(*:last-child) {
-  padding-bottom: var(--zn-spacing-x-small); // For last element not affected by gap
+.navigation-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.navigation-group h4 {
+  margin: 0;
+  padding: var(--zn-spacing-small) 0;
+  color: rgb(var(--zn-text-heading));
+  font-size: var(--zn-font-size-medium);
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+.navigation-group .navigation-item {
+  padding: var(--zn-spacing-x-small) 0;
+  color: rgb(var(--zn-text));
+  font-size: var(--zn-font-size-medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+}
+
+.navigation-group + .navigation-group {
+  margin-top: 10px;
+}
+
+.navigation-group .navigation-item .selector {
+  border-radius: 50%;
+  width: 15px;
+  position: relative;
+  height: 15px;
+  background-color: var(--zn-color-gray-200);
+  transition: background-color 0.2s ease-in-out;
+  border: 1px solid rgb(var(--zn-border-color));
+}
+
+.navigation-group .navigation-item:hover .selector,
+.navigation-group .navigation-item.active .selector {
+  border-color: rgb(var(--zn-primary));
+
+  &:after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: rgb(var(--zn-primary));
+  }
+}
+
+
+@include wc.container-query(null, ph) {
+  .breadcrumb {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+    width: 100%;
+    height: 40px;
+    background-color: rgb(var(--zn-body));
+    gap: 10px;
+  }
+
+  .breadcrumb-menu-toggle {
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .menu-overlay.active {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 40px;;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .navigation {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: -500px;
+    opacity: 0;
+    min-height: 400px;
+    bottom: 0;
+    z-index: var(--zn-z-index-dropdown);
+    transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    // allow transitions on block
+
+  }
+
+  .navigation.active {
+    display: block;
+    left: 0;
+    opacity: 1;
+    transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  }
 }

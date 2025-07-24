@@ -226,6 +226,8 @@ export default class ZnTabs extends ZincElement {
   clickTab(target: HTMLElement, refresh: boolean) {
     this.fetchUriTab(target);
 
+    console.log('clickTab', target, refresh);
+
     if (target.hasAttribute('tab')) {
       setTimeout(() => {
         this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));

@@ -1,14 +1,14 @@
 @use "../../wc";
 
 $colors: (
-  red: var(--zn-color-red-500),
+  red: var(--zn-color-red-600),
   blue: var(--zn-color-blue-500),
   orange: var(--zn-color-orange-500),
   yellow: var(--zn-color-yellow-400),
-  indigo: var(--zn-color-indigo-500),
-  violet: var(--zn-color-violet-500),
+  indigo: var(--zn-color-indigo-400),
+  violet: var(--zn-color-violet-600),
   green: var(--zn-color-green-500),
-  pink: var(--zn-color-pink-500),
+  pink: var(--zn-color-pink-400),
   gray: var(--zn-color-gray-500)
 );
 
@@ -23,8 +23,8 @@ $colors: (
   flex-direction: column;
   overflow: hidden;
   flex-wrap: nowrap;
-  padding: var(--zn-spacing-medium);
-  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-small);
+  gap: var(--zn-spacing-3x-small);
   border-left: 3px solid transparent;
 
   &__header {
@@ -45,13 +45,18 @@ $colors: (
   &__body {
     display: flex;
     flex-direction: column;
-    gap: var(--zn-spacing-small);
+    gap: var(--zn-spacing-3x-small);
     max-width: var(--zn-container-md);
   }
 
   @each $name, $color in $colors {
     &--#{'' + $name} {
+      .note__header__caption {
+        color: hsl(from #{$color} h s 40%);
+      }
+
       border-left: 3px solid #{$color};
+      background-color: hsla(from #{$color} h s l / 0.04);
     }
   }
 

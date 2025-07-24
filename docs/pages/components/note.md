@@ -34,30 +34,15 @@ layout: component
 ### Changing Colour
 
 ```html:preview
-
-<zn-note caption="The caption"
-         date="11/10/24"
-         color="blue">
-  <div>I'm blue!</div>
-</zn-note>
-
-<zn-note caption="The caption"
-         date="11/10/24"
-         color="yellow">
-  <div>I'm yellow!</div>
-</zn-note>
-
-<zn-note caption="The caption"
-         date="11/10/24"
-         color="red">
-  <div>I'm red!</div>
-</zn-note>
-
-<zn-note caption="The caption"
-         date="11/10/24"
-         color="green">
-  <div>I'm green!</div>
-</zn-note>
+<zn-note caption="The caption" date="11/10/24" color="red"><div>I'm red!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="blue"><div>I'm blue!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="orange"><div>I'm orange!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="yellow"><div>I'm yellow!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="indigo"><div>I'm indigo!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="violet"><div>I'm violet!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="green"><div>I'm green!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="pink"><div>I'm pink!</div></zn-note>
+<zn-note caption="The caption" date="11/10/24" color="gray"><div>I'm gray!</div></zn-note>
 ```
 
 ### No Border Colour

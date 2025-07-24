@@ -3,7 +3,7 @@ import Toolbar from "quill/modules/toolbar";
 
 type AttachmentModuleOptions = {
   upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
-  onFileUploaded?: (node: HTMLElement, { url }: { url: string }) => void;
+  onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
   attachmentInput?: HTMLInputElement;
 }
 
@@ -53,14 +53,15 @@ export default class AttachmentModule {
 
     fileReader.addEventListener('load', () => {
       const base64Content = fileReader.result as string;
-      this._insertAttachment({ dataUrl: base64Content, file, id: attachmentId });
+      this._insertAttachment({dataUrl: base64Content, file, id: attachmentId});
     }, false);
 
     if (file) {
       fileReader.readAsDataURL(file);
     }
 
-    this._options.upload(file).then(({ path, url }) => {
+    this._options.upload(file).then(({path, url}) => {
+      this._uploadAttachment(file, url);
       this._updateAttachment(attachmentId, url, path);
     }).catch(err => {
       console.warn(err.message);
@@ -84,7 +85,7 @@ export default class AttachmentModule {
     this._quill.container.appendChild(attachmentContainer);
   }
 
-  private _insertAttachment({ dataUrl, file, id }: { dataUrl: string, file: File, id: string }) {
+  private _insertAttachment({dataUrl, file, id}: { dataUrl: string, file: File, id: string }) {
     this._attachmentContainer.appendChild(this._createAttachment(dataUrl, file, id));
   }
 
@@ -102,7 +103,7 @@ export default class AttachmentModule {
       }
 
       if (typeof this._options.onFileUploaded === 'function') {
-        this._options.onFileUploaded(element, { url });
+        this._options.onFileUploaded(element, {url});
       }
 
 
@@ -169,5 +170,26 @@ export default class AttachmentModule {
         attachments.value = JSON.stringify(data);
       }
     }
+  }
+
+  private _uploadAttachment(file: File, url: string) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('PUT', url, true);
+    xhr.setRequestHeader('Content-Type', file.type);
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        console.log(`[Quill Attachment Module] File uploaded successfully to ${url}`);
+      } else {
+        console.error(`[Quill Attachment Module] Failed to upload file. Status: ${xhr.status}`);
+      }
+    };
+
+    xhr.onerror = () => {
+      console.error(`[Quill Attachment Module] Error occurred while uploading file.`);
+    };
+
+    xhr.send(file);
   }
 }

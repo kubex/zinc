@@ -197,6 +197,8 @@ export default class ZnButtonMenu extends ZincElement {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
             menuItem.innerText = button.button.innerText;
+            menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
+            menuItem.setAttribute('role', 'menuitem');
 
             const attr = button.button.attributes;
             // Copy all attributes from the button to the menu item
@@ -275,5 +277,67 @@ export default class ZnButtonMenu extends ZincElement {
         </zn-dropdown>
         <slot></slot>
       </div>`;
+  }
+
+  public addButton(button: ZnButton) {
+    if (!button) {
+      return;
+    }
+
+    // add class to button to show it was added via api
+    button.classList.add('zn-button-menu__added');
+
+    // Add the button to the original buttons list
+    this._originalButtons.push({
+      button: button,
+      width: Math.max(button.offsetWidth, 150)
+    });
+
+    // Recalculate the visible buttons
+    this.calculateVisibleButtons();
+  }
+
+  public removeButton(id: string) {
+    const button = this.querySelector(`zn-button#${id}`);
+    if (button) {
+      // remove the button from the original buttons list
+      this._originalButtons = this._originalButtons.filter(b => b.button !== button);
+      // remove the button from the UI
+      button.remove();
+    }
+
+    // check if its a menu-item
+    const menuItem = this.querySelector(`zn-menu-item#${id}`);
+    if (menuItem) {
+      // remove the menu item from the menu
+      const menu = this.shadowRoot?.querySelector('zn-menu');
+      if (menu) {
+        menuItem.remove();
+      }
+    }
+
+    // Recalculate the visible buttons
+    this.calculateVisibleButtons();
+  }
+
+  public removeAllButtons() {
+    // remove all buttons that have the zn-button-menu__added class
+    const buttons = this.querySelectorAll('.zn-button-menu__added');
+    buttons.forEach((button: ZnButton) => {
+      button.remove();
+    });
+
+    // remove all zn-menu-item elements
+    const menuItems = this.shadowRoot?.querySelectorAll('zn-menu-item');
+    menuItems?.forEach((menuItem: ZnMenuItem) => {
+      menuItem.remove();
+    });
+
+    // reset the original buttons list
+    this._originalButtons = [];
+    this._buttons = [];
+
+    // Recalculate the visible buttons
+    this.calculateVisibleButtons();
   }
 }

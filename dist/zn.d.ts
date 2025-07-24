@@ -5371,6 +5371,9 @@ declare module "components/button-menu/button-menu.component" {
         calculateVisibleButtons(): void;
         calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]): void;
         render(): import("lit").TemplateResult<1>;
+        addButton(button: ZnButton): void;
+        removeButton(id: string): void;
+        removeAllButtons(): void;
     }
 }
 declare module "components/button-menu/index" {

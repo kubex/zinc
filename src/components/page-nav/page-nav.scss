@@ -1,0 +1,76 @@
+@use "sass:map";
+@use "../../wc";
+@use "../../../scss/mixins";
+
+
+:host {
+  display: block;
+  --zn-sp-padding: var(--zn-spacing-medium);
+  --zn-sp-gap: var(--zn-divide-gap, var(--zn-spacing-medium));
+}
+
+.sp {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  padding: var(--zn-sp-padding);
+  gap: var(--zn-sp-gap);
+  width: 100%;
+  //max-width: var(--zn-container-hd); //don't worry about max width just yet
+  margin: 0 auto;
+
+  &--divide.sp--no-gap {
+    ::slotted(*:not(:last-child)) {
+      border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
+    }
+  }
+
+  &--divide:not(.sp--no-gap) {
+    ::slotted(*:not(:last-child)) {
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        height: 1px;
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        bottom: calc((var(--zn-sp-gap) / 2) * -1);
+        background-color: rgb(var(--zn-border-color));
+      }
+    }
+  }
+
+  &--row {
+    flex-direction: row;
+  }
+
+  &--no-gap {
+    gap: 0;
+  }
+
+  &--grow {
+    flex-grow: 1;
+  }
+
+  &--flush {
+    padding: 0;
+  }
+
+  &--flush-y {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  &--flush-x {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+}
+
+.sp:not(.sp--no-gap) ::slotted(*:last-child) {
+  padding-bottom: var(--zn-spacing-x-small); // For last element not affected by gap
+}

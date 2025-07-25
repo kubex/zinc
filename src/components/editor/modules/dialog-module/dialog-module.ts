@@ -47,8 +47,7 @@ class DialogModule {
       this._dialog = dialog;
       this._quill.container.ownerDocument.body.appendChild(this._dialog);
 
-      // Update position and add commands
-      this.updateDialogPosition();
+      // Add dialog commands
       this.addCommands();
 
       // Listen to zn-command-select event
@@ -59,9 +58,6 @@ class DialogModule {
           this.triggerCommand(this._commands.find((c) => c.title === command)!);
         }
       });
-      this._dialog.addEventListener('zn-show', () => {
-        setTimeout(() => this.updateDialogPosition(this._dialog), 1);
-      })
     }
   }
 
@@ -86,12 +82,6 @@ class DialogModule {
       // is open
       if (dialogOpen && (char === ' ' || char === '\n')) {
         this.closeDialog();
-      }
-
-      // if the dialog is open, we will filter the commands based on the text that the user has typed
-      // after the forward slash
-      if (dialogOpen) {
-        this.updateDialogPosition();
       }
 
       // if the user clicks away from the dialog, we will close the dialog
@@ -124,33 +114,7 @@ class DialogModule {
     return litToHTML<ZnDialogModule>(dialog);
   }
 
-  updateDialogPosition(dialog: ZnDialogModule = this._dialog) {
-    const editorBounds = this._quill.container.getBoundingClientRect();
-
-    // position bottom of the dialog at the top of the editor
-    const top = (editorBounds.top + this._quill.container.scrollTop) - dialog.offsetHeight;
-
-    // dialog should be full width of the editor
-    const left = editorBounds.left;
-    const right = editorBounds.right;
-    const width = editorBounds.width;
-
-    dialog.style.top = top + 'px';
-    dialog.style.left = left + 'px';
-    dialog.style.right = right + 'px';
-    dialog.style.width = width + 'px';
-    dialog.style.maxHeight = '200px';
-  }
-
   addCommands() {
-    // Add close command
-    this._commands.push({
-      title: 'Close',
-      command: '',
-      content: '',
-    } satisfies DialogModuleCannedResponse);
-
-
     this._dialog.setAttribute('commands', JSON.stringify(this._commands));
   }
 

@@ -5629,7 +5629,7 @@ declare module "components/page-nav/page-nav.component" {
     export default class ZnPageNav extends ZnTabs {
         static styles: CSSResultGroup;
         /** An example attribute. */
-        navigation: Record<string, Record<string, string>>;
+        navigation: any;
         toggleNavigation(): void;
         render(): import("lit").TemplateResult<1>;
     }

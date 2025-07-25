@@ -2,8 +2,8 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
+import DialogModule, {dialogOpen} from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
-import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
@@ -86,7 +86,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    Quill.register('modules/dropdownModule', DropdownModule as any);
+    Quill.register('modules/dialogModule', DialogModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any);
@@ -140,7 +140,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
-        dropdownModule: {
+        dialogModule: {
           cannedResponses: this.cannedResponses,
           cannedResponsesUri: this.cannedResponsesUri
         },
@@ -182,7 +182,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
-    this._supplyPlaceholderDropdown();
+    this._supplyPlaceholderDialog();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -341,7 +341,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         shiftKey: false,
         handler: () => {
           const form = this.closest('form');
-          if (form && !dropdownOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+          if (form && !dialogOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
             this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();
             this.quillElement.setText('');
@@ -353,7 +353,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     return bindings;
   }
 
-  private _supplyPlaceholderDropdown() {
+  private _supplyPlaceholderDialog() {
     const placeholderItems: HTMLElement[] = Array.prototype.slice.call(this.shadowRoot?.querySelectorAll('.ql-placeholder .ql-picker-item'));
     placeholderItems.forEach((item) => {
       item.textContent = item.dataset.value ?? ''

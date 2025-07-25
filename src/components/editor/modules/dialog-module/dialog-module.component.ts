@@ -4,21 +4,21 @@ import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
-import type {DropdownModuleCannedResponse} from "./dropdown-module";
+import type {DialogModuleCannedResponse} from "./dialog-module";
 
-import styles from './dropdown-module.scss';
+import styles from './dialog-module.scss';
 
-export default class DropdownModuleComponent extends ZincElement {
+export default class DialogModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @state() private hasFocus = false;
 
   @query('zn-input#search-input') searchInput!: HTMLInputElement;
-  @query('.dropdown-module__content') commandList!: HTMLElement;
+  @query('.dialog-module__content') commandList!: HTMLElement;
 
-  @query('.dropdown-module') dropdownModule!: HTMLElement;
+  @query('.dialog-module') dialogModule!: HTMLElement;
 
-  @property({type: Array}) commands: DropdownModuleCannedResponse[] = [];
+  @property({type: Array}) commands: DialogModuleCannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
   private closeWatcher: CloseWatcher | null;
@@ -117,13 +117,13 @@ export default class DropdownModuleComponent extends ZincElement {
 
   private handleFocus() {
     this.hasFocus = true;
-    this.dropdownModule?.focus();
+    this.dialogModule?.focus();
     this.emit('zn-focus');
   }
 
   private handleBlur() {
     this.hasFocus = false;
-    this.dropdownModule?.blur();
+    this.dialogModule?.blur();
     this.emit('zn-blur');
   }
 
@@ -190,7 +190,7 @@ export default class DropdownModuleComponent extends ZincElement {
     this.emit('zn-command-select', {detail: {item}});
   }
 
-  private _createCommand(command: DropdownModuleCannedResponse): TemplateResult {
+  private _createCommand(command: DialogModuleCannedResponse): TemplateResult {
     const labels: string[] = [];
     if (command.labels) {
       command.labels.forEach((label: string) => {
@@ -229,13 +229,13 @@ export default class DropdownModuleComponent extends ZincElement {
   render() {
     return html`
       <div class="${classMap({
-        'dropdown-module': true,
-        'dropdown-module--has-focus': this.hasFocus,
-        'dropdown-module--has-results': this.commands.length > 0,
-        'dropdown-module--open': this.open,
+        'dialog-module': true,
+        'dialog-module--has-focus': this.hasFocus,
+        'dialog-module--has-results': this.commands.length > 0,
+        'dialog-module--open': this.open,
       })}">
 
-        <div class="dropdown-module__header">
+        <div class="dialog-module__header">
           Canned Responses
         </div>
 
@@ -243,8 +243,8 @@ export default class DropdownModuleComponent extends ZincElement {
                   autocomplete="off" autocorrect="off" spellcheck="false"
                   @focus="${this.handleFocus}" @blur="${this.handleBlur}"></zn-input>
 
-        <div class="dropdown-module__content">
-          ${repeat(this.commands, (command: DropdownModuleCannedResponse) => this._createCommand(command))}
+        <div class="dialog-module__content">
+          ${repeat(this.commands, (command: DialogModuleCannedResponse) => this._createCommand(command))}
         </div>
 
         <slot></slot>
@@ -255,4 +255,4 @@ export default class DropdownModuleComponent extends ZincElement {
 
 }
 
-DropdownModuleComponent.define('zn-dropdown-module');
+DialogModuleComponent.define('zn-dialog-module');

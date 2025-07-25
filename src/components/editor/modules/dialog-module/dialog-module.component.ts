@@ -13,6 +13,8 @@ export default class DialogModuleComponent extends ZincElement {
 
   @state() private hasFocus = false;
 
+  @query('dialog') dialogEl!: HTMLDialogElement;
+
   @query('zn-input#search-input') searchInput!: HTMLInputElement;
   @query('.dialog-module__content') commandList!: HTMLElement;
 
@@ -115,18 +117,6 @@ export default class DialogModuleComponent extends ZincElement {
     });
   }
 
-  private handleFocus() {
-    this.hasFocus = true;
-    this.dialogModule?.focus();
-    this.emit('zn-focus');
-  }
-
-  private handleBlur() {
-    this.hasFocus = false;
-    this.dialogModule?.blur();
-    this.emit('zn-blur');
-  }
-
   focus() {
     this.searchInput.focus();
   }
@@ -147,9 +137,11 @@ export default class DialogModuleComponent extends ZincElement {
   @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange() {
     if (this.open) {
+      this.dialogEl?.showModal();
       this.addOpenListeners();
       setTimeout(() => this.focus(), 0);
     } else {
+      this.dialogEl?.close();
       this.removeOpenListeners();
     }
   }
@@ -228,28 +220,54 @@ export default class DialogModuleComponent extends ZincElement {
 
   render() {
     return html`
-      <div class="${classMap({
-        'dialog-module': true,
-        'dialog-module--has-focus': this.hasFocus,
-        'dialog-module--has-results': this.commands.length > 0,
-        'dialog-module--open': this.open,
-      })}">
+      <dialog closedby="any"
+              class="${classMap({
+                'dialog-module': true,
+                'dialog-module--has-focus': this.hasFocus,
+                'dialog-module--has-results': this.commands.length > 0,
+                'dialog-module--open': this.open,
+              })}">
 
         <div class="dialog-module__header">
-          Canned Responses
+          <div class="dialog-module__header--caption">
+            Canned Responses
+          </div>
+
+          <div class="dialog-module__header--search">
+            <zn-input id="search-input"
+                      type="search"
+                      placeholder="Search..."
+                      class="search-input"
+                      autocomplete="off"
+                      autocorrect="off"
+                      spellcheck="false">
+              <zn-icon src="search" slot="prefix"></zn-icon>
+            </zn-input>
+          </div>
         </div>
 
-        <zn-input id="search-input" type="search" placeholder="Search..." class="search-input"
-                  autocomplete="off" autocorrect="off" spellcheck="false"
-                  @focus="${this.handleFocus}" @blur="${this.handleBlur}"></zn-input>
+        <div class="dialog-module__body">
+          <div class="dialog-module__content">
+            ${repeat(this.commands, (command: DialogModuleCannedResponse) => this._createCommand(command))}
+          </div>
 
-        <div class="dialog-module__content">
-          ${repeat(this.commands, (command: DialogModuleCannedResponse) => this._createCommand(command))}
+          <slot></slot>
         </div>
 
-        <slot></slot>
+        <div class="dialog-module__footer">
+          <zn-button class="dialog-module__insert-button"
+                     size="medium">
+            Insert
+          </zn-button>
+          <zn-button class="dialog-module__close-button"
+                     size="medium"
+                     color="secondary"
+                     @click="${() => this.requestClose('close-button')}">
+            Close
+          </zn-button>
+        </div>
 
-      </div>
+      </dialog>
     `;
   }
 

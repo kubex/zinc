@@ -2198,6 +2198,7 @@ declare module "components/tile/tile.component" {
         flush: boolean;
         flushX: boolean;
         flushY: boolean;
+        inline: boolean;
         private _isLink;
         render(): import("lit").TemplateResult;
     }

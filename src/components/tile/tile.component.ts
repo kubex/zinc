@@ -48,6 +48,8 @@ export default class ZnTile extends ZincElement {
 
   @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
 
+  @property({type: Boolean}) inline: boolean;
+
   private _isLink() {
     return this.href || this.dataUri;
   }
@@ -72,6 +74,7 @@ export default class ZnTile extends ZincElement {
           'tile--flush': this.flush,
           'tile--flush-x': this.flushX,
           'tile--flush-y': this.flushY,
+          'tile--inline': this.inline,
           'tile--has-href': isLink,
           'tile--has-caption': hasCaption,
           'tile--has-description': hasDescription,

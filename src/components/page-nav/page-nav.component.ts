@@ -25,7 +25,7 @@ export default class ZnPageNav extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
 
   /** An example attribute. */
-  @property({type: Object}) navigation: Record<string, Record<string, string>>
+  @property({type: Object}) navigation: any;
 
   toggleNavigation() {
     const navigationElement = this.shadowRoot?.querySelector('.navigation');
@@ -51,7 +51,7 @@ export default class ZnPageNav extends ZnTabs {
       return html`
         <div class="navigation-group">
           <h4>${caption}</h4>
-          ${Object.entries(items).map(([title, url]) => html`
+          ${Object.entries(items as Record<string, Record<string, string>>).map(([title, url]) => html`
             <div tab-uri="${url}" class="navigation-item">
               <div class="selector"></div>
               ${title}

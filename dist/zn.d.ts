@@ -295,8 +295,8 @@ declare module "internal/watch" {
     export function watch(propertyName: string | string[], options?: WatchOptions): <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => void;
 }
 declare module "components/popup/popup.component" {
-    import { CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from 'lit';
     export interface VirtualElement {
         getBoundingClientRect: () => DOMRect;
         contextElement?: Element;

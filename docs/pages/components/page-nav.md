@@ -8,7 +8,7 @@ layout: component
 ```html:preview
 
 <zn-page-nav
-  navigation="{&quot;Subscriptions&quot;: {&quot;Active Subscriptions&quot;: &quot;#active-subscriptions&quot;,&quot;Inactive Subscriptions&quot;: &quot;#inactive-subscriptions&quot;},&quot;Billing&quot;: {&quot;Payment Methods&quot;: &quot;#payment-methods&quot;,&quot;Transactions&quot;: &quot;#transactions&quot;}}">
+  navigation="{&quot;data&quot;: [{&quot;title&quot;:&quot;Page Nav&quot;,&quot;items&quot;:[{ &quot;label&quot;: &quot;First Example&quot;, &quot;uri&quot;: &quot;TODO&quot; }, { &quot;label&quot;: &quot;Second Example&quot;, &quot;uri&quot;: &quot;TODO&quot; }]}, { &quot;title&quot;: &quot;Page Nav 2&quot;, &quot;items&quot;: [{ &quot;label&quot;: &quot;First Example&quot;, &quot;uri&quot;: &quot;TODO&quot;  }, { &quot;label&quot;: &quot;Second Example&quot;, &quot;uri&quot;: &quot;TODO&quot;}]}]}">
 </zn-page-nav>
 ```
 

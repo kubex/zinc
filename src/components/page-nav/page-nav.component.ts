@@ -4,6 +4,20 @@ import ZnTabs from "../tabs";
 
 import styles from './page-nav.scss';
 
+interface PageNavData {
+  data: PageNavigation[];
+}
+
+interface PageNavigation {
+  title: string;
+  items: PageNavigationItem[];
+}
+
+interface PageNavigationItem {
+  label: string;
+  uri: string;
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/page-nav
@@ -24,8 +38,7 @@ import styles from './page-nav.scss';
 export default class ZnPageNav extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
 
-  /** An example attribute. */
-  @property({type: Object}) navigation: any;
+  @property({type: Object}) navigation: PageNavData;
 
   toggleNavigation() {
     const navigationElement = this.shadowRoot?.querySelector('.navigation');
@@ -46,15 +59,14 @@ export default class ZnPageNav extends ZnTabs {
       return html`<p>No navigation data available.</p>`;
     }
 
-    // Render the navigation items
-    const navItems = Object.entries(this.navigation).map(([caption, items]) => {
+    const navItems = this.navigation.data.map(data => {
       return html`
         <div class="navigation-group">
-          <h4>${caption}</h4>
-          ${Object.entries(items as Record<string, Record<string, string>>).map(([title, url]) => html`
-            <div tab-uri="${url}" class="navigation-item">
+          <h4>${data.title}</h4>
+          ${data.items.map(item => html`
+            <div tab-uri="${item.uri}" class="navigation-item">
               <div class="selector"></div>
-              ${title}
+              ${item.label}
             </div>
           `)}
         </div>

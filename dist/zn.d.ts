@@ -2999,12 +2999,6 @@ declare module "components/tabs/tabs.component" {
      */
     export default class ZnTabs extends ZincElement {
         static styles: CSSResultGroup;
-        private _panel;
-        private _panels;
-        private _tabs;
-        private _actions;
-        private _knownUri;
-        private readonly hasSlotController;
         masterId: string;
         defaultUri: string;
         _current: string;
@@ -3020,13 +3014,21 @@ declare module "components/tabs/tabs.component" {
         fetchStyle: string;
         fullWidth: boolean;
         paddedRight: boolean;
+        monitor: string;
         caption: string;
         description: string;
         protected preload: boolean;
         protected _store: Store;
         protected _activeClicks: number;
+        private _panel;
+        private _panels;
+        private _tabs;
+        private _actions;
+        private _knownUri;
+        private readonly hasSlotController;
         constructor();
         connectedCallback(): Promise<void>;
+        monitorDom(): void;
         _addPanel(panel: HTMLElement): void;
         _addTab(tab: HTMLElement): void;
         reRegisterTabs: () => void;

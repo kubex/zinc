@@ -5612,6 +5612,17 @@ declare module "components/expanding-action/index" {
 declare module "components/page-nav/page-nav.component" {
     import { type CSSResultGroup } from 'lit';
     import ZnTabs from "components/tabs/index";
+    interface PageNavData {
+        data: PageNavigation[];
+    }
+    interface PageNavigation {
+        title: string;
+        items: PageNavigationItem[];
+    }
+    interface PageNavigationItem {
+        label: string;
+        uri: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/page-nav
@@ -5631,8 +5642,7 @@ declare module "components/page-nav/page-nav.component" {
      */
     export default class ZnPageNav extends ZnTabs {
         static styles: CSSResultGroup;
-        /** An example attribute. */
-        navigation: any;
+        navigation: PageNavData;
         toggleNavigation(): void;
         render(): import("lit").TemplateResult<1>;
     }

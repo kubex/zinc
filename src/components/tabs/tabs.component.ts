@@ -28,45 +28,35 @@ import styles from './tabs.scss';
  */
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-
-  private _panel: Element | null | undefined;
-  private _panels: Map<string, Element[]>;
-  private _tabs: HTMLElement[] = [];
-  private _actions: HTMLElement[] = [];
-  private _knownUri: Map<string, string> = new Map<string, string>();
-
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
-
-
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
-
   @property({attribute: 'active', reflect: true}) _current = '';
   @property({attribute: 'split', type: Number, reflect: true}) _split: number;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
-
   @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
-
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
-
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
   @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
-
-
+  @property() monitor: string;
   // Creating a header
   @property() caption: string;
   @property() description: string;
-
   protected preload = true;
   protected _store: Store;
   protected _activeClicks = 0;
+  private _panel: Element | null | undefined;
+  private _panels: Map<string, Element[]>;
+  private _tabs: HTMLElement[] = [];
+  private _actions: HTMLElement[] = [];
+  private _knownUri: Map<string, string> = new Map<string, string>();
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
 
   constructor() {
     super();
@@ -93,6 +83,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
+    console.log('defaultID', defaultID);
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) => {
@@ -102,6 +93,31 @@ export default class ZnTabs extends ZincElement {
     });
 
     this.observerDom();
+    this.monitorDom();
+  }
+
+  monitorDom() {
+    if (this.monitor) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+              if (node instanceof HTMLElement && node.id === this.monitor) {
+                this.reRegisterTabs();
+
+                const storedValue = this._store.get(this.storeKey);
+                if (storedValue !== null) {
+                  this._prepareTab(storedValue);
+                  this.setActiveTab(storedValue, false, false);
+                }
+              }
+            });
+          }
+        });
+      });
+
+      observer.observe(this, {childList: true, subtree: true});
+    }
   }
 
   _addPanel(panel: HTMLElement) {
@@ -251,6 +267,8 @@ export default class ZnTabs extends ZincElement {
   setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
     let hasActive = false;
     this._tabs.forEach(tab => {
+
+
       if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri')!)) {
         tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri')!)!);
       }
@@ -375,7 +393,6 @@ export default class ZnTabs extends ZincElement {
         ele.setAttribute('tab', "");
         ele.removeAttribute('tab-uri');
       }
-
       this._addTab(ele as HTMLElement);
     });
 

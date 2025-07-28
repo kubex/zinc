@@ -40,6 +40,8 @@ export default class ZnPageNav extends ZnTabs {
 
   @property({type: Object}) navigation: PageNavData;
 
+  @property() flush: boolean = true;
+
   toggleNavigation() {
     const navigationElement = this.shadowRoot?.querySelector('.navigation');
     if (navigationElement) {

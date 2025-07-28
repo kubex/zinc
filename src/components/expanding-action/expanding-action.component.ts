@@ -199,9 +199,10 @@ export default class ZnExpandingAction extends ZincElement {
       ${this.method === 'fill' ? html`
         <zn-button color="transparent"
                    size="x-small"
+                   class="expanding-action__button"
                    @click="${this.handleIconClicked}"
                    icon="${this.icon}"
-                   icon-size="24">
+                   icon-size="20">
         </zn-button>` : nothing}
       <div
         class="${classMap({
@@ -224,10 +225,11 @@ export default class ZnExpandingAction extends ZincElement {
       <zn-dropdown class="expanding-action__dropdown"
                    placement="bottom-end">
         <zn-button slot="trigger"
+                   class="expanding-action__button"
                    color="transparent"
                    size="x-small"
                    icon="${this.icon}"
-                   icon-size="24"
+                   icon-size="20"
                    notification="${this.count || nothing}"
                    @click="${this.handleIconClicked}">
         </zn-button>
@@ -239,17 +241,17 @@ export default class ZnExpandingAction extends ZincElement {
 
   protected renderFill() {
     return html`
-      <zn-icon src="${this.icon}" size="24"></zn-icon>
+      <zn-icon src="${this.icon}" size="20"></zn-icon>
       <div id="content" class="expanding-action__content">
         <slot></slot>
       </div>
       <zn-button slot="trigger"
-                 class="expanding-action__close-icon"
+                 class="expanding-action__button expanding-action__close-icon"
                  color="transparent"
                  size="x-small"
                  @click="${this.handleIconCloseClicked}"
                  icon="close"
-                 icon-size="24">
+                 icon-size="20">
       </zn-button>`
   }
 }

@@ -5,10 +5,13 @@ import AttachmentModule from "./modules/attachment-module";
 import DialogModule, {dialogOpen} from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
+import MenuModule from "./modules/menu-module/menu-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-canned-response-dialog";
+import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 
 import styles from './editor.scss';
 
@@ -87,6 +90,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const bindings = this._getQuillKeyboardBindings();
 
     Quill.register('modules/dialogModule', DialogModule as any);
+    Quill.register('modules/menuModule', MenuModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any);
@@ -140,7 +144,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
-        dialogModule: {
+        dialogModule: {},
+        menuModule: {
           cannedResponses: this.cannedResponses,
           cannedResponsesUri: this.cannedResponsesUri
         },
@@ -254,7 +259,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         if (!quill.selection.hasFocus()) quill.selection.root.focus();
         const native = (quill.selection.getNativeRange() || {}).native;
         // @ts-ignore
-        if (native === null || force || startNode !== native.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
+        if (native === null || force || startNode !== native?.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
           if (startNode.tagName === "BR") {
             // @ts-ignore
             startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
@@ -277,6 +282,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         document.body.focus();
       }
     }
+
+    // Listen for 'View All' click from menu module
+    document.addEventListener('zn-show-canned-response-dialog', (e: ZnShowCannedResponseDialogEvent) => {
+      const dialog: DialogModuleComponent | null = document.querySelector('zn-dialog-module');
+      if (dialog && e.detail.commands) {
+        dialog.commands = e.detail.commands;
+        dialog.show();
+      }
+    });
 
     /**
      * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM

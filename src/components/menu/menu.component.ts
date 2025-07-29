@@ -148,6 +148,7 @@ export default class ZnMenu extends ZincElement {
     // Reset the roving tab index when the slotted items change
     if (items.length > 0) {
       this.setCurrentItem(items[0]);
+      this.emit('zn-menu-ready');
     }
   }
 

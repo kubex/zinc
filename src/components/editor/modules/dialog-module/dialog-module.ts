@@ -1,14 +1,9 @@
 import './dialog-module.component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
-import {type ZnCommandSelectEvent} from "./events/zn-command-select";
+import {type ZnCommandSelectEvent} from "../events/zn-command-select";
 import Quill, {type Delta} from 'quill';
 import type ZnDialogModule from './dialog-module.component';
-
-interface DialogModuleOptions {
-  cannedResponses: DialogModuleCannedResponse[];
-  cannedResponsesUri: string;
-}
 
 export interface DialogModuleCannedResponse {
   title: string;
@@ -22,43 +17,32 @@ export let dialogOpen: boolean = false;
 class DialogModule {
   private _quill: Quill;
   private readonly _dialog: ZnDialogModule;
-  private readonly _cannedResponsesUri: string = '';
   private _commands: DialogModuleCannedResponse[] = [];
 
-  constructor(quill: Quill, options: DialogModuleOptions) {
+  constructor(quill: Quill) {
     this._quill = quill;
 
-    if (options.cannedResponses) {
-      this._commands = options.cannedResponses;
+    quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
+
+    // Create the dialog element
+    const dialog = this.createDialog();
+    if (!dialog) {
+      throw new Error('Dialog element not found');
     }
+    this._dialog = dialog;
+    this._quill.container.ownerDocument.body.appendChild(this._dialog);
 
-    if (options.cannedResponsesUri !== ' ') {
-      this._cannedResponsesUri = options.cannedResponsesUri;
-    }
+    // Add dialog commands
+    this.addCommands();
 
-    if (this._commands.length > 0 || this._cannedResponsesUri !== '') {
-      quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
-
-      // Create the dialog element
-      const dialog = this.createDialog();
-      if (!dialog) {
-        throw new Error('Dialog element not found');
+    // Listen to zn-command-select event
+    document.addEventListener('zn-command-select', (e: ZnCommandSelectEvent) => {
+      const item = e.detail.item;
+      const command = item.getAttribute('data-command');
+      if (command) {
+        this.triggerCommand(this._commands.find((c) => c.title === command)!);
       }
-      this._dialog = dialog;
-      this._quill.container.ownerDocument.body.appendChild(this._dialog);
-
-      // Add dialog commands
-      this.addCommands();
-
-      // Listen to zn-command-select event
-      document.addEventListener('zn-command-select', (e: ZnCommandSelectEvent) => {
-        const item = e.detail.item;
-        const command = item.getAttribute('data-command');
-        if (command) {
-          this.triggerCommand(this._commands.find((c) => c.title === command)!);
-        }
-      });
-    }
+    });
   }
 
   onTextChange = (_: Delta, _oldDelta: Delta, source: string) => {
@@ -69,7 +53,7 @@ class DialogModule {
       const text = this._quill.getText();
       const index = this._quill.getSelection()?.index ?? 0;
       const char = index === 0 ? text.charAt(0) : text.charAt(index - 1); // Last input char
-      const openCharacter = '/';
+      const openCharacter = '~';
 
       // If the openCharacter is the first character in the editor, and dialog isn't open, open it.
       if (index === 0 && char === openCharacter && !dialogOpen) {
@@ -95,10 +79,6 @@ class DialogModule {
 
   openDialog() {
     dialogOpen = true;
-    if (this._cannedResponsesUri) {
-      this.getDialogContentFromUri();
-    }
-    // add to the document out of shadow dom
     this._dialog.show();
   }
 
@@ -122,7 +102,7 @@ class DialogModule {
     this.closeDialog();
 
     // insert the command content
-    const delta = this._quill.clipboard.convert({html: command.content});
+    const delta = this._quill.clipboard.convert({html: command?.content});
     this._quill.setContents(delta, 'silent');
     // update the quill editor
     this._quill.update();
@@ -131,19 +111,6 @@ class DialogModule {
     // Set cursor position to the end of the inserted content
     const range = this._quill.getSelection()?.index || 0;
     setTimeout(() => range + 10, 1000);
-  }
-
-  private getDialogContentFromUri() {
-    if (this._cannedResponsesUri) {
-      fetch(this._cannedResponsesUri)
-        .then(response => response.json())
-        .then((data: DialogModuleCannedResponse[]) => {
-          this._commands = data;
-          this.addCommands();
-        }).catch(error => {
-        console.error('Error fetching canned responses', error);
-      });
-    }
   }
 }
 

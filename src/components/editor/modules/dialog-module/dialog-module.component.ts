@@ -255,10 +255,6 @@ export default class DialogModuleComponent extends ZincElement {
         </div>
 
         <div class="dialog-module__footer">
-          <zn-button class="dialog-module__insert-button"
-                     size="medium">
-            Insert
-          </zn-button>
           <zn-button class="dialog-module__close-button"
                      size="medium"
                      color="secondary"

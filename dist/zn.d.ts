@@ -5859,6 +5859,14 @@ declare module "zinc" {
     export { default as PageNav } from "components/page-nav/index";
     export * from "events/events";
 }
+declare module "components/editor/modules/events/zn-editor-update" {
+    export type ZnEditorUpdateEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-editor-update': ZnEditorUpdateEvent;
+        }
+    }
+}
 declare module "components/hover-container/hover-container" {
     import '../../../dist/zn.min.js';
 }

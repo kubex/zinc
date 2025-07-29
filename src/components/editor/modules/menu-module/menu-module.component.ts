@@ -3,7 +3,7 @@ import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
-import type {MenuModuleCannedResponse} from "./menu-module";
+import type {CannedResponse} from "../../editor.component";
 import type ZnMenu from "../../../menu";
 
 import styles from './menu-module.scss';
@@ -19,7 +19,7 @@ export default class MenuModuleComponent extends ZincElement {
 
   @query('.menu-module') menuModule!: HTMLElement;
 
-  @property({type: Array}) commands: MenuModuleCannedResponse[] = [];
+  @property({type: Array}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
   private closeWatcher: CloseWatcher | null;
@@ -107,7 +107,7 @@ export default class MenuModuleComponent extends ZincElement {
     this.emit('zn-command-select', {detail: {item}});
   }
 
-  private _createCommand(command: MenuModuleCannedResponse): TemplateResult {
+  private _createCommand(command: CannedResponse): TemplateResult {
     return html`
       <zn-menu-item data-command="${command.title}" @click="${this.handleClick}">
         <div class="command__wrapper">

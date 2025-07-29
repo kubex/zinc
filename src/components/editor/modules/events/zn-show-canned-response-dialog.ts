@@ -3,6 +3,7 @@ export type ZnShowCannedResponseDialogEvent = CustomEvent<{
     title: string;
     content: string;
     command: string;
+    count: string;
     labels?: string[];
   }[];
 }>;

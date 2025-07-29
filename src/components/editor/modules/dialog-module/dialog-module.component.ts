@@ -4,7 +4,7 @@ import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
-import type {DialogModuleCannedResponse} from "./dialog-module";
+import type {CannedResponse} from "../../editor.component";
 
 import styles from './dialog-module.scss';
 
@@ -20,7 +20,7 @@ export default class DialogModuleComponent extends ZincElement {
 
   @query('.dialog-module') dialogModule!: HTMLElement;
 
-  @property({type: Array}) commands: DialogModuleCannedResponse[] = [];
+  @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
   private closeWatcher: CloseWatcher | null;
@@ -182,7 +182,7 @@ export default class DialogModuleComponent extends ZincElement {
     this.emit('zn-command-select', {detail: {item}});
   }
 
-  private _createCommand(command: DialogModuleCannedResponse): TemplateResult {
+  private _createCommand(command: CannedResponse): TemplateResult {
     const labels: string[] = [];
     if (command.labels) {
       command.labels.forEach((label: string) => {
@@ -248,7 +248,7 @@ export default class DialogModuleComponent extends ZincElement {
 
         <div class="dialog-module__body">
           <div class="dialog-module__content">
-            ${repeat(this.commands, (command: DialogModuleCannedResponse) => this._createCommand(command))}
+            ${repeat(this.commands, (command: CannedResponse) => this._createCommand(command))}
           </div>
 
           <slot></slot>

@@ -3,70 +3,48 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ZnCommandSelectEvent} from "../events/zn-command-select";
 import Quill, {type Delta} from 'quill';
+import type {CannedResponse} from "../../editor.component";
 import type ZnMenuModule from './menu-module.component';
 
 interface MenuModuleOptions {
-  cannedResponses: MenuModuleCannedResponse[];
+  cannedResponses: CannedResponse[];
   cannedResponsesUri: string;
-}
-
-export interface MenuModuleCannedResponse {
-  title: string;
-  content: string;
-  command: string;
-  labels?: string[];
-  count: string;
 }
 
 export let menuOpen: boolean = false;
 
 class MenuModule {
   private _quill: Quill;
-  private readonly _menu: ZnMenuModule;
+  private _menu: ZnMenuModule;
   private readonly _cannedResponsesUri: string = '';
-  private _commands: MenuModuleCannedResponse[] = [];
+  private _commands: CannedResponse[] = [];
 
   constructor(quill: Quill, options: MenuModuleOptions) {
     this._quill = quill;
+    this._cannedResponsesUri = options.cannedResponsesUri?.trim() || '';
+    this._commands = options.cannedResponses || [];
 
-    if (options.cannedResponses) {
-      this._commands = options.cannedResponses;
-    }
-
-    if (options.cannedResponsesUri !== ' ') {
-      this._cannedResponsesUri = options.cannedResponsesUri;
-    }
-
-    if (this._commands.length > 0 || this._cannedResponsesUri !== '') {
-      quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
-
-      // Create the menu element
-      const menu = this.createMenu();
-      if (!menu) {
-        throw new Error('Menu element not found');
-      }
-      this._menu = menu;
-      this._quill.container.ownerDocument.body.appendChild(this._menu);
-
-      // Add menu commands
-      this.updateMenuPosition();
-      this.addCommands();
-
-      // Listen to zn-command-select event
-      document.addEventListener('zn-command-select', (e: ZnCommandSelectEvent) => {
-        const item = e.detail.item;
-        const command = item.getAttribute('data-command');
-        if (command) {
-          this.triggerCommand(this._commands.find((c) => c.title === command)!);
-        }
-      });
-      this._menu.addEventListener('zn-show', () => {
-        setTimeout(() => this.updateMenuPosition(this._menu), 1);
-      })
+    if (this._commands.length > 0 || this._cannedResponsesUri) {
+      this.initMenu();
+      this.attachEvents();
     }
   }
 
-  onTextChange = (_: Delta, _oldDelta: Delta, source: string) => {
+  private initMenu() {
+    this._menu = this.createMenu()!;
+    this._quill.container.ownerDocument.body.appendChild(this._menu);
+    this.updateMenuPosition();
+    this.addCommands();
+  }
+
+  private attachEvents() {
+    this._quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
+    document.addEventListener('zn-command-select', this.onCommandSelect);
+    document.addEventListener('click', this.onDocumentClick);
+    this._menu.addEventListener('zn-show', () => setTimeout(() => this.updateMenuPosition(), 1));
+  }
+
+  private onTextChange = (_: Delta, _oldDelta: Delta, source: string) => {
     if (source === Quill.sources.USER) {
       // if the user has typed a forward slash, we will show the menu until they type
       // a space or a new line. The menu will contain a list of commands that the user
@@ -102,7 +80,23 @@ class MenuModule {
     }
   }
 
-  updateMenuPosition(menu: ZnMenuModule = this._menu) {
+  private onCommandSelect = (e: Event) => {
+    const event = e as ZnCommandSelectEvent;
+    const commandTitle = event.detail.item.getAttribute('data-command');
+    if (!commandTitle) return;
+    const command = this._commands.find(cmd => cmd.title === commandTitle);
+    if (command) {
+      this.triggerCommand(command);
+    }
+  };
+
+  private onDocumentClick = (e: MouseEvent) => {
+    if (menuOpen && e.target !== this._menu) {
+      this.closeMenu();
+    }
+  };
+
+  private updateMenuPosition(menu: ZnMenuModule = this._menu) {
     const editorBounds = this._quill.container.getBoundingClientRect();
 
     // Get the current cursor position
@@ -123,57 +117,47 @@ class MenuModule {
     }
   }
 
-  openMenu() {
+  private openMenu() {
     menuOpen = true;
     if (this._cannedResponsesUri) {
-      this.getMenuContentFromUri();
+      this.fetchCannedResponses();
     }
     this._menu.show();
     this._menu.focus();
   }
 
-  closeMenu() {
+  private closeMenu() {
     menuOpen = false;
     this._menu.hide();
   }
 
-  createMenu() {
+  private createMenu() {
     const menu = html`
       <zn-menu-module anchor=${this._quill.container}></zn-menu-module>`
 
     return litToHTML<ZnMenuModule>(menu);
   }
 
-  addCommands() {
+  private addCommands() {
     this._menu.setAttribute('commands', JSON.stringify(this._commands));
   }
 
-  triggerCommand(command: MenuModuleCannedResponse) {
+  private triggerCommand(command: CannedResponse) {
     this.closeMenu();
-
-    // insert the command content
     const delta = this._quill.clipboard.convert({html: command.content});
     this._quill.setContents(delta, 'silent');
-    // update the quill editor
     this._quill.update();
-
     this._quill.focus();
-    // Set cursor position to the end of the inserted content
-    const range = this._quill.getSelection()?.index || 0;
-    setTimeout(() => range + 10, 1000);
   }
 
-  private getMenuContentFromUri() {
-    if (this._cannedResponsesUri) {
-      fetch(this._cannedResponsesUri)
-        .then(response => response.json())
-        .then((data: MenuModuleCannedResponse[]) => {
-          this._commands = data;
-          this.addCommands();
-        }).catch(error => {
-        console.error('Error fetching canned responses', error);
-      });
-    }
+  private fetchCannedResponses() {
+    fetch(this._cannedResponsesUri)
+      .then(response => response.json())
+      .then((data: CannedResponse[]) => {
+        this._commands = data;
+        this.addCommands();
+      })
+      .catch(error => console.error('Error fetching canned responses', error));
   }
 }
 

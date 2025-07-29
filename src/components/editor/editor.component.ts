@@ -5,7 +5,7 @@ import AttachmentModule from "./modules/attachment-module";
 import DialogModule, {dialogOpen} from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
-import MenuModule from "./modules/menu-module/menu-module";
+import MenuModule, {menuOpen} from "./modules/menu-module/menu-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import ZincElement from '../../internal/zinc-element';
@@ -14,6 +14,14 @@ import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-can
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 
 import styles from './editor.scss';
+
+export interface CannedResponse {
+  title: string;
+  content: string;
+  command: string;
+  labels?: string[];
+  count: string;
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -301,8 +309,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._setupTitleAttributes(quill);
 
-    const html = quill.clipboard.convert({html: this.value});
-    quill.setContents(html, Quill.sources.SILENT);
+    const delta = quill.clipboard.convert({html: this.value});
+    quill.setContents(delta, Quill.sources.SILENT);
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
@@ -355,7 +363,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         shiftKey: false,
         handler: () => {
           const form = this.closest('form');
-          if (form && !dialogOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+          if (form && !dialogOpen && !menuOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
             this.emit('zn-submit', {detail: {value: this.value, element: this}});
             form.requestSubmit();
             this.quillElement.setText('');

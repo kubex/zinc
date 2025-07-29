@@ -10,6 +10,12 @@
   background-color: rgba(128, 128, 128, 0.6);
 }
 
+dialog[open="true"] {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--zn-spacing-medium);
+}
+
 .dialog-module {
   background-color: rgb(var(--zn-panel));
   border: 1px solid rgb(var(--zn-border-color));
@@ -20,12 +26,6 @@
   width: 100%;
   max-width: 975px;
   max-height: 650px;
-
-  &--open {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: var(--zn-spacing-medium);
-  }
 
   &__header {
     display: flex;

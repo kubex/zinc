@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
@@ -36,6 +36,14 @@ export default class DialogModuleComponent extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+
+    this.dialogEl.addEventListener("close", () => {
+      this.open = false;
+    });
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -139,11 +147,11 @@ export default class DialogModuleComponent extends ZincElement {
   @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange() {
     if (this.open) {
-      this.dialogEl?.showModal();
+      this.dialogEl?.showModal(); // These are needed - Do not remove!
       this.addOpenListeners();
       setTimeout(() => this.focus(), 0);
     } else {
-      this.dialogEl?.close();
+      this.dialogEl?.close(); // These are needed - Do not remove!
       this.removeOpenListeners();
     }
   }
@@ -244,11 +252,11 @@ export default class DialogModuleComponent extends ZincElement {
   render() {
     return html`
       <dialog closedby="any"
+              open="${this.open}"
               class="${classMap({
                 'dialog-module': true,
                 'dialog-module--has-focus': this.hasFocus,
                 'dialog-module--has-results': this.commands.length > 0,
-                'dialog-module--open': this.open,
               })}">
 
         <div class="dialog-module__header">

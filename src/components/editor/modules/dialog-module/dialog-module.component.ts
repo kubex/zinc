@@ -1,24 +1,30 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
-import type {DropdownModuleCannedResponse} from "./dropdown-module";
+import type {CannedResponse} from "../../editor.component";
+import type {ZnInputEvent} from "../../../../events/zn-input";
+import type ZnInput from "../../../input";
 
-import styles from './dropdown-module.scss';
+import styles from './dialog-module.scss';
 
-export default class DropdownModuleComponent extends ZincElement {
+export default class DialogModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @state() private hasFocus = false;
+  @state() private isSearching = false;
 
-  @query('zn-input#search-input') searchInput!: HTMLInputElement;
-  @query('.dropdown-module__content') commandList!: HTMLElement;
+  @query('dialog') dialogEl!: HTMLDialogElement;
 
-  @query('.dropdown-module') dropdownModule!: HTMLElement;
+  @query('zn-input#search-input') searchInput!: ZnInput;
+  @query('.dialog-module__content') commandList!: HTMLElement;
 
-  @property({type: Array}) commands: DropdownModuleCannedResponse[] = [];
+  @query('.dialog-module') dialogModule!: HTMLElement;
+
+  @property({type: Array}) allCommands: CannedResponse[] = [];
+  @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
   private closeWatcher: CloseWatcher | null;
@@ -33,9 +39,16 @@ export default class DropdownModuleComponent extends ZincElement {
     this.removeEventListener('keydown', this.handleKeyDown);
   }
 
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+
+    this.dialogEl.addEventListener("close", () => {
+      this.open = false;
+    });
+  }
+
   private handleKeyDown(event: KeyboardEvent) {
-    // Make a selection when pressing enter or space
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === 'Enter') {
       const item = this.getCurrentItem();
       event.preventDefault();
       event.stopPropagation();
@@ -97,15 +110,6 @@ export default class DropdownModuleComponent extends ZincElement {
     return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
   }
 
-  unsetCurrentItem() {
-    const items = this.getAllItems();
-
-    // Update tab indexes
-    items.forEach(i => {
-      i.setAttribute('tabindex', '-1');
-    });
-  }
-
   setCurrentItem(item: HTMLElement) {
     const items = this.getAllItems();
 
@@ -115,41 +119,18 @@ export default class DropdownModuleComponent extends ZincElement {
     });
   }
 
-  private handleFocus() {
-    this.hasFocus = true;
-    this.dropdownModule?.focus();
-    this.emit('zn-focus');
-  }
-
-  private handleBlur() {
-    this.hasFocus = false;
-    this.dropdownModule?.blur();
-    this.emit('zn-blur');
-  }
-
   focus() {
     this.searchInput.focus();
-  }
-
-  show() {
-    this.open = true;
-    this.emit('zn-show');
-    this.searchInput.focus();
-  }
-
-  hide() {
-    this.open = false;
-    this.unsetCurrentItem();
-    this.emit('zn-close');
-    this.blur();
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange() {
     if (this.open) {
+      this.dialogEl?.showModal(); // These are needed - Do not remove!
       this.addOpenListeners();
       setTimeout(() => this.focus(), 0);
     } else {
+      this.dialogEl?.close(); // These are needed - Do not remove!
       this.removeOpenListeners();
     }
   }
@@ -176,21 +157,16 @@ export default class DropdownModuleComponent extends ZincElement {
       return;
     }
 
-    this.hide();
+    this.dialogEl.close();
   }
 
   private handleClick = (event: MouseEvent) => {
-    const target = event.composedPath().find((el: EventTarget) => {
-      return (el as HTMLElement).getAttribute('data-command') !== null;
-    });
-
-    if (!target) return;
-
-    const item = target as HTMLElement;
-    this.emit('zn-command-select', {detail: {item}});
+    const item = (event.target as HTMLElement).closest('.command__wrapper');
+    if (!item) return;
+    this.emit('zn-command-select', {detail: {item: item as HTMLElement}});
   }
 
-  private _createCommand(command: DropdownModuleCannedResponse): TemplateResult {
+  private _createCommand(command: CannedResponse): TemplateResult {
     const labels: string[] = [];
     if (command.labels) {
       command.labels.forEach((label: string) => {
@@ -226,33 +202,89 @@ export default class DropdownModuleComponent extends ZincElement {
       </div>`
   }
 
+  private isFuzzyMatch(target: string, search: string): boolean {
+    let tIdx = 0;
+    let sIdx = 0;
+    target = target.toLowerCase();
+    search = search.toLowerCase();
+    while (tIdx < target.length && sIdx < search.length) {
+      if (target[tIdx] === search[sIdx]) sIdx++;
+      tIdx++;
+    }
+    return sIdx === search.length;
+  }
+
+  handleSearch(event: ZnInputEvent) {
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    const searchValue = target.value.trim().toLowerCase();
+    this.isSearching = !!searchValue;
+    if (!searchValue) {
+      this.commands = [...this.allCommands];
+      return;
+    }
+    this.commands = this.allCommands.filter(command =>
+      this.isFuzzyMatch(command.title, searchValue) ||
+      this.isFuzzyMatch(command.content, searchValue) ||
+      (command.labels && command.labels.some(label => this.isFuzzyMatch(label, searchValue)))
+    );
+  }
+
   render() {
+    const visibleCommands = this.isSearching
+      ? this.commands
+      : this.commands.sort((a, b) => parseInt(b.count) - parseInt(a.count))
+        .slice(0, 5);
     return html`
-      <div class="${classMap({
-        'dropdown-module': true,
-        'dropdown-module--has-focus': this.hasFocus,
-        'dropdown-module--has-results': this.commands.length > 0,
-        'dropdown-module--open': this.open,
-      })}">
+      <dialog closedby="any"
+              open="${this.open}"
+              class="${classMap({
+                'dialog-module': true,
+                'dialog-module--has-focus': this.hasFocus,
+                'dialog-module--has-results': visibleCommands.length > 0,
+              })}">
 
-        <div class="dropdown-module__header">
-          Canned Responses
+        <div class="dialog-module__header">
+          <div class="dialog-module__header--caption">
+            Canned Responses
+          </div>
+
+          <div class="dialog-module__header--search">
+            <zn-input id="search-input"
+                      type="search"
+                      placeholder="Search..."
+                      class="search-input"
+                      autocomplete="off"
+                      autocorrect="off"
+                      @zn-input="${this.handleSearch}">
+              <zn-icon src="search" slot="prefix"></zn-icon>
+            </zn-input>
+          </div>
         </div>
 
-        <zn-input id="search-input" type="search" placeholder="Search..." class="search-input"
-                  autocomplete="off" autocorrect="off" spellcheck="false"
-                  @focus="${this.handleFocus}" @blur="${this.handleBlur}"></zn-input>
+        <div class="dialog-module__body">
+          <div class="dialog-module__content">
+            ${repeat(visibleCommands, (command: CannedResponse) => this._createCommand(command))}
+          </div>
 
-        <div class="dropdown-module__content">
-          ${repeat(this.commands, (command: DropdownModuleCannedResponse) => this._createCommand(command))}
+          <slot></slot>
         </div>
 
-        <slot></slot>
+        <div class="dialog-module__footer">
+          <div>
+            Showing ${visibleCommands.length} of ${this.allCommands.length} responses
+          </div>
+          <zn-button class="dialog-module__close-button"
+                     size="medium"
+                     color="secondary"
+                     @click="${() => this.requestClose('close-button')}">
+            Close
+          </zn-button>
+        </div>
 
-      </div>
+      </dialog>
     `;
   }
 
 }
 
-DropdownModuleComponent.define('zn-dropdown-module');
+DialogModuleComponent.define('zn-dialog-module');

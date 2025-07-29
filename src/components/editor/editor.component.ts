@@ -2,15 +2,27 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
+import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
-import DropdownModule, {dropdownOpen} from "./modules/dropdown-module/dropdown-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
+import MenuModule from "./modules/menu-module/menu-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-canned-response-dialog";
+import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 
 import styles from './editor.scss';
+import MenuModuleComponent from "./modules/menu-module/menu-module.component";
+
+export interface CannedResponse {
+  title: string;
+  content: string;
+  command: string;
+  labels?: string[];
+  count: string;
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -86,7 +98,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    Quill.register('modules/dropdownModule', DropdownModule as any);
+    Quill.register('modules/dialogModule', DialogModule as any);
+    Quill.register('modules/menuModule', MenuModule as any);
     Quill.register('modules/attachmentModule', AttachmentModule as any);
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any);
@@ -140,7 +153,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
-        dropdownModule: {
+        dialogModule: {},
+        menuModule: {
           cannedResponses: this.cannedResponses,
           cannedResponsesUri: this.cannedResponsesUri
         },
@@ -182,7 +196,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
-    this._supplyPlaceholderDropdown();
+    this._supplyPlaceholderDialog();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -254,7 +268,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         if (!quill.selection.hasFocus()) quill.selection.root.focus();
         const native = (quill.selection.getNativeRange() || {}).native;
         // @ts-ignore
-        if (native === null || force || startNode !== native.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
+        if (native === null || force || startNode !== native?.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
           if (startNode.tagName === "BR") {
             // @ts-ignore
             startOffset = [].indexOf.call(startNode.parentNode.childNodes, startNode);
@@ -278,6 +292,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       }
     }
 
+    // Listen for 'View All' click from menu module
+    document.addEventListener('zn-show-canned-response-dialog', (e: ZnShowCannedResponseDialogEvent) => {
+      const dialog: DialogModuleComponent | null = document.querySelector('zn-dialog-module');
+      if (dialog && e.detail.commands) {
+        dialog.allCommands = e.detail.commands; // Need a ref of original list when searching
+        dialog.commands = e.detail.commands;
+        dialog.dialogEl.showModal();
+      }
+    });
+
     /**
      * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM
      **/
@@ -287,8 +311,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._setupTitleAttributes(quill);
 
-    const html = quill.clipboard.convert({html: this.value});
-    quill.setContents(html, Quill.sources.SILENT);
+    const delta = quill.clipboard.convert({html: this.value});
+    quill.setContents(delta, Quill.sources.SILENT);
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
@@ -340,11 +364,17 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         key: 'Enter',
         shiftKey: false,
         handler: () => {
-          const form = this.closest('form');
-          if (form && !dropdownOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
-            this.emit('zn-submit', {detail: {value: this.value, element: this}});
-            form.requestSubmit();
-            this.quillElement.setText('');
+          const dialog = document.querySelector('zn-dialog-module') as DialogModuleComponent | null;
+          const isDialogOpen = dialog?.open ?? false;
+          const menu = document.querySelector('zn-menu-module') as MenuModuleComponent | null;
+          const isMenuOpen = menu?.open ?? false;
+          if (!isMenuOpen && !isDialogOpen) {
+            const form = this.closest('form');
+            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+              this.emit('zn-submit', {detail: {value: this.value, element: this}});
+              form.requestSubmit();
+              this.quillElement.setText('');
+            }
           }
         },
       };
@@ -353,7 +383,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     return bindings;
   }
 
-  private _supplyPlaceholderDropdown() {
+  private _supplyPlaceholderDialog() {
     const placeholderItems: HTMLElement[] = Array.prototype.slice.call(this.shadowRoot?.querySelectorAll('.ql-placeholder .ql-picker-item'));
     placeholderItems.forEach((item) => {
       item.textContent = item.dataset.value ?? ''

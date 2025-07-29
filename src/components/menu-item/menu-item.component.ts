@@ -10,9 +10,9 @@ import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
+import type ZnDropdown from "../dropdown";
 
 import styles from './menu-item.scss';
-import ZnDropdown from "../dropdown";
 
 /**
  * @summary Short summary of the component's intended use.

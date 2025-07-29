@@ -3876,6 +3876,70 @@ declare module "components/editor/modules/attachment-module" {
         private _uploadAttachment;
     }
 }
+declare module "components/editor/modules/dialog-module/dialog-module.component" {
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
+    import ZincElement from "internal/zinc-element";
+    import type { CannedResponse } from "components/editor/editor.component";
+    import type { ZnInputEvent } from "events/zn-input";
+    import type ZnInput from "components/input/index";
+    export default class DialogModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        private hasFocus;
+        private isSearching;
+        dialogEl: HTMLDialogElement;
+        searchInput: ZnInput;
+        commandList: HTMLElement;
+        dialogModule: HTMLElement;
+        allCommands: CannedResponse[];
+        commands: CannedResponse[];
+        open: boolean;
+        private closeWatcher;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private handleKeyDown;
+        getAllItems(): HTMLElement[];
+        getCurrentItem(): HTMLElement | undefined;
+        setCurrentItem(item: HTMLElement): void;
+        focus(): void;
+        handleOpenChange(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private requestClose;
+        private handleClick;
+        private _createCommand;
+        private isFuzzyMatch;
+        handleSearch(event: ZnInputEvent): void;
+        render(): TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/events/zn-command-select" {
+    export type ZnCommandSelectEvent = CustomEvent<{
+        item: HTMLElement;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-command-select': ZnCommandSelectEvent;
+        }
+    }
+}
+declare module "components/editor/modules/dialog-module/dialog-module" {
+    import "components/editor/modules/dialog-module/dialog-module.component";
+    import type Quill from 'quill';
+    class DialogModule {
+        private _quill;
+        private _dialog;
+        private _commands;
+        constructor(quill: Quill);
+        private initDialog;
+        private attachEvents;
+        private onCommandSelect;
+        private createDialog;
+        private addCommands;
+        private triggerCommand;
+    }
+    export default DialogModule;
+}
 declare module "components/editor/modules/drag-drop-module" {
     import Quill from 'quill';
     interface DragAndDropModuleOptions {
@@ -3893,82 +3957,6 @@ declare module "components/editor/modules/drag-drop-module" {
         handleDrop: (e: DragEvent) => void;
     }
     export const getFileDataUrl: (file: any) => Promise<unknown>;
-}
-declare module "components/editor/modules/dropdown-module/dropdown-module.component" {
-    import { type CSSResultGroup, type TemplateResult } from "lit";
-    import ZincElement from "internal/zinc-element";
-    import type { DropdownModuleCannedResponse } from "components/editor/modules/dropdown-module/dropdown-module";
-    export default class DropdownModuleComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        private hasFocus;
-        searchInput: HTMLInputElement;
-        commandList: HTMLElement;
-        dropdownModule: HTMLElement;
-        commands: DropdownModuleCannedResponse[];
-        open: boolean;
-        private closeWatcher;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private handleKeyDown;
-        getAllItems(): HTMLElement[];
-        getCurrentItem(): HTMLElement | undefined;
-        unsetCurrentItem(): void;
-        setCurrentItem(item: HTMLElement): void;
-        private handleFocus;
-        private handleBlur;
-        focus(): void;
-        show(): void;
-        hide(): void;
-        handleOpenChange(): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private requestClose;
-        private handleClick;
-        private _createCommand;
-        render(): TemplateResult<1>;
-    }
-}
-declare module "components/editor/modules/dropdown-module/events/zn-command-select" {
-    export type ZnCommandSelectEvent = CustomEvent<{
-        item: HTMLElement;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-command-select': ZnCommandSelectEvent;
-        }
-    }
-}
-declare module "components/editor/modules/dropdown-module/dropdown-module" {
-    import "components/editor/modules/dropdown-module/dropdown-module.component";
-    import Quill, { type Delta } from 'quill';
-    import type ZnDropdownModule from "components/editor/modules/dropdown-module/dropdown-module.component";
-    interface DropdownModuleOptions {
-        cannedResponses: DropdownModuleCannedResponse[];
-        cannedResponsesUri: string;
-    }
-    export interface DropdownModuleCannedResponse {
-        title: string;
-        content: string;
-        command: string;
-        labels?: string[];
-    }
-    export let dropdownOpen: boolean;
-    class DropdownModule {
-        private _quill;
-        private readonly _dropdown;
-        private readonly _cannedResponsesUri;
-        private _commands;
-        constructor(quill: Quill, options: DropdownModuleOptions);
-        onTextChange: (_: Delta, _oldDelta: Delta, source: string) => void;
-        openDropdown(): void;
-        closeDropdown(): void;
-        createDropdown(): ZnDropdownModule | null;
-        updateDropdownPosition(dropdown?: ZnDropdownModule): void;
-        addCommands(): void;
-        triggerCommand(command: DropdownModuleCannedResponse): void;
-        private getDropdownContentFromUri;
-    }
-    export default DropdownModule;
 }
 declare module "components/editor/modules/image-resize-module/image-resize-module" {
     import Quill, { Module } from "quill";
@@ -3992,6 +3980,65 @@ declare module "components/editor/modules/image-resize-module/image-resize-modul
     }
     export default ImageResizeModule;
 }
+declare module "components/editor/modules/menu-module/menu-module.component" {
+    import { type CSSResultGroup, type TemplateResult } from "lit";
+    import ZincElement from "internal/zinc-element";
+    import type { CannedResponse } from "components/editor/editor.component";
+    import type ZnMenu from "components/menu/index";
+    export default class MenuModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        private hasFocus;
+        menuEl: ZnMenu;
+        commandList: HTMLElement;
+        menuModule: HTMLElement;
+        commands: CannedResponse[];
+        open: boolean;
+        private closeWatcher;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        focus(): void;
+        show(): void;
+        hide(): void;
+        handleOpenChange(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private requestClose;
+        private showDialog;
+        private handleClick;
+        private _createCommand;
+        render(): TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/menu-module/menu-module" {
+    import "components/editor/modules/menu-module/menu-module.component";
+    import Quill from 'quill';
+    import type { CannedResponse } from "components/editor/editor.component";
+    interface MenuModuleOptions {
+        cannedResponses: CannedResponse[];
+        cannedResponsesUri: string;
+    }
+    export let menuOpen: boolean;
+    class MenuModule {
+        private _quill;
+        private _menu;
+        private readonly _cannedResponsesUri;
+        private _commands;
+        constructor(quill: Quill, options: MenuModuleOptions);
+        private initMenu;
+        private attachEvents;
+        private onTextChange;
+        private onCommandSelect;
+        private onDocumentClick;
+        private updateMenuPosition;
+        private openMenu;
+        private closeMenu;
+        private createMenu;
+        private addCommands;
+        private triggerCommand;
+        private fetchCannedResponses;
+    }
+    export default MenuModule;
+}
 declare module "components/editor/modules/time-tracking-module" {
     import Quill from 'quill';
     type TimeTrackingModuleOptions = {
@@ -4008,10 +4055,33 @@ declare module "components/editor/modules/time-tracking-module" {
         private _updateStartTime;
     }
 }
+declare module "components/editor/modules/events/zn-show-canned-response-dialog" {
+    export type ZnShowCannedResponseDialogEvent = CustomEvent<{
+        commands: {
+            title: string;
+            content: string;
+            command: string;
+            count: string;
+            labels?: string[];
+        }[];
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-show-canned-response-dialog': ZnShowCannedResponseDialogEvent;
+        }
+    }
+}
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
+    export interface CannedResponse {
+        title: string;
+        content: string;
+        command: string;
+        labels?: string[];
+        count: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/editor
@@ -4051,7 +4121,7 @@ declare module "components/editor/editor.component" {
         private _handleTextChange;
         private _updateIcons;
         private _getQuillKeyboardBindings;
-        private _supplyPlaceholderDropdown;
+        private _supplyPlaceholderDialog;
         private _setupTitleAttributes;
         render(): import("lit").TemplateResult<1>;
     }
@@ -5920,6 +5990,17 @@ declare module "events/zn-load" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-load': ZnLoadEvent;
+        }
+    }
+}
+declare module "events/zn-menu-ready" {
+    export type ZnMenuReadyEvent = CustomEvent<{
+        value: string;
+        element: HTMLElement;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-menu-ready': ZnMenuReadyEvent;
         }
     }
 }

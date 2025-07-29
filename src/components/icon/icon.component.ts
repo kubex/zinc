@@ -159,7 +159,7 @@ export default class ZnIcon extends ZincElement {
           'icon--disabled': this.color === "disabled",
           'icon--avatar': this.library === "avatar"
         })}" style="${styleMap({
-          '--icon-size': this.library === "avatar" ? "40px" : this.size + "px",
+          '--icon-size': this.size + "px",
           '--avatar-color': this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null
         })}">
           ${this.library ? html`

@@ -307,6 +307,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
      **/
     document.addEventListener('selectionchange', () => this.quillElement.selection.update());
 
+    document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
 
     this._setupTitleAttributes(quill);
@@ -320,6 +321,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private _handleTextChange() {
     this.value = this.quillElement.root.innerHTML;
+    this.editorHtml.value = this.value;
     this.emit('zn-change');
   }
 

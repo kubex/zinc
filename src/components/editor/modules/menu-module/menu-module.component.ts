@@ -105,6 +105,7 @@ export default class MenuModuleComponent extends ZincElement {
 
     const item = target as HTMLElement;
     this.emit('zn-command-select', {detail: {item}});
+    this.emit('zn-editor-update');
   }
 
   private _createCommand(command: CannedResponse): TemplateResult {

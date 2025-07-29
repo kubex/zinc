@@ -164,6 +164,7 @@ export default class DialogModuleComponent extends ZincElement {
     const item = (event.target as HTMLElement).closest('.command__wrapper');
     if (!item) return;
     this.emit('zn-command-select', {detail: {item: item as HTMLElement}});
+    this.emit('zn-editor-update');
   }
 
   private _createCommand(command: CannedResponse): TemplateResult {

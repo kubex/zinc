@@ -172,14 +172,9 @@ export default class DialogModuleComponent extends ZincElement {
   }
 
   private handleClick = (event: MouseEvent) => {
-    const target = event.composedPath().find((el: EventTarget) => {
-      return (el as HTMLElement).getAttribute('data-command') !== null;
-    });
-
-    if (!target) return;
-
-    const item = target as HTMLElement;
-    this.emit('zn-command-select', {detail: {item}});
+    const item = (event.target as HTMLElement).closest('.command__wrapper');
+    if (!item) return;
+    this.emit('zn-command-select', {detail: {item: item as HTMLElement}});
   }
 
   private _createCommand(command: CannedResponse): TemplateResult {

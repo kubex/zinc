@@ -2,10 +2,10 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
-import DialogModule, {dialogOpen} from "./modules/dialog-module/dialog-module";
+import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
-import MenuModule, {menuOpen} from "./modules/menu-module/menu-module";
+import MenuModule from "./modules/menu-module/menu-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import ZincElement from '../../internal/zinc-element';
@@ -14,6 +14,7 @@ import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-can
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 
 import styles from './editor.scss';
+import MenuModuleComponent from "./modules/menu-module/menu-module.component";
 
 export interface CannedResponse {
   title: string;
@@ -297,7 +298,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       if (dialog && e.detail.commands) {
         dialog.allCommands = e.detail.commands; // Need a ref of original list when searching
         dialog.commands = e.detail.commands;
-        dialog.show();
+        dialog.dialogEl.showModal();
       }
     });
 
@@ -363,11 +364,17 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         key: 'Enter',
         shiftKey: false,
         handler: () => {
-          const form = this.closest('form');
-          if (form && !dialogOpen && !menuOpen && this.value && this.value.trim().length > 0 && !empty(this.value)) {
-            this.emit('zn-submit', {detail: {value: this.value, element: this}});
-            form.requestSubmit();
-            this.quillElement.setText('');
+          const dialog = document.querySelector('zn-dialog-module') as DialogModuleComponent | null;
+          const isDialogOpen = dialog?.open ?? false;
+          const menu = document.querySelector('zn-menu-module') as MenuModuleComponent | null;
+          const isMenuOpen = menu?.open ?? false;
+          if (!isMenuOpen && !isDialogOpen) {
+            const form = this.closest('form');
+            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+              this.emit('zn-submit', {detail: {value: this.value, element: this}});
+              form.requestSubmit();
+              this.quillElement.setText('');
+            }
           }
         },
       };

@@ -6,8 +6,6 @@ import type {ZnCommandSelectEvent} from "../events/zn-command-select";
 import type Quill from 'quill';
 import type ZnDialogModule from './dialog-module.component';
 
-export let dialogOpen: boolean = false;
-
 class DialogModule {
   private _quill: Quill;
   private _dialog: ZnDialogModule;
@@ -28,7 +26,6 @@ class DialogModule {
 
   private attachEvents() {
     document.addEventListener('zn-command-select', this.onCommandSelect);
-    document.addEventListener('click', this.onDocumentClick);
   }
 
   private onCommandSelect = (e: ZnCommandSelectEvent) => {
@@ -38,17 +35,6 @@ class DialogModule {
       this.triggerCommand(this._commands.find((c) => c.title === command)!);
     }
   };
-
-  private onDocumentClick = (e: MouseEvent) => {
-    if (dialogOpen && e.target !== this._dialog) {
-      this.closeDialog();
-    }
-  };
-
-  private closeDialog() {
-    dialogOpen = false;
-    this._dialog.hide();
-  }
 
   private createDialog() {
     const dialog = html`
@@ -62,7 +48,7 @@ class DialogModule {
   }
 
   private triggerCommand(command: CannedResponse) {
-    this.closeDialog();
+    this._dialog.dialogEl.close();
     const delta = this._quill.clipboard.convert({html: command?.content});
     this._quill.setContents(delta, 'silent');
     this._quill.update();

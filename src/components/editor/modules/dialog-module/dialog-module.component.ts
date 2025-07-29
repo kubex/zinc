@@ -14,6 +14,7 @@ export default class DialogModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @state() private hasFocus = false;
+  @state() private isSearching = false;
 
   @query('dialog') dialogEl!: HTMLDialogElement;
 
@@ -109,15 +110,6 @@ export default class DialogModuleComponent extends ZincElement {
     return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
   }
 
-  unsetCurrentItem() {
-    const items = this.getAllItems();
-
-    // Update tab indexes
-    items.forEach(i => {
-      i.setAttribute('tabindex', '-1');
-    });
-  }
-
   setCurrentItem(item: HTMLElement) {
     const items = this.getAllItems();
 
@@ -129,19 +121,6 @@ export default class DialogModuleComponent extends ZincElement {
 
   focus() {
     this.searchInput.focus();
-  }
-
-  show() {
-    this.open = true;
-    this.emit('zn-show');
-    this.focus();
-  }
-
-  hide() {
-    this.open = false;
-    this.unsetCurrentItem();
-    this.emit('zn-close');
-    this.blur();
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
@@ -178,7 +157,7 @@ export default class DialogModuleComponent extends ZincElement {
       return;
     }
 
-    this.hide();
+    this.dialogEl.close();
   }
 
   private handleClick = (event: MouseEvent) => {
@@ -238,6 +217,7 @@ export default class DialogModuleComponent extends ZincElement {
   handleSearch(event: ZnInputEvent) {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
     const searchValue = target.value.trim().toLowerCase();
+    this.isSearching = !!searchValue;
     if (!searchValue) {
       this.commands = [...this.allCommands];
       return;
@@ -250,13 +230,17 @@ export default class DialogModuleComponent extends ZincElement {
   }
 
   render() {
+    const visibleCommands = this.isSearching
+      ? this.commands
+      : this.commands.sort((a, b) => parseInt(b.count) - parseInt(a.count))
+        .slice(0, 5);
     return html`
       <dialog closedby="any"
               open="${this.open}"
               class="${classMap({
                 'dialog-module': true,
                 'dialog-module--has-focus': this.hasFocus,
-                'dialog-module--has-results': this.commands.length > 0,
+                'dialog-module--has-results': visibleCommands.length > 0,
               })}">
 
         <div class="dialog-module__header">
@@ -279,13 +263,16 @@ export default class DialogModuleComponent extends ZincElement {
 
         <div class="dialog-module__body">
           <div class="dialog-module__content">
-            ${repeat(this.commands, (command: CannedResponse) => this._createCommand(command))}
+            ${repeat(visibleCommands, (command: CannedResponse) => this._createCommand(command))}
           </div>
 
           <slot></slot>
         </div>
 
         <div class="dialog-module__footer">
+          <div>
+            Showing ${visibleCommands.length} of ${this.allCommands.length} responses
+          </div>
           <zn-button class="dialog-module__close-button"
                      size="medium"
                      color="secondary"

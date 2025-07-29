@@ -214,7 +214,7 @@ export default class ZnExpandingAction extends ZincElement {
         })}"
         style=${styleMap({
           '--expanding-action-basis': this.method === "drop" && this.basis ? this.basis.replace('px', '') + 'px' : 'none',
-          '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : 'none',
+          '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : null,
         })}>
         ${this.method === 'drop' ? this.renderDropdown() : this.renderFill()}
       </div>`;

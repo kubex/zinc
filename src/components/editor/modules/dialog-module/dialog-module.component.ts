@@ -5,6 +5,8 @@ import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
 import type {CannedResponse} from "../../editor.component";
+import type {ZnInputEvent} from "../../../../events/zn-input";
+import type ZnInput from "../../../input";
 
 import styles from './dialog-module.scss';
 
@@ -15,11 +17,12 @@ export default class DialogModuleComponent extends ZincElement {
 
   @query('dialog') dialogEl!: HTMLDialogElement;
 
-  @query('zn-input#search-input') searchInput!: HTMLInputElement;
+  @query('zn-input#search-input') searchInput!: ZnInput;
   @query('.dialog-module__content') commandList!: HTMLElement;
 
   @query('.dialog-module') dialogModule!: HTMLElement;
 
+  @property({type: Array}) allCommands: CannedResponse[] = [];
   @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
@@ -36,8 +39,7 @@ export default class DialogModuleComponent extends ZincElement {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    // Make a selection when pressing enter or space
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === 'Enter') {
       const item = this.getCurrentItem();
       event.preventDefault();
       event.stopPropagation();
@@ -124,7 +126,7 @@ export default class DialogModuleComponent extends ZincElement {
   show() {
     this.open = true;
     this.emit('zn-show');
-    this.searchInput.focus();
+    this.focus();
   }
 
   hide() {
@@ -213,6 +215,32 @@ export default class DialogModuleComponent extends ZincElement {
       </div>`
   }
 
+  private isFuzzyMatch(target: string, search: string): boolean {
+    let tIdx = 0;
+    let sIdx = 0;
+    target = target.toLowerCase();
+    search = search.toLowerCase();
+    while (tIdx < target.length && sIdx < search.length) {
+      if (target[tIdx] === search[sIdx]) sIdx++;
+      tIdx++;
+    }
+    return sIdx === search.length;
+  }
+
+  handleSearch(event: ZnInputEvent) {
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    const searchValue = target.value.trim().toLowerCase();
+    if (!searchValue) {
+      this.commands = [...this.allCommands];
+      return;
+    }
+    this.commands = this.allCommands.filter(command =>
+      this.isFuzzyMatch(command.title, searchValue) ||
+      this.isFuzzyMatch(command.content, searchValue) ||
+      (command.labels && command.labels.some(label => this.isFuzzyMatch(label, searchValue)))
+    );
+  }
+
   render() {
     return html`
       <dialog closedby="any"
@@ -235,7 +263,7 @@ export default class DialogModuleComponent extends ZincElement {
                       class="search-input"
                       autocomplete="off"
                       autocorrect="off"
-                      spellcheck="false">
+                      @zn-input="${this.handleSearch}">
               <zn-icon src="search" slot="prefix"></zn-icon>
             </zn-input>
           </div>

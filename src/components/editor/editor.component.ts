@@ -295,6 +295,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     document.addEventListener('zn-show-canned-response-dialog', (e: ZnShowCannedResponseDialogEvent) => {
       const dialog: DialogModuleComponent | null = document.querySelector('zn-dialog-module');
       if (dialog && e.detail.commands) {
+        dialog.allCommands = e.detail.commands; // Need a ref of original list when searching
         dialog.commands = e.detail.commands;
         dialog.show();
       }

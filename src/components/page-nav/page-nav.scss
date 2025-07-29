@@ -6,7 +6,7 @@
   position: relative;
   height: 100%;
 
-  --page-nav-width: 250px;
+  --page-nav-width: 240px;
 }
 
 .breadcrumb {
@@ -33,7 +33,7 @@
   width: var(--page-nav-width);
   background-color: rgb(var(--zn-body));
   overflow-y: auto;
-  padding: var(--zn-spacing-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-small) var(--zn-spacing-small) var(--zn-spacing-medium);
   @include wc.scrollbars;
 }
 
@@ -64,34 +64,6 @@
   margin-top: 10px;
 }
 
-.navigation-group .navigation-item .selector {
-  border-radius: 50%;
-  width: 15px;
-  position: relative;
-  height: 15px;
-  background-color: var(--zn-color-gray-200);
-  transition: background-color 0.2s ease-in-out;
-  border: 1px solid rgb(var(--zn-border-color));
-}
-
-.navigation-group .navigation-item:hover .selector,
-.navigation-group .navigation-item.active .selector {
-  border-color: rgb(var(--zn-primary));
-
-  &:after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background-color: rgb(var(--zn-primary));
-  }
-}
-
-
 @include wc.container-query(null, ph) {
   .breadcrumb {
     display: flex;
@@ -99,7 +71,7 @@
     align-items: center;
     border-bottom: 1px solid rgb(var(--zn-border-color));
     width: 100%;
-    height: 40px;
+    height: 50px;
     background-color: rgb(var(--zn-body));
     gap: 10px;
   }

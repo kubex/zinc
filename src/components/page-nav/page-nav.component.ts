@@ -14,6 +14,7 @@ interface PageNavigation {
 }
 
 interface PageNavigationItem {
+  icon: string;
   label: string;
   uri: string;
 }
@@ -62,10 +63,10 @@ export default class ZnPageNav extends ZnTabs {
     const navItems = this.navigation.data.map(data => {
       return html`
         <div class="navigation-group">
-          <h4>${data.title}</h4>
+          ${data.title ? html`<h4>${data.title}</h4>` : ''}
           ${data.items.map(item => html`
             <div tab-uri="${item.uri}" class="navigation-item">
-              <div class="selector"></div>
+              <zn-icon src="${item.icon}" size="24"></zn-icon>
               ${item.label}
             </div>
           `)}

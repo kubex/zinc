@@ -42,6 +42,10 @@ export enum ActionSlots {
   sort = 'sort',
 }
 
+interface RowData {
+  [key: string]: string | number | object | undefined;
+}
+
 interface RenderDataValue {
   value: string | number;
   type: string;
@@ -158,8 +162,8 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: 'data-uri'}) dataUri: string;
   @property({attribute: 'data', type: Object, reflect: true}) data: any;
-  @property({attribute: 'sort-column'}) sortColumn: string = 'id';
-  @property({attribute: 'sort-direction'}) sortDirection: string = 'asc';
+  @property({attribute: 'sort-column'}) sortColumn: string;
+  @property({attribute: 'sort-direction'}) sortDirection: string;
   @property({attribute: 'filter'}) filter: string = '';
 
   @property({attribute: 'wide-column'}) wideColumn: string;
@@ -222,8 +226,12 @@ export default class ZnDataTable extends ZincElement {
       const params = new URLSearchParams();
       params.append('page', this.page.toString());
       params.append('per_page', this.itemsPerPage.toString());
-      params.append('sort_column', this.sortColumn);
-      params.append('sort_direction', this.sortDirection);
+      if (this.sortColumn) {
+        params.append('sort_column', this.sortColumn);
+      }
+      if (this.sortDirection) {
+        params.append('sort_direction', this.sortDirection);
+      }
       if (this.filter) {
         params.append('filter', this.filter);
       }
@@ -232,23 +240,27 @@ export default class ZnDataTable extends ZincElement {
       if (!this.dataUri) {
         return new Promise<TableData>((resolve) => {
           if (!this.data) throw new Error('No data provided, please provide data or dataUri');
-          let localData = this.data.data as any[];
-          const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage);
+          let localData = Array.isArray(this.data?.data) ? this.data.data as RowData[] : [];
 
-          localData.sort((a, b) => {
-            return this.sortData(a[this.sortColumn], b[this.sortColumn]);
-          });
+          if (this.sortColumn) {
+            localData = localData.sort((a, b) => {
+              const aValue = a?.[this.sortColumn];
+              const bValue = b?.[this.sortColumn];
+              return this.sortData(aValue, bValue);
+            });
+          }
 
+          const totalPages = Math.ceil(localData.length / this.itemsPerPage);
           const start = (this.page - 1) * this.itemsPerPage;
           const end = start + this.itemsPerPage;
-          localData = localData.slice(start, end);
+          const paginatedData = localData.slice(start, end);
 
           resolve({
             page: this.page,
             per_page: this.itemsPerPage,
-            total: this.totalPages,
+            total: localData.length,
             total_pages: totalPages,
-            data: localData,
+            data: paginatedData,
           } satisfies TableData);
         });
       }
@@ -387,7 +399,6 @@ export default class ZnDataTable extends ZincElement {
       </div>
     `;
   }
-
 
   getTableFooter() {
     const rowSelected = this.getRowsSelected();
@@ -864,7 +875,7 @@ export default class ZnDataTable extends ZincElement {
       return keys.map((header: any) => row[header]);
     });
 
-    if (this.dataUri) {
+    if (this.dataUri && this.sortColumn) {
       // sort the rows by the key
       rows = rows.sort((a, b) => {
         return this.sortData(a[keys.indexOf(this.sortColumn)], b[keys.indexOf(this.sortColumn)]);
@@ -892,12 +903,20 @@ export default class ZnDataTable extends ZincElement {
     this.updateActionKeys('delete-action');
   }
 
-  private sortData(a: string | number | object, b: string | number | object) {
-    if (typeof a === 'object' && 'value' in a) {
+  private sortData(a: RenderDataValue | string | number | object | undefined, b: RenderDataValue | string | number | object | undefined) {
+    if (a === undefined || b === undefined) {
+      return 0;
+    }
+
+    if (typeof a === 'object' && 'caption' in a && 'title' in a.caption) {
+      a = a.caption.title as string;
+    } else if (typeof a === 'object' && a && 'value' in a) {
       a = a.value as string | number;
     }
 
-    if (typeof b === 'object' && 'value' in b) {
+    if (typeof b === 'object' && 'caption' in b && 'title' in b.caption) {
+      b = b.caption.title as string;
+    } else if (typeof b === 'object' && b && 'value' in b) {
       b = b.value as string | number;
     }
 
@@ -910,9 +929,9 @@ export default class ZnDataTable extends ZincElement {
     }
 
     if (this.sortDirection === 'asc') {
-      return a > b ? 1 : -1;
+      return a > b ? 1 : a < b ? -1 : 0;
     }
 
-    return a < b ? 1 : -1;
+    return a < b ? 1 : a > b ? -1 : 0;
   }
 }

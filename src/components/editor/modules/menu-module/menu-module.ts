@@ -106,13 +106,21 @@ class MenuModule {
 
       if (cursorBounds) {
         // Position the menu to the right of the cursor
+        const maxHeight = 275;
         const top = editorBounds.top + cursorBounds.top;
         const left = editorBounds.left + cursorBounds.right + 10; // Add offset to the right
+        const windowHeight = window.innerHeight;
+        const hasRoom = windowHeight - top > maxHeight; // Check if there's enough room for the menu
+
+        if (hasRoom) {
+          menu.style.top = `${top}px`;
+        } else {
+          menu.style.top = `${top - maxHeight}px`;
+        }
 
         menu.style.position = 'absolute';
-        menu.style.top = top + 'px';
-        menu.style.left = left + 'px';
-        menu.style.maxHeight = '200px';
+        menu.style.left = `${left}px`;
+        menu.style.maxHeight = `${maxHeight}px`;
       }
     }
   }

@@ -449,7 +449,7 @@ export default class ZnDataTable extends ZincElement {
         <zn-select name="rowPerPage"
                    size="small"
                    value="${this.itemsPerPage}"
-                   @change=${this.updateRowsPerPage}>
+                   @zn-change=${this.updateRowsPerPage}>
           ${optionsRowsPerPage.map((option) => html`
             <zn-option value="${option}"
                        selected=${option === this.itemsPerPage || nothing}>${option}

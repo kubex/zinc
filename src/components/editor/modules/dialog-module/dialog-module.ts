@@ -61,7 +61,7 @@ class DialogModule {
         insertIndex += 1;
       }
 
-      const contentDelta = this._quill.clipboard.convert({html: command.content});
+      const contentDelta = this._quill.clipboard.convert({html: command?.content});
       this._quill.updateContents(
         new Delta().retain(insertIndex).concat(contentDelta),
         'user'

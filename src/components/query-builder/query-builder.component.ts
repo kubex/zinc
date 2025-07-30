@@ -3,12 +3,12 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {FormControlController} from "../../internal/form";
 import {litToHTML} from "../../utilities/lit-to-html";
 import {property, query} from 'lit/decorators.js';
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnInput from "../input";
 import ZnOption from "../option";
 import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 

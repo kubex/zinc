@@ -16,8 +16,39 @@ layout: component
 
 ```html:preview
 
-<zn-icon src="BG" library="avatar" color="primary"></zn-icon>
-<zn-icon src="BG" library="avatar" color="accent" round></zn-icon>
+<zn-icon src="A" size=32 library="avatar" round></zn-icon>
+<zn-icon src="B" size=32 library="avatar" round></zn-icon>
+<zn-icon src="C" size=32 library="avatar" round></zn-icon>
+<zn-icon src="D" size=32 library="avatar" round></zn-icon>
+<zn-icon src="E" size=32 library="avatar" round></zn-icon>
+<zn-icon src="F" size=32 library="avatar" round></zn-icon>
+<zn-icon src="G" size=32 library="avatar" round></zn-icon>
+<zn-icon src="H" size=32 library="avatar" round></zn-icon>
+<zn-icon src="I" size=32 library="avatar" round></zn-icon>
+<zn-icon src="J" size=32 library="avatar" round></zn-icon>
+<zn-icon src="K" size=32 library="avatar" round></zn-icon>
+<zn-icon src="L" size=32 library="avatar" round></zn-icon>
+<zn-icon src="M" size=32 library="avatar" round></zn-icon>
+<zn-icon src="N" size=32 library="avatar" round></zn-icon>
+<zn-icon src="O" size=32 library="avatar" round></zn-icon>
+<zn-icon src="P" size=32 library="avatar" round></zn-icon>
+<zn-icon src="Q" size=32 library="avatar" round></zn-icon>
+<zn-icon src="R" size=32 library="avatar" round></zn-icon>
+<zn-icon src="S" size=32 library="avatar" round></zn-icon>
+<zn-icon src="T" size=32 library="avatar" round></zn-icon>
+<zn-icon src="U" size=32 library="avatar" round></zn-icon>
+<zn-icon src="V" size=32 library="avatar" round></zn-icon>
+<zn-icon src="W" size=32 library="avatar" round></zn-icon>
+<zn-icon src="X" size=32 library="avatar" round></zn-icon>
+<zn-icon src="Y" size=32 library="avatar" round></zn-icon>
+<zn-icon src="Z" size=32 library="avatar" round></zn-icon>
+<zn-icon src="0" size=32 library="avatar" round></zn-icon>
+<zn-icon src="RV" size=32 library="avatar" round></zn-icon>
+<zn-icon src="RV" size=32 library="avatar" color="primary"></zn-icon>
+<zn-icon src="BG" size=32 library="avatar" color="accent" round></zn-icon>
+<zn-icon src="Random Name" size=32 library="avatar" color="error" round></zn-icon>
+<zn-icon src="ThankYou" size=32 library="avatar" color="success" round></zn-icon>
+<zn-icon src="What NeXt" size=32 library="avatar" color="warning" round></zn-icon>
 ```
 
 ## Icon Colors

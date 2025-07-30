@@ -83,7 +83,6 @@ export default class ZnTabs extends ZincElement {
     }
 
     const defaultID = this.defaultUri ? this._uriToId(this.defaultUri) : '';
-    console.log('defaultID', defaultID);
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zntab:", this.storeTtl);
     Array.from(this.children).forEach((element) => {

@@ -215,26 +215,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.sort.valueOf()
   );
 
-  // Get the UAC from the workspace - Rubix Dependent. This will not work for your application.
-  private _uacTask = new Task(this, {
-    task: async () => {
-      const response = await fetch('/_/workspace', {
-        credentials: 'same-origin',
-        headers: {
-          'x-requested-with': 'XMLHttpRequest',
-          'x-rubix': 'startup'
-        }
-      });
-
-      if (!response.ok) throw new Error(response.statusText);
-      const json = await response.json();
-      return json.uac;
-    },
-    args: () => []
-  });
-
   private _dataTask = new Task(this, {
-    task: async ([dataUri, uac], {signal}) => {
+    task: async ([dataUri], {signal}) => {
       let url = dataUri;
 
       const params = new URLSearchParams();
@@ -275,16 +257,12 @@ export default class ZnDataTable extends ZincElement {
       const response = await fetch(url, {
         signal,
         credentials: 'same-origin',
-        headers: {
-          'x-requested-with': 'XMLHttpRequest',
-          'x-kx-uac': uac
-        },
       });
 
       if (!response.ok) throw new Error(response.statusText);
       return response.json();
     },
-    args: () => [this.dataUri, this._uacTask.value]
+    args: () => [this.dataUri]
   });
 
   render() {
@@ -349,7 +327,7 @@ export default class ZnDataTable extends ZincElement {
       return html`
         <div class="table--empty">
           <zn-empty-state
-            caption=${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}
+            caption="${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}"
             icon="data_alert">
           </zn-empty-state>
         </div>`;
@@ -365,16 +343,16 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div style="overflow-x: auto">
-        <table class=${classMap({
+        <table class="${classMap({
           'table': true,
           'table--standalone': this.standalone,
           'with-hover': !this.unsortable,
-        })}>
+        })}">
           <thead>
           <tr>
             ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
               <th>
-                <div><input type="checkbox" @change=${this.selectAll}></div>
+                <div><input type="checkbox" @change="${this.selectAll}"></div>
               </th>`}
             ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
           </tr>
@@ -383,8 +361,8 @@ export default class ZnDataTable extends ZincElement {
           ${this._filteredRows.map((row: any) => html`
             <tr>
               ${this.hideCheckboxes ? html`` : html`
-                <td class=${classMap({'hidden': !hasSelectedRows})}>
-                  <div><input type="checkbox" @change=${this.selectRow}></div>
+                <td class="${classMap({'hidden': !hasSelectedRows})}">
+                  <div><input type="checkbox" @change="${this.selectRow}"></div>
                 </td>`}
               ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
             </tr>`)}
@@ -449,10 +427,10 @@ export default class ZnDataTable extends ZincElement {
         <zn-select name="rowPerPage"
                    size="small"
                    value="${this.itemsPerPage}"
-                   @zn-change=${this.updateRowsPerPage}>
+                   @zn-change="${this.updateRowsPerPage}">
           ${optionsRowsPerPage.map((option) => html`
             <zn-option value="${option}"
-                       selected=${option === this.itemsPerPage || nothing}>${option}
+                       selected="${option === this.itemsPerPage || nothing}">${option}
             </zn-option>`
           )}
         </zn-select>
@@ -467,28 +445,28 @@ export default class ZnDataTable extends ZincElement {
 
           <div class="table__footer__pagination-buttons">
             <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
-                       ?disabled=${this.page === 1}
+                       ?disabled="${this.page === 1}"
                        icon-size="16"
                        size="small"
                        icon="keyboard_double_arrow_left"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
-                       ?disabled=${this.page === 1}
+                       ?disabled="${this.page === 1}"
                        icon-size="16"
                        size="small"
                        icon="chevron_left"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                       ?disabled=${this.page === this.totalPages}
+                       ?disabled="${this.page === this.totalPages}"
                        icon-size="16"
                        size="small"
                        icon="chevron_right"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
-                       ?disabled=${this.page === this.totalPages}
+                       ?disabled="${this.page === this.totalPages}"
                        icon-size="16"
                        size="small"
                        icon="keyboard_double_arrow_right"
@@ -502,7 +480,7 @@ export default class ZnDataTable extends ZincElement {
 
     if (this.selectedRows.length > 0) {
       actions.push(html`
-        <zn-button @click=${this.clearSelectedRows} size="small" outline>
+        <zn-button @click="${this.clearSelectedRows}" size="small" outline>
           Clear Selection
         </zn-button>`);
 
@@ -678,8 +656,8 @@ export default class ZnDataTable extends ZincElement {
       if (data['url']) {
         content = html`
           <a href="${data['url']}"
-             data-target=${ifDefined(data['target'])}
-             gaid=${ifDefined(data['gaid'])}>${content}</a>`;
+             data-target="${ifDefined(data['target'])}"
+             gaid="${ifDefined(data['gaid'])}">${content}</a>`;
       }
 
       if (data['caption']) {
@@ -706,10 +684,10 @@ export default class ZnDataTable extends ZincElement {
         }
 
         content = html`
-          <div class=${classMap({
+          <div class="${classMap({
             'caption': true,
             'caption--icon': data['caption'].icon !== undefined,
-          })}>
+          })}">
             ${captionIcon}
             ${title}
             <span class="summary">${data['caption'].summary}</span>
@@ -775,8 +753,8 @@ export default class ZnDataTable extends ZincElement {
                     color="${button.color}"
                     icon="${button.icon}"
                     icon-size="${button.iconSize}"
-                    tooltip=${button.tooltip}
-                    outline=${ifDefined(button.outline)}>
+                    tooltip="${button.tooltip}"
+                    outline="${ifDefined(button.outline)}">
                     ${button.label || nothing}
                   </zn-button>
                   <zn-confirm
@@ -791,16 +769,16 @@ export default class ZnDataTable extends ZincElement {
             return html`
               <zn-button
                 id="${button.id}"
-                href=${button.href}
-                gaid=${button.gaid}
+                href="${button.href}"
+                gaid="${button.gaid}"
                 size="${button.size}"
                 color="${button.color}"
                 icon="${button.icon}"
                 icon-size="${button.iconSize}"
-                tooltip=${button.tooltip}
+                tooltip="${button.tooltip}"
                 data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
                 target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
-                outline=${ifDefined(button.outline)}>
+                outline="${ifDefined(button.outline)}">
                 ${button.label || nothing}
               </zn-button>`;
           })}`;
@@ -848,12 +826,12 @@ export default class ZnDataTable extends ZincElement {
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
     return html`
       <th
-        class=${classMap({
+        class="${classMap({
           'table__head': true,
           'table__head--wide': key === this.wideColumn,
           'table__head--last': key === headerKeys[headerKeys.length - 1],
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
-        })}
+        })}"
         @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
           ${this.headers[key]}
@@ -871,12 +849,12 @@ export default class ZnDataTable extends ZincElement {
     const header = headerKeys[index];
     return html`
       <td
-        @click=${this.selectRow}
-        class=${classMap({
+        @click="${this.selectRow}"
+        class="${classMap({
           'table__cell': true,
           'table__cell--wide': header === this.wideColumn,
           'table__cell--last': header === headerKeys[headerKeys.length - 1]
-        })}>
+        })}">
         <div>${this.renderData(value)}</div>
       </td>`;
   }

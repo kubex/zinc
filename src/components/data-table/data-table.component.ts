@@ -18,9 +18,9 @@ import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
+import type ZnSelect from "../select";
 
 import styles from './data-table.scss';
-import ZnSelect from "../select";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;

@@ -99,13 +99,18 @@ export default class MenuModuleComponent extends ZincElement {
   }
 
   private handleClick = (event: MouseEvent) => {
-    const target = event.target
+    const target = event.target as HTMLElement | null;
 
     if (!target) return;
 
-    const item = target as HTMLElement;
-    this.emit('zn-command-select', {detail: {item}});
-    this.emit('zn-editor-update');
+    const item = target.hasAttribute('data-command')
+      ? target
+      : target.closest('[data-command]') as HTMLElement | null;
+
+    if (item) {
+      this.emit('zn-command-select', {detail: {item}});
+      this.emit('zn-editor-update');
+    }
   }
 
   private _createCommand(command: CannedResponse): TemplateResult {

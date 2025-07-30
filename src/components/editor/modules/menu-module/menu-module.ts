@@ -2,7 +2,7 @@ import './menu-module.component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ZnCommandSelectEvent} from "../events/zn-command-select";
-import Quill, {type Delta} from 'quill';
+import Quill, {Delta} from 'quill';
 import type {CannedResponse} from "../../editor.component";
 import type ZnMenuModule from './menu-module.component';
 
@@ -144,10 +144,25 @@ class MenuModule {
 
   private triggerCommand(command: CannedResponse) {
     this.closeMenu();
-    const delta = this._quill.clipboard.convert({html: command.content});
-    this._quill.setContents(delta, 'silent');
-    this._quill.update();
-    this._quill.focus();
+    const range = this._quill.getSelection();
+    if (range) {
+      this._quill.deleteText(range.index - 1, 1, 'user');
+
+      const prevChar = this._quill.getText(range.index - 2, 1);
+      let insertIndex = range.index - 1;
+      if (prevChar !== ' ' && insertIndex > 0) {
+        this._quill.insertText(insertIndex, ' ', 'user');
+        insertIndex += 1;
+      }
+
+      const contentDelta = this._quill.clipboard.convert({html: command.content});
+      this._quill.updateContents(
+        new Delta().retain(insertIndex).concat(contentDelta),
+        'user'
+      );
+      this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent');
+      this._quill.focus();
+    }
   }
 
   private fetchCannedResponses() {

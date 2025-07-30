@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
+import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
 import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
@@ -237,7 +237,7 @@ export default class DialogModuleComponent extends ZincElement {
         .slice(0, 5);
     return html`
       <dialog closedby="any"
-              open="${this.open}"
+              open="${this.open || nothing}"
               class="${classMap({
                 'dialog-module': true,
                 'dialog-module--has-focus': this.hasFocus,

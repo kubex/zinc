@@ -4475,7 +4475,6 @@
               "type": {
                 "text": "string"
               },
-              "default": "'id'",
               "attribute": "sort-column"
             },
             {
@@ -4484,7 +4483,6 @@
               "type": {
                 "text": "string"
               },
-              "default": "'asc'",
               "attribute": "sort-direction"
             },
             {
@@ -4688,7 +4686,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); params.append('sort_column', this.sortColumn); params.append('sort_direction', this.sortDirection); if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); if (!this.dataUri) { return new Promise<TableData>((resolve) => { if (!this.data) throw new Error('No data provided, please provide data or dataUri'); let localData = this.data.data as any[]; const totalPages = Math.ceil(Object.keys(localData).length / this.itemsPerPage); localData.sort((a, b) => { return this.sortData(a[this.sortColumn], b[this.sortColumn]); }); const start = (this.page - 1) * this.itemsPerPage; const end = start + this.itemsPerPage; localData = localData.slice(start, end); resolve({ page: this.page, per_page: this.itemsPerPage, total: this.totalPages, total_pages: totalPages, data: localData, } satisfies TableData); }); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(url, { signal, credentials: 'same-origin', }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
+              "default": "new Task(this, { task: async ([dataUri], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); if (this.sortColumn) { params.append('sort_column', this.sortColumn); } if (this.sortDirection) { params.append('sort_direction', this.sortDirection); } if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); if (!this.dataUri) { return new Promise<TableData>((resolve) => { if (!this.data) throw new Error('No data provided, please provide data or dataUri'); let localData = Array.isArray(this.data?.data) ? this.data.data as RowData[] : []; if (this.sortColumn) { localData = localData.sort((a, b) => { const aValue = a?.[this.sortColumn]; const bValue = b?.[this.sortColumn]; return this.sortData(aValue, bValue); }); } const totalPages = Math.ceil(localData.length / this.itemsPerPage); const start = (this.page - 1) * this.itemsPerPage; const end = start + this.itemsPerPage; const paginatedData = localData.slice(start, end); resolve({ page: this.page, per_page: this.itemsPerPage, total: localData.length, total_pages: totalPages, data: paginatedData, } satisfies TableData); }); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(url, { signal, credentials: 'same-origin', }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
             },
             {
               "kind": "field",
@@ -4931,13 +4929,13 @@
                 {
                   "name": "a",
                   "type": {
-                    "text": "string | number | object"
+                    "text": "RenderDataValue | string | number | object | undefined"
                   }
                 },
                 {
                   "name": "b",
                   "type": {
-                    "text": "string | number | object"
+                    "text": "RenderDataValue | string | number | object | undefined"
                   }
                 }
               ]
@@ -4969,7 +4967,6 @@
               "type": {
                 "text": "string"
               },
-              "default": "'id'",
               "fieldName": "sortColumn"
             },
             {
@@ -4977,7 +4974,6 @@
               "type": {
                 "text": "string"
               },
-              "default": "'asc'",
               "fieldName": "sortDirection"
             },
             {

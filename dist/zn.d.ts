@@ -1605,6 +1605,7 @@ declare module "components/data-table/data-table.component" {
         url: string;
         target: string;
         gaid?: string;
+        html?: string;
         caption: CaptionConfig;
         buttons: ButtonConfig[];
         menu: MenuConfig[];

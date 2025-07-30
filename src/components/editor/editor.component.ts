@@ -12,9 +12,9 @@ import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-canned-response-dialog";
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
+import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
 
 import styles from './editor.scss';
-import MenuModuleComponent from "./modules/menu-module/menu-module.component";
 
 export interface CannedResponse {
   title: string;

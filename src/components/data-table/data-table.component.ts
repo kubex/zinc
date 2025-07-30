@@ -48,6 +48,7 @@ interface RenderDataValue {
   url: string;
   target: string;
   gaid?: string;
+  html?: string;
   caption: CaptionConfig;
   buttons: ButtonConfig[];
   menu: MenuConfig[];
@@ -642,6 +643,10 @@ export default class ZnDataTable extends ZincElement {
   renderData(data: RenderDataValue) {
     if (data && typeof data === 'object') {
       let content: TemplateResult = html`${data['value']}`;
+
+      if (data['html']) {
+        return html`${unsafeHTML(data['html'])}`;
+      }
 
       if (data['type'] === 'timestamp') {
         const timestamp = typeof data['value'] === 'string' ? parseInt(data['value']) : data['value'];

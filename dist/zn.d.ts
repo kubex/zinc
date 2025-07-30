@@ -3512,12 +3512,12 @@ declare module "events/zn-input" {
 }
 declare module "components/query-builder/query-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnInput from "components/input/index";
     import ZnOption from "components/option/index";
     import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     export type QueryBuilderData = QueryBuilderItem[];
     export interface QueryBuilderItem {
         id: string;

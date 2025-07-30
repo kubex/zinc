@@ -160,7 +160,7 @@ export default class ZnIcon extends ZincElement {
           'icon--avatar': this.library === "avatar"
         })}" style="${styleMap({
           '--icon-size': this.size + "px",
-          '--avatar-color': this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null
+          '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
         })}">
           ${this.library ? html`
             ${choose(this.library, [
@@ -190,19 +190,27 @@ export default class ZnIcon extends ZincElement {
   }
 
   private getAvatarInitials(avatar: string) {
-    const words = avatar.split(' ');
-    if (words.length > 1) {
-      return words.map(word => word.charAt(0)).join('').toUpperCase();
-    } else {
-      return avatar.slice(0, 2).toUpperCase();
+    const regex = /(^.|[A-Z]|(?<=[^a-zA-Z0-9])[a-z])/g;
+
+    // Use matchAll to get an iterator of all matches
+    const matchesIterator = avatar.matchAll(regex);
+
+    // Convert the iterator to an array of matched strings
+    const matches = [...matchesIterator].map(match => match[0]);
+
+    // Check if there are any matches and process the result
+    if (matches.length > 0) {
+      return matches.join('').slice(0, 2).toUpperCase();
     }
+    return avatar.slice(0, 2).toUpperCase()
   }
 
 
   protected getColorForAvatar(avatarInitials: string) {
     const colors = [
-      '#d1573a', '#4fbf62', '#3357FF', '#F1C40F', '#E67E22', '#9B59B6',
-      '#1ABC9C', '#2ECC71', '#3498DB', '#E74C3C', '#8E44AD', '#34495E'
+      '#00AA55', '#0882a8', '#ed55ed', '#5eae00',
+      '#09389e', '#d17300', '#5e0be2', '#5b7a13',
+      '#ddb100', '#d400c2', '#DC2A2A', '#a967ff',
     ];
 
     // Generate a hash from the initials

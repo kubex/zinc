@@ -78,15 +78,15 @@
   }
 
   &--avatar {
-    background-color: var(--avatar-color, --icon-color);
-    color: hsl(from var(--avatar-color, --icon-color) h s 20);
+    background-color: var(--avatar-color, var(--icon-color));
+    color: hsl(from var(--avatar-color, var(--icon-color)) h s 95);
     display: flex;
     justify-content: center;
     align-items: center;
 
     .avatar__text {
-      font-size: calc((var(--icon-size) / 2.2));
-      color: hsl(from var(--avatar-color, --icon-color) h s 20);
+      font-size: calc((var(--icon-size) / 2.4));
+      color: hsl(from var(--avatar-color, var(--icon-color)) h s 95);
       font-weight: var(--zn-font-weight-semibold);
     }
   }

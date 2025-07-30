@@ -1571,6 +1571,334 @@ declare module "components/hover-container/index" {
         }
     }
 }
+declare module "internal/animate" {
+    /**
+     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
+     */
+    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
+    /** Parses a CSS duration and returns the number of milliseconds. */
+    export function parseDuration(delay: number | string): number;
+    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+    export function prefersReducedMotion(): boolean;
+    /**
+     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
+     */
+    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
+    /**
+     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
+     * element's scrollHeight before the animation.
+     */
+    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
+        height: string | number | null | undefined;
+        composite?: CompositeOperationOrAuto;
+        easing?: string;
+        offset?: number | null;
+    }[];
+}
+declare module "utilities/animation-registry" {
+    export interface ElementAnimation {
+        keyframes: Keyframe[];
+        rtlKeyframes?: Keyframe[];
+        options?: KeyframeAnimationOptions;
+    }
+    export interface ElementAnimationMap {
+        [animationName: string]: ElementAnimation;
+    }
+    export interface GetAnimationOptions {
+        /**
+         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
+         * available using getAnimation().
+         */
+        dir: string;
+    }
+    /**
+     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
+     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
+     */
+    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
+    /** Sets a custom animation for the specified element. */
+    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
+    /** Gets an element's animation. Falls back to the default if no animation is found. */
+    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
+}
+declare module "events/zn-remove" {
+    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-remove': ZnRemoveEvent;
+        }
+    }
+}
+declare module "components/option/option.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/option
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The option's label.
+     * @slot prefix - Used to prepend an icon or similar element to the menu item.
+     * @slot suffix - Used to append an icon or similar element to the menu item.
+     *
+     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
+     * @csspart base - The component's base wrapper.
+     * @csspart label - The option's label.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart suffix - The container that wraps the suffix.
+     */
+    export default class ZnOption extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private cachedTextLabel;
+        private readonly localize;
+        defaultSlot: HTMLSlotElement;
+        current: boolean;
+        selected: boolean;
+        hasHover: boolean;
+        /**
+         * The option's value. When selected, the containing form control will receive this value. The value must be unique
+         * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
+         * multiple values.
+         */
+        value: string;
+        /** Draws the option in a disabled state, preventing selection. */
+        disabled: boolean;
+        connectedCallback(): void;
+        private handleDefaultSlotChange;
+        private handleMouseEnter;
+        private handleMouseLeave;
+        handleDisabledChange(): void;
+        handleSelectedChange(): void;
+        handleValueChange(): void;
+        /** Returns a plain text label based on the option's content. */
+        getTextLabel(): string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/option/index" {
+    import ZnOption from "components/option/option.component";
+    export * from "components/option/option.component";
+    export default ZnOption;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-option': ZnOption;
+        }
+    }
+}
+declare module "components/select/select.component" {
+    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import ZnChip from "components/chip/index";
+    import ZnIcon from "components/icon/index";
+    import ZnPopup from "components/popup/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnOption from "components/option/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/select
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     * @dependency zn-popup
+     * @dependency zn-tag
+     *
+     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
+     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
+     * @slot clear-icon - An icon to use in lieu of the default clear icon.
+     * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+     *
+     * @event zn-change - Emitted when the control's value changes.
+     * @event zn-clear - Emitted when the control's value is cleared.
+     * @event zn-input - Emitted when the control receives input.
+     * @event zn-focus - Emitted when the control gains focus.
+     * @event zn-blur - Emitted when the control loses focus.
+     * @event zn-show - Emitted when the select's menu opens.
+     * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.
+     * @event zn-hide - Emitted when the select's menu closes.
+     * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The select's wrapper.
+     * @csspart form-control-help-text - The help text's wrapper.
+     * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
+     * @csspart prefix - The container that wraps the prefix slot.
+     * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
+     * @csspart listbox - The listbox container where options are slotted.
+     * @csspart tags - The container that houses option tags when `multiselect` is used.
+     * @csspart tag - The individual tags that represent each multiselect option.
+     * @csspart tag__base - The tag's base part.
+     * @csspart tag__content - The tag's content part.
+     * @csspart tag__remove-button - The tag's remove button.
+     * @csspart tag__remove-button__base - The tag's remove button base part.
+     * @csspart clear-button - The clear button.
+     * @csspart expand-icon - The container that wraps the expand icon.
+     */
+    export default class ZnSelect extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-popup': typeof ZnPopup;
+            'zn-tag': typeof ZnChip;
+        };
+        protected readonly formControlController: FormControlController;
+        private readonly hasSlotController;
+        private readonly localize;
+        private typeToSelectString;
+        private typeToSelectTimeout;
+        private closeWatcher;
+        popup: ZnPopup;
+        combobox: HTMLSlotElement;
+        displayInput: HTMLInputElement;
+        valueInput: HTMLInputElement;
+        listbox: HTMLSlotElement;
+        private hasFocus;
+        displayLabel: string;
+        currentOption: ZnOption;
+        selectedOptions: ZnOption[];
+        private valueHasChanged;
+        /** The name of the select, submitted as a name/value pair with form data. */
+        name: string;
+        private _value;
+        get value(): string | string[];
+        /**
+         * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
+         * value attribute will be a space-delimited list of values based on the options selected, and the value property will
+         * be an array. **For this reason, values must not contain spaces.**
+         */
+        set value(val: string | string[]);
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string | string[];
+        /** The select's size. */
+        size: 'small' | 'medium' | 'large';
+        /** Placeholder text to show as a hint when the select is empty. */
+        placeholder: string;
+        /** Allows more than one option to be selected. */
+        multiple: boolean;
+        /**
+         * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
+         * indicate the number of additional items that are selected. Set to 0 to remove the limit.
+         */
+        maxOptionsVisible: number;
+        /** Disables the select control. */
+        disabled: boolean;
+        /** Adds a clear button when the select is not empty. */
+        clearable: boolean;
+        /**
+         * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
+         */
+        open: boolean;
+        /**
+         * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
+         * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
+         */
+        hoist: boolean;
+        /** Draws a pill-style select with rounded edges. */
+        pill: boolean;
+        /** The select's label. If you need to display HTML, use the `label` slot instead. */
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
+        contextNote: string;
+        /**
+         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
+         * inside the viewport.
+         */
+        placement: 'top' | 'bottom';
+        /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** The select's required attribute. */
+        required: boolean;
+        cacheKey: string;
+        /**
+         * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
+         * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
+         * the specified value.
+         */
+        getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        connectedCallback(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private handleFocus;
+        private handleBlur;
+        private handleDocumentFocusIn;
+        private handleDocumentKeyDown;
+        private handleDocumentMouseDown;
+        private handleLabelClick;
+        private handleComboboxMouseDown;
+        private handleComboboxKeyDown;
+        private handleClearClick;
+        private handleClearMouseDown;
+        private handleOptionClick;
+        private handleDefaultSlotChange;
+        private handleTagRemove;
+        private getAllOptions;
+        getFirstOption(): ZnOption | null;
+        private setCurrentOption;
+        private setSelectedOptions;
+        private toggleOptionSelection;
+        private selectionChanged;
+        protected get tags(): TemplateResult<1>[];
+        private handleInvalid;
+        handleDisabledChange(): void;
+        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
+        handleValueChange(): void;
+        handleOpenChange(): Promise<void>;
+        /** Shows the listbox. */
+        show(): Promise<void>;
+        /** Hides the listbox. */
+        hide(): Promise<void>;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        /** Sets focus on the control. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the control. */
+        blur(): void;
+        render(): TemplateResult<1>;
+    }
+}
+declare module "components/select/index" {
+    import ZnSelect from "components/select/select.component";
+    export * from "components/select/select.component";
+    export default ZnSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-select': ZnSelect;
+        }
+    }
+}
 declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
@@ -2457,334 +2785,6 @@ declare module "components/header/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-header': ZnHeader;
-        }
-    }
-}
-declare module "internal/animate" {
-    /**
-     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
-     */
-    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
-    /** Parses a CSS duration and returns the number of milliseconds. */
-    export function parseDuration(delay: number | string): number;
-    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
-    export function prefersReducedMotion(): boolean;
-    /**
-     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
-     */
-    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
-    /**
-     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
-     * element's scrollHeight before the animation.
-     */
-    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
-        height: string | number | null | undefined;
-        composite?: CompositeOperationOrAuto;
-        easing?: string;
-        offset?: number | null;
-    }[];
-}
-declare module "utilities/animation-registry" {
-    export interface ElementAnimation {
-        keyframes: Keyframe[];
-        rtlKeyframes?: Keyframe[];
-        options?: KeyframeAnimationOptions;
-    }
-    export interface ElementAnimationMap {
-        [animationName: string]: ElementAnimation;
-    }
-    export interface GetAnimationOptions {
-        /**
-         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
-         * available using getAnimation().
-         */
-        dir: string;
-    }
-    /**
-     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
-     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
-     */
-    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
-    /** Sets a custom animation for the specified element. */
-    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
-    /** Gets an element's animation. Falls back to the default if no animation is found. */
-    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
-}
-declare module "events/zn-remove" {
-    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-remove': ZnRemoveEvent;
-        }
-    }
-}
-declare module "components/option/option.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/option
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The option's label.
-     * @slot prefix - Used to prepend an icon or similar element to the menu item.
-     * @slot suffix - Used to append an icon or similar element to the menu item.
-     *
-     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
-     * @csspart base - The component's base wrapper.
-     * @csspart label - The option's label.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnOption extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private cachedTextLabel;
-        private readonly localize;
-        defaultSlot: HTMLSlotElement;
-        current: boolean;
-        selected: boolean;
-        hasHover: boolean;
-        /**
-         * The option's value. When selected, the containing form control will receive this value. The value must be unique
-         * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
-         * multiple values.
-         */
-        value: string;
-        /** Draws the option in a disabled state, preventing selection. */
-        disabled: boolean;
-        connectedCallback(): void;
-        private handleDefaultSlotChange;
-        private handleMouseEnter;
-        private handleMouseLeave;
-        handleDisabledChange(): void;
-        handleSelectedChange(): void;
-        handleValueChange(): void;
-        /** Returns a plain text label based on the option's content. */
-        getTextLabel(): string;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/option/index" {
-    import ZnOption from "components/option/option.component";
-    export * from "components/option/option.component";
-    export default ZnOption;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-option': ZnOption;
-        }
-    }
-}
-declare module "components/select/select.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
-    import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
-    import ZnChip from "components/chip/index";
-    import ZnIcon from "components/icon/index";
-    import ZnPopup from "components/popup/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnOption from "components/option/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/select
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-popup
-     * @dependency zn-tag
-     *
-     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
-     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
-     * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.
-     * @slot clear-icon - An icon to use in lieu of the default clear icon.
-     * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.
-     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
-     *
-     * @event zn-change - Emitted when the control's value changes.
-     * @event zn-clear - Emitted when the control's value is cleared.
-     * @event zn-input - Emitted when the control receives input.
-     * @event zn-focus - Emitted when the control gains focus.
-     * @event zn-blur - Emitted when the control loses focus.
-     * @event zn-show - Emitted when the select's menu opens.
-     * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.
-     * @event zn-hide - Emitted when the select's menu closes.
-     * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @csspart form-control - The form control that wraps the label, input, and help text.
-     * @csspart form-control-label - The label's wrapper.
-     * @csspart form-control-input - The select's wrapper.
-     * @csspart form-control-help-text - The help text's wrapper.
-     * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.
-     * @csspart prefix - The container that wraps the prefix slot.
-     * @csspart display-input - The element that displays the selected option's label, an `<input>` element.
-     * @csspart listbox - The listbox container where options are slotted.
-     * @csspart tags - The container that houses option tags when `multiselect` is used.
-     * @csspart tag - The individual tags that represent each multiselect option.
-     * @csspart tag__base - The tag's base part.
-     * @csspart tag__content - The tag's content part.
-     * @csspart tag__remove-button - The tag's remove button.
-     * @csspart tag__remove-button__base - The tag's remove button base part.
-     * @csspart clear-button - The clear button.
-     * @csspart expand-icon - The container that wraps the expand icon.
-     */
-    export default class ZnSelect extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-popup': typeof ZnPopup;
-            'zn-tag': typeof ZnChip;
-        };
-        protected readonly formControlController: FormControlController;
-        private readonly hasSlotController;
-        private readonly localize;
-        private typeToSelectString;
-        private typeToSelectTimeout;
-        private closeWatcher;
-        popup: ZnPopup;
-        combobox: HTMLSlotElement;
-        displayInput: HTMLInputElement;
-        valueInput: HTMLInputElement;
-        listbox: HTMLSlotElement;
-        private hasFocus;
-        displayLabel: string;
-        currentOption: ZnOption;
-        selectedOptions: ZnOption[];
-        private valueHasChanged;
-        /** The name of the select, submitted as a name/value pair with form data. */
-        name: string;
-        private _value;
-        get value(): string | string[];
-        /**
-         * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-         * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-         * be an array. **For this reason, values must not contain spaces.**
-         */
-        set value(val: string | string[]);
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string | string[];
-        /** The select's size. */
-        size: 'small' | 'medium' | 'large';
-        /** Placeholder text to show as a hint when the select is empty. */
-        placeholder: string;
-        /** Allows more than one option to be selected. */
-        multiple: boolean;
-        /**
-         * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
-         * indicate the number of additional items that are selected. Set to 0 to remove the limit.
-         */
-        maxOptionsVisible: number;
-        /** Disables the select control. */
-        disabled: boolean;
-        /** Adds a clear button when the select is not empty. */
-        clearable: boolean;
-        /**
-         * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
-         * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
-         */
-        open: boolean;
-        /**
-         * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
-         * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
-         */
-        hoist: boolean;
-        /** Draws a pill-style select with rounded edges. */
-        pill: boolean;
-        /** The select's label. If you need to display HTML, use the `label` slot instead. */
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-        labelTooltip: string;
-        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
-        contextNote: string;
-        /**
-         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
-         * inside the viewport.
-         */
-        placement: 'top' | 'bottom';
-        /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
-        helpText: string;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** The select's required attribute. */
-        required: boolean;
-        cacheKey: string;
-        /**
-         * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
-         * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at
-         * the specified value.
-         */
-        getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        connectedCallback(): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private handleFocus;
-        private handleBlur;
-        private handleDocumentFocusIn;
-        private handleDocumentKeyDown;
-        private handleDocumentMouseDown;
-        private handleLabelClick;
-        private handleComboboxMouseDown;
-        private handleComboboxKeyDown;
-        private handleClearClick;
-        private handleClearMouseDown;
-        private handleOptionClick;
-        private handleDefaultSlotChange;
-        private handleTagRemove;
-        private getAllOptions;
-        getFirstOption(): ZnOption | null;
-        private setCurrentOption;
-        private setSelectedOptions;
-        private toggleOptionSelection;
-        private selectionChanged;
-        protected get tags(): TemplateResult<1>[];
-        private handleInvalid;
-        handleDisabledChange(): void;
-        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
-        handleValueChange(): void;
-        handleOpenChange(): Promise<void>;
-        /** Shows the listbox. */
-        show(): Promise<void>;
-        /** Hides the listbox. */
-        hide(): Promise<void>;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        /** Sets focus on the control. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the control. */
-        blur(): void;
-        render(): TemplateResult<1>;
-    }
-}
-declare module "components/select/index" {
-    import ZnSelect from "components/select/select.component";
-    export * from "components/select/select.component";
-    export default ZnSelect;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-select': ZnSelect;
         }
     }
 }

@@ -2047,7 +2047,6 @@ declare module "components/data-table/data-table.component" {
         private selectedRows;
         private tableContainer;
         private hasSlotController;
-        private _uacTask;
         private _dataTask;
         render(): TemplateResult<1>;
         connectedCallback(): void;

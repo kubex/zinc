@@ -20,6 +20,7 @@ import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
 
 import styles from './data-table.scss';
+import ZnSelect from "../select";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -445,11 +446,16 @@ export default class ZnDataTable extends ZincElement {
     return html`
       <div class="table__footer__rows-per-page">
         <p>Rows per page</p>
-        <select name="rowPerPage" @change=${this.updateRowsPerPage}>
+        <zn-select name="rowPerPage"
+                   size="small"
+                   value="${this.itemsPerPage}"
+                   @change=${this.updateRowsPerPage}>
           ${optionsRowsPerPage.map((option) => html`
-            <option value="${option}" ?selected=${option === this.itemsPerPage}>${option}</option>`
+            <zn-option value="${option}"
+                       selected=${option === this.itemsPerPage || nothing}>${option}
+            </zn-option>`
           )}
-        </select>
+        </zn-select>
       </div>
 
       ${this.totalPages <= 1
@@ -547,8 +553,8 @@ export default class ZnDataTable extends ZincElement {
   }
 
   updateRowsPerPage(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    this.itemsPerPage = parseInt(select.value);
+    const select = event.target as ZnSelect;
+    this.itemsPerPage = parseInt(select.value as string);
     this.page = 1; // reset the page to 1 when changing the number of rows per page
     this.requestUpdate();
     this._dataTask.run().then(r => r);

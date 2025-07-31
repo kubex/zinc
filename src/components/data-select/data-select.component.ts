@@ -7,13 +7,12 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, nothing} from 'lit';
 import {FormControlController} from "../../internal/form";
-import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
@@ -37,23 +36,15 @@ import styles from './data-select.scss';
  */
 export default class ZnDataSelect extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
-
-  protected readonly formControlController = new FormControlController(this);
-
   @query('#select') select: ZnSelect;
   @query('#select__prefix') selectPrefix: HTMLElement;
-
   /** The name of the select. Used for form submission. */
   @property() name: string;
-
   /** The value of the select. Used for form submission. */
   @property() value: string;
-
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country' | 'phone';
-
   @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
-
   /** An array of keys to use for filtering the options in the selected provider. */
   @property({
     attribute: 'filter',
@@ -62,33 +53,34 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       toAttribute: (value: string[]) => value.join(',')
     }
   }) filter: string[];
-
   /** The selects size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
-
   /** Should we show the clear button */
   @property({type: Boolean}) clearable: boolean;
-
   /** The selects label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
-
   /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
   @property({attribute: 'label-tooltip'}) labelTooltip = '';
-
   /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
   @property({attribute: 'context-note'}) contextNote = '';
-
   /**
    * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
    * inside the viewport.
    */
   @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
-
   /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
-
   /** The selects required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
+  protected readonly formControlController = new FormControlController(this);
+
+  get validationMessage() {
+    return this.select.validationMessage;
+  }
+
+  get validity(): ValidityState {
+    return this.select.validity;
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -98,14 +90,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.closeOnTab);
-  }
-
-  get validationMessage() {
-    return this.select.validationMessage;
-  }
-
-  get validity(): ValidityState {
-    return this.select.validity;
   }
 
   checkValidity(): boolean {
@@ -135,25 +119,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     await this.updateComplete;
     this.formControlController.updateValidity();
     this._updatePrefix();
-  }
-
-  private _updatePrefix() {
-    // Set the prefix of the select to the selected values prefix
-    const selectedOption = this.select.selectedOptions[0];
-    if (selectedOption && (this.iconPosition !== 'none')) {
-      const slot = this.iconPosition === 'start'
-        ? selectedOption.querySelector('[slot="prefix"]')
-        : selectedOption.querySelector('[slot="suffix"]');
-
-      if (slot) {
-        this.selectPrefix.innerHTML = '';
-        this.selectPrefix.appendChild(slot.cloneNode(true));
-      } else {
-        this.selectPrefix.innerHTML = '';
-      }
-    } else {
-      this.selectPrefix.innerHTML = '';
-    }
   }
 
   handleInput = (e: Event) => {
@@ -194,14 +159,14 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
     return html`
       <zn-select id="select"
-                 clearable="${ifDefined(this.clearable)}"
+                 clearable=${this.clearable || nothing}
                  size="${this.size}"
                  label="${this.label}"
                  label-tooltip="${this.labelTooltip}"
                  context-note="${this.contextNote}"
                  help-text="${this.helpText}"
-                 required=${ifDefined(this.required)}
-                 placement="${this.placement}"
+                 required=${this.required || nothing}
+                 placement=${this.placement}
                  name="${this.name}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
@@ -218,5 +183,24 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
             ${item.value}
           </zn-option>`)}
       </zn-select>`;
+  }
+
+  private _updatePrefix() {
+    // Set the prefix of the select to the selected values prefix
+    const selectedOption = this.select.selectedOptions[0];
+    if (selectedOption && (this.iconPosition !== 'none')) {
+      const slot = this.iconPosition === 'start'
+        ? selectedOption.querySelector('[slot="prefix"]')
+        : selectedOption.querySelector('[slot="suffix"]');
+
+      if (slot) {
+        this.selectPrefix.innerHTML = '';
+        this.selectPrefix.appendChild(slot.cloneNode(true));
+      } else {
+        this.selectPrefix.innerHTML = '';
+      }
+    } else {
+      this.selectPrefix.innerHTML = '';
+    }
   }
 }

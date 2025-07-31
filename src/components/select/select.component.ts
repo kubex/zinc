@@ -4,6 +4,7 @@ import {type CSSResultGroup, html, type TemplateResult, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
 import {scrollIntoView} from "../../internal/scroll";
@@ -104,7 +105,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   get value() {
     return this._value
   }
-
 
   /**
    * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
@@ -903,8 +903,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               <input
                 class="select__value-input"
                 type="text"
-                ?disabled=${this.disabled}
-                ?required=${this.required}
+                disabled=${ifDefined(this.disabled)}
+                required=${ifDefined(this.required)}
                 value=${Array.isArray(this.value) ? this.value.join(', ') : this.value}
                 tabindex="-1"
                 aria-hidden="true"

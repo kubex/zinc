@@ -69,7 +69,8 @@ export {default as DataTableFilter} from './components/data-table-filter';
 export {default as DataTableSort} from './components/data-table-sort';
 export {default as ActionBar} from './components/action-bar';
 export {default as ExpandingAction} from './components/expanding-action';
-export { default as PageNav } from './components/page-nav';
+export {default as PageNav} from './components/page-nav';
+export {default as StatusIndicator} from './components/status-indicator';
 /* plop:component */
 
 // Utilities

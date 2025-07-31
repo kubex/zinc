@@ -1,0 +1,32 @@
+@use "../../wc";
+
+:host {
+  --indicator-color: var(--zn-color-info);
+  pointer-events: none;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.indicator {
+  display: inline-block;
+  background-color: rgb(var(--indicator-color));
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  &--info {
+    --indicator-color: var(--zn-color-info);
+  }
+
+  &--error {
+    --indicator-color: var(--zn-color-error);
+  }
+
+  &--warning {
+    --indicator-color: var(--zn-color-warning);
+  }
+
+  &--success {
+    --indicator-color: var(--zn-color-success);
+  }
+}

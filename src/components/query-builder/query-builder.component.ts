@@ -431,10 +431,17 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     const filter = this._selectedRules.get(id);
     if (!filter) return;
     const input = event.target as ZnSelect | ZnInput;
-    // Dodgy logic to offset backend filter comparator values
-    // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
-    const multiplier = filter.operator as QueryBuilderOperators === QueryBuilderOperators.Before ? -1 : 1;
-    const timestamp = (Math.floor((Date.now() - Date.parse(input.value as string)) / 1000 / 60) * multiplier).toString();
+    const operator = filter.operator as QueryBuilderOperators;
+    let timestamp: string;
+
+    if (operator === QueryBuilderOperators.Eq || operator === QueryBuilderOperators.Neq) {
+      timestamp = (Date.parse(input.value as string) / 1000).toString();
+    } else {
+      // Dodgy logic to offset backend filter comparator values
+      // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
+      const multiplier = operator === QueryBuilderOperators.Before ? -1 : 1;
+      timestamp = (Math.floor((Date.now() - Date.parse(input.value as string)) / 1000 / 60) * multiplier).toString();
+    }
 
     filter.value = timestamp as string;
 

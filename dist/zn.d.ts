@@ -5728,6 +5728,42 @@ declare module "components/page-nav/index" {
         }
     }
 }
+declare module "components/status-indicator/status-indicator.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/status-indicator
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnStatusIndicator extends ZincElement {
+        static styles: CSSResultGroup;
+        type: 'success' | 'error' | 'warning' | 'info';
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/status-indicator/index" {
+    import ZnStatusIndicator from "components/status-indicator/status-indicator.component";
+    export * from "components/status-indicator/status-indicator.component";
+    export default ZnStatusIndicator;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-status-indicator': ZnStatusIndicator;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5857,6 +5893,7 @@ declare module "zinc" {
     export { default as ActionBar } from "components/action-bar/index";
     export { default as ExpandingAction } from "components/expanding-action/index";
     export { default as PageNav } from "components/page-nav/index";
+    export { default as StatusIndicator } from "components/status-indicator/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

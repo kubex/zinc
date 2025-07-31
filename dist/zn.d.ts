@@ -5328,8 +5328,8 @@ declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
     import { type CSSResultGroup } from 'lit';
     import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -5350,7 +5350,6 @@ declare module "components/data-select/data-select.component" {
      */
     export default class ZnDataSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        protected readonly formControlController: FormControlController;
         select: ZnSelect;
         selectPrefix: HTMLElement;
         /** The name of the select. Used for form submission. */
@@ -5381,22 +5380,23 @@ declare module "components/data-select/data-select.component" {
         helpText: string;
         /** The selects required attribute. */
         required: boolean;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
+        protected readonly formControlController: FormControlController;
         get validationMessage(): string;
         get validity(): ValidityState;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         closeOnTab: (e: KeyboardEvent) => void;
         handleValueChange(): Promise<void>;
-        private _updatePrefix;
         handleInput: (e: Event) => void;
         handleClear: () => void;
         getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
         blur: () => void;
         protected render(): import("lit").TemplateResult<1>;
+        private _updatePrefix;
     }
 }
 declare module "components/data-select/index" {

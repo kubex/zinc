@@ -1,6 +1,12 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
+import {FormControlController, validValidityState} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
+import type ZnButton from "../button";
 import type ZnDropdown from "../dropdown";
 
 import styles from './split-button.scss';
@@ -22,18 +28,32 @@ import styles from './split-button.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  */
-export default class ZnSplitButton extends ZincElement {
+export default class ZnSplitButton extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
+  private readonly formControlController = new FormControlController(this);
+
   @property() caption: string;
+
   @property() href: string;
 
+  @property() name: string;
+
+  @property() value: string;
+
+  @defaultValue() defaultValue: string;
+
+  @property() type: string;
+
   @query('zn-dropdown') dropdown: ZnDropdown;
+
+  @query('zn-button#trigger-btn') button: ZnButton;
 
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('click', this.handleClick)
     this.addEventListener('zn-menu-select', this.handleMenuItemClick);
+    this.defaultValue = this.value;
   }
 
   disconnectedCallback() {
@@ -42,9 +62,14 @@ export default class ZnSplitButton extends ZincElement {
     this.removeEventListener('zn-menu-select', this.handleMenuItemClick);
   }
 
-  public handleMenuItemClick() {
+  public handleMenuItemClick(e: ZnMenuSelectEvent) {
     if (this.dropdown) {
+      this.value = e.detail.value;
       this.dropdown.hide();
+    }
+
+    if (this.type === 'submit') {
+      this.formControlController.submit();
     }
   }
 
@@ -52,12 +77,24 @@ export default class ZnSplitButton extends ZincElement {
     e.stopPropagation();
   }
 
+  public handleTriggerClick() {
+    this.value = this.defaultValue;
+
+    if (this.type === 'submit') {
+      this.formControlController.submit();
+    }
+  }
+
   render() {
     return html`
       <zn-dropdown placement="bottom-start">
         <div slot="trigger">
           <zn-button-group>
-            <zn-button href=${this.href} @click="${(e: MouseEvent) => e.stopPropagation()}">${this.caption}</zn-button>
+            <zn-button id="trigger-btn"
+                       href=${ifDefined(this.href)}
+                       @click=${this.handleTriggerClick}>
+              ${this.caption}
+            </zn-button>
             <zn-button icon="keyboard_arrow_down"></zn-button>
           </zn-button-group>
         </div>
@@ -66,5 +103,52 @@ export default class ZnSplitButton extends ZincElement {
         </div>
       </zn-dropdown>
     `;
+  }
+
+  checkValidity(): boolean {
+    if (this._isButton() && this.button) {
+      return this.button.checkValidity();
+    }
+
+    return true;
+  }
+
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  reportValidity() {
+    if (this._isButton() && this.button) {
+      return this.button.reportValidity();
+    }
+
+    return true;
+  }
+
+  setCustomValidity(message: string) {
+    if (this._isButton()) {
+      this.button.setCustomValidity(message);
+      this.formControlController.updateValidity();
+    }
+  }
+
+  get validity() {
+    if (this._isButton() && this.button) {
+      return this.button.validity;
+    }
+
+    return validValidityState;
+  }
+
+  get validationMessage() {
+    if (this._isButton() && this.button) {
+      return this.button.validationMessage;
+    }
+
+    return '';
+  }
+
+  private _isButton() {
+    return this.type === 'submit' || this.type === 'button' || this.type === 'reset';
   }
 }

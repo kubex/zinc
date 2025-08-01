@@ -16,9 +16,16 @@ layout: component
 
 ## Examples
 
-### First Example
+### As a form Submit with different values
 
-TODO
+```html:preview
+
+<zn-split-button type="submit" name="button" value="send-on-close" caption="Send and Close">
+  <zn-menu slot="menu">
+    <zn-menu-item value="send">Send</zn-menu-item>
+  </zn-menu>
+</zn-split-button>
+```
 
 ### Second Example
 

@@ -1,6 +1,6 @@
-import type { ReactiveController, ReactiveControllerHost } from "lit";
-import type { ZincFormControl } from "./zinc-element";
-import type Button from "../components/button";
+import type {ReactiveController, ReactiveControllerHost} from "lit";
+import type {ZincFormControl} from "./zinc-element";
+import Button from "../components/button";
 
 //
 // We store a WeakMap of forms + controls so we can keep references to all Zinc controls within a given form. As
@@ -230,7 +230,7 @@ export class FormControlController implements ReactiveController {
         event.formData.append(name, (value as string | number | boolean).toString());
       }
 
-      this.host.dispatchEvent(new CustomEvent('zn-formdata', { bubbles: true, composed: true }));
+      this.host.dispatchEvent(new CustomEvent('zn-formdata', {bubbles: true, composed: true}));
     }
   };
 

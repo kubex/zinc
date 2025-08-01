@@ -1354,11 +1354,6 @@ declare module "components/menu/menu.component" {
         defaultSlot: HTMLSlotElement;
         actions: never[];
         connectedCallback(): void;
-        private handleClick;
-        private handleKeyDown;
-        private handleMouseDown;
-        private handleSlotChange;
-        private isMenuItem;
         /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
         getAllItems(): ZnMenuItem[];
         /**
@@ -1372,6 +1367,11 @@ declare module "components/menu/menu.component" {
          */
         setCurrentItem(item: ZnMenuItem): void;
         render(): import("lit").TemplateResult<1>;
+        private handleClick;
+        private handleKeyDown;
+        private handleMouseDown;
+        private handleSlotChange;
+        private isMenuItem;
     }
 }
 declare module "components/menu/index" {
@@ -5753,6 +5753,49 @@ declare module "components/status-indicator/index" {
         }
     }
 }
+declare module "components/split-button/split-button.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type ZnDropdown from "components/dropdown/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/split-button
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnSplitButton extends ZincElement {
+        static styles: CSSResultGroup;
+        caption: string;
+        href: string;
+        dropdown: ZnDropdown;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        handleMenuItemClick(): void;
+        handleClick(e: MouseEvent): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/split-button/index" {
+    import ZnSplitButton from "components/split-button/split-button.component";
+    export * from "components/split-button/split-button.component";
+    export default ZnSplitButton;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-split-button': ZnSplitButton;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -5883,6 +5926,7 @@ declare module "zinc" {
     export { default as ExpandingAction } from "components/expanding-action/index";
     export { default as PageNav } from "components/page-nav/index";
     export { default as StatusIndicator } from "components/status-indicator/index";
+    export { default as SplitButton } from "components/split-button/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

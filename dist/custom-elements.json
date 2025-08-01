@@ -18850,6 +18850,129 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/split-button/split-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSplitButton",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "dropdown",
+              "type": {
+                "text": "ZnDropdown"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleMenuItemClick",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "href"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "split-button",
+          "tagName": "zn-split-button",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/split-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/split-button",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSplitButton",
+            "module": "components/split-button/split-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/split-pane/split-pane.js",
       "declarations": [
         {
@@ -22057,7 +22180,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "onText"
+              "attribute": "on-text"
             },
             {
               "kind": "field",
@@ -22066,7 +22189,7 @@
                 "text": "string"
               },
               "default": "''",
-              "attribute": "offText"
+              "attribute": "off-text"
             },
             {
               "kind": "field",
@@ -22279,7 +22402,7 @@
               "fieldName": "triggerSubmit"
             },
             {
-              "name": "onText",
+              "name": "on-text",
               "type": {
                 "text": "string"
               },
@@ -22287,7 +22410,7 @@
               "fieldName": "onText"
             },
             {
-              "name": "offText",
+              "name": "off-text",
               "type": {
                 "text": "string"
               },

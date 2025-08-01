@@ -108,7 +108,7 @@ declare module "internal/zinc-element" {
 declare module "internal/form" {
     import type { ReactiveController, ReactiveControllerHost } from "lit";
     import type { ZincFormControl } from "internal/zinc-element";
-    import type Button from "components/button/index";
+    import Button from "components/button/index";
     export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>>;
     export interface FormControlControllerOptions {
         /** A function that returns the form containing the form control. */
@@ -508,10 +508,10 @@ declare module "components/tooltip/index" {
 }
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
      * @documentation https://inc.style/components/button
@@ -5755,7 +5755,10 @@ declare module "components/status-indicator/index" {
 }
 declare module "components/split-button/split-button.component" {
     import { type CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZnMenuSelectEvent } from "events/zn-menu-select";
+    import type ZnButton from "components/button/index";
     import type ZnDropdown from "components/dropdown/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -5774,16 +5777,30 @@ declare module "components/split-button/split-button.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnSplitButton extends ZincElement {
+    export default class ZnSplitButton extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        private readonly formControlController;
         caption: string;
         href: string;
+        name: string;
+        value: string;
+        defaultValue: string;
+        type: string;
         dropdown: ZnDropdown;
+        button: ZnButton;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        handleMenuItemClick(): void;
+        handleMenuItemClick(e: ZnMenuSelectEvent): void;
         handleClick(e: MouseEvent): void;
+        handleTriggerClick(): void;
         render(): import("lit").TemplateResult<1>;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        private _isButton;
     }
 }
 declare module "components/split-button/index" {

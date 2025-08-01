@@ -63,12 +63,11 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
 
-  @property() onText: string = '';
+  @property({attribute: "on-text"}) onText: string = '';
 
-  @property() offText: string = '';
+  @property({attribute: "off-text"}) offText: string = '';
 
   @property() label: string = '';
-
 
   get validity() {
     return this.input?.validity;

@@ -63,6 +63,85 @@ export default class ZnMenu extends ZincElement {
     this.setAttribute('role', 'menu');
   }
 
+  /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
+  getAllItems() {
+    return [...this.defaultSlot.assignedElements({flatten: true})].filter((el: HTMLElement) => {
+      return !(el.inert || !this.isMenuItem(el));
+
+    }) as ZnMenuItem[];
+  }
+
+  /**
+   * @internal Gets the current menu item, which is the menu item that has `tabindex="0"` within the roving tab index.
+   * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.
+   */
+  getCurrentItem() {
+    return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
+  }
+
+  /**
+   * @internal Sets the current menu item to the specified element. This sets `tabindex="0"` on the target element and
+   * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
+   */
+  setCurrentItem(item: ZnMenuItem) {
+    const items = this.getAllItems();
+
+    // Update tab indexes
+    items.forEach(i => {
+      i.setAttribute('tabindex', i === item ? '0' : '-1');
+    });
+  }
+
+  render() {
+    return html`
+      <div
+        @slotchange=${this.handleSlotChange}
+        @keydown=${this.handleKeyDown}
+        @mousedown=${this.handleMouseDown}>
+        <slot></slot>
+        ${this.actions.map((item: NavItem) => {
+          if (item.confirm) {
+            return html`
+              <zn-confirm trigger="${ifDefined(item.confirm?.trigger)}"
+                          type="${ifDefined(item.confirm?.type)}"
+                          caption="${item.confirm?.caption}"
+                          content="${item.confirm?.content}"
+                          action="${item.confirm?.action}"></zn-confirm>
+              <zn-menu-item @mousedown=${this.handleMouseDown}
+                            @keydown=${this.handleKeyDown}
+                            id="${item.confirm?.trigger}">
+                ${(item.icon) ? html`
+                  <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                ${item.title}
+              </zn-menu-item>`;
+          } else {
+            if (item.type !== 'dropdown') {
+              return html`
+                <zn-menu-item value="${item.title}"
+                              href="${item.path}"
+                              data-target="${ifDefined(item.target)}">
+                  ${(item.icon) ? html`
+                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                  <span @click="${this.handleClick}"
+                        @keydown=${this.handleKeyDown}
+                        @mousedown=${this.handleMouseDown}
+                        data-target="${ifDefined(item.target)}">${item.title}</span>
+                </zn-menu-item>`;
+            } else {
+              return html`
+                <zn-menu-item value="${item.title}" data-path="${ifDefined(item.path)}">
+                  ${(item.icon) ? html`
+                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                  <span @click="${this.handleClick}"
+                        @keydown=${this.handleKeyDown}
+                        @mousedown=${this.handleMouseDown}>${item.title}</span>
+                </zn-menu-item>`;
+            }
+          }
+        })}
+      </div>`;
+  }
+
   private handleClick(event: MouseEvent) {
     const menuItemTypes = ['menuitem', 'menuitemcheckbox'];
 
@@ -157,84 +236,5 @@ export default class ZnMenu extends ZincElement {
       item.tagName.toLowerCase() === 'zn-menu-item' ||
       ['menuitem', 'menuitemcheckbox', 'menuitemradio'].includes(item.getAttribute('role') ?? '')
     );
-  }
-
-  /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
-  getAllItems() {
-    return [...this.defaultSlot.assignedElements({flatten: true})].filter((el: HTMLElement) => {
-      return !(el.inert || !this.isMenuItem(el));
-
-    }) as ZnMenuItem[];
-  }
-
-  /**
-   * @internal Gets the current menu item, which is the menu item that has `tabindex="0"` within the roving tab index.
-   * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.
-   */
-  getCurrentItem() {
-    return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
-  }
-
-  /**
-   * @internal Sets the current menu item to the specified element. This sets `tabindex="0"` on the target element and
-   * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
-   */
-  setCurrentItem(item: ZnMenuItem) {
-    const items = this.getAllItems();
-
-    // Update tab indexes
-    items.forEach(i => {
-      i.setAttribute('tabindex', i === item ? '0' : '-1');
-    });
-  }
-
-  render() {
-    return html`
-      <div
-        @slotchange=${this.handleSlotChange}
-        @keydown=${this.handleKeyDown}
-        @mousedown=${this.handleMouseDown}>
-        <slot></slot>
-        ${this.actions.map((item: NavItem) => {
-          if (item.confirm) {
-            return html`
-              <zn-confirm trigger="${item.confirm.trigger}"
-                          type="${ifDefined(item.confirm.type)}"
-                          caption="${item.confirm.caption}"
-                          content="${item.confirm.content}"
-                          action="${item.confirm.action}"></zn-confirm>
-              <zn-menu-item @mousedown=${this.handleMouseDown}
-                            @keydown=${this.handleKeyDown}
-                            id="${item.confirm.trigger}">
-                ${(item.icon) ? html`
-                  <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
-                ${item.title}
-              </zn-menu-item>`;
-          } else {
-            if (item.type !== 'dropdown') {
-              return html`
-                <zn-menu-item value="${item.title}"
-                              href="${item.path}"
-                              data-target="${ifDefined(item.target)}">
-                  ${(item.icon) ? html`
-                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
-                  <span @click="${this.handleClick}"
-                        @keydown=${this.handleKeyDown}
-                        @mousedown=${this.handleMouseDown}
-                        data-target="${ifDefined(item.target)}">${item.title}</span>
-                </zn-menu-item>`;
-            } else {
-              return html`
-                <zn-menu-item value="${item.title}" data-path="${ifDefined(item.path)}">
-                  ${(item.icon) ? html`
-                    <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
-                  <span @click="${this.handleClick}"
-                        @keydown=${this.handleKeyDown}
-                        @mousedown=${this.handleMouseDown}>${item.title}</span>
-                </zn-menu-item>`;
-            }
-          }
-        })}
-      </div>`;
   }
 }

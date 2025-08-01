@@ -6,7 +6,7 @@ layout: component
 ---
 
 ```html:preview
-<zn-toggle></zn-toggle>
+<zn-toggle on-text="On" off-text="off" label="Renew?"></zn-toggle>
 ```
 
 ## Examples

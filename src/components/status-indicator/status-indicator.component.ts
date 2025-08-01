@@ -6,21 +6,10 @@ import ZincElement from '../../internal/zinc-element';
 import styles from './status-indicator.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary Circular status indicators.
  * @documentation https://zinc.style/components/status-indicator
  * @status experimental
  * @since 1.0
- *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnStatusIndicator extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

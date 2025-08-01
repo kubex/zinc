@@ -6,17 +6,8 @@ layout: component
 ---
 
 ```html:preview
-<zn-status-indicator></zn-status-indicator>
+<zn-status-indicator type="info"></zn-status-indicator>
+<zn-status-indicator type="success"></zn-status-indicator>
+<zn-status-indicator type="warning"></zn-status-indicator>
+<zn-status-indicator type="error"></zn-status-indicator>
 ```
-
-## Examples
-
-### First Example
-
-TODO
-
-### Second Example
-
-TODO
-
-

@@ -24,11 +24,7 @@ class MenuModule {
     this._cannedResponsesUri = options.cannedResponsesUri?.trim() || '';
     this._commands = options.cannedResponses || [];
 
-    if (this._commands.length === 0 && this._cannedResponsesUri) {
-      this.fetchCannedResponses();
-    }
-
-    if (this._commands.length > 0) {
+    if (this._commands.length > 0 || this._cannedResponsesUri) {
       this.initMenu();
       this.attachEvents();
     }
@@ -48,7 +44,7 @@ class MenuModule {
     this._menu.addEventListener('zn-show', () => setTimeout(() => this.updateMenuPosition(), 1));
   }
 
-  private onTextChange = (_: Delta, _oldDelta: Delta, source: string) => {
+  private onTextChange = async (_: Delta, _oldDelta: Delta, source: string) => {
     if (source === Quill.sources.USER) {
       // if the user has typed a forward slash, we will show the menu until they type
       // a space or a new line. The menu will contain a list of commands that the user
@@ -60,9 +56,9 @@ class MenuModule {
 
       // If the openCharacter is the first character in the editor, and menu isn't open, open it.
       if (index === 0 && char === openCharacter && !menuOpen) {
-        this.openMenu();
+        await this.openMenu();
       } else if (char === openCharacter && text.charAt(index - 2) === ' ' && !menuOpen) {
-        this.openMenu();
+        await this.openMenu();
       }
 
       // if the user has typed a space or a new line, we will close the menu if the menu
@@ -129,10 +125,16 @@ class MenuModule {
     }
   }
 
-  private openMenu() {
+  private async openMenu() {
     menuOpen = true;
-    this._menu.show();
-    this._menu.focus();
+    if (this._cannedResponsesUri) {
+      await this.fetchCannedResponses();
+    }
+
+    if (this._commands.length > 0) {
+      this._menu.show();
+      this._menu.focus();
+    }
   }
 
   private closeMenu() {
@@ -174,14 +176,16 @@ class MenuModule {
     }
   }
 
-  private fetchCannedResponses() {
-    fetch(this._cannedResponsesUri)
-      .then(response => response.json())
-      .then((data: CannedResponse[]) => {
-        this._commands = data;
+  private async fetchCannedResponses() {
+    try {
+      const response = await fetch(this._cannedResponsesUri);
+      this._commands = await response.json() as CannedResponse[];
+      if (this._menu) {
         this.addCommands();
-      })
-      .catch(error => console.error('Error fetching canned responses', error));
+      }
+    } catch (error) {
+      console.error('Error fetching canned responses', error);
+    }
   }
 }
 

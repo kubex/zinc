@@ -50,6 +50,9 @@ class DialogModule {
 
   private triggerCommand(command: CannedResponse) {
     this._dialog.dialogEl.close();
+
+    this._quill.focus()
+
     const range = this._quill.getSelection();
     if (range) {
       this._quill.deleteText(range.index - 1, 1, 'user');

@@ -24,7 +24,11 @@ class MenuModule {
     this._cannedResponsesUri = options.cannedResponsesUri?.trim() || '';
     this._commands = options.cannedResponses || [];
 
-    if (this._commands.length > 0 || this._cannedResponsesUri) {
+    if (this._commands.length === 0 && this._cannedResponsesUri) {
+      this.fetchCannedResponses();
+    }
+
+    if (this._commands.length > 0) {
       this.initMenu();
       this.attachEvents();
     }
@@ -127,9 +131,6 @@ class MenuModule {
 
   private openMenu() {
     menuOpen = true;
-    if (this._cannedResponsesUri) {
-      this.fetchCannedResponses();
-    }
     this._menu.show();
     this._menu.focus();
   }

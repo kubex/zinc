@@ -359,6 +359,7 @@ export default class ZnDataTable extends ZincElement {
           'table': true,
           'table--standalone': this.standalone,
           'with-hover': !this.unsortable,
+          'table-with--checkboxes': !this.hideCheckboxes,
         })}">
           <thead>
           <tr>

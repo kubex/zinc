@@ -36,17 +36,13 @@ table {
   }
 
 
-  tbody {
-    //background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
-
-    a {
-      font-weight: 600;
-      color: rgb(var(--zn-text-heading));
-      text-decoration: none;
-    }
+  tbody a {
+    font-weight: 600;
+    color: rgb(var(--zn-text-heading));
+    text-decoration: none;
   }
 
-  tbody tr:hover {
+  .table--with-checkboxes tbody tr:hover {
     background-color: rgba(var(--zn-primary), 0.05) !important;
     cursor: pointer;
   }
@@ -195,9 +191,15 @@ table {
         text-decoration: none;
       }
 
+      a.title {
+        color: rgb(var(--zn-primary));
+        text-decoration: underline;
+      }
+
       .summary {
         font-size: 90%;
         text-wrap: initial;
+        color: rgb(var(--zn-text));
       }
 
       &--icon {

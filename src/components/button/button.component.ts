@@ -193,7 +193,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--square': this.square,
           'button--has-notification': this.notification !== undefined && this.notification > 0,
         })}
-        .type=${this.type}
+        type=${ifDefined(this.type)}
         href=${ifDefined(this.href)}
         target=${ifDefined(isLink ? this.target : undefined)}
         data-target=${ifDefined(isLink ? this.dataTarget : undefined)}

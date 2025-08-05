@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -9163,237 +9163,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/icon/icon.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnIcon",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "src",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "alt",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "alt",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "round",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "round",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "library",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "attribute": "library",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              },
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "gravatarOptions",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "defaultLibrary",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "default": "\"material-symbols-outlined\""
-            },
-            {
-              "kind": "method",
-              "name": "convertToLibrary",
-              "return": {
-                "type": {
-                  "text": "IconLibrary"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "ravatarOptions"
-            },
-            {
-              "kind": "method",
-              "name": "getAvatarInitials",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "avatar",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getColorForAvatar",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "avatarInitials",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "src"
-            },
-            {
-              "name": "alt",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "alt"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "fieldName": "size"
-            },
-            {
-              "name": "round",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "round"
-            },
-            {
-              "name": "library",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "fieldName": "library"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              },
-              "fieldName": "color"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "icon",
-          "tagName": "zn-icon",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/icon\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/icon",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnIcon",
-            "module": "components/icon/icon.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/inline-edit/inline-edit.js",
       "declarations": [
         {
@@ -9855,6 +9624,237 @@
           "declaration": {
             "name": "ZnInlineEdit",
             "module": "components/inline-edit/inline-edit.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnIcon",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "alt",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "round",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "attribute": "library",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
+              },
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gravatarOptions",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "defaultLibrary",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "default": "\"material-symbols-outlined\""
+            },
+            {
+              "kind": "method",
+              "name": "convertToLibrary",
+              "return": {
+                "type": {
+                  "text": "IconLibrary"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "ravatarOptions"
+            },
+            {
+              "kind": "method",
+              "name": "getAvatarInitials",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "avatar",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getColorForAvatar",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "avatarInitials",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "src"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "alt"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "fieldName": "size"
+            },
+            {
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "round"
+            },
+            {
+              "name": "library",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "fieldName": "library"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
+              },
+              "fieldName": "color"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "icon",
+          "tagName": "zn-icon",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/icon\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/icon",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnIcon",
+            "module": "components/icon/icon.js"
           }
         }
       ]
@@ -12694,6 +12694,138 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/pagination/pagination.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPagination",
+          "members": [
+            {
+              "kind": "field",
+              "name": "limit",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "attribute": "limit",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "total",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "page",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "uri",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_createLink",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_calculatePages",
+              "privacy": "protected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "limit",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "fieldName": "limit"
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "total"
+            },
+            {
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "page"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "uri"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Pagination component for navigating through pages of content.",
+          "tagNameWithoutPrefix": "pagination",
+          "tagName": "zn-pagination",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Pagination component for navigating through pages of content.\n * @documentation https://zinc.style/components/pagination\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/pagination",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPagination",
+            "module": "components/pagination/pagination.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/page-nav/page-nav.js",
       "declarations": [
         {
@@ -13662,138 +13794,6 @@
           "declaration": {
             "name": "ZnPageNav",
             "module": "components/page-nav/page-nav.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/pagination/pagination.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPagination",
-          "members": [
-            {
-              "kind": "field",
-              "name": "limit",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "attribute": "limit",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "total",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "page",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "page",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "uri",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "_createLink",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "page",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_calculatePages",
-              "privacy": "protected"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "limit",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "fieldName": "limit"
-            },
-            {
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "total"
-            },
-            {
-              "name": "page",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "page"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "uri"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Pagination component for navigating through pages of content.",
-          "tagNameWithoutPrefix": "pagination",
-          "tagName": "zn-pagination",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Pagination component for navigating through pages of content.\n * @documentation https://zinc.style/components/pagination\n * @status experimental\n * @since 1.0\n */",
-          "documentation": "https://zinc.style/components/pagination",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPagination",
-            "module": "components/pagination/pagination.js"
           }
         }
       ]
@@ -18328,248 +18328,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/slideout/slideout.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSlideout",
-          "cssProperties": [
-            {
-              "description": "The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.",
-              "name": "--width"
-            },
-            {
-              "description": "The amount of padding to use for the header.",
-              "name": "--header-spacing"
-            },
-            {
-              "description": "The amount of padding to use for the body.",
-              "name": "--body-spacing"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The slideout's header. This element wraps the title and header actions.",
-              "name": "header"
-            },
-            {
-              "description": "The slideout's close button.",
-              "name": "close-button"
-            },
-            {
-              "description": "The close buttons exported `base` part.",
-              "name": "close-button__base"
-            },
-            {
-              "description": "The slideout's body.",
-              "name": "body"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "The slideout's label. Alternatively you can use the `label` attribute.",
-              "name": "label"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton }"
-            },
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "slideout",
-              "type": {
-                "text": "HTMLDialogElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "panel",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
-              "attribute": "trigger",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "requestClose",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "source",
-                  "type": {
-                    "text": "'close-button' | 'keyboard' | 'overlay'"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "addOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "removeOpenListeners",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Shows the slideout."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Hides the slideout."
-            },
-            {
-              "kind": "field",
-              "name": "closeClickHandler",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the slideout is opens.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted when the slideout is closed.",
-              "name": "zn-close"
-            },
-            {
-              "type": {
-                "text": "{ source: 'close-button' | 'keyboard' | 'overlay' }"
-              },
-              "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.",
-              "name": "zn-request-close"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
-              "fieldName": "open"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
-              "fieldName": "trigger"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "slideout",
-          "tagName": "zn-slideout",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/slideout\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-show - Emitted when the slideout is opens.\n * @event zn-close - Emitted when the slideout is closed.\n * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to\n * close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling\n * `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in\n * destructive behavior such as data loss.\n *\n * @slot - The default slot.\n * @slot label - The slideout's label. Alternatively you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The slideout's header. This element wraps the title and header actions.\n * @csspart close-button - The slideout's close button.\n * @csspart close-button__base - The close buttons exported `base` part.\n * @csspart body - The slideout's body.\n *\n * @cssproperty --width - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.\n * @cssproperty --header-spacing - The amount of padding to use for the header.\n * @cssproperty --body-spacing - The amount of padding to use for the body.\n */",
-          "documentation": "https://zinc.style/components/slideout",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSlideout",
-            "module": "components/slideout/slideout.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/sp/sp.js",
       "declarations": [
         {
@@ -18844,6 +18602,248 @@
           "declaration": {
             "name": "ZnSp",
             "module": "components/sp/sp.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/slideout/slideout.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSlideout",
+          "cssProperties": [
+            {
+              "description": "The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.",
+              "name": "--width"
+            },
+            {
+              "description": "The amount of padding to use for the header.",
+              "name": "--header-spacing"
+            },
+            {
+              "description": "The amount of padding to use for the body.",
+              "name": "--body-spacing"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The slideout's header. This element wraps the title and header actions.",
+              "name": "header"
+            },
+            {
+              "description": "The slideout's close button.",
+              "name": "close-button"
+            },
+            {
+              "description": "The close buttons exported `base` part.",
+              "name": "close-button__base"
+            },
+            {
+              "description": "The slideout's body.",
+              "name": "body"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "The slideout's label. Alternatively you can use the `label` attribute.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton }"
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "slideout",
+              "type": {
+                "text": "HTMLDialogElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "panel",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
+              "attribute": "trigger",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "requestClose",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "'close-button' | 'keyboard' | 'overlay'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "addOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "removeOpenListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Shows the slideout."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Hides the slideout."
+            },
+            {
+              "kind": "field",
+              "name": "closeClickHandler",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the slideout is opens.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted when the slideout is closed.",
+              "name": "zn-close"
+            },
+            {
+              "type": {
+                "text": "{ source: 'close-button' | 'keyboard' | 'overlay' }"
+              },
+              "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.",
+              "name": "zn-request-close"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
+              "fieldName": "open"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
+              "fieldName": "trigger"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "slideout",
+          "tagName": "zn-slideout",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/slideout\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-show - Emitted when the slideout is opens.\n * @event zn-close - Emitted when the slideout is closed.\n * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to\n * close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling\n * `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in\n * destructive behavior such as data loss.\n *\n * @slot - The default slot.\n * @slot label - The slideout's label. Alternatively you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The slideout's header. This element wraps the title and header actions.\n * @csspart close-button - The slideout's close button.\n * @csspart close-button__base - The close buttons exported `base` part.\n * @csspart body - The slideout's body.\n *\n * @cssproperty --width - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens.\n * @cssproperty --header-spacing - The amount of padding to use for the header.\n * @cssproperty --body-spacing - The amount of padding to use for the body.\n */",
+          "documentation": "https://zinc.style/components/slideout",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSlideout",
+            "module": "components/slideout/slideout.js"
           }
         }
       ]

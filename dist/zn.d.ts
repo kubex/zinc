@@ -3925,14 +3925,19 @@ declare module "components/editor/modules/events/zn-command-select" {
 }
 declare module "components/editor/modules/dialog-module/dialog-module" {
     import "components/editor/modules/dialog-module/dialog-module.component";
+    import type { CannedResponse } from "components/editor/editor.component";
     import type Quill from 'quill';
     class DialogModule {
         private _quill;
         private _dialog;
         private _commands;
         constructor(quill: Quill);
+        setCommands(commands: CannedResponse[]): void;
+        private _open;
+        private _close;
         private initDialog;
         private attachEvents;
+        private detachEvents;
         private onCommandSelect;
         private createDialog;
         private addCommands;
@@ -4026,12 +4031,13 @@ declare module "components/editor/modules/menu-module/menu-module" {
         constructor(quill: Quill, options: MenuModuleOptions);
         private initMenu;
         private attachEvents;
+        private detachEvents;
         private onTextChange;
         private onCommandSelect;
         private onDocumentClick;
         private updateMenuPosition;
-        private openMenu;
-        private closeMenu;
+        private _openMenu;
+        private _closeMenu;
         private createMenu;
         private addCommands;
         private triggerCommand;

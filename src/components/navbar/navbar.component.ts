@@ -39,6 +39,10 @@ export default class ZnNavbar extends ZincElement {
   private _expanding: NodeListOf<Element>;
   private _openedTabs: string[] = [];
 
+  appendItem(item: Element) {
+    this._postItems[this._postItems.length - 1].after(item);
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._preItems = this.querySelectorAll('li:not([suffix])');

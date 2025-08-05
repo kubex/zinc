@@ -2713,6 +2713,7 @@ declare module "components/navbar/navbar.component" {
         private _postItems;
         private _expanding;
         private _openedTabs;
+        appendItem(item: Element): void;
         connectedCallback(): void;
         addItem(item: any): any;
         protected firstUpdated(_changedProperties: PropertyValues): void;

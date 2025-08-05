@@ -36,11 +36,14 @@ export default class ZnNavbar extends ZincElement {
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
+  @property()
+  private _appended: Element[];
   private _expanding: NodeListOf<Element>;
   private _openedTabs: string[] = [];
 
   appendItem(item: Element) {
-    this._postItems[this._postItems.length - 1].after(item);
+    this._appended = this._appended || [];
+    this._appended.push(item);
   }
 
   connectedCallback() {
@@ -122,6 +125,7 @@ export default class ZnNavbar extends ZincElement {
               </zn-dropdown>
             </li>` : ''}
           ${this._postItems}
+          ${this._appended}
         </ul>
         <div class="expandables">${this._expanding}</div>
       </div>`;

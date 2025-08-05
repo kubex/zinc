@@ -42,6 +42,8 @@ export default class ZnItem extends ZincElement {
 
   @property({type: Boolean}) inline: boolean;
 
+  @property({type: Boolean}) grid: boolean;
+
   @property({type: Boolean, attribute: 'no-padding'}) noPadding: boolean;
 
   connectedCallback() {
@@ -68,6 +70,7 @@ export default class ZnItem extends ZincElement {
           'description-item--stacked': this.stacked,
           'description-item--edit-on-hover': this.editOnHover,
           'description-item--inline': this.inline,
+          'description-item--grid': this.grid,
           'description-item--small': this.size === 'small',
           'description-item--medium': this.size === 'medium',
           'description-item--large': this.size === 'large',

@@ -44,6 +44,12 @@ class MenuModule {
     this._menu.addEventListener('zn-show', () => setTimeout(() => this.updateMenuPosition(), 1));
   }
 
+  private detachEvents() {
+    document.removeEventListener('zn-command-select', this.onCommandSelect);
+    document.removeEventListener('click', this.onDocumentClick);
+    this._menu.removeEventListener('zn-show', () => setTimeout(() => this.updateMenuPosition(), 1));
+  }
+
   private onTextChange = async (_: Delta, _oldDelta: Delta, source: string) => {
     if (source === Quill.sources.USER) {
       // if the user has typed a forward slash, we will show the menu until they type
@@ -56,15 +62,15 @@ class MenuModule {
 
       // If the openCharacter is the first character in the editor, and menu isn't open, open it.
       if (index === 0 && char === openCharacter && !menuOpen) {
-        await this.openMenu();
+        await this._openMenu();
       } else if (char === openCharacter && text.charAt(index - 2) === ' ' && !menuOpen) {
-        await this.openMenu();
+        await this._openMenu();
       }
 
       // if the user has typed a space or a new line, we will close the menu if the menu
       // is open
       if (menuOpen && (char === ' ' || char === '\n')) {
-        this.closeMenu();
+        this._closeMenu();
       }
 
       if (menuOpen) {
@@ -74,7 +80,7 @@ class MenuModule {
       // if the user clicks away from the menu, we will close the menu
       document.addEventListener('click', (e) => {
         if (menuOpen && e.target !== this._menu) {
-          this.closeMenu();
+          this._closeMenu();
         }
       });
     }
@@ -92,7 +98,7 @@ class MenuModule {
 
   private onDocumentClick = (e: MouseEvent) => {
     if (menuOpen && e.target !== this._menu) {
-      this.closeMenu();
+      this._closeMenu();
     }
   };
 
@@ -125,8 +131,9 @@ class MenuModule {
     }
   }
 
-  private async openMenu() {
+  private async _openMenu() {
     menuOpen = true;
+    this.attachEvents();
     if (this._cannedResponsesUri) {
       await this.fetchCannedResponses();
     }
@@ -137,8 +144,9 @@ class MenuModule {
     }
   }
 
-  private closeMenu() {
+  private _closeMenu() {
     menuOpen = false;
+    this.detachEvents();
     this._menu.hide();
   }
 
@@ -154,13 +162,15 @@ class MenuModule {
   }
 
   private triggerCommand(command: CannedResponse) {
-    this.closeMenu();
+    this._closeMenu();
+    this._quill.focus();
+
     const range = this._quill.getSelection();
     if (range) {
-      this._quill.deleteText(range.index - 1, 1, 'user');
-
-      const prevChar = this._quill.getText(range.index - 2, 1);
       let insertIndex = range.index - 1;
+      this._quill.deleteText(insertIndex, 1, 'user');
+
+      const prevChar = this._quill.getText(insertIndex - 1, 1);
       if (prevChar !== ' ' && insertIndex > 0) {
         this._quill.insertText(insertIndex, ' ', 'user');
         insertIndex += 1;
@@ -171,7 +181,8 @@ class MenuModule {
         new Delta().retain(insertIndex).concat(contentDelta),
         'user'
       );
-      this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent');
+
+      setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent'), 0);
       this._quill.focus();
     }
   }

@@ -126,11 +126,9 @@ export default class DialogModuleComponent extends ZincElement {
   @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange() {
     if (this.open) {
-      this.dialogEl?.showModal(); // These are needed - Do not remove!
       this.addOpenListeners();
       setTimeout(() => this.focus(), 0);
     } else {
-      this.dialogEl?.close(); // These are needed - Do not remove!
       this.removeOpenListeners();
     }
   }

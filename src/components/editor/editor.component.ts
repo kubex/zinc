@@ -295,10 +295,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     // Listen for 'View All' click from menu module
     document.addEventListener('zn-show-canned-response-dialog', (e: ZnShowCannedResponseDialogEvent) => {
       const dialog: DialogModuleComponent | null = document.querySelector('zn-dialog-module');
-      if (dialog && e.detail.commands) {
+      const dialogModule = this.quillElement.getModule('dialogModule') as DialogModule;
+      if (dialog && dialogModule && e.detail.commands) {
+        dialogModule.setCommands(e.detail.commands);
         dialog.allCommands = e.detail.commands; // Need a ref of original list when searching
-        dialog.commands = e.detail.commands;
-        dialog.dialogEl.showModal();
       }
     });
 

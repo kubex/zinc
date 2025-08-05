@@ -14,9 +14,26 @@ class DialogModule {
 
   constructor(quill: Quill) {
     this._quill = quill;
-
     this.initDialog();
+
+    document.addEventListener('zn-show-canned-response-dialog', () => {
+      this._open();
+    });
+  }
+
+  public setCommands(commands: CannedResponse[]) {
+    this._commands = commands;
+    this.addCommands();
+  }
+
+  private _open() {
+    this._dialog.dialogEl.showModal();
     this.attachEvents();
+  }
+
+  private _close() {
+    this._dialog.dialogEl.close();
+    this.detachEvents();
   }
 
   private initDialog() {
@@ -27,6 +44,10 @@ class DialogModule {
 
   private attachEvents() {
     document.addEventListener('zn-command-select', this.onCommandSelect);
+  }
+
+  private detachEvents() {
+    document.removeEventListener('zn-command-select', this.onCommandSelect);
   }
 
   private onCommandSelect = (e: ZnCommandSelectEvent) => {
@@ -49,16 +70,15 @@ class DialogModule {
   }
 
   private triggerCommand(command: CannedResponse) {
-    this._dialog.dialogEl.close();
-
-    this._quill.focus()
+    this._close();
+    this._quill.focus();
 
     const range = this._quill.getSelection();
     if (range) {
-      this._quill.deleteText(range.index - 1, 1, 'user');
-
-      const prevChar = this._quill.getText(range.index - 2, 1);
       let insertIndex = range.index - 1;
+      this._quill.deleteText(insertIndex, 1, 'user');
+
+      const prevChar = this._quill.getText(insertIndex - 1, 1);
       if (prevChar !== ' ' && insertIndex > 0) {
         this._quill.insertText(insertIndex, ' ', 'user');
         insertIndex += 1;
@@ -69,7 +89,8 @@ class DialogModule {
         new Delta().retain(insertIndex).concat(contentDelta),
         'user'
       );
-      this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent');
+
+      setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent'), 0);
       this._quill.focus();
     }
   }

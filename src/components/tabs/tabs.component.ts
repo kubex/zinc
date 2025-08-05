@@ -339,6 +339,10 @@ export default class ZnTabs extends ZincElement {
     return true;
   }
 
+  getActiveTab(): Element[] {
+    return this._panels.get(this._current) || [];
+  }
+
   observerDom() {
     // observe the DOM for changes
     const observer = new MutationObserver((mutations) => {

@@ -2587,6 +2587,55 @@
           }
         },
         {
+          "name": "zn-icon",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "src", "value": { "type": "string" } },
+            { "name": "alt", "value": { "type": "string" } },
+            { "name": "size", "value": { "type": "number", "default": "24" } },
+            {
+              "name": "round",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "library", "value": { "type": "IconLibrary" } },
+            {
+              "name": "color",
+              "value": {
+                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
+              }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "src", "type": "string" },
+              { "name": "alt", "type": "string" },
+              { "name": "size", "type": "number" },
+              { "name": "round", "type": "boolean" },
+              { "name": "library", "type": "IconLibrary" },
+              {
+                "name": "color",
+                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
+              },
+              { "name": "gravatarOptions", "type": "string" },
+              { "name": "defaultLibrary", "type": "IconLibrary" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-inline-edit",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -2673,55 +2722,6 @@
               { "name": "handleCancelClick" },
               { "name": "handleBlur" },
               { "name": "handleInput" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-icon",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "src", "value": { "type": "string" } },
-            { "name": "alt", "value": { "type": "string" } },
-            { "name": "size", "value": { "type": "number", "default": "24" } },
-            {
-              "name": "round",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "library", "value": { "type": "IconLibrary" } },
-            {
-              "name": "color",
-              "value": {
-                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "src", "type": "string" },
-              { "name": "alt", "type": "string" },
-              { "name": "size", "type": "number" },
-              { "name": "round", "type": "boolean" },
-              { "name": "library", "type": "IconLibrary" },
-              {
-                "name": "color",
-                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              },
-              { "name": "gravatarOptions", "type": "string" },
-              { "name": "defaultLibrary", "type": "IconLibrary" }
             ],
             "events": [
               {
@@ -3590,27 +3590,6 @@
           }
         },
         {
-          "name": "zn-pagination",
-          "description": "Pagination component for navigating through pages of content.\n---\n",
-          "doc-url": "",
-          "attributes": [
-            { "name": "limit", "value": { "type": "number", "default": "10" } },
-            { "name": "total", "value": { "type": "number", "default": "0" } },
-            { "name": "page", "value": { "type": "number", "default": "1" } },
-            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "limit", "type": "number" },
-              { "name": "total", "type": "number" },
-              { "name": "page", "type": "number" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-page-nav",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -3705,6 +3684,27 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-pagination",
+          "description": "Pagination component for navigating through pages of content.\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "limit", "value": { "type": "number", "default": "10" } },
+            { "name": "total", "value": { "type": "number", "default": "0" } },
+            { "name": "page", "value": { "type": "number", "default": "1" } },
+            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "limit", "type": "number" },
+              { "name": "total", "type": "number" },
+              { "name": "page", "type": "number" },
+              { "name": "uri", "type": "string" }
+            ],
+            "events": []
           }
         },
         {
@@ -4972,82 +4972,6 @@
           }
         },
         {
-          "name": "zn-sp",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "divide",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "gap", "value": { "type": "keyof typeof defaultSizes" } },
-            {
-              "name": "row",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "grow",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "pad-x",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "pad-y",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "no-gap",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-x",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-y",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "width-container",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "divide", "type": "boolean" },
-              { "name": "gap", "type": "keyof typeof defaultSizes" },
-              { "name": "row", "type": "boolean" },
-              { "name": "grow", "type": "boolean" },
-              { "name": "padX", "type": "boolean" },
-              { "name": "padY", "type": "boolean" },
-              { "name": "noGap", "type": "boolean" },
-              { "name": "flush", "type": "boolean" },
-              { "name": "flushX", "type": "boolean" },
-              { "name": "flushY", "type": "boolean" },
-              { "name": "widthContainer", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-slideout",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the slideout is opens.\n- **zn-close** - Emitted when the slideout is closed.\n- **zn-request-close** - Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the slideout.\n- **hide()** - Hides the slideout.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The slideout's label. Alternatively you can use the `label` attribute.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The slideout's header. This element wraps the title and header actions.\n- **close-button** - The slideout's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The slideout's body.",
           "doc-url": "",
@@ -5124,6 +5048,82 @@
                 "name": "zn-request-close",
                 "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
                 "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-sp",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "divide",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "gap", "value": { "type": "keyof typeof defaultSizes" } },
+            {
+              "name": "row",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "grow",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "pad-x",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "pad-y",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-gap",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-x",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-y",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "width-container",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "divide", "type": "boolean" },
+              { "name": "gap", "type": "keyof typeof defaultSizes" },
+              { "name": "row", "type": "boolean" },
+              { "name": "grow", "type": "boolean" },
+              { "name": "padX", "type": "boolean" },
+              { "name": "padY", "type": "boolean" },
+              { "name": "noGap", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "widthContainer", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }

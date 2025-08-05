@@ -3045,6 +3045,7 @@ declare module "components/tabs/tabs.component" {
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         _setTabEleActive(ele: Element, active: boolean): void;
         selectTab(tabName: string, refresh: boolean): boolean;
+        getActiveTab(): Element[];
         observerDom(): void;
         removeTabAndPanel(tabId: string): void;
         _registerTabs: () => void;

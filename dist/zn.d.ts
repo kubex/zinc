@@ -2711,6 +2711,7 @@ declare module "components/navbar/navbar.component" {
         dropdown: never[];
         private _preItems;
         private _postItems;
+        private _appended;
         private _expanding;
         private _openedTabs;
         appendItem(item: Element): void;

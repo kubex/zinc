@@ -5314,6 +5314,7 @@ declare module "components/item/item.component" {
         icon: string;
         value: string;
         inline: boolean;
+        grid: boolean;
         noPadding: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;

@@ -33,7 +33,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'active', reflect: true}) _current = '';
   @property({attribute: 'split', type: Number, reflect: true}) _split: number;
   @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
-  @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax;
+  @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax: number;
   @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;

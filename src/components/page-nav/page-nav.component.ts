@@ -65,7 +65,7 @@ export default class ZnPageNav extends ZnTabs {
         <div class="navigation-group">
           ${data.title ? html`<h4>${data.title}</h4>` : ''}
           ${data.items.map(item => html`
-            <div tab-uri="${item.uri}" class="navigation-item">
+            <div tab-uri="${item.uri}" class="navigation-item" @click=${this.toggleNavigation}>
               <zn-icon src="${item.icon}" size="24"></zn-icon>
               ${item.label}
             </div>
@@ -84,7 +84,7 @@ export default class ZnPageNav extends ZnTabs {
         <div class="navigation">
           ${navItems}
         </div>
-        <div class="menu-overlay"></div>
+        <div class="menu-overlay" @click=${this.toggleNavigation}></div>
         <div id="mid" part="mid">
           <div id="content">
             <slot></slot>

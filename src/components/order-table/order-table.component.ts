@@ -215,7 +215,7 @@ export default class ZnOrderTable extends ZincElement {
     if (this.modifiedData && this.modifiedData['paid']) {
       paid = html`
         <div class="summary-item">
-          <div class="summary-item-title">Paid</div>
+          <div class="summary-item-title">Amount Paid</div>
           <div class="summary-item-value">${this.modifiedData['paid']}</div>
         </div>`;
     }
@@ -225,7 +225,7 @@ export default class ZnOrderTable extends ZincElement {
     if (this.modifiedData && this.modifiedData['remaining']) {
       remaining = html`
         <div class="summary-item">
-          <div class="summary-item-title">Remaining Balance</div>
+          <div class="summary-item-title">Amount Outstanding</div>
           <div class="summary-item-value">${this.modifiedData['remaining']}</div>
         </div>`;
     }

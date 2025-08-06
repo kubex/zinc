@@ -56,9 +56,10 @@ export default class ZnPageNav extends ZnTabs {
     }
   }
 
-  firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    const firstTab = this.shadowRoot?.querySelector('.navigation-item');
+  setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
+    super.setActiveTab(tabName, store, refresh, refTab);
+
+    const firstTab = this.shadowRoot?.querySelector('.navigation-item.active');
     if (firstTab) {
       this.breadcrumb = firstTab.textContent?.trim() || '';
     } else {

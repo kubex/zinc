@@ -3006,6 +3006,7 @@ declare module "components/tabs/tabs.component" {
         _current: string;
         _split: number;
         _splitMin: number;
+        _splitMax: number;
         primaryCaption: string;
         secondaryCaption: string;
         noPrefetch: boolean;
@@ -3237,6 +3238,7 @@ declare module "components/split-pane/split-pane.component" {
         calculatePixels: boolean;
         preferSecondarySize: boolean;
         minimumPaneSize: number;
+        maximumPaneSize: number;
         initialSize: number;
         storeKey: string;
         border: boolean;
@@ -5456,6 +5458,7 @@ declare module "components/button-menu/button-menu.component" {
         calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]): void;
         render(): import("lit").TemplateResult<1>;
         addButton(button: ZnButton): void;
+        setDynamicButtons(btns: NodeListOf<ZnButton>): void;
         removeButton(id: string): void;
         removeAllButtons(): void;
     }

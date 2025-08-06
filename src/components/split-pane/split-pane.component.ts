@@ -38,6 +38,7 @@ export default class ZnSplitPane extends ZincElement {
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
   @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
+  @property({attribute: 'max-size', type: Number, reflect: true}) maximumPaneSize: number;
   @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
   @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
   @property({attribute: 'bordered', type: Boolean, reflect: true}) border = false;
@@ -133,10 +134,18 @@ export default class ZnSplitPane extends ZincElement {
     let percentSize = (primaryPanelPixels / this.currentContainerSize) * 100;
 
     if (this.calculatePixels) {
-      pixelSize = Math.max(this.minimumPaneSize, pixelSize);
+      if (this.maximumPaneSize) {
+        pixelSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, pixelSize));
+      } else {
+        pixelSize = Math.max(this.minimumPaneSize, pixelSize);
+      }
       this.initialSize = pixelSize;
     } else {
-      percentSize = Math.max(this.minimumPaneSize, percentSize);
+      if (this.maximumPaneSize) {
+        percentSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, percentSize));
+      } else {
+        percentSize = Math.max(this.minimumPaneSize, percentSize);
+      }
       this.initialSize = percentSize;
     }
     this.currentPixelSize = pixelSize;
@@ -161,6 +170,7 @@ export default class ZnSplitPane extends ZincElement {
     return html`
       <style>:host {
         --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
+        --max-panel-size: ${this.maximumPaneSize ? this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : 'none'};
         --initial-size: ${this.primaryFull};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};

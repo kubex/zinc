@@ -266,10 +266,10 @@ export default class ZnButtonMenu extends ZincElement {
   render() {
     return html`
       <div class=${classMap({
-      'button-menu': true,
-      'button-menu--no-padding': this.noPadding,
-      'button-menu--no-gap': this.noGap,
-    })}>
+        'button-menu': true,
+        'button-menu--no-padding': this.noPadding,
+        'button-menu--no-gap': this.noGap,
+      })}>
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent" size="content"></zn-button>
@@ -297,8 +297,18 @@ export default class ZnButtonMenu extends ZincElement {
     this.calculateVisibleButtons();
   }
 
+  public setDynamicButtons(btns: NodeListOf<ZnButton>) {
+    // remove all buttons that have the zn-button-menu__added class
+    this.removeAllButtons();
+
+    // add the new buttons
+    btns.forEach((button: ZnButton) => {
+      this.addButton(button);
+    });
+  }
+
   public removeButton(id: string) {
-    const button = this.querySelector(`zn-button#${id}`);
+    const button = this.querySelector(`zn-button.${id}`);
     if (button) {
       // remove the button from the original buttons list
       this._originalButtons = this._originalButtons.filter(b => b.button !== button);

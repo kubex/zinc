@@ -83,6 +83,16 @@
   .breadcrumb-menu-toggle {
     cursor: pointer;
     margin-left: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+      color: rgb(var(--zn-text-heading));
+      font-weight: var(--zn-font-weight-semibold);
+      font-size: var(--zn-font-size-medium);
+    }
   }
 
   .menu-overlay.active {
@@ -106,8 +116,6 @@
     bottom: 0;
     z-index: var(--zn-z-index-dropdown);
     transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
-    // allow transitions on block
-
   }
 
   .navigation.active {

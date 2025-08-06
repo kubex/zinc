@@ -1,5 +1,5 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {property} from 'lit/decorators.js';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {property, state} from 'lit/decorators.js';
 import ZnTabs from "../tabs";
 
 import styles from './page-nav.scss';
@@ -41,6 +41,8 @@ export default class ZnPageNav extends ZnTabs {
 
   @property({type: Object}) navigation: PageNavData;
 
+  @state() breadcrumb: string
+
   toggleNavigation() {
     const navigationElement = this.shadowRoot?.querySelector('.navigation');
     if (navigationElement) {
@@ -54,8 +56,23 @@ export default class ZnPageNav extends ZnTabs {
     }
   }
 
+  firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    const firstTab = this.shadowRoot?.querySelector('.navigation-item');
+    if (firstTab) {
+      this.breadcrumb = firstTab.textContent?.trim() || '';
+    } else {
+      this.breadcrumb = '';
+    }
+  }
+
+  clickTab(target: HTMLElement, refresh: boolean) {
+    super.clickTab(target, refresh);
+    this.breadcrumb = target.textContent?.trim() || '';
+    this.toggleNavigation();
+  }
+
   render() {
-    // navigation = {caption: {title: url}}
     if (!this.navigation) {
       return html`<p>No navigation data available.</p>`;
     }
@@ -65,7 +82,7 @@ export default class ZnPageNav extends ZnTabs {
         <div class="navigation-group">
           ${data.title ? html`<h4>${data.title}</h4>` : ''}
           ${data.items.map(item => html`
-            <div tab-uri="${item.uri}" class="navigation-item" @click=${this.toggleNavigation}>
+            <div tab-uri="${item.uri}" class="navigation-item">
               <zn-icon src="${item.icon}" size="24"></zn-icon>
               ${item.label}
             </div>
@@ -78,6 +95,7 @@ export default class ZnPageNav extends ZnTabs {
       <div class="breadcrumb">
         <div @click="${this.toggleNavigation}" class="breadcrumb-menu-toggle">
           <zn-icon src="menu" size="24"></zn-icon>
+          <span>${this.breadcrumb}</span>
         </div>
       </div>
       <div class="tabs">

@@ -103,7 +103,7 @@ export default class ZnPageNav extends ZnTabs {
         <div class="navigation">
           ${navItems}
         </div>
-        <div class="menu-overlay" @click=${this.toggleNavigation}></div>
+        <div class="menu-overlay" @click="${this.toggleNavigation}"></div>
         <div id="mid" part="mid">
           <div id="content">
             <slot></slot>

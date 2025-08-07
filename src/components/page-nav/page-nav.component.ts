@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
 import ZnTabs from "../tabs";
 

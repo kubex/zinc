@@ -2079,6 +2079,8 @@ declare module "components/data-table/data-table.component" {
         caption: string;
         hideCheckboxes: boolean;
         filters: [];
+        private _initialLoad;
+        private _lastTableContent;
         private resizeObserver;
         private itemsPerPage;
         private page;

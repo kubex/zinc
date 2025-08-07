@@ -287,7 +287,7 @@ export default class ZnDataTable extends ZincElement {
     const tableBody =
       this._dataTask.render({
         pending: () => html`
-          <div>Loading...</div>`,
+          <div>${this.loadingTable()}</div>`,
         complete: (data) => html`
           <div>${this.renderTable(data as TableData)}</div>`,
         error: (error) => html`
@@ -980,5 +980,78 @@ export default class ZnDataTable extends ZincElement {
     }
 
     return a < b ? 1 : a > b ? -1 : 0;
+  }
+
+  private loadingTable() {
+    return html`
+      <div class="table-container">
+        <table class="${classMap({
+          'table': true,
+          'table--standalone': this.standalone,
+        })}">
+          <thead>
+          <tr>
+            <th colspan="30%"></th>
+            <th colspan="25%"></th>
+            <th colspan="20%"></th>
+            <th colspan="15%"></th>
+            <th colspan="10%"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td colspan="30%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="25%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="20%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="15%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="10%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="30%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="25%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="20%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="15%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="10%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="30%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="25%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="20%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="15%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+            <td colspan="10%">
+              <zn-skeleton></zn-skeleton>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>`;
   }
 }

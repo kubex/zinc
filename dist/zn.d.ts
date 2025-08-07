@@ -1989,6 +1989,10 @@ declare module "components/data-table/data-table.component" {
         content: string;
         action: string;
     }
+    interface HeaderConfig {
+        title: string;
+        position: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/data-table
@@ -2027,7 +2031,7 @@ declare module "components/data-table/data-table.component" {
         filter: string;
         wideColumn: string;
         key: string;
-        headers: string;
+        headers: Record<string, string | HeaderConfig>;
         hiddenHeaders: string;
         hiddenColumns: string;
         unsortableHeaders: string;
@@ -2073,6 +2077,7 @@ declare module "components/data-table/data-table.component" {
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
+        private hasHeaderPosition;
         private getRows;
         private getSelectedKeys;
         private updateKeys;

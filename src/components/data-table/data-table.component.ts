@@ -18,6 +18,7 @@ import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
+import ZnSkeleton from "../skeleton";
 import type ZnSelect from "../select";
 
 import styles from './data-table.scss';
@@ -140,7 +141,15 @@ interface HeaderConfig {
  * @since 1.0
  *
  * @dependency zn-button
- * @dependency zn-query-builder
+ * @dependency zn-empty-state
+ * @dependency zn-chip
+ * @dependency zn-hover-container
+ * @dependency zn-dropdown
+ * @dependency zn-menu
+ * @dependency zn-menu-item
+ * @dependency zn-button-group
+ * @dependency zn-confirm
+ * @dependency zn-skeleton
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -162,7 +171,8 @@ export default class ZnDataTable extends ZincElement {
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
     'zn-button-group': ZnButtonGroup,
-    'zn-confirm': ZnConfirm
+    'zn-confirm': ZnConfirm,
+    'zn-skeleton': ZnSkeleton,
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;

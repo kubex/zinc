@@ -1993,6 +1993,7 @@ declare module "components/data-table/data-table.component" {
         id: string;
         href: string;
         gaid: string;
+        uri: string;
         size: string;
         color: string;
         icon: string;

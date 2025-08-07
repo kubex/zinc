@@ -71,7 +71,8 @@ export {default as ActionBar} from './components/action-bar';
 export {default as ExpandingAction} from './components/expanding-action';
 export {default as PageNav} from './components/page-nav';
 export {default as StatusIndicator} from './components/status-indicator';
-export { default as SplitButton } from './components/split-button';
+export {default as SplitButton} from './components/split-button';
+export {default as Skeleton} from './components/skeleton';
 /* plop:component */
 
 // Utilities

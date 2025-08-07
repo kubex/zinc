@@ -630,7 +630,9 @@ export default class ZnDataTable extends ZincElement {
     }
 
     const checkbox = target.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    checkbox.checked = !checkbox.checked;
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
+    }
 
     this.selectedRows = this._rows.filter((_, index) => {
       return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement)?.checked;
@@ -715,9 +717,9 @@ export default class ZnDataTable extends ZincElement {
         }
 
         if (data['caption'].uri) {
-          title = html` <a data-target=${ifDefined(data['caption'].target || nothing)}
+          title = html` <a data-target="${ifDefined(data['caption'].target || nothing)}"
                            href="${data['caption'].uri}"
-                           gaid=${ifDefined(data['caption'].gaid)}
+                           gaid="${ifDefined(data['caption'].gaid)}"
                            class="title">
             ${data['caption'].title}
           </a>`

@@ -1582,6 +1582,10 @@ declare module "components/skeleton/skeleton.component" {
      */
     export default class ZnSkeleton extends ZincElement {
         static styles: CSSResultGroup;
+        speed: string;
+        width: string;
+        height: string;
+        radius: string;
         protected render(): unknown;
     }
 }

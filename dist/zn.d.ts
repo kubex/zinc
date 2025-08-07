@@ -5693,7 +5693,7 @@ declare module "components/expanding-action/index" {
     }
 }
 declare module "components/page-nav/page-nav.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup } from 'lit';
     import ZnTabs from "components/tabs/index";
     interface PageNavData {
         data: PageNavigation[];
@@ -5729,7 +5729,7 @@ declare module "components/page-nav/page-nav.component" {
         navigation: PageNavData;
         breadcrumb: string;
         toggleNavigation(): void;
-        firstUpdated(_changedProperties: PropertyValues): void;
+        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         clickTab(target: HTMLElement, refresh: boolean): void;
         render(): import("lit").TemplateResult<1>;
     }

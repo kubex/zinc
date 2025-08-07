@@ -211,6 +211,9 @@ export default class ZnDataTable extends ZincElement {
   @property() filters: [] = [];
 
   // Data Table Properties
+  private _initialLoad = true;
+  private _lastTableContent: TemplateResult = html``;
+
   private resizeObserver: ResizeObserver;
 
   private itemsPerPage: number = DEFAULT_PER_PAGE;
@@ -294,15 +297,24 @@ export default class ZnDataTable extends ZincElement {
   });
 
   render() {
-    const tableBody =
-      this._dataTask.render({
-        pending: () => html`
-          <div>${this.loadingTable()}</div>`,
-        complete: (data) => html`
-          <div>${this.renderTable(data as TableData)}</div>`,
-        error: (error) => html`
-          <div>${error}</div>`
-      });
+    const tableBody = this._dataTask.render({
+      pending: () => {
+        if (this._initialLoad) {
+          return html`
+            <div>${this.loadingTable()}</div>`;
+        }
+        return html`
+          <div class="reduced-opacity">${this._lastTableContent}</div>`;
+      },
+      complete: (data) => {
+        this._initialLoad = false;
+        this._lastTableContent = html`
+          <div>${this.renderTable(data as TableData)}</div>`;
+        return this._lastTableContent;
+      },
+      error: (error) => html`
+        <div>${error}</div>`
+    }) as TemplateResult;
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
       || this.hasSlotController.test(ActionSlots.modify.valueOf())

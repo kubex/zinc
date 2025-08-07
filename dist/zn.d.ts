@@ -2084,6 +2084,7 @@ declare module "components/data-table/data-table.component" {
         private updateModifyKeys;
         private updateDeleteKeys;
         private sortData;
+        private loadingTable;
     }
 }
 declare module "components/data-table/index" {

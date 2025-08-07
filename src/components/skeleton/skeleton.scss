@@ -1,7 +1,14 @@
+:host {
+  --skeleton-speed: 3s;
+  --skeleton-width: 100%;
+  --skeleton-height: 20px;
+  --skeleton-border-radius: 4px;
+}
+
 .skeleton {
-  height: 25px;
-  width: 100%;
-  border-radius: 4px;
+  height: var(--skeleton-height);
+  width: var(--skeleton-width);
+  border-radius: var(--skeleton-border-radius);
 
   @media (prefers-reduced-motion: reduce) {
     background-repeat: no-repeat;
@@ -18,7 +25,7 @@
     );
     background-size: 200% 100%;
     background-position: -150% 0;
-    animation: loading 4s infinite linear both;
+    animation: loading var(--skeleton-speed) infinite linear both;
   }
 }
 

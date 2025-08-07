@@ -128,6 +128,11 @@ interface ConfirmConfig {
   action: string;
 }
 
+interface HeaderConfig {
+  title: string;
+  position: string;
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/data-table
@@ -169,7 +174,8 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
 
-  @property({attribute: 'headers', type: Object}) headers = '{}';
+  @property({attribute: 'headers', type: Object})
+  headers: Record<string, string | HeaderConfig> = {};
 
   // Hide header text keeping the content - e.g. Action buttons without a header
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
@@ -832,12 +838,30 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  private renderCellHeader(key: any) {
+  private renderCellHeader(key: string) {
     const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key) && !this.unsortable;
     let headerKeys = Object.keys(this.headers);
-    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
-    const header: string | object = this.headers[key];
-    const hasPosition = this.hasHeaderPosition(header);
+    headerKeys = headerKeys.filter((k) => !Object.values(this.hiddenColumns).includes(k));
+    const header: string | HeaderConfig = this.headers[key];
+
+    if (this.hasHeaderPosition(header)) {
+      return html`
+        <th
+          class="${classMap({
+            'table__head': true,
+            'table__head--wide': key === this.wideColumn,
+            'table__head--last': key === headerKeys[headerKeys.length - 1],
+            'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
+            [`table__head--${header.position}`]: true
+          })}"
+          @click="${sortable ? this.updateSort(key) : undefined}">
+          <div>
+            ${header.title}
+            ${sortable ? this.getTableSortIcon(key) : nothing}
+          </div>
+        </th>
+      `;
+    }
 
     return html`
       <th
@@ -846,11 +870,10 @@ export default class ZnDataTable extends ZincElement {
           'table__head--wide': key === this.wideColumn,
           'table__head--last': key === headerKeys[headerKeys.length - 1],
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
-          [`table__head--${header.position}`]: hasPosition
         })}"
         @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
-          ${hasPosition && 'title' in header ? header.title : header}
+          ${header}
           ${sortable ? this.getTableSortIcon(key) : nothing}
         </div>
       </th>
@@ -858,11 +881,25 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellBody(index: number, value: RenderDataValue) {
-    let headerKeys = Object.keys(this.headers);
-    headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
-    const headerKey = headerKeys[index];
-    const headerObj = this.headers[headerKey];
-    const hasPosition = this.hasHeaderPosition(headerObj);
+    const headerKeys: string[] = Object.keys(this.headers).filter(
+      (key) => !Object.values(this.hiddenColumns).includes(key)
+    );
+    const headerKey: string = headerKeys[index];
+    const header = this.headers[headerKey];
+
+    if (this.hasHeaderPosition(header)) {
+      return html`
+        <td
+          @click="${this.selectRow}"
+          class="${classMap({
+            'table__cell': true,
+            'table__cell--wide': headerKey === this.wideColumn,
+            'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
+            [`table__cell--${header.position}`]: true
+          })}">
+          <div>${this.renderData(value)}</div>
+        </td>`;
+    }
 
     return html`
       <td
@@ -871,14 +908,13 @@ export default class ZnDataTable extends ZincElement {
           'table__cell': true,
           'table__cell--wide': headerKey === this.wideColumn,
           'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
-          [`table__cell--${headerObj.position}`]: hasPosition
         })}">
         <div>${this.renderData(value)}</div>
       </td>`;
   }
 
-  private hasHeaderPosition(header: string) {
-    return header && typeof header === 'object' && 'position' in header;
+  private hasHeaderPosition(header: string | HeaderConfig) {
+    return typeof header === 'object' && header !== null && 'position' in header && 'title' in header;
   }
 
   private getRows(keys: string[], data: TableData) {

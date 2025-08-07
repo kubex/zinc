@@ -101,6 +101,7 @@ interface ButtonConfig {
   id: string;
   href: string;
   gaid: string;
+  uri: string;
   size: string;
   color: string;
   icon: string;
@@ -818,6 +819,7 @@ export default class ZnDataTable extends ZincElement {
                 icon="${button.icon}"
                 icon-size="${button.iconSize}"
                 tooltip="${button.tooltip}"
+                data-uri="${button.uri}"
                 data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
                 target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
                 outline="${ifDefined(button.outline)}">

@@ -1571,6 +1571,30 @@ declare module "components/hover-container/index" {
         }
     }
 }
+declare module "components/skeleton/skeleton.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from "lit";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/skeleton
+     * @status experimental
+     * @since 1.0
+     */
+    export default class ZnSkeleton extends ZincElement {
+        static styles: CSSResultGroup;
+        protected render(): unknown;
+    }
+}
+declare module "components/skeleton/index" {
+    import ZnSkeleton from "components/skeleton/skeleton.component";
+    export * from "components/skeleton/skeleton.component";
+    export default ZnSkeleton;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-skeleton': ZnSkeleton;
+        }
+    }
+}
 declare module "internal/animate" {
     /**
      * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
@@ -1912,6 +1936,7 @@ declare module "components/data-table/data-table.component" {
     import ZnHoverContainer from "components/hover-container/index";
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
+    import ZnSkeleton from "components/skeleton/index";
     interface TableData {
         page: number;
         per_page: number;
@@ -2000,7 +2025,15 @@ declare module "components/data-table/data-table.component" {
      * @since 1.0
      *
      * @dependency zn-button
-     * @dependency zn-query-builder
+     * @dependency zn-empty-state
+     * @dependency zn-chip
+     * @dependency zn-hover-container
+     * @dependency zn-dropdown
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     * @dependency zn-button-group
+     * @dependency zn-confirm
+     * @dependency zn-skeleton
      *
      * @event zn-event-name - Emitted as an example.
      *
@@ -2023,6 +2056,7 @@ declare module "components/data-table/data-table.component" {
             'zn-menu-item': typeof ZnMenuItem;
             'zn-button-group': typeof ZnButtonGroup;
             'zn-confirm': typeof ZnConfirm;
+            'zn-skeleton': typeof ZnSkeleton;
         };
         dataUri: string;
         data: any;
@@ -5832,30 +5866,6 @@ declare module "components/split-button/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-split-button': ZnSplitButton;
-        }
-    }
-}
-declare module "components/skeleton/skeleton.component" {
-    import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup } from "lit";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/skeleton
-     * @status experimental
-     * @since 1.0
-     */
-    export default class ZnSkeleton extends ZincElement {
-        static styles: CSSResultGroup;
-        protected render(): unknown;
-    }
-}
-declare module "components/skeleton/index" {
-    import ZnSkeleton from "components/skeleton/skeleton.component";
-    export * from "components/skeleton/skeleton.component";
-    export default ZnSkeleton;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-skeleton': ZnSkeleton;
         }
     }
 }

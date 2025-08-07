@@ -836,6 +836,9 @@ export default class ZnDataTable extends ZincElement {
     const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key) && !this.unsortable;
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
+    const header: string | object = this.headers[key];
+    const hasPosition = this.hasHeaderPosition(header);
+
     return html`
       <th
         class="${classMap({
@@ -843,32 +846,39 @@ export default class ZnDataTable extends ZincElement {
           'table__head--wide': key === this.wideColumn,
           'table__head--last': key === headerKeys[headerKeys.length - 1],
           'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
+          [`table__head--${header.position}`]: hasPosition
         })}"
         @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
-          ${this.headers[key]}
-          ${sortable ?
-            html`
-              ${this.getTableSortIcon(key)}` :
-            html``}
+          ${hasPosition && 'title' in header ? header.title : header}
+          ${sortable ? this.getTableSortIcon(key) : nothing}
         </div>
-      </th>`;
+      </th>
+    `;
   }
 
   private renderCellBody(index: number, value: RenderDataValue) {
     let headerKeys = Object.keys(this.headers);
     headerKeys = headerKeys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
-    const header = headerKeys[index];
+    const headerKey = headerKeys[index];
+    const headerObj = this.headers[headerKey];
+    const hasPosition = this.hasHeaderPosition(headerObj);
+
     return html`
       <td
         @click="${this.selectRow}"
         class="${classMap({
           'table__cell': true,
-          'table__cell--wide': header === this.wideColumn,
-          'table__cell--last': header === headerKeys[headerKeys.length - 1]
+          'table__cell--wide': headerKey === this.wideColumn,
+          'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
+          [`table__cell--${headerObj.position}`]: hasPosition
         })}">
         <div>${this.renderData(value)}</div>
       </td>`;
+  }
+
+  private hasHeaderPosition(header: string) {
+    return header && typeof header === 'object' && 'position' in header;
   }
 
   private getRows(keys: string[], data: TableData) {

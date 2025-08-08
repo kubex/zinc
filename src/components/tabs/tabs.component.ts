@@ -171,6 +171,14 @@ export default class ZnTabs extends ZincElement {
     }, {passive: true});
   }
 
+  nextTab() {
+    console.log("Select next tab")
+  }
+
+  previousTab() {
+    console.log("Select previous tab")
+  }
+
   _prepareTab(tabId: string) {
     for (const tab of this._tabs) {
       if (tab.getAttribute('tab') === tabId) {

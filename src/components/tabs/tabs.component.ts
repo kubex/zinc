@@ -171,12 +171,29 @@ export default class ZnTabs extends ZincElement {
     }, {passive: true});
   }
 
+  switchTab(inc: number) {
+    const panSize = this._panels.size;
+    if (panSize < 2) {
+      return
+    }
+
+    const currentIndex = Array.from(this._panels.keys()).indexOf(this._current);
+    let nextIndex = currentIndex + inc;
+    if (nextIndex < 0) {
+      nextIndex = panSize - 1; // wrap around to the last tab
+    } else if (nextIndex >= panSize) {
+      nextIndex = 0; // wrap around to the first tab
+    }
+    const nextTabId = Array.from(this._panels.keys())[nextIndex];
+    this.setActiveTab(nextTabId, true, false);
+  }
+
   nextTab() {
-    console.log("Select next tab")
+    this.switchTab(1);
   }
 
   previousTab() {
-    console.log("Select previous tab")
+    this.switchTab(-1);
   }
 
   _prepareTab(tabId: string) {

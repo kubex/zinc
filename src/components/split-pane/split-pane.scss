@@ -66,11 +66,11 @@
     display: none;
   }
 
-  @include wc.container-query(md) {
+  @include wc.container-query(ph) {
     padding-top: 0;
   }
 
-  @include wc.container-query(zero, md) {
+  @include wc.container-query(zero, ph) {
 
     #split-nav {
       position: absolute;
@@ -124,6 +124,7 @@
     #primary-pane, #secondary-pane {
       max-width: 100% !important;
       width: 100%;
+      padding-top: 20px;
     }
   }
 
@@ -249,7 +250,7 @@ $padding: 8px;
 }
 
 // Only wrap on md and above screens
-@include wc.container-query(md) {
+@include wc.container-query(ph) {
   :host([padded]) {
     #primary-pane {
       padding: 0 $padding;

@@ -37,6 +37,7 @@ export default class ZnSplitPane extends ZincElement {
 
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
+  @property({attribute: 'min-snap', type: Number, reflect: true}) minimumPaneSnap = 10;
   @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
   @property({attribute: 'max-size', type: Number, reflect: true}) maximumPaneSize: number;
   @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
@@ -134,7 +135,9 @@ export default class ZnSplitPane extends ZincElement {
     let percentSize = (primaryPanelPixels / this.currentContainerSize) * 100;
 
     if (this.calculatePixels) {
-      if (this.maximumPaneSize) {
+      if (this.minimumPaneSnap > 0 && pixelSize <= this.minimumPaneSnap) {
+        pixelSize = this.minimumPaneSnap;
+      } else if (this.maximumPaneSize) {
         pixelSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, pixelSize));
       } else {
         pixelSize = Math.max(this.minimumPaneSize, pixelSize);
@@ -169,8 +172,8 @@ export default class ZnSplitPane extends ZincElement {
     const resizeMargin = '5px';
     return html`
       <style>:host {
-        --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
-        --max-panel-size: ${this.maximumPaneSize ? this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : 'none'};
+        --min-panel-size: ${this.minimumPaneSnap > 0 ? Math.min(this.minimumPaneSize, this.minimumPaneSnap) : this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
+        ${this.maximumPaneSize ? '--max-panel-size: ' + this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : ''};
         --initial-size: ${this.primaryFull};
         --resize-size: ${resizeWidth};
         --resize-margin: ${resizeMargin};

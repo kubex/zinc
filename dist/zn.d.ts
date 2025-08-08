@@ -3083,6 +3083,7 @@ declare module "components/tabs/tabs.component" {
         _addTab(tab: HTMLElement): void;
         reRegisterTabs: () => void;
         firstUpdated(_changedProperties: PropertyValues): void;
+        switchTab(inc: number): void;
         nextTab(): void;
         previousTab(): void;
         _prepareTab(tabId: string): void;

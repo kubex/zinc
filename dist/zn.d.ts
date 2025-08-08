@@ -3083,6 +3083,8 @@ declare module "components/tabs/tabs.component" {
         _addTab(tab: HTMLElement): void;
         reRegisterTabs: () => void;
         firstUpdated(_changedProperties: PropertyValues): void;
+        nextTab(): void;
+        previousTab(): void;
         _prepareTab(tabId: string): void;
         _uriToId(tabUri: string): string;
         _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;

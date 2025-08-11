@@ -1963,6 +1963,7 @@ declare module "components/data-table/data-table.component" {
         target: string;
         gaid?: string;
         html?: string;
+        color?: string;
         caption: CaptionConfig;
         buttons: ButtonConfig[];
         menu: MenuConfig[];

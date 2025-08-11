@@ -55,6 +55,7 @@ interface RenderDataValue {
   target: string;
   gaid?: string;
   html?: string;
+  color?: string;
   caption: CaptionConfig;
   buttons: ButtonConfig[];
   menu: MenuConfig[];
@@ -835,6 +836,11 @@ export default class ZnDataTable extends ZincElement {
 
         content = html`
           <zn-icon src="${icon}" size="${size}" color="${color}"></zn-icon> ${content}`;
+      }
+
+      if (data['color']) {
+        content = html`
+          <zn-style color="${data['color']}">${content}</zn-style>`;
       }
 
       return content;

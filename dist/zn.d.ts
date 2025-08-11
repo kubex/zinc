@@ -5879,6 +5879,36 @@ declare module "components/split-button/index" {
         }
     }
 }
+declare module "components/style/style.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export default class ZnStyle extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        color: string;
+        border: boolean;
+        error: boolean;
+        success: boolean;
+        info: boolean;
+        warning: boolean;
+        primary: boolean;
+        accent: boolean;
+        pad: string;
+        margin: string;
+        connectedCallback(): void;
+        createRenderRoot(): this;
+    }
+}
+declare module "components/style/index" {
+    import ZnStyle from "components/style/style.component";
+    export * from "components/style/style.component";
+    export default ZnStyle;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-style': ZnStyle;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6011,6 +6041,7 @@ declare module "zinc" {
     export { default as StatusIndicator } from "components/status-indicator/index";
     export { default as SplitButton } from "components/split-button/index";
     export { default as Skeleton } from "components/skeleton/index";
+    export { default as Style } from "components/style/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

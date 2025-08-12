@@ -92,6 +92,7 @@ ul {
     background: rgb(var(--zn-panel));
     border: 1px solid rgb(var(--zn-border-color));
     flex-basis: 100%;
+    min-height: 50px;
   }
 
 
@@ -121,7 +122,7 @@ ul {
 }
 
 
-:host:not([stacked]) {
+:host(:not([stacked]):not([icon-bar])) {
   ul {
     height: 35px;
     align-self: end;

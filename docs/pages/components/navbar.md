@@ -14,7 +14,7 @@ layout: component
 
 ## Examples
 
-### First Example
+### Stacked
 
 ```html:preview
 

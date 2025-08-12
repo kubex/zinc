@@ -91,8 +91,10 @@ export default class ZnNavbar extends ZincElement {
       this.navigation = [];
     }
     const itemCount = this.navigation?.length + this._preItems?.length + this._postItems?.length;
-    if (itemCount < 2 && this.hideOne) {
-      this.style.display = 'none';
+    if (this._expanding.length === 0) {
+      if (itemCount === 0 || (itemCount < 2 && this.hideOne)) {
+        this.style.display = 'none';
+      }
     }
 
     return html`

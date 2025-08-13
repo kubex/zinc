@@ -150,10 +150,22 @@ ul {
     gap: 30px;
     list-style: none;
 
+    li.more {
+      display: none;
+    }
+
+    &.has-hidden {
+      li.more {
+        display: flex;
+      }
+    }
+
     li {
 
       &.hidden {
-        display: none;
+        visibility: hidden;
+        position: absolute;
+        pointer-events: none;
       }
 
       .closer {

@@ -71,11 +71,9 @@ export default class ZnNavbar extends ZincElement {
     }
 
     const expandWidth = this._expandableMargin + (this._expandable?.offsetWidth || 0);
-    const hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
+    let hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
 
-    console.log("Expand Width", expandWidth, "Nav Width", this._navItems?.offsetWidth, "Container Width", this.offsetWidth, "Item Width", this._totalItemWidth);
     if (!hasHidden && expandWidth + this._totalItemWidth <= this.offsetWidth) {
-      // Probably all good, or we have hidden nav items
       return
     }
 
@@ -85,16 +83,20 @@ export default class ZnNavbar extends ZincElement {
     let hideRemaining = false;
     const items = this._navItems?.querySelectorAll('li') || [];
     for (const item of items) {
+      if (item.classList.contains('more')) {
+        continue;
+      }
       const itemWidth = item.offsetWidth + this._navItemsGap + 1
-      console.log("Calc", hideRemaining, itemWidth, takenWidth, availableWidth, hideRemaining || ((itemWidth + takenWidth) > availableWidth))
       if (hideRemaining || ((itemWidth + takenWidth) > availableWidth)) {
         item.classList.add('hidden');
+        hasHidden = true;
         hideRemaining = true;
       } else {
         item.classList.remove('hidden');
         takenWidth += itemWidth;
       }
     }
+    this._navItems?.classList.toggle('has-hidden', hasHidden)
   }
 
   public addItem(item: any) {
@@ -123,7 +125,14 @@ export default class ZnNavbar extends ZincElement {
       this._navItemsGap = parseInt(computed.columnGap);
     }
 
-    this.handleResize();
+    setTimeout(() => {
+      const items = this._navItems?.querySelectorAll('li') || [];
+      for (const item of items) {
+        this._totalItemWidth += item.offsetWidth + this._navItemsGap
+      }
+
+      this.handleResize();
+    }, 100)
 
     if (this.dropdown.length > 0) {
       const menu = this.shadowRoot?.querySelector('zn-menu');
@@ -142,6 +151,10 @@ export default class ZnNavbar extends ZincElement {
         });
       }
     }
+  }
+
+  showMore() {
+    console.log("Showing More")
   }
 
   render() {
@@ -175,6 +188,7 @@ export default class ZnNavbar extends ZincElement {
             return html`
               <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
           })}
+          <li class="more" @click="${this.showMore}"><zn-icon size=16 src="double_arrow"></zn-icon></li>
           ${this.dropdown && this.dropdown.length > 0 ? html`
             <li id="dropdown-item">
               <zn-dropdown>

@@ -40,6 +40,13 @@ export default class ZnNavbar extends ZincElement {
   private _appended: Element[];
   private _expanding: NodeListOf<Element>;
   private _openedTabs: string[] = [];
+  private resizeObserver: ResizeObserver | null = null;
+
+  private _navItems: HTMLElement | null = null;
+  private _expandable: HTMLElement | null = null;
+  private _navItemsGap: number = 0;
+  private _expandableMargin: number = 0;
+  private _totalItemWidth: number = 0;
 
   appendItem(item: Element) {
     this._appended = this._appended || [];
@@ -51,6 +58,43 @@ export default class ZnNavbar extends ZincElement {
     this._preItems = this.querySelectorAll('li:not([suffix])');
     this._postItems = this.querySelectorAll('li[suffix]');
     this._expanding = this.querySelectorAll('zn-expanding-action');
+
+    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
+    this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
+  }
+
+
+  handleResize = () => {
+    if (this._totalItemWidth === 0) {
+      // If we can't do anything with the nav items, we just return
+      return;
+    }
+
+    const expandWidth = this._expandableMargin + (this._expandable?.offsetWidth || 0);
+    const hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
+
+    console.log("Expand Width", expandWidth, "Nav Width", this._navItems?.offsetWidth, "Container Width", this.offsetWidth, "Item Width", this._totalItemWidth);
+    if (!hasHidden && expandWidth + this._totalItemWidth <= this.offsetWidth) {
+      // Probably all good, or we have hidden nav items
+      return
+    }
+
+    const availableWidth = this.offsetWidth - expandWidth;
+    // reduce the items
+    let takenWidth = 0;
+    let hideRemaining = false;
+    const items = this._navItems?.querySelectorAll('li') || [];
+    for (const item of items) {
+      const itemWidth = item.offsetWidth + this._navItemsGap + 1
+      console.log("Calc", hideRemaining, itemWidth, takenWidth, availableWidth, hideRemaining || ((itemWidth + takenWidth) > availableWidth))
+      if (hideRemaining || ((itemWidth + takenWidth) > availableWidth)) {
+        item.classList.add('hidden');
+        hideRemaining = true;
+      } else {
+        item.classList.remove('hidden');
+        takenWidth += itemWidth;
+      }
+    }
   }
 
   public addItem(item: any) {
@@ -67,6 +111,20 @@ export default class ZnNavbar extends ZincElement {
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
+    this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
+    if (this._expandable) {
+      const computed = getComputedStyle(this._expandable);
+      this._expandableMargin = parseInt(computed.marginLeft) + parseInt(computed.marginRight);
+    }
+    this._navItems = this.shadowRoot?.querySelector('.navbar__container > ul') as HTMLElement || null;
+    if (this._navItems) {
+      const computed = getComputedStyle(this._navItems);
+      this._navItemsGap = parseInt(computed.columnGap);
+    }
+
+    this.handleResize();
+
     if (this.dropdown.length > 0) {
       const menu = this.shadowRoot?.querySelector('zn-menu');
       if (menu) {

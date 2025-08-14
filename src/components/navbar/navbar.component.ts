@@ -201,8 +201,8 @@ export default class ZnNavbar extends ZincElement {
               <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
           })}
           <li class="more">
-            <zn-dropdown placement="bottom-end" id="extended-dropdown" color="transparent">
-              <zn-button slot="trigger" text>
+            <zn-dropdown placement="bottom-end" id="extended-dropdown">
+              <zn-button slot="trigger" text color="transparent">
                 <zn-icon src="double_arrow" size="16"></zn-icon>
               </zn-button>
               <ul id="extended-menu">

@@ -5909,6 +5909,7 @@ declare module "components/style/style.component" {
         accent: boolean;
         pad: string;
         margin: string;
+        autoMargin: string;
         connectedCallback(): void;
         createRenderRoot(): this;
     }

@@ -2731,13 +2731,14 @@ declare module "events/zn-menu-select" {
 declare module "components/navbar/navbar.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnDropdown from "components/dropdown/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/navbar
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-dropdown
      *
      * @event zn-event-name - Emitted as an example.
      *
@@ -2750,6 +2751,9 @@ declare module "components/navbar/navbar.component" {
      */
     export default class ZnNavbar extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dropdown': typeof ZnDropdown;
+        };
         navigation: never[];
         fullWidth: boolean;
         iconBar: boolean;

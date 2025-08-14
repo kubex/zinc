@@ -100,7 +100,7 @@ export default class ZnMenu extends ZincElement {
         @mousedown=${this.handleMouseDown}>
         <slot></slot>
         ${this.actions.map((item: NavItem) => {
-          if (item.confirm) {
+          if ( item?.confirm) {
             return html`
               <zn-confirm trigger="${ifDefined(item.confirm?.trigger)}"
                           type="${ifDefined(item.confirm?.type)}"

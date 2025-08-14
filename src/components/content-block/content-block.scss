@@ -1,0 +1,64 @@
+:host {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: rgb(var(--zn-border-color));
+  }
+}
+
+zn-header div[slot='actions'] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+zn-header::part(base) {
+  cursor: pointer;
+}
+
+zn-header::part(header-left) {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+zn-navbar {
+  cursor: default;
+}
+
+.content-block--short {
+  zn-sp, zn-navbar {
+    display: none;
+  }
+
+  zn-header::part(base) {
+    border-bottom: none;
+  }
+}
+
+zn-panel.content-block--short::part(mid) {
+  display: none;
+}
+
+zn-panel:not(.content-block--short) zn-header::part(header-description) {
+  display: none;
+}
+
+.text-section {
+  font-size: 13px;
+  line-height: 19px;
+
+  a {
+    font-size: 10px;
+    opacity: 0.8;
+  }
+}
+
+.hidden {
+  display: none;
+}

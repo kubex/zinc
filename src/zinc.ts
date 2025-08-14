@@ -73,7 +73,8 @@ export {default as PageNav} from './components/page-nav';
 export {default as StatusIndicator} from './components/status-indicator';
 export {default as SplitButton} from './components/split-button';
 export {default as Skeleton} from './components/skeleton';
-export { default as Style } from './components/style';
+export {default as Style} from './components/style';
+export {default as ContentBlock} from './components/content-block';
 /* plop:component */
 
 // Utilities

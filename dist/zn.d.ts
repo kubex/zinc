@@ -2762,10 +2762,19 @@ declare module "components/navbar/navbar.component" {
         private _appended;
         private _expanding;
         private _openedTabs;
+        private resizeObserver;
+        private _navItems;
+        private _expandable;
+        private _extendedMenu;
+        private _navItemsGap;
+        private _expandableMargin;
+        private _totalItemWidth;
         appendItem(item: Element): void;
         connectedCallback(): void;
+        handleResize: () => void;
         addItem(item: any): any;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        showMore(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

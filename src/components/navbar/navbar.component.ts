@@ -83,7 +83,17 @@ export default class ZnNavbar extends ZincElement {
       return
     }
 
-    const availableWidth = this.offsetWidth - expandWidth;
+    let parent = this.parentElement;
+    let availableWidth = this.offsetWidth || parent?.offsetWidth || 0;
+
+    // Needs to grab the first available width that is not 0
+    // This is to avoid issues with the parent/navbar not being visible
+    while (availableWidth === 0 && parent?.parentElement) {
+      parent = parent.parentElement;
+      availableWidth = parent.offsetWidth || 0;
+    }
+
+    availableWidth -= expandWidth;
     // reduce the items
     let takenWidth = 0;
     let hideRemaining = false;

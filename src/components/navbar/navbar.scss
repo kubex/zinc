@@ -20,7 +20,7 @@
   }
 }
 
-ul {
+ul.navbar {
   li {
     padding-top: 0;
     font-size: var(--zn-font-size-medium);
@@ -44,7 +44,7 @@ ul {
     border-bottom: none;
   }
 
-  ul {
+  ul.navbar {
     padding: 0;
     flex-direction: column;
     gap: 0;
@@ -70,20 +70,20 @@ ul {
 }
 
 :host([stacked][slot="left"]) {
-  ul {
+  ul.navbar {
     padding-right: var(--zn-spacing-medium);
   }
 }
 
 :host([stacked][slot="right"]) {
-  ul {
+  ul.navbar {
     padding-left: var(--zn-spacing-medium);
   }
 }
 
 :host([icon-bar]) {
 
-  ul {
+  ul.navbar {
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -124,14 +124,14 @@ ul {
 
 
 :host(:not([stacked]):not([icon-bar])) {
-  ul {
+  ul.navbar {
     height: 35px;
     align-self: end;
   }
 }
 
 :host([pad]) {
-  ul {
+  ul.navbar {
     padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
   }
 }
@@ -144,7 +144,7 @@ ul {
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
 
-  ul {
+  ul.navbar {
     display: flex;
     flex-basis: fit-content;
     gap: 30px;
@@ -282,33 +282,33 @@ button[popovertarget] {
     border-bottom: 0;
   }
 
-  ul {
+  ul.navbar {
     gap: 0;
     overflow: initial;
-  }
 
-  li {
-    padding-left: var(--zn-spacing-medium);
-    padding-right: var(--zn-spacing-medium);
-    padding-top: var(--zn-spacing-small);
-    position: relative;
+    li {
+      padding-left: var(--zn-spacing-medium);
+      padding-right: var(--zn-spacing-medium);
+      padding-top: var(--zn-spacing-small);
+      position: relative;
 
-    &:hover::before,
-    &::before:not(.active):not(#dropdown-item) {
-      display: none;
-    }
+      &:hover::before,
+      &::before:not(.active):not(#dropdown-item) {
+        display: none;
+      }
 
-    &.active {
-      border-right: 1px solid rgb(var(--zn-border-color));
+      &.active {
+        border-right: 1px solid rgb(var(--zn-border-color));
 
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -1px;
-        height: 1px;
-        background-color: rgb(var(--zn-panel));
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -1px;
+          height: 1px;
+          background-color: rgb(var(--zn-panel));
+        }
       }
     }
   }
@@ -364,4 +364,39 @@ button[popovertarget] {
 
 .expandables:empty {
   display: none;
+}
+
+
+:host {
+  ul.navbar {
+    li.more {
+      zn-button::part(base) {
+        padding-left: 0;
+        padding-right: 0;
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+
+      ul#extended-menu {
+        box-shadow: var(--zn-shadow-medium);
+        background: rgb(var(--zn-border-color));
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        height: auto;
+        width: fit-content;
+        margin: 0;
+        padding: 1px;
+
+        li {
+          justify-content: left;
+          background: rgb(var(--zn-panel));
+          color: rgb(var(--zn-text));
+          padding: var(--zn-spacing-small);
+        }
+      }
+    }
+  }
 }

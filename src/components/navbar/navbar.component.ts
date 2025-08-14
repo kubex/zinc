@@ -5,6 +5,7 @@ import ZincElement from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
 import styles from './navbar.scss';
+import ZnDropdown from "../dropdown";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -44,6 +45,7 @@ export default class ZnNavbar extends ZincElement {
 
   private _navItems: HTMLElement | null = null;
   private _expandable: HTMLElement | null = null;
+  private _extendedMenu: HTMLElement | null = null;
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
@@ -65,7 +67,7 @@ export default class ZnNavbar extends ZincElement {
 
 
   handleResize = () => {
-    if (this._totalItemWidth === 0) {
+    if (this._totalItemWidth === 0 || this._extendedMenu === null) {
       // If we can't do anything with the nav items, we just return
       return;
     }
@@ -74,6 +76,7 @@ export default class ZnNavbar extends ZincElement {
     let hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
 
     if (!hasHidden && expandWidth + this._totalItemWidth <= this.offsetWidth) {
+      this._navItems?.classList.toggle('has-hidden', false)
       return
     }
 
@@ -81,13 +84,21 @@ export default class ZnNavbar extends ZincElement {
     // reduce the items
     let takenWidth = 0;
     let hideRemaining = false;
-    const items = this._navItems?.querySelectorAll('li') || [];
+    const items = this._navItems?.querySelectorAll(':scope > li') || [];
+    this._extendedMenu.innerHTML = '';
     for (const item of items) {
-      if (item.classList.contains('more')) {
+      if (item.classList.contains('more') || !(item instanceof HTMLElement)) {
         continue;
       }
       const itemWidth = item.offsetWidth + this._navItemsGap + 1
       if (hideRemaining || ((itemWidth + takenWidth) > availableWidth)) {
+        const extMenu = item.cloneNode(true) as HTMLElement;
+        extMenu.classList.remove('hidden');
+        extMenu.addEventListener('click', () => {
+          item.click();
+          (this.shadowRoot?.querySelector('#extended-dropdown') as ZnDropdown || null)?.hide()
+        })
+        this._extendedMenu?.appendChild(extMenu);
         item.classList.add('hidden');
         hasHidden = true;
         hideRemaining = true;
@@ -114,6 +125,7 @@ export default class ZnNavbar extends ZincElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
+    this._extendedMenu = this.shadowRoot?.querySelector('#extended-menu') as HTMLElement || null;
     this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
     if (this._expandable) {
       const computed = getComputedStyle(this._expandable);
@@ -188,7 +200,15 @@ export default class ZnNavbar extends ZincElement {
             return html`
               <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
           })}
-          <li class="more" @click="${this.showMore}"><zn-icon size=16 src="double_arrow"></zn-icon></li>
+          <li class="more">
+            <zn-dropdown placement="bottom-end" id="extended-dropdown" color="transparent">
+              <zn-button slot="trigger" text>
+                <zn-icon src="double_arrow" size="16"></zn-icon>
+              </zn-button>
+              <ul id="extended-menu">
+              </ul>
+            </zn-dropdown>
+          </li>
           ${this.dropdown && this.dropdown.length > 0 ? html`
             <li id="dropdown-item">
               <zn-dropdown>

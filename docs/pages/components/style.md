@@ -78,3 +78,29 @@ layout: component
 <div class="style-bg"><zn-style border margin=a>ALL Margin</zn-style></div>
 ```
 
+### Auto Margin
+
+```html:preview
+<style>
+.style-abg{
+  background-color: #f0f0f0;
+  margin: 5px;
+  width: 400px;
+  height: 200px;
+  display: flex;
+}
+</style>
+<div class="style-abg"><zn-style border a-margin=a>Auto Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=l>Left Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=r>Right Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=t>Top Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=b>Bottom Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=x>X Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=y>Y Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=tl>Top Left Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=trbl>Top Right Bottom Left Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=bx>X Bottom Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=xy>XY Margin</zn-style></div>
+<div class="style-abg"><zn-style border a-margin=a>ALL Margin</zn-style></div>
+```
+

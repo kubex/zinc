@@ -21,6 +21,7 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) accent = false;
   @property() pad = '';
   @property() margin = '';
+  @property({attribute: 'a-margin'}) autoMargin = '';
 
   connectedCallback() {
     super.connectedCallback();
@@ -84,21 +85,6 @@ export default class ZnStyle extends ZincElement {
       display = 'inline-block'
       for (const pt of this.margin) {
         switch (pt) {
-          case 'auto':
-            this.classList.toggle('m-auto', true);
-            break;
-          case 'ta':
-            this.classList.toggle('zn-mta', true);
-            break;
-          case 'ba':
-            this.classList.toggle('zn-mba', true);
-            break;
-          case 'la':
-            this.classList.toggle('zn-mla', true);
-            break;
-          case 'ra':
-            this.classList.toggle('zn-mra', true);
-            break;
           case 'a':
             this.classList.toggle('zn-margin', true);
             break;
@@ -119,6 +105,36 @@ export default class ZnStyle extends ZincElement {
             break;
           case 'y':
             this.classList.toggle('zn-my', true);
+            break;
+        }
+      }
+    }
+    if (this.autoMargin) {
+      display = 'inline-block'
+      for (const pt of this.autoMargin) {
+        switch (pt) {
+          case 'a':
+            this.classList.toggle('m-auto', true);
+            break;
+          case 't':
+            this.classList.toggle('zn-mta', true);
+            break;
+          case 'b':
+            this.classList.toggle('zn-mba', true);
+            break;
+          case 'l':
+            this.classList.toggle('zn-mla', true);
+            break;
+          case 'r':
+            this.classList.toggle('zn-mra', true);
+            break;
+          case 'x':
+            this.classList.toggle('zn-mra', true);
+            this.classList.toggle('zn-mla', true);
+            break;
+          case 'y':
+            this.classList.toggle('zn-mta', true);
+            this.classList.toggle('zn-mba', true);
             break;
         }
       }

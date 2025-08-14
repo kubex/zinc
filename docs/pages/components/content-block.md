@@ -14,6 +14,11 @@ layout: component
 >
   <div slot="text">Text formatted message goes here.</div>
   <div slot="html">HTML <b>formatted</b> message <span style="color: cornflowerblue;">goes</span> here.</div>
+  <div slot="footer" style="padding: 10px;">
+    <small>
+      &copy; 2025 Example Corp. All trademarks are property of their respective owners.
+    </small>
+  </div>
 </zn-content-block>
 ```
 
@@ -33,8 +38,7 @@ layout: component
 
 ```
 
-### Content Footer
-Basic Footer
+### Toggle Text & HTML
 
 ```html:preview
 
@@ -45,6 +49,21 @@ Basic Footer
 >
   <div slot="text">Text formatted message goes here.</div>
   <div slot="html">HTML <b>formatted</b> message <span style="color: cornflowerblue;">goes</span> here.</div>
+</zn-content-block>
+```
+
+### Content Footer
+
+Basic Footer
+
+```html:preview
+
+<zn-content-block
+  time="16 Jun 2025, 13:00"
+  sender="John Smith"
+  avatar="JS"
+>
+  <div slot="text">Text formatted message goes here.</div>
   <div slot="footer" style="padding: 10px;">
     <small>
       &copy; 2025 Example Corp. All trademarks are property of their respective owners.
@@ -63,7 +82,6 @@ Footer with Attachments
   avatar="JS"
 >
   <div slot="text">Text formatted message goes here.</div>
-  <div slot="html">HTML <b>formatted</b> message <span style="color: cornflowerblue;">goes</span> here.</div>
   <div slot="footer">
     <zn-collapsible caption="Attachments 2" flush>
       <zn-sp divide no-gap flush style="max-height: 241px; overflow-y: auto;">

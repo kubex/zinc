@@ -107,7 +107,7 @@ export default class ZnNavbar extends ZincElement {
         takenWidth += itemWidth;
       }
     }
-    this._navItems?.classList.toggle('has-hidden', hasHidden)
+    this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
 
   public addItem(item: any) {

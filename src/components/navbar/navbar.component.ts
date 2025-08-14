@@ -13,7 +13,7 @@ import styles from './navbar.scss';
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-dropdown
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -26,6 +26,9 @@ import styles from './navbar.scss';
  */
 export default class ZnNavbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-dropdown': ZnDropdown
+  };
 
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;

@@ -99,7 +99,7 @@ export default class ZnNavbar extends ZincElement {
         extMenu.classList.remove('hidden');
         extMenu.addEventListener('click', () => {
           item.click();
-          (this.shadowRoot?.querySelector('#extended-dropdown')! || null)?.hide()
+          (this.shadowRoot?.querySelector('#extended-dropdown') as ZnDropdown || null)?.hide()
         })
         this._extendedMenu?.appendChild(extMenu);
         item.classList.add('hidden');
@@ -128,13 +128,13 @@ export default class ZnNavbar extends ZincElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    this._extendedMenu = this.shadowRoot?.querySelector('#extended-menu')! || null;
-    this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables')! || null;
+    this._extendedMenu = this.shadowRoot?.querySelector('#extended-menu') as HTMLElement || null;
+    this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
     if (this._expandable) {
       const computed = getComputedStyle(this._expandable);
       this._expandableMargin = parseInt(computed.marginLeft) + parseInt(computed.marginRight);
     }
-    this._navItems = this.shadowRoot?.querySelector('.navbar__container > ul')! || null;
+    this._navItems = this.shadowRoot?.querySelector('.navbar__container > ul') as HTMLElement || null;
     if (this._navItems) {
       const computed = getComputedStyle(this._navItems);
       this._navItemsGap = parseInt(computed.columnGap);

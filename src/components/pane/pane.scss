@@ -13,11 +13,6 @@
   margin: 0;
 }
 
-// this is bad, don't do this, fix it. :(
-:host(:not([flush])) .pane__content {
-  padding: var(--zn-spacing-medium);
-}
-
 zn-header {
   position: sticky;
   top: 0;
@@ -30,6 +25,11 @@ zn-header {
   overflow: auto;
   display: flex;
   flex: 1 1;
+  padding: var(--zn-spacing-medium);
+}
+
+.pane__content--flush {
+  padding: 0;
 }
 
 .width-container {

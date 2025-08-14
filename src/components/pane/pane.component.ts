@@ -1,3 +1,4 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
@@ -41,7 +42,10 @@ export default class ZnPane extends ZincElement {
 
     return html`
       ${this._header}
-      <div class="pane__content">
+      <div class="${classMap({
+        'pane__content': true,
+        'pane__content--flush': this.flush,
+      })}">
         <slot></slot>
       </div>`;
   }

@@ -5919,6 +5919,51 @@ declare module "components/style/index" {
         }
     }
 }
+declare module "components/content-block/content-block.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { PropertyValues } from 'lit';
+    interface TextRow {
+        lines: string[];
+        type: 'reply' | 'text';
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/content-block
+     * @status experimental
+     * @since 1.0
+     */
+    export default class ContentBlock extends ZincElement {
+        static styles: import("lit").CSSResult;
+        time: string;
+        sender: string;
+        avatar: string;
+        outbound: boolean;
+        short: boolean;
+        htmlNodes: Node[];
+        iframe: Promise<HTMLIFrameElement>;
+        private readonly hasSlotController;
+        private _textRows;
+        connectedCallback(): void;
+        private _collapseContent;
+        private _toggleText;
+        private _toggleHtml;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected render(): import("lit").TemplateResult<1>;
+        protected truncateText(): string;
+        protected getTextSections(): TextRow[];
+        showReply(e: MouseEvent): void;
+    }
+}
+declare module "components/content-block/index" {
+    import ZnContentBlock from "components/content-block/content-block.component";
+    export * from "components/content-block/content-block.component";
+    export default ZnContentBlock;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-content-block': ZnContentBlock;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6052,6 +6097,7 @@ declare module "zinc" {
     export { default as SplitButton } from "components/split-button/index";
     export { default as Skeleton } from "components/skeleton/index";
     export { default as Style } from "components/style/index";
+    export { default as ContentBlock } from "components/content-block/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

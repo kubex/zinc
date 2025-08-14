@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" data-layout="component" data-zinc-version="1.0.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <title>Content Block</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/content-block" />
+    <meta property="og:title" content="Content Block" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" size="content" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">1.0.0</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          size="small"
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          size="small"
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        size="small"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block" class="active-link"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Content Block</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#basic-text">Basic Text</a></li>
+            <li data-level="3"><a href="#content-footer">Content Footer</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Content Block</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-content-block&gt; | ContentBlock</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+            </div>
+          </header>
+
+          <p class="component-summary">Short summary of the component’s intended use.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">Text formatted message goes here.</div>
+                <div slot="html">
+                  HTML <b>formatted</b> message <span style="color: cornflowerblue">goes</span> here.
+                </div>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-69">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-114">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Text formatted message goes here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>HTML <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>b</span><span class="token punctuation">&gt;</span></span>formatted<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>b</span><span class="token punctuation">&gt;</span></span> message <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">color</span><span class="token punctuation">:</span> cornflowerblue<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>goes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span> here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-114"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-69"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="basic-text" class="anchor-heading">
+            Basic Text<a href="#basic-text" aria-label='Direct link to "Basic Text"'></a>
+          </h3>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">Text formatted message goes here.</div>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-70">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-115">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Text formatted message goes here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+
+</code><zn-copy-button class="copy-code-button" from="code-block-115"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-70"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="content-footer" class="anchor-heading">
+            Content Footer<a href="#content-footer" aria-label='Direct link to "Content Footer"'></a>
+          </h3>
+          <p>Basic Footer</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">Text formatted message goes here.</div>
+                <div slot="html">
+                  HTML <b>formatted</b> message <span style="color: cornflowerblue">goes</span> here.
+                </div>
+                <div slot="footer" style="padding: 10px">
+                  <small> © 2025 Example Corp. All trademarks are property of their respective owners. </small>
+                </div>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-71">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-116">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Text formatted message goes here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>HTML <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>b</span><span class="token punctuation">&gt;</span></span>formatted<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>b</span><span class="token punctuation">&gt;</span></span> message <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">color</span><span class="token punctuation">:</span> cornflowerblue<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>goes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span> here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span><span class="token punctuation">&gt;</span></span>
+      <span class="token entity named-entity" title="©">&amp;copy;</span> 2025 Example Corp. All trademarks are property of their respective owners.
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-116"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-71"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p>Footer with Attachments</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-content-block time="16 Jun 2025, 13:00" sender="John Smith" avatar="JS">
+                <div slot="text">Text formatted message goes here.</div>
+                <div slot="html">
+                  HTML <b>formatted</b> message <span style="color: cornflowerblue">goes</span> here.
+                </div>
+                <div slot="footer">
+                  <zn-collapsible caption="Attachments 2" flush="">
+                    <zn-sp divide="" no-gap="" flush="" style="max-height: 241px; overflow-y: auto">
+                      <a href="/" target="_blank" download="">
+                        <zn-tile caption="filename1.txt" description="10mb" inline="">
+                          <zn-icon slot="image" src="attach_file" size="20"></zn-icon>
+                        </zn-tile>
+                      </a>
+                      <a href="/" target="_blank" download="">
+                        <zn-tile caption="filename2.png" description="100kb" inline="">
+                          <zn-icon slot="image" src="attach_file" size="20"></zn-icon>
+                        </zn-tile>
+                      </a>
+                    </zn-sp>
+                  </zn-collapsible>
+                </div>
+              </zn-content-block>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-72">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-117">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-content-block</span>
+  <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16 Jun 2025, 13:00<span class="token punctuation">"</span></span>
+  <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JS<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Text formatted message goes here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>HTML <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>b</span><span class="token punctuation">&gt;</span></span>formatted<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>b</span><span class="token punctuation">&gt;</span></span> message <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">color</span><span class="token punctuation">:</span> cornflowerblue<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>goes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span> here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Attachments 2<span class="token punctuation">"</span></span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">divide</span> <span class="token attr-name">no-gap</span> <span class="token attr-name">flush</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-height</span><span class="token punctuation">:</span> 241px<span class="token punctuation">;</span> <span class="token property">overflow-y</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_blank<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename1.txt<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10mb<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">inline</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>attach_file<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/<span class="token punctuation">"</span></span> <span class="token attr-name">target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_blank<span class="token punctuation">"</span></span> <span class="token attr-name">download</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filename2.png<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100kb<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">inline</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>attach_file<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-content-block</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-117"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-72"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-118"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/content-block/content-block.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-118"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-119"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-119"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-120"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/content-block/content-block.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-120"></zn-copy-button></pre>
+          </zn-collapsible>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

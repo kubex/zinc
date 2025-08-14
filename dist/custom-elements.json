@@ -3801,6 +3801,210 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/content-block/content-block.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ContentBlock",
+          "members": [
+            {
+              "kind": "field",
+              "name": "time",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "time"
+            },
+            {
+              "kind": "field",
+              "name": "sender",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "sender"
+            },
+            {
+              "kind": "field",
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "avatar"
+            },
+            {
+              "kind": "field",
+              "name": "outbound",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "outbound",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "short",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "short",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "htmlNodes",
+              "type": {
+                "text": "Node[]"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "iframe",
+              "type": {
+                "text": "Promise<HTMLIFrameElement>"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'text', 'html')"
+            },
+            {
+              "kind": "field",
+              "name": "_textRows",
+              "type": {
+                "text": "TextRow[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "_collapseContent",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleText",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_toggleHtml",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "truncateText",
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "getTextSections",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "TextRow[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "showReply",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "time",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "time"
+            },
+            {
+              "name": "sender",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "sender"
+            },
+            {
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "avatar"
+            },
+            {
+              "name": "outbound",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "outbound"
+            },
+            {
+              "name": "short",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "short"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "content-block",
+          "tagName": "zn-content-block",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/content-block\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/content-block",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ContentBlock",
+            "module": "components/content-block/content-block.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/copy-button/copy-button.js",
       "declarations": [
         {

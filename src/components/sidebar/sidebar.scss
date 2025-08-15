@@ -15,7 +15,7 @@
     max-height: 100%;
 
     @include wc.container-query(ph) {
-      max-width: calc(100% - var(--zn-spacing-bar));
+      max-width: calc(100% - var(--zn-spacing-narrow-bar));
     }
 
     @include wc.container-query(zero, ph) {
@@ -66,8 +66,8 @@
     overflow-x: hidden;
 
     @include wc.container-query(ph) {
-      min-width: var(--zn-spacing-bar);
-      max-width: var(--zn-spacing-bar);
+      min-width: var(--zn-spacing-narrow-bar);
+      max-width: var(--zn-spacing-narrow-bar);
     }
 
     @include wc.container-query(ph) {
@@ -87,7 +87,7 @@
       position: absolute;
       right: 0;
       left: 0;
-      top: var(--zn-spacing-bar);
+      top: var(--zn-spacing-narrow-bar);
       bottom: 0;
       flex-grow: 1;
 
@@ -110,7 +110,7 @@
       justify-content: center;
       overflow: hidden;
       border-bottom-width: 1px;
-      height: var(--zn-spacing-bar);
+      height: var(--zn-spacing-narrow-bar);
       width: 100%;
       background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
       z-index: 20;
@@ -123,12 +123,12 @@
         height: unset;
         flex-direction: column;
         justify-content: start;
-        min-width: var(--zn-spacing-bar);
-        max-width: var(--zn-spacing-bar);
-        width: var(--zn-spacing-bar);
+        min-width: var(--zn-spacing-narrow-bar);
+        max-width: var(--zn-spacing-narrow-bar);
+        width: var(--zn-spacing-narrow-bar);
         border-bottom-width: 0;
         border-left-width: 1px;
-        padding-bottom: var(--zn-spacing-bar);
+        padding-bottom: var(--zn-spacing-narrow-bar);
       }
 
       @include wc.container-query(lg) {
@@ -181,15 +181,15 @@
 
   .relative {
     @include wc.container-query(ph) {
-      max-width: calc(100% - var(--zn-spacing-medium-panel));
+      max-width: calc(100% - var(--zn-spacing-panel));
     }
   }
 
   .sidebar {
     @include wc.container-query(ph) {
-      min-width: var(--zn-spacing-medium-panel);
-      max-width: var(--zn-spacing-medium-panel);
-      width: var(--zn-spacing-medium-panel);
+      min-width: var(--zn-spacing-panel);
+      max-width: var(--zn-spacing-panel);
+      width: var(--zn-spacing-panel);
     }
 
     &--wide {
@@ -236,9 +236,9 @@
 
 @include wc.container-query(lg) {
   :host .sidebar {
-    min-width: var(--zn-spacing-medium-panel);
-    max-width: var(--zn-spacing-medium-panel);
-    width: var(--zn-spacing-medium-panel);
+    min-width: var(--zn-spacing-panel);
+    max-width: var(--zn-spacing-panel);
+    width: var(--zn-spacing-panel);
 
     &--wide {
       min-width: var(--zn-spacing-lside);

@@ -253,7 +253,7 @@ ul.navbar {
 :host([small]) {
   width: unset;
 
-  ul {
+  ul.navbar {
     padding: 0;
     gap: 0;
     border-radius: 5px;
@@ -277,7 +277,12 @@ button[popovertarget] {
 
 :host([highlight]) {
   margin: 0 0;
-  border-bottom: 1px solid rgb(var(--zn-border-color));
+
+  .navbar__container {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(var(--zn-border-color));
+  }
 
   &:host([dropdown]) li {
     border-bottom: 0;
@@ -320,32 +325,30 @@ button[popovertarget] {
 }
 
 :host([dropdown]) {
-  .navbar__container {
-    border-bottom: 0;
-  }
+  ul.navbar {
+    li {
+      border-bottom: 1px solid rgb(var(--zn-border-color));
+      border-right: 1px solid rgb(var(--zn-border-color));
+      border-right: 1px solid rgb(var(--zn-border-color));
+      border-left: 0;
 
-  li {
-    border-bottom: 1px solid rgb(var(--zn-border-color));
-    border-right: 1px solid rgb(var(--zn-border-color));
-    border-right: 1px solid rgb(var(--zn-border-color));
-    border-left: 0;
-
-    @include wc.container-query(hd) {
-      &:first-of-type {
-        border-left: 1px solid rgb(var(--zn-border-color));
+      @include wc.container-query(hd) {
+        &:first-of-type {
+          border-left: 1px solid rgb(var(--zn-border-color));
+        }
       }
-    }
 
-    &.active {
-      border-bottom: 0;
-    }
+      &.active {
+        border-bottom: 0;
+      }
 
-    &:before {
-      display: none;
-    }
+      &:before {
+        display: none;
+      }
 
-    &#dropdown-item {
-      border-right: 0;
+      &#dropdown-item {
+        border-right: 0;
+      }
     }
   }
 }

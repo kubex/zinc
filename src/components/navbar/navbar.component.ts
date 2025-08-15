@@ -65,12 +65,12 @@ export default class ZnNavbar extends ZincElement {
     this._expanding = this.querySelectorAll('zn-expanding-action');
 
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
+    this.resizeObserver.observe(this as HTMLElement); // Observe the parent node
   }
 
 
   handleResize = () => {
-    if (this._totalItemWidth === 0 || this._extendedMenu === null) {
+    if (this._totalItemWidth === 0 || this._extendedMenu === null || this.iconBar || this.stacked) {
       // If we can't do anything with the nav items, we just return
       return;
     }
@@ -103,7 +103,7 @@ export default class ZnNavbar extends ZincElement {
       if (item.classList.contains('more') || !(item instanceof HTMLElement)) {
         continue;
       }
-      const itemWidth = item.offsetWidth + this._navItemsGap + 1
+      const itemWidth = item.offsetWidth + this._navItemsGap + 5
       if (hideRemaining || ((itemWidth + takenWidth) > availableWidth)) {
         const extMenu = item.cloneNode(true) as HTMLElement;
         extMenu.classList.remove('hidden');

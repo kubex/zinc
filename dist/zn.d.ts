@@ -1441,6 +1441,8 @@ declare module "components/dropdown/dropdown.component" {
         private removeOpenListeners;
         /** Events */
         handlePanelSelect: (event: ZnSelectEvent) => void;
+        private preloadContent;
+        private handlePreload;
         handleTriggerClick(): Promise<void>;
         handleKeyDown(event: KeyboardEvent): void;
         private handleTriggerKeyDown;

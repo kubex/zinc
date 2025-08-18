@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {getTabbableBoundary} from "../../internal/tabbable";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -67,6 +68,9 @@ export default class ZnDropdown extends ZincElement {
   /** Syncs the popup width or height with the trigger element */
   @property({reflect: true}) sync: 'width' | 'height' | 'both' | undefined = undefined;
 
+  @property() uri: string;
+  @property({type: String}) fetchedContent: string = '';
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -97,7 +101,7 @@ export default class ZnDropdown extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeOpenListeners();
-    this.hide();
+    this.hide().then(r => r);
   }
 
   private getMenu() {
@@ -111,7 +115,7 @@ export default class ZnDropdown extends ZincElement {
       this.closeWatcher?.destroy();
       this.closeWatcher = new CloseWatcher();
       this.closeWatcher.onclose = () => {
-        this.hide();
+        this.hide().then(r => r);
         this.focusOnTrigger();
       };
     } else {
@@ -137,16 +141,26 @@ export default class ZnDropdown extends ZincElement {
   handlePanelSelect = (event: ZnSelectEvent) => {
     const target = event.target as HTMLElement;
     if (!this.stayOpenOnSelect && target.tagName.toLowerCase() === 'zn-menu') {
-      this.hide();
+      this.hide().then(r => r);
       this.focusOnTrigger();
     }
   }
 
-  handleTriggerClick() {
+  async handleTriggerClick() {
     if (this.open) {
-      this.hide();
+      await this.hide();
     } else {
-      this.show();
+      if (this.uri && !this.fetchedContent) {
+        const response = await fetch(this.uri, {
+          credentials: 'same-origin',
+          headers: {
+            "x-kx-inline": "inline"
+          }
+        });
+        this.fetchedContent = await response.text();
+        this.requestUpdate();
+      }
+      await this.show();
       this.focusOnTrigger();
     }
   }
@@ -154,7 +168,7 @@ export default class ZnDropdown extends ZincElement {
   handleKeyDown(event: KeyboardEvent) {
     if (this.open && event.key === 'Escape') {
       event.stopPropagation();
-      this.hide();
+      this.hide().then(r => r);
       this.focusOnTrigger();
     }
   }
@@ -162,7 +176,7 @@ export default class ZnDropdown extends ZincElement {
   private async handleTriggerKeyDown(event: KeyboardEvent) {
     if ([' ', 'Enter', 'Tab'].includes(event.key)) {
       event.preventDefault();
-      this.handleTriggerClick();
+      await this.handleTriggerClick();
       return;
     }
 
@@ -178,7 +192,7 @@ export default class ZnDropdown extends ZincElement {
 
         // Show the menu if it's not already open
         if (!this.open) {
-          this.show();
+          this.show().then(r => r);
 
           // Wait for the dropdown to open before focusing but not the animation
           await this.updateComplete;
@@ -216,7 +230,7 @@ export default class ZnDropdown extends ZincElement {
     const path = event.composedPath();
 
     if (this.containingElement && !path.includes(this.containingElement)) {
-      this.hide();
+      this.hide().then(r => r);
     }
   }
 
@@ -224,14 +238,14 @@ export default class ZnDropdown extends ZincElement {
     if (event.key === 'Escape' && this.open && !this.closeWatcher) {
       event.stopPropagation();
       this.focusOnTrigger();
-      this.hide();
+      this.hide().then(r => r);
       return;
     }
 
     if (event.key === 'Tab') {
       if (this.open) {
         event.preventDefault();
-        this.hide();
+        this.hide().then(r => r);
         this.focusOnTrigger();
         return;
       }
@@ -243,7 +257,7 @@ export default class ZnDropdown extends ZincElement {
             : document.activeElement;
 
         if (!this.containingElement || activeElement?.closest(this.containingElement.tagName.toLowerCase()) !== this.containingElement) {
-          this.hide();
+          this.hide().then(r => r);
         }
       });
     }
@@ -348,10 +362,12 @@ export default class ZnDropdown extends ZincElement {
         ></slot>
 
         <div aria-hidden=${this.open ? 'false' : 'true'} aria-labelledby="dropdown">
-          <slot part="panel" class="dropdown__panel"></slot>
+          <div part="panel" class="dropdown__panel">
+            ${this.fetchedContent ? unsafeHTML(this.fetchedContent) : ''}
+            <slot></slot>
+          </div>
         </div>
       </zn-popup>
-    `
-      ;
+    `;
   }
 }

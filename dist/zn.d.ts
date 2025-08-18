@@ -1430,6 +1430,8 @@ declare module "components/dropdown/dropdown.component" {
         hoist: boolean;
         /** Syncs the popup width or height with the trigger element */
         sync: 'width' | 'height' | 'both' | undefined;
+        uri: string;
+        fetchedContent: string;
         connectedCallback(): void;
         focusOnTrigger(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
@@ -1439,7 +1441,7 @@ declare module "components/dropdown/dropdown.component" {
         private removeOpenListeners;
         /** Events */
         handlePanelSelect: (event: ZnSelectEvent) => void;
-        handleTriggerClick(): void;
+        handleTriggerClick(): Promise<void>;
         handleKeyDown(event: KeyboardEvent): void;
         private handleTriggerKeyDown;
         private handleTriggerKeyUp;

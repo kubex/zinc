@@ -129,19 +129,19 @@ export default class ZnConfirm extends ZincElement {
       <slot name="trigger" slot="trigger"></slot>
       <zn-dialog size="${this.size}" variant="${this.variant}" label=${ifDefined(this.caption)} trigger=${this.trigger}
                  class=${classMap({
-      'confirm-dialog': true,
-      'confirm-dialog--warning': this.type === 'warning',
-      'confirm-dialog--error': this.type === 'error',
-      'confirm-dialog--success': this.type === 'success',
-      'confirm-dialog--info': this.type === 'info',
-      'confirm-dialog--has-default-slot': this.hasSlotController.test('[default]'),
-    })}>
+                   'confirm-dialog': true,
+                   'confirm-dialog--warning': this.type === 'warning',
+                   'confirm-dialog--error': this.type === 'error',
+                   'confirm-dialog--success': this.type === 'success',
+                   'confirm-dialog--info': this.type === 'info',
+                   'confirm-dialog--has-default-slot': this.hasSlotController.test('[default]'),
+                 })}>
 
         <slot name="announcement-intro" slot="announcement-intro">${this.announcement}</slot>
 
         ${!this.hideIcon ? html`
             <zn-icon slot="header-icon" color="${this.type}" src="${src[this.type]}"></zn-icon>`
-      : ''}
+          : ''}
 
         <div class="confirm-dialog__content">
           ${this.content ? html`${this.content}` : ''}

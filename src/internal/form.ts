@@ -246,7 +246,7 @@ export class FormControlController implements ReactiveController {
     }
 
     // get the submit button
-    const submitButton = this.form?.querySelector('[type ="submit"]') as HTMLButtonElement | null;
+    const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
     const content = submitButton?.innerHTML;
     if (submitButton) {
       setTimeout(() => {
@@ -366,7 +366,6 @@ export class FormControlController implements ReactiveController {
       button.style.whiteSpace = 'nowrap';
 
       // Pass name, value, and form attributes through to the temporary button
-      // Pass name, value, and form attributes through to the temporary button
       if (submitter) {
         button.name = submitter.name;
         button.value = submitter.value;
@@ -379,6 +378,14 @@ export class FormControlController implements ReactiveController {
       }
 
       this.form.append(button);
+
+      // make sure this form is 'zn-register-element' event with the form
+      if (this.form instanceof HTMLFormElement) {
+        document.dispatchEvent(new CustomEvent('zn-register-element', {
+          detail: {element: this.form}
+        }));
+      }
+
       button.click();
       button.remove();
     }

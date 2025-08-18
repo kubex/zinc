@@ -4703,9 +4703,10 @@ declare module "components/form-group/index" {
     }
 }
 declare module "components/linked-select/linked-select.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement, { ZincFormControl } from "internal/zinc-element";
-    import { ZnSelectEvent } from "events/zn-select";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type { ZnSelectEvent } from "events/zn-select";
     interface linkedSelectOption {
         [key: string]: string;
     }

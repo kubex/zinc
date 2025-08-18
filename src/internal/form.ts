@@ -252,7 +252,7 @@ export class FormControlController implements ReactiveController {
       setTimeout(() => {
         // disable duplicate submit
         submitButton.disabled = true;
-        submitButton.innerHTML = 'Processing...';
+        submitButton.innerHTML = this.form?.getAttribute('data-loading-text') || 'Processing...';
       }, 20);
 
       setTimeout(() => {

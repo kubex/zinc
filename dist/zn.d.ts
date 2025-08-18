@@ -5794,7 +5794,7 @@ declare module "components/page-nav/page-nav.component" {
         breadcrumb: string;
         toggleNavigation(): void;
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
-        clickTab(target: HTMLElement, refresh: boolean): void;
+        clickTab(target: HTMLElement, refresh: boolean, close?: boolean): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

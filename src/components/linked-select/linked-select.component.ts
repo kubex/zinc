@@ -1,11 +1,12 @@
-import {property, query} from 'lit/decorators.js';
-import {type CSSResultGroup, html, PropertyValues, unsafeCSS} from 'lit';
-import ZincElement, {ZincFormControl} from '../../internal/zinc-element';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {property, query} from 'lit/decorators.js';
+import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnSelectEvent} from "../../events/zn-select";
 
 import styles from './linked-select.scss';
-import {ZnSelectEvent} from "../../events/zn-select";
 
 interface linkedSelectOption {
   [key: string]: string;

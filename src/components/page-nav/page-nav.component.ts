@@ -67,10 +67,12 @@ export default class ZnPageNav extends ZnTabs {
     }
   }
 
-  clickTab(target: HTMLElement, refresh: boolean) {
+  clickTab(target: HTMLElement, refresh: boolean, close = true) {
     super.clickTab(target, refresh);
     this.breadcrumb = target.textContent?.trim() || '';
-    this.toggleNavigation();
+    if(close) {
+      this.toggleNavigation();
+    }
   }
 
   render() {

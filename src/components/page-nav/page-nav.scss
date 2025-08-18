@@ -9,6 +9,7 @@
   --page-nav-crumb-height: 50px;
   --page-nav-width: 240px;
   --page-nav-animation-duration: 0.3s;
+  --zn-z-index-dropdown: 500;
 }
 
 .breadcrumb {
@@ -106,7 +107,7 @@
     background: linear-gradient(180deg, rgb(var(--zn-body)) 70%, rgba(0, 0, 0, 0) 100%);
     width: calc(var(--page-nav-width) - 20px);
 
-    z-index: 901;
+    z-index: calc(var(--zn-z-index-dropdown) + 1);
 
     span {
       color: rgb(var(--zn-text-heading));

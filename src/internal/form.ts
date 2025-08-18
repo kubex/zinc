@@ -1,6 +1,6 @@
 import type {ReactiveController, ReactiveControllerHost} from "lit";
 import type {ZincFormControl} from "./zinc-element";
-import Button from "../components/button";
+import type Button from "../components/button";
 
 //
 // We store a WeakMap of forms + controls so we can keep references to all Zinc controls within a given form. As

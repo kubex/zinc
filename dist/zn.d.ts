@@ -108,7 +108,7 @@ declare module "internal/zinc-element" {
 declare module "internal/form" {
     import type { ReactiveController, ReactiveControllerHost } from "lit";
     import type { ZincFormControl } from "internal/zinc-element";
-    import Button from "components/button/index";
+    import type Button from "components/button/index";
     export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>>;
     export interface FormControlControllerOptions {
         /** A function that returns the form containing the form control. */

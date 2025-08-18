@@ -146,20 +146,27 @@ export default class ZnDropdown extends ZincElement {
     }
   }
 
+  private async preloadContent() {
+    if (this.uri && !this.fetchedContent) {
+      const response = await fetch(this.uri, {
+        credentials: 'same-origin',
+        headers: {
+          "x-kx-inline": "inline"
+        }
+      });
+      this.fetchedContent = await response.text();
+      this.requestUpdate();
+    }
+  }
+
+  private handlePreload = () => {
+    this.preloadContent().then(r => r);
+  };
+
   async handleTriggerClick() {
     if (this.open) {
       await this.hide();
     } else {
-      if (this.uri && !this.fetchedContent) {
-        const response = await fetch(this.uri, {
-          credentials: 'same-origin',
-          headers: {
-            "x-kx-inline": "inline"
-          }
-        });
-        this.fetchedContent = await response.text();
-        this.requestUpdate();
-      }
       await this.show();
       this.focusOnTrigger();
     }
@@ -359,6 +366,8 @@ export default class ZnDropdown extends ZincElement {
           @keydown=${this.handleTriggerKeyDown}
           @keyup=${this.handleTriggerKeyUp}
           @slotchange=${this.handleTriggerSlotChange}
+          @mouseover=${this.handlePreload}
+          @focus=${this.handlePreload}
         ></slot>
 
         <div aria-hidden=${this.open ? 'false' : 'true'} aria-labelledby="dropdown">

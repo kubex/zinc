@@ -1,6 +1,6 @@
-import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, unsafeCSS} from 'lit';
 import {LocalizeController} from '../../utilities/localize';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './style.scss';

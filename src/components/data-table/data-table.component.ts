@@ -271,14 +271,16 @@ export default class ZnDataTable extends ZincElement {
             });
           }
 
-          const totalPages = Math.ceil(localData.length / this.itemsPerPage);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const totalPages = Math.ceil(localData.length / (this.data.per_page as number ?? this.itemsPerPage));
           const start = (this.page - 1) * this.itemsPerPage;
           const end = start + this.itemsPerPage;
           const paginatedData = localData.slice(start, end);
 
           resolve({
             page: this.page,
-            per_page: this.itemsPerPage,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            per_page: this.data.per_page as number ?? this.itemsPerPage,
             total: localData.length,
             total_pages: totalPages,
             data: paginatedData,

@@ -1821,6 +1821,8 @@ declare module "components/select/select.component" {
         placeholder: string;
         /** Allows more than one option to be selected. */
         multiple: boolean;
+        /** Max number of options that can be selected when `multiple` is true. Set to 0 to allow unlimited selections. */
+        maxOptions: number;
         /**
          * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
          * indicate the number of additional items that are selected. Set to 0 to remove the limit.

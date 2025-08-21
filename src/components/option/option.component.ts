@@ -1,12 +1,12 @@
-import {property, query, state} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {LocalizeController} from "../../utilities/localize";
+import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
-import {classMap} from "lit/directives/class-map.js";
 import ZnIcon from "../icon";
 
 import styles from './option.scss';
-import {LocalizeController} from "../../utilities/localize";
 
 /**
  * @summary Short summary of the component's intended use.

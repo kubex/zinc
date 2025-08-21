@@ -139,6 +139,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Allows more than one option to be selected. */
   @property({type: Boolean, reflect: true}) multiple = false;
 
+  /** Max number of options that can be selected when `multiple` is true. Set to 0 to allow unlimited selections. */
+  @property({attribute: 'max-options', type: Number}) maxOptions = 0;
+
   /**
    * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
    * indicate the number of additional items that are selected. Set to 0 to remove the limit.
@@ -166,7 +169,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Draws a pill-style select with rounded edges. */
   @property({type: Boolean, reflect: true}) pill = false;
 
-
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
@@ -185,14 +187,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
 
-
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
   @property({reflect: true}) form: string;
-
 
   /** The select's required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
@@ -222,7 +222,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     `;
   };
 
-
   /** Gets the validity state object */
   get validity() {
     return this.valueInput?.validity;
@@ -250,7 +249,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
     }
   }
-
 
   private addOpenListeners() {
     const root = this.getRootNode();
@@ -493,7 +491,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     if (option && !option.disabled) {
       this.valueHasChanged = true
       if (this.multiple) {
-        this.toggleOptionSelection(option);
+        if (this.maxOptions > 0) {
+          if (this.selectedOptions.length >= this.maxOptions && !option.selected) {
+            return;
+          }
+
+          this.toggleOptionSelection(option);
+        } else {
+          this.toggleOptionSelection(option)
+        }
       } else {
         this.setSelectedOptions(option);
       }

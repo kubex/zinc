@@ -221,6 +221,21 @@ Note that multi-select options may wrap, causing the control to expand verticall
 attribute to control the maximum number of selected options to show at once.
 :::
 
+### Multiple with a limit
+
+To limit the number of options that can be selected, use the `max-options` attribute.
+
+```html:preview
+<zn-select label="Select one or more" value="option-1 option-2" multiple clearable max-options="3">
+  <zn-option value="option-1">Option 1</zn-option>
+  <zn-option value="option-2">Option 2</zn-option>
+  <zn-option value="option-3">Option 3</zn-option>
+  <zn-option value="option-4">Option 4</zn-option>
+  <zn-option value="option-5">Option 5</zn-option>
+  <zn-option value="option-6">Option 6</zn-option>
+</zn-select>
+```
+
 ### Setting Initial Values
 
 Use the `value` attribute to set the initial selection.

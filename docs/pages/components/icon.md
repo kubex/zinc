@@ -80,7 +80,7 @@ layout: component
 
 ## Lineicons
 
-<a href="https://lineicons.com/" target="_blank">View Icons</a>
+<a href="https://lineicons.com/free-icons" target="_blank">View Icons</a>
 
 ```html:preview
 

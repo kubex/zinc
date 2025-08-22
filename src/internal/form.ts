@@ -93,7 +93,7 @@ export class FormControlController implements ReactiveController {
     };
   }
 
-  async hostConnected() {
+  hostConnected() {
     const form = this.options.form(this.host);
 
     if (form) {
@@ -105,11 +105,6 @@ export class FormControlController implements ReactiveController {
     this.options.assumeInteractionOn.forEach(event => {
       this.host.addEventListener(event, this.handleInteraction);
     });
-
-    await this.host.updateComplete;
-    if (form) {
-      this.checkFormValidity();
-    }
   }
 
   hostDisconnected() {
@@ -295,7 +290,6 @@ export class FormControlController implements ReactiveController {
     if (emittedEvents.length === this.options.assumeInteractionOn.length) {
       this.setUserInteracted(this.host, true);
     }
-    this.checkFormValidity();
   };
 
   private checkFormValidity = () => {
@@ -309,20 +303,17 @@ export class FormControlController implements ReactiveController {
     //
     // Note that we're also honoring the form's novalidate attribute.
     //
-    const submit = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
     if (this.form && !this.form.noValidate) {
       // This seems sloppy, but checking all elements will cover native inputs, Zinc inputs, and other custom
       // elements that support the constraint validation API.
       const elements: NodeListOf<HTMLInputElement> = this.form.querySelectorAll<HTMLInputElement>('*');
       for (const element of elements) {
         if (typeof element.checkValidity === 'function' && !element.checkValidity()) {
-          submit?.setAttribute('disabled', 'disabled');
           return false;
         }
       }
     }
 
-    submit?.removeAttribute('disabled');
     return true;
   };
 

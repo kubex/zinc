@@ -80,6 +80,8 @@ layout: component
 
 ## Lineicons
 
+<a href="https://lineicons.com/" target="_blank">View Icons</a>
+
 ```html:preview
 
 <zn-icon src="bookmark-1" size="32" library="line"></zn-icon>
@@ -111,6 +113,8 @@ layout: component
 
 Our icons are taken directly from Material Icons. Click or tap on any icon to copy its name, then you can use it in
 your HTML like this:
+
+<a href="https://fonts.google.com/icons?selected=Material+Symbols+Outlined" target="_blank">View Icons</a>
 
 ```html
 

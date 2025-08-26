@@ -143,7 +143,7 @@ declare module "internal/form" {
         form?: HTMLFormElement | null;
         options: FormControlControllerOptions;
         constructor(host: ReactiveControllerHost & ZincFormControl, options?: Partial<FormControlControllerOptions>);
-        hostConnected(): void;
+        hostConnected(): Promise<void>;
         hostDisconnected(): void;
         hostUpdated(): void;
         private attachForm;

@@ -156,7 +156,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           dropdown = parent;
           break;
         }
-        parent = parent.parentElement || parent.getRootNode()?.host as HTMLElement | null;
+        parent = parent.parentElement || (parent.getRootNode() instanceof ShadowRoot ? (parent.getRootNode() as ShadowRoot).host as HTMLElement : null);
         count++;
       }
 

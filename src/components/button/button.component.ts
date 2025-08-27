@@ -6,6 +6,7 @@ import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 import type {ZincFormControl} from '../../internal/zinc-element';
@@ -56,6 +57,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
+
+  @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
   @property({type: Number}) notification: number;
 
@@ -140,6 +143,24 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   handleClick = () => {
     if (this.disabled) {
       return;
+    }
+
+    if (this.dropdownCloser) {
+      let dropdown: ZnDropdown | null = null;
+      let parent: HTMLElement | null = this as HTMLElement | null;
+      let count = 0;
+      const max = 30; // Break the loop if too deep in the DOM tree
+
+      while (parent && count < max) {
+        if (parent instanceof ZnDropdown) {
+          dropdown = parent;
+          break;
+        }
+        parent = parent.parentElement || parent.getRootNode()?.host as HTMLElement | null;
+        count++;
+      }
+
+      dropdown?.hide();
     }
 
     if (this.type === 'submit') {

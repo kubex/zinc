@@ -212,57 +212,16 @@ declare module "internal/slot" {
      */
     export function getTextContent(slot: HTMLSlotElement | undefined | null): string;
 }
-declare module "utilities/md5" {
-    export function md5(string: string): string;
-}
-declare module "components/icon/icon.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+declare module "internal/tabbable" {
     /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/icon
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
+     * element because it short-circuits after finding the first and last ones.
      */
-    export default class ZnIcon extends ZincElement {
-        static styles: CSSResultGroup;
-        src: string;
-        alt: string;
-        size: number;
-        round: boolean;
-        library: IconLibrary;
-        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
-        gravatarOptions: string;
-        defaultLibrary: IconLibrary;
-        convertToLibrary(input: string): IconLibrary;
-        connectedCallback(): void;
-        ravatarOptions(): void;
-        render(): import("lit").TemplateResult<1>;
-        private getAvatarInitials;
-        protected getColorForAvatar(avatarInitials: string): string;
-    }
-}
-declare module "components/icon/index" {
-    import ZnIcon from "components/icon/icon.component";
-    export * from "components/icon/icon.component";
-    export default ZnIcon;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-icon': ZnIcon;
-        }
-    }
+    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
+        start: HTMLElement;
+        end: HTMLElement;
+    };
+    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
 }
 declare module "internal/watch" {
     import type { LitElement } from "lit";
@@ -293,6 +252,34 @@ declare module "internal/watch" {
      * @param options
      */
     export function watch(propertyName: string | string[], options?: WatchOptions): <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => void;
+}
+declare module "translations/en" {
+    import { type Translation } from "utilities/localize";
+    const translation: Translation;
+    export default translation;
+}
+declare module "utilities/localize" {
+    import { LocalizeController as DefaultLocalizationController } from '@shoelace-style/localize';
+    import type { Translation as DefaultTranslation } from '@shoelace-style/localize';
+    export class LocalizeController extends DefaultLocalizationController<Translation> {
+    }
+    export { registerTranslation } from '@shoelace-style/localize';
+    export interface Translation extends DefaultTranslation {
+        $code: string;
+        $name: string;
+        $dir: 'ltr' | 'rtl';
+        onChange: string;
+        hidePassword: string;
+        showPassword: string;
+        clearEntry: string;
+        numOptionsSelected: (num: number) => string;
+        fileButtonText: string;
+        fileButtonTextMultiple: string;
+        folderButtonText: string;
+        folderDragDrop: string;
+        fileDragDrop: string;
+        numFilesSelected: (num: number) => string;
+    }
 }
 declare module "components/popup/popup.component" {
     import ZincElement from "internal/zinc-element";
@@ -443,6 +430,384 @@ declare module "components/popup/index" {
         }
     }
 }
+declare module "components/menu-item/submenu-controller" {
+    import { type HasSlotController } from "internal/slot";
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    import { type LocalizeController } from "utilities/localize";
+    import type ZnMenuItem from "components/menu-item/index";
+    /** A reactive controller to manage the registration of event listeners for submenus. */
+    export class SubmenuController implements ReactiveController {
+        private host;
+        private popupRef;
+        private enableSubmenuTimer;
+        private isConnected;
+        private isPopupConnected;
+        private skidding;
+        private readonly hasSlotController;
+        private readonly localize;
+        private readonly submenuOpenDelay;
+        constructor(host: ReactiveControllerHost & ZnMenuItem, hasSlotController: HasSlotController, localize: LocalizeController);
+        hostConnected(): void;
+        hostDisconnected(): void;
+        hostUpdated(): void;
+        private addListeners;
+        private removeListeners;
+        private handleMouseMove;
+        private handleMouseOver;
+        private handleSubmenuEntry;
+        private handleKeyDown;
+        private handleClick;
+        private handleFocusOut;
+        private handlePopupMouseover;
+        private handlePopupReposition;
+        private setSubmenuState;
+        private enableSubmenu;
+        private disableSubmenu;
+        private updateSkidding;
+        isExpanded(): boolean;
+        renderSubmenu(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "utilities/md5" {
+    export function md5(string: string): string;
+}
+declare module "components/icon/icon.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/icon
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnIcon extends ZincElement {
+        static styles: CSSResultGroup;
+        src: string;
+        alt: string;
+        size: number;
+        round: boolean;
+        library: IconLibrary;
+        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
+        gravatarOptions: string;
+        defaultLibrary: IconLibrary;
+        convertToLibrary(input: string): IconLibrary;
+        connectedCallback(): void;
+        ravatarOptions(): void;
+        render(): import("lit").TemplateResult<1>;
+        private getAvatarInitials;
+        protected getColorForAvatar(avatarInitials: string): string;
+    }
+}
+declare module "components/icon/index" {
+    import ZnIcon from "components/icon/icon.component";
+    export * from "components/icon/icon.component";
+    export default ZnIcon;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-icon': ZnIcon;
+        }
+    }
+}
+declare module "components/menu-item/menu-item.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnPopup from "components/popup/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/menu-item
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnMenuItem extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-popup': typeof ZnPopup;
+        };
+        private cachedTextLabel;
+        defaultSlot: HTMLSlotElement;
+        menuItem: HTMLElement;
+        /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
+        type: 'normal' | 'checkbox';
+        /** Draws the item in a checked state. */
+        checked: boolean;
+        /** A unique value to store in the menu item. This can be used as a way to identify menu items when selected. */
+        value: string;
+        /** Draws the menu item in a loading state. */
+        loading: boolean;
+        /** Draws the menu item in a disabled state, preventing selection. */
+        disabled: boolean;
+        href: string;
+        dataPath: string;
+        target: '_self' | '_blank' | '_parent' | '_top' | string;
+        dataTarget: 'modal' | 'slide' | string;
+        rel: string;
+        gaid: string;
+        private readonly localize;
+        private readonly hasSlotController;
+        private submenuController;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private handleDefaultSlotChange;
+        private handleHostClick;
+        private handleMouseOver;
+        handleCheckedChange(): void;
+        handleDisabledChange(): void;
+        handleTypeChange(): void;
+        /** Returns a text label based on the contents of the menu item's default slot. */
+        getTextLabel(): string;
+        isSubmenu(): boolean;
+        private _isLink;
+        render(): import("lit").TemplateResult;
+    }
+}
+declare module "components/menu-item/index" {
+    import ZnMenuItem from "components/menu-item/menu-item.component";
+    export * from "components/menu-item/menu-item.component";
+    export default ZnMenuItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-menu-item': ZnMenuItem;
+        }
+    }
+}
+declare module "events/zn-select" {
+    import type ZnMenuItem from "components/menu-item/index";
+    export type ZnSelectEvent = CustomEvent<{
+        item: ZnMenuItem;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-select': ZnSelectEvent;
+        }
+    }
+}
+declare module "internal/offset" {
+    /**
+     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
+     * parent doesn't have to be positioned relative or absolute.
+     *
+     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
+     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
+     */
+    export function getOffset(element: HTMLElement, parent: HTMLElement): {
+        top: number;
+        left: number;
+    };
+}
+declare module "internal/scroll" {
+    /**
+     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
+     * without premature unlocking.
+     */
+    export function lockBodyScrolling(lockingEl: HTMLElement): void;
+    /**
+     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
+     */
+    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
+    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
+    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
+}
+declare module "components/dialog/dialog.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/dialog
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     *
+     * @event zn-show - Emitted when the dialog is opens.
+     * @event zn-close - Emitted when the dialog is closed.
+     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
+     * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling
+     * `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in
+     * destructive behavior such as data loss.
+     *
+     * @slot - The default slot.
+     * @slot label - The dialog's label. Alternatively you can use the `label` attribute.
+     * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied
+     * to the icon depending on the dialog variant.
+     * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.
+     * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
+     * @slot footer - The dialog's footer. This is typically used for buttons representing various options.
+     * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The dialog's header. This element wraps the title and header actions.
+     * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
+     * @csspart title - The dialog's title.
+     * @csspart close-button - The dialog's close button.
+     * @csspart close-button__base - The close buttons exported `base` part.
+     * @csspart body - The dialog's body.
+     * @csspart footer - The dialog's footer.
+     *
+     * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.
+     * @cssproperty --header-spacing - The amount of padding to use for the header.
+     * @cssproperty --body-spacing - The amount of padding to use for the body.
+     * @cssproperty --footer-spacing - The amount of padding to use for the footer.
+     */
+    export default class ZnDialog extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+        };
+        private readonly hasSlotController;
+        private closeWatcher;
+        dialog: HTMLDialogElement;
+        panel: HTMLElement;
+        overlay: HTMLElement;
+        /** The dialog's theme variant. */
+        variant: 'default' | 'warning' | 'announcement';
+        /** The dialog's size. */
+        size: 'small' | 'medium' | 'large';
+        /**
+         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
+         */
+        open: boolean;
+        /**
+         * The dialog's label as displayed in the header. You should always include a relevant label even when using
+         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
+         */
+        label: string;
+        /**
+         * Disables the header. This will also remove the default close button, so please ensure you provide an easy,
+         * accessible way to close the dialog.
+         */
+        noHeader: boolean;
+        /**
+         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
+         * will need to manually open the dialog using the `show()` method.
+         */
+        trigger: string;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private requestClose;
+        private addOpenListeners;
+        private removeOpenListeners;
+        /** Shows the dialog. */
+        show(): void;
+        /** Hides the dialog. */
+        hide(): void;
+        private closeClickHandler;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/dialog/index" {
+    import ZnDialog from "components/dialog/dialog.component";
+    export * from "components/dialog/dialog.component";
+    export default ZnDialog;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-dialog': ZnDialog;
+        }
+    }
+}
+declare module "utilities/query" {
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
+}
+declare module "components/confirm/confirm.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnDialog from "components/dialog/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/confirm-modal
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnConfirm extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dialog': typeof ZnDialog;
+        };
+        private readonly hasSlotController;
+        /** The dialog's theme variant. */
+        variant: 'default' | 'warning' | 'announcement';
+        /** The dialog's size. */
+        size: 'small' | 'medium' | 'large';
+        /** The dialogs type, which will determine the icon and color. */
+        type: 'warning' | 'error' | 'success' | 'info';
+        /**
+         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
+         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
+         */
+        open: boolean;
+        caption: string;
+        action: string;
+        content: string;
+        confirmText: string;
+        cancelText: string;
+        hideIcon: boolean;
+        /**
+         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
+         * will need to manually open the dialog using the `show()` method.
+         */
+        trigger: string;
+        /** The Dialogs announcement text. */
+        announcement: string;
+        /** The Dialogs footer text. */
+        footerText: string;
+        dialog: ZnDialog;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
+        updateTriggers(): void;
+        show: (event?: Event | undefined) => void;
+        hide(): void;
+        render(): import("lit").TemplateResult<1>;
+        submitDialog(): void;
+    }
+}
+declare module "components/confirm/index" {
+    import ZnConfirm from "components/confirm/confirm.component";
+    export * from "components/confirm/confirm.component";
+    export default ZnConfirm;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-confirm-modal': ZnConfirm;
+        }
+    }
+}
 declare module "components/tooltip/tooltip.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -506,6 +871,161 @@ declare module "components/tooltip/index" {
         }
     }
 }
+declare module "components/menu/menu.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnConfirm from "components/confirm/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnIcon from "components/icon/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import ZnTooltip from "components/tooltip/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/menu
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnMenu extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-confirm': typeof ZnConfirm;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-icon': typeof ZnIcon;
+            'zn-menu-item': typeof ZnMenuItem;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        defaultSlot: HTMLSlotElement;
+        actions: never[];
+        connectedCallback(): void;
+        /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
+        getAllItems(): ZnMenuItem[];
+        /**
+         * @internal Gets the current menu item, which is the menu item that has `tabindex="0"` within the roving tab index.
+         * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.
+         */
+        getCurrentItem(): ZnMenuItem | undefined;
+        /**
+         * @internal Sets the current menu item to the specified element. This sets `tabindex="0"` on the target element and
+         * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
+         */
+        setCurrentItem(item: ZnMenuItem): void;
+        render(): import("lit").TemplateResult<1>;
+        private handleClick;
+        private handleKeyDown;
+        private handleMouseDown;
+        private handleSlotChange;
+        private isMenuItem;
+    }
+}
+declare module "components/menu/index" {
+    import ZnMenu from "components/menu/menu.component";
+    export * from "components/menu/menu.component";
+    export default ZnMenu;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-menu': ZnMenu;
+        }
+    }
+}
+declare module "components/dropdown/dropdown.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZnSelectEvent } from "events/zn-select";
+    import type ZnPopup from "components/popup/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/dropdown
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDropdown extends ZincElement {
+        static styles: CSSResultGroup;
+        popup: ZnPopup;
+        trigger: HTMLSlotElement;
+        panel: HTMLSlotElement;
+        private closeWatcher;
+        /** Indicates whether the dropdown is open */
+        open: boolean;
+        /** The placement of the dropdown. Note the actual placement may vary based on the available space */
+        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
+        /** Disable the dropdown */
+        disabled: boolean;
+        /** By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open */
+        stayOpenOnSelect: boolean;
+        /** The dropdown will close when the user interacts outside the element**/
+        containingElement?: HTMLElement;
+        /** The distance in pixels from which to offset the panel away from the trigger */
+        distance: number;
+        /** The distance in pixels from which to offset the panel away from the trigger */
+        skidding: number;
+        /** Enable this option if the parent is overflow hidden and the dropdown is not visible */
+        hoist: boolean;
+        /** Syncs the popup width or height with the trigger element */
+        sync: 'width' | 'height' | 'both' | undefined;
+        uri: string;
+        fetchedContent: string;
+        connectedCallback(): void;
+        focusOnTrigger(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        disconnectedCallback(): void;
+        private getMenu;
+        private addOpenListeners;
+        private removeOpenListeners;
+        /** Events */
+        handlePanelSelect: (event: ZnSelectEvent) => void;
+        private preloadContent;
+        private handlePreload;
+        handleTriggerClick(): Promise<void>;
+        handleKeyDown(event: KeyboardEvent): void;
+        private handleTriggerKeyDown;
+        private handleTriggerKeyUp;
+        private handleTriggerSlotChange;
+        private handleDocumentMouseDown;
+        handleDocumentKeyDown(event: KeyboardEvent): void;
+        /** Opens the dropdown */
+        show(): Promise<void>;
+        /** Closes the dropdown */
+        hide(): Promise<void>;
+        /** Instructs the dropdown to reposition itself */
+        reposition(): void;
+        /** Aria related method */
+        private updateAccessibleTrigger;
+        handleOpenChange(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/dropdown/index" {
+    import ZnDropdown from "components/dropdown/dropdown.component";
+    export * from "components/dropdown/dropdown.component";
+    export default ZnDropdown;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-dropdown': ZnDropdown;
+        }
+    }
+}
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -552,6 +1072,7 @@ declare module "components/button/button.component" {
         disabled: boolean;
         grow: boolean;
         square: boolean;
+        dropdownCloser: boolean;
         notification: number;
         verticalAlign: 'start' | 'center' | 'end';
         content: string;
@@ -902,208 +1423,6 @@ declare module "events/zn-filter-change" {
         }
     }
 }
-declare module "internal/offset" {
-    /**
-     * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
-     * parent doesn't have to be positioned relative or absolute.
-     *
-     * NOTE: This was created to work around what appears to be a bug in Chrome where a slotted element's offsetParent seems
-     * to ignore elements inside the surrounding shadow DOM: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
-     */
-    export function getOffset(element: HTMLElement, parent: HTMLElement): {
-        top: number;
-        left: number;
-    };
-}
-declare module "internal/scroll" {
-    /**
-     * Prevents body scrolling. Keeps track of which elements requested a lock so multiple levels of locking are possible
-     * without premature unlocking.
-     */
-    export function lockBodyScrolling(lockingEl: HTMLElement): void;
-    /**
-     * Unlocks body scrolling. Scrolling will only be unlocked once all elements that requested a lock call this method.
-     */
-    export function unlockBodyScrolling(lockingEl: HTMLElement): void;
-    /** Scrolls an element into view of its container. If the element is already in view, nothing will happen. */
-    export function scrollIntoView(element: HTMLElement, container: HTMLElement, direction?: 'horizontal' | 'vertical' | 'both', behavior?: 'smooth' | 'auto'): void;
-}
-declare module "components/dialog/dialog.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/dialog
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     *
-     * @event zn-show - Emitted when the dialog is opens.
-     * @event zn-close - Emitted when the dialog is closed.
-     * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
-     * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling
-     * `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in
-     * destructive behavior such as data loss.
-     *
-     * @slot - The default slot.
-     * @slot label - The dialog's label. Alternatively you can use the `label` attribute.
-     * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied
-     * to the icon depending on the dialog variant.
-     * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.
-     * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
-     * @slot footer - The dialog's footer. This is typically used for buttons representing various options.
-     * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart header - The dialog's header. This element wraps the title and header actions.
-     * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
-     * @csspart title - The dialog's title.
-     * @csspart close-button - The dialog's close button.
-     * @csspart close-button__base - The close buttons exported `base` part.
-     * @csspart body - The dialog's body.
-     * @csspart footer - The dialog's footer.
-     *
-     * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.
-     * @cssproperty --header-spacing - The amount of padding to use for the header.
-     * @cssproperty --body-spacing - The amount of padding to use for the body.
-     * @cssproperty --footer-spacing - The amount of padding to use for the footer.
-     */
-    export default class ZnDialog extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-        };
-        private readonly hasSlotController;
-        private closeWatcher;
-        dialog: HTMLDialogElement;
-        panel: HTMLElement;
-        overlay: HTMLElement;
-        /** The dialog's theme variant. */
-        variant: 'default' | 'warning' | 'announcement';
-        /** The dialog's size. */
-        size: 'small' | 'medium' | 'large';
-        /**
-         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
-         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
-         */
-        open: boolean;
-        /**
-         * The dialog's label as displayed in the header. You should always include a relevant label even when using
-         * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
-         */
-        label: string;
-        /**
-         * Disables the header. This will also remove the default close button, so please ensure you provide an easy,
-         * accessible way to close the dialog.
-         */
-        noHeader: boolean;
-        /**
-         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
-         * will need to manually open the dialog using the `show()` method.
-         */
-        trigger: string;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private requestClose;
-        private addOpenListeners;
-        private removeOpenListeners;
-        /** Shows the dialog. */
-        show(): void;
-        /** Hides the dialog. */
-        hide(): void;
-        private closeClickHandler;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/dialog/index" {
-    import ZnDialog from "components/dialog/dialog.component";
-    export * from "components/dialog/dialog.component";
-    export default ZnDialog;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-dialog': ZnDialog;
-        }
-    }
-}
-declare module "utilities/query" {
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
-}
-declare module "components/confirm/confirm.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnDialog from "components/dialog/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/confirm-modal
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnConfirm extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-dialog': typeof ZnDialog;
-        };
-        private readonly hasSlotController;
-        /** The dialog's theme variant. */
-        variant: 'default' | 'warning' | 'announcement';
-        /** The dialog's size. */
-        size: 'small' | 'medium' | 'large';
-        /** The dialogs type, which will determine the icon and color. */
-        type: 'warning' | 'error' | 'success' | 'info';
-        /**
-         * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
-         * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
-         */
-        open: boolean;
-        caption: string;
-        action: string;
-        content: string;
-        confirmText: string;
-        cancelText: string;
-        hideIcon: boolean;
-        /**
-         * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
-         * will need to manually open the dialog using the `show()` method.
-         */
-        trigger: string;
-        /** The Dialogs announcement text. */
-        announcement: string;
-        /** The Dialogs footer text. */
-        footerText: string;
-        dialog: ZnDialog;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        connectedCallback(): void;
-        updateTriggers(): void;
-        show: (event?: Event | undefined) => void;
-        hide(): void;
-        render(): import("lit").TemplateResult<1>;
-        submitDialog(): void;
-    }
-}
-declare module "components/confirm/index" {
-    import ZnConfirm from "components/confirm/confirm.component";
-    export * from "components/confirm/confirm.component";
-    export default ZnConfirm;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-confirm-modal': ZnConfirm;
-        }
-    }
-}
 declare module "components/data-table-filter/data-table-filter.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
@@ -1151,324 +1470,6 @@ declare module "components/data-table-filter/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-data-table-filter': ZnDataTableFilter;
-        }
-    }
-}
-declare module "internal/tabbable" {
-    /**
-     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
-     * element because it short-circuits after finding the first and last ones.
-     */
-    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
-        start: HTMLElement;
-        end: HTMLElement;
-    };
-    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
-}
-declare module "translations/en" {
-    import { type Translation } from "utilities/localize";
-    const translation: Translation;
-    export default translation;
-}
-declare module "utilities/localize" {
-    import { LocalizeController as DefaultLocalizationController } from '@shoelace-style/localize';
-    import type { Translation as DefaultTranslation } from '@shoelace-style/localize';
-    export class LocalizeController extends DefaultLocalizationController<Translation> {
-    }
-    export { registerTranslation } from '@shoelace-style/localize';
-    export interface Translation extends DefaultTranslation {
-        $code: string;
-        $name: string;
-        $dir: 'ltr' | 'rtl';
-        onChange: string;
-        hidePassword: string;
-        showPassword: string;
-        clearEntry: string;
-        numOptionsSelected: (num: number) => string;
-        fileButtonText: string;
-        fileButtonTextMultiple: string;
-        folderButtonText: string;
-        folderDragDrop: string;
-        fileDragDrop: string;
-        numFilesSelected: (num: number) => string;
-    }
-}
-declare module "components/menu-item/submenu-controller" {
-    import { type HasSlotController } from "internal/slot";
-    import type { ReactiveController, ReactiveControllerHost } from 'lit';
-    import { type LocalizeController } from "utilities/localize";
-    import type ZnMenuItem from "components/menu-item/index";
-    /** A reactive controller to manage the registration of event listeners for submenus. */
-    export class SubmenuController implements ReactiveController {
-        private host;
-        private popupRef;
-        private enableSubmenuTimer;
-        private isConnected;
-        private isPopupConnected;
-        private skidding;
-        private readonly hasSlotController;
-        private readonly localize;
-        private readonly submenuOpenDelay;
-        constructor(host: ReactiveControllerHost & ZnMenuItem, hasSlotController: HasSlotController, localize: LocalizeController);
-        hostConnected(): void;
-        hostDisconnected(): void;
-        hostUpdated(): void;
-        private addListeners;
-        private removeListeners;
-        private handleMouseMove;
-        private handleMouseOver;
-        private handleSubmenuEntry;
-        private handleKeyDown;
-        private handleClick;
-        private handleFocusOut;
-        private handlePopupMouseover;
-        private handlePopupReposition;
-        private setSubmenuState;
-        private enableSubmenu;
-        private disableSubmenu;
-        private updateSkidding;
-        isExpanded(): boolean;
-        renderSubmenu(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/menu-item/menu-item.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnPopup from "components/popup/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/menu-item
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnMenuItem extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-popup': typeof ZnPopup;
-        };
-        private cachedTextLabel;
-        defaultSlot: HTMLSlotElement;
-        menuItem: HTMLElement;
-        /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
-        type: 'normal' | 'checkbox';
-        /** Draws the item in a checked state. */
-        checked: boolean;
-        /** A unique value to store in the menu item. This can be used as a way to identify menu items when selected. */
-        value: string;
-        /** Draws the menu item in a loading state. */
-        loading: boolean;
-        /** Draws the menu item in a disabled state, preventing selection. */
-        disabled: boolean;
-        href: string;
-        dataPath: string;
-        target: '_self' | '_blank' | '_parent' | '_top' | string;
-        dataTarget: 'modal' | 'slide' | string;
-        rel: string;
-        gaid: string;
-        private readonly localize;
-        private readonly hasSlotController;
-        private submenuController;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private handleDefaultSlotChange;
-        private handleHostClick;
-        private handleMouseOver;
-        handleCheckedChange(): void;
-        handleDisabledChange(): void;
-        handleTypeChange(): void;
-        /** Returns a text label based on the contents of the menu item's default slot. */
-        getTextLabel(): string;
-        isSubmenu(): boolean;
-        private _isLink;
-        render(): import("lit").TemplateResult;
-    }
-}
-declare module "components/menu-item/index" {
-    import ZnMenuItem from "components/menu-item/menu-item.component";
-    export * from "components/menu-item/menu-item.component";
-    export default ZnMenuItem;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-menu-item': ZnMenuItem;
-        }
-    }
-}
-declare module "events/zn-select" {
-    import type ZnMenuItem from "components/menu-item/index";
-    export type ZnSelectEvent = CustomEvent<{
-        item: ZnMenuItem;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-select': ZnSelectEvent;
-        }
-    }
-}
-declare module "components/menu/menu.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnConfirm from "components/confirm/index";
-    import ZnDropdown from "components/dropdown/index";
-    import ZnIcon from "components/icon/index";
-    import ZnMenuItem from "components/menu-item/index";
-    import ZnTooltip from "components/tooltip/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/menu
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnMenu extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-confirm': typeof ZnConfirm;
-            'zn-dropdown': typeof ZnDropdown;
-            'zn-icon': typeof ZnIcon;
-            'zn-menu-item': typeof ZnMenuItem;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        defaultSlot: HTMLSlotElement;
-        actions: never[];
-        connectedCallback(): void;
-        /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
-        getAllItems(): ZnMenuItem[];
-        /**
-         * @internal Gets the current menu item, which is the menu item that has `tabindex="0"` within the roving tab index.
-         * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.
-         */
-        getCurrentItem(): ZnMenuItem | undefined;
-        /**
-         * @internal Sets the current menu item to the specified element. This sets `tabindex="0"` on the target element and
-         * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
-         */
-        setCurrentItem(item: ZnMenuItem): void;
-        render(): import("lit").TemplateResult<1>;
-        private handleClick;
-        private handleKeyDown;
-        private handleMouseDown;
-        private handleSlotChange;
-        private isMenuItem;
-    }
-}
-declare module "components/menu/index" {
-    import ZnMenu from "components/menu/menu.component";
-    export * from "components/menu/menu.component";
-    export default ZnMenu;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-menu': ZnMenu;
-        }
-    }
-}
-declare module "components/dropdown/dropdown.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import type { ZnSelectEvent } from "events/zn-select";
-    import type ZnPopup from "components/popup/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/dropdown
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnDropdown extends ZincElement {
-        static styles: CSSResultGroup;
-        popup: ZnPopup;
-        trigger: HTMLSlotElement;
-        panel: HTMLSlotElement;
-        private closeWatcher;
-        /** Indicates whether the dropdown is open */
-        open: boolean;
-        /** The placement of the dropdown. Note the actual placement may vary based on the available space */
-        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
-        /** Disable the dropdown */
-        disabled: boolean;
-        /** By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open */
-        stayOpenOnSelect: boolean;
-        /** The dropdown will close when the user interacts outside the element**/
-        containingElement?: HTMLElement;
-        /** The distance in pixels from which to offset the panel away from the trigger */
-        distance: number;
-        /** The distance in pixels from which to offset the panel away from the trigger */
-        skidding: number;
-        /** Enable this option if the parent is overflow hidden and the dropdown is not visible */
-        hoist: boolean;
-        /** Syncs the popup width or height with the trigger element */
-        sync: 'width' | 'height' | 'both' | undefined;
-        uri: string;
-        fetchedContent: string;
-        connectedCallback(): void;
-        focusOnTrigger(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        disconnectedCallback(): void;
-        private getMenu;
-        private addOpenListeners;
-        private removeOpenListeners;
-        /** Events */
-        handlePanelSelect: (event: ZnSelectEvent) => void;
-        private preloadContent;
-        private handlePreload;
-        handleTriggerClick(): Promise<void>;
-        handleKeyDown(event: KeyboardEvent): void;
-        private handleTriggerKeyDown;
-        private handleTriggerKeyUp;
-        private handleTriggerSlotChange;
-        private handleDocumentMouseDown;
-        handleDocumentKeyDown(event: KeyboardEvent): void;
-        /** Opens the dropdown */
-        show(): Promise<void>;
-        /** Closes the dropdown */
-        hide(): Promise<void>;
-        /** Instructs the dropdown to reposition itself */
-        reposition(): void;
-        /** Aria related method */
-        private updateAccessibleTrigger;
-        handleOpenChange(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/dropdown/index" {
-    import ZnDropdown from "components/dropdown/dropdown.component";
-    export * from "components/dropdown/dropdown.component";
-    export default ZnDropdown;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-dropdown': ZnDropdown;
         }
     }
 }
@@ -5515,6 +5516,7 @@ declare module "components/button-menu/button-menu.component" {
         containerWidth: number;
         limit: number;
         maxLevel: number;
+        size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
         noGap: boolean;
         noPadding: boolean;
         private _buttons;

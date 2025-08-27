@@ -38,6 +38,8 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
+  @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
+
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
   @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
@@ -164,7 +166,7 @@ export default class ZnButtonMenu extends ZincElement {
       menu.innerHTML = '';
     }
 
-    // Add colors to the buttons depending on type
+    // Add colors to the buttons depending on type and set button size
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
@@ -172,7 +174,7 @@ export default class ZnButtonMenu extends ZincElement {
         if (!button.button.hasAttribute('color')) {
           button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
         }
-
+        button.button.setAttribute('size', this.size);
       }
     });
 
@@ -198,7 +200,6 @@ export default class ZnButtonMenu extends ZincElement {
             menuItem.innerText = button.button.innerText;
             menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
             menuItem.setAttribute('role', 'menuitem');
-
             const attr = button.button.attributes;
             // Copy all attributes from the button to the menu item
             for (let i = 0; i < attr.length; i++) {

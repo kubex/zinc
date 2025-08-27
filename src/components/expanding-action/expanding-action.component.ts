@@ -62,6 +62,10 @@ export default class ZnExpandingAction extends ZincElement {
   async connectedCallback() {
     super.connectedCallback();
 
+    if (!this.masterId) {
+      this.masterId = Math.floor(Math.random() * 1000000).toString();
+    }
+
     this._preload = !this.noPrefetch;
 
     await this.updateComplete;

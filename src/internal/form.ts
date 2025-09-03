@@ -239,7 +239,7 @@ export class FormControlController implements ReactiveController {
     }
   };
 
-  private handleFormSubmit = (event: Event) => {
+  private handleFormSubmit = async (event: Event) => {
     const disabled = this.options.disabled(this.host);
     const reportValidity = this.options.reportValidity;
 
@@ -254,16 +254,8 @@ export class FormControlController implements ReactiveController {
     const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
     const content = submitButton?.innerHTML;
     if (submitButton) {
-      setTimeout(() => {
-        // disable duplicate submit
-        submitButton.disabled = true;
-        submitButton.innerHTML = this.form?.getAttribute('data-loading-text') || 'Processing...';
-      }, 20);
-
-      setTimeout(() => {
-        submitButton.disabled = false;
-        submitButton.innerHTML = content ?? '';
-      }, 2000);
+      submitButton.disabled = true;
+      submitButton.innerHTML = this.form?.getAttribute('data-loading-text') || 'Processing...';
     }
 
     if (this.form && !this.form.noValidate && !disabled && !reportValidity(this.host)) {
@@ -272,9 +264,42 @@ export class FormControlController implements ReactiveController {
 
       // remove the disabled state from the submit button
       if (submitButton) {
-        submitButton.removeAttribute('disabled');
+        submitButton.disabled = false;
         submitButton.innerHTML = content ?? '';
       }
+      return;
+    }
+
+    let asyncHandled = false;
+    if (this.form) {
+      const asyncEvent = new CustomEvent('zn-form-submit', {
+        bubbles: true,
+        cancelable: true,
+        detail: {form: this.form}
+      });
+      this.form.dispatchEvent(asyncEvent);
+
+      if (this.form._znFormSubmitPromise instanceof Promise) {
+        asyncHandled = true;
+        try {
+          await this.form._znFormSubmitPromise;
+        } catch {
+          // Ignore error
+        }
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = content ?? '';
+        }
+        delete this.form._znFormSubmitPromise;
+      }
+    }
+
+    // Enable after 5 seconds as a fallback
+    if (!asyncHandled && submitButton) {
+      setTimeout(() => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = content ?? '';
+      }, 5000);
     }
   };
 

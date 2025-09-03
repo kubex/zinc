@@ -32,6 +32,7 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property() method: 'drop' | 'fill' = 'drop';
 
+  @property({attribute: 'context-uri', reflect: true}) contextUri: string;
   @property({reflect: true}) count: string;
 
   @property({type: Boolean}) prefetch = false;
@@ -71,6 +72,11 @@ export default class ZnExpandingAction extends ZincElement {
     await this.updateComplete;
     this._panel = this.shadowRoot?.querySelector('#content');
     this._registerActions();
+
+    // Make HEAD request for initial count
+    if (this.contextUri) {
+      await this.fetchContextHeaders();
+    }
   }
 
   disconnectedCallback() {
@@ -183,6 +189,24 @@ export default class ZnExpandingAction extends ZincElement {
 
       // Observer must wait until the panel is created
       this._observeMetaCount();
+    }
+  }
+
+  async fetchContextHeaders() {
+    try {
+      const response = await fetch(this.contextUri, {
+        credentials: 'same-origin',
+        method: 'head',
+        headers: {
+          'x-requested-with': 'XMLHttpRequest',
+        }
+      });
+      const count = response.headers.get('x-kubex-count');
+      if (count) {
+        this.count = count;
+      }
+    } catch {
+      console.log('Unable to fetch context headers');
     }
   }
 

@@ -1,5 +1,5 @@
-import type {DataProviderOption, LocalDataProvider} from "./provider";
 import {html} from "lit";
+import type {DataProviderOption, LocalDataProvider} from "./provider";
 
 export const colors = ['Red', 'Blue', 'Orange', 'Yellow', 'Indigo', 'Violet', 'Green', 'Pink', 'Gray']
 

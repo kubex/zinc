@@ -771,7 +771,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
   checkValidity() {
-    return this.valueInput.checkValidity();
+    return this.valueInput ? this.valueInput.checkValidity() : false;
   }
 
   /** Gets the associated form, if one exists. */
@@ -781,7 +781,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Checks for validity and shows the browser's validation message if the control is invalid. */
   reportValidity() {
-    return this.valueInput.reportValidity();
+    return this.valueInput ? this.valueInput.reportValidity() : false;
   }
 
   /** Sets a custom validation message. Pass an empty string to restore validity. */

@@ -5722,6 +5722,7 @@ declare module "components/expanding-action/expanding-action.component" {
         static styles: CSSResultGroup;
         icon: string;
         method: 'drop' | 'fill';
+        contextUri: string;
         count: string;
         prefetch: boolean;
         basis: string;
@@ -5747,6 +5748,7 @@ declare module "components/expanding-action/expanding-action.component" {
         _handleClick(event: PointerEvent): void;
         _createUriPanel(actionEle: Element, actionUri: string, actionId: string): HTMLDivElement;
         fetchUri(target: HTMLElement): void;
+        fetchContextHeaders(): Promise<void>;
         clickAction(target: HTMLElement): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;

@@ -162,6 +162,11 @@ export default class ZnConfirm extends ZincElement {
       form = document.createElement('form') as HTMLFormElement;
       form.action = this.action;
       form.method = 'POST';
+
+      this.querySelectorAll('input').forEach((el: HTMLInputElement) => {
+        form.appendChild(el.cloneNode() as Node);
+      })
+
       this.appendChild(form);
     }
 

@@ -3430,6 +3430,10 @@ declare module "components/sp/sp.component" {
         flush: boolean;
         flushX: boolean;
         flushY: boolean;
+        flushT: boolean;
+        flushB: boolean;
+        flushL: boolean;
+        flushR: boolean;
         widthContainer: boolean;
         connectedCallback(): void;
         protected render(): unknown;

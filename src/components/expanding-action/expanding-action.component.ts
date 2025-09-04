@@ -34,6 +34,7 @@ export default class ZnExpandingAction extends ZincElement {
 
   @property({attribute: 'context-uri', reflect: true}) contextUri: string;
   @property({reflect: true}) count: string;
+  @property({reflect: true}) color: string;
 
   @property({type: Boolean}) prefetch = false;
 
@@ -71,12 +72,6 @@ export default class ZnExpandingAction extends ZincElement {
 
     await this.updateComplete;
     this._panel = this.shadowRoot?.querySelector('#content');
-    this._registerActions();
-
-    // Make HEAD request for initial count
-    if (this.contextUri) {
-      await this.fetchContextHeaders();
-    }
   }
 
   disconnectedCallback() {
@@ -90,6 +85,13 @@ export default class ZnExpandingAction extends ZincElement {
     setTimeout(() => {
       this._registerActions();
     }, 10);
+
+    // Make HEAD request for initial count
+    if (this.contextUri) {
+      setTimeout(() => {
+        this.fetchContextHeaders();
+      }, 10)
+    }
   }
 
   _observeMetaCount() {
@@ -205,6 +207,10 @@ export default class ZnExpandingAction extends ZincElement {
       if (count) {
         this.count = count;
       }
+      const color = response.headers.get('x-kubex-color');
+      if (color) {
+        this.color = color;
+      }
     } catch {
       console.log('Unable to fetch context headers');
     }
@@ -230,6 +236,7 @@ export default class ZnExpandingAction extends ZincElement {
                    class="expanding-action__button"
                    @click="${this.handleIconClicked}"
                    icon="${this.icon}"
+                   icon-color="${this.color}"
                    icon-size="20">
         </zn-button>` : nothing}
       <div
@@ -257,6 +264,7 @@ export default class ZnExpandingAction extends ZincElement {
                    color="transparent"
                    size="x-small"
                    icon="${this.icon}"
+                   icon-color="${this.color}"
                    icon-size="20"
                    notification="${this.count || nothing}"
                    @click="${this.handleIconClicked}">

@@ -69,6 +69,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property() gaid: string = '';
   @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
+  @property({attribute: "icon-color"}) iconColor: string;
   @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;
@@ -180,14 +181,15 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const isLink = this._isLink();
 
     const icon = this.icon ? html`
-      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"></zn-icon>` : '';
+      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
+               color="${this.iconColor ? this.iconColor : null}"></zn-icon>` : '';
 
     const tag = isLink ? literal`a` : literal`button`;
 
     let content = html`
       <${tag}
         part="base"
-        class=${classMap({
+        class="${classMap({
           'button': true,
           'button--default': this.color === 'default',
           'button--secondary': this.color === 'secondary',
@@ -213,15 +215,15 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
           'button--square': this.square,
           'button--has-notification': this.notification !== undefined && this.notification > 0,
-        })}
-        type=${ifDefined(this.type)}
-        href=${ifDefined(this.href)}
-        target=${ifDefined(isLink ? this.target : undefined)}
-        data-target=${ifDefined(isLink ? this.dataTarget : undefined)}
-        rel=${ifDefined(isLink ? this.rel : undefined)}
-        gaid=${ifDefined(this.gaid)}
-        data-notification=${ifDefined(this.notification)}
-        @click=${this.handleClick}>
+        })}"
+        type="${ifDefined(this.type)}"
+        href="${ifDefined(this.href)}"
+        target="${ifDefined(isLink ? this.target : undefined)}"
+        data-target="${ifDefined(isLink ? this.dataTarget : undefined)}"
+        rel="${ifDefined(isLink ? this.rel : undefined)}"
+        gaid="${ifDefined(this.gaid)}"
+        data-notification="${ifDefined(this.notification)}"
+        @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label" class="button__label">${this.content}</slot>
         ${this.iconPosition === 'right' ? icon : ''}

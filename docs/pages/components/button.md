@@ -64,3 +64,17 @@ Use the `text` attribute to set the button's style to text.
 <zn-button text color="error">Text</zn-button>
 <zn-button text color="transparent">Text</zn-button>
 ```
+
+### Icon
+
+Use the `icon` attribute to set the button's icon.
+
+```html:preview
+<zn-button icon="add_circle">Icon</zn-button>
+<zn-button icon="file_download" color="secondary">Icon</zn-button>
+<zn-button icon="check" color="success">Icon</zn-button>
+<zn-button icon="help" color="info">Icon</zn-button>
+<zn-button icon="report_problem" color="warning">Icon</zn-button>
+<zn-button icon="cancel" color="error">Icon</zn-button>
+<zn-button icon="pending" color="transparent">Icon</zn-button>
+```

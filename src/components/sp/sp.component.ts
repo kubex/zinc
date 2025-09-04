@@ -46,6 +46,10 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
   @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
+  @property({attribute: 'flush-t', type: Boolean, reflect: true}) flushT: boolean = false;
+  @property({attribute: 'flush-b', type: Boolean, reflect: true}) flushB: boolean = false;
+  @property({attribute: 'flush-l', type: Boolean, reflect: true}) flushL: boolean = false;
+  @property({attribute: 'flush-r', type: Boolean, reflect: true}) flushR: boolean = false;
   @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer: boolean = false;
 
   connectedCallback() {
@@ -70,6 +74,10 @@ export default class ZnSp extends ZincElement {
         'sp--flush': this.flush,
         'sp--flush-y': this.flushY,
         'sp--flush-x': this.flushX,
+        'sp--flush-t': this.flushT,
+        'sp--flush-b': this.flushB,
+        'sp--flush-l': this.flushL,
+        'sp--flush-r': this.flushR,
         'width-container': this.widthContainer,
       })}">
         <slot></slot>

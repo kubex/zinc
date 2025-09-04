@@ -11,6 +11,25 @@ import styles from './icon.scss';
 type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
 
+type IconColor =
+  "primary"
+  | "accent"
+  | "info"
+  | "warning"
+  | "error"
+  | "success"
+  | "white"
+  | "disabled"
+  | "red"
+  | "blue"
+  | "green"
+  | "orange"
+  | "yellow"
+  | "indigo"
+  | "violet"
+  | "pink"
+  | "grey";
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/icon
@@ -41,8 +60,7 @@ export default class ZnIcon extends ZincElement {
 
   @property({reflect: true}) library: IconLibrary;
 
-  @property({reflect: true}) color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" |
-    "disabled";
+  @property({reflect: true}) color: IconColor;
 
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
@@ -157,6 +175,15 @@ export default class ZnIcon extends ZincElement {
           'icon--success': this.color === "success",
           'icon--white': this.color === "white",
           'icon--disabled': this.color === "disabled",
+          'icon--red': this.color === "red",
+          'icon--blue': this.color === "blue",
+          'icon--green': this.color === "green",
+          'icon--orange': this.color === "orange",
+          'icon--yellow': this.color === "yellow",
+          'icon--indigo': this.color === "indigo",
+          'icon--violet': this.color === "violet",
+          'icon--pink': this.color === "pink",
+          'icon--grey': this.color === "grey",
           'icon--avatar': this.library === "avatar"
         })}" style="${styleMap({
           '--icon-size': this.size + "px",

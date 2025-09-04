@@ -1080,6 +1080,7 @@ declare module "components/button/button.component" {
         gaid: string;
         iconPosition: 'left' | 'right';
         iconSize: string;
+        iconColor: string;
         type: 'button' | 'submit' | 'reset';
         name: string;
         value: string;
@@ -5724,6 +5725,7 @@ declare module "components/expanding-action/expanding-action.component" {
         method: 'drop' | 'fill';
         contextUri: string;
         count: string;
+        color: string;
         prefetch: boolean;
         basis: string;
         maxHeight: string;

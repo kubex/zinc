@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2671,12 +2671,7 @@
               "value": { "type": "boolean", "default": "false" }
             },
             { "name": "library", "value": { "type": "IconLibrary" } },
-            {
-              "name": "color",
-              "value": {
-                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              }
-            }
+            { "name": "color", "value": { "type": "IconColor" } }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2692,10 +2687,7 @@
               { "name": "size", "type": "number" },
               { "name": "round", "type": "boolean" },
               { "name": "library", "type": "IconLibrary" },
-              {
-                "name": "color",
-                "type": "\"primary\" | \"accent\" | \"info\" | \"warning\" | \"error\" | \"success\" | \"white\" |\n    \"disabled\""
-              },
+              { "name": "color", "type": "IconColor" },
               { "name": "gravatarOptions", "type": "string" },
               { "name": "defaultLibrary", "type": "IconLibrary" }
             ],

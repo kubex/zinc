@@ -475,6 +475,7 @@ declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+    type IconColor = "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -499,7 +500,7 @@ declare module "components/icon/icon.component" {
         size: number;
         round: boolean;
         library: IconLibrary;
-        color: "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled";
+        color: IconColor;
         gravatarOptions: string;
         defaultLibrary: IconLibrary;
         convertToLibrary(input: string): IconLibrary;

@@ -735,8 +735,10 @@ export default class ZnDataTable extends ZincElement {
             'caption--icon': data['caption'].icon !== undefined,
           })}">
             ${captionIcon}
-            ${title}
-            <span class="summary">${data['caption'].summary}</span>
+            <div>
+              ${title}
+              <span class="summary">${data['caption'].summary}</span>
+            </div>
           </div>`;
       }
 

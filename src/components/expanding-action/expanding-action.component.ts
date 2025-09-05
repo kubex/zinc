@@ -54,7 +54,8 @@ export default class ZnExpandingAction extends ZincElement {
   private _knownUri: Map<string, string> = new Map<string, string>();
   private _actions: HTMLElement[] = [];
   private _preload = true;
-  private _observer?: MutationObserver;
+  private _countObserver?: MutationObserver;
+  private _colorObserver?: MutationObserver;
 
   constructor() {
     super();
@@ -76,7 +77,8 @@ export default class ZnExpandingAction extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._observer?.disconnect();
+    this._countObserver?.disconnect();
+    this._colorObserver?.disconnect();
   }
 
   firstUpdated(_changedProperties: PropertyValues) {
@@ -89,15 +91,15 @@ export default class ZnExpandingAction extends ZincElement {
     // Make HEAD request for initial count
     if (this.contextUri) {
       setTimeout(() => {
-        this.fetchContextHeaders();
+        this.fetchContextHeaders().then(r => r);
       }, 10)
     }
   }
 
-  _observeMetaCount() {
+  _observeMetaData() {
     const appContent = deepQuerySelectorAll('app-content', this, '')[0];
 
-    this._observer = new MutationObserver(() => {
+    this._countObserver = new MutationObserver(() => {
       const metaCount = appContent?.shadowRoot?.querySelector('meta[name="count"]');
       if (!metaCount) {
         return;
@@ -109,11 +111,28 @@ export default class ZnExpandingAction extends ZincElement {
       }
     });
 
-    if (appContent.shadowRoot) {
-      this._observer.observe(appContent.shadowRoot, {
+    this._colorObserver = new MutationObserver(() => {
+      const metaColor = appContent?.shadowRoot?.querySelector('meta[name="color"]');
+      if (!metaColor) {
+        return;
+      }
+      const color = metaColor.getAttribute('content');
+      if (color) {
+        this.color = color;
+      }
+    });
+
+    const root = appContent.shadowRoot;
+    if (root) {
+      const options: MutationObserverInit = {
         subtree: true,
+        attributes: true,
         attributeFilter: ['content'],
-      });
+        childList: true,
+      };
+
+      this._countObserver.observe(root, options);
+      this._colorObserver.observe(root, options);
     }
   }
 
@@ -190,7 +209,7 @@ export default class ZnExpandingAction extends ZincElement {
       this._createUriPanel(target, actionUri, this._uriToId(actionUri));
 
       // Observer must wait until the panel is created
-      this._observeMetaCount();
+      this._observeMetaData();
     }
   }
 

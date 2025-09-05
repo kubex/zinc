@@ -5743,12 +5743,13 @@ declare module "components/expanding-action/expanding-action.component" {
         private _knownUri;
         private _actions;
         private _preload;
-        private _observer?;
+        private _countObserver?;
+        private _colorObserver?;
         constructor();
         connectedCallback(): Promise<void>;
         disconnectedCallback(): void;
         firstUpdated(_changedProperties: PropertyValues): void;
-        _observeMetaCount(): void;
+        _observeMetaData(): void;
         _registerActions(): void;
         _addAction(action: HTMLElement): void;
         _uriToId(actionUri: string): string;

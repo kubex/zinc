@@ -476,7 +476,7 @@ declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
-    type IconColor = "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey";
+    export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -1033,6 +1033,7 @@ declare module "components/button/button.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
+    import type { IconColor } from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
@@ -1082,7 +1083,7 @@ declare module "components/button/button.component" {
         gaid: string;
         iconPosition: 'left' | 'right';
         iconSize: string;
-        iconColor: string;
+        iconColor: IconColor;
         type: 'button' | 'submit' | 'reset';
         name: string;
         value: string;

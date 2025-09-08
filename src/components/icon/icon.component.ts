@@ -11,8 +11,9 @@ import styles from './icon.scss';
 type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
 
-type IconColor =
-  "primary"
+export type IconColor =
+  "default"
+  | "primary"
   | "accent"
   | "info"
   | "warning"
@@ -167,6 +168,7 @@ export default class ZnIcon extends ZincElement {
         <div class="${classMap({
           'icon': true,
           'icon--round': this.round,
+          'icon--default': this.color === "default",
           'icon--primary': this.color === "primary",
           'icon--accent': this.color === "accent",
           'icon--info': this.color === "info",

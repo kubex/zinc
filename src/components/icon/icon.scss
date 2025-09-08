@@ -7,7 +7,7 @@
   box-sizing: content-box !important;
 
   --icon-size: 24px;
-  --icon-color: rgb(var(--zn-text));
+  --icon-color: inherit;
 }
 
 .icon-wrapper {
@@ -40,6 +40,10 @@
   }
 
   // Colors
+
+  &--default {
+    --icon-color: rgb(var(--zn-text));
+  }
 
   &--primary {
     --icon-color: rgb(var(--zn-primary))

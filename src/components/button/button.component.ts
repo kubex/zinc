@@ -9,6 +9,7 @@ import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
+import type {IconColor} from "../icon";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './button.scss';
@@ -69,7 +70,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property() gaid: string = '';
   @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
-  @property({attribute: "icon-color"}) iconColor: string;
+  @property({attribute: "icon-color"}) iconColor: IconColor;
   @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;

@@ -150,6 +150,7 @@ declare module "internal/form" {
         private detachForm;
         private handleFormData;
         private handleFormSubmit;
+        private enableSubmit;
         private handleFormReset;
         private handleInteraction;
         private checkFormValidity;

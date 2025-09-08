@@ -160,6 +160,11 @@ export class FormControlController implements ReactiveController {
     this.form.addEventListener('submit', this.handleFormSubmit);
     this.form.addEventListener('reset', this.handleFormReset);
 
+    // Pagelet events to check form completion state
+    this.form.addEventListener('complete', this.enableSubmit);
+    this.form.addEventListener('cancelled', this.enableSubmit);
+    this.form.addEventListener('error', this.enableSubmit);
+
     // Overload the form's reportValidity() method so it looks at Zinc form controls
     if (!reportValidityOverloads.has(this.form)) {
       reportValidityOverloads.set(this.form, this.form.reportValidity);
@@ -193,6 +198,9 @@ export class FormControlController implements ReactiveController {
       this.form.removeEventListener('submit', this.handleFormSubmit);
       this.form.removeEventListener('reset', this.handleFormReset);
 
+      this.form.removeEventListener('complete', this.enableSubmit);
+      this.form.removeEventListener('cancelled', this.enableSubmit);
+      this.form.removeEventListener('error', this.enableSubmit);
 
       if (reportValidityOverloads.has(this.form)) {
         this.form.reportValidity = reportValidityOverloads.get(this.form)!;
@@ -239,7 +247,7 @@ export class FormControlController implements ReactiveController {
     }
   };
 
-  private handleFormSubmit = async (event: Event) => {
+  private handleFormSubmit = (event: Event) => {
     const disabled = this.options.disabled(this.host);
     const reportValidity = this.options.reportValidity;
 
@@ -252,10 +260,15 @@ export class FormControlController implements ReactiveController {
 
     // get the submit button
     const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
-    const content = submitButton?.innerHTML;
+    const content = submitButton?.innerHTML ?? 'Submit';
     if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.innerHTML = this.form?.getAttribute('data-loading-text') || 'Processing...';
+      submitButton.setAttribute('data-original-text', content);
+
+      setTimeout(() => {
+        // disable duplicate submit
+        submitButton.disabled = true;
+        submitButton.innerHTML = this.form?.getAttribute('data-loading-text') || 'Processing...';
+      }, 20);
     }
 
     if (this.form && !this.form.noValidate && !disabled && !reportValidity(this.host)) {
@@ -265,43 +278,27 @@ export class FormControlController implements ReactiveController {
       // remove the disabled state from the submit button
       if (submitButton) {
         submitButton.disabled = false;
-        submitButton.innerHTML = content ?? '';
+        submitButton.innerHTML = content;
       }
+    }
+  };
+
+  private enableSubmit = (e: Event) => {
+    const target = e.target;
+
+    // Make sure the event is coming from the attached form
+    if (target !== this.form) {
       return;
     }
 
-    let asyncHandled = false;
-    if (this.form) {
-      const asyncEvent = new CustomEvent('zn-form-submit', {
-        bubbles: true,
-        cancelable: true,
-        detail: {form: this.form}
-      });
-      this.form.dispatchEvent(asyncEvent);
+    const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
+    if (submitButton) {
+      const content = submitButton.getAttribute('data-original-text') ?? submitButton.innerHTML;
 
-      if (this.form._znFormSubmitPromise instanceof Promise) {
-        asyncHandled = true;
-        try {
-          await this.form._znFormSubmitPromise;
-        } catch {
-          // Ignore error
-        }
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.innerHTML = content ?? '';
-        }
-        delete this.form._znFormSubmitPromise;
-      }
+      submitButton.disabled = false;
+      submitButton.innerHTML = content;
     }
-
-    // Enable after 5 seconds as a fallback
-    if (!asyncHandled && submitButton) {
-      setTimeout(() => {
-        submitButton.disabled = false;
-        submitButton.innerHTML = content ?? '';
-      }, 5000);
-    }
-  };
+  }
 
   private handleFormReset = () => {
     this.options.setValue(this.host, this.options.defaultValue(this.host));

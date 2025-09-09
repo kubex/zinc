@@ -1,0 +1,28 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+
+  a {
+    font-size: 0.875rem;
+    color: inherit;
+    font-weight: var(--zn-font-weight-normal);
+    text-decoration: inherit;
+
+    &:hover {
+      color: rgb(var(--zn-primary));
+    }
+  }
+
+  .separator {
+    margin: 0 var(--zn-spacing-2x-small);
+    color: rgb(var(--zn-text-secondary));
+    line-height: 0;
+  }
+}

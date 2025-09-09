@@ -1,10 +1,9 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
-import type { PropertyValues, TemplateResult} from 'lit';
 import type ZnNavbar from "../navbar";
 
 import styles from './header.scss';
@@ -29,7 +28,7 @@ import styles from './header.scss';
 export default class ZnHeader extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'nav');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'nav', 'breadcrumb');
 
   @property({attribute: 'full-location'}) fullLocation: string;
 
@@ -108,23 +107,7 @@ export default class ZnHeader extends ZincElement {
     const hasPreviousPath = this.previousPath;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
-    const hasBreadcrumb = this.breadcrumb && this.breadcrumb.length > 0;
-
-    let breadcrumb: TemplateResult = html``;
-    if (hasBreadcrumb) {
-      breadcrumb = html`
-        ${this.breadcrumb.map((item, index) => {
-          const prefix = index === 0 ? '' : ' > ';
-
-          if (item.path === '') {
-            return html`
-              ${prefix} <span>${item.title}</span>`;
-          }
-
-          return html`
-            ${prefix} <a href="${item.path}">${item.title}</a>`;
-        })}`;
-    }
+    const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
@@ -156,9 +139,9 @@ export default class ZnHeader extends ZincElement {
 
         <div class="content" part="content">
           ${hasBreadcrumb ? html`
-            <div class="breadcrumb">
-              ${breadcrumb}  <!--- Maybe make this into a component -->
-            </div>` : null}
+            <zn-breadcrumb>
+              <slot name="breadcrumb" class="breadcrumb"></slot>
+            </zn-breadcrumb>` : null}
 
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"

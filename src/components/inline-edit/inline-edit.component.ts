@@ -5,9 +5,9 @@ import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';
@@ -56,7 +56,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() pattern: string;
 
-  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' = 'text';
+  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' | 'number' = 'text';
 
   @property({type: Object}) options: { [key: string]: string } = {};
 
@@ -184,6 +184,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       case 'data-select':
         input = this._getDataSelectInput();
         break;
+      case 'number':
+        input = this._getNumberInput();
+        break;
       default:
         input = this._getTextInput();
     }
@@ -228,6 +231,20 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   protected _getTextInput(): HTMLTemplateResult {
     return html`
       <zn-input type="text"
+                class="ai__input"
+                name="${this.name}"
+                size="${this.size}"
+                value="${this.value}"
+                help-text="${ifDefined(this.helpText)}"
+                pattern=${ifDefined(this.pattern)}
+                @zn-input="${this.handleInput}"
+                @zn-blur="${this.handleBlur}">
+      </zn-input>`;
+  }
+
+  protected _getNumberInput(): HTMLTemplateResult {
+    return html`
+      <zn-input type="number"
                 class="ai__input"
                 name="${this.name}"
                 size="${this.size}"

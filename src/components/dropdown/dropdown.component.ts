@@ -371,10 +371,8 @@ export default class ZnDropdown extends ZincElement {
         ></slot>
 
         <div aria-hidden=${this.open ? 'false' : 'true'} aria-labelledby="dropdown">
-          <div part="panel" class="dropdown__panel">
-            ${this.fetchedContent ? unsafeHTML(this.fetchedContent) : ''}
-            <slot></slot>
-          </div>
+          ${this.fetchedContent ? unsafeHTML(this.fetchedContent) : ''}
+          <slot part="panel" class="dropdown__panel"></slot>
         </div>
       </zn-popup>
     `;

@@ -7,12 +7,13 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
-import {type CSSResultGroup, html, unsafeCSS, nothing} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {html, nothing, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {CSSResultGroup} from 'lit';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
@@ -57,6 +58,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
   /** Should we show the clear button */
   @property({type: Boolean}) clearable: boolean;
+  /** Include an "All" option at the top. */
+  @property({type: Boolean, attribute: 'allow-all'}) allowAll = false;
   /** The selects label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
   /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
@@ -155,6 +158,16 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
     if (filterKeys.length) {
       data = localProvider.getData.filter(item => filterKeys.includes(item.key));
+    }
+
+    if (this.provider !== 'color' && this.allowAll) {
+      const label = {
+        currency: 'All Currencies',
+        country: 'All Countries',
+        phone: 'All Phones'
+      }[this.provider] || 'All';
+      const allOption: DataProviderOption = {key: '', value: label, prefix: ''};
+      data = [allOption, ...data.filter(item => item.key !== allOption.key)];
     }
 
     return html`

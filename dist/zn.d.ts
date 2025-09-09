@@ -2804,9 +2804,8 @@ declare module "components/navbar/index" {
     }
 }
 declare module "components/header/header.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type { PropertyValues, TemplateResult } from 'lit';
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/header
@@ -2848,7 +2847,7 @@ declare module "components/header/header.component" {
         handleAltPress: () => void;
         handleAltUp: () => void;
         updateNav(): void;
-        render(): TemplateResult<1>;
+        render(): import("lit").TemplateResult<1>;
     }
 }
 declare module "components/header/index" {
@@ -2863,9 +2862,9 @@ declare module "components/header/index" {
 }
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2897,7 +2896,7 @@ declare module "components/inline-edit/inline-edit.component" {
         size: 'small' | 'medium' | 'large';
         required: boolean;
         pattern: string;
-        inputType: 'select' | 'text' | 'data-select';
+        inputType: 'select' | 'text' | 'data-select' | 'number';
         options: {
             [key: string]: string;
         };
@@ -2928,6 +2927,7 @@ declare module "components/inline-edit/inline-edit.component" {
         handleInput: (e: Event) => void;
         protected render(): import("lit").TemplateResult<1>;
         protected _getTextInput(): HTMLTemplateResult;
+        protected _getNumberInput(): HTMLTemplateResult;
         protected _getSelectInput(): HTMLTemplateResult;
         protected _getDataSelectInput(): HTMLTemplateResult;
     }
@@ -5990,6 +5990,46 @@ declare module "components/content-block/index" {
         }
     }
 }
+declare module "components/breadcrumb/breadcrumb.component" {
+    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/breadcrumb
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnBreadcrumb extends ZincElement {
+        static styles: CSSResultGroup;
+        separator: string;
+        private links;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private _getLinks;
+        private _renderLinks;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/breadcrumb/index" {
+    import ZnBreadcrumb from "components/breadcrumb/breadcrumb.component";
+    export * from "components/breadcrumb/breadcrumb.component";
+    export default ZnBreadcrumb;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-breadcrumb': ZnBreadcrumb;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6124,6 +6164,7 @@ declare module "zinc" {
     export { default as Skeleton } from "components/skeleton/index";
     export { default as Style } from "components/style/index";
     export { default as ContentBlock } from "components/content-block/index";
+    export { default as Breadcrumb } from "components/breadcrumb/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

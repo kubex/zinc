@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>Status Indicator</title>
+    <title>Breadcrumb</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,8 +12,8 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/status-indicator" />
-    <meta property="og:title" content="Status Indicator" />
+    <meta property="og:url" content="https://zinc.style/components/breadcrumb" />
+    <meta property="og:title" content="Breadcrumb" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -143,7 +143,7 @@
               </li>
 
               <li>
-                <a href="/components/breadcrumb"> Breadcrumb </a>
+                <a href="/components/breadcrumb" class="active-link"> Breadcrumb </a>
               </li>
 
               <li>
@@ -383,7 +383,7 @@
               </li>
 
               <li>
-                <a href="/components/status-indicator" class="active-link"> Status Indicator </a>
+                <a href="/components/status-indicator"> Status Indicator </a>
               </li>
 
               <li>
@@ -444,17 +444,25 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Status Indicator</a></li>
+            <li class="top"><a href="#">Breadcrumb</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#first-example">First Example</a></li>
+            <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Status Indicator</h1>
+            <h1>Breadcrumb</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-status-indicator&gt; | ZnStatusIndicator</code>
+              <code>&lt;zn-breadcrumb&gt; | ZnBreadcrumb</code>
             </div>
 
             <div class="component-header__info">
@@ -463,27 +471,34 @@
             </div>
           </header>
 
-          <p class="component-summary">Circular status indicators.</p>
+          <p class="component-summary">Short summary of the component’s intended use.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-status-indicator type="info"></zn-status-indicator>
-              <zn-status-indicator type="success"></zn-status-indicator>
-              <zn-status-indicator type="warning"></zn-status-indicator>
-              <zn-status-indicator type="error"></zn-status-indicator>
+              <zn-breadcrumb>
+                <div>
+                  <a href="#">Dashboard</a>
+                  <a href="#">Another</a>
+                  <a href="#">And another</a>
+                </div>
+              </zn-breadcrumb>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-214">
+            <div class="code-preview__source-group" id="code-preview-source-group-21">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-407"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-status-indicator</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-status-indicator</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-status-indicator</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-status-indicator</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-status-indicator</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-status-indicator</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-status-indicator</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-status-indicator</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-407"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-33">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-breadcrumb</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Dashboard<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Another<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>And another<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-breadcrumb</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-33"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -492,7 +507,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-214"
+                aria-controls="code-preview-source-group-21"
               >
                 Source
                 <svg
@@ -508,6 +523,18 @@
               </button>
             </div>
           </div>
+
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="first-example" class="anchor-heading">
+            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          </h3>
+          <p>TODO</p>
+          <h3 id="second-example" class="anchor-heading">
+            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          </h3>
+          <p>TODO</p>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -530,7 +557,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-408"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/status-indicator/status-indicator.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-408"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-34"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/breadcrumb/breadcrumb.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-34"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -545,13 +572,133 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-409"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/status-indicator/status-indicator.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-409"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-35"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.0/dist/components/breadcrumb/breadcrumb.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-35"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-410"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/status-indicator/status-indicator.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-410"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-36"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/breadcrumb/breadcrumb.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-36"></zn-copy-button></pre>
           </zn-collapsible>
+
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">(default)</td>
+                  <td>The default slot.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>example</code>
+                  </td>
+                  <td>An example slot.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted as an example.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>--example</code></td>
+                  <td>An example CSS custom property.</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+            >
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The component’s base wrapper.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-example&gt;</code></li>
+          </ul>
         </div>
       </article>
     </main>

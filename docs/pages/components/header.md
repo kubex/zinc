@@ -13,11 +13,9 @@ layout: component
              previous-path="#"
              navigation="[{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Dashboard&quot;},{&quot;path&quot;:&quot;#&quot;,&quot;title&quot;:&quot;Another&quot;}]">
     <zn-icon round src="test1@example.com" size="36"></zn-icon>
-    <div slot="breadcrumb">
-      <a href="#">Dashboard</a>
-      <a href="#">Another</a>
-      <a href="#">And another</a>
-    </div>
+    <a href="#" slot="breadcrumb">Dashboard</a>
+    <a href="#" slot="breadcrumb">Another</a>
+    <a href="#" slot="breadcrumb">And another</a>
   </zn-header>
 </div>
 ```

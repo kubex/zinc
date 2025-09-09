@@ -147,7 +147,7 @@
     gap: 10px;
   }
 
-  zn-breadcrumb {
+  .breadcrumb {
     flex-basis: 100%;
     font-size: var(--zn-font-size-x-small);
     font-weight: var(--zn-font-weight-semibold);
@@ -156,6 +156,24 @@
     display: flex;
     align-items: center;
     gap: var(--zn-spacing-2x-small);
+
+    &::slotted(a) {
+      font-size: 0.875rem;
+      color: inherit;
+      font-weight: var(--zn-font-weight-normal);
+      text-decoration: inherit;
+    }
+
+    &::slotted(a:hover) {
+      color: rgb(var(--zn-primary));
+      text-decoration: underline;
+    }
+
+    &::slotted(a:not(:last-child))::after {
+      content: '>';
+      margin-left: var(--zn-spacing-2x-small);
+      color: rgb(var(--zn-text-muted));
+    }
   }
 
   .caption {

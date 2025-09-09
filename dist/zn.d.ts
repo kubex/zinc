@@ -5414,10 +5414,10 @@ declare module "components/item/index" {
 }
 declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
-    import { type CSSResultGroup } from 'lit';
     import { FormControlController } from "internal/form";
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -5453,6 +5453,8 @@ declare module "components/data-select/data-select.component" {
         size: 'small' | 'medium' | 'large';
         /** Should we show the clear button */
         clearable: boolean;
+        /** Include an "All" option at the top. */
+        allowAll: boolean;
         /** The selects label. If you need to display HTML, use the `label` slot instead. */
         label: string;
         /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */

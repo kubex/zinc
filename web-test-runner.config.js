@@ -3,7 +3,7 @@ import {playwrightLauncher} from '@web/test-runner-playwright';
 import {globbySync} from 'globby';
 
 export default {
-  rootDir: '.',
+  rootDir: './',
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 3,
   plugins: [
@@ -21,7 +21,7 @@ export default {
         <script type="module" src="${testFramework}"></script>
         <script type="module">
           window.process = {env: {NODE_ENV: 'production'}}
-         
+
           /* Hack to disable Lit dev mode warnings */
           const systemWarn = window.console.warn;
           window.console.warn = (...args) => {
@@ -32,7 +32,7 @@ export default {
                   return;
               }
               systemWarn(...args);
-          };  
+          };
         </script>
       </head>
       <body>

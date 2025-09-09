@@ -2833,10 +2833,6 @@ declare module "components/header/header.component" {
         caption: string;
         description: string;
         navigation: never[];
-        breadcrumb: {
-            path: string;
-            title: string;
-        }[];
         fullWidth: boolean;
         previousPath: string;
         previousTarget: string;

@@ -5990,46 +5990,6 @@ declare module "components/content-block/index" {
         }
     }
 }
-declare module "components/breadcrumb/breadcrumb.component" {
-    import { type CSSResultGroup, PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/breadcrumb
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnBreadcrumb extends ZincElement {
-        static styles: CSSResultGroup;
-        separator: string;
-        private links;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        private _getLinks;
-        private _renderLinks;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/breadcrumb/index" {
-    import ZnBreadcrumb from "components/breadcrumb/breadcrumb.component";
-    export * from "components/breadcrumb/breadcrumb.component";
-    export default ZnBreadcrumb;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-breadcrumb': ZnBreadcrumb;
-        }
-    }
-}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6164,7 +6124,6 @@ declare module "zinc" {
     export { default as Skeleton } from "components/skeleton/index";
     export { default as Style } from "components/style/index";
     export { default as ContentBlock } from "components/content-block/index";
-    export { default as Breadcrumb } from "components/breadcrumb/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-editor-update" {

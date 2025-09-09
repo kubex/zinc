@@ -44,8 +44,6 @@ export default class ZnHeader extends ZincElement {
 
   @property({type: Array}) navigation = [];
 
-  @property({type: Array}) breadcrumb: { path: string; title: string }[] = [];
-
   @property({attribute: 'full-width', type: Boolean}) fullWidth: boolean;
 
   @property({attribute: 'previous-path'}) previousPath: string;
@@ -138,8 +136,7 @@ export default class ZnHeader extends ZincElement {
 
 
         <div class="content" part="content">
-          ${hasBreadcrumb ? html`
-            <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
+          ${hasBreadcrumb ? html`<slot name="breadcrumb" class="breadcrumb"></slot>` : null}
 
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"

@@ -166,10 +166,9 @@
 
     &::slotted(a:hover) {
       color: rgb(var(--zn-primary));
-      text-decoration: underline;
     }
 
-    &::slotted(a:not(:last-child))::after {
+    &::slotted(a:not(:last-of-type))::after {
       content: '>';
       margin-left: var(--zn-spacing-2x-small);
       color: rgb(var(--zn-text-muted));

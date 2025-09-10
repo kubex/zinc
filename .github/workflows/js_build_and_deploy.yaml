@@ -8,10 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2 # Check out the repository
+      - uses: actions/checkout@v3 # Check out the repository
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
@@ -31,23 +31,23 @@ jobs:
           name: app-build
           path: dist
 
-    deploy:
-      needs: [ build ]
-      steps:
-        - uses: actions/checkout@v5
-          # Setup .npmrc file to publish to npm
-        - uses: actions/setup-node@v4
-          with:
-            node-version: '20.x'
-            registry-url: 'https://registry.npmjs.org'
+  deploy:
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v3
+        # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
 
-          # Get the dist folder
-        - name: Download build artifact
-          uses: actions/download-artifact@v4
-          with:
-            name: app-build
+        # Get the dist folder
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
 
-        - run: npm publish --provenance --access public
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

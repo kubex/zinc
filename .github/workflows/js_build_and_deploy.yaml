@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app-build
-          path: ./dist/
+          path: dist
 
       - run: npm publish --access public
         env:

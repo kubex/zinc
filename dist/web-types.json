@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -3502,6 +3502,42 @@
           }
         },
         {
+          "name": "zn-note",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "color", "value": { "type": "typeof colors[number]" } },
+            {
+              "name": "caption",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "date", "value": { "type": "string", "default": "''" } },
+            { "name": "body", "value": { "type": "string", "default": "''" } }
+          ],
+          "slots": [
+            { "name": "caption", "description": "The note's caption." },
+            { "name": "date", "description": "The note's date." },
+            { "name": "body", "description": "The note's body." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "color", "type": "typeof colors[number]" },
+              { "name": "caption", "type": "string" },
+              { "name": "date", "type": "string" },
+              { "name": "body", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-navbar",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -3541,42 +3577,6 @@
               { "name": "stacked", "type": "boolean" },
               { "name": "dropdown", "type": "array" },
               { "name": "handleResize" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-note",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - **caption** - The note's caption.\n- **date** - The note's date.\n- **body** - The note's body.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "color", "value": { "type": "typeof colors[number]" } },
-            {
-              "name": "caption",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "date", "value": { "type": "string", "default": "''" } },
-            { "name": "body", "value": { "type": "string", "default": "''" } }
-          ],
-          "slots": [
-            { "name": "caption", "description": "The note's caption." },
-            { "name": "date", "description": "The note's date." },
-            { "name": "body", "description": "The note's body." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "color", "type": "typeof colors[number]" },
-              { "name": "caption", "type": "string" },
-              { "name": "date", "type": "string" },
-              { "name": "body", "type": "string" }
             ],
             "events": [
               {

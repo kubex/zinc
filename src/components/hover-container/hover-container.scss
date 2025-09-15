@@ -13,47 +13,50 @@
   display: contents;
 }
 
-.hover-container--top::part(popup) {
-  transform-origin: bottom;
-}
+.hover-container {
+  position: relative;
 
-.hover-container--bottom::part(popup) {
-  transform-origin: top;
-}
+  &--top::part(popup) {
+    transform-origin: bottom;
+  }
 
-.hover-container--left::part(popup) {
-  transform-origin: right;
-}
+  &--bottom::part(popup) {
+    transform-origin: top;
+  }
 
-.hover-container--right::part(popup) {
-  transform-origin: left;
+  &--left::part(popup) {
+    transform-origin: right;
+  }
+
+  &--right::part(popup) {
+    transform-origin: left;
+  }
+
+  &__body {
+    flex-direction: column;
+    z-index: 2;
+    background-color: var(--zn-panel-background-color);
+    border-radius: var(--zn-border-radius-large);
+    border: 1px solid rgb(var(--zn-border-color));
+    box-shadow: var(--zn-shadow-x-large);
+    width: var(--width);
+    max-width: calc(100% - var(--zn-spacing-2x-large));
+    max-height: calc(100% - var(--zn-spacing-2x-large));
+
+    ::slotted(*) {
+      flex: 1 1 auto;
+      display: block;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      color: var(--zn-color-text-default);
+      font-size: var(--zn-font-size-medium);
+      font-weight: var(--zn-font-weight-normal);
+      letter-spacing: var(--zn-tracking-normal);
+      line-height: var(--zn-line-height-dense);
+    }
+  }
 }
 
 slot[slot='anchor'] {
   cursor: pointer;
 }
-
-.hover-container__body {
-  flex-direction: column;
-  z-index: 2;
-  background-color: var(--zn-panel-background-color);
-  border-radius: var(--zn-border-radius-large);
-  border: 1px solid rgb(var(--zn-border-color));
-  box-shadow: var(--zn-shadow-x-large);
-  width: var(--width);
-  max-width: calc(100% - var(--zn-spacing-2x-large));
-  max-height: calc(100% - var(--zn-spacing-2x-large));
-
-  ::slotted(*) {
-    flex: 1 1 auto;
-    display: block;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    color: var(--zn-color-text-default);
-    font-size: var(--zn-font-size-medium);
-    font-weight: var(--zn-font-weight-normal);
-    letter-spacing: var(--zn-tracking-normal);
-    line-height: var(--zn-line-height-dense);
-  }
-}
-

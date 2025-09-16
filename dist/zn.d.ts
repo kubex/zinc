@@ -3970,9 +3970,10 @@ declare module "components/editor/modules/dialog-module/dialog-module.component"
         searchInput: ZnInput;
         commandList: HTMLElement;
         dialogModule: HTMLElement;
-        allCommands: CannedResponse[];
         commands: CannedResponse[];
         open: boolean;
+        private _allCommands;
+        set allCommands(value: CannedResponse[]);
         private closeWatcher;
         connectedCallback(): void;
         disconnectedCallback(): void;

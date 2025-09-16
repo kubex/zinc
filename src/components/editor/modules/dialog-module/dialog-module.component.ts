@@ -23,9 +23,13 @@ export default class DialogModuleComponent extends ZincElement {
 
   @query('.dialog-module') dialogModule!: HTMLElement;
 
-  @property({type: Array}) allCommands: CannedResponse[] = [];
   @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
+
+  private _allCommands: CannedResponse[] = [];
+  set allCommands(value: CannedResponse[]) {
+    this._allCommands = value;
+  }
 
   private closeWatcher: CloseWatcher | null;
 
@@ -218,10 +222,10 @@ export default class DialogModuleComponent extends ZincElement {
     const searchValue = target.value.trim().toLowerCase();
     this.isSearching = !!searchValue;
     if (!searchValue) {
-      this.commands = [...this.allCommands];
+      this.commands = [...this._allCommands];
       return;
     }
-    this.commands = this.allCommands.filter(command =>
+    this.commands = this._allCommands.filter(command =>
       this.isFuzzyMatch(command.title, searchValue) ||
       this.isFuzzyMatch(command.content, searchValue) ||
       (command.labels && command.labels.some(label => this.isFuzzyMatch(label, searchValue)))
@@ -270,7 +274,7 @@ export default class DialogModuleComponent extends ZincElement {
 
         <div class="dialog-module__footer">
           <div>
-            Showing ${visibleCommands.length} of ${this.allCommands.length} responses
+            Showing ${visibleCommands.length} of ${this._allCommands.length} responses
           </div>
           <zn-button class="dialog-module__close-button"
                      size="medium"

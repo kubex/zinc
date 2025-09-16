@@ -37,6 +37,7 @@ class DialogModule {
 
   private initDialog() {
     this._dialog = this.createDialog()!;
+    this._dialog.allCommands = this._commands;
     this._quill.container.ownerDocument.body.appendChild(this._dialog);
     this.addCommands();
   }

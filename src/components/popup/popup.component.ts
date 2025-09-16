@@ -1,10 +1,21 @@
-import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
+import {
+  arrow,
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  platform,
+  shift,
+  size
+} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';
 import {offsetParent} from 'composed-offset-position';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
+import type {
+  MiddlewareData} from '@floating-ui/dom';
 
 import styles from './popup.scss';
 
@@ -385,7 +396,7 @@ export default class ZnPopup extends ZincElement {
         getOffsetParent
       }
     }).then(({x, y, middlewareData, placement}:
-             { x: number, y: number, middlewareData: any, placement: string }) => {
+             { x: number; y: number; middlewareData: MiddlewareData; placement: string }) => {
       const staticSide = {top: 'bottom', right: 'left', bottom: 'top', left: 'right'}[placement.split('-')[0]]!;
 
       this.setAttribute('data-current-placement', placement);

@@ -4011,8 +4011,9 @@ declare module "components/editor/modules/dialog-module/dialog-module" {
         private _quill;
         private _dialog;
         private _commands;
-        constructor(quill: Quill);
-        setCommands(commands: CannedResponse[]): void;
+        constructor(quill: Quill, options: {
+            commands: CannedResponse[];
+        });
         private _open;
         private _close;
         private initDialog;
@@ -4098,17 +4099,14 @@ declare module "components/editor/modules/menu-module/menu-module" {
     import "components/editor/modules/menu-module/menu-module.component";
     import Quill from 'quill';
     import type { CannedResponse } from "components/editor/editor.component";
-    interface MenuModuleOptions {
-        cannedResponses: CannedResponse[];
-        cannedResponsesUri: string;
-    }
     export let menuOpen: boolean;
     class MenuModule {
         private _quill;
         private _menu;
-        private readonly _cannedResponsesUri;
         private _commands;
-        constructor(quill: Quill, options: MenuModuleOptions);
+        constructor(quill: Quill, options: {
+            commands: CannedResponse[];
+        });
         private initMenu;
         private attachEvents;
         private detachEvents;
@@ -4121,7 +4119,6 @@ declare module "components/editor/modules/menu-module/menu-module" {
         private createMenu;
         private addCommands;
         private triggerCommand;
-        private fetchCannedResponses;
     }
     export default MenuModule;
 }
@@ -4139,22 +4136,6 @@ declare module "components/editor/modules/time-tracking-module" {
         constructor(quill: Quill, options: TimeTrackingModuleOptions);
         private _updateOpenTime;
         private _updateStartTime;
-    }
-}
-declare module "components/editor/modules/events/zn-show-canned-response-dialog" {
-    export type ZnShowCannedResponseDialogEvent = CustomEvent<{
-        commands: {
-            title: string;
-            content: string;
-            command: string;
-            count: string;
-            labels?: string[];
-        }[];
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-show-canned-response-dialog': ZnShowCannedResponseDialogEvent;
-        }
     }
 }
 declare module "components/editor/editor.component" {
@@ -4197,18 +4178,20 @@ declare module "components/editor/editor.component" {
         cannedResponsesUri: string;
         uploadAttachmentUrl: string;
         private quillElement;
+        private _commands;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
         private _handleTextChange;
         private _updateIcons;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
         private _setupTitleAttributes;
+        private _fetchCannedResponses;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -6129,6 +6112,22 @@ declare module "components/editor/modules/events/zn-editor-update" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-editor-update': ZnEditorUpdateEvent;
+        }
+    }
+}
+declare module "components/editor/modules/events/zn-show-canned-response-dialog" {
+    export type ZnShowCannedResponseDialogEvent = CustomEvent<{
+        commands: {
+            title: string;
+            content: string;
+            command: string;
+            count: string;
+            labels?: string[];
+        }[];
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-show-canned-response-dialog': ZnShowCannedResponseDialogEvent;
         }
     }
 }

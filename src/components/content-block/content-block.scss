@@ -1,3 +1,5 @@
+@use "../../wc";
+
 :host {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -43,6 +45,12 @@ zn-navbar {
 
 zn-panel.content-block--short::part(mid) {
   display: none;
+}
+
+zn-panel.content-block--short zn-header::part(header-description) {
+  @include wc.container-query(null, ph) {
+    display: none;
+  }
 }
 
 zn-panel:not(.content-block--short) zn-header::part(header-description) {

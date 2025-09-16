@@ -10,7 +10,6 @@ import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type {ZnShowCannedResponseDialogEvent} from "./modules/events/zn-show-canned-response-dialog";
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
 
@@ -67,6 +66,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   uploadAttachmentUrl: string;
 
   private quillElement: Quill;
+  private _commands: CannedResponse[] = [];
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -93,7 +93,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.formControlController.updateValidity();
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
+  protected async firstUpdated(_changedProperties: PropertyValues) {
     this.formControlController.updateValidity();
 
     const bindings = this._getQuillKeyboardBindings();
@@ -117,6 +117,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     ];
     container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);
+
+    if (this.cannedResponsesUri) {
+      await this._fetchCannedResponses();
+    }
 
     const quill = new Quill(this.editor, {
       modules: {
@@ -153,10 +157,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
-        dialogModule: {},
+        dialogModule: {
+          commands: this._commands
+        },
         menuModule: {
-          cannedResponses: this.cannedResponses,
-          cannedResponsesUri: this.cannedResponsesUri
+          commands: this._commands
         },
         timeTrackingModule: {
           startTimeInput: startTimeInput as HTMLInputElement,
@@ -292,16 +297,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       }
     }
 
-    // Listen for 'View All' click from menu module
-    document.addEventListener('zn-show-canned-response-dialog', (e: ZnShowCannedResponseDialogEvent) => {
-      const dialog: DialogModuleComponent | null = document.querySelector('zn-dialog-module');
-      const dialogModule = this.quillElement.getModule('dialogModule') as DialogModule;
-      if (dialog && dialogModule && e.detail.commands) {
-        dialogModule.setCommands(e.detail.commands);
-        dialog.allCommands = e.detail.commands; // Need a ref of original list when searching
-      }
-    });
-
     /**
      * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM
      **/
@@ -408,6 +403,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       toolbar.querySelector('button.ql-link')?.setAttribute('title', 'Link');
       toolbar.querySelector('button.ql-image')?.setAttribute('title', 'Image');
       toolbar.querySelector('button.ql-remove-formatting')?.setAttribute('title', 'Remove Formatting');
+    }
+  }
+
+  private async _fetchCannedResponses() {
+    try {
+      const response = await fetch(this.cannedResponsesUri);
+      this._commands = await response.json() as CannedResponse[];
+    } catch (error) {
+      console.error('Error fetching canned responses', error);
     }
   }
 

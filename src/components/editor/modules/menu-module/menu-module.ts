@@ -6,25 +6,18 @@ import Quill, {Delta} from 'quill';
 import type {CannedResponse} from "../../editor.component";
 import type ZnMenuModule from './menu-module.component';
 
-interface MenuModuleOptions {
-  cannedResponses: CannedResponse[];
-  cannedResponsesUri: string;
-}
-
 export let menuOpen: boolean = false;
 
 class MenuModule {
   private _quill: Quill;
   private _menu: ZnMenuModule;
-  private readonly _cannedResponsesUri: string = '';
   private _commands: CannedResponse[] = [];
 
-  constructor(quill: Quill, options: MenuModuleOptions) {
+  constructor(quill: Quill, options: {commands: CannedResponse[]}) {
     this._quill = quill;
-    this._cannedResponsesUri = options.cannedResponsesUri?.trim() || '';
-    this._commands = options.cannedResponses || [];
+    this._commands = options.commands || [];
 
-    if (this._commands.length > 0 || this._cannedResponsesUri) {
+    if (this._commands.length > 0) {
       this.initMenu();
       this.attachEvents();
     }
@@ -50,7 +43,7 @@ class MenuModule {
     this._menu.removeEventListener('zn-show', () => setTimeout(() => this.updateMenuPosition(), 1));
   }
 
-  private onTextChange = async (_: Delta, _oldDelta: Delta, source: string) => {
+  private onTextChange = (_: Delta, _oldDelta: Delta, source: string) => {
     if (source === Quill.sources.USER) {
       // if the user has typed a forward slash, we will show the menu until they type
       // a space or a new line. The menu will contain a list of commands that the user
@@ -62,13 +55,12 @@ class MenuModule {
 
       // If the openCharacter is the first character in the editor, and menu isn't open, open it.
       if (index === 0 && char === openCharacter && !menuOpen) {
-        await this._openMenu();
+        this._openMenu();
       } else if (char === openCharacter && text.charAt(index - 2) === ' ' && !menuOpen) {
-        await this._openMenu();
+        this._openMenu();
       }
 
-      // if the user has typed a space or a new line, we will close the menu if the menu
-      // is open
+      // if the user has typed a space or a new line, we will close the menu if the menu is open
       if (menuOpen && (char === ' ' || char === '\n')) {
         this._closeMenu();
       }
@@ -131,12 +123,9 @@ class MenuModule {
     }
   }
 
-  private async _openMenu() {
+  private _openMenu() {
     menuOpen = true;
     this.attachEvents();
-    if (this._cannedResponsesUri) {
-      await this.fetchCannedResponses();
-    }
 
     if (this._commands.length > 0) {
       this._menu.show();
@@ -184,18 +173,6 @@ class MenuModule {
 
       setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent'), 0);
       this._quill.focus();
-    }
-  }
-
-  private async fetchCannedResponses() {
-    try {
-      const response = await fetch(this._cannedResponsesUri);
-      this._commands = await response.json() as CannedResponse[];
-      if (this._menu) {
-        this.addCommands();
-      }
-    } catch (error) {
-      console.error('Error fetching canned responses', error);
     }
   }
 }

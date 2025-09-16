@@ -12,18 +12,17 @@ class DialogModule {
   private _dialog: ZnDialogModule;
   private _commands: CannedResponse[] = [];
 
-  constructor(quill: Quill) {
+  constructor(quill: Quill, options: { commands: CannedResponse[] }) {
     this._quill = quill;
-    this.initDialog();
+    this._commands = options.commands || [];
 
-    document.addEventListener('zn-show-canned-response-dialog', () => {
-      this._open();
-    });
-  }
+    if (this._commands.length > 0) {
+      this.initDialog();
 
-  public setCommands(commands: CannedResponse[]) {
-    this._commands = commands;
-    this.addCommands();
+      document.addEventListener('zn-show-canned-response-dialog', () => {
+        this._open();
+      });
+    }
   }
 
   private _open() {

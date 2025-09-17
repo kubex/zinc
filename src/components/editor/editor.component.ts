@@ -114,6 +114,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       ['bold', 'italic', 'underline', 'strike'],
       ['undo', 'redo'],
       [{'list': 'ordered'}, {'list': 'bullet'}],
+      ['code-block']
     ];
     container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
     container.push(['remove-formatting']);

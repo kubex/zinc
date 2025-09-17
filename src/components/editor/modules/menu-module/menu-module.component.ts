@@ -46,7 +46,7 @@ export default class MenuModuleComponent extends ZincElement {
 
   show() {
     this.open = true;
-    this.emit('zn-show');
+    this.emit('zn-show-canned-response-menu');
     this.focus();
   }
 

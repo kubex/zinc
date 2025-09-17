@@ -33,6 +33,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'navigation', type: Array}) navigation = [];
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
+  @property({attribute: 'slim', type: Boolean, reflect: true}) slim: boolean;
+  @property({attribute: 'border', type: Boolean, reflect: true}) border: boolean;
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({type: Boolean}) stacked: boolean;
@@ -197,6 +199,8 @@ export default class ZnNavbar extends ZincElement {
       <div class="navbar__container">
         <ul class="${classMap({
           'navbar': true,
+          'navbar--slim': this.slim,
+          'navbar--border': this.border,
           'navbar--flush': this.flush
         })}">
           ${this._preItems}

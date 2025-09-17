@@ -42,7 +42,9 @@ ul.navbar {
 
   .navbar__container {
     border-bottom: none;
+    height: 100%;
   }
+
 
   ul.navbar {
     padding: 0;
@@ -66,18 +68,33 @@ ul.navbar {
         right: 0;
       }
     }
+
+    &--slim {
+      li {
+        padding: var(--zn-spacing-small);
+      }
+    }
+
   }
 }
 
 :host([stacked][slot="left"]) {
   ul.navbar {
-    padding-right: var(--zn-spacing-medium);
+    &--border {
+      border-right: 1px solid rgb(var(--zn-border-color));
+    }
+
+    //margin-right: var(--zn-spacing-medium);
   }
 }
 
 :host([stacked][slot="right"]) {
   ul.navbar {
-    padding-left: var(--zn-spacing-medium);
+    &--border {
+      border-left: 1px solid rgb(var(--zn-border-color));
+    }
+
+    //  margin-left: var(--zn-spacing-medium);
   }
 }
 

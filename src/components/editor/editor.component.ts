@@ -8,8 +8,8 @@ import ImageResizeModule from "./modules/image-resize-module/image-resize-module
 import MenuModule from "./modules/menu-module/menu-module";
 import Quill, {Range} from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
-import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
 
@@ -98,12 +98,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    Quill.register('modules/dialogModule', DialogModule as any);
-    Quill.register('modules/menuModule', MenuModule as any);
-    Quill.register('modules/attachmentModule', AttachmentModule as any);
-    Quill.register('modules/timeTrackingModule', TimeTrackingModule as any);
-    Quill.register('modules/dragAndDropModule', DragAndDropModule as any);
-    Quill.register('modules/imageResizeModule', ImageResizeModule as any);
+    Quill.register('modules/dialogModule', DialogModule as any, true);
+    Quill.register('modules/menuModule', MenuModule as any, true);
+    Quill.register('modules/attachmentModule', AttachmentModule as any, true);
+    Quill.register('modules/timeTrackingModule', TimeTrackingModule as any, true);
+    Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
+    Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
 
     this._updateIcons();
     const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');

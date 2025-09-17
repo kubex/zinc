@@ -103,20 +103,14 @@ class MenuModule {
       const cursorBounds = this._quill.getBounds(range.index);
 
       if (cursorBounds) {
-        // Position the menu to the right of the cursor
+        // Position the menu to the top-right of the inserted slash
         const maxHeight = 275;
-        const top = editorBounds.top + cursorBounds.top;
-        const left = editorBounds.left + cursorBounds.right + 10; // Add offset to the right
-        const windowHeight = window.innerHeight;
-        const hasRoom = windowHeight - top > maxHeight; // Check if there's enough room for the menu
-
-        if (hasRoom) {
-          menu.style.top = `${top}px`;
-        } else {
-          menu.style.top = `${top - maxHeight}px`;
-        }
+        const top = editorBounds.top + cursorBounds.top - maxHeight + 140; // Position above the slash
+        const left = editorBounds.left + cursorBounds.right + 10; // Right of the slash
+        const hasRoom = top > 0; // Ensure menu is not off the top of the viewport
 
         menu.style.position = 'absolute';
+        menu.style.top = hasRoom ? `${top}px` : `30px`;
         menu.style.left = `${left}px`;
         menu.style.maxHeight = `${maxHeight}px`;
       }

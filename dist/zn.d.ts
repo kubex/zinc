@@ -2768,6 +2768,8 @@ declare module "components/navbar/navbar.component" {
         navigation: never[];
         fullWidth: boolean;
         iconBar: boolean;
+        slim: boolean;
+        border: boolean;
         hideOne: boolean;
         flush: boolean;
         stacked: boolean;

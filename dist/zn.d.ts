@@ -4141,8 +4141,8 @@ declare module "components/editor/modules/time-tracking-module" {
 }
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     export interface CannedResponse {
         title: string;
         content: string;

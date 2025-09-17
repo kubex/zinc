@@ -103,7 +103,7 @@ class MenuModule {
       if (cursorBounds) {
         // Position the menu to the top-right of the inserted slash
         const maxHeight = 275;
-        const top = editorBounds.top + cursorBounds.top - maxHeight + 140; // Position above the slash
+        const top = editorBounds.top + cursorBounds.top - maxHeight + 150; // Position above the slash
         const left = editorBounds.left + cursorBounds.right + 10; // Right of the slash
         const hasRoom = top > 0; // Ensure menu is not off the top of the viewport
 

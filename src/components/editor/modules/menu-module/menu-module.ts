@@ -13,7 +13,7 @@ class MenuModule {
   private _menu: ZnMenuModule;
   private _commands: CannedResponse[] = [];
 
-  constructor(quill: Quill, options: {commands: CannedResponse[]}) {
+  constructor(quill: Quill, options: { commands: CannedResponse[] }) {
     this._quill = quill;
     this._commands = options.commands || [];
 
@@ -54,9 +54,7 @@ class MenuModule {
       const openCharacter = '/';
 
       // If the openCharacter is the first character in the editor, and menu isn't open, open it.
-      if (index === 0 && char === openCharacter && !menuOpen) {
-        this._openMenu();
-      } else if (char === openCharacter && text.charAt(index - 2) === ' ' && !menuOpen) {
+      if (char === openCharacter && !menuOpen) {
         this._openMenu();
       }
 
@@ -118,12 +116,10 @@ class MenuModule {
   }
 
   private _openMenu() {
-    menuOpen = true;
-    this.attachEvents();
-
     if (this._commands.length > 0) {
+      menuOpen = true;
+      this.attachEvents();
       this._menu.show();
-      this._menu.focus();
     }
   }
 

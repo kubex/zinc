@@ -47,7 +47,6 @@ export default class MenuModuleComponent extends ZincElement {
   show() {
     this.open = true;
     this.emit('zn-show-canned-response-menu');
-    this.focus();
   }
 
   hide() {
@@ -61,7 +60,6 @@ export default class MenuModuleComponent extends ZincElement {
     if (this.open) {
       this.addOpenListeners();
       this.menuEl.style.display = 'block';
-      setTimeout(() => this.focus(), 0);
     } else {
       this.menuEl.style.display = 'none';
       this.removeOpenListeners();

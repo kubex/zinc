@@ -6132,6 +6132,22 @@ declare module "components/editor/modules/events/zn-show-canned-response-dialog"
         }
     }
 }
+declare module "components/editor/modules/events/zn-show-canned-response-menu" {
+    export type ZnShowCannedResponseMenuEvent = CustomEvent<{
+        commands: {
+            title: string;
+            content: string;
+            command: string;
+            count: string;
+            labels?: string[];
+        }[];
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-show-canned-response-menu': ZnShowCannedResponseMenuEvent;
+        }
+    }
+}
 declare module "components/hover-container/hover-container" {
     import '../../../dist/zn.min.js';
 }

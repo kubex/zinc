@@ -10,11 +10,11 @@ import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
 import type ZnOption from "../option";
 
@@ -623,6 +623,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Update the value and display label
     if (this.multiple) {
+      this.getAllOptions().filter(el => el.multiple !== true).forEach(el => el.multiple = true);
+
       this.value = this.selectedOptions.map(el => el.value);
 
       if (this.placeholder && this.value.length === 0) {
@@ -632,6 +634,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.displayLabel = this.localize.term('numOptionsSelected', this.selectedOptions.length);
       }
     } else {
+      this.getAllOptions().filter(el => el.multiple === true).forEach(el => el.multiple = false);
       const selectedOption = this.selectedOptions[0];
       this.value = selectedOption?.value ?? '';
       this.displayLabel = selectedOption?.getTextLabel() ?? '';

@@ -34,6 +34,8 @@ export default class ZnOption extends ZincElement {
   // @ts-expect-error - Controller is currently unused
   private readonly localize = new LocalizeController(this);
 
+  public multiple = false;
+
   @query('.option__label') defaultSlot: HTMLSlotElement;
 
   @state() current = false; // the user has keyed into the option, but hasn't selected it yet (shows a highlight)
@@ -133,7 +135,8 @@ export default class ZnOption extends ZincElement {
           'option--current': this.current,
           'option--disabled': this.disabled,
           'option--selected': this.selected,
-          'option--hover': this.hasHover
+          'option--hover': this.hasHover,
+          'option--singular': !this.multiple
         })}
         @mouseenter=${this.handleMouseEnter}
         @mouseleave=${this.handleMouseLeave}>

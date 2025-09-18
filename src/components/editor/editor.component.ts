@@ -435,6 +435,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         }
         return;
       }
+      if (key === 'header' && value === undefined) {
+        value = false; // False for text normal
+      }
       const range = this.quillElement.getSelection();
       const formats: Record<string, unknown> = range ? this.quillElement.getFormat(range) : {};
       const current = formats[key];
@@ -456,7 +459,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           if (!format) return;
 
           const type = target.getAttribute('data-format-type');
-          callFormat(format, type ?? false);
+          callFormat(format, type ?? undefined);
         });
       });
     }

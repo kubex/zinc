@@ -6,14 +6,17 @@ import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import MenuModule from "./modules/menu-module/menu-module";
-import Quill, {Range} from "quill";
+import Quill from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
+import type Toolbar from "quill/modules/toolbar";
+import type ZnEditorToolbar from "./toolbar";
 
 import styles from './editor.scss';
+import ZnMenuItem from "../menu-item";
 
 export interface CannedResponse {
   title: string;
@@ -50,6 +53,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   @query('#editorHtml')
   private editorHtml: HTMLTextAreaElement;
+
+  @query('#toolbar')
+  private toolbar: ZnEditorToolbar;
 
   @property() name: string;
   @property() value: string;
@@ -110,14 +116,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
 
-    const container = [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['undo', 'redo'],
-      [{'list': 'ordered'}, {'list': 'bullet'}],
-      ['code-block']
-    ];
-    container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
-    container.push(['remove-formatting']);
+    /*    const container = [
+          ['bold', 'italic', 'underline', 'strike'],
+          ['undo', 'redo'],
+          [{'list': 'ordered'}, {'list': 'bullet'}],
+          ['code-block']
+        ];
+        container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
+        container.push(['remove-formatting']);*/
 
     if (this.cannedResponsesUri) {
       await this._fetchCannedResponses();
@@ -125,36 +131,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const quill = new Quill(this.editor, {
       modules: {
-        toolbar: {
-          container,
-          handlers: {
-            'attachment': () => null,
-            'placeholder': function (value: string) {
-              if (value) {
-                const editor: Quill | null = this.quill;
-                if (editor) {
-                  const cursorPosition = editor.getSelection()?.index;
-                  if (cursorPosition) {
-                    editor.insertText(cursorPosition, value);
-                    editor.setSelection(new Range(cursorPosition, value.length));
-                  }
-                }
-              }
-            },
-            'redo': () => this.quillElement.history.redo(),
-            'undo': () => this.quillElement.history.undo(),
-            'remove-formatting': () => {
-              const range = this.quillElement.getSelection();
-              if (range) {
-                this.quillElement.formatText(range.index, range.length, 'bold', false);
-                this.quillElement.formatText(range.index, range.length, 'italic', false);
-                this.quillElement.formatText(range.index, range.length, 'underline', false);
-                this.quillElement.formatText(range.index, range.length, 'strike', false);
-              }
-
-            }
-          }
-        },
+        toolbar: this.toolbar,
         keyboard: {
           bindings: bindings
         },
@@ -202,6 +179,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
+    this._attachToolbarHandlers(quill);
     this._supplyPlaceholderDialog();
 
     // @ts-expect-error getSelection is available it lies.
@@ -305,11 +283,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
-
-    this._setupTitleAttributes(quill);
+    quill.on('selection-change', () => this._syncToolbarState());
 
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
+    // Sync initial toolbar state with current selection/formats
+    this._syncToolbarState();
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
@@ -319,6 +298,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.value = this.quillElement.root.innerHTML;
     this.editorHtml.value = this.value;
     this.emit('zn-change');
+    // Keep toolbar state in sync after text changes
+    this._syncToolbarState();
   }
 
   private _updateIcons() {
@@ -389,21 +370,114 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 
-  private _setupTitleAttributes(quill: Quill) {
-    const toolbar = quill.container.previousSibling as HTMLElement;
-    if (toolbar) {
-      toolbar.querySelector('button.ql-bold')?.setAttribute('title', 'Bold');
-      toolbar.querySelector('button.ql-italic')?.setAttribute('title', 'Italic');
-      toolbar.querySelector('button.ql-underline')?.setAttribute('title', 'Underline');
-      toolbar.querySelector('button.ql-strike')?.setAttribute('title', 'Strikethrough');
-      toolbar.querySelector('button.ql-undo')?.setAttribute('title', 'Undo');
-      toolbar.querySelector('button.ql-redo')?.setAttribute('title', 'Redo');
-      toolbar.querySelector('button.ql-redo')?.setAttribute('title', 'Redo');
-      toolbar.querySelector('button.ql-list[value="ordered"]')?.setAttribute('title', 'Ordered List');
-      toolbar.querySelector('button.ql-list[value="bullet"]')?.setAttribute('title', 'Bullet List');
-      toolbar.querySelector('button.ql-link')?.setAttribute('title', 'Link');
-      toolbar.querySelector('button.ql-image')?.setAttribute('title', 'Image');
-      toolbar.querySelector('button.ql-remove-formatting')?.setAttribute('title', 'Remove Formatting');
+  private _syncToolbarState() {
+    if (!this.quillElement) return;
+    const range = this.quillElement.getSelection();
+    if (!range) return;
+
+    const formats: Record<string, any> = this.quillElement.getFormat(range);
+    if (!formats) return;
+
+    this._syncButtonState('format_bold', !!formats.bold);
+    this._syncButtonState('format_italic', !!formats.italic);
+    this._syncButtonState('format_underlined', !!formats.underline);
+
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+
+    // Header menu items
+    const headerItems = toolbarShadowRoot?.querySelectorAll('zn-dropdown.header__dropdown zn-menu zn-menu-item[data-format]') as NodeListOf<HTMLElement> | undefined;
+    if (headerItems?.length) {
+      headerItems.forEach((item: ZnMenuItem) => (item.checked = false));
+      const currentHeader = formats.header as string | null;
+      const wanted = currentHeader ? String(currentHeader) : null;
+      const match = Array.from(headerItems).find(i => i.getAttribute('data-format-type') === wanted) as ZnMenuItem | undefined;
+      if (match) {
+        match.checked = true;
+      }
+    }
+
+    // List menu items
+    const listItems = toolbarShadowRoot?.querySelectorAll('zn-dropdown.list__dropdown zn-menu zn-menu-item[data-format]') as NodeListOf<HTMLElement> | undefined;
+    if (listItems?.length) {
+      listItems.forEach((item: ZnMenuItem) => (item.checked = false));
+      let listValue: string | null = null;
+      if (formats.list === 'ordered') listValue = 'ordered';
+      else if (formats.list === 'bullet') listValue = 'bullet';
+      else if (formats.list === 'checked' || formats.list === 'unchecked') listValue = 'check';
+      if (listValue) {
+        const match = Array.from(listItems).find(i => i.getAttribute('data-format-type') === listValue) as ZnMenuItem | undefined;
+        if (match) {
+          match.checked = true;
+        }
+      }
+    }
+
+    // Format dropdown (strike)
+    const formatItems = toolbarShadowRoot?.querySelectorAll('zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]') as NodeListOf<HTMLElement> | undefined;
+    if (formatItems?.length) {
+      formatItems.forEach((item: ZnMenuItem) => (item.checked = false));
+      if (formats.strike) {
+        const strikeItem = Array.from(formatItems).find(i => i.getAttribute('data-format') === 'strike') as ZnMenuItem | undefined;
+        if (strikeItem) {
+          strikeItem.checked = true;
+        }
+      }
+    }
+  }
+
+  private _attachToolbarHandlers(quill: Quill) {
+    const toolbarModule = quill.getModule('toolbar') as Toolbar | undefined;
+    if (!toolbarModule) return;
+
+    const callFormat = (key: string, value?: any) => {
+      const handler = (toolbarModule.handlers?.[key] as ((value?: any) => void) | undefined);
+      if (typeof handler === 'function') {
+        handler.call(toolbarModule, value);
+        return;
+      }
+      if (key === 'clean') {
+        const range = this.quillElement.getSelection();
+        if (range) {
+          this.quillElement.removeFormat(range.index, range.length || 0);
+        } else {
+          this.quillElement.removeFormat(0, this.quillElement.getLength());
+        }
+        return;
+      }
+      const range = this.quillElement.getSelection();
+      const formats: Record<string, unknown> = range ? this.quillElement.getFormat(range) : {};
+      const current = formats[key];
+      const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+      this.quillElement.format(key, next);
+    };
+
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+
+    const formatters = toolbarShadowRoot?.querySelectorAll('[data-format]') ?? [];
+    if (formatters) {
+      formatters.forEach((formatter: Element) => {
+        formatter.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = e.target as HTMLElement;
+          if (!target) return;
+
+          const format = target.getAttribute('data-format');
+          if (!format) return;
+
+          const type = target.getAttribute('data-format-type');
+          callFormat(format, type ?? undefined);
+        });
+      });
+    }
+  }
+
+  private _syncButtonState(icon: string, active: boolean) {
+    const el = this.toolbar.shadowRoot?.querySelector(`zn-button[icon="${icon}"]`) as HTMLElement | null;
+    if (!el) return;
+    if (active) {
+      el.setAttribute('icon-color', 'primary');
+    } else {
+      el.removeAttribute('icon-color');
     }
   }
 
@@ -418,6 +492,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   render() {
     return html`
+      <zn-editor-toolbar id="toolbar"></zn-editor-toolbar>
       <div id="editor"></div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">

@@ -50,6 +50,8 @@ export default class ZnMenuItem extends ZincElement {
   /** Draws the item in a checked state. */
   @property({type: Boolean, reflect: true}) checked = false;
 
+  @property({attribute: 'checked-position', reflect: true}) checkedPosition: 'left' | 'right' = 'left';
+
   /** A unique value to store in the menu item. This can be used as a way to identify menu items when selected. */
   @property() value = '';
 
@@ -207,15 +209,21 @@ export default class ZnMenuItem extends ZincElement {
         })}
         ?aria-haspopup="${this.isSubmenu()}"
         ?aria-expanded="${isSubmenuExpanded}">
-        <span part="checked-icon" class="menu-item__check">
-          <zn-icon src="check_small" aria-hidden="true"></zn-icon>
-        </span>
+        ${this.checkedPosition === 'left' ? html`
+          <span part="checked-icon" class="menu-item__check">
+            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+          </span>` : ''}
 
         <slot name="prefix" part="prefix" class="menu-item__prefix"></slot>
 
         <slot part="label" class="menu-item__label" @slotchange=${this.handleDefaultSlotChange}></slot>
 
         <slot name="suffix" part="suffix" class="menu-item__suffix"></slot>
+
+        ${this.checkedPosition === 'right' ? html`
+          <span part="checked-icon" class="menu-item__check">
+            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+          </span>` : ''}
 
         <span part="submenu-icon" class="menu-item__chevron">
           <zn-icon src=${isRtl ? 'chevron_left' : 'chevron_right'} aria-hidden="true"></zn-icon>

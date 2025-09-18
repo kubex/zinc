@@ -4371,6 +4371,7 @@ declare module "components/textarea/textarea.component" {
         inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
         /** The default value of the form control. Primarily used for resetting the form control. */
         defaultValue: string;
+        transparent: boolean;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */

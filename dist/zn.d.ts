@@ -1695,6 +1695,7 @@ declare module "components/option/option.component" {
         };
         private cachedTextLabel;
         private readonly localize;
+        multiple: boolean;
         defaultSlot: HTMLSlotElement;
         current: boolean;
         selected: boolean;
@@ -1732,11 +1733,11 @@ declare module "components/option/index" {
 declare module "components/select/select.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.

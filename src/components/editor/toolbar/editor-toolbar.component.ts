@@ -50,6 +50,7 @@ export default class ZnEditorToolbar extends ZincElement {
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
+                        data-format-type=""
                         selected
                         @click="${this._handleOptionClicked}">
             <zn-icon src="text_format" size="18" slot="prefix"></zn-icon>
@@ -122,7 +123,7 @@ export default class ZnEditorToolbar extends ZincElement {
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="list"
-                        data-format-type="check"
+                        data-format-type="checked"
                         data-text="Checked List">
             <zn-icon src="checklist" size="18" slot="prefix"></zn-icon>
             Checked

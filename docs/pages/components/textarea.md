@@ -28,7 +28,7 @@ Add descriptive help text to a textarea with the `help-text` attribute. For help
 `help-text` slot instead.
 
 ```html:preview
-<zn-textarea label="Month in review" help-text="Tell us the highlights. Be sure to include details about any financial performance anomalies."> </zn-textarea>
+<zn-textarea transparent label="Month in review" help-text="Tell us the highlights. Be sure to include details about any financial performance anomalies."> </zn-textarea>
 <br />
 <zn-textarea label="Month in review">
   <div slot="help-text">Tell us the highlights. Be sure to include details about any financial performance <strong>anomalies</strong>.</div>

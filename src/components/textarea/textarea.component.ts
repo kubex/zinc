@@ -141,6 +141,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue() defaultValue = '';
 
+  @property({type: Boolean}) transparent = false;
 
   /** Gets the validity state object */
   get validity() {
@@ -373,7 +374,8 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
               'textarea--empty': !this.value,
               'textarea--resize-none': this.resize === 'none',
               'textarea--resize-vertical': this.resize === 'vertical',
-              'textarea--resize-auto': this.resize === 'auto'
+              'textarea--resize-auto': this.resize === 'auto',
+              'textarea--transparent': this.transparent
             })}>
             <textarea
               part="textarea"

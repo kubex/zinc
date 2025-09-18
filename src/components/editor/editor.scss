@@ -127,3 +127,18 @@
 .ql-code-block {
   font-size: 90%;
 }
+
+.ql-snow .ql-picker.ql-list .ql-picker-label::before, .ql-snow .ql-picker.ql-list .ql-picker-item::before {
+  content: "No List";
+}
+
+
+/* Editor toolbar custom active states */
+:host #toolbar zn-button.ql-active .button {
+  background-color: rgba(var(--zn-primary), 0.2);
+}
+
+:host #toolbar zn-dropdown zn-menu zn-menu-item[checked] .menu-item {
+  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+  color: rgb(var(--zn-primary));
+}

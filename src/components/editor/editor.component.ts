@@ -406,7 +406,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       });
     }
 
-    trigger.textContent = label;
+    const labelEl = trigger.querySelector('.header__dropdown-label') as HTMLElement | null;
+    if (labelEl) {
+      labelEl.textContent = label;
+    } else {
+      trigger.innerHTML = `<span class="header__dropdown-label" data-role="label">${label}</span><zn-icon class="header__dropdown-arrow" src="arrow_drop_down" size="18"></zn-icon>`;
+    }
   }
 
   private _updateDropdownTriggerIcon(dropdownSelector: string, defaultIconSrc: string) {

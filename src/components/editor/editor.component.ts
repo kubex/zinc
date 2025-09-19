@@ -14,9 +14,9 @@ import type DialogModuleComponent from "./modules/dialog-module/dialog-module.co
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
 import type Toolbar from "quill/modules/toolbar";
 import type ZnEditorToolbar from "./toolbar";
+import type ZnMenuItem from "../menu-item";
 
 import styles from './editor.scss';
-import ZnMenuItem from "../menu-item";
 
 export interface CannedResponse {
   title: string;
@@ -412,8 +412,20 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _updateTextFormatMenu(formats: Record<string, any>) {
-    const strikeWanted = formats.strike ? 'strike' : null;
-    this._updateMenuCheckedState('zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]', 'data-format', strikeWanted);
+    const selector = 'zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]';
+    const attr = 'data-format';
+    const formatsToCheck = [
+      {
+        value: formats.strike ? 'strike' : null
+      },
+      {
+        value: Object.prototype.hasOwnProperty.call(formats, 'code-block') ? 'code-block' : null
+      }
+    ];
+
+    formatsToCheck.forEach(({value}) => {
+      this._updateMenuCheckedState(selector, attr, value);
+    });
   }
 
   private _attachToolbarHandlers(quill: Quill) {

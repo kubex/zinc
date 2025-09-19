@@ -443,12 +443,23 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _updateTextFormatMenu(formats: Record<string, any>) {
     const selector = 'zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]';
     const attr = 'data-format';
-
-    const wanted: string[] = [];
-    if (formats.strike) wanted.push('strike');
-    if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) wanted.push('code-block');
+    const wanted = this._getTextFormats(formats);
 
     this._updateMenuCheckedState(selector, attr, wanted);
+  }
+
+  private _getTextFormats(formats: Record<string, any>) {
+    const wanted: string[] = [];
+    if (formats.strike) {
+      wanted.push('strike');
+    }
+    if (formats.blockquote) {
+      wanted.push('blockquote');
+    }
+    if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) {
+      wanted.push('code-block');
+    }
+    return wanted;
   }
 
   private _attachToolbarHandlers(quill: Quill) {

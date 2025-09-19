@@ -75,7 +75,7 @@ export default class ZnEditorToolbar extends ZincElement {
                      icon="arrow_drop_down"
                      icon-size="18"
                      icon-position="right">
-            Formatting
+            <zn-icon src="text_format" size="18"></zn-icon>
           </zn-button>
           <zn-menu selected-label-trigger>
             <zn-menu-item type="checkbox" checked-position="right" data-format="strike">

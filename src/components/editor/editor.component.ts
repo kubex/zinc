@@ -409,6 +409,33 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     trigger.textContent = label;
   }
 
+  private _updateDropdownTriggerIcon(dropdownSelector: string, defaultIconSrc: string) {
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+    const dropdown = toolbarShadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
+    if (!dropdown) return;
+
+    const trigger = dropdown.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
+    if (!trigger) return;
+
+    const menu = dropdown.querySelector('zn-menu');
+    const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
+
+    let iconSrc = defaultIconSrc;
+    let iconColor = 'default';
+    if (items?.length) {
+      items.forEach((item: ZnMenuItem) => {
+        const checked = item.checked ?? (item.hasAttribute('checked'));
+        if (checked) {
+          const icon = item.querySelector('zn-icon')!;
+          iconSrc = icon?.getAttribute('src') ?? iconSrc;
+          iconColor = 'primary';
+        }
+      });
+    }
+
+    trigger.innerHTML = `<zn-icon src="${iconSrc}" color="${iconColor}" size="18"></zn-icon>`;
+  }
+
   private _syncToolbarState() {
     if (!this.quillElement) return;
     const range = this.quillElement.getSelection();
@@ -426,7 +453,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateTextFormatMenu(formats);
 
     this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal Text');
-    this._updateDropdownTriggerLabel('zn-dropdown.list__dropdown', 'Lists');
+    this._updateDropdownTriggerIcon('zn-dropdown.list__dropdown', 'lists');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {

@@ -154,11 +154,11 @@ export default class ZnEditorToolbar extends ZincElement {
             Link
           </zn-menu-item>
           <zn-menu-item checked-position="right" data-format="image">
-            <zn-icon src="add_photo_alternate" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="image" size="18" slot="prefix"></zn-icon>
             Image
           </zn-menu-item>
           <zn-menu-item checked-position="right" data-format="video">
-            <zn-icon src="video_camera_back_add" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="video_camera_back" size="18" slot="prefix"></zn-icon>
             Video
           </zn-menu-item>
         </zn-menu>

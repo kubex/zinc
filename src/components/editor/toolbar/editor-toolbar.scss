@@ -1,5 +1,38 @@
+.common-format {
+  max-width: 34px;
+  max-height: 34px;
+
+  /* Move underline icon down a bit */
+  &[icon="format_underlined"]::part(base) {
+    margin-top: 2px;
+  }
+}
+
 .format__dropdown-trigger,
 .list__dropdown-trigger,
 .file__dropdown-trigger {
   max-width: 50px;
+}
+
+/* Stop header arrow from moving */
+.header__dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 140px;
+  flex: 0 0 140px;
+  box-sizing: border-box;
+}
+
+.header__dropdown-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.header__dropdown-arrow {
+  flex: 0 0 auto;
 }

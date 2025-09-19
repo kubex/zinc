@@ -25,11 +25,9 @@ export default class ZnEditorToolbar extends ZincElement {
       <zn-dropdown class="header__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
                    class="header__dropdown-trigger"
-                   color="transparent"
-                   icon="arrow_drop_down"
-                   icon-size="18"
-                   icon-position="right">
-          Normal Text
+                   color="transparent">
+          <span class="header__dropdown-label" data-role="label">Normal Text</span>
+          <zn-icon class="header__dropdown-arrow" src="arrow_drop_down" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
           <zn-menu-item type="checkbox"
@@ -60,9 +58,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _formatOptions() {
     return html`
-      <zn-button color="transparent" icon="format_bold" icon-size="18" data-format="bold"></zn-button>
-      <zn-button color="transparent" icon="format_italic" icon-size="18" data-format="italic"></zn-button>
-      <zn-button color="transparent" icon="format_underlined" icon-size="18" data-format="underline"></zn-button>
+      <zn-button class="common-format" color="transparent" icon="format_bold" icon-size="18" data-format="bold"></zn-button>
+      <zn-button class="common-format" color="transparent" icon="format_italic" icon-size="18" data-format="italic"></zn-button>
+      <zn-button class="common-format" color="transparent" icon="format_underlined" icon-size="18" data-format="underline"></zn-button>
 
       <zn-dropdown class="format__dropdown" placement="bottom-end">
         <zn-button slot="trigger"

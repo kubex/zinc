@@ -1,10 +1,14 @@
-import {html} from "lit";
+import {type CSSResultGroup, html, unsafeCSS} from "lit";
 import {litToHTML} from "../../../utilities/lit-to-html";
 import ZincElement from "../../../internal/zinc-element";
 import type Quill from "quill";
 import type ZnDropdown from "../../dropdown";
 
+import styles from './editor-toolbar.scss';
+
 export default class ZnEditorToolbar extends ZincElement {
+  static styles: CSSResultGroup = unsafeCSS(styles);
+
   public quill: Quill;
 
   render() {
@@ -31,7 +35,7 @@ export default class ZnEditorToolbar extends ZincElement {
                    icon-position="right">
           Normal Text
         </zn-button>
-        <zn-menu selected-label-trigger>
+        <zn-menu>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
@@ -76,9 +80,9 @@ export default class ZnEditorToolbar extends ZincElement {
                      icon="arrow_drop_down"
                      icon-size="18"
                      icon-position="right">
-            <zn-icon src="text_format" size="18"></zn-icon>
+              <zn-icon src="format_color_text" size="18"></zn-icon>
           </zn-button>
-          <zn-menu selected-label-trigger>
+          <zn-menu>
             <zn-menu-item type="checkbox" checked-position="right" data-format="strike">
               <zn-icon src="format_strikethrough" size="18" slot="prefix"></zn-icon>
               Strikethrough
@@ -108,7 +112,7 @@ export default class ZnEditorToolbar extends ZincElement {
                    icon-position="right">
           Lists
         </zn-button>
-        <zn-menu selected-label-trigger>
+        <zn-menu>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="list"

@@ -2670,7 +2670,15 @@
               "value": { "type": "boolean", "default": "false" }
             },
             { "name": "library", "value": { "type": "IconLibrary" } },
-            { "name": "color", "value": { "type": "IconColor" } }
+            { "name": "color", "value": { "type": "IconColor" } },
+            {
+              "name": "padded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "squared",
+              "value": { "type": "boolean", "default": "false" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -2687,6 +2695,8 @@
               { "name": "round", "type": "boolean" },
               { "name": "library", "type": "IconLibrary" },
               { "name": "color", "type": "IconColor" },
+              { "name": "padded", "type": "boolean" },
+              { "name": "squared", "type": "boolean" },
               { "name": "gravatarOptions", "type": "string" },
               { "name": "defaultLibrary", "type": "IconLibrary" }
             ],
@@ -3524,6 +3534,7 @@
               "name": "dropdown",
               "value": { "type": "array", "default": "[]" }
             },
+            { "name": "no-pad", "value": { "type": "false" } },
             { "name": "_appended", "value": { "type": "Element[]" } }
           ],
           "slots": [
@@ -3544,6 +3555,7 @@
               { "name": "flush", "type": "boolean" },
               { "name": "stacked", "type": "boolean" },
               { "name": "dropdown", "type": "array" },
+              { "name": "noPad", "type": "false" },
               { "name": "handleResize" }
             ],
             "events": [

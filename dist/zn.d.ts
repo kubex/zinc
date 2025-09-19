@@ -502,6 +502,8 @@ declare module "components/icon/icon.component" {
         round: boolean;
         library: IconLibrary;
         color: IconColor;
+        padded: boolean;
+        squared: boolean;
         gravatarOptions: string;
         defaultLibrary: IconLibrary;
         convertToLibrary(input: string): IconLibrary;
@@ -2775,6 +2777,7 @@ declare module "components/navbar/navbar.component" {
         flush: boolean;
         stacked: boolean;
         dropdown: never[];
+        noPad: false;
         private _preItems;
         private _postItems;
         private _appended;

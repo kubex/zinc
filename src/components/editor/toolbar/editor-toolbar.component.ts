@@ -1,8 +1,6 @@
 import {type CSSResultGroup, html, unsafeCSS} from "lit";
-import {litToHTML} from "../../../utilities/lit-to-html";
 import ZincElement from "../../../internal/zinc-element";
 import type Quill from "quill";
-import type ZnDropdown from "../../dropdown";
 
 import styles from './editor-toolbar.scss';
 
@@ -23,7 +21,7 @@ export default class ZnEditorToolbar extends ZincElement {
   }
 
   private _textOptions() {
-    const textOptions = html`
+    return html`
       <zn-dropdown class="header__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
                    class="header__dropdown-trigger"
@@ -57,51 +55,47 @@ export default class ZnEditorToolbar extends ZincElement {
             Normal Text
           </zn-menu-item>
         </zn-menu>
-      </zn-dropdown>`
-    return litToHTML<ZnDropdown>(textOptions);
+      </zn-dropdown>`;
   }
 
   private _formatOptions() {
-    const formatOptions = html`
-      <span>
-        <zn-button color="transparent" icon="format_bold" icon-size="18" data-format="bold"></zn-button>
-        <zn-button color="transparent" icon="format_italic" icon-size="18" data-format="italic"></zn-button>
-        <zn-button color="transparent" icon="format_underlined" icon-size="18" data-format="underline"></zn-button>
+    return html`
+      <zn-button color="transparent" icon="format_bold" icon-size="18" data-format="bold"></zn-button>
+      <zn-button color="transparent" icon="format_italic" icon-size="18" data-format="italic"></zn-button>
+      <zn-button color="transparent" icon="format_underlined" icon-size="18" data-format="underline"></zn-button>
 
-        <zn-dropdown class="format__dropdown" placement="bottom-end">
-          <zn-button slot="trigger"
-                     class="format__dropdown-trigger"
-                     color="transparent"
-                     icon="arrow_drop_down"
-                     icon-size="18"
-                     icon-position="right">
-              <zn-icon src="format_color_text" size="18"></zn-icon>
-          </zn-button>
-          <zn-menu>
-            <zn-menu-item type="checkbox" checked-position="right" data-format="strike">
-              <zn-icon src="format_strikethrough" size="18" slot="prefix"></zn-icon>
-              Strikethrough
-            </zn-menu-item>
-            <zn-menu-item type="checkbox" checked-position="right" data-format="blockquote">
-              <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
-              Quote
-            </zn-menu-item>
-            <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
-              <zn-icon src="code" size="18" slot="prefix"></zn-icon>
-              Code Block
-            </zn-menu-item>
-            <zn-menu-item data-format="clean">
-              <zn-icon src="format_clear" size="18" slot="prefix"></zn-icon>
-              Clear Formatting
-            </zn-menu-item>
-          </zn-menu>
-        </zn-dropdown>
-      </span>`
-    return litToHTML<HTMLSpanElement>(formatOptions);
+      <zn-dropdown class="format__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   class="format__dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          <zn-icon src="format_color_text" size="18"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" checked-position="right" data-format="strike">
+            <zn-icon src="format_strikethrough" size="18" slot="prefix"></zn-icon>
+            Strikethrough
+          </zn-menu-item>
+          <zn-menu-item type="checkbox" checked-position="right" data-format="blockquote">
+            <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
+            Quote
+          </zn-menu-item>
+          <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
+            <zn-icon src="code" size="18" slot="prefix"></zn-icon>
+            Code Block
+          </zn-menu-item>
+          <zn-menu-item data-format="clean">
+            <zn-icon src="format_clear" size="18" slot="prefix"></zn-icon>
+            Clear Formatting
+          </zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>`;
   }
 
   private _listOptions() {
-    const listOptions = html`
+    return html`
       <zn-dropdown class="list__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
                    class="list__dropdown-trigger"
@@ -140,12 +134,11 @@ export default class ZnEditorToolbar extends ZincElement {
             Checked
           </zn-menu-item>
         </zn-menu>
-      </zn-dropdown>`
-    return litToHTML<ZnDropdown>(listOptions);
+      </zn-dropdown>`;
   }
 
   private _fileOptions() {
-    const fileOptions = html`
+    return html`
       <zn-dropdown class="file__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
                    class="file__dropdown-trigger"
@@ -169,7 +162,6 @@ export default class ZnEditorToolbar extends ZincElement {
             Video
           </zn-menu-item>
         </zn-menu>
-      </zn-dropdown>`
-    return litToHTML<ZnDropdown>(fileOptions);
+      </zn-dropdown>`;
   }
 }

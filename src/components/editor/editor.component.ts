@@ -284,6 +284,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
     quill.on('selection-change', () => this._syncToolbarState());
+    // Ensure toolbar reflects current formats when the editor is clicked
+    quill.root.addEventListener('click', () => this._syncToolbarState());
 
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
@@ -383,6 +385,30 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     });
   }
 
+  private _updateDropdownTriggerLabel(dropdownSelector: string, defaultLabel: string) {
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+    const dropdown = toolbarShadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
+    if (!dropdown) return;
+
+    const trigger = dropdown.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
+    if (!trigger) return;
+
+    const menu = dropdown.querySelector('zn-menu');
+    const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
+
+    let label = defaultLabel;
+    if (items?.length) {
+      items.forEach((item: ZnMenuItem) => {
+        const checked = item.checked ?? (item.hasAttribute('checked'));
+        if (checked) {
+          label = item.getAttribute('data-text') ?? item.textContent?.trim() ?? defaultLabel;
+        }
+      });
+    }
+
+    trigger.textContent = label;
+  }
+
   private _syncToolbarState() {
     if (!this.quillElement) return;
     const range = this.quillElement.getSelection();
@@ -398,6 +424,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);
     this._updateTextFormatMenu(formats);
+
+    this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal Text');
+    this._updateDropdownTriggerLabel('zn-dropdown.list__dropdown', 'Lists');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {
@@ -458,7 +487,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       formatters.forEach((formatter: Element) => {
         formatter.addEventListener('click', (e) => {
           e.preventDefault();
-          const target = e.target as HTMLElement;
+          const target = e.currentTarget as HTMLElement | null;
           if (!target) return;
 
           const format = target.getAttribute('data-format');

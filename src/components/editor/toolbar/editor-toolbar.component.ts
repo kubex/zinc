@@ -112,7 +112,8 @@ export default class ZnEditorToolbar extends ZincElement {
                         checked-position="right"
                         data-format="list"
                         data-format-type="bullet"
-                        data-list="Bulleted List">
+                        data-text="Bulleted List"
+                        @click="${this._handleOptionClicked}">
             <zn-icon src="format_list_bulleted" size="18" slot="prefix"></zn-icon>
             Bulleted
           </zn-menu-item>
@@ -120,7 +121,8 @@ export default class ZnEditorToolbar extends ZincElement {
                         checked-position="right"
                         data-format="list"
                         data-format-type="ordered"
-                        data-text="Numbered List">
+                        data-text="Numbered List"
+                        @click="${this._handleOptionClicked}">
             <zn-icon src="format_list_numbered" size="18" slot="prefix"></zn-icon>
             Numbered
           </zn-menu-item>
@@ -128,7 +130,8 @@ export default class ZnEditorToolbar extends ZincElement {
                         checked-position="right"
                         data-format="list"
                         data-format-type="checked"
-                        data-text="Checked List">
+                        data-text="Checked List"
+                        @click="${this._handleOptionClicked}">
             <zn-icon src="checklist" size="18" slot="prefix"></zn-icon>
             Checked
           </zn-menu-item>
@@ -138,9 +141,7 @@ export default class ZnEditorToolbar extends ZincElement {
   }
 
   private _handleOptionClicked = (e: Event) => {
-    const menuItem = e.target as HTMLElement;
-
-    if (menuItem.tagName !== 'ZN-MENU-ITEM') return;
+    const menuItem = e.currentTarget as HTMLElement;
 
     const label = menuItem.getAttribute('data-text') ?? menuItem.textContent?.trim();
 

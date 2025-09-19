@@ -370,17 +370,17 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 
-  private _updateMenuCheckedState(selector: string, matchAttr: string, wanted: string | null) {
+  private _updateMenuCheckedState(selector: string, matchAttr: string, wanted: string | string[] | null) {
     const toolbarShadowRoot = this.toolbar.shadowRoot;
-    const items = toolbarShadowRoot?.querySelectorAll(selector) as NodeListOf<HTMLElement> | undefined;
+    const items = toolbarShadowRoot?.querySelectorAll(selector) as NodeListOf<ZnMenuItem> | undefined;
     if (!items?.length) return;
 
-    items.forEach((item: ZnMenuItem) => (item.checked = false));
+    const wantedValues: string[] = wanted === null ? [] : Array.isArray(wanted) ? wanted : [wanted];
 
-    const match = Array.from(items).find(i => i.getAttribute(matchAttr) === wanted) as ZnMenuItem | undefined;
-    if (match) {
-      match.checked = true;
-    }
+    items.forEach((item: ZnMenuItem) => {
+      const value = item.getAttribute(matchAttr) ?? '';
+      item.checked = wantedValues.includes(value);
+    });
   }
 
   private _syncToolbarState() {
@@ -414,18 +414,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _updateTextFormatMenu(formats: Record<string, any>) {
     const selector = 'zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]';
     const attr = 'data-format';
-    const formatsToCheck = [
-      {
-        value: formats.strike ? 'strike' : null
-      },
-      {
-        value: Object.prototype.hasOwnProperty.call(formats, 'code-block') ? 'code-block' : null
-      }
-    ];
 
-    formatsToCheck.forEach(({value}) => {
-      this._updateMenuCheckedState(selector, attr, value);
-    });
+    const wanted: string[] = [];
+    if (formats.strike) wanted.push('strike');
+    if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) wanted.push('code-block');
+
+    this._updateMenuCheckedState(selector, attr, wanted);
   }
 
   private _attachToolbarHandlers(quill: Quill) {

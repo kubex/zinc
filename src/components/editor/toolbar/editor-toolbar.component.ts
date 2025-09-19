@@ -26,7 +26,7 @@ export default class ZnEditorToolbar extends ZincElement {
         <zn-button slot="trigger"
                    class="header__dropdown-trigger"
                    color="transparent">
-          <span class="header__dropdown-label" data-role="label">Normal Text</span>
+          <span class="header__dropdown-label" data-role="label">Normal</span>
           <zn-icon class="header__dropdown-arrow" src="arrow_drop_down" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
@@ -50,7 +50,7 @@ export default class ZnEditorToolbar extends ZincElement {
                         data-format-type=""
                         selected>
             <zn-icon src="text_format" size="18" slot="prefix"></zn-icon>
-            Normal Text
+            Normal
           </zn-menu-item>
         </zn-menu>
       </zn-dropdown>`;

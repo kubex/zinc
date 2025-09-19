@@ -13,8 +13,9 @@ export default class ZnEditorToolbar extends ZincElement {
     return html`
       <div>
         ${this._textOptions()}
-        ${this._formatOptions()}
         ${this._listOptions()}
+        ${this._fileOptions()}
+        ${this._formatOptions()}
       </div>
     `;
   }
@@ -138,6 +139,35 @@ export default class ZnEditorToolbar extends ZincElement {
         </zn-menu>
       </zn-dropdown>`
     return litToHTML<ZnDropdown>(listOptions);
+  }
+
+  private _fileOptions() {
+    const fileOptions = html`
+      <zn-dropdown class="list__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   class="list__dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          Insert
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item checked-position="right" data-format="link">
+            <zn-icon src="link" size="18" slot="prefix"></zn-icon>
+            Link
+          </zn-menu-item>
+          <zn-menu-item checked-position="right" data-format="image">
+            <zn-icon src="add_photo_alternate" size="18" slot="prefix"></zn-icon>
+            Image
+          </zn-menu-item>
+          <zn-menu-item checked-position="right" data-format="video">
+            <zn-icon src="video_camera_back_add" size="18" slot="prefix"></zn-icon>
+            Video
+          </zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>`
+    return litToHTML<ZnDropdown>(fileOptions);
   }
 
   private _handleOptionClicked = (e: Event) => {

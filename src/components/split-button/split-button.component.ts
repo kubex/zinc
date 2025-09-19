@@ -87,7 +87,7 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
 
   render() {
     return html`
-      <zn-dropdown placement="bottom-start">
+      <zn-dropdown placement="bottom-end">
         <div slot="trigger">
           <zn-button-group>
             <zn-button id="trigger-btn"

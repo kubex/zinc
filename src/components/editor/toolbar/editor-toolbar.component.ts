@@ -87,6 +87,10 @@ export default class ZnEditorToolbar extends ZincElement {
               <zn-icon src="format_strikethrough" size="18" slot="prefix"></zn-icon>
               Strikethrough
             </zn-menu-item>
+            <zn-menu-item type="checkbox" checked-position="right" data-format="blockquote">
+              <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
+              Quote
+            </zn-menu-item>
             <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
               <zn-icon src="code" size="18" slot="prefix"></zn-icon>
               Code Block

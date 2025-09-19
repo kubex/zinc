@@ -27,12 +27,34 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
 const DEFAULT_TOTAL_PAGES = 10;
 
-interface TableData {
-  page: number;
+interface Cell {
+  text: string;
+  heading?: string;
+  color?: string;
+  style?: string;
+  icon: IconConfig;
+  chip?: string;
+  hover?: HoverConfig;
+  gaid?: string;
+  sortValue?: string;
+  uri?: string;
+  target?: string;
+}
+
+interface Row {
+  id: string;
+  uri?: string;
+  target?: string;
+  actions?: ButtonConfig[];
+  cells: Cell[];
+}
+
+interface Response {
+  data: Row[];
   per_page: number;
   total: number;
+  page: number;
   total_pages: number;
-  data: any[];
 }
 
 export enum ActionSlots {
@@ -43,45 +65,17 @@ export enum ActionSlots {
   sort = 'sort',
 }
 
-interface RowData {
-  [key: string]: string | number | object | undefined;
-}
-
-interface RenderDataValue {
-  value: string | number;
-  type: string;
-  tag: string;
-  url: string;
-  target: string;
-  gaid?: string;
-  html?: string;
-  color?: string;
-  caption: CaptionConfig;
-  buttons: ButtonConfig[];
-  menu: MenuConfig[];
-  icon: IconConfig;
-  hover: HoverContainerConfig;
-}
-
-interface CaptionConfig {
-  title: string;
-  summary: string;
-  uri: string;
-  target: string;
-  gaid: string;
-  icon: IconConfig;
-}
-
 interface IconConfig {
   src: string;
   size: number;
   color: string;
+  placement:
+    | 'right'
+    | 'left';
 }
 
-interface HoverContainerConfig {
-  label: string;
+interface HoverConfig {
   content: string;
-  anchor: string;
   placement:
     | 'top'
     | 'top-start'
@@ -95,7 +89,6 @@ interface HoverContainerConfig {
     | 'left'
     | 'left-start'
     | 'left-end';
-  icon: IconConfig;
 }
 
 interface ButtonConfig {
@@ -112,14 +105,6 @@ interface ButtonConfig {
   label: string;
   outline: boolean;
   confirm: ConfirmConfig;
-}
-
-interface MenuConfig {
-  id: string;
-  href: string;
-  gaid: string;
-  target: string;
-  label: string;
 }
 
 interface ConfirmConfig {
@@ -223,7 +208,6 @@ export default class ZnDataTable extends ZincElement {
   private totalPages: number;
 
   private _rows: any[] = [];
-  private _filteredRows: any[] = [];
 
   private numberOfRowsSelected: number = 0;
   private selectedRows: any[] = [];
@@ -258,36 +242,6 @@ export default class ZnDataTable extends ZincElement {
       }
       url += '?' + params.toString();
 
-      if (!this.dataUri) {
-        return new Promise<TableData>((resolve) => {
-          if (!this.data) throw new Error('No data provided, please provide data or dataUri');
-          let localData = Array.isArray(this.data?.data) ? this.data.data as RowData[] : [];
-
-          if (this.sortColumn) {
-            localData = localData.sort((a, b) => {
-              const aValue = a?.[this.sortColumn];
-              const bValue = b?.[this.sortColumn];
-              return this.sortData(aValue, bValue);
-            });
-          }
-
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          const totalPages = Math.ceil(localData.length / (this.data.per_page as number ?? this.itemsPerPage));
-          const start = (this.page - 1) * this.itemsPerPage;
-          const end = start + this.itemsPerPage;
-          const paginatedData = localData.slice(start, end);
-
-          resolve({
-            page: this.page,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            per_page: this.data.per_page as number ?? this.itemsPerPage,
-            total: localData.length,
-            total_pages: totalPages,
-            data: paginatedData,
-          } satisfies TableData);
-        });
-      }
-
       // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(url, {
         signal,
@@ -313,7 +267,7 @@ export default class ZnDataTable extends ZincElement {
       complete: (data) => {
         this._initialLoad = false;
         this._lastTableContent = html`
-          <div>${this.renderTable(data as TableData)}</div>`;
+          <div>${this.renderTable(data as Response)}</div>`;
         return this._lastTableContent;
       },
       error: (error) => html`
@@ -362,7 +316,7 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
-  renderTable(data: TableData) {
+  renderTable(data: Response) {
     this.itemsPerPage = data.per_page ?? DEFAULT_PER_PAGE;
     this.page = data.page ?? DEFAULT_PAGE;
     this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
@@ -377,11 +331,11 @@ export default class ZnDataTable extends ZincElement {
         </div>`;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const keys = Object.entries(this.headers).map(([key, _]) => key);
     const filteredKeys = keys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
 
-    this._filteredRows = this.getRows(filteredKeys, data);
-    this._rows = this.getRows(keys, data);
+    this._rows = this.getRows(data);
 
     const hasSelectedRows = this.selectedRows.length > 0;
 
@@ -399,17 +353,17 @@ export default class ZnDataTable extends ZincElement {
               <th>
                 <div><input type="checkbox" @change="${this.selectAll}"></div>
               </th>`}
-            ${filteredKeys.map((key: any) => this.renderCellHeader(key))}
+            ${filteredKeys.map((key: string) => this.renderCellHeader(key))}
           </tr>
           </thead>
           <tbody>
-          ${this._filteredRows.map((row: any) => html`
+          ${this._rows.map((row: Row) => html`
             <tr>
               ${this.hideCheckboxes ? html`` : html`
                 <td class="${classMap({'hidden': !hasSelectedRows})}">
                   <div><input type="checkbox" @change="${this.selectRow}"></div>
                 </td>`}
-              ${row.map((value: RenderDataValue, index: number) => this.renderCellBody(index, value))}
+              ${row.cells.map((value: Cell, index: number) => this.renderCellBody(index, value))}
             </tr>`)}
           </tbody>
         </table>
@@ -670,108 +624,58 @@ export default class ZnDataTable extends ZincElement {
     };
   }
 
-  renderData(data: RenderDataValue) {
+  renderCell(data: Cell) {
     if (data && typeof data === 'object') {
-      let content: TemplateResult = html`${data['value']}`;
+      let content: TemplateResult = html`${data.text}`;
 
-      if (data['html']) {
-        return html`${unsafeHTML(data['html'])}`;
-      }
-
-      if (data['type'] === 'timestamp') {
-        const timestamp = typeof data['value'] === 'string' ? parseInt(data['value']) : data['value'];
-        content = html`${new Intl.DateTimeFormat('en-GB', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-          hourCycle: 'h12',
-          timeZone: 'UTC'
-        }).format(new Date(timestamp < 10000000000 ? timestamp * 1000 : timestamp))}`;
-      }
-
-      if (data['tag'] === 'zn-chip') {
-        const type = data['type'];
+      if (data.style || data.color) {
         content = html`
-          <zn-chip type="${type}">${content}</zn-chip>`;
+          <zn-style ${ifDefined(data.style || nothing)}
+                    color="${ifDefined(data.color || nothing)}">${content}
+          </zn-style>`;
       }
 
-      if (data['tag'] === 'code') {
+      if (data.uri) {
         content = html`
-          <code>${content}</code>`;
+          <a href="${data.uri}"
+             data-target="${ifDefined(data.target || nothing)}"
+             gaid="${ifDefined(data.uri || nothing)}">${content}</a>`;
       }
 
-      if (data['url']) {
-        content = html`
-          <a href="${data['url']}"
-             data-target="${ifDefined(data['target'])}"
-             gaid="${ifDefined(data['gaid'])}">${content}</a>`;
+      if (data.chip) {
+        return html`
+          <zn-chip type="${data.chip}">${content}</zn-chip>`;
       }
 
-      if (data['caption']) {
-        let title = html`<span class="title">${data['caption'].title}</span>`;
-        let captionIcon = html``;
+      if (data.hover) {
+        const placement = data.hover.placement ?? 'top';
 
-        if (data['caption'].icon) {
-          const icon = data['caption'].icon;
-          const src = icon['src'] ?? icon;
-          const size = icon['size'] ?? 16;
-          const color = icon['color'] ?? '';
-
-          captionIcon = html`
-            <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>`;
-        }
-
-        if (data['caption'].uri) {
-          title = html` <a data-target="${ifDefined(data['caption'].target || nothing)}"
-                           href="${data['caption'].uri}"
-                           gaid="${ifDefined(data['caption'].gaid)}"
-                           class="title">
-            ${data['caption'].title}
-          </a>`
-        }
-
-        content = html`
-          <div class="${classMap({
-            'caption': true,
-            'caption--icon': data['caption'].icon !== undefined,
-          })}">
-            ${captionIcon}
-            <div>
-              ${title}
-              <span class="summary">${data['caption'].summary}</span>
-            </div>
-          </div>`;
-      }
-
-      if (data['hover']) {
-        const placement = data['hover'].placement ?? 'top';
-
-        if (data['hover'].icon) {
-          const icon = data['hover'].icon;
-          const src = icon['src'] ?? icon;
-          const size = icon['size'] ?? 16;
-          const color = icon['color'] ?? '';
+        if (data.icon) {
+          const icon = data.icon;
+          const src = icon.src;
+          const size = icon.size ?? 16;
+          const color = icon.color ?? '';
 
           return html`
-            ${data['hover'].label}
+            ${content}
             <zn-hover-container placement="${placement}"
                                 flip>
               <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>
               <div slot="content">
-                ${unsafeHTML(data['hover'].content)}
+                ${unsafeHTML(data.hover.content)}
               </div>
             </zn-hover-container>`;
         }
 
         return html`
-          ${data['hover'].label}
           <zn-hover-container placement="${placement}"
                               flip>
-            <div slot="anchor">${data['hover'].anchor}</div>
-            ${unsafeHTML(data['hover'].content)}
+            <div slot="anchor">${content}</div>
+            ${unsafeHTML(data.hover.content)}
           </zn-hover-container>`;
       }
 
-      if (data['menu']) {
+      /*if (data['menu']) {
         return html`
           <zn-dropdown>
             <zn-button slot="trigger" icon="more_horiz" icon-size="24" color="transparent" size="content"></zn-button>
@@ -831,20 +735,16 @@ export default class ZnDataTable extends ZincElement {
                 ${button.label || nothing}
               </zn-button>`;
           })}`;
-      }
+      }*/
 
-      if (data['icon']) {
-        const icon = data['icon']?.['src'] ?? data['icon'];
-        const size = data['icon']?.['size'] ?? 16;
-        const color = data['icon']?.['color'] ?? '';
+      if (data.icon) {
+        const icon = data.icon;
+        const src = icon.src;
+        const size = icon.size ?? 16;
+        const color = icon.color ?? '';
 
-        content = html`
-          <zn-icon src="${icon}" size="${size}" color="${color}"></zn-icon> ${content}`;
-      }
-
-      if (data['color']) {
-        content = html`
-          <zn-style color="${data['color']}">${content}</zn-style>`;
+        return html`
+          <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon> ${content}`;
       }
 
       return content;
@@ -916,7 +816,7 @@ export default class ZnDataTable extends ZincElement {
     `;
   }
 
-  private renderCellBody(index: number, value: RenderDataValue) {
+  private renderCellBody(index: number, value: Cell) {
     const headerKeys: string[] = Object.keys(this.headers).filter(
       (key) => !Object.values(this.hiddenColumns).includes(key)
     );
@@ -933,7 +833,7 @@ export default class ZnDataTable extends ZincElement {
             'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
             [`table__cell--${header.position}`]: true
           })}">
-          <div>${this.renderData(value)}</div>
+          <div>${this.renderCell(value)}</div>
         </td>`;
     }
 
@@ -945,7 +845,7 @@ export default class ZnDataTable extends ZincElement {
           'table__cell--wide': headerKey === this.wideColumn,
           'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
         })}">
-        <div>${this.renderData(value)}</div>
+        <div>${this.renderCell(value)}</div>
       </td>`;
   }
 
@@ -953,24 +853,45 @@ export default class ZnDataTable extends ZincElement {
     return typeof header === 'object' && header !== null && 'position' in header && 'title' in header;
   }
 
-  private getRows(keys: string[], data: TableData) {
-    let rows = Object.values(data.data).map((row: any) => {
-      return keys.map((header: any) => row[header]);
-    });
+  private getRows(data: Response): Row[] {
+    const sourceRows = data.data;
 
-    if (this.dataUri && this.sortColumn) {
-      // sort the rows by the key
-      rows = rows.sort((a, b) => {
-        return this.sortData(a[keys.indexOf(this.sortColumn)], b[keys.indexOf(this.sortColumn)]);
+    if (this.sortColumn) {
+      const headerKeys = Object.keys(this.headers);
+      const sortIndex = headerKeys.indexOf(this.sortColumn);
+
+      sourceRows.sort((rowA: Row, rowB: Row) => {
+        const getCellForSort = (row: Row): Cell => {
+          const byHeading = row.cells.find((cell: Cell) => cell.heading === this.sortColumn);
+          if (byHeading !== undefined) return byHeading as unknown as Cell;
+          return row.cells[sortIndex];
+        };
+
+        const aVal = getCellForSort(rowA);
+        const bVal = getCellForSort(rowB);
+        return this.sortData(aVal, bVal);
       });
     }
 
-    return rows;
+    return sourceRows;
   }
 
-  private getSelectedKeys() {
+  private getSelectedKeys(): (string)[] {
     const headerKeys = Object.keys(this.headers);
-    return this.selectedRows.map((row) => row[headerKeys.indexOf(this.key)]);
+    const keyIndex = headerKeys.indexOf(this.key);
+
+    return this.selectedRows
+      .map((row: Row) => {
+        if (this.key === 'id' || keyIndex === -1) {
+          return row.id;
+        }
+        const cell = row.cells?.[keyIndex] as Cell;
+        if (cell.sortValue) {
+          return cell.sortValue;
+        }
+        return cell.text as string;
+      })
+      .filter((v): v is string => v !== undefined && v !== null);
   }
 
   private updateKeys() {
@@ -986,36 +907,27 @@ export default class ZnDataTable extends ZincElement {
     this.updateActionKeys('delete-action');
   }
 
-  private sortData(a: RenderDataValue | string | number | object | undefined, b: RenderDataValue | string | number | object | undefined) {
-    if (a === undefined || b === undefined) {
-      return 0;
+  private extractComparable(cell: Cell): string {
+    const sortValue = cell.sortValue;
+    if (sortValue) {
+      return sortValue;
     }
 
-    if (typeof a === 'object' && 'caption' in a && 'title' in a.caption) {
-      a = a.caption.title as string;
-    } else if (typeof a === 'object' && a && 'value' in a) {
-      a = a.value as string | number;
-    }
+    return cell.text;
+  }
 
-    if (typeof b === 'object' && 'caption' in b && 'title' in b.caption) {
-      b = b.caption.title as string;
-    } else if (typeof b === 'object' && b && 'value' in b) {
-      b = b.value as string | number;
-    }
+  private sortData(a: Cell, b: Cell) {
+    const aCompare = this.extractComparable(a);
+    const bCompare = this.extractComparable(b);
 
-    if (typeof a === 'string') {
-      a = a.toLowerCase();
-    }
-
-    if (typeof b === 'string') {
-      b = b.toLowerCase();
-    }
+    const aNormal = aCompare.toLowerCase();
+    const bNormal = bCompare.toLowerCase();
 
     if (this.sortDirection === 'asc') {
-      return a > b ? 1 : a < b ? -1 : 0;
+      return aNormal > bNormal ? 1 : aNormal < bNormal ? -1 : 0;
     }
 
-    return a < b ? 1 : a > b ? -1 : 0;
+    return aNormal < bNormal ? 1 : aNormal > bNormal ? -1 : 0;
   }
 
   private loadingTable() {

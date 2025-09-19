@@ -28,6 +28,16 @@ Icon position can be set to `start` or `end`. The default is `none`.
 </div>
 ```
 
+### Icon Only
+
+Icon 
+
+```html:preview
+<div class="form-spacing">
+  <zn-data-select provider="color" name="color" value="red" icon-only></zn-data-select>
+</div>
+```
+
 ### Clearable
 
 ```html:preview

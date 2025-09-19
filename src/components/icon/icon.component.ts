@@ -63,6 +63,10 @@ export default class ZnIcon extends ZincElement {
 
   @property({reflect: true}) color: IconColor;
 
+  @property({type: Boolean}) padded: boolean = false;
+
+  @property({type: Boolean}) squared: boolean = false;
+
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
 
@@ -186,7 +190,9 @@ export default class ZnIcon extends ZincElement {
           'icon--violet': this.color === "violet",
           'icon--pink': this.color === "pink",
           'icon--grey': this.color === "grey",
-          'icon--avatar': this.library === "avatar"
+          'icon--avatar': this.library === "avatar",
+          'icon--padded': this.padded,
+          'icon--squared': this.squared,
         })}" style="${styleMap({
           '--icon-size': this.size + "px",
           '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)

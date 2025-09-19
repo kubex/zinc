@@ -39,6 +39,7 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
+  @property({attribute: "no-pad", type: Boolean}) noPad: false
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
@@ -201,7 +202,8 @@ export default class ZnNavbar extends ZincElement {
           'navbar': true,
           'navbar--slim': this.slim,
           'navbar--border': this.border,
-          'navbar--flush': this.flush
+          'navbar--flush': this.flush,
+          'navbar--no-pad': this.noPad
         })}">
           ${this._preItems}
           ${this.navigation.map((item: any) => {

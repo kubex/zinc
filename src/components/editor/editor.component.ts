@@ -457,7 +457,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateListFormatMenu(formats);
     this._updateTextFormatMenu(formats);
 
-    this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal Text');
+    this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal');
     this._updateDropdownTriggerIcon('zn-dropdown.list__dropdown', 'lists');
   }
 

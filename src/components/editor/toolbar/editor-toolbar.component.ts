@@ -12,14 +12,12 @@ export default class ZnEditorToolbar extends ZincElement {
   public quill: Quill;
 
   render() {
-    console.log(this.quill);
-
     return html`
       <div>
         ${this._textOptions()}
+        ${this._formatOptions()}
         ${this._listOptions()}
         ${this._fileOptions()}
-        ${this._formatOptions()}
       </div>
     `;
   }
@@ -39,16 +37,14 @@ export default class ZnEditorToolbar extends ZincElement {
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
-                        data-format-type="1"
-                        @click="${this._handleOptionClicked}">
+                        data-format-type="1">
             <zn-icon src="format_h1" size="18" slot="prefix"></zn-icon>
             Heading 1
           </zn-menu-item>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
-                        data-format-type="2"
-                        @click="${this._handleOptionClicked}">
+                        data-format-type="2">
             <zn-icon src="format_h2" size="18" slot="prefix"></zn-icon>
             Heading 2
           </zn-menu-item>
@@ -56,8 +52,7 @@ export default class ZnEditorToolbar extends ZincElement {
                         checked-position="right"
                         data-format="header"
                         data-format-type=""
-                        selected
-                        @click="${this._handleOptionClicked}">
+                        selected>
             <zn-icon src="text_format" size="18" slot="prefix"></zn-icon>
             Normal Text
           </zn-menu-item>
@@ -114,7 +109,7 @@ export default class ZnEditorToolbar extends ZincElement {
                    icon="arrow_drop_down"
                    icon-size="18"
                    icon-position="right">
-          Lists
+          <zn-icon src="lists" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
           <zn-menu-item type="checkbox"
@@ -122,7 +117,7 @@ export default class ZnEditorToolbar extends ZincElement {
                         data-format="list"
                         data-format-type="bullet"
                         data-text="Bulleted List"
-                        @click="${this._handleOptionClicked}">
+                        data-icon="format_list_bulleted">
             <zn-icon src="format_list_bulleted" size="18" slot="prefix"></zn-icon>
             Bulleted
           </zn-menu-item>
@@ -131,7 +126,7 @@ export default class ZnEditorToolbar extends ZincElement {
                         data-format="list"
                         data-format-type="ordered"
                         data-text="Numbered List"
-                        @click="${this._handleOptionClicked}">
+                        data-icon="format_list_numbered">
             <zn-icon src="format_list_numbered" size="18" slot="prefix"></zn-icon>
             Numbered
           </zn-menu-item>
@@ -140,7 +135,7 @@ export default class ZnEditorToolbar extends ZincElement {
                         data-format="list"
                         data-format-type="checked"
                         data-text="Checked List"
-                        @click="${this._handleOptionClicked}">
+                        data-icon="checklist">
             <zn-icon src="checklist" size="18" slot="prefix"></zn-icon>
             Checked
           </zn-menu-item>
@@ -151,14 +146,14 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _fileOptions() {
     const fileOptions = html`
-      <zn-dropdown class="list__dropdown" placement="bottom-end">
+      <zn-dropdown class="file__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="list__dropdown-trigger"
+                   class="file__dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
                    icon-position="right">
-          Insert
+          <zn-icon src="add" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
           <zn-menu-item checked-position="right" data-format="link">
@@ -176,31 +171,5 @@ export default class ZnEditorToolbar extends ZincElement {
         </zn-menu>
       </zn-dropdown>`
     return litToHTML<ZnDropdown>(fileOptions);
-  }
-
-  private _handleOptionClicked = (e: Event) => {
-    const menuItem = e.currentTarget as HTMLElement;
-
-    const label = menuItem.getAttribute('data-text') ?? menuItem.textContent?.trim();
-
-    // Locate the closest dropdown from the clicked item (not from the toolbar itself)
-    let parent: HTMLElement | null = menuItem as HTMLElement;
-    let dropdown: HTMLElement | null = null;
-    let depth = 0;
-    const maxDepth = 30;
-    while (parent && depth < maxDepth) {
-      if (parent.tagName && parent.tagName.toLowerCase() === 'zn-dropdown') {
-        dropdown = parent;
-        break;
-      }
-      parent = parent.parentElement || (parent.getRootNode() instanceof ShadowRoot ? (parent.getRootNode() as ShadowRoot).host as HTMLElement : null);
-      depth++;
-    }
-
-    const button = dropdown?.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
-
-    if (button && label) {
-      button.textContent = label;
-    }
   }
 }

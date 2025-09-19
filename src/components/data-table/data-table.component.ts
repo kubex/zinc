@@ -32,9 +32,11 @@ interface Cell {
   heading?: string;
   color?: string;
   style?: string;
-  icon: IconConfig;
-  chip?: string;
-  hover?: HoverConfig;
+  iconSrc?: string;
+  iconColor?: string;
+  hoverContent?: string;
+  hoverPlacement?: string;
+  chipColor?: string;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -50,7 +52,7 @@ interface Row {
 }
 
 interface Response {
-  data: Row[];
+  rows: Row[];
   per_page: number;
   total: number;
   page: number;
@@ -63,32 +65,6 @@ export enum ActionSlots {
   create = 'create-action',
   filter = 'filter',
   sort = 'sort',
-}
-
-interface IconConfig {
-  src: string;
-  size: number;
-  color: string;
-  placement:
-    | 'right'
-    | 'left';
-}
-
-interface HoverConfig {
-  content: string;
-  placement:
-    | 'top'
-    | 'top-start'
-    | 'top-end'
-    | 'bottom'
-    | 'bottom-start'
-    | 'bottom-end'
-    | 'right'
-    | 'right-start'
-    | 'right-end'
-    | 'left'
-    | 'left-start'
-    | 'left-end';
 }
 
 interface ButtonConfig {
@@ -321,7 +297,7 @@ export default class ZnDataTable extends ZincElement {
     this.page = data.page ?? DEFAULT_PAGE;
     this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
 
-    if (!data?.data || data.data.length === 0) {
+    if (!data?.rows || data.rows.length === 0) {
       return html`
         <div class="table--empty">
           <zn-empty-state
@@ -642,27 +618,25 @@ export default class ZnDataTable extends ZincElement {
              gaid="${ifDefined(data.uri || nothing)}">${content}</a>`;
       }
 
-      if (data.chip) {
+      if (data.chipColor) {
         return html`
-          <zn-chip type="${data.chip}">${content}</zn-chip>`;
+          <zn-chip type="${data.chipColor}">${content}</zn-chip>`;
       }
 
-      if (data.hover) {
-        const placement = data.hover.placement ?? 'top';
+      if (data.hoverContent) {
+        const placement = data.hoverPlacement ?? 'top';
 
-        if (data.icon) {
-          const icon = data.icon;
-          const src = icon.src;
-          const size = icon.size ?? 16;
-          const color = icon.color ?? '';
+        if (data.iconSrc) {
+          const src = data.iconSrc;
+          const color = data.iconColor ?? '';
 
           return html`
             ${content}
             <zn-hover-container placement="${placement}"
                                 flip>
-              <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon>
+              <zn-icon src="${src}" color="${color}"></zn-icon>
               <div slot="content">
-                ${unsafeHTML(data.hover.content)}
+                ${unsafeHTML(data.hoverContent)}
               </div>
             </zn-hover-container>`;
         }
@@ -671,7 +645,7 @@ export default class ZnDataTable extends ZincElement {
           <zn-hover-container placement="${placement}"
                               flip>
             <div slot="anchor">${content}</div>
-            ${unsafeHTML(data.hover.content)}
+            ${unsafeHTML(data.hoverContent)}
           </zn-hover-container>`;
       }
 
@@ -737,14 +711,12 @@ export default class ZnDataTable extends ZincElement {
           })}`;
       }*/
 
-      if (data.icon) {
-        const icon = data.icon;
-        const src = icon.src;
-        const size = icon.size ?? 16;
-        const color = icon.color ?? '';
+      if (data.iconSrc) {
+        const src = data.iconSrc;
+        const color = data.iconColor ?? '';
 
         return html`
-          <zn-icon src="${src}" size="${size}" color="${color}"></zn-icon> ${content}`;
+          <zn-icon src="${src}" color="${color}"></zn-icon> ${content}`;
       }
 
       return content;
@@ -854,7 +826,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private getRows(data: Response): Row[] {
-    const sourceRows = data.data;
+    const sourceRows = data.rows;
 
     if (this.sortColumn) {
       const headerKeys = Object.keys(this.headers);

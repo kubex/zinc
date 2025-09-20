@@ -58,9 +58,21 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _formatOptions() {
     return html`
-      <zn-button class="common-format" color="transparent" icon="format_bold" icon-size="18" data-format="bold"></zn-button>
-      <zn-button class="common-format" color="transparent" icon="format_italic" icon-size="18" data-format="italic"></zn-button>
-      <zn-button class="common-format" color="transparent" icon="format_underlined" icon-size="18" data-format="underline"></zn-button>
+      <zn-button class="common-format"
+                 color="transparent"
+                 icon="format_bold"
+                 icon-size="18"
+                 data-format="bold"></zn-button>
+      <zn-button class="common-format"
+                 color="transparent"
+                 icon="format_italic"
+                 icon-size="18"
+                 data-format="italic"></zn-button>
+      <zn-button class="common-format"
+                 color="transparent"
+                 icon="format_underlined"
+                 icon-size="18"
+                 data-format="underline"></zn-button>
 
       <zn-dropdown class="format__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
@@ -80,8 +92,12 @@ export default class ZnEditorToolbar extends ZincElement {
             <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
             Quote
           </zn-menu-item>
-          <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
+          <zn-menu-item type="checkbox" checked-position="right" data-format="code">
             <zn-icon src="code" size="18" slot="prefix"></zn-icon>
+            Code
+          </zn-menu-item>
+          <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
+            <zn-icon src="code-blocks" size="18" slot="prefix"></zn-icon>
             Code Block
           </zn-menu-item>
           <zn-menu-item data-format="clean">

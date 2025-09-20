@@ -456,6 +456,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);
     this._updateTextFormatMenu(formats);
+    this._updateColorFormatMenu(formats);
 
     this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal');
     this._updateDropdownTriggerIcon('zn-dropdown.list__dropdown', 'lists');
@@ -478,6 +479,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const wanted = this._getTextFormats(formats);
 
     this._updateMenuCheckedState(selector, attr, wanted);
+  }
+
+  private _updateColorFormatMenu(formats: Record<string, any>) {
+    const color = (typeof formats.color === 'string') ? formats.color : '';
+    this._updateMenuCheckedState('zn-dropdown.color__dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', color);
   }
 
   private _getTextFormats(formats: Record<string, any>) {
@@ -539,7 +545,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const format = target.getAttribute('data-format');
           if (!format) return;
 
-          const type = target.getAttribute('data-format-type');
+          let type: any = target.getAttribute('data-format-type');
+          if (format === 'color' && (!type || type === '')) {
+            type = false; // Clear color to default
+          }
           callFormat(format, type ?? undefined);
         });
       });

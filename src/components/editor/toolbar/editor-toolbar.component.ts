@@ -1,3 +1,4 @@
+import {colorDataProvider} from "../../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, unsafeCSS} from "lit";
 import ZincElement from "../../../internal/zinc-element";
 import type Quill from "quill";
@@ -14,6 +15,7 @@ export default class ZnEditorToolbar extends ZincElement {
       <div>
         ${this._textOptions()}
         ${this._formatOptions()}
+        ${this._colorOptions()}
         ${this._listOptions()}
         ${this._fileOptions()}
       </div>
@@ -76,7 +78,7 @@ export default class ZnEditorToolbar extends ZincElement {
 
       <zn-dropdown class="format__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="format__dropdown-trigger"
+                   class="toolbar__dropdown-trigger format__dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -108,11 +110,37 @@ export default class ZnEditorToolbar extends ZincElement {
       </zn-dropdown>`;
   }
 
+  private _colorOptions() {
+    return html`
+      <zn-dropdown class="color__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   class="toolbar__dropdown-trigger color__dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          <zn-icon src="colors" size="18"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item data-format="color" data-format-type="">
+            <zn-icon slot="prefix" class="color-icon--unset" src="format_color_reset" size="18"></zn-icon>
+            Unset
+          </zn-menu-item>
+          ${colorDataProvider.getData.map((opt) => html`
+            <zn-menu-item data-format="color" data-format-type="${opt.key}">
+              <div slot="prefix" class="color-icon color-icon--${opt.key}"></div>
+              ${opt.value}
+            </zn-menu-item>
+          `)}
+        </zn-menu>
+      </zn-dropdown>`;
+  }
+
   private _listOptions() {
     return html`
       <zn-dropdown class="list__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="list__dropdown-trigger"
+                   class="toolbar__dropdown-trigger list__dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -155,7 +183,7 @@ export default class ZnEditorToolbar extends ZincElement {
     return html`
       <zn-dropdown class="file__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="file__dropdown-trigger"
+                   class="toolbar__dropdown-trigger file__dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"

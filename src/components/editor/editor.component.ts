@@ -488,6 +488,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     if (formats.blockquote) {
       wanted.push('blockquote');
     }
+    if (formats.code) {
+      wanted.push('code');
+    }
     if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) {
       wanted.push('code-block');
     }

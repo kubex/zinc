@@ -1,14 +1,12 @@
 import {colorDataProvider} from "../../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, unsafeCSS} from "lit";
 import ZincElement from "../../../internal/zinc-element";
-import type Quill from "quill";
 
 import styles from './editor-toolbar.scss';
 
 export default class ZnEditorToolbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  public quill: Quill;
 
   render() {
     return html`
@@ -18,6 +16,7 @@ export default class ZnEditorToolbar extends ZincElement {
         ${this._colorOptions()}
         ${this._listOptions()}
         ${this._fileOptions()}
+        ${this._emojiOptions()}
       </div>
     `;
   }
@@ -204,6 +203,21 @@ export default class ZnEditorToolbar extends ZincElement {
             Video
           </zn-menu-item>
         </zn-menu>
+      </zn-dropdown>`;
+  }
+
+  private _emojiOptions() {
+    return html`
+      <zn-dropdown class="emoji__dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   class="toolbar__dropdown-trigger emoji__dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          <zn-icon src="insert_emoticon" size="18"></zn-icon>
+        </zn-button>
+        <div class="emoji-picker"></div>
       </zn-dropdown>`;
   }
 }

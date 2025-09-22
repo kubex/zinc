@@ -1,7 +1,9 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
+import {Picker} from 'emoji-mart';
 import {property, query} from 'lit/decorators.js';
 import AttachmentModule from "./modules/attachment-module";
+import data from '@emoji-mart/data';
 import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
@@ -24,6 +26,11 @@ export interface CannedResponse {
   command: string;
   labels?: string[];
   count: string;
+}
+
+interface Emoji {
+  native?: string;
+  skins?: { native?: string }[];
 }
 
 /**
@@ -181,6 +188,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._attachToolbarHandlers(quill);
     this._supplyPlaceholderDialog();
+    this._initEmojiPicker();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -294,6 +302,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
+  }
+
+  protected updated(changed: PropertyValues) {
+    if (changed.has('t')) {
+      this._initEmojiPicker();
+    }
   }
 
   private _handleTextChange() {
@@ -573,6 +587,43 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._commands = await response.json() as CannedResponse[];
     } catch (error) {
       console.error('Error fetching canned responses', error);
+    }
+  }
+
+  private _initEmojiPicker() {
+    const container = this.toolbar?.shadowRoot?.querySelector('.emoji-picker') as HTMLElement | null;
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    // eslint-disable-next-line no-new
+    new Picker({
+      parent: container,
+      data: data as Record<string, unknown>,
+      previewPosition: 'none',
+      skinTonePosition: 'none',
+      theme: this.t === 'dark' ? 'dark' : 'light',
+      set: 'native',
+      icons: 'solid',
+      onEmojiSelect: (emoji: Emoji) => this._onEmojiSelect(emoji)
+    });
+  }
+
+  private _onEmojiSelect(emoji: Emoji | null) {
+    try {
+      const text: string = emoji?.native ?? emoji?.skins?.[0]?.native ?? '';
+      if (!text || !this.quillElement) return;
+      const range = this.quillElement.getSelection(true);
+      if (range) {
+        this.quillElement.insertText(range.index, text, 'user');
+        this.quillElement.setSelection(range.index + text.length, 0, 'user');
+      } else {
+        const index = Math.max(0, this.quillElement.getLength() - 1);
+        this.quillElement.insertText(index, text, 'user');
+        this.quillElement.setSelection(index + text.length, 0, 'user');
+      }
+    } catch (e) {
+      // no-op
     }
   }
 

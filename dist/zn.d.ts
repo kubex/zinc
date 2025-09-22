@@ -610,6 +610,9 @@ declare module "events/zn-select" {
         }
     }
 }
+declare module "utilities/query" {
+    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
+}
 declare module "internal/offset" {
     /**
      * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
@@ -735,9 +738,6 @@ declare module "components/dialog/index" {
             'zn-dialog': ZnDialog;
         }
     }
-}
-declare module "utilities/query" {
-    export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[];
 }
 declare module "components/confirm/confirm.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';

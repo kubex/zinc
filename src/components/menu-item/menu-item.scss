@@ -2,17 +2,14 @@
 
 :host {
   --submenu-offset: -2px;
+  --color: rgba(var(--zn-text), var(--zn-text-opacity));
+  --hover-color: rgb(var(--zn-primary));
+  --hover-bg: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
   display: block;
 }
 
 :host([inert]) {
   display: none;
-}
-
-:root {
-  --color: rgba(var(--zn-text), var(--zn-text-opacity));
-  --hover-color: rgb(var(--zn-primary));
-  --hover-bg: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
 }
 
 .menu-item {
@@ -53,6 +50,11 @@
   text-overflow: ellipsis;
   align-items: center;
   overflow: hidden;
+  color: var(--color);
+}
+
+.menu-item .menu-item__label:hover {
+  color: var(--hover-color);
 }
 
 .menu-item .menu-item__prefix {

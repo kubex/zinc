@@ -381,7 +381,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     items.forEach((item: ZnMenuItem) => {
       const value = item.getAttribute(matchAttr) ?? '';
-      item.checked = wantedValues.includes(value);
+      if (item.getAttribute('type') === 'checkbox') {
+        item.checked = wantedValues.includes(value);
+      }
     });
   }
 

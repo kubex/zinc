@@ -155,7 +155,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const quill = new Quill(this.editor, {
       modules: {
-        toolbar: this.toolbar,
+        toolbar: {
+          container: this.toolbar,
+          handlers: {
+            'attachment': () => null,
+            'divider': () => this._insertDivider(),
+            'redo': () => this.quillElement.history.redo(),
+            'undo': () => this.quillElement.history.undo(),
+          }
+        },
         keyboard: {
           bindings: bindings
         },
@@ -194,7 +202,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             });
           },
         },
-        imageResizeModule: {}
+        imageResizeModule: {},
+        history: {}
       },
       placeholder: 'Compose your reply...',
       theme: 'snow',
@@ -511,7 +520,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const toolbarModule = quill.getModule('toolbar') as Toolbar | undefined;
     if (!toolbarModule) return;
 
-    const callFormat = (key: string, value?: any) => {
+    const callFormat = (key: string, value?: string | boolean | undefined) => {
       const handler = (toolbarModule.handlers?.[key] as ((value?: any) => void) | undefined);
       if (value === undefined) {
         if (key === 'header' || key === 'color') {
@@ -554,14 +563,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const format = target.getAttribute('data-format');
           if (!format) return;
 
-          if (format === 'divider') {
-            this._insertDivider();
-            return;
-          }
-
-          let type: any = target.getAttribute('data-format-type');
-
-          callFormat(format, type ?? undefined);
+          const type: string | undefined = target.getAttribute('data-format-type') ?? undefined;
+          callFormat(format, type);
         });
       });
     }

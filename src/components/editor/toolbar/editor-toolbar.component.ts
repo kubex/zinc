@@ -13,6 +13,7 @@ export default class ZnEditorToolbar extends ZincElement {
       <div class="toolbar">
         <div class="toolbar__group">${this._textOptions()}</div>
         <div class="toolbar__group">${this._formatOptions()}</div>
+        <div class="toolbar__group">${this._historyOptions()}</div>
         <div class="toolbar__group">${this._colorOptions()}</div>
         <div class="toolbar__group">${this._listOptions()}</div>
         <div class="toolbar__group">${this._fileOptions()}</div>
@@ -112,6 +113,20 @@ export default class ZnEditorToolbar extends ZincElement {
           </zn-menu-item>
         </zn-menu>
       </zn-dropdown>`;
+  }
+
+  private _historyOptions() {
+    return html`
+      <zn-button class="toolbar__format-button"
+                 color="transparent"
+                 icon="undo"
+                 icon-size="18"
+                 data-format="undo"></zn-button>
+      <zn-button class="toolbar__format-button"
+                 color="transparent"
+                 icon="redo"
+                 icon-size="18"
+                 data-format="redo"></zn-button>`;
   }
 
   private _colorOptions() {

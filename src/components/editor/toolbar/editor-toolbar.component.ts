@@ -99,7 +99,7 @@ export default class ZnEditorToolbar extends ZincElement {
             Code
           </zn-menu-item>
           <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
-            <zn-icon src="code-blocks" size="18" slot="prefix"></zn-icon>
+            <zn-icon src="code_blocks" size="18" slot="prefix"></zn-icon>
             Code Block
           </zn-menu-item>
           <zn-menu-item data-format="clean">

@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
 import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
@@ -256,8 +257,9 @@ export default class ZnButtonMenu extends ZincElement {
       }
     }
 
-    // check if there are an zn-confirms attached
-    const confirms: NodeListOf<ZnConfirm> = this.querySelectorAll('zn-confirm');
+    // check if there are any zn-confirms attached
+    // @ts-ignore
+    const confirms: NodeListOf<ZnConfirm> = deepQuerySelectorAll('zn-confirm', this, '');
     confirms.forEach(confirm => {
       confirm.updateTriggers(); // update the triggers for the confirm dialog
     })

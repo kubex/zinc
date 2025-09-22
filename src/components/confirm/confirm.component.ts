@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
@@ -7,7 +8,6 @@ import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
 
 import styles from './confirm.scss';
-import {deepQuerySelectorAll} from "../../utilities/query";
 
 /**
  * @summary Short summary of the component's intended use.

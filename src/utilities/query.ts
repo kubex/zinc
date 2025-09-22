@@ -2,8 +2,12 @@ export function deepQuerySelectorAll(selector: string, element: Element, stopSel
   const arr: Element[] = [];
 
   const traverser = (node: Element, sub: boolean) => {
+    if (!node) {
+      return;
+    }
+
     // 1. decline all nodes that are not elements
-    if (node.nodeType !== Node.ELEMENT_NODE || (sub && stopSelector && node.matches(stopSelector))) {
+    if ((node.nodeType !== Node.ELEMENT_NODE) || (sub && stopSelector && node.matches(stopSelector))) {
       return;
     }
 

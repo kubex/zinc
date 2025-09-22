@@ -10,13 +10,13 @@ export default class ZnEditorToolbar extends ZincElement {
 
   render() {
     return html`
-      <div>
-        ${this._textOptions()}
-        ${this._formatOptions()}
-        ${this._colorOptions()}
-        ${this._listOptions()}
-        ${this._fileOptions()}
-        ${this._emojiOptions()}
+      <div class="toolbar">
+        <div class="toolbar__group">${this._textOptions()}</div>
+        <div class="toolbar__group">${this._formatOptions()}</div>
+        <div class="toolbar__group">${this._colorOptions()}</div>
+        <div class="toolbar__group">${this._listOptions()}</div>
+        <div class="toolbar__group">${this._fileOptions()}</div>
+        <div class="toolbar__group">${this._emojiOptions()}</div>
       </div>
     `;
   }

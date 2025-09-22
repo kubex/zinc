@@ -1,3 +1,28 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small);
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: var(--zn-spacing-2x-small);
+    position: relative;
+
+    /* Divider between toolbar groups */
+    & + &::before {
+      content: "";
+      display: inline-block;
+      width: 1px;
+      height: 18px;
+      background-color: var(--zn-color-gray-300);
+      opacity: 0.8;
+      margin-inline: var(--zn-spacing-2x-small);
+      border-radius: 1px;
+    }
+  }
+}
+
 .common-format {
   max-width: 34px;
   max-height: 34px;

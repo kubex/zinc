@@ -175,6 +175,9 @@ export default class ZnButtonMenu extends ZincElement {
         if (!button.button.hasAttribute('color')) {
           button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
         }
+        if(button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')){
+          button.button.setAttribute('text', "");
+        }
         button.button.setAttribute('size', this.size);
       }
     });
@@ -346,7 +349,6 @@ export default class ZnButtonMenu extends ZincElement {
     });
 
     // reset the original buttons list
-    this._originalButtons = [];
     this._buttons = [];
 
     // Recalculate the visible buttons

@@ -513,6 +513,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const callFormat = (key: string, value?: any) => {
       const handler = (toolbarModule.handlers?.[key] as ((value?: any) => void) | undefined);
+      if (value === undefined) {
+        if (key === 'header' || key === 'color') {
+          value = false; // False for text normal or default color
+        }
+        if (key === 'link') {
+          value = true; // True for creating a link
+        }
+      }
       if (typeof handler === 'function') {
         handler.call(toolbarModule, value);
         return;
@@ -525,9 +533,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           this.quillElement.removeFormat(0, this.quillElement.getLength());
         }
         return;
-      }
-      if (key === 'header' && value === undefined) {
-        value = false; // False for text normal
       }
       const range = this.quillElement.getSelection();
       const formats: Record<string, unknown> = range ? this.quillElement.getFormat(range) : {};
@@ -555,9 +560,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           }
 
           let type: any = target.getAttribute('data-format-type');
-          if (format === 'color' && (!type || type === '')) {
-            type = false; // Clear color to default
-          }
+
           callFormat(format, type ?? undefined);
         });
       });

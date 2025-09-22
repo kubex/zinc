@@ -4946,15 +4946,6 @@
             },
             {
               "kind": "field",
-              "name": "_filteredRows",
-              "type": {
-                "text": "any[]"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
               "name": "numberOfRowsSelected",
               "type": {
                 "text": "number"
@@ -4989,7 +4980,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); if (this.sortColumn) { params.append('sort_column', this.sortColumn); } if (this.sortDirection) { params.append('sort_direction', this.sortDirection); } if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); if (!this.dataUri) { return new Promise<TableData>((resolve) => { if (!this.data) throw new Error('No data provided, please provide data or dataUri'); let localData = Array.isArray(this.data?.data) ? this.data.data as RowData[] : []; if (this.sortColumn) { localData = localData.sort((a, b) => { const aValue = a?.[this.sortColumn]; const bValue = b?.[this.sortColumn]; return this.sortData(aValue, bValue); }); } // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access const totalPages = Math.ceil(localData.length / (this.data.per_page as number ?? this.itemsPerPage)); const start = (this.page - 1) * this.itemsPerPage; const end = start + this.itemsPerPage; const paginatedData = localData.slice(start, end); resolve({ page: this.page, // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access per_page: this.data.per_page as number ?? this.itemsPerPage, total: localData.length, total_pages: totalPages, data: paginatedData, } satisfies TableData); }); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(url, { signal, credentials: 'same-origin', }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
+              "default": "new Task(this, { task: async ([dataUri], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); if (this.sortColumn) { params.append('sort_column', this.sortColumn); } if (this.sortDirection) { params.append('sort_direction', this.sortDirection); } if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); // This is also used for Rubix, so it may not work for your application. const response = await fetch(url, { signal, credentials: 'same-origin', }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
             },
             {
               "kind": "field",
@@ -5002,7 +4993,7 @@
                 {
                   "name": "data",
                   "type": {
-                    "text": "TableData"
+                    "text": "Response"
                   }
                 }
               ]
@@ -5130,12 +5121,12 @@
             },
             {
               "kind": "method",
-              "name": "renderData",
+              "name": "renderCell",
               "parameters": [
                 {
                   "name": "data",
                   "type": {
-                    "text": "RenderDataValue"
+                    "text": "Cell"
                   }
                 }
               ]
@@ -5180,7 +5171,7 @@
                 {
                   "name": "value",
                   "type": {
-                    "text": "RenderDataValue"
+                    "text": "Cell"
                   }
                 }
               ]
@@ -5202,17 +5193,16 @@
               "kind": "method",
               "name": "getRows",
               "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Row[]"
+                }
+              },
               "parameters": [
-                {
-                  "name": "keys",
-                  "type": {
-                    "text": "string[]"
-                  }
-                },
                 {
                   "name": "data",
                   "type": {
-                    "text": "TableData"
+                    "text": "Response"
                   }
                 }
               ]
@@ -5220,7 +5210,12 @@
             {
               "kind": "method",
               "name": "getSelectedKeys",
-              "privacy": "private"
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "(string)[]"
+                }
+              }
             },
             {
               "kind": "method",
@@ -5239,19 +5234,37 @@
             },
             {
               "kind": "method",
+              "name": "extractComparable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cell",
+                  "type": {
+                    "text": "Cell"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "sortData",
               "privacy": "private",
               "parameters": [
                 {
                   "name": "a",
                   "type": {
-                    "text": "RenderDataValue | string | number | object | undefined"
+                    "text": "Cell"
                   }
                 },
                 {
                   "name": "b",
                   "type": {
-                    "text": "RenderDataValue | string | number | object | undefined"
+                    "text": "Cell"
                   }
                 }
               ]

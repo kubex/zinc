@@ -1955,12 +1955,34 @@ declare module "components/data-table/data-table.component" {
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
     import ZnSkeleton from "components/skeleton/index";
-    interface TableData {
-        page: number;
+    interface Cell {
+        text: string;
+        heading?: string;
+        color?: string;
+        style?: string;
+        iconSrc?: string;
+        iconColor?: string;
+        hoverContent?: string;
+        hoverPlacement?: string;
+        chipColor?: string;
+        gaid?: string;
+        sortValue?: string;
+        uri?: string;
+        target?: string;
+    }
+    interface Row {
+        id: string;
+        uri?: string;
+        target?: string;
+        actions?: ButtonConfig[];
+        cells: Cell[];
+    }
+    interface Response {
+        rows: Row[];
         per_page: number;
         total: number;
+        page: number;
         total_pages: number;
-        data: any[];
     }
     export enum ActionSlots {
         delete = "delete-action",
@@ -1968,41 +1990,6 @@ declare module "components/data-table/data-table.component" {
         create = "create-action",
         filter = "filter",
         sort = "sort"
-    }
-    interface RenderDataValue {
-        value: string | number;
-        type: string;
-        tag: string;
-        url: string;
-        target: string;
-        gaid?: string;
-        html?: string;
-        color?: string;
-        caption: CaptionConfig;
-        buttons: ButtonConfig[];
-        menu: MenuConfig[];
-        icon: IconConfig;
-        hover: HoverContainerConfig;
-    }
-    interface CaptionConfig {
-        title: string;
-        summary: string;
-        uri: string;
-        target: string;
-        gaid: string;
-        icon: IconConfig;
-    }
-    interface IconConfig {
-        src: string;
-        size: number;
-        color: string;
-    }
-    interface HoverContainerConfig {
-        label: string;
-        content: string;
-        anchor: string;
-        placement: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'right' | 'right-start' | 'right-end' | 'left' | 'left-start' | 'left-end';
-        icon: IconConfig;
     }
     interface ButtonConfig {
         id: string;
@@ -2018,13 +2005,6 @@ declare module "components/data-table/data-table.component" {
         label: string;
         outline: boolean;
         confirm: ConfirmConfig;
-    }
-    interface MenuConfig {
-        id: string;
-        href: string;
-        gaid: string;
-        target: string;
-        label: string;
     }
     interface ConfirmConfig {
         type: string;
@@ -2102,7 +2082,6 @@ declare module "components/data-table/data-table.component" {
         private page;
         private totalPages;
         private _rows;
-        private _filteredRows;
         private numberOfRowsSelected;
         private selectedRows;
         private tableContainer;
@@ -2112,7 +2091,7 @@ declare module "components/data-table/data-table.component" {
         connectedCallback(): void;
         disconnectedCallback(): void;
         changeEventListener: (e: ZnFilterChangeEvent) => void;
-        renderTable(data: TableData): TemplateResult<1>;
+        renderTable(data: Response): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1> | null;
@@ -2129,7 +2108,7 @@ declare module "components/data-table/data-table.component" {
         selectRow(e: PointerEvent): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
-        renderData(data: RenderDataValue): TemplateResult;
+        renderCell(data: Cell): TemplateResult;
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
@@ -2139,6 +2118,7 @@ declare module "components/data-table/data-table.component" {
         private updateKeys;
         private updateModifyKeys;
         private updateDeleteKeys;
+        private extractComparable;
         private sortData;
         private loadingTable;
     }

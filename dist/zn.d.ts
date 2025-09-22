@@ -565,6 +565,7 @@ declare module "components/menu-item/menu-item.component" {
         loading: boolean;
         /** Draws the menu item in a disabled state, preventing selection. */
         disabled: boolean;
+        color: string;
         href: string;
         dataPath: string;
         target: '_self' | '_blank' | '_parent' | '_top' | string;

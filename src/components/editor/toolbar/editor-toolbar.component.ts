@@ -218,6 +218,10 @@ export default class ZnEditorToolbar extends ZincElement {
             <zn-icon src="link" size="18" slot="prefix"></zn-icon>
             Link
           </zn-menu-item>
+          <zn-menu-item checked-position="right" data-format="attachment">
+            <zn-icon src="attachment" size="18" slot="prefix"></zn-icon>
+            Attachment
+          </zn-menu-item>
           <zn-menu-item checked-position="right" data-format="image">
             <zn-icon src="image" size="18" slot="prefix"></zn-icon>
             Image

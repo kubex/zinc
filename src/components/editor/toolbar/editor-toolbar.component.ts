@@ -195,6 +195,10 @@ export default class ZnEditorToolbar extends ZincElement {
           <zn-icon src="add" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
+          <zn-menu-item checked-position="right" data-format="divider">
+            <zn-icon src="horizontal_rule" size="18" slot="prefix"></zn-icon>
+            Divider
+          </zn-menu-item>
           <zn-menu-item checked-position="right" data-format="link">
             <zn-icon src="link" size="18" slot="prefix"></zn-icon>
             Link

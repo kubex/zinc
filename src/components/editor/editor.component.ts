@@ -118,6 +118,19 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
     Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
 
+    // Register a custom HR blot so we can insert an inline horizontal rule block
+    const BlockEmbed = Quill.import('blots/block/embed') as any;
+    class HrBlot extends BlockEmbed {
+      static blotName = 'hr';
+      static tagName = 'HR';
+      static className = 'ql-hr';
+      static create(value: any) {
+        const node = super.create() as HTMLElement;
+        return node;
+      }
+    }
+    Quill.register(HrBlot, true);
+
     this._updateIcons();
     const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
@@ -532,6 +545,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const format = target.getAttribute('data-format');
           if (!format) return;
 
+          if (format === 'divider') {
+            this._insertDivider();
+            return;
+          }
+
           let type: any = target.getAttribute('data-format-type');
           if (format === 'color' && (!type || type === '')) {
             type = false; // Clear color to default
@@ -593,6 +611,28 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         this.quillElement.insertText(index, text, 'user');
         this.quillElement.setSelection(index + text.length, 0, 'user');
       }
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  private _insertDivider() {
+    try {
+      if (!this.quillElement) return;
+      const selection = this.quillElement.getSelection(true);
+      let index = selection ? selection.index + selection.length : this.quillElement.getLength();
+
+      const prevChar = index > 0 ? this.quillElement.getText(index - 1, 1) : '\n';
+      if (prevChar !== '\n') {
+        this.quillElement.insertText(index, '\n', 'user');
+        index += 1;
+      }
+
+      this.quillElement.insertEmbed(index, 'hr', true, 'user');
+      this.quillElement.insertText(index + 1, '\n', 'user');
+      this.quillElement.setSelection(index + 1, 0, 'user');
+
+      this._handleTextChange();
     } catch (e) {
       // no-op
     }

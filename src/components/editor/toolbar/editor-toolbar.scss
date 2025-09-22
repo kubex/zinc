@@ -21,20 +21,22 @@
       border-radius: 1px;
     }
   }
-}
 
-.common-format {
-  max-width: 34px;
-  max-height: 34px;
-
-  /* Move underline icon down a bit */
-  &[icon="format_underlined"]::part(base) {
-    margin-top: 2px;
+  &__dropdown-trigger {
+    width: 50px;
+    height: 34px;
   }
-}
 
-.toolbar__dropdown-trigger {
-  max-width: 50px;
+  &__format-button {
+    width: 34px;
+    height: 34px;
+
+    /* Move underline icon down a bit */
+    &[icon="format_underlined"]::part(base) {
+      position: relative;
+      top: 1px;
+    }
+  }
 }
 
 .color-icon {

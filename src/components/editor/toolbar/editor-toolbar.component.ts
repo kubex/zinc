@@ -23,9 +23,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _textOptions() {
     return html`
-      <zn-dropdown class="header__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__header-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger header__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__header-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -64,25 +64,25 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _formatOptions() {
     return html`
-      <zn-button class="common-format"
+      <zn-button class="toolbar__format-button"
                  color="transparent"
                  icon="format_bold"
                  icon-size="18"
                  data-format="bold"></zn-button>
-      <zn-button class="common-format"
+      <zn-button class="toolbar__format-button"
                  color="transparent"
                  icon="format_italic"
                  icon-size="18"
                  data-format="italic"></zn-button>
-      <zn-button class="common-format"
+      <zn-button class="toolbar__format-button"
                  color="transparent"
                  icon="format_underlined"
                  icon-size="18"
                  data-format="underline"></zn-button>
 
-      <zn-dropdown class="format__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__format-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger format__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__format-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -116,9 +116,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _colorOptions() {
     return html`
-      <zn-dropdown class="color__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__color-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger color__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__color-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -142,9 +142,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _listOptions() {
     return html`
-      <zn-dropdown class="list__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__list-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger list__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__list-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -185,9 +185,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _fileOptions() {
     return html`
-      <zn-dropdown class="file__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__file-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger file__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__file-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"
@@ -217,9 +217,9 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _emojiOptions() {
     return html`
-      <zn-dropdown class="emoji__dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__emoji-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger emoji__dropdown-trigger"
+                   class="toolbar__dropdown-trigger toolbar__emoji-dropdown-trigger"
                    color="transparent"
                    icon="arrow_drop_down"
                    icon-size="18"

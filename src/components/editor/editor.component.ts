@@ -124,9 +124,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       static blotName = 'hr';
       static tagName = 'HR';
       static className = 'ql-hr';
-      static create(value: any) {
-        const node = super.create() as HTMLElement;
-        return node;
+      static create() {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+        return super.create() as HTMLElement;
       }
     }
     Quill.register(HrBlot, true);
@@ -458,23 +458,23 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateTextFormatMenu(formats);
     this._updateColorFormatMenu(formats);
 
-    this._updateDropdownTrigger('zn-dropdown.header__dropdown', 'match_case');
-    this._updateDropdownTrigger('zn-dropdown.list__dropdown', 'lists');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'match_case');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'lists');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {
     const wanted = formats.header ? String(formats.header) : ''; // Empty string for text normal
-    this._updateMenuCheckedState('zn-dropdown.header__dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', wanted);
+    this._updateMenuCheckedState('zn-dropdown.toolbar__header-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', wanted);
   }
 
   private _updateListFormatMenu(formats: Record<string, any>) {
     const list = formats.list as string | null;
     const listValue = (list === 'ordered' || list === 'bullet' || list === 'checked') ? list : null;
-    this._updateMenuCheckedState('zn-dropdown.list__dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', listValue);
+    this._updateMenuCheckedState('zn-dropdown.toolbar__list-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', listValue);
   }
 
   private _updateTextFormatMenu(formats: Record<string, any>) {
-    const selector = 'zn-dropdown.format__dropdown zn-menu zn-menu-item[data-format]';
+    const selector = 'zn-dropdown.toolbar__format-dropdown zn-menu zn-menu-item[data-format]';
     const attr = 'data-format';
     const wanted = this._getTextFormats(formats);
 
@@ -483,7 +483,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private _updateColorFormatMenu(formats: Record<string, any>) {
     const color = (typeof formats.color === 'string') ? formats.color : '';
-    this._updateMenuCheckedState('zn-dropdown.color__dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', color);
+    this._updateMenuCheckedState('zn-dropdown.toolbar__color-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', color);
   }
 
   private _getTextFormats(formats: Record<string, any>) {

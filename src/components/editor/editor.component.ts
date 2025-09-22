@@ -119,17 +119,21 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
-    const BlockEmbed = Quill.import('blots/block/embed') as any;
+    const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
+
     class HrBlot extends BlockEmbed {
       static blotName = 'hr';
       static tagName = 'HR';
       static className = 'ql-hr';
-      static create() {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-        return super.create() as HTMLElement;
+
+      static create(): HTMLElement {
+        const node = document.createElement('hr');
+        node.classList.add('ql-hr');
+        return node;
       }
     }
-    Quill.register(HrBlot, true);
+
+    Quill.register({'formats/hr': HrBlot}, true);
 
     this._updateIcons();
     const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');

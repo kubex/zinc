@@ -25,23 +25,27 @@ export default class ZnEditorToolbar extends ZincElement {
     return html`
       <zn-dropdown class="header__dropdown" placement="bottom-end">
         <zn-button slot="trigger"
-                   class="header__dropdown-trigger"
-                   color="transparent">
-          <span class="header__dropdown-label" data-role="label">Normal</span>
-          <zn-icon class="header__dropdown-arrow" src="arrow_drop_down" size="18"></zn-icon>
+                   class="toolbar__dropdown-trigger header__dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          <zn-icon src="match_case" size="18" color="primary"></zn-icon>
         </zn-button>
         <zn-menu>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
-                        data-format-type="1">
+                        data-format-type="1"
+                        data-icon="format_h1">
             <zn-icon src="format_h1" size="18" slot="prefix"></zn-icon>
             Heading 1
           </zn-menu-item>
           <zn-menu-item type="checkbox"
                         checked-position="right"
                         data-format="header"
-                        data-format-type="2">
+                        data-format-type="2"
+                        data-icon="format_h2">
             <zn-icon src="format_h2" size="18" slot="prefix"></zn-icon>
             Heading 2
           </zn-menu-item>
@@ -49,8 +53,9 @@ export default class ZnEditorToolbar extends ZincElement {
                         checked-position="right"
                         data-format="header"
                         data-format-type=""
-                        selected>
-            <zn-icon src="text_format" size="18" slot="prefix"></zn-icon>
+                        data-icon="match_case"
+                        checked>
+            <zn-icon src="match_case" size="18" slot="prefix"></zn-icon>
             Normal
           </zn-menu-item>
         </zn-menu>

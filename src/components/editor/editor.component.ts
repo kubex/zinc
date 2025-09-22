@@ -401,36 +401,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     });
   }
 
-  private _updateDropdownTriggerLabel(dropdownSelector: string, defaultLabel: string) {
-    const toolbarShadowRoot = this.toolbar.shadowRoot;
-    const dropdown = toolbarShadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
-    if (!dropdown) return;
-
-    const trigger = dropdown.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
-    if (!trigger) return;
-
-    const menu = dropdown.querySelector('zn-menu');
-    const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
-
-    let label = defaultLabel;
-    if (items?.length) {
-      items.forEach((item: ZnMenuItem) => {
-        const checked = item.checked ?? (item.hasAttribute('checked'));
-        if (checked) {
-          label = item.getAttribute('data-text') ?? item.textContent?.trim() ?? defaultLabel;
-        }
-      });
-    }
-
-    const labelEl = trigger.querySelector('.header__dropdown-label') as HTMLElement | null;
-    if (labelEl) {
-      labelEl.textContent = label;
-    } else {
-      trigger.innerHTML = `<span class="header__dropdown-label" data-role="label">${label}</span><zn-icon class="header__dropdown-arrow" src="arrow_drop_down" size="18"></zn-icon>`;
-    }
-  }
-
-  private _updateDropdownTriggerIcon(dropdownSelector: string, defaultIconSrc: string) {
+  private _updateDropdownTrigger(dropdownSelector: string, defaultIconSrc: string) {
     const toolbarShadowRoot = this.toolbar.shadowRoot;
     const dropdown = toolbarShadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
     if (!dropdown) return;
@@ -474,8 +445,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._updateTextFormatMenu(formats);
     this._updateColorFormatMenu(formats);
 
-    this._updateDropdownTriggerLabel('zn-dropdown.header__dropdown', 'Normal');
-    this._updateDropdownTriggerIcon('zn-dropdown.list__dropdown', 'lists');
+    this._updateDropdownTrigger('zn-dropdown.header__dropdown', 'match_case');
+    this._updateDropdownTrigger('zn-dropdown.list__dropdown', 'lists');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {

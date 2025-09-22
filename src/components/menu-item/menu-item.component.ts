@@ -59,6 +59,8 @@ export default class ZnMenuItem extends ZincElement {
   /** Draws the menu item in a disabled state, preventing selection. */
   @property({type: Boolean, reflect: true}) disabled = false;
 
+  @property() color: string;
+
   // Link Specific
   @property() href: string;
 
@@ -193,7 +195,15 @@ export default class ZnMenuItem extends ZincElement {
           'menu-item--disabled': this.disabled,
           'menu-item--loading': this.loading,
           'menu-item--has-submenu': this.isSubmenu(),
-          'menu-item--submenu-expanded': isSubmenuExpanded
+          'menu-item--submenu-expanded': isSubmenuExpanded,
+          'menu-item--primary': this.color === 'primary',
+          'menu-item--secondary': this.color === 'secondary',
+          'menu-item--error': this.color === 'error',
+          'menu-item--info': this.color === 'info',
+          'menu-item--success': this.color === 'success',
+          'menu-item--warning': this.color === 'warning',
+          'menu-item--transparent': this.color === 'transparent',
+
         })}
         ?aria-haspopup="${this.isSubmenu()}"
         ?aria-expanded="${isSubmenuExpanded}">

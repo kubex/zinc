@@ -5014,7 +5014,7 @@
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri], {signal}) => { let url = dataUri; const params = new URLSearchParams(); params.append('page', this.page.toString()); params.append('per_page', this.itemsPerPage.toString()); if (this.sortColumn) { params.append('sort_column', this.sortColumn); } if (this.sortDirection) { params.append('sort_direction', this.sortDirection); } if (this.filter) { params.append('filter', this.filter); } url += '?' + params.toString(); // This is also used for Rubix, so it may not work for your application. const response = await fetch(url, { signal, credentials: 'same-origin', }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
+              "default": "new Task(this, { task: async ([dataUri], {signal}) => { const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, }; // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: 'POST', headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: JSON.stringify(requestData) }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri] })"
             },
             {
               "kind": "field",

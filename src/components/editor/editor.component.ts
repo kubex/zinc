@@ -164,7 +164,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             'divider': () => this._insertDivider(),
             'redo': () => this.quillElement.history.redo(),
             'undo': () => this.quillElement.history.undo(),
-            'date': () => this._openDatePicker(),
           }
         },
         keyboard: {

@@ -4140,6 +4140,7 @@ declare module "components/editor/toolbar/editor-toolbar.component" {
         render(): import("lit").TemplateResult<1>;
         private _textOptions;
         private _formatOptions;
+        private _commonFormatOptions;
         private _historyOptions;
         private _colorOptions;
         private _listOptions;

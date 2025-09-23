@@ -59,9 +59,11 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
 
+
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
   @property({type: Number}) notification: number;
+  @property({attribute: "muted-notifications", type: Boolean}) mutedNotifications = false;
 
   @property() verticalAlign: 'start' | 'center' | 'end';
 
@@ -215,7 +217,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-right': this.iconPosition === 'right',
           'button--with-content': this.hasSlotController.test('[default]') || this.content,
           'button--square': this.square,
-          'button--has-notification': this.notification !== undefined && this.notification > 0,
+          'button--has-notification': this.notification !== undefined && this.notification !== 0,
+          'button--muted-notification': this.mutedNotifications || (this.notification !== undefined && this.notification === -2),
+          'button--notification-dot': this.notification !== undefined && this.notification < 0,
         })}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"

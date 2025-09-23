@@ -246,8 +246,15 @@ export default class ZnDataTable extends ZincElement {
           <div>${this.renderTable(data as Response)}</div>`;
         return this._lastTableContent;
       },
-      error: (error) => html`
-        <div>${error}</div>`
+      error: (error) => {
+        if (error instanceof Error) {
+          if (error.message === "Not Found") {
+            return this.emptyState();
+          }
+        }
+        return html`
+          <div>${error}</div>`
+      }
     }) as TemplateResult;
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
@@ -292,19 +299,23 @@ export default class ZnDataTable extends ZincElement {
     }
   }
 
+  emptyState() {
+    return html`
+      <div class="table--empty">
+        <zn-empty-state
+          caption="${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}"
+          icon="data_alert">
+        </zn-empty-state>
+      </div>`;
+  }
+
   renderTable(data: Response) {
     this.itemsPerPage = data.per_page ?? DEFAULT_PER_PAGE;
     this.page = data.page ?? DEFAULT_PAGE;
     this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
 
     if (!data?.rows || data.rows.length === 0) {
-      return html`
-        <div class="table--empty">
-          <zn-empty-state
-            caption="${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}"
-            icon="data_alert">
-          </zn-empty-state>
-        </div>`;
+      return this.emptyState();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

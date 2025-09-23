@@ -16,8 +16,11 @@ export default class ZnEditorToolbar extends ZincElement {
         <div class="toolbar__group">${this._historyOptions()}</div>
         <div class="toolbar__group">${this._colorOptions()}</div>
         <div class="toolbar__group">${this._listOptions()}</div>
-        <div class="toolbar__group">${this._fileOptions()}</div>
-        <div class="toolbar__group">${this._emojiOptions()}</div>
+        <div class="toolbar__group">
+          ${this._insertOptions()}
+          ${this._dateOption()}
+          ${this._emojiOptions()}
+        </div>
       </div>
     `;
   }
@@ -198,7 +201,7 @@ export default class ZnEditorToolbar extends ZincElement {
       </zn-dropdown>`;
   }
 
-  private _fileOptions() {
+  private _insertOptions() {
     return html`
       <zn-dropdown class="toolbar__file-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
@@ -246,6 +249,21 @@ export default class ZnEditorToolbar extends ZincElement {
           <zn-icon src="insert_emoticon" size="18"></zn-icon>
         </zn-button>
         <div class="emoji-picker"></div>
+      </zn-dropdown>`;
+  }
+
+  private _dateOption() {
+    return html`
+      <zn-dropdown class="toolbar__date-dropdown" placement="bottom-end">
+        <zn-button slot="trigger"
+                   class="toolbar__dropdown-trigger toolbar__date-dropdown-trigger"
+                   color="transparent"
+                   icon="arrow_drop_down"
+                   icon-size="18"
+                   icon-position="right">
+          <zn-icon src="calendar_today" size="18"></zn-icon>
+        </zn-button>
+        <div class="date-picker"></div>
       </zn-dropdown>`;
   }
 }

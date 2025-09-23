@@ -2,6 +2,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {Picker} from 'emoji-mart';
 import {property, query} from 'lit/decorators.js';
+import AirDatepicker from "air-datepicker";
 import AttachmentModule from "./modules/attachment-module";
 import data from '@emoji-mart/data';
 import DialogModule from "./modules/dialog-module/dialog-module";
@@ -80,6 +81,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private quillElement: Quill;
   private _commands: CannedResponse[] = [];
+  private _datePickerInstance: AirDatepicker<HTMLElement>;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -162,6 +164,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             'divider': () => this._insertDivider(),
             'redo': () => this.quillElement.history.redo(),
             'undo': () => this.quillElement.history.undo(),
+            'date': () => this._openDatePicker(),
           }
         },
         keyboard: {
@@ -215,6 +218,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._attachToolbarHandlers(quill);
     this._supplyPlaceholderDialog();
     this._initEmojiPicker();
+    this._initDatePicker();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -319,7 +323,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     quill.on('text-change', this._handleTextChange.bind(this));
     quill.on('selection-change', () => this._syncToolbarState());
     // Ensure toolbar reflects current formats when the editor is clicked
-    quill.root.addEventListener('click', () => this._syncToolbarState());
+    quill.root?.addEventListener('click', () => this._syncToolbarState());
 
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
@@ -333,6 +337,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   protected updated(changed: PropertyValues) {
     if (changed.has('t')) {
       this._initEmojiPicker();
+      this._initDatePicker();
     }
   }
 
@@ -574,8 +579,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const el = this.toolbar.shadowRoot?.querySelector(`zn-button[icon="${icon}"]`) as HTMLElement | null;
     if (!el) return;
     if (active) {
+      el.classList.add('ql-active');
       el.setAttribute('icon-color', 'primary');
     } else {
+      el.classList.remove('ql-active');
       el.removeAttribute('icon-color');
     }
   }
@@ -618,6 +625,56 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         this.quillElement.setSelection(range.index + text.length, 0, 'user');
       } else {
         const index = Math.max(0, this.quillElement.getLength() - 1);
+        this.quillElement.insertText(index, text, 'user');
+        this.quillElement.setSelection(index + text.length, 0, 'user');
+      }
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  private _initDatePicker() {
+    const container = this.toolbar?.shadowRoot?.querySelector('.date-picker') as HTMLElement | null;
+    if (!container) return;
+
+    if (this._datePickerInstance) {
+      if (Object.prototype.hasOwnProperty.call(this._datePickerInstance, 'destroy')) {
+        this._datePickerInstance.destroy();
+      }
+    }
+
+    container.innerHTML = '';
+
+    // eslint-disable-next-line no-new
+    this._datePickerInstance = new AirDatepicker(container, {
+      inline: true,
+      locale: {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        today: 'Today',
+        clear: 'Clear',
+        dateFormat: 'MM/dd/yyyy',
+        timeFormat: 'hh:ii aa',
+        firstDay: 0
+      },
+      onSelect: ({formattedDate}) => this._onDateSelect(formattedDate)
+    });
+  }
+
+  private _onDateSelect(formattedDate: string | string[]) {
+    try {
+      if (!formattedDate || !this.quillElement) return;
+      const range = this.quillElement.getSelection(true);
+      if (range) {
+        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
+        this.quillElement.insertText(range.index, text, 'user');
+        this.quillElement.setSelection(range.index + text.length, 0, 'user');
+      } else {
+        const index = Math.max(0, this.quillElement.getLength() - 1);
+        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
         this.quillElement.insertText(index, text, 'user');
         this.quillElement.setSelection(index + text.length, 0, 'user');
       }

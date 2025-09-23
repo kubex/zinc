@@ -182,7 +182,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const isLink = this._isLink();
 
     const icon = this.icon ? html`
-      <zn-icon src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
+      <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
                color="${this.iconColor ? this.iconColor : null}"></zn-icon>` : '';
 
     const tag = isLink ? literal`a` : literal`button`;

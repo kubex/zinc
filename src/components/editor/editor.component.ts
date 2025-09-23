@@ -1,6 +1,6 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
-import {Picker} from 'emoji-mart';
+import {init, Picker, SearchIndex} from 'emoji-mart';
 import {property, query} from 'lit/decorators.js';
 import AirDatepicker from "air-datepicker";
 import AttachmentModule from "./modules/attachment-module";
@@ -32,6 +32,8 @@ export interface CannedResponse {
 interface Emoji {
   native?: string;
   skins?: { native?: string }[];
+  id?: string;
+  shortcodes?: string;
 }
 
 /**
@@ -83,6 +85,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _commands: CannedResponse[] = [];
   private _datePickerInstance: AirDatepicker<HTMLElement>;
 
+  // Emoji search popup state
+  private _emojiPopupEl: HTMLDivElement | null = null;
+  private _emojiActive = false;
+  private _emojiStartIndex = -1;
+  private _emojiQuery = '';
+
   get validity(): ValidityState {
     return this.editorHtml.validity;
   }
@@ -110,6 +118,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
     this.formControlController.updateValidity();
+
+    // Initialize emoji-mart headless index for search
+    try {
+      await init({data: data});
+    } catch (e) {
+      // ignore if already initialized
+    }
 
     const bindings = this._getQuillKeyboardBindings();
 
@@ -218,6 +233,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._supplyPlaceholderDialog();
     this._initEmojiPicker();
     this._initDatePicker();
+    this._initEmojiSearch();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -677,6 +693,242 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         this.quillElement.insertText(index, text, 'user');
         this.quillElement.setSelection(index + text.length, 0, 'user');
       }
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  // ===== Emoji ':' headless search popup =====
+  private _initEmojiSearch() {
+    try {
+      this._ensureEmojiPopup();
+      if (!this.quillElement) return;
+
+      this.quillElement.on('text-change', () => this._maybeUpdateEmojiSearch());
+      this.quillElement.on('selection-change', () => this._maybeUpdateEmojiSearch());
+
+      // Keyboard interactions: Enter selects first, Escape closes
+      this.quillElement.root.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (!this._emojiActive) return;
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this._hideEmojiPopup();
+        } else if (e.key === 'Enter') {
+          // Click the first result if present
+          const first = this._emojiPopupEl?.querySelector('[data-emoji-item]') as HTMLElement | null;
+          if (first) {
+            e.preventDefault();
+            first.click();
+          }
+        }
+      });
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  private _ensureEmojiPopup() {
+    if (this._emojiPopupEl) return;
+    const container = this.editor;
+    const el = document.createElement('div');
+    el.id = 'emoji-search-popup';
+    el.style.position = 'absolute';
+    el.style.zIndex = '10000';
+    el.style.background = 'var(--zn-panel-bg, #fff)';
+    el.style.border = '1px solid var(--zn-border, rgba(0,0,0,0.12))';
+    el.style.borderRadius = '8px';
+    el.style.boxShadow = 'var(--zn-shadow-medium)';
+    el.style.padding = '6px';
+    el.style.maxHeight = '220px';
+    el.style.overflowY = 'auto';
+    el.style.minWidth = '180px';
+    el.style.display = 'none';
+    el.setAttribute('role', 'listbox');
+
+    container.appendChild(el);
+    this._emojiPopupEl = el;
+
+    // Hide when clicking outside
+    const root = this.getRootNode() as Document | ShadowRoot;
+    root.addEventListener('click', (ev: Event) => {
+      if (!this._emojiPopupEl || !this._emojiActive) return;
+      const path = ev.composedPath?.() ?? [];
+      if (!path.includes(this._emojiPopupEl) && !path.includes(this.quillElement.root)) {
+        this._hideEmojiPopup();
+      }
+    });
+  }
+
+  private _maybeUpdateEmojiSearch() {
+    if (!this.quillElement) return;
+
+    const queryInfo = this._getEmojiQuery();
+    if (!queryInfo) {
+      this._hideEmojiPopup();
+      return;
+    }
+
+    const {start, query: emojiQuery} = queryInfo;
+    this._emojiStartIndex = start;
+    this._emojiQuery = emojiQuery;
+    this._emojiActive = true;
+    void this._performEmojiSearch(this._emojiQuery);
+    // Position near caret
+    const sel = this.quillElement.getSelection();
+    if (sel) {
+      const bounds = this.quillElement.getBounds(sel.index);
+      if (bounds) {
+        this._positionEmojiPopup(bounds);
+      }
+    }
+  }
+
+  private _positionEmojiPopup(bounds: { left: number; top: number; bottom: number; height?: number }) {
+    if (!this._emojiPopupEl) return;
+    // Place below caret, aligned left
+    this._emojiPopupEl.style.left = `${Math.max(0, bounds.left)}px`;
+    this._emojiPopupEl.style.top = `${bounds.bottom + 4}px`;
+  }
+
+  private _getEmojiQuery(): { start: number; query: string } | null {
+    try {
+      const sel = this.quillElement.getSelection();
+      if (!sel) return null;
+
+      const cursor = sel.index;
+      const textBefore = this.quillElement.getText(Math.max(0, cursor - 50), Math.min(50, cursor));
+      const offset = cursor - Math.max(0, cursor - 50);
+      const uptoCursor = textBefore.slice(0, offset);
+      const cIndex = uptoCursor.lastIndexOf(':');
+      if (cIndex === -1) return null;
+
+      const prev = cIndex > 0 ? uptoCursor[cIndex - 1] : ' ';
+      if (prev && /[^\s\n]/.test(prev)) return null; // must start at word boundary
+
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const query = uptoCursor.substring(cIndex + 1);
+      if (/[\s\n]/.test(query)) return null; // stop at whitespace
+
+      // Do not trigger for URLs like http:// or emoji already complete like :)
+      if (/^\/\//.test(uptoCursor.substring(Math.max(0, cIndex - 5), cIndex + 1))) return null;
+      return {start: cursor - query.length - 1, query};
+    } catch {
+      return null;
+    }
+  }
+
+  private async _performEmojiSearch(value: string) {
+    if (!this._emojiPopupEl) {
+      this._ensureEmojiPopup();
+    }
+    if (!this._emojiPopupEl) return;
+
+    try {
+      const results = await SearchIndex.search(value) as Emoji[];
+      this._renderEmojiResults(results);
+    } catch (e) {
+      this._renderEmojiResults(null);
+    }
+  }
+
+  private _renderEmojiResults(results: Emoji[] | null) {
+    if (!this._emojiPopupEl) return;
+
+    this._emojiPopupEl.innerHTML = '';
+
+    const makeItem = (emojiChar: string, label: string) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.setAttribute('data-emoji-item', '');
+      item.style.display = 'flex';
+      item.style.alignItems = 'center';
+      item.style.gap = '8px';
+      item.style.padding = '6px 8px';
+      item.style.width = '100%';
+      item.style.border = 'none';
+      item.style.background = 'transparent';
+      item.style.cursor = 'pointer';
+      item.style.font = 'inherit';
+      item.onmouseenter = () => (item.style.background = 'var(--zn-hover, rgba(0,0,0,0.04))');
+      item.onmouseleave = () => (item.style.background = 'transparent');
+
+      const emojiSpan = document.createElement('span');
+      emojiSpan.style.fontSize = '20px';
+      emojiSpan.textContent = emojiChar;
+
+      const labelSpan = document.createElement('span');
+      labelSpan.style.opacity = '0.7';
+      labelSpan.textContent = label;
+
+      item.appendChild(emojiSpan);
+      item.appendChild(labelSpan);
+      item.addEventListener('click', () => this._replaceEmojiAtQuery(emojiChar));
+      return item;
+    };
+
+    const header = document.createElement('div');
+    header.style.padding = '4px 6px';
+    header.style.fontSize = '12px';
+    header.style.opacity = '0.6';
+    header.textContent = this._emojiQuery ? `Emoji: ${this._emojiQuery}` : 'Emoji';
+    this._emojiPopupEl.appendChild(header);
+
+    if (!results) {
+      const msg = document.createElement('div');
+      msg.style.padding = '8px';
+      msg.style.opacity = '0.7';
+      msg.textContent = 'Type something';
+      this._emojiPopupEl.appendChild(msg);
+      this._emojiPopupEl.style.display = 'block';
+      return;
+    }
+
+    if (!Array.isArray(results) || results.length === 0) {
+      const msg = document.createElement('div');
+      msg.style.padding = '8px';
+      msg.style.opacity = '0.7';
+      msg.textContent = 'No results';
+      this._emojiPopupEl.appendChild(msg);
+      this._emojiPopupEl.style.display = 'block';
+      return;
+    }
+
+    results.slice(0, 20).forEach((e: Emoji) => {
+      const emojiChar = (e?.skins?.[0]?.native) || e?.native || '';
+      const label = e?.id || e?.shortcodes || '';
+      if (!emojiChar) return;
+
+      this._emojiPopupEl!.appendChild(makeItem(emojiChar, label));
+    });
+
+    this._emojiPopupEl.style.display = 'block';
+  }
+
+  private _hideEmojiPopup() {
+    this._emojiActive = false;
+    this._emojiQuery = '';
+    if (this._emojiPopupEl) {
+      this._emojiPopupEl.style.display = 'none';
+      this._emojiPopupEl.innerHTML = '';
+    }
+  }
+
+  private _replaceEmojiAtQuery(emojiChar: string) {
+    try {
+      if (!this.quillElement || this._emojiStartIndex < 0) return;
+
+      const sel = this.quillElement.getSelection();
+      if (!sel) return;
+
+      const length = sel.index - this._emojiStartIndex;
+      if (length < 0) return;
+
+      const insertText = `${emojiChar} `;
+      this.quillElement.deleteText(this._emojiStartIndex, length, 'user');
+      this.quillElement.insertText(this._emojiStartIndex, insertText, 'user');
+      this.quillElement.setSelection(this._emojiStartIndex + insertText.length, 0, 'user');
+      this._hideEmojiPopup();
     } catch (e) {
       // no-op
     }

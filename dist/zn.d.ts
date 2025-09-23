@@ -559,6 +559,7 @@ declare module "components/menu-item/menu-item.component" {
         type: 'normal' | 'checkbox';
         /** Draws the item in a checked state. */
         checked: boolean;
+        checkedPosition: 'left' | 'right';
         /** A unique value to store in the menu item. This can be used as a way to identify menu items when selected. */
         value: string;
         /** Draws the menu item in a loading state. */
@@ -4126,10 +4127,36 @@ declare module "components/editor/modules/time-tracking-module" {
         private _updateStartTime;
     }
 }
+declare module "components/editor/toolbar/editor-toolbar.component" {
+    import { type CSSResultGroup } from "lit";
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorToolbar extends ZincElement {
+        static styles: CSSResultGroup;
+        render(): import("lit").TemplateResult<1>;
+        private _textOptions;
+        private _formatOptions;
+        private _historyOptions;
+        private _colorOptions;
+        private _listOptions;
+        private _insertOptions;
+        private _emojiOptions;
+        private _dateOption;
+    }
+}
+declare module "components/editor/toolbar/index" {
+    import ZnEditorToolbar from "components/editor/toolbar/editor-toolbar.component";
+    export * from "components/editor/toolbar/editor-toolbar.component";
+    export default ZnEditorToolbar;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-editor-toolbar': ZnEditorToolbar;
+        }
+    }
+}
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     export interface CannedResponse {
         title: string;
         content: string;
@@ -4159,6 +4186,7 @@ declare module "components/editor/editor.component" {
         private formControlController;
         private editor;
         private editorHtml;
+        private toolbar;
         name: string;
         value: string;
         interactionType: 'ticket' | 'chat';
@@ -4167,6 +4195,7 @@ declare module "components/editor/editor.component" {
         uploadAttachmentUrl: string;
         private quillElement;
         private _commands;
+        private _datePickerInstance;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4174,12 +4203,27 @@ declare module "components/editor/editor.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
+        protected updated(changed: PropertyValues): void;
         private _handleTextChange;
         private _updateIcons;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
-        private _setupTitleAttributes;
+        private _updateMenuCheckedState;
+        private _updateDropdownTrigger;
+        private _syncToolbarState;
+        private _updateHeadingFormatMenu;
+        private _updateListFormatMenu;
+        private _updateTextFormatMenu;
+        private _updateColorFormatMenu;
+        private _getTextFormats;
+        private _attachToolbarHandlers;
+        private _syncButtonState;
         private _fetchCannedResponses;
+        private _initEmojiPicker;
+        private _onEmojiSelect;
+        private _initDatePicker;
+        private _onDateSelect;
+        private _insertDivider;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -6065,6 +6109,7 @@ declare module "zinc" {
     export { default as OrderTable } from "components/order-table/index";
     export { default as BulkActions } from "components/bulk-actions/index";
     export { default as Editor } from "components/editor/index";
+    export { default as EditorToolbar } from "components/editor/toolbar/index";
     export { default as Toggle } from "components/toggle/index";
     export { default as Input } from "components/input/index";
     export { default as Select } from "components/select/index";

@@ -7350,6 +7350,14 @@
             },
             {
               "kind": "field",
+              "name": "toolbar",
+              "type": {
+                "text": "ZnEditorToolbar"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -7413,6 +7421,14 @@
               },
               "privacy": "private",
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_datePickerInstance",
+              "type": {
+                "text": "AirDatepicker<HTMLElement>"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -7496,7 +7512,121 @@
             },
             {
               "kind": "method",
-              "name": "_setupTitleAttributes",
+              "name": "_updateMenuCheckedState",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "selector",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "matchAttr",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "wanted",
+                  "type": {
+                    "text": "string | string[] | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateDropdownTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "dropdownSelector",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "defaultIconSrc",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_syncToolbarState",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_updateHeadingFormatMenu",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formats",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateListFormatMenu",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formats",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateTextFormatMenu",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formats",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_updateColorFormatMenu",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formats",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getTextFormats",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formats",
+                  "type": {
+                    "text": "Record<string, any>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_attachToolbarHandlers",
               "privacy": "private",
               "parameters": [
                 {
@@ -7509,7 +7639,67 @@
             },
             {
               "kind": "method",
+              "name": "_syncButtonState",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "icon",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "_fetchCannedResponses",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_initEmojiPicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onEmojiSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "emoji",
+                  "type": {
+                    "text": "Emoji | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_initDatePicker",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_onDateSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "formattedDate",
+                  "type": {
+                    "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_insertDivider",
               "privacy": "private"
             }
           ],
@@ -12161,6 +12351,16 @@
             },
             {
               "kind": "field",
+              "name": "checkedPosition",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "attribute": "checked-position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string"
@@ -12337,6 +12537,14 @@
               "default": "false",
               "description": "Draws the item in a checked state.",
               "fieldName": "checked"
+            },
+            {
+              "name": "checked-position",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "fieldName": "checkedPosition"
             },
             {
               "name": "value",
@@ -24361,6 +24569,76 @@
           "declaration": {
             "name": "ZnWell",
             "module": "components/well/well.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/editor/toolbar/editor-toolbar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEditorToolbar",
+          "members": [
+            {
+              "kind": "method",
+              "name": "_textOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_formatOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_historyOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_colorOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_listOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_insertOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_emojiOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_dateOption",
+              "privacy": "private"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "editor-toolbar",
+          "tagName": "zn-editor-toolbar",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEditorToolbar",
+            "module": "components/editor/toolbar/editor-toolbar.js"
           }
         }
       ]

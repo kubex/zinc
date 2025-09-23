@@ -7,7 +7,6 @@ import styles from './editor-toolbar.scss';
 export default class ZnEditorToolbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-
   render() {
     return html`
       <div class="toolbar">

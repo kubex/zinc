@@ -1,17 +1,23 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
+import {Picker} from 'emoji-mart';
 import {property, query} from 'lit/decorators.js';
+import AirDatepicker from "air-datepicker";
 import AttachmentModule from "./modules/attachment-module";
+import data from '@emoji-mart/data';
 import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import MenuModule from "./modules/menu-module/menu-module";
-import Quill, {Range} from "quill";
+import Quill from "quill";
 import TimeTrackingModule from "./modules/time-tracking-module";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
+import type Toolbar from "quill/modules/toolbar";
+import type ZnEditorToolbar from "./toolbar";
+import type ZnMenuItem from "../menu-item";
 
 import styles from './editor.scss';
 
@@ -21,6 +27,11 @@ export interface CannedResponse {
   command: string;
   labels?: string[];
   count: string;
+}
+
+interface Emoji {
+  native?: string;
+  skins?: { native?: string }[];
 }
 
 /**
@@ -51,6 +62,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @query('#editorHtml')
   private editorHtml: HTMLTextAreaElement;
 
+  @query('#toolbar')
+  private toolbar: ZnEditorToolbar;
+
   @property() name: string;
   @property() value: string;
 
@@ -67,6 +81,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private quillElement: Quill;
   private _commands: CannedResponse[] = [];
+  private _datePickerInstance: AirDatepicker<HTMLElement>;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -105,19 +120,36 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
     Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
 
+    // Register a custom HR blot so we can insert an inline horizontal rule block
+    const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
+
+    class HrBlot extends BlockEmbed {
+      static blotName = 'hr';
+      static tagName = 'HR';
+      static className = 'ql-hr';
+
+      static create(): HTMLElement {
+        const node = document.createElement('hr');
+        node.classList.add('ql-hr');
+        return node;
+      }
+    }
+
+    Quill.register({'formats/hr': HrBlot}, true);
+
     this._updateIcons();
     const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
 
-    const container = [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['undo', 'redo'],
-      [{'list': 'ordered'}, {'list': 'bullet'}],
-      ['code-block']
-    ];
-    container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
-    container.push(['remove-formatting']);
+    /*    const container = [
+          ['bold', 'italic', 'underline', 'strike'],
+          ['undo', 'redo'],
+          [{'list': 'ordered'}, {'list': 'bullet'}],
+          ['code-block']
+        ];
+        container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
+        container.push(['remove-formatting']);*/
 
     if (this.cannedResponsesUri) {
       await this._fetchCannedResponses();
@@ -126,33 +158,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
-          container,
+          container: this.toolbar,
           handlers: {
             'attachment': () => null,
-            'placeholder': function (value: string) {
-              if (value) {
-                const editor: Quill | null = this.quill;
-                if (editor) {
-                  const cursorPosition = editor.getSelection()?.index;
-                  if (cursorPosition) {
-                    editor.insertText(cursorPosition, value);
-                    editor.setSelection(new Range(cursorPosition, value.length));
-                  }
-                }
-              }
-            },
+            'divider': () => this._insertDivider(),
             'redo': () => this.quillElement.history.redo(),
             'undo': () => this.quillElement.history.undo(),
-            'remove-formatting': () => {
-              const range = this.quillElement.getSelection();
-              if (range) {
-                this.quillElement.formatText(range.index, range.length, 'bold', false);
-                this.quillElement.formatText(range.index, range.length, 'italic', false);
-                this.quillElement.formatText(range.index, range.length, 'underline', false);
-                this.quillElement.formatText(range.index, range.length, 'strike', false);
-              }
-
-            }
+            'date': () => this._openDatePicker(),
           }
         },
         keyboard: {
@@ -193,7 +205,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             });
           },
         },
-        imageResizeModule: {}
+        imageResizeModule: {},
+        history: {}
       },
       placeholder: 'Compose your reply...',
       theme: 'snow',
@@ -202,7 +215,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
+    this._attachToolbarHandlers(quill);
     this._supplyPlaceholderDialog();
+    this._initEmojiPicker();
+    this._initDatePicker();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -305,20 +321,32 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
-
-    this._setupTitleAttributes(quill);
+    quill.on('selection-change', () => this._syncToolbarState());
+    // Ensure toolbar reflects current formats when the editor is clicked
+    quill.root?.addEventListener('click', () => this._syncToolbarState());
 
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
+    // Sync initial toolbar state with current selection/formats
+    this._syncToolbarState();
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
+  }
+
+  protected updated(changed: PropertyValues) {
+    if (changed.has('t')) {
+      this._initEmojiPicker();
+      this._initDatePicker();
+    }
   }
 
   private _handleTextChange() {
     this.value = this.quillElement.root.innerHTML;
     this.editorHtml.value = this.value;
     this.emit('zn-change');
+    // Keep toolbar state in sync after text changes
+    this._syncToolbarState();
   }
 
   private _updateIcons() {
@@ -389,21 +417,173 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 
-  private _setupTitleAttributes(quill: Quill) {
-    const toolbar = quill.container.previousSibling as HTMLElement;
-    if (toolbar) {
-      toolbar.querySelector('button.ql-bold')?.setAttribute('title', 'Bold');
-      toolbar.querySelector('button.ql-italic')?.setAttribute('title', 'Italic');
-      toolbar.querySelector('button.ql-underline')?.setAttribute('title', 'Underline');
-      toolbar.querySelector('button.ql-strike')?.setAttribute('title', 'Strikethrough');
-      toolbar.querySelector('button.ql-undo')?.setAttribute('title', 'Undo');
-      toolbar.querySelector('button.ql-redo')?.setAttribute('title', 'Redo');
-      toolbar.querySelector('button.ql-redo')?.setAttribute('title', 'Redo');
-      toolbar.querySelector('button.ql-list[value="ordered"]')?.setAttribute('title', 'Ordered List');
-      toolbar.querySelector('button.ql-list[value="bullet"]')?.setAttribute('title', 'Bullet List');
-      toolbar.querySelector('button.ql-link')?.setAttribute('title', 'Link');
-      toolbar.querySelector('button.ql-image')?.setAttribute('title', 'Image');
-      toolbar.querySelector('button.ql-remove-formatting')?.setAttribute('title', 'Remove Formatting');
+  private _updateMenuCheckedState(selector: string, matchAttr: string, wanted: string | string[] | null) {
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+    const items = toolbarShadowRoot?.querySelectorAll(selector) as NodeListOf<ZnMenuItem> | undefined;
+    if (!items?.length) return;
+
+    const wantedValues: string[] = wanted === null ? [] : Array.isArray(wanted) ? wanted : [wanted];
+
+    items.forEach((item: ZnMenuItem) => {
+      const value = item.getAttribute(matchAttr) ?? '';
+      if (item.getAttribute('type') === 'checkbox') {
+        item.checked = wantedValues.includes(value);
+      }
+    });
+  }
+
+  private _updateDropdownTrigger(dropdownSelector: string, defaultIconSrc: string) {
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+    const dropdown = toolbarShadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
+    if (!dropdown) return;
+
+    const trigger = dropdown.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
+    if (!trigger) return;
+
+    const menu = dropdown.querySelector('zn-menu');
+    const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
+
+    let iconSrc = defaultIconSrc;
+    let iconColor = 'default';
+    if (items?.length) {
+      items.forEach((item: ZnMenuItem) => {
+        const checked = item.checked ?? (item.hasAttribute('checked'));
+        if (checked) {
+          const icon = item.querySelector('zn-icon')!;
+          iconSrc = icon?.getAttribute('src') ?? iconSrc;
+          iconColor = 'primary';
+        }
+      });
+    }
+
+    trigger.innerHTML = `<zn-icon src="${iconSrc}" color="${iconColor}" size="18"></zn-icon>`;
+  }
+
+  private _syncToolbarState() {
+    if (!this.quillElement) return;
+    const range = this.quillElement.getSelection();
+    if (!range) return;
+
+    const formats: Record<string, any> = this.quillElement.getFormat(range);
+    if (!formats) return;
+
+    this._syncButtonState('format_bold', !!formats.bold);
+    this._syncButtonState('format_italic', !!formats.italic);
+    this._syncButtonState('format_underlined', !!formats.underline);
+
+    this._updateHeadingFormatMenu(formats);
+    this._updateListFormatMenu(formats);
+    this._updateTextFormatMenu(formats);
+    this._updateColorFormatMenu(formats);
+
+    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'match_case');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'lists');
+  }
+
+  private _updateHeadingFormatMenu(formats: Record<string, any>) {
+    const wanted = formats.header ? String(formats.header) : ''; // Empty string for text normal
+    this._updateMenuCheckedState('zn-dropdown.toolbar__header-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', wanted);
+  }
+
+  private _updateListFormatMenu(formats: Record<string, any>) {
+    const list = formats.list as string | null;
+    const listValue = (list === 'ordered' || list === 'bullet' || list === 'checked') ? list : null;
+    this._updateMenuCheckedState('zn-dropdown.toolbar__list-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', listValue);
+  }
+
+  private _updateTextFormatMenu(formats: Record<string, any>) {
+    const selector = 'zn-dropdown.toolbar__format-dropdown zn-menu zn-menu-item[data-format]';
+    const attr = 'data-format';
+    const wanted = this._getTextFormats(formats);
+
+    this._updateMenuCheckedState(selector, attr, wanted);
+  }
+
+  private _updateColorFormatMenu(formats: Record<string, any>) {
+    const color = (typeof formats.color === 'string') ? formats.color : '';
+    this._updateMenuCheckedState('zn-dropdown.toolbar__color-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', color);
+  }
+
+  private _getTextFormats(formats: Record<string, any>) {
+    const wanted: string[] = [];
+    if (formats.strike) {
+      wanted.push('strike');
+    }
+    if (formats.blockquote) {
+      wanted.push('blockquote');
+    }
+    if (formats.code) {
+      wanted.push('code');
+    }
+    if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) {
+      wanted.push('code-block');
+    }
+    return wanted;
+  }
+
+  private _attachToolbarHandlers(quill: Quill) {
+    const toolbarModule = quill.getModule('toolbar') as Toolbar | undefined;
+    if (!toolbarModule) return;
+
+    const callFormat = (key: string, value?: string | boolean | undefined) => {
+      const handler = (toolbarModule.handlers?.[key] as ((value?: any) => void) | undefined);
+      if (value === undefined) {
+        if (key === 'header' || key === 'color') {
+          value = false; // False for text normal or default color
+        }
+        if (key === 'link') {
+          value = true; // True for creating a link
+        }
+      }
+      if (typeof handler === 'function') {
+        handler.call(toolbarModule, value);
+        return;
+      }
+      if (key === 'clean') {
+        const range = this.quillElement.getSelection();
+        if (range) {
+          this.quillElement.removeFormat(range.index, range.length || 0);
+        } else {
+          this.quillElement.removeFormat(0, this.quillElement.getLength());
+        }
+        return;
+      }
+      const range = this.quillElement.getSelection();
+      const formats: Record<string, unknown> = range ? this.quillElement.getFormat(range) : {};
+      const current = formats[key];
+      const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+      this.quillElement.format(key, next);
+    };
+
+    const toolbarShadowRoot = this.toolbar.shadowRoot;
+
+    const formatters = toolbarShadowRoot?.querySelectorAll('[data-format]') ?? [];
+    if (formatters) {
+      formatters.forEach((formatter: Element) => {
+        formatter.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = e.currentTarget as HTMLElement | null;
+          if (!target) return;
+
+          const format = target.getAttribute('data-format');
+          if (!format) return;
+
+          const type: string | undefined = target.getAttribute('data-format-type') ?? undefined;
+          callFormat(format, type);
+        });
+      });
+    }
+  }
+
+  private _syncButtonState(icon: string, active: boolean) {
+    const el = this.toolbar.shadowRoot?.querySelector(`zn-button[icon="${icon}"]`) as HTMLElement | null;
+    if (!el) return;
+    if (active) {
+      el.classList.add('ql-active');
+      el.setAttribute('icon-color', 'primary');
+    } else {
+      el.classList.remove('ql-active');
+      el.removeAttribute('icon-color');
     }
   }
 
@@ -416,8 +596,118 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
   }
 
+  private _initEmojiPicker() {
+    const container = this.toolbar?.shadowRoot?.querySelector('.emoji-picker') as HTMLElement | null;
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    // eslint-disable-next-line no-new
+    new Picker({
+      parent: container,
+      data: data as Record<string, unknown>,
+      previewPosition: 'none',
+      skinTonePosition: 'none',
+      theme: this.t === 'dark' ? 'dark' : 'light',
+      set: 'native',
+      icons: 'solid',
+      onEmojiSelect: (emoji: Emoji) => this._onEmojiSelect(emoji)
+    });
+  }
+
+  private _onEmojiSelect(emoji: Emoji | null) {
+    try {
+      const text: string = emoji?.native ?? emoji?.skins?.[0]?.native ?? '';
+      if (!text || !this.quillElement) return;
+      const range = this.quillElement.getSelection(true);
+      if (range) {
+        this.quillElement.insertText(range.index, text, 'user');
+        this.quillElement.setSelection(range.index + text.length, 0, 'user');
+      } else {
+        const index = Math.max(0, this.quillElement.getLength() - 1);
+        this.quillElement.insertText(index, text, 'user');
+        this.quillElement.setSelection(index + text.length, 0, 'user');
+      }
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  private _initDatePicker() {
+    const container = this.toolbar?.shadowRoot?.querySelector('.date-picker') as HTMLElement | null;
+    if (!container) return;
+
+    if (this._datePickerInstance) {
+      if (Object.prototype.hasOwnProperty.call(this._datePickerInstance, 'destroy')) {
+        this._datePickerInstance.destroy();
+      }
+    }
+
+    container.innerHTML = '';
+
+    // eslint-disable-next-line no-new
+    this._datePickerInstance = new AirDatepicker(container, {
+      inline: true,
+      locale: {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        today: 'Today',
+        clear: 'Clear',
+        dateFormat: 'MM/dd/yyyy',
+        timeFormat: 'hh:ii aa',
+        firstDay: 0
+      },
+      onSelect: ({formattedDate}) => this._onDateSelect(formattedDate)
+    });
+  }
+
+  private _onDateSelect(formattedDate: string | string[]) {
+    try {
+      if (!formattedDate || !this.quillElement) return;
+      const range = this.quillElement.getSelection(true);
+      if (range) {
+        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
+        this.quillElement.insertText(range.index, text, 'user');
+        this.quillElement.setSelection(range.index + text.length, 0, 'user');
+      } else {
+        const index = Math.max(0, this.quillElement.getLength() - 1);
+        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
+        this.quillElement.insertText(index, text, 'user');
+        this.quillElement.setSelection(index + text.length, 0, 'user');
+      }
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  private _insertDivider() {
+    try {
+      if (!this.quillElement) return;
+      const selection = this.quillElement.getSelection(true);
+      let index = selection ? selection.index + selection.length : this.quillElement.getLength();
+
+      const prevChar = index > 0 ? this.quillElement.getText(index - 1, 1) : '\n';
+      if (prevChar !== '\n') {
+        this.quillElement.insertText(index, '\n', 'user');
+        index += 1;
+      }
+
+      this.quillElement.insertEmbed(index, 'hr', true, 'user');
+      this.quillElement.insertText(index + 1, '\n', 'user');
+      this.quillElement.setSelection(index + 1, 0, 'user');
+
+      this._handleTextChange();
+    } catch (e) {
+      // no-op
+    }
+  }
+
   render() {
     return html`
+      <zn-editor-toolbar id="toolbar"></zn-editor-toolbar>
       <div id="editor"></div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">

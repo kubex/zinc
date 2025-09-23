@@ -1,0 +1,76 @@
+@use "../../../../scss/boot"; // Need to include the global styles again for Air Picker to work properly
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &__group {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    /* Divider between toolbar groups */
+    & + &::before {
+      content: "";
+      display: inline-block;
+      width: 1px;
+      height: 18px;
+      background-color: var(--zn-color-gray-300);
+      opacity: 0.8;
+      margin-inline: var(--zn-spacing-2x-small);
+      border-radius: 1px;
+    }
+  }
+
+  &__dropdown-trigger {
+    width: 44px;
+    height: 28px;
+    margin: 3px 2px;
+
+    &::part(icon) {
+      margin-left: 4px;
+    }
+  }
+
+  &__format-button {
+    width: 28px;
+    height: 28px;
+    margin: 3px 2px;
+
+    /* Move underline icon down a bit */
+    &[icon="format_underlined"]::part(base) {
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+
+.color-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+  border-radius: 100%;
+  flex-shrink: 0;
+
+  @each $name, $color in (
+    red: var(--zn-color-red-500),
+    blue: var(--zn-color-blue-500),
+    orange: var(--zn-color-orange-500),
+    yellow: var(--zn-color-yellow-400),
+    indigo: var(--zn-color-indigo-500),
+    violet: var(--zn-color-violet-500),
+    green: var(--zn-color-green-500),
+    pink: var(--zn-color-pink-500),
+    gray: var(--zn-color-gray-500)
+  ) {
+    &--#{"" + $name} {
+      background-color: #{$color};
+    }
+  }
+}
+
+/* Line up unset value with color chips */
+.color-icon--unset {
+  margin-inline-end: var(--zn-spacing-x-small);
+}

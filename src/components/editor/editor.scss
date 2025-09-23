@@ -123,7 +123,29 @@
   color: rgb(var(--zn-text))
 }
 
-
 .ql-code-block {
   font-size: 90%;
+}
+
+/* Editor toolbar custom active states */
+:host #toolbar zn-button.ql-active .button {
+  background-color: rgba(var(--zn-primary), 0.2);
+}
+
+:host #toolbar zn-dropdown zn-menu zn-menu-item[checked] .menu-item {
+  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
+  color: rgb(var(--zn-primary));
+}
+
+:host .ql-editor hr,
+:host .ql-editor .ql-hr {
+  border: none;
+  border-top: 1px solid rgb(var(--zn-border-color));
+  height: 0;
+  margin: var(--zn-spacing-small) 0;
+  opacity: 1;
+}
+
+.ql-toolbar.ql-snow:first-of-type {
+  padding: 0; // Unset toolbar padding
 }

@@ -7521,6 +7521,15 @@
             },
             {
               "kind": "field",
+              "name": "_emojiActiveIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
@@ -7582,11 +7591,6 @@
             {
               "kind": "method",
               "name": "_handleTextChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_updateIcons",
               "privacy": "private"
             },
             {
@@ -7846,6 +7850,39 @@
                   "name": "results",
                   "type": {
                     "text": "Emoji[] | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getEmojiItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_getActiveEmojiItem",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setActiveEmojiIndex",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
                   }
                 }
               ]

@@ -4206,6 +4206,7 @@ declare module "components/editor/editor.component" {
         private _emojiActive;
         private _emojiStartIndex;
         private _emojiQuery;
+        private _emojiActiveIndex;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4215,7 +4216,6 @@ declare module "components/editor/editor.component" {
         protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
         protected updated(changed: PropertyValues): void;
         private _handleTextChange;
-        private _updateIcons;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
         private _updateMenuCheckedState;
@@ -4240,6 +4240,9 @@ declare module "components/editor/editor.component" {
         private _getEmojiQuery;
         private _performEmojiSearch;
         private _renderEmojiResults;
+        private _getEmojiItems;
+        private _getActiveEmojiItem;
+        private _setActiveEmojiIndex;
         private _hideEmojiPopup;
         private _replaceEmojiAtQuery;
         private _insertDivider;

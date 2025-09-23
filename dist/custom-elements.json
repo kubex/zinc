@@ -7485,6 +7485,42 @@
             },
             {
               "kind": "field",
+              "name": "_emojiPopupEl",
+              "type": {
+                "text": "HTMLDivElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_emojiActive",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_emojiStartIndex",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "-1"
+            },
+            {
+              "kind": "field",
+              "name": "_emojiQuery",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "type": {
                 "text": "ValidityState"
@@ -7746,6 +7782,88 @@
                   "name": "formattedDate",
                   "type": {
                     "text": "string | string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_initEmojiSearch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_ensureEmojiPopup",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_maybeUpdateEmojiSearch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_positionEmojiPopup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "bounds",
+                  "type": {
+                    "text": "{ left: number; top: number; bottom: number; height?: number }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getEmojiQuery",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ start: number; query: string } | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_performEmojiSearch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderEmojiResults",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "results",
+                  "type": {
+                    "text": "Emoji[] | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_hideEmojiPopup",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_replaceEmojiAtQuery",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "emojiChar",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]

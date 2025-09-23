@@ -4201,6 +4201,10 @@ declare module "components/editor/editor.component" {
         private quillElement;
         private _commands;
         private _datePickerInstance;
+        private _emojiPopupEl;
+        private _emojiActive;
+        private _emojiStartIndex;
+        private _emojiQuery;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4228,6 +4232,15 @@ declare module "components/editor/editor.component" {
         private _onEmojiSelect;
         private _initDatePicker;
         private _onDateSelect;
+        private _initEmojiSearch;
+        private _ensureEmojiPopup;
+        private _maybeUpdateEmojiSearch;
+        private _positionEmojiPopup;
+        private _getEmojiQuery;
+        private _performEmojiSearch;
+        private _renderEmojiResults;
+        private _hideEmojiPopup;
+        private _replaceEmojiAtQuery;
         private _insertDivider;
         render(): import("lit").TemplateResult<1>;
     }

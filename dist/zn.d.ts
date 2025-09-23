@@ -2076,6 +2076,7 @@ declare module "components/data-table/data-table.component" {
         hidePagination: boolean;
         standalone: boolean;
         caption: string;
+        emptyStateCaption: string;
         emptyStateIcon: string;
         hideCheckboxes: boolean;
         filters: [];

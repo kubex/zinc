@@ -753,6 +753,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const root = this.getRootNode() as Document | ShadowRoot;
     root.addEventListener('click', (ev: Event) => {
       if (!this._emojiPopupEl || !this._emojiActive) return;
+
       const path = ev.composedPath?.() ?? [];
       if (!path.includes(this._emojiPopupEl) && !path.includes(this.quillElement.root)) {
         this._hideEmojiPopup();
@@ -769,7 +770,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       return;
     }
 
-    const {start, query: emojiQuery} = queryInfo;
+    const {start, emojiQuery} = queryInfo;
     this._emojiStartIndex = start;
     this._emojiQuery = emojiQuery;
     this._emojiActive = true;
@@ -791,7 +792,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._emojiPopupEl.style.top = `${bounds.bottom + 4}px`;
   }
 
-  private _getEmojiQuery(): { start: number; query: string } | null {
+  private _getEmojiQuery(): { start: number; emojiQuery: string } | null {
     try {
       const sel = this.quillElement.getSelection();
       if (!sel) return null;
@@ -806,13 +807,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       const prev = cIndex > 0 ? uptoCursor[cIndex - 1] : ' ';
       if (prev && /[^\s\n]/.test(prev)) return null; // must start at word boundary
 
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const query = uptoCursor.substring(cIndex + 1);
-      if (/[\s\n]/.test(query)) return null; // stop at whitespace
+      const emojiQuery = uptoCursor.substring(cIndex + 1);
+      if (/[\s\n]/.test(emojiQuery)) return null; // stop at whitespace
 
-      // Do not trigger for URLs like http:// or emoji already complete like :)
+      // Do not trigger for URLs like http://
       if (/^\/\//.test(uptoCursor.substring(Math.max(0, cIndex - 5), cIndex + 1))) return null;
-      return {start: cursor - query.length - 1, query};
+      return {start: cursor - emojiQuery.length - 1, emojiQuery};
     } catch {
       return null;
     }

@@ -67,21 +67,7 @@ export default class ZnEditorToolbar extends ZincElement {
 
   private _formatOptions() {
     return html`
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="format_bold"
-                 icon-size="18"
-                 data-format="bold"></zn-button>
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="format_italic"
-                 icon-size="18"
-                 data-format="italic"></zn-button>
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="format_underlined"
-                 icon-size="18"
-                 data-format="underline"></zn-button>
+      ${this._commonFormatOptions()}
 
       <zn-dropdown class="toolbar__format-dropdown" placement="bottom-end">
         <zn-button slot="trigger"
@@ -115,6 +101,25 @@ export default class ZnEditorToolbar extends ZincElement {
           </zn-menu-item>
         </zn-menu>
       </zn-dropdown>`;
+  }
+
+  private _commonFormatOptions() {
+    return html`
+      <zn-button class="toolbar__format-button"
+                 color="transparent"
+                 icon="format_bold"
+                 icon-size="18"
+                 data-format="bold"></zn-button>
+      <zn-button class="toolbar__format-button"
+                 color="transparent"
+                 icon="format_italic"
+                 icon-size="18"
+                 data-format="italic"></zn-button>
+      <zn-button class="toolbar__format-button"
+                 color="transparent"
+                 icon="format_underlined"
+                 icon-size="18"
+                 data-format="underline"></zn-button>`;
   }
 
   private _historyOptions() {

@@ -97,6 +97,14 @@ interface HeaderConfig {
   position: string;
 }
 
+interface DataRequest {
+  page: number;
+  perPage: number;
+  sortColumn: string;
+  sortDirection: string;
+  filter: string;
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/data-table
@@ -204,26 +212,23 @@ export default class ZnDataTable extends ZincElement {
 
   private _dataTask = new Task(this, {
     task: async ([dataUri], {signal}) => {
-      let url = dataUri;
-
-      const params = new URLSearchParams();
-      params.append('page', this.page.toString());
-      params.append('per_page', this.itemsPerPage.toString());
-      if (this.sortColumn) {
-        params.append('sort_column', this.sortColumn);
-      }
-      if (this.sortDirection) {
-        params.append('sort_direction', this.sortDirection);
-      }
-      if (this.filter) {
-        params.append('filter', this.filter);
-      }
-      url += '?' + params.toString();
+      const requestData: DataRequest = {
+        page: this.page,
+        perPage: this.itemsPerPage,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection,
+        filter: this.filter,
+      };
 
       // This is also used for Rubix, so it may not work for your application.
-      const response = await fetch(url, {
+      const response = await fetch(dataUri, {
+        method: 'POST',
+        headers: {
+          'x-kx-fetch-style': 'zn-data-table',
+        },
         signal,
         credentials: 'same-origin',
+        body: JSON.stringify(requestData)
       });
 
       if (!response.ok) throw new Error(response.statusText);
@@ -250,15 +255,18 @@ export default class ZnDataTable extends ZincElement {
       },
       error: (error) => {
         if (error instanceof Error) {
-          if(error.name === "SyntaxError") {
+          if (error.name === "SyntaxError") {
             console.debug(error.message)
-            return html`<zn-sp><zn-alert level="error">Unable to load data</zn-alert></zn-sp>`;
+            return html`
+              <zn-sp>
+                <zn-alert level="error">Unable to load data</zn-alert>
+              </zn-sp>`;
           } else if (error.message === "Not Found") {
             return this.emptyState();
-          /*} else {
-            console.log(error.name)
-            console.log(error.message)
-            console.log(error.cause)*/
+            /*} else {
+              console.log(error.name)
+              console.log(error.message)
+              console.log(error.cause)*/
           }
         }
         return html`

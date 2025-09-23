@@ -90,6 +90,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _emojiActive = false;
   private _emojiStartIndex = -1;
   private _emojiQuery = '';
+  private _emojiActiveIndex = -1;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -152,19 +153,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     Quill.register({'formats/hr': HrBlot}, true);
 
-    this._updateIcons();
     const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
-
-    /*    const container = [
-          ['bold', 'italic', 'underline', 'strike'],
-          ['undo', 'redo'],
-          [{'list': 'ordered'}, {'list': 'bullet'}],
-          ['code-block']
-        ];
-        container.push(this.interactionType === 'ticket' ? ['link', 'image', 'attachment'] : ['link', 'image', 'video']);
-        container.push(['remove-formatting']);*/
 
     if (this.cannedResponsesUri) {
       await this._fetchCannedResponses();
@@ -364,20 +355,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._syncToolbarState();
   }
 
-  private _updateIcons() {
-    // @ts-expect-error icons has no type
-    const icons: { [key: string]: string } = Quill.import("ui/icons");
-    if (icons) {
-      icons["undo"] = `<zn-icon src="undo" size="20"></zn-icon>`;
-      icons["redo"] = `<zn-icon src="redo" size="20"></zn-icon>`;
-      icons["remove-formatting"] = `<zn-icon src="format_clear" size="20"></zn-icon>`;
-
-      if (this.interactionType === 'ticket') {
-        icons["attachment"] = `<zn-icon src="attachment" size="20"></zn-icon>`;
-      }
-    }
-  }
-
   private _getQuillKeyboardBindings() {
     const bindings = {
       'remove-formatting': {
@@ -399,12 +376,33 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       return match === null;
     };
 
-    if (this.interactionType === 'chat') {
-      // @ts-expect-error bindings has no type
-      bindings['enter'] = {
-        key: 'Enter',
-        shiftKey: false,
-        handler: () => {
+    // Always add an Enter binding to support emoji selection in all interaction types
+    // @ts-expect-error bindings has no type
+    bindings['enter'] = {
+      key: 'Enter',
+      shiftKey: false,
+      handler: (_range: any, context: any) => {
+        // If emoji popup is active, insert the currently targeted emoji option
+        if (this._emojiActive) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const e: KeyboardEvent | undefined = context?.event as KeyboardEvent | undefined;
+          try {
+            e?.preventDefault?.();
+            e?.stopPropagation?.();
+          } catch {
+            // no-op
+          }
+          const activeEl = this._getActiveEmojiItem();
+          const firstEl = this._emojiPopupEl?.querySelector('[data-emoji-item]') as HTMLElement | null;
+          const target = activeEl ?? firstEl;
+          if (target) {
+            target.click();
+          }
+
+          return false;
+        }
+
+        if (this.interactionType === 'chat') {
           const dialog = document.querySelector('zn-dialog-module') as DialogModuleComponent | null;
           const isDialogOpen = dialog?.open ?? false;
           const menu = document.querySelector('zn-menu-module') as MenuModuleComponent | null;
@@ -415,11 +413,18 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
               this.emit('zn-submit', {detail: {value: this.value, element: this}});
               form.requestSubmit();
               this.quillElement.setText('');
+              // prevent default Enter (submit completed)
+              return false;
             }
           }
-        },
-      };
-    }
+          // If we didn't submit, allow default so Enter inserts newline
+          return true;
+        }
+
+        // For non-chat interactions, allow default behavior (newline)
+        return true;
+      },
+    };
 
     return bindings;
   }
@@ -707,21 +712,48 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this.quillElement.on('text-change', () => this._maybeUpdateEmojiSearch());
       this.quillElement.on('selection-change', () => this._maybeUpdateEmojiSearch());
 
-      // Keyboard interactions: Enter selects first, Escape closes
+      // Keyboard interactions: Up/Down to navigate, Enter to select, Escape to close
       this.quillElement.root.addEventListener('keydown', (e: KeyboardEvent) => {
         if (!this._emojiActive) return;
 
         if (e.key === 'Escape') {
           e.preventDefault();
+          e.stopPropagation();
           this._hideEmojiPopup();
-        } else if (e.key === 'Enter') {
-          // Click the first result if present
-          const first = this._emojiPopupEl?.querySelector('[data-emoji-item]') as HTMLElement | null;
-          if (first) {
-            e.preventDefault();
-            first.click();
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          e.stopPropagation();
+          const items = this._getEmojiItems();
+          if (items.length) {
+            const next = this._emojiActiveIndex < 0 ? 0 : this._emojiActiveIndex + 1;
+            this._setActiveEmojiIndex(next);
+          }
+          return;
+        }
+
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          e.stopPropagation();
+          const items = this._getEmojiItems();
+          if (items.length) {
+            const prev = this._emojiActiveIndex < 0 ? items.length - 1 : this._emojiActiveIndex - 1;
+            this._setActiveEmojiIndex(prev);
           }
         }
+/*
+        if (e.key === 'Enter') {
+          const activeEl = this._getActiveEmojiItem();
+          const target = activeEl ?? (this._emojiPopupEl?.querySelector('[data-emoji-item]') as HTMLElement | null);
+
+          if (target) {
+            e.stopPropagation();
+            e.preventDefault();
+            target.click();
+          }
+        }*/
       });
     } catch (e) {
       // no-op
@@ -838,10 +870,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this._emojiPopupEl.innerHTML = '';
 
-    const makeItem = (emojiChar: string, label: string) => {
+    const makeItem = (emojiChar: string, label: string, index: number) => {
       const item = document.createElement('button');
       item.type = 'button';
       item.setAttribute('data-emoji-item', '');
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', 'false');
+      item.dataset.index = String(index);
       item.style.display = 'flex';
       item.style.alignItems = 'center';
       item.style.gap = '8px';
@@ -851,8 +886,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       item.style.background = 'transparent';
       item.style.cursor = 'pointer';
       item.style.font = 'inherit';
-      item.onmouseenter = () => (item.style.background = 'var(--zn-hover, rgba(0,0,0,0.04))');
-      item.onmouseleave = () => (item.style.background = 'transparent');
 
       const emojiSpan = document.createElement('span');
       emojiSpan.style.fontSize = '20px';
@@ -864,6 +897,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
       item.appendChild(emojiSpan);
       item.appendChild(labelSpan);
+      item.addEventListener('mouseenter', () => {
+        const items = this._getEmojiItems();
+        const domIndex = items.indexOf(item);
+        this._setActiveEmojiIndex(domIndex);
+      });
       item.addEventListener('click', () => this._replaceEmojiAtQuery(emojiChar));
       return item;
     };
@@ -882,6 +920,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       msg.textContent = 'Type something';
       this._emojiPopupEl.appendChild(msg);
       this._emojiPopupEl.style.display = 'block';
+      this._emojiActiveIndex = -1;
       return;
     }
 
@@ -892,23 +931,67 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       msg.textContent = 'No results';
       this._emojiPopupEl.appendChild(msg);
       this._emojiPopupEl.style.display = 'block';
+      this._emojiActiveIndex = -1;
       return;
     }
 
-    results.slice(0, 20).forEach((e: Emoji) => {
+    const limited = results.slice(0, 20);
+    limited.forEach((e: Emoji, i: number) => {
       const emojiChar = (e?.skins?.[0]?.native) || e?.native || '';
       const label = e?.id || e?.shortcodes || '';
       if (!emojiChar) return;
 
-      this._emojiPopupEl!.appendChild(makeItem(emojiChar, label));
+      this._emojiPopupEl!.appendChild(makeItem(emojiChar, label, i));
     });
 
+    // initialize active selection to first item
+    this._setActiveEmojiIndex(0);
+
     this._emojiPopupEl.style.display = 'block';
+  }
+
+  // Helpers for keyboard navigation in emoji popup
+  private _getEmojiItems(): HTMLElement[] {
+    return Array.from(this._emojiPopupEl?.querySelectorAll('[data-emoji-item]') ?? []) as HTMLElement[];
+  }
+
+  private _getActiveEmojiItem(): HTMLElement | null {
+    const items = this._getEmojiItems();
+    if (this._emojiActiveIndex < 0 || this._emojiActiveIndex >= items.length) return null;
+
+    return items[this._emojiActiveIndex];
+  }
+
+  private _setActiveEmojiIndex(index: number) {
+    const items = this._getEmojiItems();
+    if (!items.length) {
+      this._emojiActiveIndex = -1;
+      return;
+    }
+
+    if (index < 0) {
+      index = items.length - 1;
+    }
+    if (index >= items.length) {
+      index = 0;
+    }
+    this._emojiActiveIndex = index;
+
+    items.forEach((el, i) => {
+      el.setAttribute('aria-selected', String(i === index));
+      (el as HTMLElement).style.background = i === index ? 'var(--zn-input-background-color-hover)' : 'transparent';
+    });
+
+    const active = items[index];
+    if (active && typeof active.scrollIntoView === 'function') {
+      active.scrollIntoView({block: 'nearest'});
+    }
   }
 
   private _hideEmojiPopup() {
     this._emojiActive = false;
     this._emojiQuery = '';
+    this._emojiActiveIndex = -1;
     if (this._emojiPopupEl) {
       this._emojiPopupEl.style.display = 'none';
       this._emojiPopupEl.innerHTML = '';

@@ -1,5 +1,6 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
+import {property} from "lit/decorators.js";
 
 import styles from './scroll-container.scss';
 
@@ -23,14 +24,15 @@ import styles from './scroll-container.scss';
 export default class ZnScrollContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  constructor() {
-    super();
+  @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
 
-    this.addEventListener('scroll-to-bottom', () => {
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    if (this.startScrolled) {
       setTimeout(() => {
         this.scrollTop = this.scrollHeight;
-      }, 100);
-    });
+      }, 1000);
+    }
   }
 
   render() {

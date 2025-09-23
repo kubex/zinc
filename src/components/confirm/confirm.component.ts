@@ -85,7 +85,6 @@ export default class ZnConfirm extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-
     if (this.hasSlotController.test('trigger')) {
       const trigger = this.hasSlotController.getSlot('trigger');
       trigger?.addEventListener('click', this.show);

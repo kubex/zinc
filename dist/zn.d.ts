@@ -3523,7 +3523,7 @@ declare module "components/stat/index" {
     }
 }
 declare module "components/scroll-container/scroll-container.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -3544,7 +3544,8 @@ declare module "components/scroll-container/scroll-container.component" {
      */
     export default class ZnScrollContainer extends ZincElement {
         static styles: CSSResultGroup;
-        constructor();
+        startScrolled: boolean;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

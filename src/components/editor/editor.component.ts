@@ -798,8 +798,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       if (!sel) return null;
 
       const cursor = sel.index;
-      const textBefore = this.quillElement.getText(Math.max(0, cursor - 50), Math.min(50, cursor));
-      const offset = cursor - Math.max(0, cursor - 50);
+      const characterLimit = 50;
+      const textBefore = this.quillElement.getText(Math.max(0, cursor - characterLimit), Math.min(characterLimit, cursor));
+      const offset = cursor - Math.max(0, cursor - characterLimit);
       const uptoCursor = textBefore.slice(0, offset);
       const cIndex = uptoCursor.lastIndexOf(':');
       if (cIndex === -1) return null;

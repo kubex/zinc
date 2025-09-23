@@ -1081,6 +1081,7 @@ declare module "components/button/button.component" {
         square: boolean;
         dropdownCloser: boolean;
         notification: number;
+        mutedNotifications: boolean;
         verticalAlign: 'start' | 'center' | 'end';
         content: string;
         icon: string;

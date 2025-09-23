@@ -168,6 +168,7 @@ export default class ZnDataTable extends ZincElement {
   @property({type: Boolean}) standalone: boolean = false;
 
   @property() caption: string;
+  @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
   // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
@@ -304,7 +305,7 @@ export default class ZnDataTable extends ZincElement {
       <div class="table--empty">
         <zn-empty-state
           caption="${this.caption ? "No " + this.caption.toLowerCase() + " found" : "No data found"}"
-          icon="data_alert">
+          icon="${this.emptyStateIcon}">
         </zn-empty-state>
       </div>`;
   }

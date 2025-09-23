@@ -250,8 +250,15 @@ export default class ZnDataTable extends ZincElement {
       },
       error: (error) => {
         if (error instanceof Error) {
-          if (error.message === "Not Found") {
+          if(error.name === "SyntaxError") {
+            console.debug(error.message)
+            return html`<zn-sp><zn-alert level="error">Unable to load data</zn-alert></zn-sp>`;
+          } else if (error.message === "Not Found") {
             return this.emptyState();
+          /*} else {
+            console.log(error.name)
+            console.log(error.message)
+            console.log(error.cause)*/
           }
         }
         return html`

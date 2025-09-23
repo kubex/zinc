@@ -2094,6 +2094,7 @@ declare module "components/data-table/data-table.component" {
         connectedCallback(): void;
         disconnectedCallback(): void;
         changeEventListener: (e: ZnFilterChangeEvent) => void;
+        emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;

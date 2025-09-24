@@ -2912,6 +2912,7 @@ declare module "components/inline-edit/inline-edit.component" {
         handleValueChange(): Promise<void>;
         handleIsEditingChange(): Promise<void>;
         escKeyHandler: (e: KeyboardEvent) => void;
+        submitKeyHandler: (e: KeyboardEvent) => void;
         handleEditClick: () => void;
         handleSubmitClick: (e: MouseEvent) => void;
         handleCancelClick: (e: MouseEvent) => void;

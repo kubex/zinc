@@ -149,6 +149,12 @@ class ContextMenuModule {
       const idx = this._component.getActiveIndex?.();
       const results = (this._component.results as ResultItem[]) || [];
       const item = (typeof idx === 'number' && idx >= 0 && idx < results.length) ? results[idx] : undefined;
+      if (item?.module === 'dialog') {
+        e.preventDefault();
+        e.stopPropagation();
+        this.showDialog();
+        return;
+      }
       if (item?.format) {
         e.preventDefault();
         e.stopPropagation();
@@ -157,18 +163,20 @@ class ContextMenuModule {
     }
   }
 
+  private showDialog() {
+    this.hide();
+    this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {
+      bubbles: true,
+      composed: true
+    }));
+  }
+
   private onToolbarSelect(e: CustomEvent) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const module: string | undefined = e.detail?.module as (string | undefined);
 
-    console.log('module', module);
-
     if (module === 'dialog') {
-      this.hide();
-
-      console.log(this._toolbarModule.handlers?.['dialogModule']);
-
-      this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {bubbles: true, composed: true}));
+      this.showDialog();
       return;
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access

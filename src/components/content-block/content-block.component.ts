@@ -1,10 +1,10 @@
 import {classMap} from "lit/directives/class-map.js";
 import {HasSlotController} from "../../internal/slot";
+import type {PropertyValues} from 'lit';
 import {html, unsafeCSS} from 'lit';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
-import type {PropertyValues} from 'lit';
 
 import styles from './content-block.scss';
 
@@ -53,6 +53,30 @@ export default class ContentBlock extends ZincElement {
           iframe.srcdoc = baseStyles + convertedHtml;
         }
       }
+
+      iframe.addEventListener("load", () => {
+        // Save original styles
+        const originalDisplay = iframe.style.display;
+        const originalVisibility = iframe.style.visibility;
+        const originalPosition = iframe.style.position;
+
+        // Make iframe render but stay hidden
+        iframe.style.display = 'block';
+        iframe.style.visibility = 'hidden';
+        iframe.style.position = 'absolute';
+
+        setTimeout(() => {
+          const iframeBody = iframe.contentDocument?.body;
+          if (iframeBody) {
+            const height = iframeBody.scrollHeight;
+            iframe.style.height = `${height + 30}px`;
+          }
+          // Restore original styles
+          iframe.style.display = originalDisplay;
+          iframe.style.visibility = originalVisibility;
+          iframe.style.position = originalPosition;
+        }, 50);
+      });
     });
   }
 

@@ -16,12 +16,14 @@
   border-radius: var(--zn-border-radius-x-large);
   background-color: var(--zn-panel-background-color);
   margin: 2px;
+  overflow: auto;
 }
 
 .dialog {
   flex-direction: column;
   z-index: 2;
-  width: var(--width);
+  width: calc(var(--width) + 2px);
+  overflow: hidden;
   max-width: calc(100% - var(--zn-spacing-2x-large));
   max-height: calc(100% - var(--zn-spacing-2x-large));
   background-color: var(--zn-panel-background-color);

@@ -4117,12 +4117,13 @@ declare module "components/editor/modules/emoji-module/headless/headless-emoji-m
     export default HeadlessEmojiModule;
 }
 declare module "components/editor/toolbar/headless/headless-toolbar-component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup, PropertyValues } from 'lit';
     export interface ResultItem {
         icon: string;
         label: string;
-        format: string;
+        format?: string;
+        module?: string;
         value?: string | boolean;
     }
     export default class HeadlessToolbarComponent extends ZincElement {
@@ -4136,8 +4137,7 @@ declare module "components/editor/toolbar/headless/headless-toolbar-component" {
         setPosition(left: number, top: number): void;
         setActiveIndex(index: number): void;
         getActiveIndex(): number;
-        private onMouseEnterItem;
-        private onClickItem;
+        private _onClickItem;
         protected willUpdate(changed: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }
@@ -4145,14 +4145,18 @@ declare module "components/editor/toolbar/headless/headless-toolbar-component" {
 declare module "components/editor/toolbar/headless/headless-toolbar-module" {
     import "components/editor/toolbar/headless/headless-toolbar-component";
     import Quill from "quill";
+    import type { CannedResponse } from "components/editor/editor.component";
     class HeadlessToolbarModule {
         private _quill;
         private readonly _toolbarModule;
+        private readonly _commands;
         private _component;
         private _startIndex;
         private _keydownHandler;
         private _docClickHandler;
-        constructor(quill: Quill);
+        constructor(quill: Quill, options: {
+            commands: CannedResponse[];
+        });
         private initComponent;
         private attachEvents;
         private createComponent;
@@ -4164,7 +4168,7 @@ declare module "components/editor/toolbar/headless/headless-toolbar-module" {
         private onToolbarSelect;
         private _callFormat;
         private _applySelectedFormat;
-        private _getCatalog;
+        private _getOptions;
         private show;
         private hide;
     }

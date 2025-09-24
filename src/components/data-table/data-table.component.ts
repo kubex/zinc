@@ -93,6 +93,7 @@ interface ConfirmConfig {
 }
 
 interface HeaderConfig {
+  key: string;
   label: string;
   required?: boolean;
   default?: boolean;
@@ -154,12 +155,9 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'sort-column'}) sortColumn: string;
   @property({attribute: 'sort-direction'}) sortDirection: string;
   @property({attribute: 'filter'}) filter: string = '';
-
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
-
-  @property({attribute: 'headers', type: Object})
-  headers: Record<string, HeaderConfig> = {};
+  @property({attribute: 'headers', type: Object}) headers: Record<string, HeaderConfig> = {};
 
   // Hide header text keeping the content - e.g. Action buttons without a header
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
@@ -268,10 +266,6 @@ export default class ZnDataTable extends ZincElement {
               </zn-sp>`;
           } else if (error.message === "Not Found") {
             return this.emptyState();
-            /*} else {
-              console.log(error.name)
-              console.log(error.message)
-              console.log(error.cause)*/
           }
         }
         return html`
@@ -340,9 +334,9 @@ export default class ZnDataTable extends ZincElement {
       return this.emptyState();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const keys = Object.entries(this.headers).map(([key, _]) => key);
-    const filteredKeys = keys.filter((key) => !Object.values(this.hiddenColumns).includes(key));
+    const filteredHeaders = Object.values(this.headers).filter((header) => {
+      return !Object.values(this.hiddenColumns).includes(header.key);
+    });
 
     this._rows = this.getRows(data);
 
@@ -362,7 +356,7 @@ export default class ZnDataTable extends ZincElement {
               <th>
                 <div><input type="checkbox" @change="${this.selectAll}"></div>
               </th>`}
-            ${filteredKeys.map((key: string) => this.renderCellHeader(key))}
+            ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
           </tr>
           </thead>
           <tbody>
@@ -717,24 +711,24 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  private renderCellHeader(key: string) {
-    const sortable = !Object.values(this.unsortableHeaders).includes(key) && !Object.values(this.hiddenHeaders).includes(key) && !this.unsortable;
-    let headerKeys = Object.keys(this.headers);
-    headerKeys = headerKeys.filter((k) => !Object.values(this.hiddenColumns).includes(k));
-    const header: string | HeaderConfig = this.headers[key];
+  private renderCellHeader(header: HeaderConfig) {
+
+    const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable;
+    const lastHeader = Object.keys(this.headers).filter((key) => !Object.values(this.hiddenColumns).includes(key)).slice(-1)[0];
+    const lastHeaderKey = lastHeader ? this.headers[lastHeader].key : '';
 
     return html`
       <th
         class="${classMap({
           'table__head': true,
-          'table__head--wide': key === this.wideColumn,
-          'table__head--last': key === headerKeys[headerKeys.length - 1],
-          'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
+          'table__head--wide': header.key === this.wideColumn,
+          'table__head--last': header.key === lastHeaderKey,
+          'table__head--hidden': Object.values(this.hiddenHeaders).includes(header.key),
         })}"
-        @click="${sortable ? this.updateSort(key) : undefined}">
+        @click="${sortable ? this.updateSort(header.key) : undefined}">
         <div>
           ${header.label}
-          ${sortable ? this.getTableSortIcon(key) : nothing}
+          ${sortable ? this.getTableSortIcon(header.key) : nothing}
         </div>
       </th>
     `;

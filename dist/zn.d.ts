@@ -3957,6 +3957,64 @@ declare module "components/editor/modules/attachment-module" {
         private _uploadAttachment;
     }
 }
+declare module "components/editor/modules/context-menu/context-menu-module-component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export interface ResultItem {
+        icon: string;
+        label: string;
+        format?: string;
+        module?: string;
+        value?: string | boolean;
+    }
+    export default class ContextMenuModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        open: boolean;
+        query: string;
+        results: ResultItem[];
+        private _activeIndex;
+        show(): void;
+        hide(): void;
+        setPosition(left: number, top: number): void;
+        setActiveIndex(index: number): void;
+        getActiveIndex(): number;
+        private _onClickItem;
+        protected willUpdate(changed: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/context-menu/context-menu-module" {
+    import "components/editor/modules/context-menu/context-menu-module-component";
+    import Quill from "quill";
+    import type { CannedResponse } from "components/editor/editor.component";
+    class ContextMenuModule {
+        private _quill;
+        private readonly _toolbarModule;
+        private readonly _commands;
+        private _component;
+        private _startIndex;
+        private _keydownHandler;
+        private _docClickHandler;
+        constructor(quill: Quill, options: {
+            commands: CannedResponse[];
+        });
+        private initComponent;
+        private attachEvents;
+        private createComponent;
+        private onDocumentClick;
+        private updateFromEditor;
+        private positionComponent;
+        private getToolbarQuery;
+        private onKeydown;
+        private onToolbarSelect;
+        private _callFormat;
+        private _applySelectedFormat;
+        private _getOptions;
+        private show;
+        private hide;
+    }
+    export default ContextMenuModule;
+}
 declare module "components/editor/modules/dialog-module/dialog-module.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
@@ -4116,64 +4174,6 @@ declare module "components/editor/modules/emoji-module/headless/headless-emoji-m
         private hide;
     }
     export default HeadlessEmojiModule;
-}
-declare module "components/editor/toolbar/headless/headless-toolbar-component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export interface ResultItem {
-        icon: string;
-        label: string;
-        format?: string;
-        module?: string;
-        value?: string | boolean;
-    }
-    export default class HeadlessToolbarComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        open: boolean;
-        query: string;
-        results: ResultItem[];
-        private _activeIndex;
-        show(): void;
-        hide(): void;
-        setPosition(left: number, top: number): void;
-        setActiveIndex(index: number): void;
-        getActiveIndex(): number;
-        private _onClickItem;
-        protected willUpdate(changed: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/editor/toolbar/headless/headless-toolbar-module" {
-    import "components/editor/toolbar/headless/headless-toolbar-component";
-    import Quill from "quill";
-    import type { CannedResponse } from "components/editor/editor.component";
-    class HeadlessToolbarModule {
-        private _quill;
-        private readonly _toolbarModule;
-        private readonly _commands;
-        private _component;
-        private _startIndex;
-        private _keydownHandler;
-        private _docClickHandler;
-        constructor(quill: Quill, options: {
-            commands: CannedResponse[];
-        });
-        private initComponent;
-        private attachEvents;
-        private createComponent;
-        private onDocumentClick;
-        private updateFromEditor;
-        private positionComponent;
-        private getToolbarQuery;
-        private onKeydown;
-        private onToolbarSelect;
-        private _callFormat;
-        private _applySelectedFormat;
-        private _getOptions;
-        private show;
-        private hide;
-    }
-    export default HeadlessToolbarModule;
 }
 declare module "components/editor/modules/image-resize-module/image-resize-module" {
     import Quill, { Module } from "quill";

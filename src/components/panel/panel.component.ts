@@ -34,6 +34,7 @@ export default class ZnPanel extends ZincElement {
 
   @property({type: Boolean}) tabbed: boolean;
 
+  @property({type: Boolean}) cosmic: boolean;
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
   @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
@@ -64,8 +65,14 @@ export default class ZnPanel extends ZincElement {
     const hasFooterSlot = this.hasSlotController.test('footer');
     const hasHeader = this.caption || hasActionSlot;
 
+    const glow = this.cosmic ? html`
+      <div class="glow-cont">
+        <div class="glow"></div>
+      </div>` : html``
+
     return html`
-      <div part="base" class=${classMap({
+      ${glow}
+      <div part="base" class="${classMap({
         panel: true,
         'panel--flush': this.flush || this.tabbed,
         'panel--flush-x': this.flushX,
@@ -75,7 +82,7 @@ export default class ZnPanel extends ZincElement {
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
         'panel--has-header': hasHeader,
-      })}>
+      })}">
 
         <div class="panel__inner">
           ${hasHeader ? html`
@@ -94,7 +101,6 @@ export default class ZnPanel extends ZincElement {
           ${hasFooterSlot ? html`
             <slot name="footer" class="panel__footer"></slot>` : null}
         </div>
-
       </div>`;
   }
 }

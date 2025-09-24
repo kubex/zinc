@@ -12,6 +12,12 @@
   display: contents;
 }
 
+.dialog-container {
+  border-radius: var(--zn-border-radius-x-large);
+  background-color: var(--zn-panel-background-color);
+  margin: 2px;
+}
+
 .dialog {
   flex-direction: column;
   z-index: 2;
@@ -193,5 +199,10 @@
 
   &:not(.dialog--has-footer) &__footer {
     display: none;
+  }
+
+  &--cosmic {
+    @include wc.cosmic-border();
+    position: relative;
   }
 }

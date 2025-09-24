@@ -37,7 +37,7 @@ deleting something).
 ```html:preview
 
 <zn-button id="dialog-trigger">Open Default Dialog</zn-button>
-<zn-dialog class="dialog-basic" trigger="dialog-trigger" label="Dialog">
+<zn-dialog class="dialog-basic" trigger="dialog-trigger" label="Dialog" cosmic>
   <zn-icon src="info" slot="header-icon"></zn-icon>
   If you need to, you can cancel this request after submitting it. Are you sure you want to submit it now?
 

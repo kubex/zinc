@@ -60,6 +60,7 @@ export default class ZnDialog extends ZincElement {
   @query('.dialog__panel') panel: HTMLElement;
   @query('.dialog__overlay') overlay: HTMLElement;
 
+
   /** The dialog's theme variant. */
   @property({reflect: true}) variant: 'default' | 'warning' | 'announcement' = 'default';
 
@@ -77,6 +78,8 @@ export default class ZnDialog extends ZincElement {
    * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
    */
   @property({reflect: true}) label: string;
+
+  @property({type: Boolean, reflect: true}) cosmic = false;
 
   /**
    * Disables the header. This will also remove the default close button, so please ensure you provide an easy,
@@ -108,6 +111,14 @@ export default class ZnDialog extends ZincElement {
       if (trigger) {
         trigger.addEventListener('click', () => this.show());
       }
+    }
+    if (window.CSS.registerProperty) {
+      window.CSS.registerProperty({
+        inherits: false,
+        initialValue: '0deg',
+        name: '--rotate',
+        syntax: '<angle>',
+      })
     }
   }
 
@@ -195,42 +206,47 @@ export default class ZnDialog extends ZincElement {
           'dialog--announcement': this.variant === 'announcement',
           'dialog--small': this.size === 'small',
           'dialog--medium': this.size === 'medium',
-          'dialog--large': this.size === 'large'
+          'dialog--large': this.size === 'large',
+          'dialog--cosmic': this.cosmic
         })}>
 
-        ${!this.noHeader ? html`
-          <header part="header" class="dialog__header">
-            <h2 part="title" class="dialog__title" id="title">
-              <slot name="header-icon"></slot>
-              <slot name="announcement-intro"></slot>
-              <slot name="label"> ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
-              </slot>
-            </h2>
-            <div part="header-actions" class="dialog__header-actions">
-              <slot name="header-actions"></slot>
-              <zn-button
-                part="close-button"
-                exportparts="base:close-button__base"
-                class="dialog__close"
-                icon="close"
-                icon-size="24"
-                type="button"
-                color="transparent"
-                size="content"
-                @click="${() => this.requestClose('close-button')}"
-              ></zn-button>
-            </div>
-          </header>` : ''}
+        <div class=${classMap({
+          'dialog-container': true,
+        })}>
 
-        <div part="body" class="dialog__body" tabindex="-1">
-          <slot></slot>
+          ${!this.noHeader ? html`
+            <header part="header" class="dialog__header">
+              <h2 part="title" class="dialog__title" id="title">
+                <slot name="header-icon"></slot>
+                <slot name="announcement-intro"></slot>
+                <slot name="label"> ${this.label && this.label.length > 0 ? this.label : String.fromCharCode(65279)}
+                </slot>
+              </h2>
+              <div part="header-actions" class="dialog__header-actions">
+                <slot name="header-actions"></slot>
+                <zn-button
+                  part="close-button"
+                  exportparts="base:close-button__base"
+                  class="dialog__close"
+                  icon="close"
+                  icon-size="24"
+                  type="button"
+                  color="transparent"
+                  size="content"
+                  @click="${() => this.requestClose('close-button')}"
+                ></zn-button>
+              </div>
+            </header>` : ''}
+
+          <div part="body" class="dialog__body" tabindex="-1">
+            <slot></slot>
+          </div>
+
+          <footer part="footer" class="dialog__footer">
+            <slot name="footer"></slot>
+            <slot name="footer-text"></slot>
+          </footer>
         </div>
-
-        <footer part="footer" class="dialog__footer">
-          <slot name="footer"></slot>
-          <slot name="footer-text"></slot>
-        </footer>
-
       </dialog>
     `;
   }

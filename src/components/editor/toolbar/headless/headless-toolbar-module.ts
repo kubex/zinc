@@ -3,20 +3,27 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./headless-toolbar-component";
 import Quill from "quill";
+import type {CannedResponse} from "../../editor.component";
 import type HeadlessToolbarComponent from "./headless-toolbar-component";
 import type Toolbar from "quill/modules/toolbar";
 
 class HeadlessToolbarModule {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
+  private readonly _commands: CannedResponse[] = [];
   private _component!: HeadlessToolbarComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill) {
+  constructor(quill: Quill, options: { commands: CannedResponse[] }) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
+    const commands = options.commands || [];
+    this._commands = commands
+      .sort((a, b) => parseInt(b.count) - parseInt(a.count))
+      .slice(0, 3);
+
     this.initComponent();
     this.attachEvents();
   }
@@ -61,18 +68,15 @@ class HeadlessToolbarModule {
     this._startIndex = start;
 
     try {
-      const catalog = this._getCatalog();
-      const q = (formatQuery || '').toLowerCase();
-      this._component.results = catalog.filter(it => !q || it.label.toLowerCase().includes(q) || it.format.toLowerCase().includes(q)).slice(0, 20);
-      this._component.query = formatQuery;
-      this.show();
-      this.positionComponent();
+      const q = formatQuery.toLowerCase();
+      this._component.results = this._getOptions().filter(it => !q || it.label.toLowerCase().includes(q) || it?.format?.toLowerCase().includes(q));
     } catch {
       this._component.results = [];
-      this._component.query = formatQuery;
-      this.show();
-      this.positionComponent();
     }
+
+    this._component.query = formatQuery;
+    this.show();
+    this.positionComponent();
   }
 
   private positionComponent() {
@@ -145,7 +149,7 @@ class HeadlessToolbarModule {
       const idx = this._component.getActiveIndex?.();
       const results = (this._component.results as ResultItem[]) || [];
       const item = (typeof idx === 'number' && idx >= 0 && idx < results.length) ? results[idx] : undefined;
-      if (item) {
+      if (item?.format) {
         e.preventDefault();
         e.stopPropagation();
         this._applySelectedFormat(item.format, item.value);
@@ -154,6 +158,19 @@ class HeadlessToolbarModule {
   }
 
   private onToolbarSelect(e: CustomEvent) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    const module: string | undefined = e.detail?.module as (string | undefined);
+
+    console.log('module', module);
+
+    if (module === 'dialog') {
+      this.hide();
+
+      console.log(this._toolbarModule.handlers?.['dialogModule']);
+
+      this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {bubbles: true, composed: true}));
+      return;
+    }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const format: string = e.detail?.format || '';
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
@@ -201,19 +218,43 @@ class HeadlessToolbarModule {
         const length = sel.index - insertIndex;
         if (length >= 0) {
           this._quill.deleteText(insertIndex, length, 'user');
-          setTimeout(() => this._quill.setSelection(insertIndex, 0, 'silent'), 0);
+          this._quill.setSelection(insertIndex, 0, 'silent');
         }
       }
     } catch {
       // no-op
     }
+
+    if (key === 'insert' && typeof value === 'string') {
+      const sel = this._quill.getSelection();
+      if (sel) {
+        this._quill.insertText(sel.index, value, 'user');
+        this._quill.setSelection(sel.index + value.length, 0, 'silent');
+      }
+      this._quill.focus();
+      this.hide();
+      return;
+    }
+
     this._callFormat(key, value);
     this._quill.focus();
     this.hide();
   }
 
-  private _getCatalog(): ResultItem[] {
-    return [
+  private _getOptions(): ResultItem[] {
+    const options = [];
+
+    if (this._commands.length > 0) {
+      options.push(...this._commands.map(cmd => ({
+        icon: 'quickreply',
+        label: cmd.title,
+        value: cmd.command,
+        format: 'insert'
+      } satisfies ResultItem)));
+    }
+
+    options.push(
+      {icon: 'quickreply', label: 'Canned Responses', module: 'dialog'},
       {icon: 'format_bold', label: 'Bold', format: 'bold'},
       {icon: 'format_italic', label: 'Italic', format: 'italic'},
       {icon: 'format_underlined', label: 'Underline', format: 'underline'},
@@ -221,16 +262,18 @@ class HeadlessToolbarModule {
       {icon: 'format_quote', label: 'Blockquote', format: 'blockquote'},
       {icon: 'code', label: 'Inline Code', format: 'code'},
       {icon: 'code_blocks', label: 'Code Block', format: 'code-block'},
-      {icon: 'match_case', label: 'Heading 1', format: 'header', value: '1'},
-      {icon: 'match_case', label: 'Heading 2', format: 'header', value: '2'},
-      {icon: 'match_case', label: 'Heading 3', format: 'header', value: '3'},
+      {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1'},
+      {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2'},
+      {icon: 'match_case', label: 'Normal Text', format: 'header', value: '2'},
       {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet'},
       {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered'},
       {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'},
       {icon: 'link', label: 'Link', format: 'link', value: true},
       {icon: 'horizontal_rule', label: 'Divider', format: 'divider'},
       {icon: 'format_clear', label: 'Clear Formatting', format: 'clean'}
-    ];
+    );
+
+    return options;
   }
 
   private show() {

@@ -1,14 +1,14 @@
-import {html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from "../../../../internal/zinc-element";
-import type {CSSResultGroup, PropertyValues} from 'lit';
 
 import styles from './headless-toolbar-module.scss';
 
 export interface ResultItem {
   icon: string;
   label: string;
-  format: string;
+  format?: string;
+  module?: string;
   value?: string | boolean;
 }
 
@@ -52,7 +52,7 @@ export default class HeadlessToolbarComponent extends ZincElement {
     this.requestUpdate();
 
     requestAnimationFrame(() => {
-      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-format-item]'));
+      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-toolbar-option]'));
       const active = items[this._activeIndex];
       active?.scrollIntoView?.({block: 'nearest'});
     });
@@ -62,22 +62,14 @@ export default class HeadlessToolbarComponent extends ZincElement {
     return this._activeIndex;
   }
 
-  private onMouseEnterItem = (e: MouseEvent) => {
-    const target = e.currentTarget as HTMLElement | null;
-    if (!target) return;
-
-    const idx = parseInt(target.dataset.index || '-1', 10);
-    if (!Number.isNaN(idx)) {
-      this.setActiveIndex(idx);
-    }
-  }
-
-  private onClickItem = (e: MouseEvent) => {
+  private _onClickItem = (e: MouseEvent) => {
     const target = e.currentTarget as HTMLElement | null;
     if (!target) return;
 
     const idx = parseInt(target.dataset.index || '-1', 10);
     if (Number.isNaN(idx)) return;
+
+    this.setActiveIndex(idx);
 
     const item = this.results?.[idx];
     if (!item) return;
@@ -85,7 +77,7 @@ export default class HeadlessToolbarComponent extends ZincElement {
     this.dispatchEvent(new CustomEvent('zn-format-select', {
       bubbles: true,
       composed: true,
-      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value}
+      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value, module: item.module}
     }));
   }
 
@@ -106,10 +98,9 @@ export default class HeadlessToolbarComponent extends ZincElement {
             class="item"
             role="option"
             aria-selected="${String(i === this._activeIndex)}"
-            data-format-item
+            data-toolbar-option
             data-index="${i}"
-            @mouseenter="${this.onMouseEnterItem}"
-            @click="${this.onClickItem}"
+            @click="${this._onClickItem}"
           >
             <zn-icon src="${res.icon}" size="16"></zn-icon>
             <span class="label">${res.label}</span>

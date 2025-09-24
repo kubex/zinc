@@ -146,6 +146,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       await this._fetchCannedResponses();
     }
 
+    const topCannedResponses = (this._commands || []).slice(0, 3);
+
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
@@ -157,16 +159,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             'undo': () => this.quillElement.history.undo(),
           }
         },
-        headlessToolbarModule: {},
+        headlessToolbarModule: {
+          commands: topCannedResponses
+        },
         keyboard: {
           bindings: bindings
         },
         dialogModule: {
           commands: this._commands
         },
-        // menuModule: {
-        //   commands: this._commands
-        // },
         emojiModule: {},
         headlessEmojiModule: {},
         timeTrackingModule: {

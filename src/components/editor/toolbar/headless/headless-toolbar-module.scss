@@ -32,10 +32,11 @@
   background: transparent;
   cursor: pointer;
   font: inherit;
-}
 
-.item[aria-selected="true"] {
-  background: var(--zn-input-background-color-hover);
+  &[aria-selected="true"],
+  &:hover {
+    background: var(--zn-input-background-color-hover);
+  }
 }
 
 .label {

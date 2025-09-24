@@ -7,6 +7,7 @@ import DialogModule from "./modules/dialog-module/dialog-module";
 import DragAndDropModule from "./modules/drag-drop-module";
 import EmojiModule from "./modules/emoji-module/emoji-module";
 import HeadlessEmojiModule from "./modules/emoji-module/headless/headless-emoji-module";
+import HeadlessToolbarModule from "./toolbar/headless/headless-toolbar-module";
 import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
 import MenuModule from "./modules/menu-module/menu-module";
 import Quill from "quill";
@@ -15,6 +16,7 @@ import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
 import type HeadlessEmojiModuleComponent from "./modules/emoji-module/headless/headless-emoji-module.component";
+import type HeadlessToolbarComponent from "./toolbar/headless/headless-toolbar-component";
 import type MenuModuleComponent from "./modules/menu-module/menu-module.component";
 import type Toolbar from "quill/modules/toolbar";
 import type ZnEditorToolbar from "./toolbar";
@@ -117,6 +119,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/timeTrackingModule', TimeTrackingModule as any, true);
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
     Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
+    Quill.register('modules/headlessToolbarModule', HeadlessToolbarModule as any, true);
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
     const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
@@ -154,15 +157,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             'undo': () => this.quillElement.history.undo(),
           }
         },
+        headlessToolbarModule: {},
         keyboard: {
           bindings: bindings
         },
         dialogModule: {
           commands: this._commands
         },
-        menuModule: {
-          commands: this._commands
-        },
+        // menuModule: {
+        //   commands: this._commands
+        // },
         emojiModule: {},
         headlessEmojiModule: {},
         timeTrackingModule: {
@@ -365,7 +369,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       handler: () => {
         const emoji = document.querySelector('zn-headless-emoji-module') as HeadlessEmojiModuleComponent | null;
         const isEmojiOpen = emoji?.open ?? false;
-        if (isEmojiOpen) {
+        const headlessToolbar = document.querySelector('zn-headless-toolbar') as HeadlessToolbarComponent | null;
+        const isToolbarOpen = headlessToolbar?.open ?? false;
+        if (isEmojiOpen || isToolbarOpen) {
           return false;
         }
 

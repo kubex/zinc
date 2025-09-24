@@ -707,6 +707,7 @@ declare module "components/dialog/dialog.component" {
          * `no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.
          */
         label: string;
+        cosmic: boolean;
         /**
          * Disables the header. This will also remove the default close button, so please ensure you provide an easy,
          * accessible way to close the dialog.

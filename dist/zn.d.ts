@@ -4112,6 +4112,60 @@ declare module "components/editor/modules/emoji-module/headless/headless-emoji-m
     }
     export default HeadlessEmojiModule;
 }
+declare module "components/editor/toolbar/headless/headless-toolbar-component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup, PropertyValues } from 'lit';
+    export interface ResultItem {
+        icon: string;
+        label: string;
+        format: string;
+        value?: string | boolean;
+    }
+    export default class HeadlessToolbarComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        open: boolean;
+        query: string;
+        results: ResultItem[];
+        private _activeIndex;
+        show(): void;
+        hide(): void;
+        setPosition(left: number, top: number): void;
+        setActiveIndex(index: number): void;
+        getActiveIndex(): number;
+        private onMouseEnterItem;
+        private onClickItem;
+        protected willUpdate(changed: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/toolbar/headless/headless-toolbar-module" {
+    import "components/editor/toolbar/headless/headless-toolbar-component";
+    import Quill from "quill";
+    class HeadlessToolbarModule {
+        private _quill;
+        private readonly _toolbarModule;
+        private _component;
+        private _startIndex;
+        private _keydownHandler;
+        private _docClickHandler;
+        constructor(quill: Quill);
+        private initComponent;
+        private attachEvents;
+        private createComponent;
+        private onDocumentClick;
+        private updateFromEditor;
+        private positionComponent;
+        private getToolbarQuery;
+        private onKeydown;
+        private onToolbarSelect;
+        private _callFormat;
+        private _applySelectedFormat;
+        private _getCatalog;
+        private show;
+        private hide;
+    }
+    export default HeadlessToolbarModule;
+}
 declare module "components/editor/modules/image-resize-module/image-resize-module" {
     import Quill, { Module } from "quill";
     type ImageResizeModuleOptions = {

@@ -62,13 +62,17 @@ export default class ZnPanel extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (window.CSS.registerProperty) {
-      window.CSS.registerProperty({
-        inherits: false,
-        initialValue: '0deg',
-        name: '--rotate',
-        syntax: '<angle>',
-      })
+    try {
+      if (window.CSS.registerProperty) {
+        window.CSS.registerProperty({
+          inherits: false,
+          initialValue: '0deg',
+          name: '--rotate',
+          syntax: '<angle>',
+        })
+      }
+    } catch {
+      // do nothing
     }
   }
 

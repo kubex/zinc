@@ -3162,6 +3162,7 @@ declare module "components/panel/panel.component" {
         flushY: boolean;
         transparent: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
         protected render(): unknown;
     }
 }

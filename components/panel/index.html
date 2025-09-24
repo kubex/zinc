@@ -449,6 +449,7 @@
             <li data-level="3"><a href="#basic-panel">Basic Panel</a></li>
             <li data-level="3"><a href="#flush-with-tabs">Flush with Tabs</a></li>
             <li data-level="3"><a href="#moving-the-caption">Moving the caption</a></li>
+            <li data-level="3"><a href="#cosmic-panel">Cosmic Panel</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
@@ -806,6 +807,70 @@
             </div>
           </div>
 
+          <h3 id="cosmic-panel" class="anchor-heading">
+            Cosmic Panel<a href="#cosmic-panel" aria-label='Direct link to "Cosmic Panel"'></a>
+          </h3>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-panel flush="" cosmic="">
+                <!-- Example panel content -->
+                <zn-sp flush="" no-gap="" divide="">
+                  <zn-inline-edit padded="" inline="" caption="Label 1" value="This is Awesome"></zn-inline-edit>
+                  <zn-inline-edit padded="" inline="" caption="Label 2" value="This is Awesome"></zn-inline-edit>
+                </zn-sp>
+
+                <!-- Panel Footer -->
+                <span slot="footer"> Some awesome footer information </span>
+              </zn-panel>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-162">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-298">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">flush</span> <span class="token attr-name">cosmic</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token comment">&lt;!-- Example panel content --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">flush</span> <span class="token attr-name">no-gap</span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 1<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-inline-edit</span> <span class="token attr-name">padded</span> <span class="token attr-name">inline</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label 2<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This is Awesome<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-inline-edit</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token comment">&lt;!-- Panel Footer --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>footer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    Some awesome footer information
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-298"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-162"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
           </h2>
@@ -827,7 +892,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-298"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/panel/panel.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-298"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-299"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/panel/panel.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-299"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -842,12 +907,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-299"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/panel/panel.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-299"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-300"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/panel/panel.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-300"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-300"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/panel/panel.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-300"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-301"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/panel/panel.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-301"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

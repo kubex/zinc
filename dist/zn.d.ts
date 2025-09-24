@@ -4006,6 +4006,7 @@ declare module "components/editor/modules/context-menu/context-menu-module" {
         private positionComponent;
         private getToolbarQuery;
         private onKeydown;
+        private showDialog;
         private onToolbarSelect;
         private _callFormat;
         private _applySelectedFormat;

@@ -104,12 +104,15 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     super.connectedCallback();
     document.addEventListener('keydown', this.escKeyHandler);
     document.addEventListener('keydown', this.submitKeyHandler);
+    // if click outside, cancel edit
+    document.addEventListener('click', this.mouseEventHandler);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('keydown', this.escKeyHandler);
     document.removeEventListener('keydown', this.submitKeyHandler);
+    document.removeEventListener('click', this.mouseEventHandler);
   }
 
   async firstUpdated() {
@@ -130,6 +133,14 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       await this.input.hide();
     }
   }
+
+  mouseEventHandler = (e: MouseEvent) => {
+    if (this.isEditing && !this.contains(e.target as Node)) {
+      this.isEditing = false;
+      this.value = this.defaultValue;
+      this.input.blur();
+    }
+  };
 
   escKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.isEditing) {

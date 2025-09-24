@@ -3156,6 +3156,7 @@ declare module "components/panel/panel.component" {
         caption: string;
         description: string;
         tabbed: boolean;
+        cosmic: boolean;
         flush: boolean;
         flushX: boolean;
         flushY: boolean;

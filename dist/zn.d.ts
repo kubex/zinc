@@ -2018,6 +2018,7 @@ declare module "components/data-table/data-table.component" {
         action: string;
     }
     interface HeaderConfig {
+        key: string;
         label: string;
         required?: boolean;
         default?: boolean;

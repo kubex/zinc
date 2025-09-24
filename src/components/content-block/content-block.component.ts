@@ -49,7 +49,7 @@ export default class ContentBlock extends ZincElement {
           convertedHtml = convertedHtml.replace(/&gt;/g, '>');
           convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
-          const baseStyles = "<style>body,html{padding: 0; margin: 0; font-size: 13px; font-family: Arial;}img{max-width:100%;}</style>";
+          const baseStyles = "<style>body,html{padding: 0; margin: 0; font-size: 13px; font-family: Arial;}img{max-width:100%; max-height: 500px;}</style>";
           iframe.srcdoc = baseStyles + convertedHtml;
         }
       }

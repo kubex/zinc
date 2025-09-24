@@ -113,12 +113,16 @@ export default class ZnDialog extends ZincElement {
       }
     }
     if (window.CSS.registerProperty) {
-      window.CSS.registerProperty({
-        inherits: false,
-        initialValue: '0deg',
-        name: '--rotate',
-        syntax: '<angle>',
-      })
+      try {
+        window.CSS.registerProperty({
+          inherits: false,
+          initialValue: '0deg',
+          name: '--rotate',
+          syntax: '<angle>',
+        });
+      } catch (e) {
+        // do nothing
+      }
     }
   }
 

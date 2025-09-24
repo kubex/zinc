@@ -60,18 +60,24 @@ export default class ZnPanel extends ZincElement {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (window.CSS.registerProperty) {
+      window.CSS.registerProperty({
+        inherits: false,
+        initialValue: '0deg',
+        name: '--rotate',
+        syntax: '<angle>',
+      })
+    }
+  }
+
   protected render(): unknown {
     const hasActionSlot = this.hasSlotController.test('actions');
     const hasFooterSlot = this.hasSlotController.test('footer');
     const hasHeader = this.caption || hasActionSlot;
 
-    const glow = this.cosmic ? html`
-      <div class="glow-cont">
-        <div class="glow"></div>
-      </div>` : html``
-
     return html`
-      ${glow}
       <div part="base" class="${classMap({
         panel: true,
         'panel--flush': this.flush || this.tabbed,
@@ -82,6 +88,7 @@ export default class ZnPanel extends ZincElement {
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
         'panel--has-header': hasHeader,
+        'panel--cosmic': this.cosmic
       })}">
 
         <div class="panel__inner">

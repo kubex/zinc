@@ -16,12 +16,12 @@ fullWidth: true
 {&quot;key&quot;:&quot;Three&quot;,&quot;label&quot;:&quot;Name&quot;, &quot;required&quot;:true, &quot;default&quot;: true, &quot;sortable&quot;:true, &quot;filterable&quot;:true},
 {&quot;key&quot;:&quot;Four&quot;,&quot;label&quot;:&quot;Name&quot;, &quot;required&quot;:true, &quot;default&quot;: true, &quot;sortable&quot;:true, &quot;filterable&quot;:true}]">
   
-  <zn-data-table-sort>
+  <zn-data-table-sort slot="sort">
     <!-- Need to configure default, and available sort columns
      Future enhancement: allow multi-column sort !-->
   </zn-data-table-sort>
 
-  <zn-data-table-filter auto-submit="true" debounce="1000">
+  <zn-data-table-filter auto-submit="true" debounce="1000" slot="filter">
     <zn-input name="search" placeholder="Search customers..." icon="search" debounce="300" clearable></zn-input>
   </zn-data-table-filter>
 
@@ -45,12 +45,12 @@ fullWidth: true
     <zn-button>Create new customer</zn-button>
   </zn-empty-state>
 
-  <zn-data-table-sort>
+  <zn-data-table-sort slot="sort">
     <!-- Need to configure default, and available sort columns
      Future enhancement: allow multi-column sort !-->
   </zn-data-table-sort>
 
-  <zn-data-table-filter auto-submit="true" debounce="1000">
+  <zn-data-table-filter auto-submit="true" debounce="1000" slot="filter">
     <!-- Allow auto submit on filter change with debounce 
      Should be possible to build your own forms for filtering here 
      Current filter builder could be a different component as a query-builder, that can expand -->

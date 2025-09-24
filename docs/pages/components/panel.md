@@ -121,4 +121,21 @@ panel. This can be useful when using other components such as `zn-tabs`.
 </zn-panel>
 ```
 
+### Cosmic Panel
 
+```html:preview
+
+<zn-panel flush cosmic>
+
+  <!-- Example panel content -->
+  <zn-sp flush no-gap divide>
+    <zn-inline-edit padded inline caption="Label 1" value="This is Awesome"></zn-inline-edit>
+    <zn-inline-edit padded inline caption="Label 2" value="This is Awesome"></zn-inline-edit>
+  </zn-sp>
+
+  <!-- Panel Footer -->
+  <span slot="footer">
+    Some awesome footer information
+  </span>
+</zn-panel>
+```

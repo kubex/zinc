@@ -247,6 +247,9 @@ module.exports = function (eleventyConfig)
     watch:   ['dist/**/*'] // additional files to watch that will trigger server updates (array of paths or globs)
   });
 
+  // Copy the data folder to the _site directory
+  eleventyConfig.addPassthroughCopy('data');
+
   //
   // 11ty config
   //

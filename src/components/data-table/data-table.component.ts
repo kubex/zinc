@@ -93,8 +93,11 @@ interface ConfirmConfig {
 }
 
 interface HeaderConfig {
-  title: string;
-  position: string;
+  label: string;
+  required?: boolean;
+  default?: boolean;
+  sortable?: boolean;
+  filterable?: boolean;
 }
 
 interface DataRequest {
@@ -156,7 +159,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'key'}) key: string = 'id';
 
   @property({attribute: 'headers', type: Object})
-  headers: Record<string, string | HeaderConfig> = {};
+  headers: Record<string, HeaderConfig> = {};
 
   // Hide header text keeping the content - e.g. Action buttons without a header
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
@@ -182,6 +185,8 @@ export default class ZnDataTable extends ZincElement {
   // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
   @property() filters: [] = [];
+
+  @property() method: 'GET' | 'POST' = 'POST';
 
   // Data Table Properties
   private _initialLoad = true;
@@ -222,13 +227,13 @@ export default class ZnDataTable extends ZincElement {
 
       // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(dataUri, {
-        method: 'POST',
+        method: this.method,
         headers: {
           'x-kx-fetch-style': 'zn-data-table',
         },
         signal,
         credentials: 'same-origin',
-        body: JSON.stringify(requestData)
+        body: this.method === 'POST' ? JSON.stringify(requestData) : undefined
       });
 
       if (!response.ok) throw new Error(response.statusText);
@@ -677,68 +682,6 @@ export default class ZnDataTable extends ZincElement {
           </zn-hover-container>`;
       }
 
-      /*if (data['menu']) {
-        return html`
-          <zn-dropdown>
-            <zn-button slot="trigger" icon="more_horiz" icon-size="24" color="transparent" size="content"></zn-button>
-            <zn-menu>
-              ${data['menu'].map((item: MenuConfig) => {
-                return html`
-                  <zn-menu-item id="${item.id}"
-                                href="${item.href}"
-                                gaid="${item.gaid}"
-                                data-target="${ifDefined(item.target)}">
-                    ${item.label}
-                  </zn-menu-item>`;
-              })}
-            </zn-menu>
-          </zn-dropdown>`
-      }
-
-      if (data['buttons']) {
-        content = html`
-          ${Object.values(data['buttons']).map((button) => {
-            if (button.confirm) {
-              return html`
-                <div>
-                  <zn-button
-                    id="${button.id}"
-                    size="${button.size}"
-                    color="${button.color}"
-                    icon="${button.icon}"
-                    icon-size="${button.iconSize}"
-                    tooltip="${button.tooltip}"
-                    outline="${ifDefined(button.outline)}">
-                    ${button.label || nothing}
-                  </zn-button>
-                  <zn-confirm
-                    fid="${button.confirm.fid}"
-                    trigger="${button.confirm.trigger}"
-                    type="${button.confirm.type}"
-                    caption="${button.confirm.caption}"
-                    content="${button.confirm.content}"
-                    action="${button.confirm.action}"></zn-confirm>
-                </div>`;
-            }
-            return html`
-              <zn-button
-                id="${button.id}"
-                href="${button.href}"
-                gaid="${button.gaid}"
-                size="${button.size}"
-                color="${button.color}"
-                icon="${button.icon}"
-                icon-size="${button.iconSize}"
-                tooltip="${button.tooltip}"
-                data-uri="${button.uri}"
-                data-target="${['modal', 'slide'].includes(button.target) ? button.target : nothing}"
-                target="${!['modal', 'slide'].includes(button.target) ? button.target : nothing}"
-                outline="${ifDefined(button.outline)}">
-                ${button.label || nothing}
-              </zn-button>`;
-          })}`;
-      }*/
-
       if (data.iconSrc) {
         const src = data.iconSrc;
         const color = data.iconColor ?? '';
@@ -780,25 +723,6 @@ export default class ZnDataTable extends ZincElement {
     headerKeys = headerKeys.filter((k) => !Object.values(this.hiddenColumns).includes(k));
     const header: string | HeaderConfig = this.headers[key];
 
-    if (this.hasHeaderPosition(header)) {
-      return html`
-        <th
-          class="${classMap({
-            'table__head': true,
-            'table__head--wide': key === this.wideColumn,
-            'table__head--last': key === headerKeys[headerKeys.length - 1],
-            'table__head--hidden': Object.values(this.hiddenHeaders).includes(key),
-            [`table__head--${header.position}`]: true
-          })}"
-          @click="${sortable ? this.updateSort(key) : undefined}">
-          <div>
-            ${header.title}
-            ${sortable ? this.getTableSortIcon(key) : nothing}
-          </div>
-        </th>
-      `;
-    }
-
     return html`
       <th
         class="${classMap({
@@ -809,7 +733,7 @@ export default class ZnDataTable extends ZincElement {
         })}"
         @click="${sortable ? this.updateSort(key) : undefined}">
         <div>
-          ${header}
+          ${header.label}
           ${sortable ? this.getTableSortIcon(key) : nothing}
         </div>
       </th>
@@ -821,21 +745,6 @@ export default class ZnDataTable extends ZincElement {
       (key) => !Object.values(this.hiddenColumns).includes(key)
     );
     const headerKey: string = headerKeys[index];
-    const header = this.headers[headerKey];
-
-    if (this.hasHeaderPosition(header)) {
-      return html`
-        <td
-          @click="${this.selectRow}"
-          class="${classMap({
-            'table__cell': true,
-            'table__cell--wide': headerKey === this.wideColumn,
-            'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
-            [`table__cell--${header.position}`]: true
-          })}">
-          <div>${this.renderCell(value)}</div>
-        </td>`;
-    }
 
     return html`
       <td
@@ -847,10 +756,6 @@ export default class ZnDataTable extends ZincElement {
         })}">
         <div>${this.renderCell(value)}</div>
       </td>`;
-  }
-
-  private hasHeaderPosition(header: string | HeaderConfig) {
-    return typeof header === 'object' && header !== null && 'position' in header && 'title' in header;
   }
 
   private getRows(data: Response): Row[] {

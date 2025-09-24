@@ -1,17 +1,17 @@
-import './headless-toolbar-component';
+import './context-menu-module-component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
-import {type ResultItem} from "./headless-toolbar-component";
+import {type ResultItem} from "./context-menu-module-component";
 import Quill from "quill";
 import type {CannedResponse} from "../../editor.component";
-import type HeadlessToolbarComponent from "./headless-toolbar-component";
+import type ContextMenuModuleComponent from "./context-menu-module-component";
 import type Toolbar from "quill/modules/toolbar";
 
-class HeadlessToolbarModule {
+class ContextMenuModule {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
   private readonly _commands: CannedResponse[] = [];
-  private _component!: HeadlessToolbarComponent;
+  private _component!: ContextMenuModuleComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
@@ -44,8 +44,8 @@ class HeadlessToolbarModule {
 
   private createComponent() {
     const tpl = html`
-      <zn-headless-toolbar></zn-headless-toolbar>`;
-    return litToHTML<HeadlessToolbarComponent>(tpl);
+      <zn-context-menu></zn-context-menu>`;
+    return litToHTML<ContextMenuModuleComponent>(tpl);
   }
 
   private onDocumentClick(e: MouseEvent) {
@@ -290,4 +290,4 @@ class HeadlessToolbarModule {
   }
 }
 
-export default HeadlessToolbarModule;
+export default ContextMenuModule;

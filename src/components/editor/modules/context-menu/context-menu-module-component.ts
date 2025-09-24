@@ -2,7 +2,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from "../../../../internal/zinc-element";
 
-import styles from './headless-toolbar-module.scss';
+import styles from './context-menu-module.scss';
 
 export interface ResultItem {
   icon: string;
@@ -12,7 +12,7 @@ export interface ResultItem {
   value?: string | boolean;
 }
 
-export default class HeadlessToolbarComponent extends ZincElement {
+export default class ContextMenuModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: Boolean, reflect: true}) open = false;
@@ -112,4 +112,4 @@ export default class HeadlessToolbarComponent extends ZincElement {
   }
 }
 
-HeadlessToolbarComponent.define('zn-headless-toolbar');
+ContextMenuModuleComponent.define('zn-context-menu');

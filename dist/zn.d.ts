@@ -4038,6 +4038,77 @@ declare module "components/editor/modules/drag-drop-module" {
     }
     export const getFileDataUrl: (file: any) => Promise<unknown>;
 }
+declare module "components/editor/modules/emoji-module/emoji-module" {
+    import type Quill from 'quill';
+    export interface Emoji {
+        native?: string;
+        skins?: {
+            native?: string;
+        }[];
+        id?: string;
+        shortcodes?: string;
+    }
+    class EmojiModule {
+        private readonly _quill;
+        private _mo;
+        constructor(quill: Quill);
+        private getHostEditor;
+        private getToolbarEmojiContainer;
+        private getTheme;
+        private initPicker;
+        private onEmojiSelect;
+    }
+    export default EmojiModule;
+}
+declare module "components/editor/modules/emoji-module/headless/headless-emoji-module.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup, PropertyValues } from 'lit';
+    export interface ResultItem {
+        emojiChar: string;
+        label: string;
+    }
+    export default class HeadlessEmojiModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        open: boolean;
+        query: string;
+        results: ResultItem[];
+        private _activeIndex;
+        show(): void;
+        hide(): void;
+        setPosition(left: number, top: number): void;
+        setActiveIndex(index: number): void;
+        getActiveIndex(): number;
+        private onMouseEnterItem;
+        private onClickItem;
+        protected willUpdate(changed: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/emoji-module/headless/headless-emoji-module" {
+    import "components/editor/modules/emoji-module/headless/headless-emoji-module.component";
+    import Quill from 'quill';
+    class HeadlessEmojiModule {
+        private _quill;
+        private _component;
+        private _startIndex;
+        private _keydownHandler;
+        private _docClickHandler;
+        constructor(quill: Quill);
+        private initComponent;
+        private attachEvents;
+        private createComponent;
+        private onDocumentClick;
+        private updateFromEditor;
+        private positionComponent;
+        private getEmojiQuery;
+        private onKeydown;
+        private onEmojiSelect;
+        private replaceAtQuery;
+        private show;
+        private hide;
+    }
+    export default HeadlessEmojiModule;
+}
 declare module "components/editor/modules/image-resize-module/image-resize-module" {
     import Quill, { Module } from "quill";
     type ImageResizeModuleOptions = {
@@ -4202,11 +4273,6 @@ declare module "components/editor/editor.component" {
         private quillElement;
         private _commands;
         private _datePickerInstance;
-        private _emojiPopupEl;
-        private _emojiActive;
-        private _emojiStartIndex;
-        private _emojiQuery;
-        private _emojiActiveIndex;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4229,22 +4295,8 @@ declare module "components/editor/editor.component" {
         private _attachToolbarHandlers;
         private _syncButtonState;
         private _fetchCannedResponses;
-        private _initEmojiPicker;
-        private _onEmojiSelect;
         private _initDatePicker;
         private _onDateSelect;
-        private _initEmojiSearch;
-        private _ensureEmojiPopup;
-        private _maybeUpdateEmojiSearch;
-        private _positionEmojiPopup;
-        private _getEmojiQuery;
-        private _performEmojiSearch;
-        private _renderEmojiResults;
-        private _getEmojiItems;
-        private _getActiveEmojiItem;
-        private _setActiveEmojiIndex;
-        private _hideEmojiPopup;
-        private _replaceEmojiAtQuery;
         private _insertDivider;
         render(): import("lit").TemplateResult<1>;
     }

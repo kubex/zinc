@@ -2018,8 +2018,11 @@ declare module "components/data-table/data-table.component" {
         action: string;
     }
     interface HeaderConfig {
-        title: string;
-        position: string;
+        label: string;
+        required?: boolean;
+        default?: boolean;
+        sortable?: boolean;
+        filterable?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.
@@ -2068,7 +2071,7 @@ declare module "components/data-table/data-table.component" {
         filter: string;
         wideColumn: string;
         key: string;
-        headers: Record<string, string | HeaderConfig>;
+        headers: Record<string, HeaderConfig>;
         hiddenHeaders: string;
         hiddenColumns: string;
         unsortableHeaders: string;
@@ -2080,6 +2083,7 @@ declare module "components/data-table/data-table.component" {
         emptyStateIcon: string;
         hideCheckboxes: boolean;
         filters: [];
+        method: 'GET' | 'POST';
         private _initialLoad;
         private _lastTableContent;
         private resizeObserver;
@@ -2118,7 +2122,6 @@ declare module "components/data-table/data-table.component" {
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
-        private hasHeaderPosition;
         private getRows;
         private getSelectedKeys;
         private updateKeys;

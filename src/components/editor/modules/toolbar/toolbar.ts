@@ -1,17 +1,17 @@
 import './toolbar.component';
 import Toolbar from "quill/modules/toolbar";
 import type Quill from "quill";
-import type ToolbarModuleComponent from "./toolbar.component";
+import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";
 
 export * from './toolbar.component';
 
 class ToolbarModule extends Toolbar {
   private readonly _quill: Quill;
-  private readonly _component: ToolbarModuleComponent;
+  private readonly _component: ToolbarComponent;
 
   constructor(quill: Quill, options: {
-    container: ToolbarModuleComponent;
+    container: ToolbarComponent;
     handlers?: Record<string, (value?: any) => void>;
   }) {
     super(quill, options);
@@ -25,15 +25,17 @@ class ToolbarModule extends Toolbar {
     this._quill = quill;
     this._component = options.container;
 
-    this._attachToolbarHandlers();
-    this._syncToolbarState = this._syncToolbarState.bind(this);
+    this._component.updateComplete.then(() => {
+      this._attachToolbarHandlers();
+      this._syncToolbarState = this._syncToolbarState.bind(this);
 
-    if (quill) {
-      quill.on('selection-change', this._syncToolbarState);
-      quill.root?.addEventListener('click', this._syncToolbarState);
-      quill.on('text-change', this._syncToolbarState);
-      this._syncToolbarState();
-    }
+      if (quill) {
+        quill.on('selection-change', this._syncToolbarState);
+        quill.root?.addEventListener('click', this._syncToolbarState);
+        quill.on('text-change', this._syncToolbarState);
+        this._syncToolbarState();
+      }
+    });
   }
 
   private _attachToolbarHandlers() {

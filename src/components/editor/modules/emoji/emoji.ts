@@ -1,15 +1,16 @@
 import {init, Picker} from 'emoji-mart';
 import data from '@emoji-mart/data';
 import type Quill from 'quill';
+import type ToolbarComponent from "../toolbar/toolbar.component";
 
-export interface Emoji {
+export interface EmojiResult {
   native?: string;
   skins?: { native?: string }[];
   id?: string;
   shortcodes?: string;
 }
 
-class EmojiModule {
+class Emoji {
   private readonly _quill: Quill;
   private _mo: MutationObserver | null = null;
 
@@ -34,12 +35,14 @@ class EmojiModule {
     return (root && (root as ShadowRoot).host) as HTMLElement | null;
   }
 
-  private getToolbarEmojiContainer(): HTMLElement | null {
+  private async getToolbarEmojiContainer(): Promise<HTMLElement | null> {
     try {
       const root = this._quill.container?.getRootNode?.() as ShadowRoot | null;
       if (!root) return null;
 
-      const toolbar = root.getElementById?.('toolbar') as HTMLElement | null;
+      const toolbar = root.getElementById?.('toolbar') as ToolbarComponent | null;
+      await toolbar?.updateComplete;
+
       const shadow = toolbar?.shadowRoot as ShadowRoot | undefined;
       const container = shadow?.querySelector?.('.emoji-picker') as HTMLElement | null;
       return container ?? null;
@@ -56,25 +59,26 @@ class EmojiModule {
   }
 
   private initPicker() {
-    const container = this.getToolbarEmojiContainer();
-    if (!container) return;
+    this.getToolbarEmojiContainer().then((container) => {
+      if (!container) return;
 
-    container.innerHTML = '';
+      container.innerHTML = '';
 
-    // eslint-disable-next-line no-new
-    new Picker({
-      parent: container,
-      data: data as Record<string, unknown>,
-      previewPosition: 'none',
-      skinTonePosition: 'none',
-      theme: this.getTheme(),
-      set: 'native',
-      icons: 'solid',
-      onEmojiSelect: (emoji: Emoji) => this.onEmojiSelect(emoji)
+      // eslint-disable-next-line no-new
+      new Picker({
+        parent: container,
+        data: data as Record<string, unknown>,
+        previewPosition: 'none',
+        skinTonePosition: 'none',
+        theme: this.getTheme(),
+        set: 'native',
+        icons: 'solid',
+        onEmojiSelect: (emoji: EmojiResult) => this.onEmojiSelect(emoji)
+      });
     });
   }
 
-  private onEmojiSelect(emoji: Emoji | null) {
+  private onEmojiSelect(emoji: EmojiResult | null) {
     try {
       const text: string = (emoji?.native) ?? (emoji?.skins?.[0]?.native) ?? '';
       if (!text || !this._quill) return;
@@ -94,4 +98,4 @@ class EmojiModule {
   }
 }
 
-export default EmojiModule;
+export default Emoji;

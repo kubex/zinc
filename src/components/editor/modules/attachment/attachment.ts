@@ -1,5 +1,5 @@
 import type Quill from 'quill';
-import type ToolbarModule from "./toolbar/toolbar";
+import type ToolbarModule from "../toolbar/toolbar";
 
 interface AttachmentModuleOptions {
   upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
@@ -13,7 +13,7 @@ const generateId = () => {
   return `${name}_${id}`;
 };
 
-export default class AttachmentModule {
+export default class Attachment {
   private _quill: Quill;
   private _options: AttachmentModuleOptions;
 

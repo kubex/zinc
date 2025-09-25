@@ -4,7 +4,7 @@ import ZincElement from "../../../../internal/zinc-element";
 
 import styles from './toolbar.scss';
 
-export default class ToolbarModuleComponent extends ZincElement {
+export default class ToolbarComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   render() {
@@ -272,4 +272,4 @@ export default class ToolbarModuleComponent extends ZincElement {
   }
 }
 
-ToolbarModuleComponent.define('zn-toolbar');
+ToolbarComponent.define('zn-toolbar');

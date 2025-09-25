@@ -8,9 +8,9 @@ import type {CannedResponse} from "../../editor.component";
 import type {ZnInputEvent} from "../../../../events/zn-input";
 import type ZnInput from "../../../input";
 
-import styles from './dialog-module.scss';
+import styles from './dialog.scss';
 
-export default class DialogModuleComponent extends ZincElement {
+export default class DialogComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @state() private hasFocus = false;
@@ -19,9 +19,9 @@ export default class DialogModuleComponent extends ZincElement {
   @query('dialog') dialogEl!: HTMLDialogElement;
 
   @query('zn-input#search-input') searchInput!: ZnInput;
-  @query('.dialog-module__content') commandList!: HTMLElement;
+  @query('.dialog__content') commandList!: HTMLElement;
 
-  @query('.dialog-module') dialogModule!: HTMLElement;
+  @query('.dialog') dialogModule!: HTMLElement;
 
   @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
   @property({type: Boolean, reflect: true}) open = false;
@@ -241,17 +241,17 @@ export default class DialogModuleComponent extends ZincElement {
       <dialog closedby="any"
               open="${this.open || nothing}"
               class="${classMap({
-                'dialog-module': true,
-                'dialog-module--has-focus': this.hasFocus,
-                'dialog-module--has-results': visibleCommands.length > 0,
+                'dialog': true,
+                'dialog--has-focus': this.hasFocus,
+                'dialog--has-results': visibleCommands.length > 0,
               })}">
 
-        <div class="dialog-module__header">
-          <div class="dialog-module__header--caption">
+        <div class="dialog__header">
+          <div class="dialog__header--caption">
             Canned Responses
           </div>
 
-          <div class="dialog-module__header--search">
+          <div class="dialog__header--search">
             <zn-input id="search-input"
                       type="search"
                       placeholder="Search..."
@@ -264,19 +264,19 @@ export default class DialogModuleComponent extends ZincElement {
           </div>
         </div>
 
-        <div class="dialog-module__body">
-          <div class="dialog-module__content">
+        <div class="dialog__body">
+          <div class="dialog__content">
             ${repeat(visibleCommands, (command: CannedResponse) => this._createCommand(command))}
           </div>
 
           <slot></slot>
         </div>
 
-        <div class="dialog-module__footer">
+        <div class="dialog__footer">
           <div>
             Showing ${visibleCommands.length} of ${this._allCommands.length} responses
           </div>
-          <zn-button class="dialog-module__close-button"
+          <zn-button class="dialog__close-button"
                      size="medium"
                      color="secondary"
                      @click="${() => this.requestClose('close-button')}">
@@ -290,4 +290,4 @@ export default class DialogModuleComponent extends ZincElement {
 
 }
 
-DialogModuleComponent.define('zn-dialog-module');
+DialogComponent.define('zn-dialog');

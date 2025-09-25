@@ -1,11 +1,11 @@
-import Quill from 'quill';
+import type Quill from 'quill';
 
-type TimeTrackingModuleOptions = {
+interface TimeTrackingModuleOptions {
   startTimeInput?: HTMLInputElement;
   openTimeInput?: HTMLInputElement;
 }
 
-export default class TimeTrackingModule {
+export default class TimeTracking {
   private _quill: Quill;
   private _options: TimeTrackingModuleOptions;
   private _startTime: number;

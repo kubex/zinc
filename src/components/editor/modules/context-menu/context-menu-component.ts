@@ -1,16 +1,18 @@
-import {html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
-import ZincElement from '../../../../../internal/zinc-element';
-import type {CSSResultGroup, PropertyValues} from 'lit';
+import ZincElement from "../../../../internal/zinc-element";
 
-import styles from './headless-emoji-module.scss';
+import styles from './context-menu.scss';
 
 export interface ResultItem {
-  emojiChar: string;
+  icon: string;
   label: string;
+  format?: string;
+  module?: string;
+  value?: string | boolean;
 }
 
-export default class HeadlessEmojiModuleComponent extends ZincElement {
+export default class ContextMenuComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: Boolean, reflect: true}) open = false;
@@ -19,11 +21,11 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
 
   @state() private _activeIndex = -1;
 
-  show() {
+  public show() {
     this.open = true;
   }
 
-  hide() {
+  public hide() {
     this.open = false;
     this._activeIndex = -1;
   }
@@ -50,7 +52,7 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
     this.requestUpdate();
 
     requestAnimationFrame(() => {
-      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-emoji-item]'));
+      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-toolbar-option]'));
       const active = items[this._activeIndex];
       active?.scrollIntoView?.({block: 'nearest'});
     });
@@ -60,30 +62,22 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
     return this._activeIndex;
   }
 
-  private onMouseEnterItem = (e: MouseEvent) => {
-    const target = e.currentTarget as HTMLElement | null;
-    if (!target) return;
-
-    const idx = parseInt(target.dataset.index || '-1', 10);
-    if (!Number.isNaN(idx)) {
-      this.setActiveIndex(idx);
-    }
-  }
-
-  private onClickItem = (e: MouseEvent) => {
+  private _onClickItem = (e: MouseEvent) => {
     const target = e.currentTarget as HTMLElement | null;
     if (!target) return;
 
     const idx = parseInt(target.dataset.index || '-1', 10);
     if (Number.isNaN(idx)) return;
 
+    this.setActiveIndex(idx);
+
     const item = this.results?.[idx];
     if (!item) return;
 
-    this.dispatchEvent(new CustomEvent('zn-emoji-select', {
+    this.dispatchEvent(new CustomEvent('zn-format-select', {
       bubbles: true,
       composed: true,
-      detail: {emojiChar: item.emojiChar, label: item.label}
+      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value, module: item.module}
     }));
   }
 
@@ -96,7 +90,7 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
 
   render() {
     return html`
-      <div class="header">${this.query ? `Emoji: ${this.query}` : 'Emoji'}</div>
+      <div class="header">${this.query ? `Search: ${this.query}` : 'Options'}</div>
       ${Array.isArray(this.results) && this.results.length > 0 ? (
         this.results.slice(0, 20).map((res, i) => html`
           <button
@@ -104,12 +98,11 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
             class="item"
             role="option"
             aria-selected="${String(i === this._activeIndex)}"
-            data-emoji-item
+            data-toolbar-option
             data-index="${i}"
-            @mouseenter="${this.onMouseEnterItem}"
-            @click="${this.onClickItem}"
+            @click="${this._onClickItem}"
           >
-            <span class="emoji">${res.emojiChar}</span>
+            <zn-icon src="${res.icon}" size="16"></zn-icon>
             <span class="label">${res.label}</span>
           </button>
         `)
@@ -119,4 +112,4 @@ export default class HeadlessEmojiModuleComponent extends ZincElement {
   }
 }
 
-HeadlessEmojiModuleComponent.define('zn-headless-emoji-module');
+ContextMenuComponent.define('zn-context-menu');

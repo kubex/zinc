@@ -1,10 +1,10 @@
 import Quill, {Module} from "quill";
 
-type ImageResizeModuleOptions = {
+interface ImageResizeModuleOptions {
   overlayStyles?: Partial<CSSStyleDeclaration>;
 }
 
-class ImageResizeModule extends Module<ImageResizeModuleOptions>
+class ImageResize extends Module<ImageResizeModuleOptions>
 {
 
   static DEFAULTS: ImageResizeModuleOptions = {};
@@ -154,4 +154,4 @@ class ImageResizeModule extends Module<ImageResizeModuleOptions>
   };
 }
 
-export default ImageResizeModule;
+export default ImageResize;

@@ -1,13 +1,13 @@
-import './dialog-module.component';
+import './dialog.component';
 import {Delta} from 'quill';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import type {CannedResponse} from "../../editor.component";
 import type {ZnCommandSelectEvent} from "../events/zn-command-select";
 import type Quill from 'quill';
-import type ZnDialogModule from './dialog-module.component';
+import type ZnDialogModule from './dialog.component';
 
-class DialogModule {
+class Dialog {
   private _quill: Quill;
   private _dialog: ZnDialogModule;
   private _commands: CannedResponse[] = [];
@@ -96,4 +96,4 @@ class DialogModule {
   }
 }
 
-export default DialogModule;
+export default Dialog;

@@ -1,4 +1,4 @@
-import Quill from 'quill';
+import type Quill from 'quill';
 
 interface DragAndDropModuleOptions {
   onDrop: (file: File, options: object) => void;

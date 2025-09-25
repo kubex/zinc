@@ -1,16 +1,16 @@
-import './headless-emoji-module.component';
+import './headless-emoji.component';
 import {html} from 'lit';
 import {init, SearchIndex} from 'emoji-mart';
 import {litToHTML} from '../../../../../utilities/lit-to-html';
 import data from '@emoji-mart/data';
 import Quill from 'quill';
-import type {Emoji} from "../emoji-module";
-import type {ResultItem} from './headless-emoji-module.component';
-import type HeadlessEmojiModuleComponent from './headless-emoji-module.component';
+import type {EmojiResult} from "../emoji";
+import type {ResultItem} from './headless-emoji.component';
+import type HeadlessEmojiComponent from './headless-emoji.component';
 
-class HeadlessEmojiModule {
+class HeadlessEmoji {
   private _quill: Quill;
-  private _component!: HeadlessEmojiModuleComponent;
+  private _component!: HeadlessEmojiComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
@@ -45,7 +45,7 @@ class HeadlessEmojiModule {
   private createComponent() {
     const tpl = html`
       <zn-headless-emoji-module></zn-headless-emoji-module>`;
-    return litToHTML<HeadlessEmojiModuleComponent>(tpl);
+    return litToHTML<HeadlessEmojiComponent>(tpl);
   }
 
   private onDocumentClick(e: MouseEvent) {
@@ -68,7 +68,7 @@ class HeadlessEmojiModule {
     this._startIndex = start;
 
     try {
-      const results = await SearchIndex.search(emojiQuery) as Emoji[];
+      const results = await SearchIndex.search(emojiQuery) as EmojiResult[];
       const mapped: ResultItem[] = (Array.isArray(results) ? results : []).slice(0, 20).map((e) => ({
         emojiChar: (e?.skins?.[0]?.native) || e?.native || '',
         label: (e?.id || e?.shortcodes || '') || ''
@@ -216,4 +216,4 @@ class HeadlessEmojiModule {
   }
 }
 
-export default HeadlessEmojiModule;
+export default HeadlessEmoji;

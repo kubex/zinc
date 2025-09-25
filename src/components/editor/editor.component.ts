@@ -1,23 +1,23 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
-import AirDatepicker from "air-datepicker";
-import AttachmentModule from "./modules/attachment-module";
-import ContextMenuModule from "./modules/context-menu/context-menu-module";
-import DialogModule from "./modules/dialog-module/dialog-module";
-import DragAndDropModule from "./modules/drag-drop-module";
-import EmojiModule from "./modules/emoji-module/emoji-module";
-import HeadlessEmojiModule from "./modules/emoji-module/headless/headless-emoji-module";
-import ImageResizeModule from "./modules/image-resize-module/image-resize-module";
+import Attachment from "./modules/attachment/attachment";
+import ContextMenu from "./modules/context-menu/context-menu";
+import DatePicker from "./modules/date-picker/date-picker";
+import Dialog from "./modules/dialog/dialog";
+import DragAndDropModule from "./modules/drag-drop/drag-drop";
+import Emoji from "./modules/emoji/emoji";
+import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
+import ImageResize from "./modules/image-resize/image-resize";
 import Quill from "quill";
-import TimeTrackingModule from "./modules/time-tracking-module";
+import TimeTracking from "./modules/time-tracking/time-tracking";
 import ToolbarModule from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type ContextMenuModuleComponent from "./modules/context-menu/context-menu-module-component";
-import type DialogModuleComponent from "./modules/dialog-module/dialog-module.component";
-import type HeadlessEmojiModuleComponent from "./modules/emoji-module/headless/headless-emoji-module.component";
-import type ToolbarModuleComponent from "./modules/toolbar/toolbar.component";
+import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
+import type DialogComponent from "./modules/dialog/dialog.component";
+import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
+import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
 
@@ -58,7 +58,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private editorHtml: HTMLTextAreaElement;
 
   @query('#toolbar')
-  private toolbar: ToolbarModuleComponent;
+  private toolbar: ToolbarComponent;
 
   @property() name: string;
   @property() value: string;
@@ -76,7 +76,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private quillElement: Quill;
   private _commands: CannedResponse[] = [];
-  private _datePickerInstance: AirDatepicker<HTMLElement>;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -109,14 +108,15 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const bindings = this._getQuillKeyboardBindings();
 
     Quill.register('modules/toolbar', ToolbarModule as any, true);
-    Quill.register('modules/dialogModule', DialogModule as any, true);
-    Quill.register('modules/emojiModule', EmojiModule as any, true);
-    Quill.register('modules/headlessEmojiModule', HeadlessEmojiModule as any, true);
-    Quill.register('modules/attachmentModule', AttachmentModule as any, true);
-    Quill.register('modules/timeTrackingModule', TimeTrackingModule as any, true);
+    Quill.register('modules/datePickerModule', DatePicker as any, true);
+    Quill.register('modules/dialogModule', Dialog as any, true);
+    Quill.register('modules/emojiModule', Emoji as any, true);
+    Quill.register('modules/headlessEmojiModule', HeadlessEmoji as any, true);
+    Quill.register('modules/attachmentModule', Attachment as any, true);
+    Quill.register('modules/timeTrackingModule', TimeTracking as any, true);
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
-    Quill.register('modules/imageResizeModule', ImageResizeModule as any, true);
-    Quill.register('modules/contextMenuModule', ContextMenuModule as any, true);
+    Quill.register('modules/imageResizeModule', ImageResize as any, true);
+    Quill.register('modules/contextMenuModule', ContextMenu as any, true);
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
     const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
@@ -161,6 +161,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         },
         emojiModule: {},
         headlessEmojiModule: {},
+        datePickerModule: {},
         timeTrackingModule: {
           startTimeInput: startTimeInput as HTMLInputElement,
           openTimeInput: openTimeInput as HTMLInputElement
@@ -201,7 +202,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.quillElement = quill;
 
     this._supplyPlaceholderDialog();
-    this._initDatePicker();
 
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
@@ -312,12 +312,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     super.firstUpdated(_changedProperties);
   }
 
-  protected updated(changed: PropertyValues) {
-    if (changed.has('t')) {
-      this._initDatePicker();
-    }
-  }
-
   private _handleTextChange() {
     this.value = this.quillElement.root.innerHTML;
     this.editorHtml.value = this.value;
@@ -351,11 +345,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       key: 'Enter',
       shiftKey: false,
       handler: () => {
-        const emoji = document.querySelector('zn-headless-emoji-module') as HeadlessEmojiModuleComponent | null;
+        const emoji = document.querySelector('zn-headless-emoji-module') as HeadlessEmojiComponent | null;
         const isEmojiOpen = emoji?.open ?? false;
-        const contextMenu = document.querySelector('zn-context-menu') as ContextMenuModuleComponent | null;
+        const contextMenu = document.querySelector('zn-context-menu') as ContextMenuComponent | null;
         const isContextMenuOpen = contextMenu?.open ?? false;
-        const dialog = document.querySelector('zn-dialog-module') as DialogModuleComponent | null;
+        const dialog = document.querySelector('zn-dialog-module') as DialogComponent | null;
         const isDialogOpen = dialog?.open ?? false;
         if (isEmojiOpen || isContextMenuOpen || isDialogOpen) {
           return false;
@@ -396,56 +390,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._commands = await response.json() as CannedResponse[];
     } catch (error) {
       console.error('Error fetching canned responses', error);
-    }
-  }
-
-  private _initDatePicker() {
-    const container = this.toolbar?.shadowRoot?.querySelector('.date-picker') as HTMLElement | null;
-    if (!container) return;
-
-    if (this._datePickerInstance) {
-      if (Object.prototype.hasOwnProperty.call(this._datePickerInstance, 'destroy')) {
-        this._datePickerInstance.destroy();
-      }
-    }
-
-    container.innerHTML = '';
-
-    // eslint-disable-next-line no-new
-    this._datePickerInstance = new AirDatepicker(container, {
-      inline: true,
-      locale: {
-        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        today: 'Today',
-        clear: 'Clear',
-        dateFormat: 'MM/dd/yyyy',
-        timeFormat: 'hh:ii aa',
-        firstDay: 0
-      },
-      onSelect: ({formattedDate}) => this._onDateSelect(formattedDate)
-    });
-  }
-
-  private _onDateSelect(formattedDate: string | string[]) {
-    try {
-      if (!formattedDate || !this.quillElement) return;
-      const range = this.quillElement.getSelection(true);
-      if (range) {
-        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
-        this.quillElement.insertText(range.index, text, 'user');
-        this.quillElement.setSelection(range.index + text.length, 0, 'user');
-      } else {
-        const index = Math.max(0, this.quillElement.getLength() - 1);
-        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
-        this.quillElement.insertText(index, text, 'user');
-        this.quillElement.setSelection(index + text.length, 0, 'user');
-      }
-    } catch (e) {
-      // no-op
     }
   }
 

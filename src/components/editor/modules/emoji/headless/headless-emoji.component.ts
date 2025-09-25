@@ -1,18 +1,16 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {html, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
-import ZincElement from "../../../../internal/zinc-element";
+import ZincElement from '../../../../../internal/zinc-element';
+import type {CSSResultGroup, PropertyValues} from 'lit';
 
-import styles from './context-menu-module.scss';
+import styles from './headless-emoji.scss';
 
 export interface ResultItem {
-  icon: string;
+  emojiChar: string;
   label: string;
-  format?: string;
-  module?: string;
-  value?: string | boolean;
 }
 
-export default class ContextMenuModuleComponent extends ZincElement {
+export default class HeadlessEmojiComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property({type: Boolean, reflect: true}) open = false;
@@ -21,11 +19,11 @@ export default class ContextMenuModuleComponent extends ZincElement {
 
   @state() private _activeIndex = -1;
 
-  public show() {
+  show() {
     this.open = true;
   }
 
-  public hide() {
+  hide() {
     this.open = false;
     this._activeIndex = -1;
   }
@@ -52,7 +50,7 @@ export default class ContextMenuModuleComponent extends ZincElement {
     this.requestUpdate();
 
     requestAnimationFrame(() => {
-      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-toolbar-option]'));
+      const items = Array.from(this.renderRoot.querySelectorAll<HTMLButtonElement>('[data-emoji-item]'));
       const active = items[this._activeIndex];
       active?.scrollIntoView?.({block: 'nearest'});
     });
@@ -62,22 +60,30 @@ export default class ContextMenuModuleComponent extends ZincElement {
     return this._activeIndex;
   }
 
-  private _onClickItem = (e: MouseEvent) => {
+  private onMouseEnterItem = (e: MouseEvent) => {
+    const target = e.currentTarget as HTMLElement | null;
+    if (!target) return;
+
+    const idx = parseInt(target.dataset.index || '-1', 10);
+    if (!Number.isNaN(idx)) {
+      this.setActiveIndex(idx);
+    }
+  }
+
+  private onClickItem = (e: MouseEvent) => {
     const target = e.currentTarget as HTMLElement | null;
     if (!target) return;
 
     const idx = parseInt(target.dataset.index || '-1', 10);
     if (Number.isNaN(idx)) return;
 
-    this.setActiveIndex(idx);
-
     const item = this.results?.[idx];
     if (!item) return;
 
-    this.dispatchEvent(new CustomEvent('zn-format-select', {
+    this.dispatchEvent(new CustomEvent('zn-emoji-select', {
       bubbles: true,
       composed: true,
-      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value, module: item.module}
+      detail: {emojiChar: item.emojiChar, label: item.label}
     }));
   }
 
@@ -90,7 +96,7 @@ export default class ContextMenuModuleComponent extends ZincElement {
 
   render() {
     return html`
-      <div class="header">${this.query ? `Search: ${this.query}` : 'Options'}</div>
+      <div class="header">${this.query ? `Emoji: ${this.query}` : 'Emoji'}</div>
       ${Array.isArray(this.results) && this.results.length > 0 ? (
         this.results.slice(0, 20).map((res, i) => html`
           <button
@@ -98,11 +104,12 @@ export default class ContextMenuModuleComponent extends ZincElement {
             class="item"
             role="option"
             aria-selected="${String(i === this._activeIndex)}"
-            data-toolbar-option
+            data-emoji-item
             data-index="${i}"
-            @click="${this._onClickItem}"
+            @mouseenter="${this.onMouseEnterItem}"
+            @click="${this.onClickItem}"
           >
-            <zn-icon src="${res.icon}" size="16"></zn-icon>
+            <span class="emoji">${res.emojiChar}</span>
             <span class="label">${res.label}</span>
           </button>
         `)
@@ -112,4 +119,4 @@ export default class ContextMenuModuleComponent extends ZincElement {
   }
 }
 
-ContextMenuModuleComponent.define('zn-context-menu');
+HeadlessEmojiComponent.define('zn-headless-emoji-module');

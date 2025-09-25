@@ -1,17 +1,17 @@
-import './context-menu-module-component';
+import './context-menu-component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
-import {type ResultItem} from "./context-menu-module-component";
+import {type ResultItem} from "./context-menu-component";
 import Quill from "quill";
 import type {CannedResponse} from "../../editor.component";
-import type ContextMenuModuleComponent from "./context-menu-module-component";
+import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "quill/modules/toolbar";
 
-class ContextMenuModule {
+class ContextMenu {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
   private readonly _commands: CannedResponse[] = [];
-  private _component!: ContextMenuModuleComponent;
+  private _component!: ContextMenuComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
@@ -45,7 +45,7 @@ class ContextMenuModule {
   private createComponent() {
     const tpl = html`
       <zn-context-menu></zn-context-menu>`;
-    return litToHTML<ContextMenuModuleComponent>(tpl);
+    return litToHTML<ContextMenuComponent>(tpl);
   }
 
   private onDocumentClick(e: MouseEvent) {
@@ -301,4 +301,4 @@ class ContextMenuModule {
   }
 }
 
-export default ContextMenuModule;
+export default ContextMenu;

@@ -13,17 +13,25 @@
 @use "../node_modules/air-datepicker/air-datepicker.css";
 
 .air-datepicker {
+  --adp-color: rgba(var(--zn-text), var(--zn-text-opacity));
+  --adp-nav-color-secondary: rgb(var(--zn-purple-text));
+
   --adp-day-name-color: var(--zn-color-primary-600);
   --adp-day-name-color-hover: var(--zn-color-primary-700);
   --adp-cell-background-color-selected: var(--zn-color-primary-600);
   --adp-cell-background-color-selected-hover: var(--zn-color-primary-700);
   --adp-color-current-date: var(--zn-color-primary-600);
 
+  --adp-background-color: var(--zn-input-background-color);
+  --adp-background-color-hover: var(--zn-input-background-color-hover);
+  --adp-background-color-active: var(--zn-input-background-color-hover);
   --adp-background-color-selected-other-month: var(--zn-color-primary-300);
   --adp-background-color-in-range: var(--zn-color-primary-100);
 
+  --adp-border-color: rgb(var(--zn-border-color));
+  --adp-border-color-inline: rgb(var(--zn-border-color));
+  --adp-border-color-inner: rgb(var(--zn-border-color));
+
   --adp-cell-background-color-in-range: var(--zn-color-primary-100);
   --adp-cell-background-color-in-range-hover: var(--zn-color-primary-200);
-
-  z-index: 1000000; // Needs to display over modals
 }

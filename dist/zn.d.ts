@@ -3929,9 +3929,53 @@ declare module "components/bulk-actions/index" {
         }
     }
 }
+declare module "components/editor/modules/toolbar/toolbar.component" {
+    import { type CSSResultGroup } from "lit";
+    import ZincElement from "internal/zinc-element";
+    export default class ToolbarModuleComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        render(): import("lit").TemplateResult<1>;
+        private _textOptions;
+        private _formatOptions;
+        private _commonFormatOptions;
+        private _historyOptions;
+        private _colorOptions;
+        private _listOptions;
+        private _insertOptions;
+        private _emojiOptions;
+        private _dateOption;
+    }
+}
+declare module "components/editor/modules/toolbar/toolbar" {
+    import "components/editor/modules/toolbar/toolbar.component";
+    import Toolbar from "quill/modules/toolbar";
+    import type Quill from "quill";
+    import type ToolbarModuleComponent from "components/editor/modules/toolbar/toolbar.component";
+    export * from "components/editor/modules/toolbar/toolbar.component";
+    class ToolbarModule extends Toolbar {
+        private readonly _quill;
+        private readonly _component;
+        constructor(quill: Quill, options: {
+            container: ToolbarModuleComponent;
+            handlers?: Record<string, (value?: any) => void>;
+        });
+        private _attachToolbarHandlers;
+        private _syncToolbarState;
+        private _updateHeadingFormatMenu;
+        private _updateListFormatMenu;
+        private _updateTextFormatMenu;
+        private _updateColorFormatMenu;
+        private _getTextFormats;
+        private _updateMenuCheckedState;
+        private _updateDropdownTrigger;
+        private _syncButtonState;
+        private _insertDivider;
+    }
+    export default ToolbarModule;
+}
 declare module "components/editor/modules/attachment-module" {
-    import Quill from 'quill';
-    type AttachmentModuleOptions = {
+    import type Quill from 'quill';
+    interface AttachmentModuleOptions {
         upload: (file: File) => Promise<{
             path: any;
             url: any;
@@ -3941,7 +3985,7 @@ declare module "components/editor/modules/attachment-module" {
             url: string;
         }) => void;
         attachmentInput?: HTMLInputElement;
-    };
+    }
     export default class AttachmentModule {
         private _quill;
         private _options;
@@ -4199,62 +4243,6 @@ declare module "components/editor/modules/image-resize-module/image-resize-modul
     }
     export default ImageResizeModule;
 }
-declare module "components/editor/modules/menu-module/menu-module.component" {
-    import { type CSSResultGroup, type TemplateResult } from "lit";
-    import ZincElement from "internal/zinc-element";
-    import type { CannedResponse } from "components/editor/editor.component";
-    import type ZnMenu from "components/menu/index";
-    export default class MenuModuleComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        private hasFocus;
-        menuEl: ZnMenu;
-        commandList: HTMLElement;
-        menuModule: HTMLElement;
-        commands: CannedResponse[];
-        open: boolean;
-        private closeWatcher;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        focus(): void;
-        show(): void;
-        hide(): void;
-        handleOpenChange(): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private requestClose;
-        private showDialog;
-        private handleClick;
-        private _createCommand;
-        render(): TemplateResult<1>;
-    }
-}
-declare module "components/editor/modules/menu-module/menu-module" {
-    import "components/editor/modules/menu-module/menu-module.component";
-    import Quill from 'quill';
-    import type { CannedResponse } from "components/editor/editor.component";
-    export let menuOpen: boolean;
-    class MenuModule {
-        private _quill;
-        private _menu;
-        private _commands;
-        constructor(quill: Quill, options: {
-            commands: CannedResponse[];
-        });
-        private initMenu;
-        private attachEvents;
-        private detachEvents;
-        private onTextChange;
-        private onCommandSelect;
-        private onDocumentClick;
-        private updateMenuPosition;
-        private _openMenu;
-        private _closeMenu;
-        private createMenu;
-        private addCommands;
-        private triggerCommand;
-    }
-    export default MenuModule;
-}
 declare module "components/editor/modules/time-tracking-module" {
     import Quill from 'quill';
     type TimeTrackingModuleOptions = {
@@ -4269,33 +4257,6 @@ declare module "components/editor/modules/time-tracking-module" {
         constructor(quill: Quill, options: TimeTrackingModuleOptions);
         private _updateOpenTime;
         private _updateStartTime;
-    }
-}
-declare module "components/editor/toolbar/editor-toolbar.component" {
-    import { type CSSResultGroup } from "lit";
-    import ZincElement from "internal/zinc-element";
-    export default class ZnEditorToolbar extends ZincElement {
-        static styles: CSSResultGroup;
-        render(): import("lit").TemplateResult<1>;
-        private _textOptions;
-        private _formatOptions;
-        private _commonFormatOptions;
-        private _historyOptions;
-        private _colorOptions;
-        private _listOptions;
-        private _insertOptions;
-        private _emojiOptions;
-        private _dateOption;
-    }
-}
-declare module "components/editor/toolbar/index" {
-    import ZnEditorToolbar from "components/editor/toolbar/editor-toolbar.component";
-    export * from "components/editor/toolbar/editor-toolbar.component";
-    export default ZnEditorToolbar;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-editor-toolbar': ZnEditorToolbar;
-        }
     }
 }
 declare module "components/editor/editor.component" {
@@ -4352,20 +4313,9 @@ declare module "components/editor/editor.component" {
         private _handleTextChange;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
-        private _updateMenuCheckedState;
-        private _updateDropdownTrigger;
-        private _syncToolbarState;
-        private _updateHeadingFormatMenu;
-        private _updateListFormatMenu;
-        private _updateTextFormatMenu;
-        private _updateColorFormatMenu;
-        private _getTextFormats;
-        private _attachToolbarHandlers;
-        private _syncButtonState;
         private _fetchCannedResponses;
         private _initDatePicker;
         private _onDateSelect;
-        private _insertDivider;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -6253,7 +6203,6 @@ declare module "zinc" {
     export { default as OrderTable } from "components/order-table/index";
     export { default as BulkActions } from "components/bulk-actions/index";
     export { default as Editor } from "components/editor/index";
-    export { default as EditorToolbar } from "components/editor/toolbar/index";
     export { default as Toggle } from "components/toggle/index";
     export { default as Input } from "components/input/index";
     export { default as Select } from "components/select/index";

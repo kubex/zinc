@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -7427,7 +7427,7 @@
               "kind": "field",
               "name": "toolbar",
               "type": {
-                "text": "ZnEditorToolbar"
+                "text": "ToolbarModuleComponent"
               },
               "privacy": "private"
             },
@@ -7582,152 +7582,6 @@
             },
             {
               "kind": "method",
-              "name": "_updateMenuCheckedState",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "selector",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "matchAttr",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "wanted",
-                  "type": {
-                    "text": "string | string[] | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateDropdownTrigger",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "dropdownSelector",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "defaultIconSrc",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_syncToolbarState",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_updateHeadingFormatMenu",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "formats",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateListFormatMenu",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "formats",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateTextFormatMenu",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "formats",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_updateColorFormatMenu",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "formats",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_getTextFormats",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "formats",
-                  "type": {
-                    "text": "Record<string, any>"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_attachToolbarHandlers",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "quill",
-                  "type": {
-                    "text": "Quill"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_syncButtonState",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "icon",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "active",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "_fetchCannedResponses",
               "privacy": "private"
             },
@@ -7748,11 +7602,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "_insertDivider",
-              "privacy": "private"
             }
           ],
           "events": [
@@ -24670,81 +24519,6 @@
           "declaration": {
             "name": "ZnWell",
             "module": "components/well/well.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/editor/toolbar/editor-toolbar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnEditorToolbar",
-          "members": [
-            {
-              "kind": "method",
-              "name": "_textOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_formatOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_commonFormatOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_historyOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_colorOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_listOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_insertOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_emojiOptions",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_dateOption",
-              "privacy": "private"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "tagNameWithoutPrefix": "editor-toolbar",
-          "tagName": "zn-editor-toolbar",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnEditorToolbar",
-            "module": "components/editor/toolbar/editor-toolbar.js"
           }
         }
       ]

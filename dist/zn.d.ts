@@ -3932,7 +3932,7 @@ declare module "components/bulk-actions/index" {
 declare module "components/editor/modules/toolbar/toolbar.component" {
     import { type CSSResultGroup } from "lit";
     import ZincElement from "internal/zinc-element";
-    export default class ToolbarModuleComponent extends ZincElement {
+    export default class ToolbarComponent extends ZincElement {
         static styles: CSSResultGroup;
         render(): import("lit").TemplateResult<1>;
         private _textOptions;
@@ -3950,13 +3950,13 @@ declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
     import Toolbar from "quill/modules/toolbar";
     import type Quill from "quill";
-    import type ToolbarModuleComponent from "components/editor/modules/toolbar/toolbar.component";
+    import type ToolbarComponent from "components/editor/modules/toolbar/toolbar.component";
     export * from "components/editor/modules/toolbar/toolbar.component";
     class ToolbarModule extends Toolbar {
         private readonly _quill;
         private readonly _component;
         constructor(quill: Quill, options: {
-            container: ToolbarModuleComponent;
+            container: ToolbarComponent;
             handlers?: Record<string, (value?: any) => void>;
         });
         private _attachToolbarHandlers;
@@ -3973,7 +3973,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
     }
     export default ToolbarModule;
 }
-declare module "components/editor/modules/attachment-module" {
+declare module "components/editor/modules/attachment/attachment" {
     import type Quill from 'quill';
     interface AttachmentModuleOptions {
         upload: (file: File) => Promise<{
@@ -3986,7 +3986,7 @@ declare module "components/editor/modules/attachment-module" {
         }) => void;
         attachmentInput?: HTMLInputElement;
     }
-    export default class AttachmentModule {
+    export default class Attachment {
         private _quill;
         private _options;
         private _fileHolder;
@@ -4002,7 +4002,7 @@ declare module "components/editor/modules/attachment-module" {
         private _uploadAttachment;
     }
 }
-declare module "components/editor/modules/context-menu/context-menu-module-component" {
+declare module "components/editor/modules/context-menu/context-menu-component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     export interface ResultItem {
@@ -4012,7 +4012,7 @@ declare module "components/editor/modules/context-menu/context-menu-module-compo
         module?: string;
         value?: string | boolean;
     }
-    export default class ContextMenuModuleComponent extends ZincElement {
+    export default class ContextMenuComponent extends ZincElement {
         static styles: CSSResultGroup;
         open: boolean;
         query: string;
@@ -4028,11 +4028,11 @@ declare module "components/editor/modules/context-menu/context-menu-module-compo
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/editor/modules/context-menu/context-menu-module" {
-    import "components/editor/modules/context-menu/context-menu-module-component";
+declare module "components/editor/modules/context-menu/context-menu" {
+    import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
     import type { CannedResponse } from "components/editor/editor.component";
-    class ContextMenuModule {
+    class ContextMenu {
         private _quill;
         private readonly _toolbarModule;
         private readonly _commands;
@@ -4059,15 +4059,26 @@ declare module "components/editor/modules/context-menu/context-menu-module" {
         private show;
         private hide;
     }
-    export default ContextMenuModule;
+    export default ContextMenu;
 }
-declare module "components/editor/modules/dialog-module/dialog-module.component" {
+declare module "components/editor/modules/date-picker/date-picker" {
+    import type Quill from "quill";
+    class DatePicker {
+        private readonly _quill;
+        constructor(quill: Quill);
+        private _initPicker;
+        private getToolbarDateContainer;
+        private _onDateSelect;
+    }
+    export default DatePicker;
+}
+declare module "components/editor/modules/dialog/dialog.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
     import type { CannedResponse } from "components/editor/editor.component";
     import type { ZnInputEvent } from "events/zn-input";
     import type ZnInput from "components/input/index";
-    export default class DialogModuleComponent extends ZincElement {
+    export default class DialogComponent extends ZincElement {
         static styles: CSSResultGroup;
         private hasFocus;
         private isSearching;
@@ -4109,11 +4120,11 @@ declare module "components/editor/modules/events/zn-command-select" {
         }
     }
 }
-declare module "components/editor/modules/dialog-module/dialog-module" {
-    import "components/editor/modules/dialog-module/dialog-module.component";
+declare module "components/editor/modules/dialog/dialog" {
+    import "components/editor/modules/dialog/dialog.component";
     import type { CannedResponse } from "components/editor/editor.component";
     import type Quill from 'quill';
-    class DialogModule {
+    class Dialog {
         private _quill;
         private _dialog;
         private _commands;
@@ -4130,10 +4141,10 @@ declare module "components/editor/modules/dialog-module/dialog-module" {
         private addCommands;
         private triggerCommand;
     }
-    export default DialogModule;
+    export default Dialog;
 }
-declare module "components/editor/modules/drag-drop-module" {
-    import Quill from 'quill';
+declare module "components/editor/modules/drag-drop/drag-drop" {
+    import type Quill from 'quill';
     interface DragAndDropModuleOptions {
         onDrop: (file: File, options: object) => void;
         draggableContentTypePattern: string;
@@ -4150,9 +4161,9 @@ declare module "components/editor/modules/drag-drop-module" {
     }
     export const getFileDataUrl: (file: any) => Promise<unknown>;
 }
-declare module "components/editor/modules/emoji-module/emoji-module" {
+declare module "components/editor/modules/emoji/emoji" {
     import type Quill from 'quill';
-    export interface Emoji {
+    export interface EmojiResult {
         native?: string;
         skins?: {
             native?: string;
@@ -4160,7 +4171,7 @@ declare module "components/editor/modules/emoji-module/emoji-module" {
         id?: string;
         shortcodes?: string;
     }
-    class EmojiModule {
+    class Emoji {
         private readonly _quill;
         private _mo;
         constructor(quill: Quill);
@@ -4170,16 +4181,16 @@ declare module "components/editor/modules/emoji-module/emoji-module" {
         private initPicker;
         private onEmojiSelect;
     }
-    export default EmojiModule;
+    export default Emoji;
 }
-declare module "components/editor/modules/emoji-module/headless/headless-emoji-module.component" {
+declare module "components/editor/modules/emoji/headless/headless-emoji.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup, PropertyValues } from 'lit';
     export interface ResultItem {
         emojiChar: string;
         label: string;
     }
-    export default class HeadlessEmojiModuleComponent extends ZincElement {
+    export default class HeadlessEmojiComponent extends ZincElement {
         static styles: CSSResultGroup;
         open: boolean;
         query: string;
@@ -4196,10 +4207,10 @@ declare module "components/editor/modules/emoji-module/headless/headless-emoji-m
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/editor/modules/emoji-module/headless/headless-emoji-module" {
-    import "components/editor/modules/emoji-module/headless/headless-emoji-module.component";
+declare module "components/editor/modules/emoji/headless/headless-emoji" {
+    import "components/editor/modules/emoji/headless/headless-emoji.component";
     import Quill from 'quill';
-    class HeadlessEmojiModule {
+    class HeadlessEmoji {
         private _quill;
         private _component;
         private _startIndex;
@@ -4219,14 +4230,14 @@ declare module "components/editor/modules/emoji-module/headless/headless-emoji-m
         private show;
         private hide;
     }
-    export default HeadlessEmojiModule;
+    export default HeadlessEmoji;
 }
-declare module "components/editor/modules/image-resize-module/image-resize-module" {
+declare module "components/editor/modules/image-resize/image-resize" {
     import Quill, { Module } from "quill";
-    type ImageResizeModuleOptions = {
+    interface ImageResizeModuleOptions {
         overlayStyles?: Partial<CSSStyleDeclaration>;
-    };
-    class ImageResizeModule extends Module<ImageResizeModuleOptions> {
+    }
+    class ImageResize extends Module<ImageResizeModuleOptions> {
         static DEFAULTS: ImageResizeModuleOptions;
         private _focusedImage;
         private _overlay;
@@ -4241,15 +4252,15 @@ declare module "components/editor/modules/image-resize-module/image-resize-modul
         setUserSelect: (value: string) => void;
         checkImage: (e: KeyboardEvent) => void;
     }
-    export default ImageResizeModule;
+    export default ImageResize;
 }
-declare module "components/editor/modules/time-tracking-module" {
-    import Quill from 'quill';
-    type TimeTrackingModuleOptions = {
+declare module "components/editor/modules/time-tracking/time-tracking" {
+    import type Quill from 'quill';
+    interface TimeTrackingModuleOptions {
         startTimeInput?: HTMLInputElement;
         openTimeInput?: HTMLInputElement;
-    };
-    export default class TimeTrackingModule {
+    }
+    export default class TimeTracking {
         private _quill;
         private _options;
         private _startTime;
@@ -4301,7 +4312,6 @@ declare module "components/editor/editor.component" {
         uploadAttachmentUrl: string;
         private quillElement;
         private _commands;
-        private _datePickerInstance;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4309,13 +4319,10 @@ declare module "components/editor/editor.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
-        protected updated(changed: PropertyValues): void;
         private _handleTextChange;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
         private _fetchCannedResponses;
-        private _initDatePicker;
-        private _onDateSelect;
         render(): import("lit").TemplateResult<1>;
     }
 }

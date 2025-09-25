@@ -409,15 +409,6 @@
     }
   });
 
-  // Purge cache when we press CMD+CTRL+R
-  document.addEventListener('keydown', event =>
-  {
-    if((event.metaKey || event.ctrlKey) && event.shiftKey && event.key === 'r')
-    {
-      localStorage.clear();
-    }
-  });
-
   input.addEventListener('input', handleInput);
   clearButton.addEventListener('click', handleClear);
 

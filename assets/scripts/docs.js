@@ -103,7 +103,7 @@
 {
   function getTheme()
   {
-    return 'light';
+    return localStorage.getItem('theme') || 'light';
   }
 
   function isDark()
@@ -371,5 +371,3 @@
     });
   });
 })();
-
-

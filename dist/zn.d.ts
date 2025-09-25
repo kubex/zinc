@@ -4870,6 +4870,7 @@ declare module "components/form-group/index" {
 declare module "components/linked-select/linked-select.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnSelect from "components/select/index";
     import type { ZincFormControl } from "internal/zinc-element";
     import type { ZnSelectEvent } from "events/zn-select";
     interface linkedSelectOption {
@@ -4904,9 +4905,10 @@ declare module "components/linked-select/linked-select.component" {
         linkedSelect: string;
         cacheKey: string;
         label: string;
-        input: HTMLInputElement;
+        input: ZnSelect;
         private linkedSelectElement;
         private readonly formControlController;
+        get displayLabel(): string;
         get validity(): ValidityState;
         get validationMessage(): string;
         connectedCallback(): void;

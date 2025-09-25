@@ -56,6 +56,7 @@ class DatePicker {
   private _onDateSelect(formattedDate: string | string[]) {
     try {
       if (!formattedDate || !this._quill) return;
+
       const range = this._quill.getSelection(true);
       if (range) {
         const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;

@@ -46,7 +46,6 @@ export {default as ProgressBar} from './components/progress-bar';
 export {default as OrderTable} from './components/order-table';
 export {default as BulkActions} from './components/bulk-actions';
 export {default as Editor} from './components/editor';
-export {default as EditorToolbar} from './components/editor/toolbar';
 export {default as Toggle} from './components/toggle';
 export {default as Input} from './components/input';
 export {default as Select} from './components/select';

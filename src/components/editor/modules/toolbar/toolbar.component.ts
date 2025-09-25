@@ -1,10 +1,10 @@
-import {colorDataProvider} from "../../data-select/providers/color-data-provider";
+import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, unsafeCSS} from "lit";
-import ZincElement from "../../../internal/zinc-element";
+import ZincElement from "../../../../internal/zinc-element";
 
-import styles from './editor-toolbar.scss';
+import styles from './toolbar.scss';
 
-export default class ZnEditorToolbar extends ZincElement {
+export default class ToolbarModuleComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   render() {
@@ -271,3 +271,5 @@ export default class ZnEditorToolbar extends ZincElement {
       </zn-dropdown>`;
   }
 }
+
+ToolbarModuleComponent.define('zn-toolbar');

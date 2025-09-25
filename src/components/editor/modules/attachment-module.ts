@@ -1,5 +1,5 @@
-import Quill from 'quill';
-import Toolbar from "quill/modules/toolbar";
+import type Quill from 'quill';
+import type ToolbarModule from "./toolbar/toolbar";
 
 interface AttachmentModuleOptions {
   upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
@@ -28,7 +28,7 @@ export default class AttachmentModule {
     }
 
     (this._quill
-      .getModule('toolbar') as Toolbar)
+      .getModule('toolbar') as ToolbarModule)
       .addHandler('attachment', this._selectLocalImage.bind(this));
 
     this._createAttachmentContainer();

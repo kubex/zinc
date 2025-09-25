@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -328,47 +328,6 @@
           }
         },
         {
-          "name": "zn-button-menu",
-          "description": "Automatically hides buttons in a menu when the screen is too small.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "max-width", "value": { "type": "number" } },
-            { "name": "containerWidth", "value": { "type": "number" } },
-            { "name": "limit", "value": { "type": "number", "default": "-1" } },
-            {
-              "name": "max-level",
-              "value": { "type": "number", "default": "2" }
-            },
-            {
-              "name": "size",
-              "value": {
-                "type": "'content' | 'x-small' | 'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            { "name": "no-gap", "value": { "type": "boolean" } },
-            { "name": "no-padding", "value": { "type": "boolean" } }
-          ],
-          "slots": [{ "name": "", "description": "The default slot." }],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "maxWidth", "type": "number" },
-              { "name": "containerWidth", "type": "number" },
-              { "name": "limit", "type": "number" },
-              { "name": "maxLevel", "type": "number" },
-              {
-                "name": "size",
-                "type": "'content' | 'x-small' | 'small' | 'medium' | 'large'"
-              },
-              { "name": "noGap", "type": "boolean" },
-              { "name": "noPadding", "type": "boolean" },
-              { "name": "handleResize" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-button-group",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n\n### **CSS Properties:**\n - **--grow** - Use flex-grow to fill available space. _(default: undefined)_\n- **--start** - Justify content at the start of the flex space. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -416,6 +375,47 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-button-menu",
+          "description": "Automatically hides buttons in a menu when the screen is too small.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "max-width", "value": { "type": "number" } },
+            { "name": "containerWidth", "value": { "type": "number" } },
+            { "name": "limit", "value": { "type": "number", "default": "-1" } },
+            {
+              "name": "max-level",
+              "value": { "type": "number", "default": "2" }
+            },
+            {
+              "name": "size",
+              "value": {
+                "type": "'content' | 'x-small' | 'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            { "name": "no-gap", "value": { "type": "boolean" } },
+            { "name": "no-padding", "value": { "type": "boolean" } }
+          ],
+          "slots": [{ "name": "", "description": "The default slot." }],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "maxWidth", "type": "number" },
+              { "name": "containerWidth", "type": "number" },
+              { "name": "limit", "type": "number" },
+              { "name": "maxLevel", "type": "number" },
+              {
+                "name": "size",
+                "type": "'content' | 'x-small' | 'small' | 'medium' | 'large'"
+              },
+              { "name": "noGap", "type": "boolean" },
+              { "name": "noPadding", "type": "boolean" },
+              { "name": "handleResize" }
+            ],
+            "events": []
           }
         },
         {

@@ -278,6 +278,9 @@ class ContextMenuModule {
       {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'},
       {icon: 'link', label: 'Link', format: 'link', value: true},
       {icon: 'horizontal_rule', label: 'Divider', format: 'divider'},
+      {icon: 'attachment', label: 'Attachment', format: 'attachment'},
+      {icon: 'image', label: 'Image', format: 'image'},
+      {icon: 'video_camera_back', label: 'Video', format: 'video'},
       {icon: 'format_clear', label: 'Clear Formatting', format: 'clean'}
     );
 

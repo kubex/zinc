@@ -1,7 +1,7 @@
 import Quill from 'quill';
 import Toolbar from "quill/modules/toolbar";
 
-type AttachmentModuleOptions = {
+interface AttachmentModuleOptions {
   upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
   onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
   attachmentInput?: HTMLInputElement;
@@ -43,7 +43,7 @@ export default class AttachmentModule {
   }
 
   private _fileChanged() {
-    if (!this._fileHolder || !this._fileHolder.files || this._fileHolder.files.length < 0) {
+    if (!this._fileHolder?.files || this._fileHolder.files.length < 0) {
       return;
     }
 

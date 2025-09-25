@@ -151,14 +151,14 @@
   });
 
   // Listen for selections
-  document.addEventListener('zn-select', event =>
+  document.addEventListener('zn-menu-select', event =>
   {
     const menu = event.target.closest('#theme-selector zn-menu');
     if(!menu)
     {
       return;
     }
-    setTheme(event.detail.item.value);
+    setTheme(event.detail.element.value);
   });
 
   // Update the theme when the preference changes

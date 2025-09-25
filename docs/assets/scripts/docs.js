@@ -125,6 +125,7 @@
 
     // Toggle the dark mode class
     document.documentElement.setAttribute('t', isDark() ? 'dark' : 'light');
+    window.dispatchEvent(new CustomEvent('theme-change', {detail: {theme}}));
   }
 
   function updateSelection()

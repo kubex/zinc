@@ -46,7 +46,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   @property({attribute: 'cache-key'}) cacheKey: string = "";
   @property() label: string = "";
 
-  @query('zn-select') input: HTMLInputElement;
+  @query('zn-select') input: ZnSelect;
 
   private linkedSelectElement: HTMLSelectElement | ZnSelect;
   private readonly formControlController = new FormControlController(this, {
@@ -59,6 +59,10 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
       return input.value;
     }
   });
+
+  get displayLabel() {
+    return (this.input as ZnSelect).displayLabel;
+  }
 
   get validity() {
     return this.input?.validity;

@@ -642,7 +642,7 @@ export default class ZnDataTable extends ZincElement {
         content = html`
           <a href="${data.uri}"
              data-target="${ifDefined(data.target || nothing)}"
-             gaid="${ifDefined(data.uri || nothing)}">${content}</a>`;
+             gaid="${ifDefined(data.gaid || nothing)}">${content}</a>`;
       }
 
       if (data.chipColor) {

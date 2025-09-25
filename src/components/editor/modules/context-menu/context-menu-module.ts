@@ -272,7 +272,7 @@ class ContextMenuModule {
       {icon: 'code_blocks', label: 'Code Block', format: 'code-block'},
       {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1'},
       {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2'},
-      {icon: 'match_case', label: 'Normal Text', format: 'header', value: '2'},
+      {icon: 'match_case', label: 'Normal Text', format: 'header', value: ''},
       {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet'},
       {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered'},
       {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'},

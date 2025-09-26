@@ -3558,6 +3558,7 @@ declare module "components/scroll-container/scroll-container.component" {
         static styles: CSSResultGroup;
         startScrolled: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        connectedCallback(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

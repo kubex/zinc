@@ -3944,6 +3944,7 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _insertOptions;
         private _emojiOptions;
         private _dateOption;
+        private _cannedResponsesOption;
     }
 }
 declare module "components/editor/modules/toolbar/toolbar" {
@@ -3971,6 +3972,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _syncButtonState;
         private _insertDivider;
         private _openDatePicker;
+        private _openCannedResponseDialog;
     }
     export default ToolbarModule;
 }
@@ -4003,94 +4005,24 @@ declare module "components/editor/modules/attachment/attachment" {
         private _uploadAttachment;
     }
 }
-declare module "components/editor/modules/context-menu/context-menu-component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export interface ResultItem {
-        icon: string;
-        label: string;
-        format?: string;
-        module?: string;
-        value?: string | boolean;
-    }
-    export default class ContextMenuComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        open: boolean;
-        query: string;
-        results: ResultItem[];
-        private _activeIndex;
-        show(): void;
-        hide(): void;
-        setPosition(left: number, top: number): void;
-        setActiveIndex(index: number): void;
-        getActiveIndex(): number;
-        private _onClickItem;
-        protected willUpdate(changed: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/editor/modules/context-menu/context-menu" {
-    import "components/editor/modules/context-menu/context-menu-component";
-    import Quill from "quill";
-    import type { CannedResponse } from "components/editor/editor.component";
-    class ContextMenu {
-        private _quill;
-        private readonly _toolbarModule;
-        private readonly _commands;
-        private _component;
-        private _startIndex;
-        private _keydownHandler;
-        private _docClickHandler;
-        constructor(quill: Quill, options: {
-            commands: CannedResponse[];
-        });
-        private initComponent;
-        private attachEvents;
-        private createComponent;
-        private onDocumentClick;
-        private updateFromEditor;
-        private positionComponent;
-        private getToolbarQuery;
-        private onKeydown;
-        private showDialog;
-        private onToolbarSelect;
-        private _callFormat;
-        private _applySelectedFormat;
-        private _getOptions;
-        private show;
-        private hide;
-    }
-    export default ContextMenu;
-}
-declare module "components/editor/modules/date-picker/date-picker" {
-    import type Quill from "quill";
-    class DatePicker {
-        private readonly _quill;
-        constructor(quill: Quill);
-        private _initPicker;
-        private getToolbarDateContainer;
-        private _onDateSelect;
-    }
-    export default DatePicker;
-}
-declare module "components/editor/modules/dialog/dialog.component" {
+declare module "components/editor/modules/canned-response/canned-response-component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
     import ZincElement from "internal/zinc-element";
-    import type { CannedResponse } from "components/editor/editor.component";
+    import type { Commands } from "components/editor/editor.component";
     import type { ZnInputEvent } from "events/zn-input";
     import type ZnInput from "components/input/index";
-    export default class DialogComponent extends ZincElement {
+    export default class CannedResponseComponent extends ZincElement {
         static styles: CSSResultGroup;
         private hasFocus;
         private isSearching;
         dialogEl: HTMLDialogElement;
         searchInput: ZnInput;
         commandList: HTMLElement;
-        dialogModule: HTMLElement;
-        commands: CannedResponse[];
+        cannedResponseModule: HTMLElement;
+        commands: Commands[];
         open: boolean;
         private _allCommands;
-        set allCommands(value: CannedResponse[]);
+        set allCommands(value: Commands[]);
         private closeWatcher;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -4121,20 +4053,21 @@ declare module "components/editor/modules/events/zn-command-select" {
         }
     }
 }
-declare module "components/editor/modules/dialog/dialog" {
-    import "components/editor/modules/dialog/dialog.component";
-    import type { CannedResponse } from "components/editor/editor.component";
+declare module "components/editor/modules/canned-response/canned-response" {
+    import "components/editor/modules/canned-response/canned-response-component";
+    import type { Commands } from "components/editor/editor.component";
     import type Quill from 'quill';
-    class Dialog {
+    class CannedResponse {
         private _quill;
         private _dialog;
-        private _commands;
+        private readonly _commands;
         constructor(quill: Quill, options: {
-            commands: CannedResponse[];
+            commands: Commands[];
         });
         private _open;
         private _close;
-        private initDialog;
+        private _initDialog;
+        private getToolbarDialogContainer;
         private attachEvents;
         private detachEvents;
         private onCommandSelect;
@@ -4142,7 +4075,77 @@ declare module "components/editor/modules/dialog/dialog" {
         private addCommands;
         private triggerCommand;
     }
-    export default Dialog;
+    export default CannedResponse;
+}
+declare module "components/editor/modules/context-menu/context-menu-component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export interface ResultItem {
+        icon: string;
+        label: string;
+        format?: string;
+        module?: string;
+        value?: string | boolean;
+    }
+    export default class ContextMenuComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        open: boolean;
+        query: string;
+        results: ResultItem[];
+        private _activeIndex;
+        show(): void;
+        hide(): void;
+        setPosition(left: number, top: number): void;
+        setActiveIndex(index: number): void;
+        getActiveIndex(): number;
+        private _onClickItem;
+        protected willUpdate(changed: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/context-menu/context-menu" {
+    import "components/editor/modules/context-menu/context-menu-component";
+    import Quill from "quill";
+    import type { Commands } from "components/editor/editor.component";
+    class ContextMenu {
+        private _quill;
+        private readonly _toolbarModule;
+        private readonly _commands;
+        private _component;
+        private _startIndex;
+        private _keydownHandler;
+        private _docClickHandler;
+        constructor(quill: Quill, options: {
+            commands: Commands[];
+        });
+        private initComponent;
+        private attachEvents;
+        private createComponent;
+        private onDocumentClick;
+        private updateFromEditor;
+        private positionComponent;
+        private getToolbarQuery;
+        private onKeydown;
+        private showDialog;
+        private onToolbarSelect;
+        private _callFormat;
+        private _applySelectedFormat;
+        private _getOptions;
+        private show;
+        private hide;
+    }
+    export default ContextMenu;
+}
+declare module "components/editor/modules/date-picker/date-picker" {
+    import type Quill from "quill";
+    class DatePicker {
+        private readonly _quill;
+        constructor(quill: Quill);
+        private _initPicker;
+        private getToolbarDateContainer;
+        private _onDateSelect;
+    }
+    export default DatePicker;
 }
 declare module "components/editor/modules/drag-drop/drag-drop" {
     import type Quill from 'quill';
@@ -4275,7 +4278,7 @@ declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
-    export interface CannedResponse {
+    export interface Commands {
         title: string;
         content: string;
         command: string;

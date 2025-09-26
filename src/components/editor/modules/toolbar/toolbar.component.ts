@@ -274,7 +274,7 @@ export default class ToolbarComponent extends ZincElement {
 
   private _cannedResponsesOption() {
     return html`
-      <zn-button class="toolbar__canned-responses"
+      <zn-button class="toolbar__action-button"
                  color="transparent"
                  icon="quickreply"
                  icon-size="18"

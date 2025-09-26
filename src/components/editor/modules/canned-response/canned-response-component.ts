@@ -4,13 +4,13 @@ import {property, query, state} from "lit/decorators.js";
 import {repeat} from "lit/directives/repeat.js";
 import {watch} from "../../../../internal/watch";
 import ZincElement from "../../../../internal/zinc-element";
-import type {CannedResponse} from "../../editor.component";
+import type {Commands} from "../../editor.component";
 import type {ZnInputEvent} from "../../../../events/zn-input";
 import type ZnInput from "../../../input";
 
-import styles from './dialog.scss';
+import styles from './canned-response.scss';
 
-export default class DialogComponent extends ZincElement {
+export default class CannedResponseComponent extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @state() private hasFocus = false;
@@ -19,15 +19,15 @@ export default class DialogComponent extends ZincElement {
   @query('dialog') dialogEl!: HTMLDialogElement;
 
   @query('zn-input#search-input') searchInput!: ZnInput;
-  @query('.dialog__content') commandList!: HTMLElement;
+  @query('.canned-response__content') commandList!: HTMLElement;
 
-  @query('.dialog') dialogModule!: HTMLElement;
+  @query('.canned-response') cannedResponseModule!: HTMLElement;
 
-  @property({type: Array, reflect: true}) commands: CannedResponse[] = [];
+  @property({type: Array, reflect: true}) commands: Commands[] = [];
   @property({type: Boolean, reflect: true}) open = false;
 
-  private _allCommands: CannedResponse[] = [];
-  set allCommands(value: CannedResponse[]) {
+  private _allCommands: Commands[] = [];
+  set allCommands(value: Commands[]) {
     this._allCommands = value;
   }
 
@@ -169,7 +169,7 @@ export default class DialogComponent extends ZincElement {
     this.emit('zn-editor-update');
   }
 
-  private _createCommand(command: CannedResponse): TemplateResult {
+  private _createCommand(command: Commands): TemplateResult {
     const labels: string[] = [];
     if (command.labels) {
       command.labels.forEach((label: string) => {
@@ -241,17 +241,17 @@ export default class DialogComponent extends ZincElement {
       <dialog closedby="any"
               open="${this.open || nothing}"
               class="${classMap({
-                'dialog': true,
-                'dialog--has-focus': this.hasFocus,
-                'dialog--has-results': visibleCommands.length > 0,
+                'canned-response': true,
+                'canned-response--has-focus': this.hasFocus,
+                'canned-response--has-results': visibleCommands.length > 0,
               })}">
 
-        <div class="dialog__header">
-          <div class="dialog__header--caption">
+        <div class="canned-response__header">
+          <div class="canned-response__header--caption">
             Canned Responses
           </div>
 
-          <div class="dialog__header--search">
+          <div class="canned-response__header--search">
             <zn-input id="search-input"
                       type="search"
                       placeholder="Search..."
@@ -264,30 +264,28 @@ export default class DialogComponent extends ZincElement {
           </div>
         </div>
 
-        <div class="dialog__body">
-          <div class="dialog__content">
-            ${repeat(visibleCommands, (command: CannedResponse) => this._createCommand(command))}
+        <div class="canned-response__body">
+          <div class="canned-response__content">
+            ${repeat(visibleCommands, (command: Commands) => this._createCommand(command))}
           </div>
 
           <slot></slot>
         </div>
 
-        <div class="dialog__footer">
+        <div class="canned-response__footer">
           <div>
             Showing ${visibleCommands.length} of ${this._allCommands.length} responses
           </div>
-          <zn-button class="dialog__close-button"
+          <zn-button class="canned-response__close-button"
                      size="medium"
                      color="secondary"
                      @click="${() => this.requestClose('close-button')}">
             Close
           </zn-button>
         </div>
-
       </dialog>
     `;
   }
-
 }
 
-DialogComponent.define('zn-dialog');
+CannedResponseComponent.define('zn-canned-response');

@@ -19,6 +19,7 @@ export default class ToolbarComponent extends ZincElement {
           ${this._insertOptions()}
           ${this._dateOption()}
           ${this._emojiOptions()}
+          ${this._cannedResponsesOption()}
         </div>
       </div>
     `;
@@ -269,6 +270,16 @@ export default class ToolbarComponent extends ZincElement {
         </zn-button>
         <div class="date-picker"></div>
       </zn-dropdown>`;
+  }
+
+  private _cannedResponsesOption() {
+    return html`
+      <zn-button class="toolbar__canned-responses"
+                 color="transparent"
+                 icon="quickreply"
+                 icon-size="18"
+                 data-format="canned-responses"></zn-button>
+      <div class="canned-response"></div>`;
   }
 }
 

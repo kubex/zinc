@@ -1,23 +1,24 @@
-import './dialog.component';
+import './canned-response-component';
 import {Delta} from 'quill';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
-import type {CannedResponse} from "../../editor.component";
+import type {Commands} from "../../editor.component";
 import type {ZnCommandSelectEvent} from "../events/zn-command-select";
+import type CannedResponseComponent from './canned-response-component';
 import type Quill from 'quill';
-import type ZnDialogModule from './dialog.component';
+import type ToolbarComponent from "../toolbar/toolbar.component";
 
-class Dialog {
+class CannedResponse {
   private _quill: Quill;
-  private _dialog: ZnDialogModule;
-  private _commands: CannedResponse[] = [];
+  private _dialog: CannedResponseComponent;
+  private readonly _commands: Commands[] = [];
 
-  constructor(quill: Quill, options: { commands: CannedResponse[] }) {
+  constructor(quill: Quill, options: { commands: Commands[] }) {
     this._quill = quill;
     this._commands = options.commands || [];
 
     if (this._commands.length > 0) {
-      this.initDialog();
+      this._initDialog();
 
       document.addEventListener('zn-show-canned-response-dialog', () => {
         this._open();
@@ -35,11 +36,33 @@ class Dialog {
     this.detachEvents();
   }
 
-  private initDialog() {
-    this._dialog = this.createDialog()!;
-    this._dialog.allCommands = this._commands;
-    this._quill.container.ownerDocument.body.appendChild(this._dialog);
-    this.addCommands();
+  private _initDialog() {
+    this.getToolbarDialogContainer().then((container) => {
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      this._dialog = this.createDialog()!;
+      this._dialog.allCommands = this._commands;
+      container.appendChild(this._dialog);
+      this.addCommands();
+    });
+  }
+
+  private async getToolbarDialogContainer(): Promise<HTMLElement | null> {
+    try {
+      const root = this._quill.container?.getRootNode?.() as ShadowRoot | null;
+      if (!root) return null;
+
+      const toolbar = root.getElementById?.('toolbar') as ToolbarComponent | null;
+      await toolbar?.updateComplete;
+
+      const shadow = toolbar?.shadowRoot as ShadowRoot | undefined;
+      const container = shadow?.querySelector?.('.canned-response') as HTMLElement | null;
+      return container ?? null;
+    } catch {
+      return null;
+    }
   }
 
   private attachEvents() {
@@ -59,17 +82,17 @@ class Dialog {
   };
 
   private createDialog() {
-    const dialog = html`
-      <zn-dialog-module anchor=${this._quill.container}></zn-dialog-module>`
+    const cannedResponse = html`
+      <zn-canned-response></zn-canned-response>`
 
-    return litToHTML<ZnDialogModule>(dialog);
+    return litToHTML<CannedResponseComponent>(cannedResponse);
   }
 
   private addCommands() {
     this._dialog.setAttribute('commands', JSON.stringify(this._commands));
   }
 
-  private triggerCommand(command: CannedResponse) {
+  private triggerCommand(command: Commands) {
     this._close();
     this._quill.focus();
 
@@ -96,4 +119,4 @@ class Dialog {
   }
 }
 
-export default Dialog;
+export default CannedResponse;

@@ -3,20 +3,20 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill from "quill";
-import type {CannedResponse} from "../../editor.component";
+import type {Commands} from "../../editor.component";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "quill/modules/toolbar";
 
 class ContextMenu {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
-  private readonly _commands: CannedResponse[] = [];
+  private readonly _commands: Commands[] = [];
   private _component!: ContextMenuComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill, options: { commands: CannedResponse[] }) {
+  constructor(quill: Quill, options: { commands: Commands[] }) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
     const commands = options.commands || [];
@@ -281,6 +281,7 @@ class ContextMenu {
       {icon: 'attachment', label: 'Attachment', format: 'attachment'},
       {icon: 'image', label: 'Image', format: 'image'},
       {icon: 'video_camera_back', label: 'Video', format: 'video'},
+      {icon: 'calendar_today', label: 'Date', format: 'date'},
       {icon: 'format_clear', label: 'Clear Formatting', format: 'clean'}
     );
 

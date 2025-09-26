@@ -22,6 +22,7 @@ class ToolbarModule extends Toolbar {
     this.addHandler('divider', () => this._insertDivider());
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
+    this.addHandler('canned-responses', () => this._openCannedResponseDialog());
 
     this._quill = quill;
     this._component = options.container;
@@ -231,6 +232,13 @@ class ToolbarModule extends Toolbar {
     if (!button) return;
 
     button.click();
+  }
+
+  private _openCannedResponseDialog() {
+    this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {
+      bubbles: true,
+      composed: true
+    }));
   }
 }
 

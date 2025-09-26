@@ -2,9 +2,9 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
 import {property, query} from 'lit/decorators.js';
 import Attachment from "./modules/attachment/attachment";
+import CannedResponse from "./modules/canned-response/canned-response";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
-import Dialog from "./modules/dialog/dialog";
 import DragAndDropModule from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
@@ -15,13 +15,12 @@ import ToolbarModule from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
-import type DialogComponent from "./modules/dialog/dialog.component";
 import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
 
-export interface CannedResponse {
+export interface Commands {
   title: string;
   content: string;
   command: string;
@@ -75,7 +74,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   uploadAttachmentUrl: string;
 
   private quillElement: Quill;
-  private _commands: CannedResponse[] = [];
+  private _commands: Commands[] = [];
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -109,7 +108,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     Quill.register('modules/toolbar', ToolbarModule as any, true);
     Quill.register('modules/datePickerModule', DatePicker as any, true);
-    Quill.register('modules/dialogModule', Dialog as any, true);
     Quill.register('modules/emojiModule', Emoji as any, true);
     Quill.register('modules/headlessEmojiModule', HeadlessEmoji as any, true);
     Quill.register('modules/attachmentModule', Attachment as any, true);
@@ -117,6 +115,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
     Quill.register('modules/imageResizeModule', ImageResize as any, true);
     Quill.register('modules/contextMenuModule', ContextMenu as any, true);
+    Quill.register('modules/cannedResponseModule', CannedResponse as any, true);
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
     const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
@@ -156,8 +155,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         keyboard: {
           bindings: bindings
         },
-        dialogModule: {
-          commands: this._commands
+        cannedResponseModule: {
+          commands: this._commands // TODO: Have the module do a fetch for these results
         },
         emojiModule: {},
         headlessEmojiModule: {},
@@ -345,13 +344,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       key: 'Enter',
       shiftKey: false,
       handler: () => {
-        const emoji = document.querySelector('zn-headless-emoji-module') as HeadlessEmojiComponent | null;
+        const emoji = document.querySelector('zn-headless-emoji') as HeadlessEmojiComponent | null;
         const isEmojiOpen = emoji?.open ?? false;
         const contextMenu = document.querySelector('zn-context-menu') as ContextMenuComponent | null;
         const isContextMenuOpen = contextMenu?.open ?? false;
-        const dialog = document.querySelector('zn-dialog-module') as DialogComponent | null;
-        const isDialogOpen = dialog?.open ?? false;
-        if (isEmojiOpen || isContextMenuOpen || isDialogOpen) {
+        if (isEmojiOpen || isContextMenuOpen) {
           return false;
         }
 
@@ -387,7 +384,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private async _fetchCannedResponses() {
     try {
       const response = await fetch(this.cannedResponsesUri);
-      this._commands = await response.json() as CannedResponse[];
+      this._commands = await response.json() as Commands[];
     } catch (error) {
       console.error('Error fetching canned responses', error);
     }

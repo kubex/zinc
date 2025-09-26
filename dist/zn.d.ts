@@ -3970,6 +3970,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _updateDropdownTrigger;
         private _syncButtonState;
         private _insertDivider;
+        private _openDatePicker;
     }
     export default ToolbarModule;
 }

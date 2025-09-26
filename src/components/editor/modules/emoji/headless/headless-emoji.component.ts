@@ -119,4 +119,4 @@ export default class HeadlessEmojiComponent extends ZincElement {
   }
 }
 
-HeadlessEmojiComponent.define('zn-headless-emoji-module');
+HeadlessEmojiComponent.define('zn-headless-emoji');

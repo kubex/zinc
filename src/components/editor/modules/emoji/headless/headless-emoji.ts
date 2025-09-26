@@ -44,7 +44,7 @@ class HeadlessEmoji {
 
   private createComponent() {
     const tpl = html`
-      <zn-headless-emoji-module></zn-headless-emoji-module>`;
+      <zn-headless-emoji></zn-headless-emoji>`;
     return litToHTML<HeadlessEmojiComponent>(tpl);
   }
 

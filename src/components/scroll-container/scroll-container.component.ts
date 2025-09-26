@@ -35,6 +35,18 @@ export default class ZnScrollContainer extends ZincElement {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.startScrolled) {
+      const observer = new MutationObserver(() => {
+        setTimeout(() => {
+          this.scrollTop = this.scrollHeight;
+        }, 100);
+      });
+      observer.observe(this, {childList: true, subtree: true});
+    }
+  }
+
   render() {
     return html`
       <slot></slot>

@@ -104,7 +104,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     super.connectedCallback();
     document.addEventListener('keydown', this.escKeyHandler);
     document.addEventListener('keydown', this.submitKeyHandler);
-    // if click outside, cancel edit
     document.addEventListener('click', this.mouseEventHandler);
   }
 
@@ -158,7 +157,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     }
   }
 
-  handleEditClick = () => {
+  handleEditClick = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (this.disabled) {
       return;
     }

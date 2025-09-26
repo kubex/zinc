@@ -18,6 +18,7 @@ class ToolbarModule extends Toolbar {
 
     // Add handlers after parent Toolbar initialization
     this.addHandler('attachment', () => null);
+    this.addHandler('date', () => this._openDatePicker());
     this.addHandler('divider', () => this._insertDivider());
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
@@ -223,6 +224,13 @@ class ToolbarModule extends Toolbar {
     } catch (e) {
       // no-op
     }
+  }
+
+  private _openDatePicker() {
+    const button = this._component.shadowRoot?.querySelector(`zn-button.toolbar__date-dropdown-trigger`) as HTMLElement | null;
+    if (!button) return;
+
+    button.click();
   }
 }
 

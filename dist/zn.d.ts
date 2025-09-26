@@ -2915,7 +2915,7 @@ declare module "components/inline-edit/inline-edit.component" {
         mouseEventHandler: (e: MouseEvent) => void;
         escKeyHandler: (e: KeyboardEvent) => void;
         submitKeyHandler: (e: KeyboardEvent) => void;
-        handleEditClick: () => void;
+        handleEditClick: (e: MouseEvent) => void;
         handleSubmitClick: (e: MouseEvent) => void;
         handleCancelClick: (e: MouseEvent) => void;
         handleBlur: () => void;

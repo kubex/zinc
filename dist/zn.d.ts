@@ -1983,10 +1983,10 @@ declare module "components/data-table/data-table.component" {
     }
     interface Response {
         rows: Row[];
-        per_page: number;
+        perPage: number;
         total: number;
         page: number;
-        total_pages: number;
+        totalPages: number;
     }
     export enum ActionSlots {
         delete = "delete-action",

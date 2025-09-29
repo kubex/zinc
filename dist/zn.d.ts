@@ -4234,6 +4234,62 @@ declare module "components/editor/modules/image-resize/image-resize" {
     }
     export default ImageResize;
 }
+declare module "components/editor/modules/ai/panel/ai-panel.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from "lit";
+    export default class AIPanelComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        promptInput: HTMLTextAreaElement;
+        open: boolean;
+        refine?: (prompt: string) => void;
+        show(): void;
+        hide(): void;
+        private handleTriggerKeyDown;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/ai/tooltip/ai-tooltip.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from "lit";
+    export default class AITooltipComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        open: boolean;
+        show(): void;
+        hide(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/ai/index" {
+    import "components/editor/modules/ai/panel/ai-panel.component";
+    import "components/editor/modules/ai/tooltip/ai-tooltip.component";
+    import Quill from "quill";
+    class QuillAI {
+        private _quill;
+        private readonly _path;
+        private _component;
+        private _selectedText;
+        constructor(quill: Quill, options: {
+            path: string;
+        });
+        private _initComponent;
+        private _attachEvents;
+        processAIRequest(prompt: string): Promise<void>;
+        private _createTooltipComponent;
+        private _createPanelComponent;
+        private _replaceTooltip;
+        private _onDocumentClick;
+        private _updateFromEditor;
+        private _positionComponent;
+        private _setPosition;
+        private resetComponent;
+        private _show;
+        private _hide;
+        private _onEscapeKey;
+        private _attachPanelEvents;
+        private _clickPanelEvent;
+    }
+    export default QuillAI;
+}
 declare module "components/editor/modules/time-tracking/time-tracking" {
     import type Quill from 'quill';
     interface TimeTrackingModuleOptions {
@@ -4290,6 +4346,7 @@ declare module "components/editor/editor.component" {
         cannedResponses: any[];
         cannedResponsesUri: string;
         uploadAttachmentUrl: string;
+        aiPath: string;
         private quillElement;
         private _commands;
         get validity(): ValidityState;

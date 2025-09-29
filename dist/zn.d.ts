@@ -4242,6 +4242,7 @@ declare module "components/editor/modules/ai/panel/ai-panel.component" {
         promptInput: HTMLTextAreaElement;
         open: boolean;
         refine?: (prompt: string) => void;
+        refineBuiltIn?: (e: Event) => void;
         show(): void;
         hide(): void;
         private handleTriggerKeyDown;
@@ -4286,6 +4287,7 @@ declare module "components/editor/modules/ai/index" {
         private _hide;
         private _onEscapeKey;
         private _attachPanelEvents;
+        private _clickPreDefinedEvent;
         private _clickPanelEvent;
     }
     export default QuillAI;

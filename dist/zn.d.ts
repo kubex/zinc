@@ -3948,12 +3948,49 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _cannedResponsesOption;
     }
 }
+declare module "components/editor/modules/canned-response/canned-response-component" {
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
+    import ZincElement from "internal/zinc-element";
+    import type { Commands } from "components/editor/editor.component";
+    import type { ZnInputEvent } from "events/zn-input";
+    import type ZnInput from "components/input/index";
+    export default class CannedResponseComponent extends ZincElement {
+        static styles: CSSResultGroup;
+        private hasFocus;
+        private isSearching;
+        dialogEl: HTMLDialogElement;
+        searchInput: ZnInput;
+        commandList: HTMLElement;
+        commands: Commands[];
+        open: boolean;
+        onCommandSelect?: (command: Commands) => void;
+        private _allCommands;
+        set allCommands(value: Commands[]);
+        private closeWatcher;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private handleKeyDown;
+        private _handleClick;
+        getAllItems(): HTMLElement[];
+        getCurrentItem(): HTMLElement | undefined;
+        setCurrentItem(item: HTMLElement): void;
+        focus(): void;
+        handleOpenChange(): void;
+        private addOpenListeners;
+        private removeOpenListeners;
+        private requestClose;
+        private _createCommand;
+        private isFuzzyMatch;
+        handleSearch(event: ZnInputEvent): void;
+        render(): TemplateResult<1>;
+    }
+}
 declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
     import Toolbar from "quill/modules/toolbar";
     import type Quill from "quill";
     import type ToolbarComponent from "components/editor/modules/toolbar/toolbar.component";
-    export * from "components/editor/modules/toolbar/toolbar.component";
     class ToolbarModule extends Toolbar {
         private readonly _quill;
         private readonly _component;
@@ -4006,54 +4043,6 @@ declare module "components/editor/modules/attachment/attachment" {
         private _uploadAttachment;
     }
 }
-declare module "components/editor/modules/canned-response/canned-response-component" {
-    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
-    import ZincElement from "internal/zinc-element";
-    import type { Commands } from "components/editor/editor.component";
-    import type { ZnInputEvent } from "events/zn-input";
-    import type ZnInput from "components/input/index";
-    export default class CannedResponseComponent extends ZincElement {
-        static styles: CSSResultGroup;
-        private hasFocus;
-        private isSearching;
-        dialogEl: HTMLDialogElement;
-        searchInput: ZnInput;
-        commandList: HTMLElement;
-        cannedResponseModule: HTMLElement;
-        commands: Commands[];
-        open: boolean;
-        private _allCommands;
-        set allCommands(value: Commands[]);
-        private closeWatcher;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        private handleKeyDown;
-        getAllItems(): HTMLElement[];
-        getCurrentItem(): HTMLElement | undefined;
-        setCurrentItem(item: HTMLElement): void;
-        focus(): void;
-        handleOpenChange(): void;
-        private addOpenListeners;
-        private removeOpenListeners;
-        private requestClose;
-        private handleClick;
-        private _createCommand;
-        private isFuzzyMatch;
-        handleSearch(event: ZnInputEvent): void;
-        render(): TemplateResult<1>;
-    }
-}
-declare module "components/editor/modules/events/zn-command-select" {
-    export type ZnCommandSelectEvent = CustomEvent<{
-        item: HTMLElement;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-command-select': ZnCommandSelectEvent;
-        }
-    }
-}
 declare module "components/editor/modules/canned-response/canned-response" {
     import "components/editor/modules/canned-response/canned-response-component";
     import type { Commands } from "components/editor/editor.component";
@@ -4065,13 +4054,9 @@ declare module "components/editor/modules/canned-response/canned-response" {
         constructor(quill: Quill, options: {
             commands: Commands[];
         });
-        private _open;
         private _close;
         private _initDialog;
         private getToolbarDialogContainer;
-        private attachEvents;
-        private detachEvents;
-        private onCommandSelect;
         private createDialog;
         private addCommands;
         private triggerCommand;
@@ -6245,6 +6230,16 @@ declare module "zinc" {
     export { default as Style } from "components/style/index";
     export { default as ContentBlock } from "components/content-block/index";
     export * from "events/events";
+}
+declare module "components/editor/modules/events/zn-command-select" {
+    export type ZnCommandSelectEvent = CustomEvent<{
+        item: HTMLElement;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-command-select': ZnCommandSelectEvent;
+        }
+    }
 }
 declare module "components/editor/modules/events/zn-editor-update" {
     export type ZnEditorUpdateEvent = CustomEvent<Record<PropertyKey, never>>;

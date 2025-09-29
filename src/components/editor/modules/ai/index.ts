@@ -32,8 +32,7 @@ class QuillAI {
   }
 
   async processAIRequest(prompt: string) {
-    const quotedSelectedText = this._selectedText ? ` "${this._selectedText}"` : '';
-    const fullPrompt = prompt + quotedSelectedText;
+    const quotedSelectedText = this._selectedText ? this._selectedText : this._quill.getText();
 
     const response = await fetch(this._path, {
       method: 'POST',
@@ -41,13 +40,16 @@ class QuillAI {
         'Content-Type': 'application/json',
         'x-kx-fetch-style': 'zn-editor',
       },
-      body: JSON.stringify({q: fullPrompt})
+      body: JSON.stringify({text: quotedSelectedText, prompt: prompt})
     });
 
     // TODO: Remove event when done
     // this._component.removeEventListener('click', this._clickPanelEvent());
 
     if (response.ok) {
+      const result: unknown = await response.text();
+      console.log(result);
+    } else {
       const result: unknown = await response.json();
 
       if (typeof result === 'string') {
@@ -176,6 +178,22 @@ class QuillAI {
 
   private _attachPanelEvents(panel: AIPanelComponent) {
     panel.refine = this._clickPanelEvent.bind(this);
+    panel.refineBuiltIn = this._clickPreDefinedEvent.bind(this);
+  }
+
+  private _clickPreDefinedEvent(e: Event) {
+    if (e instanceof PointerEvent) {
+      const target = e.target as HTMLElement;
+      let prompt = target.getAttribute('data-ai-option') || '';
+      if (prompt === "") {
+        for (const targetElement of e.composedPath()) {
+          if (!(targetElement instanceof HTMLElement)) continue;
+          prompt = targetElement.getAttribute('data-ai-option') || ''
+          if (prompt) break;
+        }
+      }
+      this.processAIRequest(prompt).then(r => r);
+    }
   }
 
   private _clickPanelEvent(prompt: string) {

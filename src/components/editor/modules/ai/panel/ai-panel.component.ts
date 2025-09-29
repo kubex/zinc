@@ -12,6 +12,7 @@ export default class AIPanelComponent extends ZincElement {
 
   @property({type: Boolean, reflect: true}) open = false;
   @property({type: Function}) refine?: (prompt: string) => void;
+  @property({type: Function}) refineBuiltIn?: (e: Event) => void;
 
   public show() {
     this.open = true;
@@ -54,7 +55,7 @@ export default class AIPanelComponent extends ZincElement {
             role="option"
             aria-selected="false"
             data-ai-option="improve"
-            @click=${this.refine}
+            @click=${this.refineBuiltIn}
           >
             <zn-icon src="article" size="16"></zn-icon>
             <span class="label">Improve writing</span>
@@ -65,7 +66,7 @@ export default class AIPanelComponent extends ZincElement {
             role="option"
             aria-selected="false"
             data-ai-option="shorten"
-            @click=${this.refine}
+            @click=${this.refineBuiltIn}
           >
             <zn-icon src="compress" size="16"></zn-icon>
             <span class="label">Shorten text</span>
@@ -76,7 +77,7 @@ export default class AIPanelComponent extends ZincElement {
             role="option"
             aria-selected="false"
             data-ai-option="tone"
-            @click=${this.refine}
+            @click=${this.refineBuiltIn}
           >
             <zn-icon src="work" size="16"></zn-icon>
             <span class="label">Change tone</span>
@@ -87,7 +88,7 @@ export default class AIPanelComponent extends ZincElement {
             role="option"
             aria-selected="false"
             data-ai-option="spelling"
-            @click=${this.refine}
+            @click=${this.refineBuiltIn}
           >
             <zn-icon src="spellcheck" size="16"></zn-icon>
             <span class="label">Fix spelling / grammar</span>
@@ -98,7 +99,7 @@ export default class AIPanelComponent extends ZincElement {
             role="option"
             aria-selected="false"
             data-ai-option="translate"
-            @click=${this.refine}
+            @click=${this.refineBuiltIn}
           >
             <zn-icon src="translate" size="16"></zn-icon>
             <span class="label">Translate</span>

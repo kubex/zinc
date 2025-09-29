@@ -107,6 +107,7 @@ layout: component
 <span class=icncont><zn-icon src="trustpayments" size="32" library="brands"></zn-icon></span>
 <span class=icncont><zn-icon src="worldpay" size="32" library="brands"></zn-icon></span>
 <span class=icncont><zn-icon src="yapstone" size="32" library="brands"></zn-icon></span>
+<span class=icncont><zn-icon src="chargie" size="32" library="brands"></zn-icon></span>
 ```
 
 ## Default  icons

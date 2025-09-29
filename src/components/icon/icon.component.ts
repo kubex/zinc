@@ -146,7 +146,7 @@ export default class ZnIcon extends ZincElement {
     // load the material icons font if the library is set to material
     render(html`
       <link
-        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.6/dist/kubex-icons.css"
+        href="https://cdn.jsdelivr.net/gh/kubex/icons@0.0.7/dist/kubex-icons.css"
         rel="stylesheet">
       <link
         href="https://cdn.lineicons.com/5.0/lineicons.css"

@@ -196,7 +196,6 @@ export default class ZnDialog extends ZincElement {
         part="base"
         role="alertdialog"
         aria-modal="true"
-        aria-hidden=${this.open ? 'false' : 'true'}
         aria-label=${ifDefined(this.noHeader ? this.label : undefined)}
         aria-labelledby=${ifDefined(!this.noHeader ? 'title' : undefined)}
         tabindex="-1"

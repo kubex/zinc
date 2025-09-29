@@ -47,7 +47,7 @@ interface Row {
   id: string;
   uri?: string;
   target?: string;
-  actions?: ButtonConfig[];
+  actions?: ActionConfig[];
   cells: Cell[];
 }
 
@@ -67,29 +67,16 @@ export enum ActionSlots {
   sort = 'sort',
 }
 
-interface ButtonConfig {
-  id: string;
-  href: string;
-  gaid: string;
+interface ActionConfig {
+  text: string;
   uri: string;
-  size: string;
-  color: string;
-  icon: string;
-  iconSize: string;
-  tooltip: string;
   target: string;
-  label: string;
-  outline: boolean;
-  confirm: ConfirmConfig;
-}
-
-interface ConfirmConfig {
+  gaid: string;
+  confirmType: string;
+  confirmTitle: string;
+  confirmContent: string;
+  icon: string;
   type: string;
-  trigger: string;
-  fid: string;
-  caption: string;
-  content: string;
-  action: string;
 }
 
 interface HeaderConfig {
@@ -240,6 +227,8 @@ export default class ZnDataTable extends ZincElement {
     args: () => [this.dataUri]
   });
 
+  private rowHasActions: boolean = false;
+
   render() {
     const tableBody = this._dataTask.render({
       pending: () => {
@@ -342,6 +331,11 @@ export default class ZnDataTable extends ZincElement {
 
     const hasSelectedRows = this.selectedRows.length > 0;
 
+    const rowHasActions = (this._rows.find((row: Row) => row.actions && row.actions.length > 0) !== undefined);
+    if (rowHasActions) {
+      this.rowHasActions = true;
+    }
+
     return html`
       <div style="overflow-x: auto">
         <table class="${classMap({
@@ -357,6 +351,7 @@ export default class ZnDataTable extends ZincElement {
                 <div><input type="checkbox" @change="${this.selectAll}"></div>
               </th>`}
             ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
+            ${this.rowHasActions ? html`<th></th>` : html``}
           </tr>
           </thead>
           <tbody>
@@ -367,6 +362,7 @@ export default class ZnDataTable extends ZincElement {
                   <div><input type="checkbox" @change="${this.selectRow}"></div>
                 </td>`}
               ${row.cells.map((value: Cell, index: number) => this.renderCellBody(index, value))}
+              ${this.renderActions(row)}
             </tr>`)}
           </tbody>
         </table>
@@ -900,5 +896,55 @@ export default class ZnDataTable extends ZincElement {
           </tbody>
         </table>
       </div>`;
+  }
+
+  private renderActions(row: Row) {
+    if ((row.actions === null || row.actions === undefined) && this.rowHasActions) {
+      // return an empty cell to keep the table structure
+      return html`
+        <td></td>`;
+    }
+
+    return html`
+      <td class="table__cell table__cell--actions">
+        <zn-dropdown placement="bottom-end">
+          <zn-button slot="trigger"
+                     icon="more_horiz"
+                     size="small"
+                     color="transparent"
+                     icon-size="24"
+                     aria-label="Row actions"
+                     ?disabled="${row.actions === null || row.actions === undefined || row.actions.length === 0}">
+          </zn-button>
+          <zn-menu>
+            ${row.actions?.map((action: ActionConfig) => {
+              if (action.confirmContent) {
+                const triggerId = 'confirm-action-' + Math.random().toString(36).substring(2, 15);
+                return html`
+                  <zn-confirm trigger="${triggerId}"
+                              type="${ifDefined(action.confirmType)}"
+                              caption="${action.confirmTitle}"
+                              content="${action.confirmContent}"
+                              action="${action.uri}"></zn-confirm>
+                  <zn-menu-item id="${triggerId}">
+                    ${(action.icon) ? html`
+                      <zn-icon src="${action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                    ${action.text}
+                  </zn-menu-item>`;
+              } else {
+                return html`
+                  <zn-menu-item value="${action.text}"
+                                href="${action.uri}"
+                                gaid="${ifDefined(action.gaid || nothing)}"
+                                data-target="${ifDefined(action.target || nothing)}">
+                    ${(action.icon) ? html`
+                      <zn-icon src="${action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                    ${action.text}
+                  </zn-menu-item>`;
+              }
+            })}
+          </zn-menu>
+        </zn-dropdown>
+      </td>`;
   }
 }

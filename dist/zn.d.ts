@@ -1978,7 +1978,7 @@ declare module "components/data-table/data-table.component" {
         id: string;
         uri?: string;
         target?: string;
-        actions?: ButtonConfig[];
+        actions?: ActionConfig[];
         cells: Cell[];
     }
     interface Response {
@@ -1995,28 +1995,16 @@ declare module "components/data-table/data-table.component" {
         filter = "filter",
         sort = "sort"
     }
-    interface ButtonConfig {
-        id: string;
-        href: string;
-        gaid: string;
+    interface ActionConfig {
+        text: string;
         uri: string;
-        size: string;
-        color: string;
-        icon: string;
-        iconSize: string;
-        tooltip: string;
         target: string;
-        label: string;
-        outline: boolean;
-        confirm: ConfirmConfig;
-    }
-    interface ConfirmConfig {
+        gaid: string;
+        confirmType: string;
+        confirmTitle: string;
+        confirmContent: string;
+        icon: string;
         type: string;
-        trigger: string;
-        fid: string;
-        caption: string;
-        content: string;
-        action: string;
     }
     interface HeaderConfig {
         key: string;
@@ -2098,6 +2086,7 @@ declare module "components/data-table/data-table.component" {
         private tableContainer;
         private hasSlotController;
         private _dataTask;
+        private rowHasActions;
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -2132,6 +2121,7 @@ declare module "components/data-table/data-table.component" {
         private extractComparable;
         private sortData;
         private loadingTable;
+        private renderActions;
     }
 }
 declare module "components/data-table/index" {

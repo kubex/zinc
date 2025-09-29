@@ -138,17 +138,16 @@ p {
 }
 
 
-
 :host([level="note"]) .wrapper {
   h6 {
     color: var(--zn-color-gray-800);
   }
 
-  border-color:  var(--zn-color-gray-500) !important;
-  background:  var(--zn-color-gray-100);
+  border-color: var(--zn-color-gray-500) !important;
+  background: var(--zn-color-gray-100);
 
   zn-icon {
-    --icon-color: var(--zn-color-gray-800) ;
+    --icon-color: var(--zn-color-gray-800);
   }
 }
 
@@ -166,5 +165,20 @@ p {
   &--large {
     padding: var(--zn-spacing-small) var(--zn-spacing-medium);
     font-size: 110%;
+  }
+}
+
+:host([level="cosmic"]) {
+  @include wc.cosmic-border();
+  position: relative;
+  z-index: 0;
+
+  &:before {
+    border-radius: 11px;
+  }
+
+  .wrapper {
+    border: none !important;
+    background: rgba(var(--zn-panel), 0.99);
   }
 }

@@ -913,8 +913,7 @@ export default class ZnDataTable extends ZincElement {
                      size="small"
                      color="transparent"
                      icon-size="24"
-                     aria-label="Row actions"
-                     ?disabled="${row.actions === null || row.actions === undefined || row.actions.length === 0}">
+                     aria-label="Row actions">
           </zn-button>
           <zn-menu>
             ${row.actions?.map((action: ActionConfig) => {

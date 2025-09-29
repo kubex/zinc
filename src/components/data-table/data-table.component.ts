@@ -25,7 +25,7 @@ import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
-const DEFAULT_TOTAL_PAGES = 10;
+const DEFAULT_TOTAL_PAGES = 1;
 
 interface Cell {
   text: string;
@@ -53,10 +53,10 @@ interface Row {
 
 interface Response {
   rows: Row[];
-  per_page: number;
+  perPage: number;
   total: number;
   page: number;
-  total_pages: number;
+  totalPages: number;
 }
 
 export enum ActionSlots {
@@ -315,9 +315,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   renderTable(data: Response) {
-    this.itemsPerPage = data.per_page ?? DEFAULT_PER_PAGE;
+    this.itemsPerPage = data.perPage ?? DEFAULT_PER_PAGE;
     this.page = data.page ?? DEFAULT_PAGE;
-    this.totalPages = data.total_pages ?? DEFAULT_TOTAL_PAGES;
+    this.totalPages = data.totalPages ?? DEFAULT_TOTAL_PAGES;
 
     if (!data?.rows || data.rows.length === 0) {
       return this.emptyState();
@@ -414,7 +414,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getPagination() {
-    if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= 10)) return null;
+    if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];
     optionsRowsPerPage.filter((option) => option <= this._rows.length);
@@ -910,7 +910,7 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--actions">
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"
-                     icon="more_horiz"
+                     icon="more_vert"
                      size="small"
                      color="transparent"
                      icon-size="24"

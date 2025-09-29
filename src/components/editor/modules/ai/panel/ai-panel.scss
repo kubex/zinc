@@ -1,0 +1,82 @@
+@use "../../../../../wc";
+
+:host {
+  position: absolute;
+  z-index: 100001; // 1 more than slides
+  display: none;
+  border-radius: var(--zn-border-radius-circle);
+  font-size: var(--zn-font-size-small);
+  --zn-blur: 2px;
+}
+
+:host([open]) {
+  display: block;
+}
+
+.ai-panel {
+  display: flex;
+  flex-grow: 1;
+
+  max-width: 100%;
+  position: relative;
+  min-width: 240px;
+
+  &::part(base) {
+    margin-bottom: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .prompt {
+    padding: 8px;
+    --zn-input-border-color: var(--zn-input-border-color);
+    --zn-input-border-color-hover: var(--zn-input-border-color-hover);
+    --zn-input-text-color: var(--zn-input-text-color);
+    --zn-input-placeholder-color: var(--zn-input-placeholder-color);
+    --zn-input-border-radius: var(--zn-border-radius-medium);
+    --zn-input-padding: 8px 12px;
+    --zn-input-font-size: 14px;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 60%;
+      margin: 4px auto;
+      border-bottom: 1px solid rgba(var(--zn-border-color), 0.4);
+    }
+
+    &::part(textarea) {
+      border-radius: var(--zn-border-radius-medium);
+    }
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+
+    &[aria-selected="true"],
+    &:hover {
+      background: var(--zn-input-background-color-hover);
+    }
+  }
+
+  .label {
+    opacity: 0.7;
+  }
+
+  .empty {
+    padding: 8px;
+    opacity: 0.7;
+  }
+}

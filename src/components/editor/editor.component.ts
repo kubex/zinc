@@ -10,6 +10,7 @@ import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
 import ImageResize from "./modules/image-resize/image-resize";
 import Quill from "quill";
+import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
 import ToolbarModule from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
@@ -73,6 +74,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
+  @property({attribute: 'ai-path'}) aiPath: string = '';
+
   private quillElement: Quill;
   private _commands: Commands[] = [];
 
@@ -116,6 +119,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register('modules/imageResizeModule', ImageResize as any, true);
     Quill.register('modules/contextMenuModule', ContextMenu as any, true);
     Quill.register('modules/cannedResponseModule', CannedResponse as any, true);
+
+    /* AI Modules */
+    Quill.register('modules/ai', QuillAI as any, true);
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
     const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
@@ -161,6 +167,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         emojiModule: {},
         headlessEmojiModule: {},
         datePickerModule: {},
+        ai: {
+          path: this.aiPath
+        },
         timeTrackingModule: {
           startTimeInput: startTimeInput as HTMLInputElement,
           openTimeInput: openTimeInput as HTMLInputElement

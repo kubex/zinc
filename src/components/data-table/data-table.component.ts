@@ -362,7 +362,7 @@ export default class ZnDataTable extends ZincElement {
                   <div><input type="checkbox" @change="${this.selectRow}"></div>
                 </td>`}
               ${row.cells.map((value: Cell, index: number) => this.renderCellBody(index, value))}
-              ${this.renderActions(row)}
+              ${this.rowHasActions ? this.renderActions(row) : null}
             </tr>`)}
           </tbody>
         </table>

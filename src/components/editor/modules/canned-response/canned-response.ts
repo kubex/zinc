@@ -3,7 +3,6 @@ import {Delta} from 'quill';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import type {Commands} from "../../editor.component";
-import type {ZnCommandSelectEvent} from "../events/zn-command-select";
 import type CannedResponseComponent from './canned-response-component';
 import type Quill from 'quill';
 import type ToolbarComponent from "../toolbar/toolbar.component";
@@ -19,21 +18,11 @@ class CannedResponse {
 
     if (this._commands.length > 0) {
       this._initDialog();
-
-      document.addEventListener('zn-show-canned-response-dialog', () => {
-        this._open();
-      });
     }
-  }
-
-  private _open() {
-    this._dialog.dialogEl.showModal();
-    this.attachEvents();
   }
 
   private _close() {
     this._dialog.dialogEl.close();
-    this.detachEvents();
   }
 
   private _initDialog() {
@@ -44,6 +33,7 @@ class CannedResponse {
 
       this._dialog = this.createDialog()!;
       this._dialog.allCommands = this._commands;
+      this._dialog.onCommandSelect = this.triggerCommand.bind(this);
       container.appendChild(this._dialog);
       this.addCommands();
     });
@@ -64,22 +54,6 @@ class CannedResponse {
       return null;
     }
   }
-
-  private attachEvents() {
-    document.addEventListener('zn-command-select', this.onCommandSelect);
-  }
-
-  private detachEvents() {
-    document.removeEventListener('zn-command-select', this.onCommandSelect);
-  }
-
-  private onCommandSelect = (e: ZnCommandSelectEvent) => {
-    const item = e.detail.item;
-    const command = item.getAttribute('data-command');
-    if (command) {
-      this.triggerCommand(this._commands.find((c) => c.title === command)!);
-    }
-  };
 
   private createDialog() {
     const cannedResponse = html`

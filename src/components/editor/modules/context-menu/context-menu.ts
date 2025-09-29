@@ -165,10 +165,14 @@ class ContextMenu {
 
   private showDialog() {
     this.hide();
-    this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {
-      bubbles: true,
-      composed: true
-    }));
+
+    const toolbar = this._toolbarModule.container;
+    if (!toolbar) return;
+
+    const button = toolbar.shadowRoot?.querySelector('[data-format="canned-responses"]') as HTMLElement | null;
+    if (!button) return;
+
+    button.click();
   }
 
   private onToolbarSelect(e: CustomEvent) {

@@ -1,10 +1,9 @@
 import './toolbar.component';
 import Toolbar from "quill/modules/toolbar";
+import type CannedResponseComponent from "../canned-response/canned-response-component";
 import type Quill from "quill";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";
-
-export * from './toolbar.component';
 
 class ToolbarModule extends Toolbar {
   private readonly _quill: Quill;
@@ -235,10 +234,10 @@ class ToolbarModule extends Toolbar {
   }
 
   private _openCannedResponseDialog() {
-    this._component.dispatchEvent(new CustomEvent('zn-show-canned-response-dialog', {
-      bubbles: true,
-      composed: true
-    }));
+    const dialog = this._component.shadowRoot?.querySelector(`zn-canned-response`) as CannedResponseComponent | null;
+    if (!dialog) return;
+
+    dialog.dialogEl.showModal();
   }
 }
 

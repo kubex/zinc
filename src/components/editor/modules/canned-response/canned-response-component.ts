@@ -21,10 +21,10 @@ export default class CannedResponseComponent extends ZincElement {
   @query('zn-input#search-input') searchInput!: ZnInput;
   @query('.canned-response__content') commandList!: HTMLElement;
 
-  @query('.canned-response') cannedResponseModule!: HTMLElement;
-
   @property({type: Array, reflect: true}) commands: Commands[] = [];
   @property({type: Boolean, reflect: true}) open = false;
+
+  @property({type: Function}) onCommandSelect?: (command: Commands) => void;
 
   private _allCommands: Commands[] = [];
   set allCommands(value: Commands[]) {
@@ -100,6 +100,17 @@ export default class CannedResponseComponent extends ZincElement {
     }
   }
 
+  private _handleClick = (event: MouseEvent) => {
+    const item = (event.target as HTMLElement).closest('.command__wrapper');
+    if (!item) return;
+
+    const commandTitle = item.getAttribute('data-command');
+    const command = this._allCommands.find(c => c.title === commandTitle);
+    if (command && this.onCommandSelect) {
+      this.onCommandSelect(command);
+    }
+  }
+
   getAllItems() {
     if (!this.commandList) {
       return [];
@@ -162,13 +173,6 @@ export default class CannedResponseComponent extends ZincElement {
     this.dialogEl.close();
   }
 
-  private handleClick = (event: MouseEvent) => {
-    const item = (event.target as HTMLElement).closest('.command__wrapper');
-    if (!item) return;
-    this.emit('zn-command-select', {detail: {item: item as HTMLElement}});
-    this.emit('zn-editor-update');
-  }
-
   private _createCommand(command: Commands): TemplateResult {
     const labels: string[] = [];
     if (command.labels) {
@@ -182,7 +186,7 @@ export default class CannedResponseComponent extends ZincElement {
     }
 
     return html`
-      <div data-command="${command.title}" class="command__wrapper" @click="${this.handleClick}">
+      <div data-command="${command.title}" class="command__wrapper" @click="${this._handleClick}">
         <div class="command__left">
           <div class="command__command">
             ${'/' + (command.command ? command.command :

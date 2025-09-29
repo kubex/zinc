@@ -331,7 +331,7 @@ export default class ZnDataTable extends ZincElement {
 
     const hasSelectedRows = this.selectedRows.length > 0;
 
-    const rowHasActions = (this._rows.find((row: Row) => row.actions && row.actions.length > 0) !== undefined);
+    const rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
     if (rowHasActions) {
       this.rowHasActions = true;
     }
@@ -351,7 +351,8 @@ export default class ZnDataTable extends ZincElement {
                 <div><input type="checkbox" @change="${this.selectAll}"></div>
               </th>`}
             ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
-            ${this.rowHasActions ? html`<th></th>` : html``}
+            ${this.rowHasActions ? html`
+              <th></th>` : html``}
           </tr>
           </thead>
           <tbody>

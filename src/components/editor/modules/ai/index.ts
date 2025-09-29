@@ -34,6 +34,17 @@ class QuillAI {
   async processAIRequest(prompt: string) {
     const quotedSelectedText = this._selectedText ? this._selectedText : this._quill.getText();
 
+    const panel: HTMLElement | null | undefined = this._component.shadowRoot?.querySelector('.ai-panel');
+    if (panel) {
+      // Loading skeletons - TODO: Fix up height and transitions between states
+      panel.innerHTML = `
+        <zn-skeleton width="60%" height="15px" style="margin-bottom:8px;"></zn-skeleton>
+        <zn-skeleton width="80%" height="15px" style="margin-bottom:8px;"></zn-skeleton>
+        <zn-skeleton height="15px"></zn-skeleton>
+      `;
+      panel.style.width = '100%';
+    }
+
     const response = await fetch(this._path, {
       method: 'POST',
       headers: {
@@ -48,7 +59,11 @@ class QuillAI {
 
     if (response.ok) {
       const result: unknown = await response.text();
-      console.log(result);
+      if (panel) {
+        // TODO: Add resizing animation
+        panel.style.width = '300px';
+        panel.innerHTML = result as string;
+      }
     } else {
       const result: unknown = await response.json();
 

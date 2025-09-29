@@ -8,7 +8,7 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './icon.scss';
 
-type IconLibrary = "material" | "material-outlined" | "material-round" | "material-sharp" |
+type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
 
 export type IconColor =
@@ -197,7 +197,7 @@ export default class ZnIcon extends ZincElement {
           '--icon-size': this.size + "px",
           '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
         })}">
-          ${this.library ? html`
+          ${this.library && this.library !== "src" ? html`
             ${choose(this.library, [
               ["material", () => html`<i part="icon" class="mi">${this.src}</i>`],
               ["material-outlined", () => html`<i part="icon" class="mi mi--outlined">${this.src}</i>`],
@@ -214,7 +214,7 @@ export default class ZnIcon extends ZincElement {
               ["avatar", () => html`<span class="avatar__text">${this.getAvatarInitials(this.src)}</span>`]
             ], () => html`Library not supported: ${this.library}`)}` : ''}
 
-          ${!this.library && this.src ? html`
+          ${(!this.library || this.library === 'src') && this.src ? html`
             <img part="icon" src="${this.src}" alt="${this.alt}" class="${this.library}" height="${this.size}"
                  width="${this.size}"/>` : ''}
 

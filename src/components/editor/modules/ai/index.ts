@@ -37,7 +37,10 @@ class QuillAI {
 
     const response = await fetch(this._path, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'x-kx-fetch-style': 'zn-editor',
+      },
       body: JSON.stringify({q: fullPrompt})
     });
 

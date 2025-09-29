@@ -25,7 +25,6 @@ import styles from './data-table.scss';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
-const DEFAULT_TOTAL_PAGES = 1;
 
 interface Cell {
   text: string;
@@ -315,9 +314,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   renderTable(data: Response) {
-    this.itemsPerPage = data.perPage ?? DEFAULT_PER_PAGE;
-    this.page = data.page ?? DEFAULT_PAGE;
-    this.totalPages = data.totalPages ?? DEFAULT_TOTAL_PAGES;
+    this.itemsPerPage = Math.max(1, data.perPage ?? DEFAULT_PER_PAGE);
+    this.page = Math.max(1, data.page ?? DEFAULT_PAGE);
+    this.totalPages = Math.ceil(Math.max(1, data.total) / this.itemsPerPage);
 
     if (!data?.rows || data.rows.length === 0) {
       return this.emptyState();

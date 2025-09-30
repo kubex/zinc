@@ -76,6 +76,17 @@ export default class AIPanelComponent extends ZincElement {
             class="item"
             role="option"
             aria-selected="false"
+            data-ai-option="expand"
+            @click=${this.refineBuiltIn}
+          >
+            <zn-icon src="expand" size="16"></zn-icon>
+            <span class="label">Expand text</span>
+          </button>
+          <button
+            type="button"
+            class="item"
+            role="option"
+            aria-selected="false"
             data-ai-option="tone"
             @click=${this.refineBuiltIn}
           >

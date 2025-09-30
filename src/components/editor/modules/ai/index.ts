@@ -6,6 +6,7 @@ import Quill from "quill";
 import type {Range} from "quill";
 import type AIPanelComponent from "./panel/ai-panel.component";
 import AITooltipComponent from "./tooltip/ai-tooltip.component";
+import ZnTextarea from "../../../textarea";
 
 class QuillAI {
   private _quill: Quill;
@@ -24,20 +25,22 @@ class QuillAI {
   }
 
   public replaceTextAtSelection() {
+    const content = this._latestContent(null);
     const range = this._quill.getSelection();
     if (range) {
       this._quill.deleteText(range.index, range.length);
-      this._quill.insertText(range.index, this._aiResponseContent || '');
-      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+      this._quill.insertText(range.index, content || '');
+      this._quill.setSelection(range.index + (content.length || 0), 0);
     }
     this.resetComponent();
   }
 
   public insertTextAtSelection() {
+    const content = this._latestContent(null);
     const range = this._quill.getSelection();
     if (range) {
-      this._quill.insertText(range.index, this._aiResponseContent || '');
-      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+      this._quill.insertText(range.index, content || '');
+      this._quill.setSelection(range.index + (content.length || 0), 0);
     }
     this.resetComponent();
   }
@@ -50,6 +53,19 @@ class QuillAI {
 
   private _attachEvents() {
     this._quill.on(Quill.events.SELECTION_CHANGE, (range) => this._updateFromEditor(range));
+  }
+
+  private _latestContent(panel: HTMLElement | null | undefined): string {
+    if (panel === null || panel === undefined) {
+      panel = this._component.shadowRoot?.querySelector('.ai-panel');
+    }
+    if (panel) {
+      const ele = panel.querySelector('[name="editor-response-text"]')
+      if (ele instanceof HTMLInputElement || ele instanceof ZnTextarea) {
+        return ele.value;
+      }
+    }
+    return this._aiResponseContent
   }
 
   async processAIRequest() {
@@ -74,11 +90,10 @@ class QuillAI {
     if (response.ok) {
       const result: unknown = await response.text();
       if (panel) {
-        // TODO: Add resizing animation
         panel.style.width = '500px';
         panel.innerHTML = result as string;
 
-        this._aiResponseContent = (panel.querySelector('input[name="ai-response-text"]') as HTMLInputElement)?.value || '';
+        this._aiResponseContent = this._latestContent(panel);
 
         // Reposition panel after content change
         this._positionComponent();

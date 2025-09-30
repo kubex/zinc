@@ -418,8 +418,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       aiModule.replaceTextAtSelection();
     } else if (editorMode === 'insert') {
       aiModule.insertTextAtSelection();
-    } else if (editorMode === 'retry') {
-      aiModule.processAIRequest().then();
     }
   }
 

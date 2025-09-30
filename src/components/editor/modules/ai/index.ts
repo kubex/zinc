@@ -59,7 +59,7 @@ class QuillAI {
     if (panel) {
       // Loading skeletons - TODO: Fix up height and transitions between states
       panel.innerHTML = `<zn-skeleton height="200px" speed="2s" style="margin: 15px 10px;"></zn-skeleton>`;
-      panel.style.width = '100%';
+     // panel.style.width = '100%';
     }
 
     const response = await fetch(this._path, {
@@ -75,7 +75,7 @@ class QuillAI {
       const result: unknown = await response.text();
       if (panel) {
         // TODO: Add resizing animation
-        panel.style.width = '300px';
+        panel.style.width = '500px';
         panel.innerHTML = result as string;
 
         this._aiResponseContent = (panel.querySelector('input[name="ai-response-text"]') as HTMLInputElement)?.value || '';

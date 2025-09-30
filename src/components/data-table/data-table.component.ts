@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
@@ -19,6 +19,10 @@ import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
 import ZnSkeleton from "../skeleton";
+
+import type ZnDataSelect from "../data-select";
+import type ZnInput from "../input";
+import type ZnQueryBuilder from "../query-builder";
 import type ZnSelect from "../select";
 
 import styles from './data-table.scss';
@@ -64,6 +68,7 @@ export enum ActionSlots {
   filter = 'filter',
   filter_top = 'filter-top',
   sort = 'sort',
+  inputs = 'inputs'
 }
 
 interface ActionConfig {
@@ -94,6 +99,15 @@ interface DataRequest {
   sortDirection: string;
   filter: string;
 }
+
+type AllowedInputElement =
+  HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement
+  | ZnInput
+  | ZnSelect
+  | ZnDataSelect
+  | ZnQueryBuilder
 
 /**
  * @summary Short summary of the component's intended use.
@@ -193,7 +207,6 @@ export default class ZnDataTable extends ZincElement {
   private selectedRows: any[] = [];
   private tableContainer: Element | undefined;
 
-
   private hasSlotController = new HasSlotController(
     this,
     '[default]',
@@ -202,7 +215,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.modify.valueOf(),
     ActionSlots.create.valueOf(),
     ActionSlots.filter.valueOf(),
-    ActionSlots.sort.valueOf()
+    ActionSlots.sort.valueOf(),
+    ActionSlots.inputs.valueOf()
   );
 
   private _dataTask = new Task(this, {
@@ -214,6 +228,24 @@ export default class ZnDataTable extends ZincElement {
         sortDirection: this.sortDirection,
         filter: this.filter,
       };
+
+      // get all inputs that are in the inputs slot and add them to the
+      const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf());
+      const params: Record<string, any> = {};
+      if (inputs) {
+        inputs.forEach((input) => {
+          const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'input', 'select', 'textarea'];
+          if (allowedInputs.includes(input.tagName.toLowerCase())) {
+            const value = (input as AllowedInputElement).value as string || input.getAttribute('value');
+            const name = (input as AllowedInputElement).name || input.getAttribute('name');
+            if (name) {
+              params[name] = value;
+            }
+          }
+        });
+        Object.assign(requestData, params);
+      }
+
 
       // Add any extra request params
       if (requestParams && typeof requestParams === 'object') {
@@ -240,6 +272,8 @@ export default class ZnDataTable extends ZincElement {
   private rowHasActions: boolean = false;
 
   requestParams: Record<string, any> = {};
+
+  builtinRequestParams: Record<string, any> = {};
 
   refresh() {
     // Allow manual refresh to trigger the first data load when no-initial-load is set
@@ -292,7 +326,8 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
       || this.hasSlotController.test(ActionSlots.filter.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter_top.valueOf());
+      || this.hasSlotController.test(ActionSlots.filter_top.valueOf())
+      || this.hasSlotController.test(ActionSlots.inputs.valueOf());
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -321,12 +356,6 @@ export default class ZnDataTable extends ZincElement {
       this.resizeObserver.disconnect();
     }
     this.removeEventListener('zn-filter-change', this.changeEventListener);
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-
-    // do some magic shit to do some shit that probably doesn't need doing
   }
 
   changeEventListener = (e: ZnFilterChangeEvent) => {
@@ -421,6 +450,7 @@ export default class ZnDataTable extends ZincElement {
   getTableHeader() {
     return html`
       <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
+      <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>
       <div class="table__header">
         <div class="table__header__actions">
           ${this.getActions()}

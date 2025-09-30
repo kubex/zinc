@@ -2,13 +2,22 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
 
+import type ZnDataSelect from "../data-select";
 import type ZnDataTable from "../data-table";
 import type ZnInput from "../input";
+import type ZnQueryBuilder from "../query-builder";
 import type ZnSelect from "../select";
 
 import styles from './filter-wrapper.scss';
 
-type AllowedInputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | ZnInput | ZnSelect
+type AllowedInputElement =
+  HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement
+  | ZnInput
+  | ZnSelect
+  | ZnDataSelect
+  | ZnQueryBuilder
 
 /**
  * @summary Short summary of the component's intended use.
@@ -38,7 +47,7 @@ export default class ZnFilterWrapper extends ZincElement {
     event.preventDefault();
     const dataTable: ZnDataTable | null = this.closest('zn-data-table');
     if (dataTable) {
-      const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-data-select', 'input', 'select', 'textarea'];
+      const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'input', 'select', 'textarea'];
       const inputs = Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[];
       const params: Record<string, any> = {};
       inputs.forEach(input => {

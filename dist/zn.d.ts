@@ -1986,7 +1986,6 @@ declare module "components/data-table/data-table.component" {
         perPage: number;
         total: number;
         page: number;
-        totalPages: number;
     }
     export enum ActionSlots {
         delete = "delete-action",

@@ -1614,6 +1614,48 @@ declare module "components/skeleton/index" {
         }
     }
 }
+declare module "components/data-select/providers/country-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/currency-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const currencyDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/color-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const colors: string[];
+    export const colorDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/country-code-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
+}
+declare module "components/data-select/providers/provider" {
+    import type { HTMLTemplateResult } from "lit";
+    /**
+     * Providers are what the data select component uses to get data. They are
+     * responsible for defining the data.
+     */
+    export interface LocalDataProvider<T> {
+        getName: string;
+        getData: T[];
+    }
+    export interface RemoteDataProvider<T> {
+        getName: string;
+        getData: () => Promise<T[]>;
+    }
+    export interface DataProviderOption {
+        key: string;
+        value: string;
+        prefix?: string | HTMLTemplateResult;
+    }
+    export const emptyDataProvider: LocalDataProvider<DataProviderOption>;
+    export * from "components/data-select/providers/country-data-provider";
+    export * from "components/data-select/providers/currency-data-provider";
+    export * from "components/data-select/providers/color-data-provider";
+    export * from "components/data-select/providers/country-code-data-provider";
+}
 declare module "internal/animate" {
     /**
      * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
@@ -1945,205 +1987,16 @@ declare module "components/select/index" {
         }
     }
 }
-declare module "components/data-table/data-table.component" {
-    import { type CSSResultGroup, type TemplateResult, PropertyValues } from 'lit';
-    import { type ZnFilterChangeEvent } from "events/zn-filter-change";
+declare module "components/data-select/data-select.component" {
+    import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
+    import { FormControlController } from "internal/form";
     import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    import ZnButtonGroup from "components/button-group/index";
-    import ZnChip from "components/chip/index";
-    import ZnConfirm from "components/confirm/index";
-    import ZnDropdown from "components/dropdown/index";
-    import ZnEmptyState from "components/empty-state/index";
-    import ZnHoverContainer from "components/hover-container/index";
-    import ZnMenu from "components/menu/index";
-    import ZnMenuItem from "components/menu-item/index";
-    import ZnSkeleton from "components/skeleton/index";
-    interface Cell {
-        text: string;
-        column: string;
-        color?: string;
-        style?: string;
-        iconSrc?: string;
-        iconColor?: string;
-        hoverContent?: string;
-        hoverPlacement?: string;
-        chipColor?: string;
-        gaid?: string;
-        sortValue?: string;
-        uri?: string;
-        target?: string;
-    }
-    interface Row {
-        id: string;
-        uri?: string;
-        target?: string;
-        actions?: ActionConfig[];
-        cells: Cell[];
-    }
-    interface Response {
-        rows: Row[];
-        perPage: number;
-        total: number;
-        page: number;
-    }
-    export enum ActionSlots {
-        delete = "delete-action",
-        modify = "modify-action",
-        create = "create-action",
-        filter = "filter",
-        filter_top = "filter-top",
-        sort = "sort"
-    }
-    interface ActionConfig {
-        text: string;
-        uri: string;
-        target: string;
-        gaid: string;
-        confirmType: string;
-        confirmTitle: string;
-        confirmContent: string;
-        icon: string;
-        type: string;
-    }
-    interface HeaderConfig {
-        key: string;
-        label: string;
-        required?: boolean;
-        default?: boolean;
-        sortable?: boolean;
-        filterable?: boolean;
-    }
+    import type { CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/data-table
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     * @dependency zn-empty-state
-     * @dependency zn-chip
-     * @dependency zn-hover-container
-     * @dependency zn-dropdown
-     * @dependency zn-menu
-     * @dependency zn-menu-item
-     * @dependency zn-button-group
-     * @dependency zn-confirm
-     * @dependency zn-skeleton
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnDataTable extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-empty-state': typeof ZnEmptyState;
-            'zn-chip': typeof ZnChip;
-            'zn-hover-container': typeof ZnHoverContainer;
-            'zn-dropdown': typeof ZnDropdown;
-            'zn-menu': typeof ZnMenu;
-            'zn-menu-item': typeof ZnMenuItem;
-            'zn-button-group': typeof ZnButtonGroup;
-            'zn-confirm': typeof ZnConfirm;
-            'zn-skeleton': typeof ZnSkeleton;
-        };
-        dataUri: string;
-        data: any;
-        sortColumn: string;
-        sortDirection: string;
-        filter: string;
-        wideColumn: string;
-        key: string;
-        headers: Record<string, HeaderConfig>;
-        hiddenHeaders: string;
-        hiddenColumns: string;
-        unsortableHeaders: string;
-        unsortable: boolean;
-        hidePagination: boolean;
-        standalone: boolean;
-        caption: string;
-        emptyStateCaption: string;
-        emptyStateIcon: string;
-        hideCheckboxes: boolean;
-        filters: [];
-        method: 'GET' | 'POST';
-        noInitialLoad: boolean;
-        private _initialLoad;
-        private _lastTableContent;
-        private resizeObserver;
-        private itemsPerPage;
-        private page;
-        private totalPages;
-        private _rows;
-        private numberOfRowsSelected;
-        private selectedRows;
-        private tableContainer;
-        private hasSlotController;
-        private _dataTask;
-        private rowHasActions;
-        requestParams: Record<string, any>;
-        refresh(): void;
-        render(): TemplateResult<1>;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        changeEventListener: (e: ZnFilterChangeEvent) => void;
-        emptyState(): TemplateResult<1>;
-        renderTable(data: Response): TemplateResult<1>;
-        getTableHeader(): TemplateResult<1>;
-        getTableFooter(): TemplateResult<1>;
-        getRowsSelected(): TemplateResult<1> | null;
-        getPagination(): TemplateResult<1> | null;
-        getActions(): TemplateResult<1>[];
-        goToPage(page: number): void;
-        goToFirstPage(): void;
-        goToPreviousPage(): void;
-        goToNextPage(): void;
-        goToLastPage(): void;
-        updateRowsPerPage(event: Event): void;
-        selectAll(event: Event): void;
-        selectRow(e: PointerEvent): void;
-        clearSelectedRows(event: Event): void;
-        updateSort(key: string): () => void;
-        renderCell(data: Cell): TemplateResult;
-        private updateActionKeys;
-        private getTableSortIcon;
-        private renderCellHeader;
-        private renderCellBody;
-        private getRows;
-        private getSelectedKeys;
-        private updateKeys;
-        private updateModifyKeys;
-        private updateDeleteKeys;
-        private extractComparable;
-        private sortData;
-        private loadingTable;
-        private renderActions;
-    }
-}
-declare module "components/data-table/index" {
-    import ZnDataTable from "components/data-table/data-table.component";
-    export * from "components/data-table/data-table.component";
-    export default ZnDataTable;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-data-table': ZnDataTable;
-        }
-    }
-}
-declare module "components/cols/cols.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/columns
+     * @documentation https://zinc.style/components/data-select
      * @status experimental
      * @since 1.0
      *
@@ -2158,25 +2011,66 @@ declare module "components/cols/cols.component" {
      *
      * @cssproperty --example - An example CSS custom property.
      */
-    export default class ZnCols extends ZincElement {
+    export default class ZnDataSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
-        layout: string;
-        maxColumns: number;
-        noGap: boolean;
-        border: boolean;
-        pad: boolean;
-        padX: boolean;
-        padY: boolean;
-        render(): import("lit").TemplateResult<1>;
+        select: ZnSelect;
+        selectPrefix: HTMLElement;
+        /** The name of the select. Used for form submission. */
+        name: string;
+        /** The value of the select. Used for form submission. */
+        value: string;
+        /** The provider of the select. */
+        provider: 'color' | 'currency' | 'country' | 'phone';
+        iconPosition: 'start' | 'end' | 'none';
+        /** An array of keys to use for filtering the options in the selected provider. */
+        filter: string[];
+        /** The selects size. */
+        size: 'small' | 'medium' | 'large';
+        /** Should we show the clear button */
+        clearable: boolean;
+        /** Include an "All" option at the top. */
+        allowAll: boolean;
+        /** The selects label. If you need to display HTML, use the `label` slot instead. */
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
+        contextNote: string;
+        /**
+         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
+         * inside the viewport.
+         */
+        placement: 'top' | 'bottom';
+        /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /** The selects required attribute. */
+        required: boolean;
+        protected readonly formControlController: FormControlController;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        closeOnTab: (e: KeyboardEvent) => void;
+        handleValueChange(): Promise<void>;
+        handleInput: (e: Event) => void;
+        handleClear: () => void;
+        getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
+        blur: () => void;
+        protected render(): import("lit").TemplateResult<1>;
+        private _updatePrefix;
     }
 }
-declare module "components/cols/index" {
-    import ZnCols from "components/cols/cols.component";
-    export * from "components/cols/cols.component";
-    export default ZnCols;
+declare module "components/data-select/index" {
+    import ZnDataSelect from "components/data-select/data-select.component";
+    export * from "components/data-select/data-select.component";
+    export default ZnDataSelect;
     global {
         interface HTMLElementTagNameMap {
-            'zn-cols': ZnCols;
+            'zn-data-select': ZnDataSelect;
         }
     }
 }
@@ -2394,6 +2288,396 @@ declare module "components/input/index" {
         }
     }
 }
+declare module "utilities/lit-to-html" {
+    import { type TemplateResult } from "lit";
+    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
+}
+declare module "events/zn-change" {
+    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-change': ZnChangeEvent;
+        }
+    }
+}
+declare module "events/zn-input" {
+    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-input': ZnInputEvent;
+        }
+    }
+}
+declare module "components/query-builder/query-builder.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    export type QueryBuilderData = QueryBuilderItem[];
+    export interface QueryBuilderItem {
+        id: string;
+        name: string;
+        type?: QueryBuilderType;
+        options?: QueryBuilderOptions;
+        operators: QueryBuilderOperators[];
+        maxOptionsVisible?: string;
+    }
+    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
+    export interface QueryBuilderOptions {
+        [key: string | number]: string | number;
+    }
+    export enum QueryBuilderOperators {
+        Eq = "eq",
+        Neq = "neq",
+        Eqi = "eqi",
+        Neqi = "neqi",
+        Before = "before",
+        After = "after",
+        In = "in",
+        Nin = "nin",
+        MatchPhrasePre = "matchphrasepre",
+        NMatchPhrasePre = "nmatchphrasepre",
+        MatchPhrase = "matchphrase",
+        NMatchPhrase = "nmatchphrase",
+        Match = "match",
+        NMatch = "nmatch",
+        Contains = "contains",
+        DoesNotContain = "doesnotcontain",
+        Starts = "starts",
+        NStarts = "nstarts",
+        Ends = "ends",
+        NEnds = "nends",
+        Wild = "wild",
+        NWild = "nwild",
+        Like = "like",
+        NLike = "nlike",
+        Fuzzy = "fuzzy",
+        NFuzzy = "nfuzzy",
+        Gte = "gte",
+        Gt = "gt",
+        Lt = "lt",
+        Lte = "lte"
+    }
+    export interface CreatedRule {
+        id: string;
+        name: string;
+        operator: string;
+        value: string;
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/query-builder
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
+        private _selectedRules;
+        private _formController;
+        private _previousOperator;
+        container: HTMLDivElement;
+        addRule: ZnSelect;
+        input: HTMLInputElement;
+        filters: QueryBuilderData;
+        dropdown: boolean;
+        name: string;
+        value: PropertyKey;
+        showValues: string[];
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+        private _handleChange;
+        private _addRule;
+        private _createInput;
+        private _changeValueInput;
+        private _createBooleanInput;
+        private _createNumberInput;
+        private _createDateInput;
+        private _createSelectInput;
+        private _createDefaultInput;
+        private _updateOperatorValue;
+        private _updateDateValue;
+        private _updateValue;
+        private updateInValue;
+        private _changeRule;
+        private _getRulePosition;
+        private _removeRule;
+        clear(): void;
+        reset(): void;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+    }
+}
+declare module "components/query-builder/index" {
+    import ZnQueryBuilder from "components/query-builder/query-builder.component";
+    export * from "components/query-builder/query-builder.component";
+    export default ZnQueryBuilder;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-query-builder': ZnQueryBuilder;
+        }
+    }
+}
+declare module "components/data-table/data-table.component" {
+    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type ZnFilterChangeEvent } from "events/zn-filter-change";
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnButtonGroup from "components/button-group/index";
+    import ZnChip from "components/chip/index";
+    import ZnConfirm from "components/confirm/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnEmptyState from "components/empty-state/index";
+    import ZnHoverContainer from "components/hover-container/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import ZnSkeleton from "components/skeleton/index";
+    interface Cell {
+        text: string;
+        column: string;
+        color?: string;
+        style?: string;
+        iconSrc?: string;
+        iconColor?: string;
+        hoverContent?: string;
+        hoverPlacement?: string;
+        chipColor?: string;
+        gaid?: string;
+        sortValue?: string;
+        uri?: string;
+        target?: string;
+    }
+    interface Row {
+        id: string;
+        uri?: string;
+        target?: string;
+        actions?: ActionConfig[];
+        cells: Cell[];
+    }
+    interface Response {
+        rows: Row[];
+        perPage: number;
+        total: number;
+        page: number;
+    }
+    export enum ActionSlots {
+        delete = "delete-action",
+        modify = "modify-action",
+        create = "create-action",
+        filter = "filter",
+        filter_top = "filter-top",
+        sort = "sort",
+        inputs = "inputs"
+    }
+    interface ActionConfig {
+        text: string;
+        uri: string;
+        target: string;
+        gaid: string;
+        confirmType: string;
+        confirmTitle: string;
+        confirmContent: string;
+        icon: string;
+        type: string;
+    }
+    interface HeaderConfig {
+        key: string;
+        label: string;
+        required?: boolean;
+        default?: boolean;
+        sortable?: boolean;
+        filterable?: boolean;
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/data-table
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-empty-state
+     * @dependency zn-chip
+     * @dependency zn-hover-container
+     * @dependency zn-dropdown
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     * @dependency zn-button-group
+     * @dependency zn-confirm
+     * @dependency zn-skeleton
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnDataTable extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-empty-state': typeof ZnEmptyState;
+            'zn-chip': typeof ZnChip;
+            'zn-hover-container': typeof ZnHoverContainer;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
+            'zn-button-group': typeof ZnButtonGroup;
+            'zn-confirm': typeof ZnConfirm;
+            'zn-skeleton': typeof ZnSkeleton;
+        };
+        dataUri: string;
+        data: any;
+        sortColumn: string;
+        sortDirection: string;
+        filter: string;
+        wideColumn: string;
+        key: string;
+        headers: Record<string, HeaderConfig>;
+        hiddenHeaders: string;
+        hiddenColumns: string;
+        unsortableHeaders: string;
+        unsortable: boolean;
+        hidePagination: boolean;
+        standalone: boolean;
+        caption: string;
+        emptyStateCaption: string;
+        emptyStateIcon: string;
+        hideCheckboxes: boolean;
+        filters: [];
+        method: 'GET' | 'POST';
+        noInitialLoad: boolean;
+        private _initialLoad;
+        private _lastTableContent;
+        private resizeObserver;
+        private itemsPerPage;
+        private page;
+        private totalPages;
+        private _rows;
+        private numberOfRowsSelected;
+        private selectedRows;
+        private tableContainer;
+        private hasSlotController;
+        private _dataTask;
+        private rowHasActions;
+        requestParams: Record<string, any>;
+        builtinRequestParams: Record<string, any>;
+        refresh(): void;
+        render(): TemplateResult<1>;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        changeEventListener: (e: ZnFilterChangeEvent) => void;
+        emptyState(): TemplateResult<1>;
+        renderTable(data: Response): TemplateResult<1>;
+        getTableHeader(): TemplateResult<1>;
+        getTableFooter(): TemplateResult<1>;
+        getRowsSelected(): TemplateResult<1> | null;
+        getPagination(): TemplateResult<1> | null;
+        getActions(): TemplateResult<1>[];
+        goToPage(page: number): void;
+        goToFirstPage(): void;
+        goToPreviousPage(): void;
+        goToNextPage(): void;
+        goToLastPage(): void;
+        updateRowsPerPage(event: Event): void;
+        selectAll(event: Event): void;
+        selectRow(e: PointerEvent): void;
+        clearSelectedRows(event: Event): void;
+        updateSort(key: string): () => void;
+        renderCell(data: Cell): TemplateResult;
+        private updateActionKeys;
+        private getTableSortIcon;
+        private renderCellHeader;
+        private renderCellBody;
+        private getRows;
+        private getSelectedKeys;
+        private updateKeys;
+        private updateModifyKeys;
+        private updateDeleteKeys;
+        private extractComparable;
+        private sortData;
+        private loadingTable;
+        private renderActions;
+    }
+}
+declare module "components/data-table/index" {
+    import ZnDataTable from "components/data-table/data-table.component";
+    export * from "components/data-table/data-table.component";
+    export default ZnDataTable;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table': ZnDataTable;
+        }
+    }
+}
+declare module "components/cols/cols.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/columns
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnCols extends ZincElement {
+        static styles: CSSResultGroup;
+        layout: string;
+        maxColumns: number;
+        noGap: boolean;
+        border: boolean;
+        pad: boolean;
+        padX: boolean;
+        padY: boolean;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/cols/index" {
+    import ZnCols from "components/cols/cols.component";
+    export * from "components/cols/cols.component";
+    export default ZnCols;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-cols': ZnCols;
+        }
+    }
+}
 declare module "components/defined-label/defined-label.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -2457,48 +2741,6 @@ declare module "components/defined-label/index" {
             'zn-defined-label': ZnDefinedLabel;
         }
     }
-}
-declare module "components/data-select/providers/country-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const countryDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/currency-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const currencyDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/country-code-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
-}
-declare module "components/data-select/providers/provider" {
-    import type { HTMLTemplateResult } from "lit";
-    /**
-     * Providers are what the data select component uses to get data. They are
-     * responsible for defining the data.
-     */
-    export interface LocalDataProvider<T> {
-        getName: string;
-        getData: T[];
-    }
-    export interface RemoteDataProvider<T> {
-        getName: string;
-        getData: () => Promise<T[]>;
-    }
-    export interface DataProviderOption {
-        key: string;
-        value: string;
-        prefix?: string | HTMLTemplateResult;
-    }
-    export const emptyDataProvider: LocalDataProvider<DataProviderOption>;
-    export * from "components/data-select/providers/country-data-provider";
-    export * from "components/data-select/providers/currency-data-provider";
-    export * from "components/data-select/providers/color-data-provider";
-    export * from "components/data-select/providers/country-code-data-provider";
-}
-declare module "components/data-select/providers/color-data-provider" {
-    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const colors: string[];
-    export const colorDataProvider: LocalDataProvider<DataProviderOption>;
 }
 declare module "components/note/note.component" {
     import { type colors } from "components/data-select/providers/color-data-provider";
@@ -3563,160 +3805,6 @@ declare module "components/scroll-container/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-scroll-container': ZnScrollContainer;
-        }
-    }
-}
-declare module "utilities/lit-to-html" {
-    import { type TemplateResult } from "lit";
-    export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
-}
-declare module "events/zn-change" {
-    export type ZnChangeEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-change': ZnChangeEvent;
-        }
-    }
-}
-declare module "events/zn-input" {
-    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-input': ZnInputEvent;
-        }
-    }
-}
-declare module "components/query-builder/query-builder.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnButton from "components/button/index";
-    import ZnInput from "components/input/index";
-    import ZnOption from "components/option/index";
-    import ZnSelect from "components/select/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    export type QueryBuilderData = QueryBuilderItem[];
-    export interface QueryBuilderItem {
-        id: string;
-        name: string;
-        type?: QueryBuilderType;
-        options?: QueryBuilderOptions;
-        operators: QueryBuilderOperators[];
-        maxOptionsVisible?: string;
-    }
-    export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
-    export interface QueryBuilderOptions {
-        [key: string | number]: string | number;
-    }
-    export enum QueryBuilderOperators {
-        Eq = "eq",
-        Neq = "neq",
-        Eqi = "eqi",
-        Neqi = "neqi",
-        Before = "before",
-        After = "after",
-        In = "in",
-        Nin = "nin",
-        MatchPhrasePre = "matchphrasepre",
-        NMatchPhrasePre = "nmatchphrasepre",
-        MatchPhrase = "matchphrase",
-        NMatchPhrase = "nmatchphrase",
-        Match = "match",
-        NMatch = "nmatch",
-        Contains = "contains",
-        DoesNotContain = "doesnotcontain",
-        Starts = "starts",
-        NStarts = "nstarts",
-        Ends = "ends",
-        NEnds = "nends",
-        Wild = "wild",
-        NWild = "nwild",
-        Like = "like",
-        NLike = "nlike",
-        Fuzzy = "fuzzy",
-        NFuzzy = "nfuzzy",
-        Gte = "gte",
-        Gt = "gt",
-        Lt = "lt",
-        Lte = "lte"
-    }
-    export interface CreatedRule {
-        id: string;
-        name: string;
-        operator: string;
-        value: string;
-    }
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/query-builder
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     * @dependency zn-input
-     * @dependency zn-option
-     * @dependency zn-select
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnQueryBuilder extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-button': typeof ZnButton;
-            'zn-input': typeof ZnInput;
-            'zn-option': typeof ZnOption;
-            'zn-select': typeof ZnSelect;
-        };
-        private _selectedRules;
-        private _formController;
-        private _previousOperator;
-        container: HTMLDivElement;
-        addRule: ZnSelect;
-        input: HTMLInputElement;
-        filters: QueryBuilderData;
-        dropdown: boolean;
-        name: string;
-        value: PropertyKey;
-        showValues: string[];
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
-        private _handleChange;
-        private _addRule;
-        private _createInput;
-        private _changeValueInput;
-        private _createBooleanInput;
-        private _createNumberInput;
-        private _createDateInput;
-        private _createSelectInput;
-        private _createDefaultInput;
-        private _updateOperatorValue;
-        private _updateDateValue;
-        private _updateValue;
-        private updateInValue;
-        private _changeRule;
-        private _getRulePosition;
-        private _removeRule;
-        clear(): void;
-        reset(): void;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-    }
-}
-declare module "components/query-builder/index" {
-    import ZnQueryBuilder from "components/query-builder/query-builder.component";
-    export * from "components/query-builder/query-builder.component";
-    export default ZnQueryBuilder;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-query-builder': ZnQueryBuilder;
         }
     }
 }
@@ -5635,93 +5723,6 @@ declare module "components/item/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-item': ZnItem;
-        }
-    }
-}
-declare module "components/data-select/data-select.component" {
-    import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
-    import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnSelect from "components/select/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/data-select
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnDataSelect extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        select: ZnSelect;
-        selectPrefix: HTMLElement;
-        /** The name of the select. Used for form submission. */
-        name: string;
-        /** The value of the select. Used for form submission. */
-        value: string;
-        /** The provider of the select. */
-        provider: 'color' | 'currency' | 'country' | 'phone';
-        iconPosition: 'start' | 'end' | 'none';
-        /** An array of keys to use for filtering the options in the selected provider. */
-        filter: string[];
-        /** The selects size. */
-        size: 'small' | 'medium' | 'large';
-        /** Should we show the clear button */
-        clearable: boolean;
-        /** Include an "All" option at the top. */
-        allowAll: boolean;
-        /** The selects label. If you need to display HTML, use the `label` slot instead. */
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-        labelTooltip: string;
-        /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
-        contextNote: string;
-        /**
-         * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
-         * inside the viewport.
-         */
-        placement: 'top' | 'bottom';
-        /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
-        helpText: string;
-        /** The selects required attribute. */
-        required: boolean;
-        protected readonly formControlController: FormControlController;
-        get validationMessage(): string;
-        get validity(): ValidityState;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-        closeOnTab: (e: KeyboardEvent) => void;
-        handleValueChange(): Promise<void>;
-        handleInput: (e: Event) => void;
-        handleClear: () => void;
-        getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
-        blur: () => void;
-        protected render(): import("lit").TemplateResult<1>;
-        private _updatePrefix;
-    }
-}
-declare module "components/data-select/index" {
-    import ZnDataSelect from "components/data-select/data-select.component";
-    export * from "components/data-select/data-select.component";
-    export default ZnDataSelect;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-data-select': ZnDataSelect;
         }
     }
 }

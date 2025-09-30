@@ -5027,13 +5027,13 @@
               "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
-              "default": "new HasSlotController( this, '[default]', 'search-action', ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf() )"
+              "default": "new HasSlotController( this, '[default]', 'search-action', ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf() )"
             },
             {
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, }; // Add any extra request params if (requestParams && typeof requestParams === 'object') { Object.assign(requestData, requestParams); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
+              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, }; // get all inputs that are in the inputs slot and add them to the const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf()); const params: Record<string, any> = {}; if (inputs) { inputs.forEach((input) => { const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'input', 'select', 'textarea']; if (allowedInputs.includes(input.tagName.toLowerCase())) { const value = (input as AllowedInputElement).value as string || input.getAttribute('value'); const name = (input as AllowedInputElement).name || input.getAttribute('name'); if (name) { params[name] = value; } } }); Object.assign(requestData, params); } // Add any extra request params if (requestParams && typeof requestParams === 'object') { Object.assign(requestData, requestParams); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
             },
             {
               "kind": "field",
@@ -5047,6 +5047,14 @@
             {
               "kind": "field",
               "name": "requestParams",
+              "type": {
+                "text": "Record<string, any>"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "builtinRequestParams",
               "type": {
                 "text": "Record<string, any>"
               },

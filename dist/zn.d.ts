@@ -2075,6 +2075,7 @@ declare module "components/data-table/data-table.component" {
         hideCheckboxes: boolean;
         filters: [];
         method: 'GET' | 'POST';
+        noInitialLoad: boolean;
         private _initialLoad;
         private _lastTableContent;
         private resizeObserver;
@@ -2088,6 +2089,8 @@ declare module "components/data-table/data-table.component" {
         private hasSlotController;
         private _dataTask;
         private rowHasActions;
+        requestParams: Record<string, any>;
+        refresh(): void;
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -6146,6 +6149,46 @@ declare module "components/content-block/index" {
         }
     }
 }
+declare module "components/filter-wrapper/filter-wrapper.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/filter-wrapper
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnFilterWrapper extends ZincElement {
+        static styles: CSSResultGroup;
+        button: string;
+        private hasSubmitButton;
+        handleSubmit(event: Event): void;
+        connectedCallback(): void;
+        private renderDefaultButton;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/filter-wrapper/index" {
+    import ZnFilterWrapper from "components/filter-wrapper/filter-wrapper.component";
+    export * from "components/filter-wrapper/filter-wrapper.component";
+    export default ZnFilterWrapper;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-filter-wrapper': ZnFilterWrapper;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6280,6 +6323,7 @@ declare module "zinc" {
     export { default as Skeleton } from "components/skeleton/index";
     export { default as Style } from "components/style/index";
     export { default as ContentBlock } from "components/content-block/index";
+    export { default as FilterWrapper } from "components/filter-wrapper/index";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-command-select" {

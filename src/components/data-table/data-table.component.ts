@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS, PropertyValues} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
@@ -63,6 +63,7 @@ export enum ActionSlots {
   modify = 'modify-action',
   create = 'create-action',
   filter = 'filter',
+  filter_top = 'filter-top',
   sort = 'sort',
 }
 
@@ -139,7 +140,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'data-uri'}) dataUri: string;
   @property({attribute: 'data', type: Object, reflect: true}) data: any;
   @property({attribute: 'sort-column'}) sortColumn: string;
-  @property({attribute: 'sort-direction'}) sortDirection: string;
+  @property({attribute: 'sort-direction'}) sortDirection: string = "asc";
   @property({attribute: 'filter'}) filter: string = '';
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
@@ -163,11 +164,14 @@ export default class ZnDataTable extends ZincElement {
   @property({type: Boolean}) standalone: boolean = false;
 
   @property() caption: string;
+
   @property({attribute: "empty-state-caption"}) emptyStateCaption: string;
+
   @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
   // Hide the checkbox column
   @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
+
   @property() filters: [] = [];
 
   @property() method: 'GET' | 'POST' = 'POST';
@@ -265,7 +269,8 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter.valueOf());
+      || this.hasSlotController.test(ActionSlots.filter.valueOf())
+      || this.hasSlotController.test(ActionSlots.filter_top.valueOf());
 
     // Headers do not need to be re-rendered with new data
     return html`
@@ -294,6 +299,12 @@ export default class ZnDataTable extends ZincElement {
       this.resizeObserver.disconnect();
     }
     this.removeEventListener('zn-filter-change', this.changeEventListener);
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+
+    // do some magic shit to do some shit that probably doesn't need doing
   }
 
   changeEventListener = (e: ZnFilterChangeEvent) => {
@@ -330,10 +341,7 @@ export default class ZnDataTable extends ZincElement {
 
     const hasSelectedRows = this.selectedRows.length > 0;
 
-    const rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
-    if (rowHasActions) {
-      this.rowHasActions = true;
-    }
+    this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
 
     return html`
       <div style="overflow-x: auto">
@@ -374,6 +382,7 @@ export default class ZnDataTable extends ZincElement {
 
   getTableHeader() {
     return html`
+      <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
       <div class="table__header">
         <div class="table__header__actions">
           ${this.getActions()}
@@ -550,22 +559,6 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-
-  private updateActionKeys(slotName: string) {
-    if (this.hasSlotController.test(slotName)) {
-      // we need to look into the slot controller for the keys input
-      const slots = this.hasSlotController.getSlots(slotName);
-      if (slots) {
-        slots.forEach((slot) => {
-          const input = slot.querySelector('input[name="keys"]');
-          if (input && input instanceof HTMLInputElement) {
-            input.value = this.getSelectedKeys().join(',');
-          }
-        });
-      }
-    }
-  }
-
   selectRow(e: PointerEvent) {
     if (!(e.target && (e.target instanceof Element))) {
       return;
@@ -684,6 +677,21 @@ export default class ZnDataTable extends ZincElement {
     }
 
     return data;
+  }
+
+  private updateActionKeys(slotName: string) {
+    if (this.hasSlotController.test(slotName)) {
+      // we need to look into the slot controller for the keys input
+      const slots = this.hasSlotController.getSlots(slotName);
+      if (slots) {
+        slots.forEach((slot) => {
+          const input = slot.querySelector('input[name="keys"]');
+          if (input && input instanceof HTMLInputElement) {
+            input.value = this.getSelectedKeys().join(',');
+          }
+        });
+      }
+    }
   }
 
   private getTableSortIcon(key: any) {
@@ -903,6 +911,10 @@ export default class ZnDataTable extends ZincElement {
       // return an empty cell to keep the table structure
       return html`
         <td></td>`;
+    }
+
+    if (!row.actions || row.actions.length === 0) {
+      return html``;
     }
 
     return html`

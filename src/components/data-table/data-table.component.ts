@@ -28,7 +28,7 @@ const DEFAULT_PER_PAGE = 10;
 
 interface Cell {
   text: string;
-  heading?: string;
+  column: string;
   color?: string;
   style?: string;
   iconSrc?: string;
@@ -362,8 +362,24 @@ export default class ZnDataTable extends ZincElement {
     this._rows = this.getRows(data);
 
     const hasSelectedRows = this.selectedRows.length > 0;
-
     this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
+
+    // To make sure the cells are in the same order as the headers, we need to map them cell.col to heading.key
+    this._rows.forEach((row: Row) => {
+      const orderedCells: Cell[] = [];
+      // const unorderedCells = row.cells.filter((c: Cell) => !filteredHeaders.some((h: HeaderConfig) => h.key === c.column));
+
+      filteredHeaders.forEach((header: HeaderConfig) => {
+        const cell = row.cells.find((c: Cell) => c.column === header.key);
+        if (cell) {
+          orderedCells.push(cell);
+        } else {
+          orderedCells.push({text: '', column: header.key});
+        }
+      });
+
+      row.cells = orderedCells;//.concat(unorderedCells);
+    });
 
     return html`
       <div style="overflow-x: auto">
@@ -738,7 +754,6 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(header: HeaderConfig) {
-
     const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable;
     const lastHeader = Object.keys(this.headers).filter((key) => !Object.values(this.hiddenColumns).includes(key)).slice(-1)[0];
     const lastHeaderKey = lastHeader ? this.headers[lastHeader].key : '';
@@ -787,7 +802,7 @@ export default class ZnDataTable extends ZincElement {
 
       sourceRows.sort((rowA: Row, rowB: Row) => {
         const getCellForSort = (row: Row): Cell => {
-          const byHeading = row.cells.find((cell: Cell) => cell.heading === this.sortColumn);
+          const byHeading = row.cells.find((cell: Cell) => cell.column === this.sortColumn);
           if (byHeading !== undefined) return byHeading as unknown as Cell;
           return row.cells[sortIndex];
         };

@@ -1961,7 +1961,7 @@ declare module "components/data-table/data-table.component" {
     import ZnSkeleton from "components/skeleton/index";
     interface Cell {
         text: string;
-        heading?: string;
+        column: string;
         color?: string;
         style?: string;
         iconSrc?: string;

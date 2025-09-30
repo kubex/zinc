@@ -5,7 +5,7 @@ import {litToHTML} from "../../../../utilities/lit-to-html";
 import Quill from "quill";
 import type {Range} from "quill";
 import type AIPanelComponent from "./panel/ai-panel.component";
-import type AITooltipComponent from "./tooltip/ai-tooltip.component";
+import AITooltipComponent from "./tooltip/ai-tooltip.component";
 
 class QuillAI {
   private _quill: Quill;
@@ -160,7 +160,20 @@ class QuillAI {
     const range = this._quill.getSelection();
     if (!range) return;
 
-    const positionTooltip = () => {
+    if (this._component instanceof AITooltipComponent) {
+      const editorBounds = this._quill.container.getBoundingClientRect();
+      const endIndex = range.index + range.length;
+      const bounds = this._quill.getBounds(endIndex);
+      if (!bounds) return;
+
+      const left = editorBounds.left + bounds.left - 10; // Slight offset to the left
+      const top = editorBounds.top + bounds.bottom + 4;
+      this._setPosition(left, top);
+
+      return;
+    }
+
+    const positionPanel = () => {
       const editorBounds = this._quill.container.getBoundingClientRect();
       let bounds;
       if (range.length === this._quill.getLength() - 1) {
@@ -179,11 +192,12 @@ class QuillAI {
         return;
       }
 
+
       this._setPosition(right - this._component.offsetWidth, top);
     };
 
-    // Defer positioning to ensure the component is fully rendered
-    requestAnimationFrame(positionTooltip);
+    // Defer positioning to ensure the panel is fully rendered
+    requestAnimationFrame(positionPanel);
   }
 
   private _setPosition(left: number, top: number) {

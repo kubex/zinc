@@ -442,8 +442,7 @@
           <ul>
             <li class="top"><a href="#">Data Table</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#custom-empty-state">Custom Empty State</a></li>
-            <li data-level="3"><a href="#custom-filter-actions">Custom Filter Actions</a></li>
+            <li data-level="3"><a href="#filter-top-slot-with-tabs">Filter-top Slot with Tabs</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
@@ -553,110 +552,13 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="custom-empty-state" class="anchor-heading">
-            Custom Empty State<a href="#custom-empty-state" aria-label='Direct link to "Custom Empty State"'></a>
-          </h3>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-data-table
-                data-uri="/data/data-table.json"
-                standalone=""
-                hide-checkboxes=""
-                method="GET"
-                headers='[{"key":"label","label":"ID", "required":true, "default": true},
-{"key":"One","label":"Name", "required":true, "default": true, "sortable":true, "filterable":true},
-{"key":"Two","label":"Name", "required":true, "default": true, "sortable":true, "filterable":true},
-{"key":"Three","label":"Name", "required":true, "default": true, "sortable":true, "filterable":true},
-{"key":"Four","label":"Name", "required":true, "default": true, "sortable":true, "filterable":true}]'
-              >
-                <zn-empty-state slot="empty">
-                  <zn-button>Create new customer</zn-button>
-                </zn-empty-state>
-
-                <zn-data-table-sort slot="sort">
-                  <!-- Need to configure default, and available sort columns
-     Future enhancement: allow multi-column sort !-->
-                </zn-data-table-sort>
-
-                <zn-data-table-filter auto-submit="true" debounce="1000" slot="filter">
-                  <!-- Allow auto submit on filter change with debounce 
-     Should be possible to build your own forms for filtering here 
-     Current filter builder could be a different component as a query-builder, that can expand -->
-                  <zn-input
-                    name="search"
-                    placeholder="Search customers..."
-                    icon="search"
-                    debounce="300"
-                    clearable=""
-                  ></zn-input>
-                </zn-data-table-filter>
-              </zn-data-table>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-84">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-144">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/data-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">standalone</span> <span class="token attr-name">hide-checkboxes</span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span>
-               <span class="token attr-name">headers</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label&amp;quot,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>ID<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>required<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>default<span class="token entity named-entity" title="&quot;">&amp;quot;</span>: true},
-{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>One<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>required<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>default<span class="token entity named-entity" title="&quot;">&amp;quot;</span>: true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>sortable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>filterable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true},
-{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Two<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>required<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>default<span class="token entity named-entity" title="&quot;">&amp;quot;</span>: true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>sortable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>filterable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true},
-{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Three<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>required<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>default<span class="token entity named-entity" title="&quot;">&amp;quot;</span>: true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>sortable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>filterable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true},
-{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Four<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>required<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>default<span class="token entity named-entity" title="&quot;">&amp;quot;</span>: true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>sortable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true, <span class="token entity named-entity" title="&quot;">&amp;quot;</span>filterable<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:true}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-empty-state</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empty<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Create new customer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-empty-state</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-sort</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sort<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- Need to configure default, and available sort columns
-     Future enhancement: allow multi-column sort !--&gt;</span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-sort</span><span class="token punctuation">&gt;</span></span>
-
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span> <span class="token attr-name">auto-submit</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span> <span class="token attr-name">debounce</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1000<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filter<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- Allow auto submit on filter change with debounce 
-     Should be possible to build your own forms for filtering here 
-     Current filter builder could be a different component as a query-builder, that can expand --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>search<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Search customers...<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>search<span class="token punctuation">"</span></span> <span class="token attr-name">debounce</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-144"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-84"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 id="custom-filter-actions" class="anchor-heading">
-            Custom Filter Actions<a
-              href="#custom-filter-actions"
-              aria-label='Direct link to "Custom Filter Actions"'
+          <h3 id="filter-top-slot-with-tabs" class="anchor-heading">
+            Filter-top Slot with Tabs<a
+              href="#filter-top-slot-with-tabs"
+              aria-label='Direct link to "Filter-top Slot with Tabs"'
             ></a>
           </h3>
+          <p>Add complex filtering options to the top of the table using the <code>filter-top</code> slot.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -710,9 +612,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-85">
+            <div class="code-preview__source-group" id="code-preview-source-group-84">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-145">
+                <pre><code class="language-html" id="code-block-144">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/products-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">standalone</span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span>
                <span class="token attr-name">headers</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},
   {<span class="token entity named-entity" title="&quot;">&amp;quot;</span>key<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>label<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},
@@ -754,7 +656,7 @@
 
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-145"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-144"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -763,7 +665,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-85"
+                aria-controls="code-preview-source-group-84"
               >
                 Source
                 <svg
@@ -801,7 +703,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-146"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-146"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-145"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-145"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -816,12 +718,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-147"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-147"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-146"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.4/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-146"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-148"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-148"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-147"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-147"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

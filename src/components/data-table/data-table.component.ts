@@ -55,7 +55,6 @@ interface Response {
   perPage: number;
   total: number;
   page: number;
-  totalPages: number;
 }
 
 export enum ActionSlots {
@@ -445,6 +444,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getPagination() {
+
+    console.log('totalPages', this.totalPages, this._rows.length, this.itemsPerPage);
+
     if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
     const optionsRowsPerPage = [10, 20, 30, 40, 50];

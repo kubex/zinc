@@ -60,19 +60,31 @@ class QuillAI {
         panel.style.width = '300px';
         panel.innerHTML = result as string;
 
-        // Append two zn-button elements for Accept and Retry
         const actionButtons = document.createElement('div');
         actionButtons.style.display = 'flex';
-        actionButtons.style.justifyContent = 'flex-end';
+        actionButtons.style.justifyContent = 'space-between';
         actionButtons.style.gap = '10px';
         actionButtons.style.padding = '10px';
 
-        const acceptButton = document.createElement('zn-button');
-        acceptButton.setAttribute('variant', 'primary');
-        acceptButton.textContent = 'Accept';
+        const acceptButton = document.createElement('zn-split-button');
+        acceptButton.setAttribute('name', 'button');
+        acceptButton.setAttribute('value', 'replace-text');
+        acceptButton.setAttribute('caption', 'Replace');
+        acceptButton.setAttribute('class', 'ml-auto');
+        acceptButton.setAttribute('slot', 'actions');
+
+        const menu = document.createElement('zn-menu');
+        menu.setAttribute('slot', 'menu');
+
+        const menuItem = document.createElement('zn-menu-item');
+        menuItem.setAttribute('value', 'insert-text');
+        menuItem.textContent = 'Insert';
+
+        menu.appendChild(menuItem);
+        acceptButton.appendChild(menu);
+
         acceptButton.addEventListener('click', () => {
           const range = this._quill.getSelection();
-          // Replace selected text with AI response
           if (range) {
             this._quill.deleteText(range.index, range.length);
             this._quill.insertText(range.index, panel?.innerText || '');
@@ -175,15 +187,30 @@ class QuillAI {
     const range = this._quill.getSelection();
     if (!range) return;
 
-    // Position at the end of the selection (last character)
-    const endIndex = range.index + range.length;
-    const bounds = this._quill.getBounds(endIndex);
-    if (!bounds) return;
+    const positionTooltip = () => {
+      const editorBounds = this._quill.container.getBoundingClientRect();
+      let bounds;
+      if (range.length === this._quill.getLength() - 1) {
+        bounds = this._quill.getBounds(range.index, range.length);
+      } else {
+        const endIndex = range.index + range.length;
+        bounds = this._quill.getBounds(endIndex);
+      }
+      if (!bounds) return;
 
-    const editorBounds = this._quill.container.getBoundingClientRect();
-    const left = editorBounds.left + bounds.left - 10; // Slight offset to the left
-    const top = editorBounds.top + bounds.bottom + 4;
-    this._setPosition(left, top);
+      const right = editorBounds.left + bounds.right; // Align right side
+      const top = editorBounds.top + bounds.top - this._component.offsetHeight - 4; // Position above the selection
+
+      if (right + this._component.offsetWidth > window.innerWidth) {
+        this._setPosition(window.innerWidth - this._component.offsetWidth - 10, top);
+        return;
+      }
+
+      this._setPosition(right - this._component.offsetWidth, top);
+    };
+
+    // Defer positioning to ensure the component is fully rendered
+    requestAnimationFrame(positionTooltip);
   }
 
   private _setPosition(left: number, top: number) {

@@ -30,13 +30,44 @@ fullWidth: true
 
 ## Examples
 
+### Filter-top Slot
+
+Add complex filtering options to the top of the table using the `filter-top` slot.
+
+```html:preview
+
+<zn-data-table data-uri="/data/products-table.json" method="GET"
+               no-initial-load
+               headers="[{&quot;key&quot;:&quot;name&quot;,&quot;label&quot;:&quot;Name&quot;},
+  {&quot;key&quot;:&quot;category&quot;,&quot;label&quot;:&quot;Category&quot;},
+  {&quot;key&quot;:&quot;price&quot;,&quot;label&quot;:&quot;Price&quot;},
+  {&quot;key&quot;:&quot;discountPercentage&quot;,&quot;label&quot;:&quot;Discount %&quot;},
+  {&quot;key&quot;:&quot;stock&quot;,&quot;label&quot;:&quot;Stock&quot;},
+  {&quot;key&quot;:&quot;rating&quot;,&quot;label&quot;:&quot;Rating&quot;}]">
+
+  <zn-empty-state slot="empty-state" icon="inventory_2" caption="No products found">
+    <p>Use the filters to search for products</p>
+  </zn-empty-state>
+
+  <zn-filter-wrapper slot="filter-top" button="Submit">
+    <div class="form-spacing">
+      <zn-input type="price" name="price" label="Price" span="3"></zn-input>
+      <zn-select name="category" span="3" label="Category" clearable>
+        <zn-option value="beauty">Beauty</zn-option>
+      </zn-select>
+      <zn-button type="primary" submit>Search</zn-button>
+    </div>
+  </zn-filter-wrapper>
+</zn-data-table>
+```
+
 ### Filter-top Slot with Tabs
 
 Add complex filtering options to the top of the table using the `filter-top` slot.
 
 ```html:preview
 
-<zn-data-table data-uri="/data/products-table.json" standalone method="GET"
+<zn-data-table data-uri="/data/products-table.json" method="GET"
                headers="[{&quot;key&quot;:&quot;name&quot;,&quot;label&quot;:&quot;Name&quot;},
   {&quot;key&quot;:&quot;category&quot;,&quot;label&quot;:&quot;Category&quot;},
   {&quot;key&quot;:&quot;price&quot;,&quot;label&quot;:&quot;Price&quot;},
@@ -52,25 +83,27 @@ Add complex filtering options to the top of the table using the `filter-top` slo
       </zn-navbar>
 
       <zn-sp gap="sm">
-        <zn-form-group
-          label="Quick Search"
-          label-tooltip="Quickly filter results in the table"
-          help-text="Use the fields to filter results in the table, then click Search">
-          <zn-input type="price" name="price" label="Price" span="3"></zn-input>
-          <zn-select name="category" span="3" label="Category" clearable>
-            <zn-option value="beauty">Beauty</zn-option>
-          </zn-select>
-        </zn-form-group>
-
-        <zn-button type="submit">Search</zn-button>
+        <zn-filter-wrapper with-submit>
+          <zn-form-group
+            label="Quick Search"
+            label-tooltip="Quickly filter results in the table"
+            help-text="Use the fields to filter results in the table, then click Search">
+            <zn-input type="price" name="price" label="Price" span="3"></zn-input>
+            <zn-select name="category" span="3" label="Category" clearable>
+              <zn-option value="beauty">Beauty</zn-option>
+            </zn-select>
+          </zn-form-group>
+        </zn-filter-wrapper>
       </zn-sp>
 
       <zn-sp id="product" flush-y>
-        <zn-query-builder
-          filters="[{&quot;id&quot;:&quot;title&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;: [&quot;eq&quot;]},
+        <zn-filter-wrapper with-submit>
+          <zn-filter-builder
+            filters="[{&quot;id&quot;:&quot;title&quot;,&quot;name&quot;:&quot;Title&quot;,&quot;operators&quot;: [&quot;eq&quot;]},
   {&quot;id&quot;:&quot;category&quot;,&quot;name&quot;:&quot;Category&quot;,&quot;options&quot;:{&quot;beauty&quot;:&quot;Beauty&quot;},&quot;operators&quot;:[&quot;eq&quot;]}]"
-          name="query"></zn-query-builder>
-        <zn-button type="submit">Submit</zn-button>
+            name="query">
+          </zn-filter-builder>
+        </zn-filter-wrapper>
       </zn-sp>
     </zn-tabs>
   </zn-panel>

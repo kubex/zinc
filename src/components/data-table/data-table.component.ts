@@ -176,6 +176,8 @@ export default class ZnDataTable extends ZincElement {
 
   @property() method: 'GET' | 'POST' = 'POST';
 
+  @property({attribute: "no-initial-load", type: Boolean}) noInitialLoad: boolean = false;
+
   // Data Table Properties
   private _initialLoad = true;
   private _lastTableContent: TemplateResult = html``;
@@ -192,6 +194,7 @@ export default class ZnDataTable extends ZincElement {
   private selectedRows: any[] = [];
   private tableContainer: Element | undefined;
 
+
   private hasSlotController = new HasSlotController(
     this,
     '[default]',
@@ -204,7 +207,7 @@ export default class ZnDataTable extends ZincElement {
   );
 
   private _dataTask = new Task(this, {
-    task: async ([dataUri], {signal}) => {
+    task: async ([dataUri, requestParams], {signal}) => {
       const requestData: DataRequest = {
         page: this.page,
         perPage: this.itemsPerPage,
@@ -212,6 +215,11 @@ export default class ZnDataTable extends ZincElement {
         sortDirection: this.sortDirection,
         filter: this.filter,
       };
+
+      // Add any extra request params
+      if (requestParams && typeof requestParams === 'object') {
+        Object.assign(requestData, requestParams);
+      }
 
       // This is also used for Rubix, so it may not work for your application.
       const response = await fetch(dataUri, {
@@ -227,43 +235,58 @@ export default class ZnDataTable extends ZincElement {
       if (!response.ok) throw new Error(response.statusText);
       return response.json();
     },
-    args: () => [this.dataUri]
+    args: () => [this.dataUri, this.requestParams]
   });
 
   private rowHasActions: boolean = false;
 
+  requestParams: Record<string, any> = {};
+
+  refresh() {
+    // Allow manual refresh to trigger the first data load when no-initial-load is set
+    this._initialLoad = false;
+    this._dataTask.run().then(r => r);
+  }
+
   render() {
-    const tableBody = this._dataTask.render({
-      pending: () => {
-        if (this._initialLoad) {
-          return html`
-            <div>${this.loadingTable()}</div>`;
-        }
-        return html`
-          <div class="reduced-opacity">${this._lastTableContent}</div>`;
-      },
-      complete: (data) => {
-        this._initialLoad = false;
-        this._lastTableContent = html`
-          <div>${this.renderTable(data as Response)}</div>`;
-        return this._lastTableContent;
-      },
-      error: (error) => {
-        if (error instanceof Error) {
-          if (error.name === "SyntaxError") {
-            console.debug(error.message)
+    // If no-initial-load is set, do not invoke the Task on the first render
+    let tableBody: TemplateResult;
+    if (this.noInitialLoad && this._initialLoad) {
+      tableBody = html`
+        <slot name="empty-state"></slot>`;
+    } else {
+      tableBody = this._dataTask.render({
+        pending: () => {
+          if (this._initialLoad) {
             return html`
-              <zn-sp>
-                <zn-alert level="error">Unable to load data</zn-alert>
-              </zn-sp>`;
-          } else if (error.message === "Not Found") {
-            return this.emptyState();
+              <div>${this.loadingTable()}</div>`;
           }
+          return html`
+            <div class="reduced-opacity">${this._lastTableContent}</div>`;
+        },
+        complete: (data) => {
+          this._initialLoad = false;
+          this._lastTableContent = html`
+            <div>${this.renderTable(data as Response)}</div>`;
+          return this._lastTableContent;
+        },
+        error: (error) => {
+          if (error instanceof Error) {
+            if (error.name === "SyntaxError") {
+              console.debug(error.message)
+              return html`
+                <zn-sp>
+                  <zn-alert level="error">Unable to load data</zn-alert>
+                </zn-sp>`;
+            } else if (error.message === "Not Found") {
+              return this.emptyState();
+            }
+          }
+          return html`
+            <div>${error}</div>`
         }
-        return html`
-          <div>${error}</div>`
-      }
-    }) as TemplateResult;
+      }) as TemplateResult;
+    }
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
       || this.hasSlotController.test(ActionSlots.modify.valueOf())

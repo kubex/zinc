@@ -49,7 +49,7 @@ class QuillAI {
   }
 
   private _attachEvents() {
-    this._quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => this._updateFromEditor(range, oldRange));
+    this._quill.on(Quill.events.SELECTION_CHANGE, (range) => this._updateFromEditor(range));
   }
 
   async processAIRequest() {
@@ -59,7 +59,7 @@ class QuillAI {
     if (panel) {
       // Loading skeletons - TODO: Fix up height and transitions between states
       panel.innerHTML = `<zn-skeleton height="200px" speed="2s" style="margin: 15px 10px;"></zn-skeleton>`;
-     // panel.style.width = '100%';
+      // panel.style.width = '100%';
     }
 
     const response = await fetch(this._path, {
@@ -141,19 +141,15 @@ class QuillAI {
     }
   }
 
-  private _updateFromEditor(range: Range, oldRange: Range) {
+  private _updateFromEditor(range: Range) {
     // Only display 'refine' option for selections longer than 25 characters
-    if (range?.length > 0) {
+    if (range?.length > 25) {
       // Keep selected text in memory to be passed to AI later
       this._selectedText = this._quill.getText(range.index, range.length);
 
       this._show();
       this._positionComponent();
-      return;
-    }
-
-    // Reset component if editor selection is changed
-    if (oldRange === null) {
+    } else {
       this.resetComponent();
     }
   }

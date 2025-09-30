@@ -260,7 +260,7 @@ class ContextMenu {
       options.push(...this._commands.map(cmd => ({
         icon: 'quickreply',
         label: cmd.title,
-        value: cmd.command,
+        value: cmd.content,
         format: 'insert'
       } satisfies ResultItem)));
     }

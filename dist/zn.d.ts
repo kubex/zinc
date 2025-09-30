@@ -1946,7 +1946,7 @@ declare module "components/select/index" {
     }
 }
 declare module "components/data-table/data-table.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type CSSResultGroup, type TemplateResult, PropertyValues } from 'lit';
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
@@ -1993,6 +1993,7 @@ declare module "components/data-table/data-table.component" {
         modify = "modify-action",
         create = "create-action",
         filter = "filter",
+        filter_top = "filter-top",
         sort = "sort"
     }
     interface ActionConfig {
@@ -2090,6 +2091,7 @@ declare module "components/data-table/data-table.component" {
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         changeEventListener: (e: ZnFilterChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
@@ -2105,11 +2107,11 @@ declare module "components/data-table/data-table.component" {
         goToLastPage(): void;
         updateRowsPerPage(event: Event): void;
         selectAll(event: Event): void;
-        private updateActionKeys;
         selectRow(e: PointerEvent): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
         renderCell(data: Cell): TemplateResult;
+        private updateActionKeys;
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;

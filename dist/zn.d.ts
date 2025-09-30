@@ -6172,7 +6172,7 @@ declare module "components/filter-wrapper/filter-wrapper.component" {
         static styles: CSSResultGroup;
         button: string;
         private hasSubmitButton;
-        handleSubmit(event: Event): void;
+        handleSubmit: (event: Event) => void;
         connectedCallback(): void;
         private renderDefaultButton;
         render(): import("lit").TemplateResult<1>;

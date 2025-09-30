@@ -200,7 +200,7 @@ class QuillAI {
       if (!bounds) return;
 
       const right = editorBounds.left + bounds.right; // Align right side
-      const top = editorBounds.top + bounds.top - this._component.offsetHeight - 4; // Position above the selection
+      const top = editorBounds.top + bounds.top - this._component.offsetHeight - 8; // Position above the selection
 
       if (right + this._component.offsetWidth > window.innerWidth) {
         this._setPosition(window.innerWidth - this._component.offsetWidth - 10, top);

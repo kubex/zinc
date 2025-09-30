@@ -37,11 +37,7 @@ class QuillAI {
     const panel: HTMLElement | null | undefined = this._component.shadowRoot?.querySelector('.ai-panel');
     if (panel) {
       // Loading skeletons - TODO: Fix up height and transitions between states
-      panel.innerHTML = `
-        <zn-skeleton width="60%" height="15px" style="margin-bottom:8px;"></zn-skeleton>
-        <zn-skeleton width="80%" height="15px" style="margin-bottom:8px;"></zn-skeleton>
-        <zn-skeleton height="15px"></zn-skeleton>
-      `;
+      panel.innerHTML = `<zn-skeleton height="200px" speed="2s" style="margin: 15px 10px;"></zn-skeleton>`;
       panel.style.width = '100%';
     }
 
@@ -63,6 +59,38 @@ class QuillAI {
         // TODO: Add resizing animation
         panel.style.width = '300px';
         panel.innerHTML = result as string;
+
+        // Append two zn-button elements for Accept and Retry
+        const actionButtons = document.createElement('div');
+        actionButtons.style.display = 'flex';
+        actionButtons.style.justifyContent = 'flex-end';
+        actionButtons.style.gap = '10px';
+        actionButtons.style.padding = '10px';
+
+        const acceptButton = document.createElement('zn-button');
+        acceptButton.setAttribute('variant', 'primary');
+        acceptButton.textContent = 'Accept';
+        acceptButton.addEventListener('click', () => {
+          const range = this._quill.getSelection();
+          // Replace selected text with AI response
+          if (range) {
+            this._quill.deleteText(range.index, range.length);
+            this._quill.insertText(range.index, panel?.innerText || '');
+            this._quill.setSelection(range.index + (panel?.innerText.length || 0), 0);
+          }
+          this.resetComponent();
+        });
+
+        const retryButton = document.createElement('zn-button');
+        retryButton.setAttribute('variant', 'secondary');
+        retryButton.textContent = 'Retry';
+        retryButton.addEventListener('click', () => {
+          this.processAIRequest(prompt).then(r => r);
+        });
+
+        actionButtons.appendChild(retryButton);
+        actionButtons.appendChild(acceptButton);
+        panel.appendChild(actionButtons);
       }
     } else {
       const result: unknown = await response.json();

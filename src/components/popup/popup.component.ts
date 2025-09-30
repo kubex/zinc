@@ -15,7 +15,8 @@ import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
 import type {
-  MiddlewareData} from '@floating-ui/dom';
+  MiddlewareData
+} from '@floating-ui/dom';
 
 import styles from './popup.scss';
 
@@ -405,6 +406,8 @@ export default class ZnPopup extends ZincElement {
         left: `${x}px`,
         top: `${y}px`
       });
+
+      if (!this.popup?.isConnected) return;
 
       this.popup.showPopover();
 

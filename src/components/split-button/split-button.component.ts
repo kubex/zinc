@@ -63,6 +63,8 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
   }
 
   public handleMenuItemClick(e: ZnMenuSelectEvent) {
+    this.dispatchEvent(new CustomEvent('menu-item-click', { detail: e.detail, bubbles: true, composed: true }));
+
     if (this.dropdown) {
       this.value = e.detail.value;
       this.dropdown.hide();
@@ -78,6 +80,7 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
   }
 
   public handleTriggerClick() {
+    this.dispatchEvent(new CustomEvent('trigger-click', { bubbles: true, composed: true }));
     this.value = this.defaultValue;
 
     if (this.type === 'submit') {

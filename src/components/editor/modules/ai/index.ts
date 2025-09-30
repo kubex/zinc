@@ -6,12 +6,15 @@ import Quill from "quill";
 import type {Range} from "quill";
 import type AIPanelComponent from "./panel/ai-panel.component";
 import type AITooltipComponent from "./tooltip/ai-tooltip.component";
+import type ZnButton from "../../../button";
+import type ZnSplitButton from "../../../split-button";
 
 class QuillAI {
   private _quill: Quill;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
   private _selectedText: string = '';
+  private _aiResponseContent: string = '';
 
   constructor(quill: Quill, options: { path: string }) {
     this._quill = quill;
@@ -50,58 +53,18 @@ class QuillAI {
       body: JSON.stringify({text: quotedSelectedText, prompt: prompt})
     });
 
-    // TODO: Remove event when done
-    // this._component.removeEventListener('click', this._clickPanelEvent());
-
     if (response.ok) {
       const result: unknown = await response.text();
       if (panel) {
+        this._aiResponseContent = new DOMParser().parseFromString(result as string, 'text/html').body.innerText;
+
         // TODO: Add resizing animation
         panel.style.width = '300px';
         panel.innerHTML = result as string;
 
-        const actionButtons = document.createElement('div');
-        actionButtons.style.display = 'flex';
-        actionButtons.style.justifyContent = 'space-between';
-        actionButtons.style.gap = '10px';
-        actionButtons.style.padding = '10px';
+        const actionButtons = this._createActionButtons(prompt);
+        if (!actionButtons) return;
 
-        const acceptButton = document.createElement('zn-split-button');
-        acceptButton.setAttribute('name', 'button');
-        acceptButton.setAttribute('value', 'replace-text');
-        acceptButton.setAttribute('caption', 'Replace');
-        acceptButton.setAttribute('class', 'ml-auto');
-        acceptButton.setAttribute('slot', 'actions');
-
-        const menu = document.createElement('zn-menu');
-        menu.setAttribute('slot', 'menu');
-
-        const menuItem = document.createElement('zn-menu-item');
-        menuItem.setAttribute('value', 'insert-text');
-        menuItem.textContent = 'Insert';
-
-        menu.appendChild(menuItem);
-        acceptButton.appendChild(menu);
-
-        acceptButton.addEventListener('click', () => {
-          const range = this._quill.getSelection();
-          if (range) {
-            this._quill.deleteText(range.index, range.length);
-            this._quill.insertText(range.index, panel?.innerText || '');
-            this._quill.setSelection(range.index + (panel?.innerText.length || 0), 0);
-          }
-          this.resetComponent();
-        });
-
-        const retryButton = document.createElement('zn-button');
-        retryButton.setAttribute('variant', 'secondary');
-        retryButton.textContent = 'Retry';
-        retryButton.addEventListener('click', () => {
-          this.processAIRequest(prompt).then(r => r);
-        });
-
-        actionButtons.appendChild(retryButton);
-        actionButtons.appendChild(acceptButton);
         panel.appendChild(actionButtons);
 
         // Reposition panel after content change
@@ -121,10 +84,66 @@ class QuillAI {
     }
   }
 
+  private _createActionButtons(prompt: string) {
+    const actionButtons = html`
+      <div style="display: flex; justify-content: space-between; gap: 10px; padding: 10px;">
+        ${this._createRetryButton(prompt)}
+        ${this._createInsertOptionsButton()}
+      </div>
+    `;
+    return litToHTML<HTMLDivElement>(actionButtons);
+  }
+
+  private _createInsertOptionsButton() {
+    const insertOptionsButton = html`
+      <zn-split-button
+        name="button"
+        caption="Replace"
+        class="ml-auto"
+        @trigger-click=${() => this._replaceTextAtSelection()}
+        @menu-item-click=${() => this._insertTextAtSelection()}
+      >
+        <zn-menu slot="menu">
+          <zn-menu-item>Insert</zn-menu-item>
+        </zn-menu>
+      </zn-split-button>
+    `;
+    return litToHTML<ZnSplitButton>(insertOptionsButton);
+  }
+
+
+  private _createRetryButton(prompt: string) {
+    const retryButton = html`
+      <zn-button name="ai-response-retry" color="secondary" @click=${() => this.processAIRequest(prompt)}>
+        Retry
+      </zn-button>
+    `;
+    return litToHTML<ZnButton>(retryButton);
+  }
+
   private _createTooltipComponent() {
     const tpl = html`
       <zn-ai-tooltip></zn-ai-tooltip>`;
     return litToHTML<AITooltipComponent>(tpl);
+  }
+
+  private _replaceTextAtSelection() {
+    const range = this._quill.getSelection();
+    if (range) {
+      this._quill.deleteText(range.index, range.length);
+      this._quill.insertText(range.index, this._aiResponseContent || '');
+      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+    }
+    this.resetComponent();
+  }
+
+  private _insertTextAtSelection() {
+    const range = this._quill.getSelection();
+    if (range) {
+      this._quill.insertText(range.index, this._aiResponseContent || '');
+      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+    }
+    this.resetComponent();
   }
 
   private _createPanelComponent() {

@@ -6,14 +6,13 @@ import Quill from "quill";
 import type {Range} from "quill";
 import type AIPanelComponent from "./panel/ai-panel.component";
 import type AITooltipComponent from "./tooltip/ai-tooltip.component";
-import type ZnButton from "../../../button";
-import type ZnSplitButton from "../../../split-button";
 
 class QuillAI {
   private _quill: Quill;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
   private _selectedText: string = '';
+  private _prompt: string = '';
   private _aiResponseContent: string = '';
 
   constructor(quill: Quill, options: { path: string }) {
@@ -22,6 +21,25 @@ class QuillAI {
 
     this._initComponent();
     this._attachEvents();
+  }
+
+  public replaceTextAtSelection() {
+    const range = this._quill.getSelection();
+    if (range) {
+      this._quill.deleteText(range.index, range.length);
+      this._quill.insertText(range.index, this._aiResponseContent || '');
+      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+    }
+    this.resetComponent();
+  }
+
+  public insertTextAtSelection() {
+    const range = this._quill.getSelection();
+    if (range) {
+      this._quill.insertText(range.index, this._aiResponseContent || '');
+      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
+    }
+    this.resetComponent();
   }
 
   private _initComponent() {
@@ -34,7 +52,7 @@ class QuillAI {
     this._quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => this._updateFromEditor(range, oldRange));
   }
 
-  async processAIRequest(prompt: string) {
+  async processAIRequest() {
     const quotedSelectedText = this._selectedText ? this._selectedText : this._quill.getText();
 
     const panel: HTMLElement | null | undefined = this._component.shadowRoot?.querySelector('.ai-panel');
@@ -50,22 +68,17 @@ class QuillAI {
         'Content-Type': 'application/json',
         'x-kx-fetch-style': 'zn-editor',
       },
-      body: JSON.stringify({text: quotedSelectedText, prompt: prompt})
+      body: JSON.stringify({text: quotedSelectedText, prompt: this._prompt})
     });
 
     if (response.ok) {
       const result: unknown = await response.text();
       if (panel) {
-        this._aiResponseContent = new DOMParser().parseFromString(result as string, 'text/html').body.innerText;
-
         // TODO: Add resizing animation
         panel.style.width = '300px';
         panel.innerHTML = result as string;
 
-        const actionButtons = this._createActionButtons(prompt);
-        if (!actionButtons) return;
-
-        panel.appendChild(actionButtons);
+        this._aiResponseContent = (panel.querySelector('input[name="ai-response-text"]') as HTMLInputElement)?.value || '';
 
         // Reposition panel after content change
         this._positionComponent();
@@ -84,66 +97,10 @@ class QuillAI {
     }
   }
 
-  private _createActionButtons(prompt: string) {
-    const actionButtons = html`
-      <div style="display: flex; justify-content: space-between; gap: 10px; padding: 10px;">
-        ${this._createRetryButton(prompt)}
-        ${this._createInsertOptionsButton()}
-      </div>
-    `;
-    return litToHTML<HTMLDivElement>(actionButtons);
-  }
-
-  private _createInsertOptionsButton() {
-    const insertOptionsButton = html`
-      <zn-split-button
-        name="button"
-        caption="Replace"
-        class="ml-auto"
-        @trigger-click=${() => this._replaceTextAtSelection()}
-        @menu-item-click=${() => this._insertTextAtSelection()}
-      >
-        <zn-menu slot="menu">
-          <zn-menu-item>Insert</zn-menu-item>
-        </zn-menu>
-      </zn-split-button>
-    `;
-    return litToHTML<ZnSplitButton>(insertOptionsButton);
-  }
-
-
-  private _createRetryButton(prompt: string) {
-    const retryButton = html`
-      <zn-button name="ai-response-retry" color="secondary" @click=${() => this.processAIRequest(prompt)}>
-        Retry
-      </zn-button>
-    `;
-    return litToHTML<ZnButton>(retryButton);
-  }
-
   private _createTooltipComponent() {
     const tpl = html`
       <zn-ai-tooltip></zn-ai-tooltip>`;
     return litToHTML<AITooltipComponent>(tpl);
-  }
-
-  private _replaceTextAtSelection() {
-    const range = this._quill.getSelection();
-    if (range) {
-      this._quill.deleteText(range.index, range.length);
-      this._quill.insertText(range.index, this._aiResponseContent || '');
-      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
-    }
-    this.resetComponent();
-  }
-
-  private _insertTextAtSelection() {
-    const range = this._quill.getSelection();
-    if (range) {
-      this._quill.insertText(range.index, this._aiResponseContent || '');
-      this._quill.setSelection(range.index + (this._aiResponseContent.length || 0), 0);
-    }
-    this.resetComponent();
   }
 
   private _createPanelComponent() {
@@ -274,20 +231,20 @@ class QuillAI {
   private _clickPreDefinedEvent(e: Event) {
     if (e instanceof PointerEvent) {
       const target = e.target as HTMLElement;
-      let prompt = target.getAttribute('data-ai-option') || '';
-      if (prompt === "") {
+      this._prompt = target.getAttribute('data-ai-option') || '';
+      if (this._prompt === "") {
         for (const targetElement of e.composedPath()) {
           if (!(targetElement instanceof HTMLElement)) continue;
-          prompt = targetElement.getAttribute('data-ai-option') || ''
-          if (prompt) break;
+          this._prompt = targetElement.getAttribute('data-ai-option') || ''
+          if (this._prompt) break;
         }
       }
-      this.processAIRequest(prompt).then(r => r);
+      this.processAIRequest().then(r => r);
     }
   }
 
-  private _clickPanelEvent(prompt: string) {
-    this.processAIRequest(prompt).then(r => r);
+  private _clickPanelEvent() {
+    this.processAIRequest().then(r => r);
   }
 }
 

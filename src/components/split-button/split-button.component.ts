@@ -51,14 +51,12 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('click', this.handleClick)
     this.addEventListener('zn-menu-select', this.handleMenuItemClick);
     this.defaultValue = this.value;
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('click', this.handleClick);
     this.removeEventListener('zn-menu-select', this.handleMenuItemClick);
   }
 
@@ -73,10 +71,6 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
     }
   }
 
-  public handleClick(e: MouseEvent) {
-    e.stopPropagation();
-  }
-
   public handleTriggerClick() {
     this.value = this.defaultValue;
 
@@ -88,20 +82,32 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
   render() {
     return html`
       <zn-dropdown placement="bottom-end">
-        <div slot="trigger">
-          <zn-button-group>
-            <zn-button id="trigger-btn"
-                       href=${ifDefined(this.href)}
-                       @click=${this.handleTriggerClick}>
-              ${this.caption}
-            </zn-button>
-            <zn-button icon="keyboard_arrow_down"></zn-button>
-          </zn-button-group>
-        </div>
+        ${this.renderTriggerSlot()}
         <div>
           <slot name="menu"></slot>
         </div>
       </zn-dropdown>
+    `;
+  }
+
+  private renderTriggerSlot() {
+    const hasTriggerSlot = !!this.querySelector('[slot="trigger"]');
+    if (hasTriggerSlot) {
+      return html`
+        <slot name="trigger" slot="trigger"></slot>`;
+    }
+
+    return html`
+      <div slot="trigger">
+        <zn-button-group>
+          <zn-button id="trigger-btn"
+                     href=${ifDefined(this.href)}
+                     @click=${this.handleTriggerClick}>
+            ${this.caption}
+          </zn-button>
+          <zn-button icon="keyboard_arrow_down"></zn-button>
+        </zn-button-group>
+      </div>
     `;
   }
 

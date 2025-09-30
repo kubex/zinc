@@ -6,20 +6,19 @@ interface OnEventListener {
 
 export function on(delegate: EventTarget, eventName: string, targetSelector: string, callback: OnEventListener) {
   function _fn(e: OnEvent) {
-    const path = e.path || (e.composedPath?.());
-    let t: Element | null = (path?.[0] || e.target) as Element;
-    do {
-      if (!targetSelector || (t.matches && t.matches(targetSelector))) {
-        e.selectedTarget = t;
+    const path = e.composedPath?.() || e.path || [e.target];
+
+    for (const node of path) {
+      if (node instanceof Element && node.matches(targetSelector)) {
+        e.selectedTarget = node;
         return callback(e);
       }
 
       // stop traversing up the dom once we reach the delegate
-      if (delegate === t) {
+      if (node === delegate) {
         break;
       }
     }
-    while ((t = t.parentElement));
 
     return false;
   }

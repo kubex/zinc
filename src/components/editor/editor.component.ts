@@ -1,5 +1,6 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from '../../internal/form';
+import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
 import Attachment from "./modules/attachment/attachment";
 import CannedResponse from "./modules/canned-response/canned-response";
@@ -108,6 +109,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.formControlController.updateValidity();
 
     const bindings = this._getQuillKeyboardBindings();
+
+    on(document, 'click', '[editor-id]', (event) => {
+      const target = event.selectedTarget as HTMLElement;
+      if (target.hasAttribute('editor-id')) {
+        this._handleEditorChange(target);
+      }
+    });
 
     Quill.register('modules/toolbar', ToolbarModule as any, true);
     Quill.register('modules/datePickerModule', DatePicker as any, true);
@@ -396,6 +404,22 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._commands = await response.json() as Commands[];
     } catch (error) {
       console.error('Error fetching canned responses', error);
+    }
+  }
+
+  private _handleEditorChange(target: HTMLElement) {
+    const editorMode = target.getAttribute('editor-mode');
+    if (!editorMode) return;
+
+    const aiModule = this.quillElement.getModule('ai') as QuillAI;
+    if (!aiModule) return;
+
+    if (editorMode === 'replace') {
+      aiModule.replaceTextAtSelection();
+    } else if (editorMode === 'insert') {
+      aiModule.insertTextAtSelection();
+    } else if (editorMode === 'retry') {
+      aiModule.processAIRequest().then();
     }
   }
 

@@ -82,17 +82,7 @@ export default class AIPanelComponent extends ZincElement {
             <zn-icon src="expand" size="16"></zn-icon>
             <span class="label">Expand text</span>
           </button>
-          <button
-            type="button"
-            class="item"
-            role="option"
-            aria-selected="false"
-            data-ai-option="tone"
-            @click=${this.refineBuiltIn}
-          >
-            <zn-icon src="work" size="16"></zn-icon>
-            <span class="label">Change tone</span>
-          </button>
+
           <button
             type="button"
             class="item"
@@ -103,17 +93,6 @@ export default class AIPanelComponent extends ZincElement {
           >
             <zn-icon src="spellcheck" size="16"></zn-icon>
             <span class="label">Fix spelling / grammar</span>
-          </button>
-          <button
-            type="button"
-            class="item"
-            role="option"
-            aria-selected="false"
-            data-ai-option="translate"
-            @click=${this.refineBuiltIn}
-          >
-            <zn-icon src="translate" size="16"></zn-icon>
-            <span class="label">Translate</span>
           </button>
         </div>
       </zn-panel>`;

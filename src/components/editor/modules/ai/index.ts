@@ -103,14 +103,15 @@ class QuillAI {
         actionButtons.appendChild(retryButton);
         actionButtons.appendChild(acceptButton);
         panel.appendChild(actionButtons);
+
+        // Reposition panel after content change
+        this._positionComponent();
       }
     } else {
       const result: unknown = await response.json();
 
       if (typeof result === 'string') {
-        console.log('AI Result:', result);
         const range = this._quill.getSelection();
-        // Replace selected text with AI response - TODO: Add in accept button step
         if (range) {
           this._quill.deleteText(range.index, range.length);
           this._quill.insertText(range.index, result);

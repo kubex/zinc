@@ -42,14 +42,13 @@ export default class ZnFilterWrapper extends ZincElement {
       const inputs = Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[];
       const params: Record<string, any> = {};
       inputs.forEach(input => {
+        if (!input.value && input.hasAttribute('omit-empty')) {
+          return;
+        }
         params[input.name] = input.value as string;
       });
 
-      dataTable.requestParams = {
-        ...dataTable.requestParams,
-        ...params
-      }
-
+      dataTable.requestParams = params;
       dataTable.refresh();
     }
   }

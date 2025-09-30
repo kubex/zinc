@@ -6012,8 +6012,8 @@ declare module "components/status-indicator/index" {
 }
 declare module "components/split-button/split-button.component" {
     import { type CSSResultGroup } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     import type { ZnMenuSelectEvent } from "events/zn-menu-select";
     import type ZnButton from "components/button/index";
     import type ZnDropdown from "components/dropdown/index";

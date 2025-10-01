@@ -175,7 +175,7 @@ export default class ZnButtonMenu extends ZincElement {
         if (!button.button.hasAttribute('color')) {
           button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
         }
-        if(button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')){
+        if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
           button.button.setAttribute('text', "");
         }
         button.button.setAttribute('size', this.size);
@@ -304,6 +304,9 @@ export default class ZnButtonMenu extends ZincElement {
 
   public setDynamicButtons(btns: NodeListOf<ZnButton>) {
     // remove all buttons that have the zn-button-menu__added class
+
+    console.log('Adding dynamic buttons', btns);
+
     this.removeAllButtons();
 
     // add the new buttons
@@ -336,20 +339,18 @@ export default class ZnButtonMenu extends ZincElement {
   }
 
   public removeAllButtons() {
-    // remove all buttons that have the zn-button-menu__added class
-    const buttons = this.querySelectorAll('.zn-button-menu__added');
+    const buttons = this.shadowRoot?.querySelectorAll('zn-button.zn-button-menu__added');
     buttons.forEach((button: ZnButton) => {
       button.remove();
     });
 
-    // remove all zn-menu-item elements
-    const menuItems = this.shadowRoot?.querySelectorAll('zn-menu-item');
+    const menuItems = this.shadowRoot?.querySelectorAll('zn-menu-item.zn-button-menu__added');
     menuItems?.forEach((menuItem: ZnMenuItem) => {
       menuItem.remove();
     });
 
-    // reset the original buttons list
     this._buttons = [];
+    this._originalButtons = this._originalButtons.filter(b => !b.button.classList.contains('zn-button-menu__added'));
 
     // Recalculate the visible buttons
     this.calculateVisibleButtons();

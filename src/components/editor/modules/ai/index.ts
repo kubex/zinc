@@ -127,6 +127,22 @@ class QuillAI {
     // Attach panel button triggers
     this._attachPanelEvents(panel);
 
+    // TODO: Finish overlay to prevent clicking away
+/*    // Create and append the overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'none';
+    overlay.style.zIndex = '10000';
+
+    // Append the overlay and panel to the body
+    this._quill.container.ownerDocument.body.appendChild(overlay);
+
+    this._component.style.zIndex = '10001';*/
+
     this._quill.container.ownerDocument.body.appendChild(this._component);
     this._show();
     this._positionComponent();

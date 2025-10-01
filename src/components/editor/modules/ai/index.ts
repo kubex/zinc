@@ -67,13 +67,7 @@ class QuillAI {
 
   async processAIRequest() {
     const quotedSelectedText = this._selectedText ? this._selectedText : this._quill.getText();
-
     const panel: HTMLElement | null | undefined = this._component.shadowRoot?.querySelector('.ai-panel');
-    if (panel) {
-      // Loading skeletons - TODO: Fix up height and transitions between states
-      panel.innerHTML = `<zn-skeleton height="200px" speed="2s" style="margin: 15px 10px;"></zn-skeleton>`;
-      // panel.style.width = '100%';
-    }
 
     const response = await fetch(this._path, {
       method: 'POST',
@@ -91,9 +85,6 @@ class QuillAI {
         panel.innerHTML = result as string;
 
         this._aiResponseContent = this._latestContent(panel);
-
-        // Reposition panel after content change
-        this._positionComponent();
       }
     } else {
       const result: unknown = await response.json();
@@ -179,18 +170,19 @@ class QuillAI {
   private _positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._quill.getSelection();
-    if (!range) return;
+    if (!this._range) return;
 
     if (this._component instanceof AITooltipComponent) {
       const editorBounds = this._quill.container.getBoundingClientRect();
-      const endIndex = range.index + range.length;
+      const endIndex = this._range.index + this._range.length;
       const bounds = this._quill.getBounds(endIndex);
       if (!bounds) return;
 
       const left = editorBounds.left + bounds.left - 10; // Slight offset to the left
       const top = editorBounds.top + bounds.bottom + 4;
-      this._setPosition(left, top);
+
+      this._component.style.left = `${Math.max(0, left)}px`;
+      this._component.style.top = `${top}px`;
 
       return;
     }
@@ -198,33 +190,32 @@ class QuillAI {
     const positionPanel = () => {
       const editorBounds = this._quill.container.getBoundingClientRect();
       let bounds;
-      if (range.length === this._quill.getLength() - 1) {
-        bounds = this._quill.getBounds(range.index, range.length);
+      if (this._range.length === this._quill.getLength() - 1) {
+        bounds = this._quill.getBounds(this._range.index, this._range.length);
       } else {
-        const endIndex = range.index + range.length;
+        const endIndex = this._range.index + this._range.length;
         bounds = this._quill.getBounds(endIndex);
       }
       if (!bounds) return;
 
       const right = editorBounds.left + bounds.right; // Align right side
-      const top = editorBounds.top + bounds.top - this._component.offsetHeight - 8; // Position above the selection
+      const bottom = editorBounds.top + bounds.top - 8; // Position above the selection
 
-      if (right + this._component.offsetWidth > window.innerWidth) {
-        this._setPosition(window.innerWidth - this._component.offsetWidth - 10, top);
+      if (right > window.innerWidth) {
+        this._setPanelPosition(window.innerWidth - 10, bottom);
         return;
       }
 
-
-      this._setPosition(right - this._component.offsetWidth, top);
+      this._setPanelPosition(right, bottom);
     };
 
     // Defer positioning to ensure the panel is fully rendered
     requestAnimationFrame(positionPanel);
   }
 
-  private _setPosition(left: number, top: number) {
-    this._component.style.left = `${Math.max(0, left)}px`;
-    this._component.style.top = `${top}px`;
+  private _setPanelPosition(right: number, bottom: number) {
+    this._component.style.right = `${Math.max(0, window.innerWidth - right)}px`;
+    this._component.style.bottom = `${Math.max(0, window.innerHeight - bottom)}px`;
   }
 
   private _resetComponent() {

@@ -4503,8 +4503,6 @@ declare module "components/textarea/index" {
     }
 }
 declare module "components/editor/modules/ai/index" {
-    import "components/editor/modules/ai/panel/ai-panel.component";
-    import "components/editor/modules/ai/tooltip/ai-tooltip.component";
     import Quill from "quill";
     class QuillAI {
         private _quill;
@@ -4529,7 +4527,7 @@ declare module "components/editor/modules/ai/index" {
         private _updateFromEditor;
         private _positionComponent;
         private _setPosition;
-        private resetComponent;
+        private _resetComponent;
         private _show;
         private _hide;
         private _onEscapeKey;

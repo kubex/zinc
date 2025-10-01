@@ -1,12 +1,10 @@
-import './panel/ai-panel.component';
-import './tooltip/ai-tooltip.component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
-import Quill from "quill";
-import type {Range} from "quill";
-import type AIPanelComponent from "./panel/ai-panel.component";
+import AIPanelComponent from './panel/ai-panel.component';
 import AITooltipComponent from "./tooltip/ai-tooltip.component";
+import Quill from "quill";
 import ZnTextarea from "../../../textarea";
+import type {Range} from "quill";
 
 class QuillAI {
   private _quill: Quill;
@@ -32,7 +30,8 @@ class QuillAI {
       this._quill.insertText(range.index, content || '');
       this._quill.setSelection(range.index + (content.length || 0), 0);
     }
-    this.resetComponent();
+    console.log('QuillAI: Replaced selected text with AI response');
+    this._resetComponent();
   }
 
   public insertTextAtSelection() {
@@ -42,7 +41,8 @@ class QuillAI {
       this._quill.insertText(range.index, content || '');
       this._quill.setSelection(range.index + (content.length || 0), 0);
     }
-    this.resetComponent();
+    console.log('QuillAI: Inserted AI response at cursor position');
+    this._resetComponent();
   }
 
   private _initComponent() {
@@ -146,18 +146,26 @@ class QuillAI {
 
   private _onDocumentClick(e: MouseEvent) {
     const path = e.composedPath ? e.composedPath() : [e.target as Node];
-    if (
-      !path.includes(this._component) &&
-      !path.includes(this._component.shadowRoot!) &&
-      this._component.shadowRoot !== null &&
-      !this._quill.root.contains(path[0] as Node)
-    ) {
-      this.resetComponent();
+    const isInsideComponent = path.includes(this._component) || path.includes(this._component.shadowRoot!);
+    const isInsideQuillRoot = this._quill.root.contains(path[0] as Node);
+
+    const isInsideAIPanel = path.some((node) => {
+      if (node instanceof HTMLElement) {
+        return node.tagName === 'ZN-AI-PANEL';
+      }
+      return false;
+    });
+
+    if (!isInsideComponent && !isInsideQuillRoot && !isInsideAIPanel) {
+      this._resetComponent();
     }
   }
 
   private _updateFromEditor(range: Range) {
-    // Only display 'refine' option for selections longer than 25 characters
+    // Update if component isn't AI panel
+    if (this._component instanceof AIPanelComponent) return;
+
+    // Display 'refine' option for selections longer than 25 characters
     if (range?.length > 25) {
       // Keep selected text in memory to be passed to AI later
       this._selectedText = this._quill.getText(range.index, range.length);
@@ -165,7 +173,7 @@ class QuillAI {
       this._show();
       this._positionComponent();
     } else {
-      this.resetComponent();
+      this._resetComponent();
     }
   }
 
@@ -220,7 +228,7 @@ class QuillAI {
     this._component.style.top = `${top}px`;
   }
 
-  private resetComponent() {
+  private _resetComponent() {
     this._hide();
     this._component.remove();
     this._initComponent();

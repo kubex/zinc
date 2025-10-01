@@ -221,7 +221,7 @@ export default class ZnDataTable extends ZincElement {
 
   private _dataTask = new Task(this, {
     task: async ([dataUri, requestParams], {signal}) => {
-      if (this.noInitialLoad && this._initialLoad) {
+      if (dataUri === undefined || this.noInitialLoad && this._initialLoad) {
         return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0};
       }
 

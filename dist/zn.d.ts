@@ -6092,6 +6092,9 @@ declare module "components/style/style.component" {
         warning: boolean;
         primary: boolean;
         accent: boolean;
+        center: boolean;
+        width: string;
+        height: string;
         pad: string;
         margin: string;
         autoMargin: string;

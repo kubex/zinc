@@ -144,6 +144,16 @@ class QuillAI {
       return false;
     });
 
+    // If this._aiResponseContent is not empty, it means user is interacting with the panel
+    if (this._latestContent(null)) {
+      if (!isInsideAIPanel) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        return;
+      }
+    }
+
     if (!isInsideComponent && !isInsideQuillRoot && !isInsideAIPanel) {
       this._resetComponent();
     }

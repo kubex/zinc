@@ -19,6 +19,9 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) warning = false;
   @property({type: Boolean}) primary = false;
   @property({type: Boolean}) accent = false;
+  @property({type: Boolean}) center = false;
+  @property() width = '';
+  @property() height = '';
   @property() pad = '';
   @property() margin = '';
   @property({attribute: 'a-margin'}) autoMargin = '';
@@ -45,6 +48,21 @@ export default class ZnStyle extends ZincElement {
     }
     if (this.color) {
       this.classList.toggle('zn-' + this.color, true);
+    }
+
+
+    if (this.center) {
+      display = "flex"
+      this.classList.toggle('flex-mid', true);
+      this.classList.toggle('flex-jc', true);
+    }
+
+    if (this.width === "f") {
+      this.classList.toggle('w-full', true);
+    }
+
+    if (this.height === "f") {
+      this.classList.toggle('h-full', true);
     }
 
     if (this.border) {

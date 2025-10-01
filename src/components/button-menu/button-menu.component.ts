@@ -340,14 +340,18 @@ export default class ZnButtonMenu extends ZincElement {
 
   public removeAllButtons() {
     const buttons = this.shadowRoot?.querySelectorAll('zn-button.zn-button-menu__added');
-    buttons.forEach((button: ZnButton) => {
-      button.remove();
-    });
+    if (buttons) {
+      buttons.forEach((button: ZnButton) => {
+        button.remove();
+      });
+    }
 
     const menuItems = this.shadowRoot?.querySelectorAll('zn-menu-item.zn-button-menu__added');
-    menuItems?.forEach((menuItem: ZnMenuItem) => {
-      menuItem.remove();
-    });
+    if (menuItems) {
+      menuItems?.forEach((menuItem: ZnMenuItem) => {
+        menuItem.remove();
+      });
+    }
 
     this._buttons = [];
     this._originalButtons = this._originalButtons.filter(b => !b.button.classList.contains('zn-button-menu__added'));

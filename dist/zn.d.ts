@@ -4508,6 +4508,7 @@ declare module "components/editor/modules/ai/index" {
         private _quill;
         private readonly _path;
         private _component;
+        private _range;
         private _selectedText;
         private _prompt;
         private _aiResponseContent;

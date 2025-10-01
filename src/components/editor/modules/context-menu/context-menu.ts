@@ -2,7 +2,7 @@ import './context-menu-component';
 import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
-import Quill from "quill";
+import Quill, {Delta} from "quill";
 import type {Commands} from "../../editor.component";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "quill/modules/toolbar";
@@ -238,10 +238,24 @@ class ContextMenu {
     }
 
     if (key === 'insert' && typeof value === 'string') {
-      const sel = this._quill.getSelection();
-      if (sel) {
-        this._quill.insertText(sel.index, value, 'user');
-        this._quill.setSelection(sel.index + value.length, 0, 'silent');
+      const range = this._quill.getSelection();
+      if (range) {
+        let insertIndex = range.index - 1;
+        this._quill.deleteText(insertIndex, 1, 'user');
+
+        const prevChar = this._quill.getText(insertIndex - 1, 1);
+        if (prevChar !== ' ' && insertIndex > 0) {
+          this._quill.insertText(insertIndex, ' ', 'user');
+          insertIndex += 1;
+        }
+
+        const contentDelta = this._quill.clipboard.convert({html: value});
+        this._quill.updateContents(
+          new Delta().retain(insertIndex).concat(contentDelta),
+          'user'
+        );
+
+        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent'), 0);
       }
       this._quill.focus();
       this.hide();

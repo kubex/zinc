@@ -10,6 +10,7 @@ class QuillAI {
   private _quill: Quill;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
+  private _range: Range = {index: 0, length: 0};
   private _selectedText: string = '';
   private _prompt: string = '';
   private _aiResponseContent: string = '';
@@ -24,24 +25,20 @@ class QuillAI {
 
   public replaceTextAtSelection() {
     const content = this._latestContent(null);
-    const range = this._quill.getSelection();
-    if (range) {
-      this._quill.deleteText(range.index, range.length);
-      this._quill.insertText(range.index, content || '');
-      this._quill.setSelection(range.index + (content.length || 0), 0);
+    if (this._range) {
+      this._quill.deleteText(this._range.index, this._range.length);
+      this._quill.insertText(this._range.index, content || '');
+      this._quill.setSelection(this._range.index + (content.length || 0), 0);
     }
-    console.log('QuillAI: Replaced selected text with AI response');
     this._resetComponent();
   }
 
   public insertTextAtSelection() {
     const content = this._latestContent(null);
-    const range = this._quill.getSelection();
-    if (range) {
-      this._quill.insertText(range.index, content || '');
-      this._quill.setSelection(range.index + (content.length || 0), 0);
+    if (this._range) {
+      this._quill.insertText(this._range.index, content || '');
+      this._quill.setSelection(this._range.index + (content.length || 0), 0);
     }
-    console.log('QuillAI: Inserted AI response at cursor position');
     this._resetComponent();
   }
 
@@ -52,7 +49,7 @@ class QuillAI {
   }
 
   private _attachEvents() {
-    this._quill.on(Quill.events.SELECTION_CHANGE, (range) => this._updateFromEditor(range));
+    this._quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => this._updateFromEditor(range, oldRange));
   }
 
   private _latestContent(panel: HTMLElement | null | undefined): string {
@@ -161,7 +158,9 @@ class QuillAI {
     }
   }
 
-  private _updateFromEditor(range: Range) {
+  private _updateFromEditor(range: Range, oldRange: Range) {
+    this._range = range?.length > 0 ? range : oldRange;
+
     // Update if component isn't AI panel
     if (this._component instanceof AIPanelComponent) return;
 

@@ -4527,7 +4527,7 @@ declare module "components/editor/modules/ai/index" {
         private _onDocumentClick;
         private _updateFromEditor;
         private _positionComponent;
-        private _setPosition;
+        private _setPanelPosition;
         private _resetComponent;
         private _show;
         private _hide;

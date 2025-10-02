@@ -1,6 +1,6 @@
 import './toolbar.component';
-import type CannedResponseComponent from "../canned-response/canned-response-component";
 import QuillToolbar from "quill/modules/toolbar";
+import type CannedResponseComponent from "../canned-response/canned-response-component";
 import type Quill from "quill";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";

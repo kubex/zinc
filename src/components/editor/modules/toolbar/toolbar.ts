@@ -248,7 +248,7 @@ class Toolbar extends QuillToolbar {
     button.click();
   }
 
-  private async _openDialog(uri: string) {
+  private _openDialog(uri: string) {
     if (this._lastDialogUri === uri) {
       const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
       if (dialog) {
@@ -261,8 +261,9 @@ class Toolbar extends QuillToolbar {
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
+    dialog.setContent(`<app-space id="app-modal-shellything" inline auto-load uri="${uri}"></app-space>`);
 
-    try {
+    /*try {
       const response = await fetch(uri, {
         credentials: 'same-origin',
         headers: {
@@ -282,7 +283,7 @@ class Toolbar extends QuillToolbar {
     } catch (error) {
       dialog.setContent('<div class="dialog-error">An error occurred while loading content.</div>');
       this._lastDialogUri = undefined;
-    }
+    }*/
   }
 }
 

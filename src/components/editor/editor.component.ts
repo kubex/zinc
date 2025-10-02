@@ -3,6 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
+import {trim} from "lodash";
 import Attachment from "./modules/attachment/attachment";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
@@ -16,6 +17,7 @@ import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
 import Toolbar from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
+import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
@@ -24,8 +26,6 @@ import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
-import ZnTextarea from "../textarea";
-import {trim} from "lodash";
 
 /**
  * @summary Short summary of the component's intended use.

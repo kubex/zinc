@@ -4070,10 +4070,10 @@ declare module "components/editor/modules/canned-response/canned-response-compon
 }
 declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
-    import Toolbar from "quill/modules/toolbar";
+    import QuillToolbar from "quill/modules/toolbar";
     import type Quill from "quill";
     import type ToolbarComponent from "components/editor/modules/toolbar/toolbar.component";
-    class ToolbarModule extends Toolbar {
+    class Toolbar extends QuillToolbar {
         private readonly _quill;
         private readonly _component;
         constructor(quill: Quill, options: {
@@ -4094,11 +4094,11 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _openDatePicker;
         private _openCannedResponseDialog;
     }
-    export default ToolbarModule;
+    export default Toolbar;
 }
 declare module "components/editor/modules/attachment/attachment" {
     import type Quill from 'quill';
-    interface AttachmentModuleOptions {
+    interface AttachmentOptions {
         upload: (file: File) => Promise<{
             path: any;
             url: any;
@@ -4113,7 +4113,7 @@ declare module "components/editor/modules/attachment/attachment" {
         private _quill;
         private _options;
         private _fileHolder;
-        constructor(quill: Quill, options: AttachmentModuleOptions);
+        constructor(quill: Quill, options: AttachmentOptions);
         private _selectLocalImage;
         private _fileChanged;
         private _attachmentContainer;
@@ -4217,17 +4217,17 @@ declare module "components/editor/modules/date-picker/date-picker" {
 }
 declare module "components/editor/modules/drag-drop/drag-drop" {
     import type Quill from 'quill';
-    interface DragAndDropModuleOptions {
+    interface DragAndDropOptions {
         onDrop: (file: File, options: object) => void;
         draggableContentTypePattern: string;
         draggables: [];
     }
-    export default class DragAndDropModule {
+    export default class DragAndDrop {
         private _quill;
         private _options;
         private _container;
         private _draggables;
-        constructor(quill: Quill, options: DragAndDropModuleOptions);
+        constructor(quill: Quill, options: DragAndDropOptions);
         nullReturner: () => null;
         handleDrop: (e: DragEvent) => void;
     }
@@ -4306,14 +4306,14 @@ declare module "components/editor/modules/emoji/headless/headless-emoji" {
 }
 declare module "components/editor/modules/image-resize/image-resize" {
     import Quill, { Module } from "quill";
-    interface ImageResizeModuleOptions {
+    interface ImageResizeOptions {
         overlayStyles?: Partial<CSSStyleDeclaration>;
     }
-    class ImageResize extends Module<ImageResizeModuleOptions> {
-        static DEFAULTS: ImageResizeModuleOptions;
+    class ImageResize extends Module<ImageResizeOptions> {
+        static DEFAULTS: ImageResizeOptions;
         private _focusedImage;
         private _overlay;
-        constructor(quill: Quill, options: ImageResizeModuleOptions);
+        constructor(quill: Quill, options: ImageResizeOptions);
         handleClick: (e: MouseEvent) => void;
         handleScroll: () => void;
         show: (image: HTMLImageElement) => void;
@@ -4540,7 +4540,7 @@ declare module "components/editor/modules/ai/index" {
 }
 declare module "components/editor/modules/time-tracking/time-tracking" {
     import type Quill from 'quill';
-    interface TimeTrackingModuleOptions {
+    interface TimeTrackingOptions {
         startTimeInput?: HTMLInputElement;
         openTimeInput?: HTMLInputElement;
     }
@@ -4549,7 +4549,7 @@ declare module "components/editor/modules/time-tracking/time-tracking" {
         private _options;
         private _startTime;
         private _openTime;
-        constructor(quill: Quill, options: TimeTrackingModuleOptions);
+        constructor(quill: Quill, options: TimeTrackingOptions);
         private _updateOpenTime;
         private _updateStartTime;
     }

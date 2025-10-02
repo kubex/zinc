@@ -1,4 +1,5 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
@@ -415,13 +416,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const editorMode = target.getAttribute('editor-mode');
     if (!editorMode) return;
 
-    const contentContainer = target.getAttribute('editor-click');
+    const contentContainer = target.getAttribute('editor-content-id');
     if (!contentContainer) return;
 
-    const contentElement = document.querySelector(contentContainer);
+    const contentElement = deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '');
     if (!contentElement) return;
 
-    const content = contentElement.textContent;
+    const content = contentElement[0].textContent;
     if (!content || content === '') return;
 
     this._content = content;
@@ -436,18 +437,22 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private _replaceTextAtSelection() {
     const range = this.quillElement.getSelection();
     if (range) {
-      this.quillElement.deleteText(range.index, range.length);
-      this.quillElement.insertText(range.index, this._content || '');
-      this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
+      if (range.length === 0) {
+        this.quillElement.setText(this._content || '');
+        this.quillElement.setSelection((this._content?.length || 0), 0);
+      } else {
+        this.quillElement.deleteText(range.index, range.length);
+        this.quillElement.insertText(range.index, this._content || '');
+        this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
+      }
     }
   }
 
   private _insertTextAtSelection() {
     const range = this.quillElement.getSelection();
-    if (range) {
-      this.quillElement.insertText(range.index, this._content || '');
-      this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
-    }
+    const index = range ? range.index : 0;
+    this.quillElement.insertText(index, this._content || '');
+    this.quillElement.setSelection(index + (this._content.length || 0), 0);
   }
 
   render() {

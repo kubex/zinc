@@ -4187,6 +4187,7 @@ declare module "components/editor/modules/dialog/dialog" {
         });
         private _initDialog;
         private createComponent;
+        close(): void;
     }
     export default Dialog;
 }
@@ -4578,6 +4579,7 @@ declare module "components/editor/editor.component" {
         private _handleEditorChange;
         private _replaceTextAtSelection;
         private _insertTextAtSelection;
+        private _closeDialog;
         render(): import("lit").TemplateResult<1>;
     }
 }

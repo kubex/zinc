@@ -3328,6 +3328,7 @@ declare module "components/tabs/tabs.component" {
         protected _activeClicks: number;
         private _panel;
         private _panels;
+        private _activeTab;
         private _tabs;
         private _actions;
         private _knownUri;

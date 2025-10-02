@@ -417,11 +417,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
     if (!contentElement) return;
 
-    const content = contentElement.textContent;
+    let content = contentElement.textContent;
     if (contentElement instanceof HTMLInputElement || contentElement instanceof ZnTextarea) {
-      this._content = contentElement.value;
+      content = contentElement.value;
     }
-
     if (!content || content === '') return;
 
     this._content = content;

@@ -25,6 +25,7 @@ import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
 import ZnTextarea from "../textarea";
+import {trim} from "lodash";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -423,7 +424,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
     if (!content || content === '') return;
 
-    this._content = content;
+    this._content = trim(content);
 
     if (editorMode === 'replace') {
       this._replaceTextAtSelection();

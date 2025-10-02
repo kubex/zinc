@@ -4598,6 +4598,7 @@ declare module "components/editor/editor.component" {
         private quillElement;
         private _commands;
         private _content;
+        private _lastCursorIndex;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;

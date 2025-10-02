@@ -36,7 +36,7 @@ export default class DialogComponent extends ZincElement {
 
   setContent(content: string) {
     if (this.dialogEl) {
-      this.dialogEl.innerHTML = content;
+      this.dialogEl.querySelector('.editor-dialog__content')!.innerHTML = content;
     }
   }
 
@@ -94,7 +94,18 @@ export default class DialogComponent extends ZincElement {
                 'editor-dialog--has-focus': this.hasFocus,
               })}"
               context-data=${JSON.stringify({'editor-id': this._editorId})}>
-        ${this._getLoadingState()}
+        <zn-button
+          class="editor-dialog__close"
+          icon="close"
+          icon-size="24"
+          type="button"
+          color="transparent"
+          size="content"
+          @click="${() => this.dialogEl.close()}"
+        ></zn-button>
+        <div class="editor-dialog__content">
+          ${this._getLoadingState()}
+        </div>
       </dialog>
     `;
   }

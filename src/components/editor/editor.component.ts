@@ -19,6 +19,7 @@ import ZincElement from '../../internal/zinc-element';
 import type {OnEvent} from "../../utilities/on";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
+import type DialogComponent from "./modules/dialog/dialog.component";
 import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
@@ -441,6 +442,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
       }
     }
+
+    const dialog = this.shadowRoot?.querySelector('zn-editor-dialog') as DialogComponent | null;
+    if (dialog && dialog.open) {
+      dialog.dialogEl.close();
+    }
   }
 
   private _insertTextAtSelection() {
@@ -448,6 +454,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const index = range ? range.index : this._lastCursorIndex;
     this.quillElement.insertText(index, this._content || '');
     this.quillElement.setSelection(index + (this._content.length || 0), 0);
+
+    const dialog = this.shadowRoot?.querySelector('zn-editor-dialog') as DialogComponent | null;
+    if (dialog && dialog.open) {
+      dialog.dialogEl.close();
+    }
   }
 
   render() {

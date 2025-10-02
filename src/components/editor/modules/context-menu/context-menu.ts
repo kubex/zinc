@@ -3,26 +3,20 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill, {Delta} from "quill";
-import type {Commands} from "../../editor.component";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "quill/modules/toolbar";
 
 class ContextMenu {
   private _quill: Quill;
   private readonly _toolbarModule: Toolbar;
-  private readonly _commands: Commands[] = [];
   private _component!: ContextMenuComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill, options: { commands: Commands[] }) {
+  constructor(quill: Quill) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
-    const commands = options.commands || [];
-    this._commands = commands
-      .sort((a, b) => parseInt(b.count) - parseInt(a.count))
-      .slice(0, 3);
 
     this.initComponent();
     this.attachEvents();
@@ -169,7 +163,7 @@ class ContextMenu {
     const toolbar = this._toolbarModule.container;
     if (!toolbar) return;
 
-    const button = toolbar.shadowRoot?.querySelector('[data-format="canned-responses"]') as HTMLElement | null;
+    const button = toolbar.shadowRoot?.querySelector('[data-format="dialog"]') as HTMLElement | null;
     if (!button) return;
 
     button.click();
@@ -270,17 +264,20 @@ class ContextMenu {
   private _getOptions(): ResultItem[] {
     const options = [];
 
-    if (this._commands.length > 0) {
-      options.push(...this._commands.map(cmd => ({
-        icon: 'quickreply',
-        label: cmd.title,
-        value: cmd.content,
-        format: 'insert'
-      } satisfies ResultItem)));
-    }
+    /**
+     * TODO:  Hook into new logic using zn-editor-quick-action
+     *  if (this._commands.length > 0) {
+     *           options.push(...this._commands.map(cmd => ({
+     *             icon: 'quickreply',
+     *             label: cmd.title,
+     *             value: cmd.content,
+     *             format: 'insert'
+     *           } satisfies ResultItem)));
+     */
 
+    // TODO: Canned Responses need to use data from zn-editor-quick-action component
     options.push(
-      {icon: 'quickreply', label: 'Canned Responses', module: 'dialog'},
+      // {icon: 'quickreply', label: 'Canned Responses', format: 'dialog', value: '/test'}, - TODO: Re-enable once path is finalised
       {icon: 'format_bold', label: 'Bold', format: 'bold'},
       {icon: 'format_italic', label: 'Italic', format: 'italic'},
       {icon: 'format_underlined', label: 'Underline', format: 'underline'},

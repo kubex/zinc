@@ -4,10 +4,9 @@ import {FormControlController} from '../../internal/form';
 import {on} from "../../utilities/on";
 import {property, query} from 'lit/decorators.js';
 import Attachment from "./modules/attachment/attachment";
-import CannedResponse from "./modules/canned-response/canned-response";
 import ContextMenu from "./modules/context-menu/context-menu";
-import CustomToolbar from "./modules/toolbar/toolbar";
 import DatePicker from "./modules/date-picker/date-picker";
+import Dialog from "./modules/dialog/dialog";
 import DragAndDrop from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
@@ -15,6 +14,7 @@ import ImageResize from "./modules/image-resize/image-resize";
 import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
+import Toolbar from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import type {OnEvent} from "../../utilities/on";
 import type {ZincFormControl} from '../../internal/zinc-element';
@@ -24,14 +24,6 @@ import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
 import ZnTextarea from "../textarea";
-
-export interface Commands {
-  title: string;
-  content: string;
-  command: string;
-  labels?: string[];
-  count: string;
-}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -64,16 +56,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @query('#toolbar')
   private toolbar: ToolbarComponent;
 
+  @property({reflect: true}) id: string;
   @property() name: string;
   @property() value: string;
 
   @property({attribute: 'interaction-type', type: String})
   interactionType: 'ticket' | 'chat' = 'chat';
-
-  @property({attribute: 'canned-responses', type: Array})
-  cannedResponses: any[];
-
-  @property({attribute: 'canned-responses-url'}) cannedResponsesUri: string;
 
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
@@ -81,7 +69,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
   private quillElement: Quill;
-  private _commands: Commands[] = [];
   private _content: string = '';
   private _lastCursorIndex: number = 0;
 
@@ -110,7 +97,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.formControlController.updateValidity();
   }
 
-  protected async firstUpdated(_changedProperties: PropertyValues) {
+  protected firstUpdated(_changedProperties: PropertyValues) {
     this.formControlController.updateValidity();
 
     const bindings = this._getQuillKeyboardBindings();
@@ -120,7 +107,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._handleEditorChange(e);
     });
 
-    Quill.register({'modules/toolbar': CustomToolbar}, true);
+    Quill.register({'modules/toolbar': Toolbar}, true);
     Quill.register({'modules/datePicker': DatePicker}, true);
     Quill.register({'modules/emoji': Emoji}, true);
     Quill.register({'modules/headlessEmoji': HeadlessEmoji}, true);
@@ -129,7 +116,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register({'modules/dragAndDrop': DragAndDrop}, true);
     Quill.register({'modules/imageResize': ImageResize}, true);
     Quill.register({'modules/contextMenu': ContextMenu}, true);
-    Quill.register({'modules/cannedResponse': CannedResponse}, true);
+    Quill.register({'modules/dialog': Dialog}, true);
 
     /* AI Modules */
     Quill.register('modules/ai', QuillAI as any, true);
@@ -155,25 +142,18 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
 
-    if (this.cannedResponsesUri) {
-      await this._fetchCannedResponses();
-    }
-
-    const topCannedResponses = (this._commands || []).slice(0, 3);
-
+    // TODO: Re-enable context menu once fixed
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
           container: this.toolbar,
         },
-        contextMenu: {
-          commands: topCannedResponses
-        },
+        contextMenu: {},
         keyboard: {
           bindings: bindings
         },
-        cannedResponse: {
-          commands: this._commands // TODO: Have the module do a fetch for these results
+        dialog: {
+          editorId: this.id
         },
         emoji: {},
         headlessEmoji: {},
@@ -407,15 +387,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 
-  private async _fetchCannedResponses() {
-    try {
-      const response = await fetch(this.cannedResponsesUri);
-      this._commands = await response.json() as Commands[];
-    } catch (error) {
-      console.error('Error fetching canned responses', error);
-    }
-  }
-
   private _handleEditorChange(e: OnEvent) {
     const target = e.selectedTarget as HTMLElement;
     if (!target.hasAttribute('editor-mode')) return;
@@ -481,7 +452,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   render() {
     return html`
-      <zn-toolbar id="toolbar"></zn-toolbar>
+      <zn-toolbar id="toolbar">
+        <slot name="tools"></slot>
+      </zn-toolbar>
       <div id="editor"></div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">

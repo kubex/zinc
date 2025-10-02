@@ -1,0 +1,31 @@
+@use "../../../../wc";
+
+:host {
+  @include wc.scrollbars;
+  display: block;
+  position: absolute;
+  overflow: hidden;
+}
+
+::backdrop {
+  background-color: rgba(128, 128, 128, 0.6);
+}
+
+.editor-dialog {
+  background-color: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  padding: var(--zn-spacing-medium) 0;
+  border-radius: var(--zn-border-radius-medium);
+  height: 100%;
+  width: 100%;
+  max-width: 975px;
+  max-height: 650px;
+
+  .loading-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    gap: 10px;
+  }
+}

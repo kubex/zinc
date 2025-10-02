@@ -1,6 +1,6 @@
 import './toolbar.component';
 import QuillToolbar from "quill/modules/toolbar";
-import type CannedResponseComponent from "../canned-response/canned-response-component";
+import type DialogComponent from "../dialog/dialog.component";
 import type Quill from "quill";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";
@@ -8,6 +8,7 @@ import type ZnMenuItem from "../../../menu-item";
 class Toolbar extends QuillToolbar {
   private readonly _quill: Quill;
   private readonly _component: ToolbarComponent;
+  private _lastDialogUri?: string;
 
   constructor(quill: Quill, options: {
     container: ToolbarComponent;
@@ -21,7 +22,7 @@ class Toolbar extends QuillToolbar {
     this.addHandler('divider', () => this._insertDivider());
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
-    this.addHandler('canned-responses', () => this._openCannedResponseDialog());
+    this.addHandler('dialog', (value: string) => this._openDialog(value));
 
     this._quill = quill;
     this._component = options.container;
@@ -70,8 +71,22 @@ class Toolbar extends QuillToolbar {
       this._quill.format(key, next);
     };
 
-    const formatters = this._component.shadowRoot?.querySelectorAll('[data-format]') ?? [];
-    if (formatters) {
+    const shadowRoot = this._component.shadowRoot;
+    const shadowFormatters = shadowRoot?.querySelectorAll('[data-format]') ?? [];
+    const slottedFormatters: Element[] = [];
+    const slot = shadowRoot?.querySelector('slot');
+    if (slot) {
+      const assigned = (slot as HTMLSlotElement).assignedElements({flatten: true});
+      assigned.forEach(el => {
+        const formatEl = el.shadowRoot?.querySelector('[data-format]')
+        if (formatEl) {
+          slottedFormatters.push(formatEl);
+        }
+      });
+    }
+
+    const formatters = [...shadowFormatters, ...slottedFormatters];
+    if (formatters.length) {
       formatters.forEach((formatter: Element) => {
         formatter.addEventListener('click', (e) => {
           e.preventDefault();
@@ -233,11 +248,41 @@ class Toolbar extends QuillToolbar {
     button.click();
   }
 
-  private _openCannedResponseDialog() {
-    const dialog = this._component.shadowRoot?.querySelector(`zn-canned-response`) as CannedResponseComponent | null;
+  private async _openDialog(uri: string) {
+    if (this._lastDialogUri === uri) {
+      const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
+      if (dialog) {
+        dialog.dialogEl.showModal();
+      }
+      return;
+    }
+
+    const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
+
+    try {
+      const response = await fetch(uri, {
+        credentials: 'same-origin',
+        headers: {
+          "x-kx-inline": "inline"
+        }
+      });
+
+      if (response.ok) {
+        const content = await response.text();
+
+        dialog.setContent(content);
+        this._lastDialogUri = uri;
+      } else {
+        dialog.setContent('<div class="dialog-error">Failed to load content.</div>');
+        this._lastDialogUri = undefined;
+      }
+    } catch (error) {
+      dialog.setContent('<div class="dialog-error">An error occurred while loading content.</div>');
+      this._lastDialogUri = undefined;
+    }
   }
 }
 

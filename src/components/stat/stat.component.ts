@@ -32,6 +32,7 @@ export default class ZnStatsTile extends ZincElement {
   @property() previous = '0';
   @property() currency = '';
   @property({type: Boolean, attribute: 'show-delta'}) showDelta = false;
+  @property() color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral' = 'primary';
 
   calcPercentageDifference() {
     const previous = parseFloat(this.previous);
@@ -100,7 +101,10 @@ export default class ZnStatsTile extends ZincElement {
 
   render() {
     return html`
-      <div class="${classMap({'stat-tile': true})}">
+      <div class="${classMap({
+        'stat-tile': true,
+        [`stat-tile--${this.color}`]: true
+      })}">
         <div class="container">
           <div class="left">
             <div>

@@ -261,6 +261,7 @@ export default class ZnTabs extends ZincElement {
     if (!target.hasAttribute('tab') && target.hasAttribute('tab-uri')) {
       const tabUri: string | null = target.getAttribute("tab-uri") ?? "";
       this._createUriPanel(target, tabUri, this._uriToId(tabUri));
+      target.setAttribute('tab-id', this._uriToId(tabUri));
     }
   }
 

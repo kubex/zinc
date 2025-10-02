@@ -3753,6 +3753,7 @@ declare module "components/stat/stat.component" {
         previous: string;
         currency: string;
         showDelta: boolean;
+        color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral';
         calcPercentageDifference(): number;
         getCurrentAmount(): string;
         private getDisplayAmount;

@@ -80,6 +80,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private quillElement: Quill;
   private _commands: Commands[] = [];
+  private _content: string = '';
 
   get validity(): ValidityState {
     return this.editorHtml.validity;

@@ -21,7 +21,6 @@ import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
-import type DialogComponent from "./modules/dialog/dialog.component";
 import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
@@ -427,6 +426,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._content = trim(content);
 
     if (editorMode === 'replace') {
+      console.log('replacing text')
       this._replaceTextAtSelection();
     } else if (editorMode === 'insert') {
       this._insertTextAtSelection();
@@ -444,12 +444,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         this.quillElement.insertText(range.index, this._content || '');
         this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
       }
+    } else {
+      this.quillElement.setText(this._content || '');
+      this.quillElement.setSelection((this._content?.length || 0), 0);
     }
 
-    const dialog = this.shadowRoot?.querySelector('zn-editor-dialog') as DialogComponent | null;
-    if (dialog && dialog.open) {
-      dialog.dialogEl.close();
-    }
+    this._closeDialog();
   }
 
   private _insertTextAtSelection() {
@@ -458,9 +458,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.quillElement.insertText(index, this._content || '');
     this.quillElement.setSelection(index + (this._content.length || 0), 0);
 
-    const dialog = this.shadowRoot?.querySelector('zn-editor-dialog') as DialogComponent | null;
-    if (dialog && dialog.open) {
-      dialog.dialogEl.close();
+    this._closeDialog();
+  }
+
+  private _closeDialog() {
+    const dialogModule = this.quillElement.getModule('dialog') as Dialog;
+    if (dialogModule) {
+      dialogModule.close();
     }
   }
 

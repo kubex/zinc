@@ -25,6 +25,11 @@ class Dialog {
       <zn-editor-dialog></zn-editor-dialog>`;
     return litToHTML<DialogComponent>(tpl);
   }
+
+  public close() {
+    this._component.remove();
+    this._initDialog(); // TODO: Fix bodged job of closing dialog on text insertion (Creates shell error)
+  }
 }
 
 export default Dialog;

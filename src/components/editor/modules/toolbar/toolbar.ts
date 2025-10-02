@@ -261,7 +261,7 @@ class Toolbar extends QuillToolbar {
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
-    dialog.setContent(`<app-space id="app-edito-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
+    dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
 
     /*try {
       const response = await fetch(uri, {

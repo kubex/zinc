@@ -54,6 +54,7 @@ export default class ZnTabs extends ZincElement {
   protected _activeClicks = 0;
   private _panel: Element | null | undefined;
   private _panels: Map<string, Element[]>;
+  private _activeTab: Element | null = null;
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
@@ -321,6 +322,9 @@ export default class ZnTabs extends ZincElement {
   }
 
   _setTabEleActive(ele: Element, active: boolean) {
+    if (active) {
+      this._activeTab = ele
+    }
     ele.classList.toggle('zn-tb-active', active);
     ele.classList.toggle('active', active);
   }
@@ -350,8 +354,14 @@ export default class ZnTabs extends ZincElement {
         }
         element.toggleAttribute('selected', isActive);
         if (isActive && refresh) {
+          let uri = "";
+          let gaid = "";
+          if (this._activeTab && this._activeTab.hasAttribute('tab-uri')) {
+            uri = this._activeTab.getAttribute('tab-uri')!;
+            gaid = this._activeTab.getAttribute('gaid')!;
+          }
           document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: {element: element}
+            detail: {element: element, uri: uri, gaid: gaid}
           }));
         }
       });

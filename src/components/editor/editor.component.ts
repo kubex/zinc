@@ -117,16 +117,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       }
     });
 
-    Quill.register('modules/toolbar', Toolbar as any, true);
-    Quill.register('modules/datePicker', DatePicker as any, true);
-    Quill.register('modules/emoji', Emoji as any, true);
-    Quill.register('modules/headlessEmoji', HeadlessEmoji as any, true);
-    Quill.register('modules/attachment', Attachment as any, true);
-    Quill.register('modules/timeTracking', TimeTracking as any, true);
-    Quill.register('modules/dragAndDrop', DragAndDrop as any, true);
-    Quill.register('modules/imageResize', ImageResize as any, true);
-    Quill.register('modules/contextMenu', ContextMenu as any, true);
-    Quill.register('modules/cannedResponse', CannedResponse as any, true);
+    Quill.register({'modules/toolbar': Toolbar}, true);
+    Quill.register({'modules/datePicker': DatePicker}, true);
+    Quill.register({'modules/emoji': Emoji}, true);
+    Quill.register({'modules/headlessEmoji': HeadlessEmoji}, true);
+    Quill.register({'modules/attachment': Attachment}, true);
+    Quill.register({'modules/timeTracking': TimeTracking}, true);
+    Quill.register({'modules/dragAndDrop': DragAndDrop}, true);
+    Quill.register({'modules/imageResize': ImageResize}, true);
+    Quill.register({'modules/contextMenu': ContextMenu}, true);
+    Quill.register({'modules/cannedResponse': CannedResponse}, true);
 
     /* AI Modules */
     Quill.register('modules/ai', QuillAI as any, true);

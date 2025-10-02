@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -2078,18 +2078,38 @@
           }
         },
         {
+          "name": "zn-editor-quick-action",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "uri", "value": { "type": "string" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } },
+            { "name": "key", "value": { "type": "string" } }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "uri", "type": "string" },
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "key", "type": "string" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-editor",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
+            { "name": "id", "value": { "type": "string" } },
             { "name": "name", "value": { "type": "string" } },
             { "name": "value", "value": { "type": "string" } },
             {
               "name": "interaction-type",
               "value": { "type": "'ticket' | 'chat'", "default": "'chat'" }
             },
-            { "name": "canned-responses", "value": { "type": "any[]" } },
-            { "name": "canned-responses-url", "value": { "type": "string" } },
             { "name": "attachment-url", "value": { "type": "string" } },
             {
               "name": "ai-path",
@@ -2105,11 +2125,10 @@
           ],
           "js": {
             "properties": [
+              { "name": "id", "type": "string" },
               { "name": "name", "type": "string" },
               { "name": "value", "type": "string" },
               { "name": "interactionType", "type": "'ticket' | 'chat'" },
-              { "name": "cannedResponses", "type": "any[]" },
-              { "name": "cannedResponsesUri", "type": "string" },
               { "name": "uploadAttachmentUrl", "type": "string" },
               { "name": "aiPath", "type": "string" },
               { "name": "validity", "type": "ValidityState" },
@@ -6525,6 +6544,28 @@
             "properties": [
               { "name": "icon", "type": "string" },
               { "name": "inline", "type": "boolean" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-editor-tool",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "uri", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            {
+              "name": "handler",
+              "value": { "type": "string", "default": "'dialog'" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "uri", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "handler", "type": "string" }
             ],
             "events": []
           }

@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -7433,6 +7433,98 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/editor/editor-quick-action.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEditorQuickAction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "key"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "key"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "editor-quick-action",
+          "tagName": "zn-editor-quick-action",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEditorQuickAction",
+            "module": "components/editor/editor-quick-action.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/editor/editor.js",
       "declarations": [
         {
@@ -7494,6 +7586,15 @@
             },
             {
               "kind": "field",
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "id",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "name",
               "type": {
                 "text": "string"
@@ -7519,22 +7620,6 @@
             },
             {
               "kind": "field",
-              "name": "cannedResponses",
-              "type": {
-                "text": "any[]"
-              },
-              "attribute": "canned-responses"
-            },
-            {
-              "kind": "field",
-              "name": "cannedResponsesUri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "canned-responses-url"
-            },
-            {
-              "kind": "field",
               "name": "uploadAttachmentUrl",
               "type": {
                 "text": "string"
@@ -7557,15 +7642,6 @@
                 "text": "Quill"
               },
               "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_commands",
-              "type": {
-                "text": "Commands[]"
-              },
-              "privacy": "private",
-              "default": "[]"
             },
             {
               "kind": "field",
@@ -7662,11 +7738,6 @@
             },
             {
               "kind": "method",
-              "name": "_fetchCannedResponses",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
               "name": "_handleEditorChange",
               "privacy": "private",
               "parameters": [
@@ -7697,6 +7768,13 @@
           ],
           "attributes": [
             {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "id"
+            },
+            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -7717,20 +7795,6 @@
               },
               "default": "'chat'",
               "fieldName": "interactionType"
-            },
-            {
-              "name": "canned-responses",
-              "type": {
-                "text": "any[]"
-              },
-              "fieldName": "cannedResponses"
-            },
-            {
-              "name": "canned-responses-url",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "cannedResponsesUri"
             },
             {
               "name": "attachment-url",
@@ -24758,6 +24822,85 @@
           "declaration": {
             "name": "ZnWell",
             "module": "components/well/well.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/editor/editor-tool/editor-tool.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEditorTool",
+          "members": [
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "handler",
+              "type": {
+                "text": "string"
+              },
+              "default": "'dialog'",
+              "attribute": "handler"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "handler",
+              "type": {
+                "text": "string"
+              },
+              "default": "'dialog'",
+              "fieldName": "handler"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "editor-tool",
+          "tagName": "zn-editor-tool",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEditorTool",
+            "module": "components/editor/editor-tool/editor-tool.js"
           }
         }
       ]

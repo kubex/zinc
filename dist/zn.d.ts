@@ -4027,45 +4027,29 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _insertOptions;
         private _emojiOptions;
         private _dateOption;
-        private _cannedResponsesOption;
     }
 }
-declare module "components/editor/modules/canned-response/canned-response-component" {
-    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from "lit";
+declare module "components/editor/modules/dialog/dialog.component" {
+    import { type CSSResultGroup, type PropertyValues } from "lit";
     import ZincElement from "internal/zinc-element";
-    import type { Commands } from "components/editor/editor.component";
-    import type { ZnInputEvent } from "events/zn-input";
-    import type ZnInput from "components/input/index";
-    export default class CannedResponseComponent extends ZincElement {
+    export default class DialogComponent extends ZincElement {
         static styles: CSSResultGroup;
         private hasFocus;
-        private isSearching;
         dialogEl: HTMLDialogElement;
-        searchInput: ZnInput;
-        commandList: HTMLElement;
-        commands: Commands[];
         open: boolean;
-        onCommandSelect?: (command: Commands) => void;
-        private _allCommands;
-        set allCommands(value: Commands[]);
+        uri: string;
         private closeWatcher;
+        private _editorId;
+        set editorId(value: string);
         connectedCallback(): void;
-        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        private handleKeyDown;
-        private _handleClick;
-        getAllItems(): HTMLElement[];
-        getCurrentItem(): HTMLElement | undefined;
-        setCurrentItem(item: HTMLElement): void;
-        focus(): void;
+        setContent(content: string): void;
         handleOpenChange(): void;
         private addOpenListeners;
         private removeOpenListeners;
         private requestClose;
-        private _createCommand;
-        private isFuzzyMatch;
-        handleSearch(event: ZnInputEvent): void;
-        render(): TemplateResult<1>;
+        private _getLoadingState;
+        render(): import("lit").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/toolbar/toolbar" {
@@ -4076,6 +4060,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
     class Toolbar extends QuillToolbar {
         private readonly _quill;
         private readonly _component;
+        private _lastDialogUri?;
         constructor(quill: Quill, options: {
             container: ToolbarComponent;
             handlers?: Record<string, (value?: any) => void>;
@@ -4092,7 +4077,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _syncButtonState;
         private _insertDivider;
         private _openDatePicker;
-        private _openCannedResponseDialog;
+        private _openDialog;
     }
     export default Toolbar;
 }
@@ -4125,26 +4110,6 @@ declare module "components/editor/modules/attachment/attachment" {
         private _uploadAttachment;
     }
 }
-declare module "components/editor/modules/canned-response/canned-response" {
-    import "components/editor/modules/canned-response/canned-response-component";
-    import type { Commands } from "components/editor/editor.component";
-    import type Quill from 'quill';
-    class CannedResponse {
-        private _quill;
-        private _dialog;
-        private readonly _commands;
-        constructor(quill: Quill, options: {
-            commands: Commands[];
-        });
-        private _close;
-        private _initDialog;
-        private getToolbarDialogContainer;
-        private createDialog;
-        private addCommands;
-        private triggerCommand;
-    }
-    export default CannedResponse;
-}
 declare module "components/editor/modules/context-menu/context-menu-component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -4174,18 +4139,14 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
 declare module "components/editor/modules/context-menu/context-menu" {
     import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
-    import type { Commands } from "components/editor/editor.component";
     class ContextMenu {
         private _quill;
         private readonly _toolbarModule;
-        private readonly _commands;
         private _component;
         private _startIndex;
         private _keydownHandler;
         private _docClickHandler;
-        constructor(quill: Quill, options: {
-            commands: Commands[];
-        });
+        constructor(quill: Quill);
         private initComponent;
         private attachEvents;
         private createComponent;
@@ -4214,6 +4175,20 @@ declare module "components/editor/modules/date-picker/date-picker" {
         private _onDateSelect;
     }
     export default DatePicker;
+}
+declare module "components/editor/modules/dialog/dialog" {
+    import type Quill from "quill";
+    class Dialog {
+        private readonly _quill;
+        private readonly _editorId;
+        private _component;
+        constructor(quill: Quill, options: {
+            editorId: string;
+        });
+        private _initDialog;
+        private createComponent;
+    }
+    export default Dialog;
 }
 declare module "components/editor/modules/drag-drop/drag-drop" {
     import type Quill from 'quill';
@@ -4558,13 +4533,6 @@ declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
-    export interface Commands {
-        title: string;
-        content: string;
-        command: string;
-        labels?: string[];
-        count: string;
-    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/editor
@@ -4588,15 +4556,13 @@ declare module "components/editor/editor.component" {
         private editor;
         private editorHtml;
         private toolbar;
+        id: string;
         name: string;
         value: string;
         interactionType: 'ticket' | 'chat';
-        cannedResponses: any[];
-        cannedResponsesUri: string;
         uploadAttachmentUrl: string;
         aiPath: string;
         private quillElement;
-        private _commands;
         private _content;
         private _lastCursorIndex;
         get validity(): ValidityState;
@@ -4605,11 +4571,10 @@ declare module "components/editor/editor.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
-        protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         private _handleTextChange;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
-        private _fetchCannedResponses;
         private _handleEditorChange;
         private _replaceTextAtSelection;
         private _insertTextAtSelection;
@@ -4623,6 +4588,27 @@ declare module "components/editor/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor': ZnEditor;
+        }
+    }
+}
+declare module "components/editor/editor-tool/editor-tool.component" {
+    import { type CSSResultGroup } from "lit";
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorTool extends ZincElement {
+        static styles: CSSResultGroup;
+        uri: string;
+        icon: string;
+        handler: string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/editor-tool/index" {
+    import ZnEditorTool from "components/editor/editor-tool/editor-tool.component";
+    export * from "components/editor/editor-tool/editor-tool.component";
+    export default ZnEditorTool;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-editor-tool': ZnEditorTool;
         }
     }
 }
@@ -6306,6 +6292,8 @@ declare module "zinc" {
     export { default as OrderTable } from "components/order-table/index";
     export { default as BulkActions } from "components/bulk-actions/index";
     export { default as Editor } from "components/editor/index";
+    export { default as EditorTool } from "components/editor/editor-tool/index";
+    export { default as EditorDialog } from "components/editor/modules/dialog/dialog.component";
     export { default as Toggle } from "components/toggle/index";
     export { default as Input } from "components/input/index";
     export { default as Select } from "components/select/index";
@@ -6338,6 +6326,16 @@ declare module "zinc" {
     export { default as FilterWrapper } from "components/filter-wrapper/index";
     export * from "events/events";
 }
+declare module "components/editor/editor-quick-action.component" {
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorQuickAction extends ZincElement {
+        uri: string;
+        caption: string;
+        description: string;
+        key: string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
 declare module "components/editor/modules/events/zn-command-select" {
     export type ZnCommandSelectEvent = CustomEvent<{
         item: HTMLElement;
@@ -6353,38 +6351,6 @@ declare module "components/editor/modules/events/zn-editor-update" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-editor-update': ZnEditorUpdateEvent;
-        }
-    }
-}
-declare module "components/editor/modules/events/zn-show-canned-response-dialog" {
-    export type ZnShowCannedResponseDialogEvent = CustomEvent<{
-        commands: {
-            title: string;
-            content: string;
-            command: string;
-            count: string;
-            labels?: string[];
-        }[];
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-show-canned-response-dialog': ZnShowCannedResponseDialogEvent;
-        }
-    }
-}
-declare module "components/editor/modules/events/zn-show-canned-response-menu" {
-    export type ZnShowCannedResponseMenuEvent = CustomEvent<{
-        commands: {
-            title: string;
-            content: string;
-            command: string;
-            count: string;
-            labels?: string[];
-        }[];
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-show-canned-response-menu': ZnShowCannedResponseMenuEvent;
         }
     }
 }

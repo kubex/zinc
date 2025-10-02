@@ -5,6 +5,7 @@ import {property, query} from 'lit/decorators.js';
 import Attachment from "./modules/attachment/attachment";
 import CannedResponse from "./modules/canned-response/canned-response";
 import ContextMenu from "./modules/context-menu/context-menu";
+import CustomToolbar from "./modules/toolbar/toolbar";
 import DatePicker from "./modules/date-picker/date-picker";
 import DragAndDrop from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
@@ -13,7 +14,6 @@ import ImageResize from "./modules/image-resize/image-resize";
 import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
-import Toolbar from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
@@ -117,7 +117,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       }
     });
 
-    Quill.register({'modules/toolbar': Toolbar}, true);
+    Quill.register({'modules/toolbar': CustomToolbar}, true);
     Quill.register({'modules/datePicker': DatePicker}, true);
     Quill.register({'modules/emoji': Emoji}, true);
     Quill.register({'modules/headlessEmoji': HeadlessEmoji}, true);

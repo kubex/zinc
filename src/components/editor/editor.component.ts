@@ -23,6 +23,7 @@ import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
+import ZnTextarea from "../textarea";
 
 export interface Commands {
   title: string;
@@ -425,10 +426,27 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const contentContainer = target.getAttribute('editor-content-id');
     if (!contentContainer) return;
 
-    const contentElement = deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '');
+    let contentElement = (target as Element).closest('#' + contentContainer)
+    if (e.currentTarget instanceof Element) {
+      contentElement = e.currentTarget.closest('#' + contentContainer)
+    } else if (e.selectedTarget instanceof Element) {
+      contentElement = e.selectedTarget.closest('#' + contentContainer)
+    } else if (e.target instanceof Element) {
+      contentElement = e.target.closest('#' + contentContainer)
+    } else {
+      contentElement = (e.composedPath()[0] as Element).closest('#' + contentContainer)
+    }
+
+    if (!contentElement) {
+      contentElement = deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '')[0];
+    }
     if (!contentElement) return;
 
-    const content = contentElement[0].textContent;
+    const content = contentElement.textContent;
+    if (contentElement instanceof HTMLInputElement || contentElement instanceof ZnTextarea) {
+      this._content = contentElement.value;
+    }
+
     if (!content || content === '') return;
 
     this._content = content;

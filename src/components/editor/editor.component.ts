@@ -82,6 +82,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   private quillElement: Quill;
   private _commands: Commands[] = [];
   private _content: string = '';
+  private _lastCursorIndex: number = 0;
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -112,7 +113,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.formControlController.updateValidity();
 
     const bindings = this._getQuillKeyboardBindings();
-
 
     // TODO: Change ID from abc to actual editor ID
     on(document, 'click', `[editor-id="abc"]`, (e: OnEvent) => {
@@ -318,7 +318,13 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     /**
      * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM
      **/
-    document.addEventListener('selectionchange', () => this.quillElement.selection.update());
+    document.addEventListener('selectionchange', () => {
+      const range = this.quillElement.getSelection();
+      if (range) {
+        this._lastCursorIndex = range.index;
+      }
+      this.quillElement.selection.update()
+    });
 
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
@@ -450,7 +456,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private _insertTextAtSelection() {
     const range = this.quillElement.getSelection();
-    const index = range ? range.index : 0;
+    const index = range ? range.index : this._lastCursorIndex;
     this.quillElement.insertText(index, this._content || '');
     this.quillElement.setSelection(index + (this._content.length || 0), 0);
   }

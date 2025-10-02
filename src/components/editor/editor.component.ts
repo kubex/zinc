@@ -407,7 +407,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
   }
 
-  private _handleEditorChange(target: HTMLElement) {
+  private _handleEditorChange(e: OnEvent) {
+    const target = e.selectedTarget as HTMLElement;
+    if (!target.hasAttribute('editor-mode')) return;
+
     const editorMode = target.getAttribute('editor-mode');
     if (!editorMode) return;
 

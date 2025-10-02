@@ -277,7 +277,7 @@ class ContextMenu {
 
     // TODO: Canned Responses need to use data from zn-editor-quick-action component
     options.push(
-      {icon: 'quickreply', label: 'Canned Responses', format: 'dialog', value: '/fortifi/ticket/canned-response'}, // TODO: Fix this to be dynamic
+      {icon: 'quickreply', label: 'Canned Responses', format: 'dialog', value: '/fortifi/tickets/canned-responses'}, // TODO: Fix this to be dynamic
       {icon: 'format_bold', label: 'Bold', format: 'bold'},
       {icon: 'format_italic', label: 'Italic', format: 'italic'},
       {icon: 'format_underlined', label: 'Underline', format: 'underline'},

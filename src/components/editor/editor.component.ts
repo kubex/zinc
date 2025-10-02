@@ -103,8 +103,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    // TODO: Change ID from abc to actual editor ID
-    on(document, 'click', `[editor-id="abc"]`, (e: OnEvent) => {
+    let checkId = this.id
+    if (!checkId) {
+      checkId = "abc"
+    }
+    on(document, 'click', `[editor-id="` + checkId + `"]`, (e: OnEvent) => {
       this._handleEditorChange(e);
     });
 

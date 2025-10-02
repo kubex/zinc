@@ -3504,7 +3504,7 @@ declare module "components/pane/index" {
     }
 }
 declare module "utilities/on" {
-    type OnEvent = Event & {
+    export type OnEvent = Event & {
         selectedTarget: EventTarget;
         path: EventTarget[];
     };
@@ -4597,6 +4597,7 @@ declare module "components/editor/editor.component" {
         aiPath: string;
         private quillElement;
         private _commands;
+        private _content;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4609,6 +4610,8 @@ declare module "components/editor/editor.component" {
         private _supplyPlaceholderDialog;
         private _fetchCannedResponses;
         private _handleEditorChange;
+        private _replaceTextAtSelection;
+        private _insertTextAtSelection;
         render(): import("lit").TemplateResult<1>;
     }
 }

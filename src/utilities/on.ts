@@ -1,4 +1,4 @@
-type OnEvent = Event & { selectedTarget: EventTarget; path: EventTarget[] };
+export type OnEvent = Event & { selectedTarget: EventTarget; path: EventTarget[] };
 
 interface OnEventListener {
   (evt: OnEvent): void;

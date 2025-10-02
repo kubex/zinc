@@ -15,6 +15,7 @@ import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
 import ZincElement from '../../internal/zinc-element';
+import type {OnEvent} from "../../utilities/on";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
 import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
@@ -110,11 +111,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     const bindings = this._getQuillKeyboardBindings();
 
-    on(document, 'click', '[editor-id]', (event) => {
-      const target = event.selectedTarget as HTMLElement;
-      if (target.hasAttribute('editor-id')) {
-        this._handleEditorChange(target);
-      }
+
+    // TODO: Change ID from abc to actual editor ID
+    on(document, 'click', `[editor-id="abc"]`, (e: OnEvent) => {
+      this._handleEditorChange(e);
     });
 
     Quill.register({'modules/toolbar': CustomToolbar}, true);
@@ -411,13 +411,38 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const editorMode = target.getAttribute('editor-mode');
     if (!editorMode) return;
 
-    const aiModule = this.quillElement.getModule('ai') as QuillAI;
-    if (!aiModule) return;
+    const contentContainer = target.getAttribute('editor-click');
+    if (!contentContainer) return;
+
+    const contentElement = document.querySelector(contentContainer);
+    if (!contentElement) return;
+
+    const content = contentElement.textContent;
+    if (!content || content === '') return;
+
+    this._content = content;
 
     if (editorMode === 'replace') {
-      aiModule.replaceTextAtSelection();
+      this._replaceTextAtSelection();
     } else if (editorMode === 'insert') {
-      aiModule.insertTextAtSelection();
+      this._insertTextAtSelection();
+    }
+  }
+
+  private _replaceTextAtSelection() {
+    const range = this.quillElement.getSelection();
+    if (range) {
+      this.quillElement.deleteText(range.index, range.length);
+      this.quillElement.insertText(range.index, this._content || '');
+      this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
+    }
+  }
+
+  private _insertTextAtSelection() {
+    const range = this.quillElement.getSelection();
+    if (range) {
+      this.quillElement.insertText(range.index, this._content || '');
+      this.quillElement.setSelection(range.index + (this._content.length || 0), 0);
     }
   }
 

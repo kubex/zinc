@@ -1,11 +1,12 @@
 import './toolbar.component';
 import Toolbar from "quill/modules/toolbar";
 import type CannedResponseComponent from "../canned-response/canned-response-component";
+import QuillToolbar from "quill/modules/toolbar";
 import type Quill from "quill";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";
 
-class ToolbarModule extends Toolbar {
+class Toolbar extends QuillToolbar {
   private readonly _quill: Quill;
   private readonly _component: ToolbarComponent;
 
@@ -241,4 +242,4 @@ class ToolbarModule extends Toolbar {
   }
 }
 
-export default ToolbarModule;
+export default Toolbar;

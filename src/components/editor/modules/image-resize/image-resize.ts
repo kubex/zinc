@@ -1,18 +1,18 @@
 import Quill, {Module} from "quill";
 
-interface ImageResizeModuleOptions {
+interface ImageResizeOptions {
   overlayStyles?: Partial<CSSStyleDeclaration>;
 }
 
-class ImageResize extends Module<ImageResizeModuleOptions>
+class ImageResize extends Module<ImageResizeOptions>
 {
 
-  static DEFAULTS: ImageResizeModuleOptions = {};
+  static DEFAULTS: ImageResizeOptions = {};
 
   private _focusedImage: HTMLImageElement | null = null;
   private _overlay: HTMLDivElement | null = null;
 
-  constructor(quill: Quill, options: ImageResizeModuleOptions)
+  constructor(quill: Quill, options: ImageResizeOptions)
   {
     super(quill, options);
 

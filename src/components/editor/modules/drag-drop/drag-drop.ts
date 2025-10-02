@@ -1,25 +1,25 @@
 import type Quill from 'quill';
 
-interface DragAndDropModuleOptions {
+interface DragAndDropOptions {
   onDrop: (file: File, options: object) => void;
   draggableContentTypePattern: string;
   draggables: [];
 }
 
-const defaultOptions: DragAndDropModuleOptions = {
+const defaultOptions: DragAndDropOptions = {
   onDrop: () => {
   },
   draggableContentTypePattern: '^image\\/',
   draggables: []
 };
 
-export default class DragAndDropModule {
+export default class DragAndDrop {
   private _quill: Quill;
-  private _options: DragAndDropModuleOptions;
+  private _options: DragAndDropOptions;
   private _container: any = null;
   private _draggables: any = [];
 
-  constructor(quill: Quill, options: DragAndDropModuleOptions) {
+  constructor(quill: Quill, options: DragAndDropOptions) {
     this._quill = quill;
     this._options = Object.assign({}, defaultOptions, options);
     this._container = this._quill.addContainer('ql-editor');

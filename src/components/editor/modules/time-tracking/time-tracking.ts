@@ -1,17 +1,17 @@
 import type Quill from 'quill';
 
-interface TimeTrackingModuleOptions {
+interface TimeTrackingOptions {
   startTimeInput?: HTMLInputElement;
   openTimeInput?: HTMLInputElement;
 }
 
 export default class TimeTracking {
   private _quill: Quill;
-  private _options: TimeTrackingModuleOptions;
+  private _options: TimeTrackingOptions;
   private _startTime: number;
   private _openTime: number;
 
-  constructor(quill: Quill, options: TimeTrackingModuleOptions) {
+  constructor(quill: Quill, options: TimeTrackingOptions) {
     this._quill = quill;
     this._options = options;
 

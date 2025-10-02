@@ -1,7 +1,7 @@
 import type Quill from 'quill';
-import type ToolbarModule from "../toolbar/toolbar";
+import type Toolbar from "../toolbar/toolbar";
 
-interface AttachmentModuleOptions {
+interface AttachmentOptions {
   upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
   onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
   attachmentInput?: HTMLInputElement;
@@ -15,11 +15,11 @@ const generateId = () => {
 
 export default class Attachment {
   private _quill: Quill;
-  private _options: AttachmentModuleOptions;
+  private _options: AttachmentOptions;
 
   private _fileHolder: HTMLInputElement | null;
 
-  constructor(quill: Quill, options: AttachmentModuleOptions) {
+  constructor(quill: Quill, options: AttachmentOptions) {
     this._quill = quill;
     this._options = options;
 
@@ -28,7 +28,7 @@ export default class Attachment {
     }
 
     (this._quill
-      .getModule('toolbar') as ToolbarModule)
+      .getModule('toolbar') as Toolbar)
       .addHandler('attachment', this._selectLocalImage.bind(this));
 
     this._createAttachmentContainer();

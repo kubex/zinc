@@ -6,14 +6,14 @@ import Attachment from "./modules/attachment/attachment";
 import CannedResponse from "./modules/canned-response/canned-response";
 import ContextMenu from "./modules/context-menu/context-menu";
 import DatePicker from "./modules/date-picker/date-picker";
-import DragAndDropModule from "./modules/drag-drop/drag-drop";
+import DragAndDrop from "./modules/drag-drop/drag-drop";
 import Emoji from "./modules/emoji/emoji";
 import HeadlessEmoji from "./modules/emoji/headless/headless-emoji";
 import ImageResize from "./modules/image-resize/image-resize";
 import Quill from "quill";
 import QuillAI from "./modules/ai";
 import TimeTracking from "./modules/time-tracking/time-tracking";
-import ToolbarModule from "./modules/toolbar/toolbar";
+import Toolbar from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
@@ -117,16 +117,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       }
     });
 
-    Quill.register('modules/toolbar', ToolbarModule as any, true);
-    Quill.register('modules/datePickerModule', DatePicker as any, true);
-    Quill.register('modules/emojiModule', Emoji as any, true);
-    Quill.register('modules/headlessEmojiModule', HeadlessEmoji as any, true);
-    Quill.register('modules/attachmentModule', Attachment as any, true);
-    Quill.register('modules/timeTrackingModule', TimeTracking as any, true);
-    Quill.register('modules/dragAndDropModule', DragAndDropModule as any, true);
-    Quill.register('modules/imageResizeModule', ImageResize as any, true);
-    Quill.register('modules/contextMenuModule', ContextMenu as any, true);
-    Quill.register('modules/cannedResponseModule', CannedResponse as any, true);
+    Quill.register('modules/toolbar', Toolbar as any, true);
+    Quill.register('modules/datePicker', DatePicker as any, true);
+    Quill.register('modules/emoji', Emoji as any, true);
+    Quill.register('modules/headlessEmoji', HeadlessEmoji as any, true);
+    Quill.register('modules/attachment', Attachment as any, true);
+    Quill.register('modules/timeTracking', TimeTracking as any, true);
+    Quill.register('modules/dragAndDrop', DragAndDrop as any, true);
+    Quill.register('modules/imageResize', ImageResize as any, true);
+    Quill.register('modules/contextMenu', ContextMenu as any, true);
+    Quill.register('modules/cannedResponse', CannedResponse as any, true);
 
     /* AI Modules */
     Quill.register('modules/ai', QuillAI as any, true);
@@ -163,26 +163,26 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         toolbar: {
           container: this.toolbar,
         },
-        contextMenuModule: {
+        contextMenu: {
           commands: topCannedResponses
         },
         keyboard: {
           bindings: bindings
         },
-        cannedResponseModule: {
+        cannedResponse: {
           commands: this._commands // TODO: Have the module do a fetch for these results
         },
-        emojiModule: {},
-        headlessEmojiModule: {},
-        datePickerModule: {},
+        emoji: {},
+        headlessEmoji: {},
+        datePicker: {},
         ai: {
           path: this.aiPath
         },
-        timeTrackingModule: {
+        timeTracking: {
           startTimeInput: startTimeInput as HTMLInputElement,
           openTimeInput: openTimeInput as HTMLInputElement
         },
-        attachmentModule: {
+        attachment: {
           attachmentInput: attachmentInput,
           onFileUploaded: () => {
             window.onbeforeunload = () => null;
@@ -207,7 +207,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
             });
           },
         },
-        imageResizeModule: {},
+        imageResize: {},
         history: {}
       },
       placeholder: 'Compose your reply...',
@@ -287,7 +287,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       if (selection === null) return;
       if (startNode !== null) {
         if (!quill.selection.hasFocus()) quill.selection.root.focus();
-        const native = (quill.selection.getNativeRange() || {}).native;
+        const native = quill.selection.getNativeRange()?.native;
         // @ts-ignore
         if (native === null || force || startNode !== native?.startContainer || startOffset !== native.startOffset || endNode !== native.endContainer || endOffset !== native.endOffset) {
           if (startNode.tagName === "BR") {

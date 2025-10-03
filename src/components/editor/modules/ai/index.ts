@@ -128,20 +128,20 @@ class QuillAI {
     this._attachPanelEvents(panel);
 
     // TODO: Finish overlay to prevent clicking away
-/*    // Create and append the overlay
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'none';
-    overlay.style.zIndex = '10000';
+    /*    // Create and append the overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'none';
+        overlay.style.zIndex = '10000';
 
-    // Append the overlay and panel to the body
-    this._quill.container.ownerDocument.body.appendChild(overlay);
+        // Append the overlay and panel to the body
+        this._quill.container.ownerDocument.body.appendChild(overlay);
 
-    this._component.style.zIndex = '10001';*/
+        this._component.style.zIndex = '10001';*/
 
     this._quill.container.ownerDocument.body.appendChild(this._component);
     this._show();
@@ -273,7 +273,7 @@ class QuillAI {
   }
 
   private _attachPanelEvents(panel: AIPanelComponent) {
-    panel.refine = this._clickPanelEvent.bind(this);
+    panel.refine = this._enterCustomPrompt.bind(this);
     panel.refineBuiltIn = this._clickPreDefinedEvent.bind(this);
   }
 
@@ -292,7 +292,8 @@ class QuillAI {
     }
   }
 
-  private _clickPanelEvent() {
+  private _enterCustomPrompt(prompt: string) {
+    this._prompt = prompt;
     this.processAIRequest().then(r => r);
   }
 }

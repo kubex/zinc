@@ -74,6 +74,7 @@ class QuillAI {
       headers: {
         'Content-Type': 'application/json',
         'x-kx-fetch-style': 'zn-editor',
+        'x-kx-editor-id': this._quill?.container?.getAttribute('x-editor-id') || '',
       },
       body: JSON.stringify({text: quotedSelectedText, prompt: this._prompt})
     });

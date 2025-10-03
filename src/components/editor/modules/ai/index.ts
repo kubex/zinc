@@ -23,25 +23,6 @@ class QuillAI {
     this._attachEvents();
   }
 
-  public replaceTextAtSelection() {
-    const content = this._latestContent(null);
-    if (this._range) {
-      this._quill.deleteText(this._range.index, this._range.length);
-      this._quill.insertText(this._range.index, content || '');
-      this._quill.setSelection(this._range.index + (content.length || 0), 0);
-    }
-    this._resetComponent();
-  }
-
-  public insertTextAtSelection() {
-    const content = this._latestContent(null);
-    if (this._range) {
-      this._quill.insertText(this._range.index, content || '');
-      this._quill.setSelection(this._range.index + (content.length || 0), 0);
-    }
-    this._resetComponent();
-  }
-
   private _initComponent() {
     this._component = this._createTooltipComponent()!;
     this._component.addEventListener('click', (e: Event) => this._replaceTooltip(e));
@@ -172,7 +153,7 @@ class QuillAI {
     }
 
     if (!isInsideComponent && !isInsideQuillRoot && !isInsideAIPanel) {
-      this._resetComponent();
+      this.resetComponent();
     }
   }
 
@@ -190,7 +171,7 @@ class QuillAI {
       this._show();
       this._positionComponent();
     } else {
-      this._resetComponent();
+      this.resetComponent();
     }
   }
 
@@ -245,7 +226,7 @@ class QuillAI {
     this._component.style.bottom = `${Math.max(0, window.innerHeight - bottom)}px`;
   }
 
-  private _resetComponent() {
+  public resetComponent() {
     this._hide();
     this._component.remove();
     this._initComponent();

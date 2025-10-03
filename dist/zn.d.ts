@@ -4512,7 +4512,7 @@ declare module "components/editor/modules/ai/index" {
         private _onEscapeKey;
         private _attachPanelEvents;
         private _clickPreDefinedEvent;
-        private _clickPanelEvent;
+        private _enterCustomPrompt;
     }
     export default QuillAI;
 }

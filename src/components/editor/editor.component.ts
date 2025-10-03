@@ -426,7 +426,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._content = trim(content);
 
     if (editorMode === 'replace') {
-      console.log('replacing text')
       this._replaceTextAtSelection();
     } else if (editorMode === 'insert') {
       this._insertTextAtSelection();

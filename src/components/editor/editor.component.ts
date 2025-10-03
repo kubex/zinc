@@ -448,7 +448,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this.quillElement.setSelection((this._content?.length || 0), 0);
     }
 
-    this._closeDialog();
+    this._closePopups();
+
   }
 
   private _insertTextAtSelection() {
@@ -457,7 +458,19 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this.quillElement.insertText(index, this._content || '');
     this.quillElement.setSelection(index + (this._content.length || 0), 0);
 
+    this._closePopups();
+  }
+
+  private _closePopups() {
+    this._closeAiPanel();
     this._closeDialog();
+  }
+
+  private _closeAiPanel() {
+    const aiModule = this.quillElement.getModule('ai') as QuillAI;
+    if (aiModule) {
+      aiModule.resetComponent();
+    }
   }
 
   private _closeDialog() {

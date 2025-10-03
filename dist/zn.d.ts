@@ -4493,8 +4493,6 @@ declare module "components/editor/modules/ai/index" {
         constructor(quill: Quill, options: {
             path: string;
         });
-        replaceTextAtSelection(): void;
-        insertTextAtSelection(): void;
         private _initComponent;
         private _attachEvents;
         private _latestContent;
@@ -4506,7 +4504,7 @@ declare module "components/editor/modules/ai/index" {
         private _updateFromEditor;
         private _positionComponent;
         private _setPanelPosition;
-        private _resetComponent;
+        resetComponent(): void;
         private _show;
         private _hide;
         private _onEscapeKey;
@@ -4581,6 +4579,8 @@ declare module "components/editor/editor.component" {
         private _handleEditorChange;
         private _replaceTextAtSelection;
         private _insertTextAtSelection;
+        private _closePopups;
+        private _closeAiPanel;
         private _closeDialog;
         render(): import("lit").TemplateResult<1>;
     }

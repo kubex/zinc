@@ -6229,7 +6229,14 @@ declare module "components/settings-container/settings-container.component" {
             label: string;
         }[];
         itemSelector: string;
+        private mutationObserver;
+        private _updateFiltersScheduled;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        private scheduleUpdateFilters;
+        private handleContentSlotChange;
+        private handleFiltersSlotChange;
+        private recomputeFiltersFromSlot;
         updateFilters(): void;
         updateFilter(e: ZnChangeEvent): void;
         render(): import("lit").TemplateResult<1>;

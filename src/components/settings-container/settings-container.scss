@@ -1,0 +1,47 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-content {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  padding-bottom: 40px;
+}
+
+zn-dropdown {
+  z-index: 10;
+  position: absolute;
+  bottom: var(--zn-spacing-small);
+  right: var(--zn-spacing-small);
+}
+
+zn-button {
+  border-radius: var(--zn-border-radius-medium);
+}
+
+.settings-container__dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-2x-small);
+  background-color: rgb(var(--zn-panel));
+  padding: var(--zn-spacing-small);
+  box-shadow: var(--zn-elevation-2);
+  border-radius: var(--zn-border-radius-medium);
+  width: var(--zn-size-mpanel);
+  z-index: 20;
+  border: 1px solid rgb(var(--zn-border-color));
+}

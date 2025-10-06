@@ -30,7 +30,6 @@ export default class ZnProgressTile extends ZincElement {
   @property({type: Number, attribute: 'wait-time', reflect: true}) waitTime: number;
   @property({type: Number, attribute: 'max-time'}) maxTime: number;
   @property({type: Number, attribute: 'end-time'}) endTime: number;
-
   @property({type: Number, attribute: 'max-wait-time'}) maxWaitTime: number = 60 * 5;
   @property({type: Boolean, attribute: 'waiting-agent-response'}) waitingAgentResponse: boolean;
 
@@ -59,6 +58,11 @@ export default class ZnProgressTile extends ZincElement {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
+
+    // if over 24 hours, cap it
+    if (hours >= 24) {
+      return '1 Day+';
+    }
 
     if (hours) {
       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -98,7 +102,7 @@ export default class ZnProgressTile extends ZincElement {
         'progress-tile--warn': this.waitTime > 60 && this.waitTime < (this.maxWaitTime / 2),
         'progress-tile--danger': this.waitTime >= this.maxWaitTime
       })}">
-        <zn-icon size="45" src="${this.avatar}" round></zn-icon>
+        <zn-icon size="36" src="${this.avatar}" round></zn-icon>
         <div class="progress-tile__content">
 
           <div class="progress-tile__header">

@@ -4695,9 +4695,9 @@ declare module "components/toggle/index" {
 }
 declare module "components/checkbox/checkbox.component" {
     import { type CSSResultGroup } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/checkbox
@@ -4771,6 +4771,7 @@ declare module "components/checkbox/checkbox.component" {
         labelTooltip: string;
         /** Gets the validity state object */
         get validity(): ValidityState;
+        get isChecked(): boolean;
         /** Gets the validation message */
         get validationMessage(): string;
         firstUpdated(): void;
@@ -6199,6 +6200,51 @@ declare module "components/filter-wrapper/index" {
         }
     }
 }
+declare module "components/settings-container/settings-container.component" {
+    import { type CSSResultGroup } from 'lit';
+    import { type ZnChangeEvent } from "events/zn-change";
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/settings-container
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnSettingsContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        filters: {
+            attribute: string;
+            checked: boolean;
+            label: string;
+        }[];
+        itemSelector: string;
+        connectedCallback(): void;
+        updateFilters(): void;
+        updateFilter(e: ZnChangeEvent): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/settings-container/index" {
+    import ZnSettingsContainer from "components/settings-container/settings-container.component";
+    export * from "components/settings-container/settings-container.component";
+    export default ZnSettingsContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-settings-container': ZnSettingsContainer;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6336,6 +6382,7 @@ declare module "zinc" {
     export { default as Style } from "components/style/index";
     export { default as ContentBlock } from "components/content-block/index";
     export { default as FilterWrapper } from "components/filter-wrapper/index";
+    export { default as SettingsContainer } from "components/settings-container/index";
     export * from "events/events";
 }
 declare module "components/editor/editor-quick-action.component" {

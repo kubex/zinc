@@ -1,10 +1,11 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './collapsible.scss';
+import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Toggles between showing and hiding content when clicked
@@ -26,6 +27,11 @@ export default class ZnCollapsible extends ZincElement {
 
   @property({reflect: true}) label = '';
 
+  @property({type: Boolean, attribute: 'show-number', reflect: true}) showNumber: boolean = false;
+
+  // what element name to count
+  @property({type: String, attribute: 'count-element'}) countElement: string = '*';
+
   @property({type: Boolean, reflect: true}) expanded: boolean = false;
 
   @property({attribute: 'default'}) defaultState: 'open' | 'closed';
@@ -38,7 +44,13 @@ export default class ZnCollapsible extends ZincElement {
 
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
 
+  @state() numberOfItems: number = 0;
+
   protected _store: Store;
+
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label');
+
+  private observer: MutationObserver;
 
   connectedCallback() {
     super.connectedCallback();
@@ -51,6 +63,22 @@ export default class ZnCollapsible extends ZincElement {
         this.expanded = hasPref === "true";
       }
     }
+
+    if (this.showNumber) {
+      // add a mutation observer to the default slot to recalculate the number of items when it changes
+      const slot = this as HTMLElement;
+      this.observer = new MutationObserver(() => {
+        this.recalculateNumberOfItems();
+      });
+      this.observer.observe(slot, {childList: true, subtree: true});
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 
   handleCollapse = (e: MouseEvent) => {
@@ -60,7 +88,23 @@ export default class ZnCollapsible extends ZincElement {
     }
   }
 
+  public recalculateNumberOfItems = () => {
+    const assignedElements = this.hasSlotController.getDefaultSlot()
+      .filter(node => node.nodeType === Node.ELEMENT_NODE) as HTMLElement[];
+
+    // query all direct children that match the countElement tag name
+    if (this.countElement === '*') {
+      this.numberOfItems = assignedElements.length;
+      return;
+    }
+
+    const children = assignedElements.flatMap(el => Array.from(el.querySelectorAll(this.countElement)));
+    this.numberOfItems = children.length;
+  }
+
   render() {
+    this.recalculateNumberOfItems();
+
     return html`
       <div @click="${() => (!this.expanded ? (this.expanded = true) : '')}">
         <slot name="header" class="header" @click="${this.handleCollapse}">
@@ -72,6 +116,10 @@ export default class ZnCollapsible extends ZincElement {
           </div>
           <div class="header__right">
             <slot name="label"><p class="label">${this.label}</p></slot>
+            ${this.showNumber ? html`
+              <p class="number">
+                <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>
+              </p>` : ''}
             <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>
           </div>
         </slot>
@@ -79,7 +127,7 @@ export default class ZnCollapsible extends ZincElement {
           'content': true,
           'content--flush': this.flush,
         })}">
-          <slot></slot>
+          <slot @slotchange="${this.requestUpdate}"></slot>
         </div>
       </div>`;
   }

@@ -1,4 +1,4 @@
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
 
 /** A reactive controller that determines when slots exist. */
 export class HasSlotController implements ReactiveController {
@@ -55,6 +55,32 @@ export class HasSlotController implements ReactiveController {
     return this.host.querySelector(`:scope > [slot="${slotName}"]`)!;
   }
 
+  getDefaultSlot() {
+    // Get all child nodes that do not have a slot attribute
+    return [...this.host.childNodes].filter(node => {
+      if (node.nodeType === node.TEXT_NODE && node.textContent!.trim() !== '') {
+        return true;
+      }
+
+      if (node.nodeType === node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const tagName = el.tagName.toLowerCase();
+
+        // Ignore visually hidden elements since they aren't rendered
+        if (tagName === 'zn-visually-hidden') {
+          return false;
+        }
+
+        // If it doesn't have a slot attribute, it's part of the default slot
+        if (!el.hasAttribute('slot')) {
+          return true;
+        }
+      }
+
+      return false;
+    }) as HTMLElement[];
+  }
+
   getSlots(slotName: string) {
     return this.host.querySelectorAll(`:scope > [slot="${slotName}"]`) as NodeListOf<HTMLElement>;
   }
@@ -73,7 +99,7 @@ export class HasSlotController implements ReactiveController {
  * HTML as a string. This is useful because we can't use slot.innerHTML as an alternative.
  */
 export function getInnerHTML(slot: HTMLSlotElement): string {
-  const nodes = slot.assignedNodes({ flatten: true });
+  const nodes = slot.assignedNodes({flatten: true});
   let html = '';
 
   [...nodes].forEach(node => {
@@ -97,7 +123,7 @@ export function getTextContent(slot: HTMLSlotElement | undefined | null): string
   if (!slot) {
     return '';
   }
-  const nodes = slot.assignedNodes({ flatten: true });
+  const nodes = slot.assignedNodes({flatten: true});
   let text = '';
 
   [...nodes].forEach(node => {

@@ -199,6 +199,7 @@ declare module "internal/slot" {
         hostConnected(): void;
         hostDisconnected(): void;
         getSlot(slotName: string): Element;
+        getDefaultSlot(): HTMLElement[];
         getSlots(slotName: string): NodeListOf<HTMLElement>;
         private handleSlotChange;
     }
@@ -1195,15 +1196,22 @@ declare module "components/collapsible/collapsible.component" {
         caption: string;
         description: string;
         label: string;
+        showNumber: boolean;
+        countElement: string;
         expanded: boolean;
         defaultState: 'open' | 'closed';
         localStorage: boolean;
         storeKey: string;
         storeTtl: number;
         flush: boolean;
+        numberOfItems: number;
         protected _store: Store;
+        private readonly hasSlotController;
+        private observer;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         handleCollapse: (e: MouseEvent) => void;
+        recalculateNumberOfItems: () => void;
         render(): import("lit").TemplateResult<1>;
     }
 }

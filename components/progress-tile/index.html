@@ -483,7 +483,24 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-progress-tile></zn-progress-tile>
+              <zn-progress-tile
+                id="progress-tile"
+                caption="John Doe"
+                status="Active"
+                avatar="JohnDoe@avatar"
+                wait-time="60"
+              >
+              </zn-progress-tile>
+
+              <script>
+                (() => {
+                  // set start time to current time for demo purposes - 10 seconds ago
+                  const startTime = Math.floor(Date.now() / 1000) - 40;
+                  const progressTile = document.getElementById('progress-tile');
+
+                  progressTile.setAttribute('start-time', startTime);
+                })();
+              </script>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
@@ -492,7 +509,23 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-167">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-315"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-tile</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-tile</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-315">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-tile</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>progress-tile<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Doe<span class="token punctuation">"</span></span>
+  <span class="token attr-name">status</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Active<span class="token punctuation">"</span></span>
+  <span class="token attr-name">avatar</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JohnDoe@avatar<span class="token punctuation">"</span></span>
+  <span class="token attr-name">wait-time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-tile</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">// set start time to current time for demo purposes - 10 seconds ago</span>
+  <span class="token keyword">const</span> startTime <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">40</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> progressTile <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'progress-tile'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  progressTile<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'start-time'</span><span class="token punctuation">,</span> startTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-315"></zn-copy-button></pre>
               </div>
             </div>

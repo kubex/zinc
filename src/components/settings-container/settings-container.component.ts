@@ -29,19 +29,67 @@ export default class ZnSettingsContainer extends ZincElement {
   @state() filters: { attribute: string; checked: boolean; label: string }[] = [];
   @property({type: String, attribute: 'item-selector'}) itemSelector: string = '*';
 
+  private mutationObserver: MutationObserver | null = null;
+  private _updateFiltersScheduled = false;
+
   connectedCallback() {
     super.connectedCallback();
 
-    const filters = this.querySelectorAll('[slot="filter"]');
-    filters.forEach(filter => {
-      const attribute = filter.getAttribute('attribute');
-      const isChecked = filter.getAttribute('default') === 'true';
-      const label = filter.textContent || 'Unnamed Filter';
-
-      this.filters.push({attribute: attribute!, checked: isChecked, label: label});
-    });
-
+    this.recomputeFiltersFromSlot();
     this.updateFilters();
+
+    this.mutationObserver = new MutationObserver(mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+          continue;
+        }
+        this.scheduleUpdateFilters();
+        break;
+      }
+    });
+    this.mutationObserver.observe(this, { childList: true, subtree: true, attributes: true });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+      this.mutationObserver = null;
+    }
+  }
+
+  // Debounced scheduling to avoid excessive updates on rapid DOM mutations
+  private scheduleUpdateFilters() {
+    if (this._updateFiltersScheduled) return;
+    this._updateFiltersScheduled = true;
+    Promise.resolve().then(() => {
+      this._updateFiltersScheduled = false;
+      this.updateFilters();
+    });
+  }
+
+  private handleContentSlotChange = () => {
+    this.updateFilters();
+  };
+
+  private handleFiltersSlotChange = () => {
+    this.recomputeFiltersFromSlot();
+    this.updateFilters();
+  };
+
+  private recomputeFiltersFromSlot() {
+    const existingChecked = new Map(this.filters.map(f => [f.attribute, f.checked]));
+    const slotFilters = this.querySelectorAll('[slot="filter"]');
+    const nextFilters: { attribute: string; checked: boolean; label: string }[] = [];
+    slotFilters.forEach(filter => {
+      const attribute = filter.getAttribute('attribute');
+      if (!attribute) return;
+      const defaultChecked = filter.getAttribute('default') === 'true';
+      const checked = existingChecked.has(attribute) ? !!existingChecked.get(attribute) : defaultChecked;
+      const label = filter.textContent || 'Unnamed Filter';
+      nextFilters.push({ attribute, checked, label });
+    });
+    this.filters = nextFilters;
   }
 
   updateFilters() {
@@ -80,13 +128,13 @@ export default class ZnSettingsContainer extends ZincElement {
     return html`
       <div class="container">
         <div class="scroll-content">
-          <slot></slot>
+          <slot @slotchange=${this.handleContentSlotChange}></slot>
         </div>
         <zn-dropdown placement="top-end">
           <zn-button class="setting-container__toggle-button" slot="trigger" icon="settings" icon-size="24"
                      color="secondary"></zn-button>
           <div class="settings-container__dropdown-content">
-            <slot name="filter" style="display: none;"></slot>
+            <slot name="filter" style="display: none;" @slotchange=${this.handleFiltersSlotChange}></slot>
             ${this.filters.map(filter => html`
               <zn-checkbox class="settings-container__dropdown-item"
                            data-attribute="${filter.attribute}"

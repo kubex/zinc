@@ -64,6 +64,35 @@ for example by adding item-selector="zn-inline-edit" only the inline edit elemen
 
 ```html:preview
 
+<style>
+  zn-tile, zn-inline-edit {
+    position: relative;
+  }
+
+  [private]:after, [original]:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 0 0 0 4px;
+    color: #000;
+    font-weight: bold;
+  }
+
+  [private]:after {
+    content: " (private)";
+    border: 1px solid #f00;
+    background: #fee;
+  }
+
+  [original]:after {
+    content: " (original)";
+    border: 1px solid #00f;
+    background: #eef;
+  }
+</style>
+
 <div style="width: 100%; height: 300px; border: 1px solid #ccc;">
   <zn-settings-container item-selector="zn-inline-edit">
 

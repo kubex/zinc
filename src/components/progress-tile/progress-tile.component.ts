@@ -38,7 +38,7 @@ export default class ZnProgressTile extends ZincElement {
   @property() avatar: string;
   @property() caption: string;
 
-  private _timerInterval: any;
+  private _timerInterval: number;
 
   connectedCallback() {
     super.connectedCallback();
@@ -49,7 +49,9 @@ export default class ZnProgressTile extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    clearInterval(this._timerInterval);
+    if (this._timerInterval) {
+      clearInterval(this._timerInterval);
+    }
   }
 
   private getHumanReadableTime(time: number): string {
@@ -96,7 +98,7 @@ export default class ZnProgressTile extends ZincElement {
         'progress-tile--warn': this.waitTime > 60 && this.waitTime < (this.maxWaitTime / 2),
         'progress-tile--danger': this.waitTime >= this.maxWaitTime
       })}">
-        <zn-icon size="45" src="${this.avatar}"></zn-icon>
+        <zn-icon size="45" src="${this.avatar}" round></zn-icon>
         <div class="progress-tile__content">
 
           <div class="progress-tile__header">

@@ -117,9 +117,7 @@ export default class ZnCollapsible extends ZincElement {
           <div class="header__right">
             <slot name="label"><p class="label">${this.label}</p></slot>
             ${this.showNumber && !this.expanded ? html`
-              <p class="number">
-                <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>
-              </p>` : ''}
+              <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>` : ''}
             <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>
           </div>
         </slot>

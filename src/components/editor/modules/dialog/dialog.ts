@@ -6,18 +6,26 @@ import type Quill from "quill";
 class Dialog {
   private readonly _quill: Quill;
   private readonly _editorId: string;
+  private readonly _document: Document;
   private _component!: DialogComponent;
 
-  constructor(quill: Quill, options: {editorId: string}) {
+  constructor(quill: Quill, options: { editorId: string }) {
     this._quill = quill;
     this._editorId = options.editorId;
+    this._document = this._quill.container.ownerDocument;
     this._initDialog();
   }
 
   private _initDialog() {
-    this._component = this.createComponent()!;
+    const existing = this._document.querySelector<DialogComponent>('zn-editor-dialog');
+    if (existing) {
+      this._component = existing;
+    } else {
+      this._component = this.createComponent()!;
+      this._document.body.appendChild(this._component);
+    }
+
     this._component.editorId = this._editorId;
-    this._quill.container.ownerDocument.body.appendChild(this._component);
   }
 
   private createComponent() {
@@ -27,8 +35,7 @@ class Dialog {
   }
 
   public close() {
-    this._component.remove();
-    this._initDialog(); // TODO: Fix bodged job of closing dialog on text insertion (Creates shell error)
+    this._component.dialogEl.close();
   }
 }
 

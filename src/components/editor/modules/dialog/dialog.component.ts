@@ -20,6 +20,7 @@ export default class DialogComponent extends ZincElement {
   private _editorId: string;
   set editorId(value: string) {
     this._editorId = value;
+    this.requestUpdate();
   }
 
   connectedCallback() {

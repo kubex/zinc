@@ -39,3 +39,17 @@
 .air-datepicker--pointer:after {
   background-color: var(--zn-input-background-color);
 }
+
+// Utility to minimize flashing of undefined web components
+.zn-cloak:has(:not(:defined)) {
+  animation: 2s step-end zn-cloak;
+}
+
+@keyframes zn-cloak {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

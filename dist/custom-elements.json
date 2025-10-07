@@ -7501,98 +7501,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/editor/editor-quick-action.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnEditorQuickAction",
-          "members": [
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "uri"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "key",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "key"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "uri"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "key",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "key"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "tagNameWithoutPrefix": "editor-quick-action",
-          "tagName": "zn-editor-quick-action",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnEditorQuickAction",
-            "module": "components/editor/editor-quick-action.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/editor/editor.js",
       "declarations": [
         {
@@ -7722,12 +7630,12 @@
             },
             {
               "kind": "field",
-              "name": "_lastCursorIndex",
+              "name": "_selectionRange",
               "type": {
-                "text": "number"
+                "text": "Range"
               },
               "privacy": "private",
-              "default": "0"
+              "default": "{index: 0, length: 0}"
             },
             {
               "kind": "field",
@@ -7788,6 +7696,10 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "getSelectionRange"
             },
             {
               "kind": "method",
@@ -25129,6 +25041,113 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/editor/editor-quick-action/editor-quick-action.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEditorQuickAction",
+          "members": [
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "key"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "key"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "editor-quick-action",
+          "tagName": "zn-editor-quick-action",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEditorQuickAction",
+            "module": "components/editor/editor-quick-action/editor-quick-action.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/editor/editor-tool/editor-tool.js",
       "declarations": [
         {
@@ -25143,6 +25162,14 @@
                 "text": "string"
               },
               "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "key"
             },
             {
               "kind": "field",
@@ -25169,6 +25196,13 @@
                 "text": "string"
               },
               "fieldName": "uri"
+            },
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "key"
             },
             {
               "name": "icon",

@@ -4071,10 +4071,13 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private readonly _quill;
         private readonly _component;
         private _lastDialogUri?;
+        private _formatters;
         constructor(quill: Quill, options: {
             container: ToolbarComponent;
             handlers?: Record<string, (value?: any) => void>;
         });
+        callFormat(key: string, value?: string | boolean | undefined): void;
+        trigger(key: string): void;
         private _attachToolbarHandlers;
         private _syncToolbarState;
         private _updateHeadingFormatMenu;
@@ -4127,7 +4130,7 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
         icon: string;
         label: string;
         format?: string;
-        module?: string;
+        key?: string;
         value?: string | boolean;
     }
     export default class ContextMenuComponent extends ZincElement {
@@ -4149,14 +4152,20 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
 declare module "components/editor/modules/context-menu/context-menu" {
     import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
+    import type ContextMenuComponent from "components/editor/modules/context-menu/context-menu-component";
+    import type ZnEditor from "components/editor/editor.component";
     class ContextMenu {
         private _quill;
+        private readonly _editor;
         private readonly _toolbarModule;
         private _component;
         private _startIndex;
         private _keydownHandler;
         private _docClickHandler;
-        constructor(quill: Quill);
+        constructor(quill: Quill, options: {
+            editor: ZnEditor;
+            container: ContextMenuComponent;
+        });
         private initComponent;
         private attachEvents;
         private createComponent;
@@ -4165,10 +4174,10 @@ declare module "components/editor/modules/context-menu/context-menu" {
         private positionComponent;
         private getToolbarQuery;
         private onKeydown;
-        private showDialog;
         private onToolbarSelect;
-        private _callFormat;
+        private _clickToolbarItem;
         private _applySelectedFormat;
+        private deleteLastIndex;
         private _getOptions;
         private show;
         private hide;
@@ -4490,15 +4499,17 @@ declare module "components/textarea/index" {
 }
 declare module "components/editor/modules/ai/index" {
     import Quill from "quill";
+    import type ZnEditor from "components/editor/editor.component";
     class QuillAI {
         private _quill;
+        private readonly _editor;
         private readonly _path;
         private _component;
-        private _range;
         private _selectedText;
         private _prompt;
         private _aiResponseContent;
         constructor(quill: Quill, options: {
+            editor: ZnEditor;
             path: string;
         });
         private _initComponent;
@@ -4541,6 +4552,7 @@ declare module "components/editor/modules/time-tracking/time-tracking" {
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { Range } from "quill";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -4573,7 +4585,7 @@ declare module "components/editor/editor.component" {
         aiPath: string;
         private quillElement;
         private _content;
-        private _lastCursorIndex;
+        private _selectionRange;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -4581,6 +4593,7 @@ declare module "components/editor/editor.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        getSelectionRange: () => Range;
         private _handleTextChange;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;
@@ -4609,6 +4622,7 @@ declare module "components/editor/editor-tool/editor-tool.component" {
     export default class ZnEditorTool extends ZincElement {
         static styles: CSSResultGroup;
         uri: string;
+        key: string;
         icon: string;
         handler: string;
         render(): import("lit").TemplateResult<1>;
@@ -4621,6 +4635,27 @@ declare module "components/editor/editor-tool/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor-tool': ZnEditorTool;
+        }
+    }
+}
+declare module "components/editor/editor-quick-action/editor-quick-action.component" {
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorQuickAction extends ZincElement {
+        uri: string;
+        caption: string;
+        description: string;
+        key: string;
+        icon: string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/editor-quick-action/index" {
+    import ZnEditorQuickAction from "components/editor/editor-quick-action/editor-quick-action.component";
+    export * from "components/editor/editor-quick-action/editor-quick-action.component";
+    export default ZnEditorQuickAction;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-editor-quick-action': ZnEditorQuickAction;
         }
     }
 }
@@ -6363,6 +6398,7 @@ declare module "zinc" {
     export { default as BulkActions } from "components/bulk-actions/index";
     export { default as Editor } from "components/editor/index";
     export { default as EditorTool } from "components/editor/editor-tool/index";
+    export { default as EditorQuickAction } from "components/editor/editor-quick-action/index";
     export { default as EditorDialog } from "components/editor/modules/dialog/dialog.component";
     export { default as Toggle } from "components/toggle/index";
     export { default as Input } from "components/input/index";
@@ -6396,16 +6432,6 @@ declare module "zinc" {
     export { default as FilterWrapper } from "components/filter-wrapper/index";
     export { default as SettingsContainer } from "components/settings-container/index";
     export * from "events/events";
-}
-declare module "components/editor/editor-quick-action.component" {
-    import ZincElement from "internal/zinc-element";
-    export default class ZnEditorQuickAction extends ZincElement {
-        uri: string;
-        caption: string;
-        description: string;
-        key: string;
-        render(): import("lit").TemplateResult<1>;
-    }
 }
 declare module "components/editor/modules/events/zn-command-select" {
     export type ZnCommandSelectEvent = CustomEvent<{

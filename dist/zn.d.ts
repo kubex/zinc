@@ -3524,8 +3524,8 @@ declare module "utilities/on" {
 }
 declare module "components/split-pane/split-pane.component" {
     import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
     import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/split-pane

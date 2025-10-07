@@ -1,10 +1,10 @@
-import {eventOptions, property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {eventOptions, property} from 'lit/decorators.js';
+import {on} from "../../utilities/on";
+import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './split-pane.scss';
-import {Store} from "../../internal/storage";
-import {on} from "../../utilities/on";
 
 /**
  * @summary Short summary of the component's intended use.
@@ -64,7 +64,7 @@ export default class ZnSplitPane extends ZincElement {
     on(this, 'click', '[split-pane-focus]', (e: Event & { selectedTarget: EventTarget }) => {
       e.preventDefault();
       e.stopPropagation();
-      this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus') as string));
+      this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')!));
     });
   }
 
@@ -160,7 +160,7 @@ export default class ZnSplitPane extends ZincElement {
   _setFocusPane(idx: number) {
     this._focusPane = idx;
     this.querySelectorAll('ul#split-nav li').forEach((el) => {
-      el.classList.toggle('active', parseInt(el.getAttribute('idx') as string) == idx);
+      el.classList.toggle('active', parseInt(el.getAttribute('idx')!) == idx);
     });
   }
 

@@ -125,8 +125,8 @@ for example by adding item-selector="zn-inline-edit" only the inline edit elemen
       </div>
     </zn-tile>
 
-    <div slot="filter" attribute="private" default="true">Toggle Private Messages</div>
-    <div slot="filter" attribute="original" default="true">Toggle Original Messages</div>
+    <div slot="filter" attribute="private" default="true" item-selector="zn-inline-edit">Toggle Inline Edit Private Messages</div>
+    <div slot="filter" attribute="original" default="true" item-selector="zn-tile">Toggle Tile Original Messages</div>
 
   </zn-settings-container>
 </div>

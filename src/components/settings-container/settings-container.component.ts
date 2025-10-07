@@ -6,6 +6,7 @@ import type ZnCheckbox from "../checkbox";
 
 import styles from './settings-container.scss';
 import {classMap} from "lit/directives/class-map.js";
+import {Store} from "../../internal/storage";
 
 interface SettingsContainerFilter {
   attribute: string;
@@ -38,17 +39,36 @@ export default class ZnSettingsContainer extends ZincElement {
 
   @property() position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start' = 'bottom-start';
 
-  private mutationObserver: MutationObserver | null = null;
+  @property({attribute: 'store-key'}) storeKey: string;
+
+  private _mutationObserver: MutationObserver | null = null;
 
   private _updateFiltersScheduled = false;
+
+  private _store: Store;
 
   connectedCallback() {
     super.connectedCallback();
 
+    this._store = new Store(window.localStorage, this.storeKey);
+
     this.recomputeFiltersFromSlot();
     this.updateFilters();
 
-    this.mutationObserver = new MutationObserver(mutations => {
+    // Load saved filter states
+    if (this.storeKey) {
+      const savedFilters = this._store.get('filters');
+      if (savedFilters) {
+        const parsedFilters = JSON.parse(savedFilters) as Record<string, boolean>;
+        this.filters = this.filters.map(filter => ({
+          ...filter,
+          checked: Object.prototype.hasOwnProperty.call(parsedFilters, filter.attribute) ? parsedFilters[filter.attribute] : filter.checked
+        }));
+        this.updateFilters();
+      }
+    }
+
+    this._mutationObserver = new MutationObserver(mutations => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
           continue;
@@ -57,14 +77,14 @@ export default class ZnSettingsContainer extends ZincElement {
         break;
       }
     });
-    this.mutationObserver.observe(this, {childList: true, subtree: true, attributes: true});
+    this._mutationObserver.observe(this, {childList: true, subtree: true, attributes: true});
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.mutationObserver) {
-      this.mutationObserver.disconnect();
-      this.mutationObserver = null;
+    if (this._mutationObserver) {
+      this._mutationObserver.disconnect();
+      this._mutationObserver = null;
     }
   }
 
@@ -131,6 +151,15 @@ export default class ZnSettingsContainer extends ZincElement {
       }
       return filter;
     });
+
+    // Save filter states
+    if (this.storeKey) {
+      const filterStates = this.filters.reduce((acc: Record<string, boolean>, filter) => {
+        acc[filter.attribute] = filter.checked;
+        return acc;
+      }, {} satisfies Record<string, boolean>);
+      this._store.set('filters', JSON.stringify(filterStates));
+    }
 
     this.updateFilters();
   }

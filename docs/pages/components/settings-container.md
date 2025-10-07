@@ -11,7 +11,7 @@ You can add filters to toggle visibility of specific elements based on their att
 ```html:preview
 
 <div style="width: 100%; height: 300px; border: 1px solid #ccc;">
-  <zn-settings-container>
+  <zn-settings-container store-key="example-filters">
 
     <zn-tile private caption="Leslie Alexander" description="Leslie.alexander@example.com" href="https://google.com">
       <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=70" round></zn-icon>

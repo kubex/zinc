@@ -6235,6 +6235,7 @@ declare module "components/settings-container/settings-container.component" {
         private _mutationObserver;
         private _updateFiltersScheduled;
         private _store;
+        private _hiddenElements;
         connectedCallback(): void;
         disconnectedCallback(): void;
         private scheduleUpdateFilters;

@@ -4200,6 +4200,7 @@ declare module "components/editor/modules/dialog/dialog" {
     class Dialog {
         private readonly _quill;
         private readonly _editorId;
+        private readonly _document;
         private _component;
         constructor(quill: Quill, options: {
             editorId: string;

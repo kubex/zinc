@@ -6204,6 +6204,12 @@ declare module "components/settings-container/settings-container.component" {
     import { type CSSResultGroup } from 'lit';
     import { type ZnChangeEvent } from "events/zn-change";
     import ZincElement from "internal/zinc-element";
+    interface SettingsContainerFilter {
+        attribute: string;
+        checked: boolean;
+        label: string;
+        itemSelector?: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/settings-container
@@ -6223,14 +6229,12 @@ declare module "components/settings-container/settings-container.component" {
      */
     export default class ZnSettingsContainer extends ZincElement {
         static styles: CSSResultGroup;
-        filters: {
-            attribute: string;
-            checked: boolean;
-            label: string;
-        }[];
-        itemSelector: string;
-        private mutationObserver;
+        filters: SettingsContainerFilter[];
+        position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
+        storeKey: string;
+        private _mutationObserver;
         private _updateFiltersScheduled;
+        private _store;
         connectedCallback(): void;
         disconnectedCallback(): void;
         private scheduleUpdateFilters;

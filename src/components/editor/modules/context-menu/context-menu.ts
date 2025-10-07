@@ -4,19 +4,22 @@ import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill, {Delta} from "quill";
 import type ContextMenuComponent from "./context-menu-component";
-import type Toolbar from "quill/modules/toolbar";
+import type Toolbar from "../toolbar/toolbar";
+import type ZnEditor from "../../editor.component";
 
 class ContextMenu {
   private _quill: Quill;
+  private readonly _editor: ZnEditor;
   private readonly _toolbarModule: Toolbar;
-  private _component!: ContextMenuComponent;
+  private _component: ContextMenuComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill) {
+  constructor(quill: Quill, options: { editor: ZnEditor; container: ContextMenuComponent }) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
+    this._editor = options.editor;
 
     this.initComponent();
     this.attachEvents();
@@ -31,7 +34,7 @@ class ContextMenu {
     this._quill.on(Quill.events.TEXT_CHANGE, () => this.updateFromEditor());
     this._quill.on(Quill.events.SELECTION_CHANGE, () => this.updateFromEditor());
     this._quill.root.addEventListener('keydown', this._keydownHandler);
-    this._component.addEventListener('zn-format-select', (e: Event) => this.onToolbarSelect(e as CustomEvent));
+    this._component.addEventListener('zn-format-select', (e: Event) => this.onToolbarSelect(e as CustomEvent<ResultItem>));
     this._quill.on('editor-change', () => this.positionComponent());
     this._quill.focus();
   }
@@ -76,16 +79,15 @@ class ContextMenu {
   private positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._quill.getSelection();
-    if (!range) return;
-
+    const range = this._editor.getSelectionRange();
     const bounds = this._quill.getBounds(range.index);
     if (!bounds) return;
 
     const editorBounds = this._quill.container.getBoundingClientRect();
-    const left = editorBounds.left + Math.max(0, bounds.left);
+    const left = Math.max(0, editorBounds.left + bounds.left);
     const top = editorBounds.top + bounds.bottom + 4;
     this._component.setPosition(left, top);
+
   }
 
   private getToolbarQuery(): { start: number; formatQuery: string } | null {
@@ -143,10 +145,10 @@ class ContextMenu {
       const idx = this._component.getActiveIndex?.();
       const results = (this._component.results as ResultItem[]) || [];
       const item = (typeof idx === 'number' && idx >= 0 && idx < results.length) ? results[idx] : undefined;
-      if (item?.module === 'dialog') {
+      if (item?.format === 'toolbar' && item?.key) {
         e.preventDefault();
         e.stopPropagation();
-        this.showDialog();
+        this._clickToolbarItem(item.key);
         return;
       }
       if (item?.format) {
@@ -157,79 +159,28 @@ class ContextMenu {
     }
   }
 
-  private showDialog() {
-    this.hide();
-
-    const toolbar = this._toolbarModule.container;
-    if (!toolbar) return;
-
-    const button = toolbar.shadowRoot?.querySelector('[data-format="dialog"]') as HTMLElement | null;
-    if (!button) return;
-
-    button.click();
-  }
-
-  private onToolbarSelect(e: CustomEvent) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    const module: string | undefined = e.detail?.module as (string | undefined);
-
-    if (module === 'dialog') {
-      this.showDialog();
+  private onToolbarSelect(e: CustomEvent<ResultItem>) {
+    const key: string | undefined = e.detail?.key as (string | undefined);
+    if (key) {
+      this._clickToolbarItem(key);
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+
     const format: string = e.detail?.format || '';
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const value: string | boolean | undefined = e.detail?.value as (string | boolean | undefined);
     if (!format) return;
 
     this._applySelectedFormat(format, value);
   }
 
-  private _callFormat(key: string, value?: string | boolean | undefined) {
-    const handler = (this._toolbarModule.handlers?.[key] as ((value?: any) => void) | undefined);
-    if (value === undefined) {
-      if (key === 'header' || key === 'color') {
-        value = false; // False for text normal or default color
-      }
-      if (key === 'link') {
-        value = true; // True for creating a link
-      }
-    }
-    if (typeof handler === 'function') {
-      handler.call(this._toolbarModule, value);
-      return;
-    }
-    if (key === 'clean') {
-      const range = this._quill.getSelection();
-      if (range) {
-        this._quill.removeFormat(range.index, range.length || 0);
-      } else {
-        this._quill.removeFormat(0, this._quill.getLength());
-      }
-      return;
-    }
-    const range = this._quill.getSelection();
-    const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
-    const current = formats[key];
-    const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
-    this._quill.format(key, next);
+  private _clickToolbarItem(key: string) {
+    this.deleteLastIndex();
+    this._toolbarModule.trigger?.(key);
+    this.hide();
   }
 
   private _applySelectedFormat(key: string, value?: string | boolean) {
-    try {
-      const sel = this._quill.getSelection();
-      if (sel && this._startIndex >= 0) {
-        const insertIndex = this._startIndex;
-        const length = sel.index - insertIndex;
-        if (length >= 0) {
-          this._quill.deleteText(insertIndex, length, 'user');
-          this._quill.setSelection(insertIndex, 0, 'silent');
-        }
-      }
-    } catch {
-      // no-op
-    }
+    this.deleteLastIndex();
 
     if (key === 'insert' && typeof value === 'string') {
       const range = this._quill.getSelection();
@@ -256,28 +207,58 @@ class ContextMenu {
       return;
     }
 
-    this._callFormat(key, value);
+    this._toolbarModule.callFormat(key, value);
     this._quill.focus();
     this.hide();
   }
 
+  private deleteLastIndex() {
+    const sel = this._quill.getSelection();
+    if (sel && this._startIndex >= 0) {
+      const insertIndex = this._startIndex;
+      const length = sel.index - insertIndex;
+      if (length >= 0) {
+        this._quill.deleteText(insertIndex, length, 'user');
+        this._quill.setSelection(insertIndex, 0, 'silent');
+      }
+    }
+  }
+
   private _getOptions(): ResultItem[] {
-    const options = [];
+    const options: ResultItem[] = [];
 
-    /**
-     * TODO:  Hook into new logic using zn-editor-quick-action
-     *  if (this._commands.length > 0) {
-     *           options.push(...this._commands.map(cmd => ({
-     *             icon: 'quickreply',
-     *             label: cmd.title,
-     *             value: cmd.content,
-     *             format: 'insert'
-     *           } satisfies ResultItem)));
-     */
+    // 1) Quick Actions
+    try {
+      const root = this._quill.container.getRootNode() as ShadowRoot;
+      if (root?.host) {
+        const slot = root.querySelector('slot[name="context-items"]') as HTMLSlotElement | null;
+        const assigned = slot ? slot.assignedElements({flatten: true}) : [];
+        assigned.forEach((el: Element) => {
+          const hostEl = el as HTMLElement;
+          const marker = hostEl.shadowRoot?.querySelector('[data-quick-action]') as HTMLElement | null;
+          if (!marker) return;
 
-    // TODO: Canned Responses need to use data from zn-editor-quick-action component
+          const label = marker.getAttribute('data-caption') ?? '';
+          const uri = marker.getAttribute('data-uri') ?? '';
+          const icon = marker.getAttribute('data-icon') ?? '';
+          const key = marker.getAttribute('data-key') ?? '';
+
+          if (key && icon && label) {
+            options.push({icon, label, format: 'toolbar', key: key});
+            return;
+          }
+
+          if (label && uri) {
+            options.push({icon, label, format: 'dialog', value: uri});
+          }
+        });
+      }
+    } catch {
+      // no-op
+    }
+
+    // 2) Built-in Actions
     options.push(
-      {icon: 'quickreply', label: 'Canned Responses', format: 'dialog', value: '/fortifi/tickets/canned-responses'}, // TODO: Fix this to be dynamic
       {icon: 'format_bold', label: 'Bold', format: 'bold'},
       {icon: 'format_italic', label: 'Italic', format: 'italic'},
       {icon: 'format_underlined', label: 'Underline', format: 'underline'},

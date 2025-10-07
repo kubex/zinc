@@ -8,7 +8,7 @@ export interface ResultItem {
   icon: string;
   label: string;
   format?: string;
-  module?: string;
+  key?: string;
   value?: string | boolean;
 }
 
@@ -77,7 +77,7 @@ export default class ContextMenuComponent extends ZincElement {
     this.dispatchEvent(new CustomEvent('zn-format-select', {
       bubbles: true,
       composed: true,
-      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value, module: item.module}
+      detail: {icon: item.icon, label: item.label, format: item.format, value: item.value, key: item.key}
     }));
   }
 

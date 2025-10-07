@@ -19,6 +19,7 @@ import Toolbar from "./modules/toolbar/toolbar";
 import ZincElement from '../../internal/zinc-element';
 import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
+import type {Range} from "quill";
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
 import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
@@ -71,7 +72,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private quillElement: Quill;
   private _content: string = '';
-  private _lastCursorIndex: number = 0;
+  private _selectionRange: Range = {index: 0, length: 0};
 
   get validity(): ValidityState {
     return this.editorHtml.validity;
@@ -146,13 +147,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
 
-    // TODO: Re-enable context menu once fixed
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
           container: this.toolbar,
         },
-        contextMenu: {},
+        contextMenu: {
+          editor: this,
+        },
         keyboard: {
           bindings: bindings
         },
@@ -163,6 +165,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         headlessEmoji: {},
         datePicker: {},
         ai: {
+          editor: this,
           path: this.aiPath
         },
         timeTracking: {
@@ -306,7 +309,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     document.addEventListener('selectionchange', () => {
       const range = this.quillElement.getSelection();
       if (range) {
-        this._lastCursorIndex = range.index;
+        this._selectionRange = range;
       }
       this.quillElement.selection.update()
     });
@@ -314,11 +317,20 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
     quill.on('text-change', this._handleTextChange.bind(this));
 
+    // Track selection range inside the editor so other modules can access it
+    quill.on(Quill.events.SELECTION_CHANGE, (range: Range, oldRange: Range) => {
+      this._selectionRange = range?.length > 0 ? range : oldRange;
+    });
+
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
+  }
+
+  getSelectionRange = (): Range => {
+    return this._selectionRange;
   }
 
   private _handleTextChange() {
@@ -454,7 +466,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private _insertTextAtSelection() {
     const range = this.quillElement.getSelection();
-    const index = range ? range.index : this._lastCursorIndex;
+    const index = range ? range.index : this._selectionRange.index;
     this.quillElement.insertText(index, this._content || '');
     this.quillElement.setSelection(index + (this._content.length || 0), 0);
 
@@ -485,6 +497,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       <zn-toolbar id="toolbar">
         <slot name="tools"></slot>
       </zn-toolbar>
+      <slot name="context-items" id="contextItemsSlot" style="display: none;"></slot>
       <div id="editor" x-editor-id="${this.id}"></div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">

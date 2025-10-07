@@ -5,18 +5,20 @@ import AITooltipComponent from "./tooltip/ai-tooltip.component";
 import Quill from "quill";
 import ZnTextarea from "../../../textarea";
 import type {Range} from "quill";
+import type ZnEditor from "../../editor.component";
 
 class QuillAI {
   private _quill: Quill;
+  private readonly _editor: ZnEditor;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
-  private _range: Range = {index: 0, length: 0};
   private _selectedText: string = '';
   private _prompt: string = '';
   private _aiResponseContent: string = '';
 
-  constructor(quill: Quill, options: { path: string }) {
+  constructor(quill: Quill, options: { editor: ZnEditor; path: string }) {
     this._quill = quill;
+    this._editor = options.editor;
     this._path = options.path;
 
     this._initComponent();
@@ -30,7 +32,7 @@ class QuillAI {
   }
 
   private _attachEvents() {
-    this._quill.on(Quill.events.SELECTION_CHANGE, (range, oldRange) => this._updateFromEditor(range, oldRange));
+    this._quill.on(Quill.events.SELECTION_CHANGE, (range) => this._updateFromEditor(range));
   }
 
   private _latestContent(panel: HTMLElement | null | undefined): string {
@@ -157,9 +159,7 @@ class QuillAI {
     }
   }
 
-  private _updateFromEditor(range: Range, oldRange: Range) {
-    this._range = range?.length > 0 ? range : oldRange;
-
+  private _updateFromEditor(range: Range) {
     // Update if component isn't AI panel
     if (this._component instanceof AIPanelComponent) return;
 
@@ -178,11 +178,10 @@ class QuillAI {
   private _positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    if (!this._range) return;
-
+    const range = this._editor.getSelectionRange();
     if (this._component instanceof AITooltipComponent) {
       const editorBounds = this._quill.container.getBoundingClientRect();
-      const endIndex = this._range.index + this._range.length;
+      const endIndex = range.index + range.length;
       const bounds = this._quill.getBounds(endIndex);
       if (!bounds) return;
 
@@ -198,10 +197,10 @@ class QuillAI {
     const positionPanel = () => {
       const editorBounds = this._quill.container.getBoundingClientRect();
       let bounds;
-      if (this._range.length === this._quill.getLength() - 1) {
-        bounds = this._quill.getBounds(this._range.index, this._range.length);
+      if (range.length === this._quill.getLength() - 1) {
+        bounds = this._quill.getBounds(range.index, range.length);
       } else {
-        const endIndex = this._range.index + this._range.length;
+        const endIndex = range.index + range.length;
         bounds = this._quill.getBounds(endIndex);
       }
       if (!bounds) return;

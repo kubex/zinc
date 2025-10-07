@@ -47,6 +47,7 @@ export {default as OrderTable} from './components/order-table';
 export {default as BulkActions} from './components/bulk-actions';
 export {default as Editor} from './components/editor';
 export {default as EditorTool} from './components/editor/editor-tool';
+export {default as EditorQuickAction} from './components/editor/editor-quick-action';
 export {default as EditorDialog} from './components/editor/modules/dialog/dialog.component';
 export {default as Toggle} from './components/toggle';
 export {default as Input} from './components/input';

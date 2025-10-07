@@ -9,6 +9,7 @@ class Toolbar extends QuillToolbar {
   private readonly _quill: Quill;
   private readonly _component: ToolbarComponent;
   private _lastDialogUri?: string;
+  private _formatters: Element[] = [];
 
   constructor(quill: Quill, options: {
     container: ToolbarComponent;
@@ -40,37 +41,50 @@ class Toolbar extends QuillToolbar {
     });
   }
 
-  private _attachToolbarHandlers() {
-    const callFormat = (key: string, value?: string | boolean | undefined) => {
-      const handler = (this.handlers?.[key] as ((value?: any) => void) | undefined);
-      if (value === undefined) {
-        if (key === 'header' || key === 'color') {
-          value = false; // False for text normal or default color
-        }
-        if (key === 'link') {
-          value = true; // True for creating a link
-        }
+  public callFormat(key: string, value?: string | boolean | undefined) {
+    const handler = (this.handlers?.[key] as ((value?: any) => void) | undefined);
+    if (value === undefined) {
+      if (key === 'header' || key === 'color') {
+        value = false; // False for text normal or default color
       }
-      if (typeof handler === 'function') {
-        handler.call(this, value);
-        return;
+      if (key === 'link') {
+        value = true; // True for creating a link
       }
-      if (key === 'clean') {
-        const range = this._quill.getSelection();
-        if (range) {
-          this._quill.removeFormat(range.index, range.length || 0);
-        } else {
-          this._quill.removeFormat(0, this._quill.getLength());
-        }
-        return;
-      }
+    }
+    if (typeof handler === 'function') {
+      handler.call(this, value);
+      return;
+    }
+    if (key === 'clean') {
       const range = this._quill.getSelection();
-      const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
-      const current = formats[key];
-      const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
-      this._quill.format(key, next);
-    };
+      if (range) {
+        this._quill.removeFormat(range.index, range.length || 0);
+      } else {
+        this._quill.removeFormat(0, this._quill.getLength());
+      }
+      return;
+    }
+    const range = this._quill.getSelection();
+    const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
+    const current = formats[key];
+    const next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
+    this._quill.format(key, next);
+  }
 
+  public trigger(key: string) {
+    const container = this.container;
+    if (container) {
+      const matches = this._formatters.filter(
+        formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
+      );
+      const tool = (matches?.length ? matches[0] as HTMLElement : null);
+      if (tool) {
+        tool.click();
+      }
+    }
+  }
+
+  private _attachToolbarHandlers() {
     const shadowRoot = this._component.shadowRoot;
     const shadowFormatters = shadowRoot?.querySelectorAll('[data-format]') ?? [];
     const slottedFormatters: Element[] = [];
@@ -85,9 +99,9 @@ class Toolbar extends QuillToolbar {
       });
     }
 
-    const formatters = [...shadowFormatters, ...slottedFormatters];
-    if (formatters.length) {
-      formatters.forEach((formatter: Element) => {
+    this._formatters = [...shadowFormatters, ...slottedFormatters];
+    if (this._formatters.length) {
+      this._formatters.forEach((formatter: Element) => {
         formatter.addEventListener('click', (e) => {
           e.preventDefault();
           const target = e.currentTarget as HTMLElement | null;
@@ -97,7 +111,7 @@ class Toolbar extends QuillToolbar {
           if (!format) return;
 
           const type: string | undefined = target.getAttribute('data-format-type') ?? undefined;
-          callFormat(format, type);
+          this.callFormat(format, type);
         });
       });
     }
@@ -262,28 +276,6 @@ class Toolbar extends QuillToolbar {
 
     dialog.dialogEl.showModal();
     dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
-
-    /*try {
-      const response = await fetch(uri, {
-        credentials: 'same-origin',
-        headers: {
-          "x-kx-inline": "inline"
-        }
-      });
-
-      if (response.ok) {
-        const content = await response.text();
-
-        dialog.setContent(content);
-        this._lastDialogUri = uri;
-      } else {
-        dialog.setContent('<div class="dialog-error">Failed to load content.</div>');
-        this._lastDialogUri = undefined;
-      }
-    } catch (error) {
-      dialog.setContent('<div class="dialog-error">An error occurred while loading content.</div>');
-      this._lastDialogUri = undefined;
-    }*/
   }
 }
 

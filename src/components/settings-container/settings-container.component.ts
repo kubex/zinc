@@ -50,7 +50,7 @@ export default class ZnSettingsContainer extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this._store = new Store(window.localStorage, this.storeKey);
+    this._store = new Store(window.sessionStorage, this.storeKey);
 
     this.recomputeFiltersFromSlot();
     this.updateFilters();

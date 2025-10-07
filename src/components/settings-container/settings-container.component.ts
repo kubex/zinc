@@ -1,12 +1,12 @@
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {state, property} from "lit/decorators.js";
+import {property, state} from "lit/decorators.js";
+import {Store} from "../../internal/storage";
 import {type ZnChangeEvent} from "../../events/zn-change";
 import ZincElement from '../../internal/zinc-element';
 import type ZnCheckbox from "../checkbox";
 
 import styles from './settings-container.scss';
-import {classMap} from "lit/directives/class-map.js";
-import {Store} from "../../internal/storage";
 
 interface SettingsContainerFilter {
   attribute: string;
@@ -46,6 +46,8 @@ export default class ZnSettingsContainer extends ZincElement {
   private _updateFiltersScheduled = false;
 
   private _store: Store;
+
+  private _hiddenElements: Set<Element> = new Set();
 
   connectedCallback() {
     super.connectedCallback();
@@ -125,8 +127,7 @@ export default class ZnSettingsContainer extends ZincElement {
 
   updateFilters() {
     // reset all items
-    const allItems = this.querySelectorAll('[hidden]');
-    allItems.forEach(item => item.removeAttribute('hidden'));
+    this._hiddenElements.forEach(el => el.removeAttribute('hidden'));
 
     // apply filters
     this.filters.forEach(filter => {
@@ -136,6 +137,7 @@ export default class ZnSettingsContainer extends ZincElement {
           item.removeAttribute('hidden');
         } else {
           item.setAttribute('hidden', 'true');
+          this._hiddenElements.add(item);
         }
       });
     });

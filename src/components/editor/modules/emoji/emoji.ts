@@ -2,6 +2,7 @@ import {init, Picker} from 'emoji-mart';
 import data from '@emoji-mart/data';
 import type Quill from 'quill';
 import type ToolbarComponent from "../toolbar/toolbar.component";
+import type ZnDialog from "../../../dialog";
 
 export interface EmojiResult {
   native?: string;
@@ -92,6 +93,13 @@ class Emoji {
         this._quill.insertText(index, text, 'user');
         this._quill.setSelection(index + text.length, 0, 'user');
       }
+
+      this.getToolbarEmojiContainer().then((container) => {
+        const dialog = container?.parentElement as ZnDialog;
+        if (dialog) {
+          dialog.hide();
+        }
+      });
     } catch {
       // no-op
     }

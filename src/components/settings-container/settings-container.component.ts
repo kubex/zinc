@@ -196,8 +196,7 @@ export default class ZnSettingsContainer extends ZincElement {
           'setting-container__dropdown--bottom-end': this.position === 'bottom-end',
           'setting-container__dropdown--bottom-start': this.position === 'bottom-start',
         })}>
-          <zn-button class="setting-container__toggle-button" slot="trigger" icon="settings" icon-size="24"
-                     color="secondary"></zn-button>
+          <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
           <div class="settings-container__dropdown-content">
             <slot name="filter" style="display: none;" @slotchange=${this.handleFiltersSlotChange}></slot>
             ${this.filters.map(filter => html`

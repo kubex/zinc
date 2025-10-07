@@ -25,32 +25,47 @@
 .setting-container__dropdown {
   z-index: 10;
   position: absolute;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background: rgba(var(--zn-panel, 0.8));
   box-shadow: var(--zn-shadow-small);
 
+  &:hover {
+    background: rgba(var(--zn-panel, 1));
+  }
+
   &--top-end {
-    top: var(--zn-spacing-small);
-    right: var(--zn-spacing-small);
+    top: var(--zn-spacing-medium);
+    right: var(--zn-spacing-medium);
     bottom: auto;
   }
 
   &--top-start {
-    top: var(--zn-spacing-small);
+    top: var(--zn-spacing-medium);
     right: auto;
-    left: var(--zn-spacing-small);
+    left: var(--zn-spacing-medium);
     bottom: auto;
   }
 
   &--bottom-end {
-    bottom: var(--zn-spacing-small);
-    right: var(--zn-spacing-small);
+    bottom: var(--zn-spacing-medium);
+    right: var(--zn-spacing-medium);
     top: auto;
   }
 
   &--bottom-start {
-    bottom: var(--zn-spacing-small);
-    left: var(--zn-spacing-small);
+    bottom: var(--zn-spacing-medium);
+    left: var(--zn-spacing-medium);
     top: auto;
   }
+}
+
+.setting-container__dropdown[open] .setting-container__toggle-button, .setting-container__toggle-button:hover {
+  color: rgb(var(--zn-primary));
+  cursor: pointer;
+  rotate: 10deg;
 }
 
 zn-button {
@@ -69,4 +84,5 @@ zn-button {
   width: fit-content;
   z-index: 20;
   border: 1px solid rgb(var(--zn-border-color));
+  margin-bottom: 10px;
 }

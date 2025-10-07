@@ -102,7 +102,7 @@ export default class ZnProgressTile extends ZincElement {
         'progress-tile--warn': this.waitTime > 60 && this.waitTime < (this.maxWaitTime / 2),
         'progress-tile--danger': this.waitTime >= this.maxWaitTime
       })}">
-        <zn-icon size="36" src="${this.avatar}" round></zn-icon>
+        <zn-icon size="36" src="${this.avatar}"></zn-icon>
         <div class="progress-tile__content">
 
           <div class="progress-tile__header">

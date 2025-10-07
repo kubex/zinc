@@ -1,13 +1,16 @@
 @use "../../wc";
 @use "./lni";
 
-
 :host {
   display: inline-block;
   box-sizing: content-box !important;
 
   --icon-size: 24px;
   --icon-color: inherit;
+}
+
+:host([split-pane-focus]) .icon-wrapper {
+  cursor: pointer;
 }
 
 .icon-wrapper {
@@ -26,7 +29,6 @@
   width: 100%;
   height: 100%;
 }
-
 
 .icon {
   width: var(--icon-size);

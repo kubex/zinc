@@ -4149,7 +4149,7 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/editor/editor-quick-action/editor-quick-action.component" {
+declare module "components/editor/modules/context-menu/quick-action/quick-action.component" {
     import ZincElement from "internal/zinc-element";
     export default class ZnEditorQuickAction extends ZincElement {
         uri: string;
@@ -4160,9 +4160,9 @@ declare module "components/editor/editor-quick-action/editor-quick-action.compon
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/editor/editor-quick-action/index" {
-    import ZnEditorQuickAction from "components/editor/editor-quick-action/editor-quick-action.component";
-    export * from "components/editor/editor-quick-action/editor-quick-action.component";
+declare module "components/editor/modules/context-menu/quick-action/index" {
+    import ZnEditorQuickAction from "components/editor/modules/context-menu/quick-action/quick-action.component";
+    export * from "components/editor/modules/context-menu/quick-action/quick-action.component";
     export default ZnEditorQuickAction;
     global {
         interface HTMLElementTagNameMap {
@@ -4627,7 +4627,7 @@ declare module "components/editor/index" {
         }
     }
 }
-declare module "components/editor/editor-tool/editor-tool.component" {
+declare module "components/editor/modules/toolbar/tool/tool.component" {
     import { type CSSResultGroup } from "lit";
     import ZincElement from "internal/zinc-element";
     export default class ZnEditorTool extends ZincElement {
@@ -4639,9 +4639,9 @@ declare module "components/editor/editor-tool/editor-tool.component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/editor/editor-tool/index" {
-    import ZnEditorTool from "components/editor/editor-tool/editor-tool.component";
-    export * from "components/editor/editor-tool/editor-tool.component";
+declare module "components/editor/modules/toolbar/tool/index" {
+    import ZnEditorTool from "components/editor/modules/toolbar/tool/tool.component";
+    export * from "components/editor/modules/toolbar/tool/tool.component";
     export default ZnEditorTool;
     global {
         interface HTMLElementTagNameMap {
@@ -6387,8 +6387,8 @@ declare module "zinc" {
     export { default as OrderTable } from "components/order-table/index";
     export { default as BulkActions } from "components/bulk-actions/index";
     export { default as Editor } from "components/editor/index";
-    export { default as EditorTool } from "components/editor/editor-tool/index";
-    export { default as EditorQuickAction } from "components/editor/editor-quick-action/index";
+    export { default as EditorTool } from "components/editor/modules/toolbar/tool/index";
+    export { default as EditorQuickAction } from "components/editor/modules/context-menu/quick-action/index";
     export { default as EditorDialog } from "components/editor/modules/dialog/dialog.component";
     export { default as Toggle } from "components/toggle/index";
     export { default as Input } from "components/input/index";

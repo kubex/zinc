@@ -1,7 +1,7 @@
 import './toolbar.component';
+import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
 import type DialogComponent from "../dialog/dialog.component";
-import type Quill from "quill";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnMenuItem from "../../../menu-item";
 
@@ -241,13 +241,13 @@ class Toolbar extends QuillToolbar {
 
       const prevChar = index > 0 ? this._quill.getText(index - 1, 1) : '\n';
       if (prevChar !== '\n') {
-        this._quill.insertText(index, '\n', 'user');
+        this._quill.insertText(index, '\n', Quill.sources.USER);
         index += 1;
       }
 
-      this._quill.insertEmbed(index, 'hr', true, 'user');
-      this._quill.insertText(index + 1, '\n', 'user');
-      this._quill.setSelection(index + 1, 0, 'user');
+      this._quill.insertEmbed(index, 'hr', true, Quill.sources.USER);
+      this._quill.insertText(index + 1, '\n', Quill.sources.USER);
+      this._quill.setSelection(index + 1, 0, Quill.sources.USER);
 
       this._syncToolbarState();
     } catch (e) {

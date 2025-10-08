@@ -188,13 +188,13 @@ class HeadlessEmoji {
       if (length < 0) return;
 
       // Remove ':' and the query
-      this._quill.deleteText(insertIndex, length, 'user');
+      this._quill.deleteText(insertIndex, length, Quill.sources.USER);
 
       const insertText = `${emojiChar} `;
-      this._quill.insertText(insertIndex, insertText, 'user');
+      this._quill.insertText(insertIndex, insertText, Quill.sources.USER);
 
       const cursorPos = insertIndex + insertText.length;
-      setTimeout(() => this._quill.setSelection(cursorPos, 0, 'silent'), 0);
+      setTimeout(() => this._quill.setSelection(cursorPos, 0, Quill.sources.SILENT), 0);
       this._quill.focus();
       this.hide();
     } catch {

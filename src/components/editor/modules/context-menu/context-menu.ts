@@ -185,21 +185,21 @@ class ContextMenu {
       const range = this._quill.getSelection();
       if (range) {
         let insertIndex = range.index - 1;
-        this._quill.deleteText(insertIndex, 1, 'user');
+        this._quill.deleteText(insertIndex, 1, Quill.sources.USER);
 
         const prevChar = this._quill.getText(insertIndex - 1, 1);
         if (prevChar !== ' ' && insertIndex > 0) {
-          this._quill.insertText(insertIndex, ' ', 'user');
+          this._quill.insertText(insertIndex, ' ', Quill.sources.USER);
           insertIndex += 1;
         }
 
         const contentDelta = this._quill.clipboard.convert({html: value});
         this._quill.updateContents(
           new Delta().retain(insertIndex).concat(contentDelta),
-          'user'
+          Quill.sources.USER
         );
 
-        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, 'silent'), 0);
+        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, Quill.sources.SILENT), 0);
       }
       this._quill.focus();
       this.hide();
@@ -217,8 +217,8 @@ class ContextMenu {
       const insertIndex = this._startIndex;
       const length = sel.index - insertIndex;
       if (length >= 0) {
-        this._quill.deleteText(insertIndex, length, 'user');
-        this._quill.setSelection(insertIndex, 0, 'silent');
+        this._quill.deleteText(insertIndex, length, Quill.sources.USER);
+        this._quill.setSelection(insertIndex, 0, Quill.sources.SILENT);
       }
     }
   }

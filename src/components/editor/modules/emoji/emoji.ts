@@ -1,6 +1,6 @@
 import {init, Picker} from 'emoji-mart';
 import data from '@emoji-mart/data';
-import type Quill from 'quill';
+import Quill from 'quill';
 import type ToolbarComponent from "../toolbar/toolbar.component";
 import type ZnDialog from "../../../dialog";
 
@@ -86,12 +86,12 @@ class Emoji {
 
       const range = this._quill.getSelection(true);
       if (range) {
-        this._quill.insertText(range.index, text, 'user');
-        this._quill.setSelection(range.index + text.length, 0, 'user');
+        this._quill.insertText(range.index, text, Quill.sources.USER);
+        this._quill.setSelection(range.index + text.length, 0, Quill.sources.USER);
       } else {
         const index = Math.max(0, this._quill.getLength() - 1);
-        this._quill.insertText(index, text, 'user');
-        this._quill.setSelection(index + text.length, 0, 'user');
+        this._quill.insertText(index, text, Quill.sources.USER);
+        this._quill.setSelection(index + text.length, 0, Quill.sources.USER);
       }
 
       this.getToolbarEmojiContainer().then((container) => {

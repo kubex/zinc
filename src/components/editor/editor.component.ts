@@ -338,7 +338,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const text = clipboard.getData('text/plain');
           const html = clipboard.getData('text/html');
           const delta = this.quillElement.clipboard.convert({html: html, text: text});
-          this.quillElement.setContents(delta, 'silent');
+          this.quillElement.setContents(delta, Quill.sources.SILENT);
           this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
         }
       },

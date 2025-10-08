@@ -4064,8 +4064,8 @@ declare module "components/editor/modules/dialog/dialog.component" {
 }
 declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
+    import Quill from "quill";
     import QuillToolbar from "quill/modules/toolbar";
-    import type Quill from "quill";
     import type ToolbarComponent from "components/editor/modules/toolbar/toolbar.component";
     class Toolbar extends QuillToolbar {
         private readonly _quill;
@@ -4200,7 +4200,7 @@ declare module "components/editor/modules/context-menu/context-menu" {
     export default ContextMenu;
 }
 declare module "components/editor/modules/date-picker/date-picker" {
-    import type Quill from "quill";
+    import Quill from "quill";
     class DatePicker {
         private readonly _quill;
         constructor(quill: Quill);
@@ -4245,7 +4245,7 @@ declare module "components/editor/modules/drag-drop/drag-drop" {
     export const getFileDataUrl: (file: any) => Promise<unknown>;
 }
 declare module "components/editor/modules/emoji/emoji" {
-    import type Quill from 'quill';
+    import Quill from 'quill';
     export interface EmojiResult {
         native?: string;
         skins?: {

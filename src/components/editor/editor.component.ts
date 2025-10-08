@@ -402,20 +402,14 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const contentContainer = target.getAttribute('editor-content-id');
     if (!contentContainer) return;
 
-    let contentElement = (target as Element).closest('#' + contentContainer)
-    if (e.currentTarget instanceof Element) {
-      contentElement = e.currentTarget.closest('#' + contentContainer)
-    } else if (e.selectedTarget instanceof Element) {
-      contentElement = e.selectedTarget.closest('#' + contentContainer)
-    } else if (e.target instanceof Element) {
-      contentElement = e.target.closest('#' + contentContainer)
-    } else {
-      contentElement = (e.composedPath()[0] as Element).closest('#' + contentContainer)
-    }
-
-    if (!contentElement) {
-      contentElement = deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '')[0];
-    }
+    // Find which element contains the content to insert
+    // Priority: currentTarget > selectedTarget > target > composedPath > querySelector
+    const contentElement: Element | null =
+      (e.currentTarget instanceof Element && e.currentTarget.closest('#' + contentContainer)) ||
+      (e.selectedTarget instanceof Element && e.selectedTarget.closest('#' + contentContainer)) ||
+      (e.target instanceof Element && e.target.closest('#' + contentContainer)) ||
+      ((e.composedPath()[0] as Element)?.closest('#' + contentContainer)) ||
+      deepQuerySelectorAll(`#${contentContainer}`, document.documentElement, '')[0];
     if (!contentElement) return;
 
     let content = contentElement.textContent;

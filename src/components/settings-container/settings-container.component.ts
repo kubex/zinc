@@ -132,7 +132,13 @@ export default class ZnSettingsContainer extends ZincElement {
 
     // apply filters
     this.filters.forEach(filter => {
-      const items = deepQuerySelectorAll(filter.itemSelector + (filter.attribute === "*" ? `` : `[${filter.attribute}]`), this, "");
+      let items;
+      const attrAppend = filter.attribute === "*" ? `` : `[${filter.attribute}]`;
+      if (filter.itemSelector && filter.itemSelector.startsWith('>')) {
+        items = deepQuerySelectorAll(filter.itemSelector.substring(1) + attrAppend, this, "");
+      } else {
+        items = this.querySelectorAll(filter.itemSelector + attrAppend);
+      }
       items.forEach(item => {
         if (filter.checked) {
           item.removeAttribute('hidden');

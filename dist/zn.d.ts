@@ -6143,8 +6143,8 @@ declare module "components/style/index" {
     }
 }
 declare module "components/content-block/content-block.component" {
-    import type { PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { PropertyValues } from 'lit';
     interface TextRow {
         lines: string[];
         type: 'reply' | 'text';

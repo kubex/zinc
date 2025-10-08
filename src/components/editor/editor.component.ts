@@ -176,7 +176,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           },
           upload: (file: File) => {
             window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
-            return new Promise((resolve, _) => {
+            return new Promise((resolve) => {
               const fd = new FormData();
               fd.append('filename', file.name);
               fd.append('size', file.size.toString());
@@ -186,7 +186,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
               xhr.open('POST', this.uploadAttachmentUrl, true);
               xhr.onload = () => {
                 if (xhr.status === 200) {
-                  const response = JSON.parse(xhr.responseText);
+                  const response = JSON.parse(xhr.responseText) as {
+                    uploadPath: string;
+                    uploadUrl: string;
+                    originalFilename: string;
+                  };
                   resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
                 }
               };
@@ -204,8 +208,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.quillElement = quill;
 
-    this._supplyPlaceholderDialog();
-
     // @ts-expect-error getSelection is available it lies.
     const hasShadowRootSelection = !!(document.createElement('div').attachShadow({mode: 'open'}).getSelection);
     // Each browser engine has a different implementation for retrieving the Range
@@ -217,16 +219,12 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           return rootNode?.getSelection()?.getRangeAt(0);
         } else {
           const selection = window.getSelection();
-          // @ts-expect-error getComposedRanges is available it lies.
-          if (selection.getComposedRanges) {
+          if (selection && "getComposedRanges" in selection && typeof selection.getComposedRanges === 'function') {
             // Webkit range retrieval is done with getComposedRanges (see: https://bugs.webkit.org/show_bug.cgi?id=163921)
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            return selection?.getComposedRanges(rootNode)[0];
+            return Array.isArray(selection.getComposedRanges(rootNode)) ? (selection.getComposedRanges(rootNode) as unknown[])[0] : undefined;
           } else {
             // Gecko implements the range API properly in Native Shadow: https://developer.mozilla.org/en-US/docs/Web/API/Selection/getRangeAt
-            // @ts-ignore
-            return selection.getRangeAt(0);
+            return selection?.getRangeAt(0);
           }
         }
       } catch {
@@ -382,14 +380,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     };
 
     return bindings;
-  }
-
-  private _supplyPlaceholderDialog() {
-    const placeholderItems: HTMLElement[] = Array.prototype.slice.call(this.shadowRoot?.querySelectorAll('.ql-placeholder .ql-picker-item'));
-    placeholderItems.forEach((item) => {
-      item.textContent = item.dataset.value ?? ''
-    });
-    placeholderItems.forEach((item) => item.classList.remove('ql-selected'));
   }
 
   private _handleEditorChange(e: OnEvent) {

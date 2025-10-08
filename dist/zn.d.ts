@@ -3804,7 +3804,10 @@ declare module "components/scroll-container/scroll-container.component" {
         static styles: CSSResultGroup;
         startScrolled: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        private _footer;
+        private _footerResizeObserver?;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }
@@ -6259,6 +6262,7 @@ declare module "components/settings-container/settings-container.component" {
         filters: SettingsContainerFilter[];
         position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
         storeKey: string;
+        noScroll: boolean;
         private _mutationObserver;
         private _updateFiltersScheduled;
         private _store;

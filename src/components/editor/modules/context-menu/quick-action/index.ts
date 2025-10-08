@@ -1,6 +1,6 @@
-import ZnEditorQuickAction from './editor-quick-action.component';
+import ZnEditorQuickAction from './quick-action.component';
 
-export * from './editor-quick-action.component';
+export * from './quick-action.component';
 export default ZnEditorQuickAction;
 
 ZnEditorQuickAction.define('zn-editor-quick-action');

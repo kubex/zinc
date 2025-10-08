@@ -1,8 +1,8 @@
 import {type CSSResultGroup, html, unsafeCSS} from "lit";
 import {property} from "lit/decorators.js";
-import ZincElement from "../../../internal/zinc-element";
+import ZincElement from "../../../../../internal/zinc-element";
 
-import styles from './editor-tool.scss';
+import styles from './tool.scss';
 
 export default class ZnEditorTool extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

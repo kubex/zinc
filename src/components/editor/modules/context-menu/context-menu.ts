@@ -3,7 +3,7 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill, {Delta} from "quill";
-import ZnEditorQuickAction from "../../editor-quick-action";
+import ZnEditorQuickAction from "./quick-action";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "../toolbar/toolbar";
 

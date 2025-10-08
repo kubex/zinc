@@ -1,6 +1,6 @@
 import {html} from "lit";
 import {property} from "lit/decorators.js";
-import ZincElement from "../../../internal/zinc-element";
+import ZincElement from "../../../../../internal/zinc-element";
 
 export default class ZnEditorQuickAction extends ZincElement {
   @property() uri: string;

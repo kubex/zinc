@@ -497,7 +497,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       <zn-toolbar id="toolbar">
         <slot name="tools"></slot>
       </zn-toolbar>
-      <slot name="context-items" id="contextItemsSlot" style="display: none;"></slot>
+      <slot name="context-items" style="display: none;"></slot>
       <div id="editor" x-editor-id="${this.id}"></div>
       <input type="text" id="editorHtml" name="${this.name}" value="${this.value}" style="display: none;">
       <div id="action-container" class="ql-toolbar ql-snow">

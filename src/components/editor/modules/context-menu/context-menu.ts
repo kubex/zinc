@@ -3,6 +3,7 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill, {Delta} from "quill";
+import ZnEditorQuickAction from "../../editor-quick-action";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "../toolbar/toolbar";
 import type ZnEditor from "../../editor.component";
@@ -233,23 +234,19 @@ class ContextMenu {
       if (root?.host) {
         const slot = root.querySelector('slot[name="context-items"]') as HTMLSlotElement | null;
         const assigned = slot ? slot.assignedElements({flatten: true}) : [];
-        assigned.forEach((el: Element) => {
-          const hostEl = el as HTMLElement;
-          const marker = hostEl.shadowRoot?.querySelector('[data-quick-action]') as HTMLElement | null;
-          if (!marker) return;
+        assigned.forEach((quickAction: Element) => {
+          if (!(quickAction instanceof ZnEditorQuickAction)) return;
 
-          const label = marker.getAttribute('data-caption') ?? '';
-          const uri = marker.getAttribute('data-uri') ?? '';
-          const icon = marker.getAttribute('data-icon') ?? '';
-          const key = marker.getAttribute('data-key') ?? '';
+          const {label, content, uri, icon, key} = quickAction;
 
-          if (key && icon && label) {
-            options.push({icon, label, format: 'toolbar', key: key});
-            return;
-          }
-
-          if (label && uri) {
-            options.push({icon, label, format: 'dialog', value: uri});
+          if (label && icon) {
+            if (key) {
+              options.push({icon, label, format: 'toolbar', key: key});
+            } else if (uri) {
+              options.push({icon, label, format: 'dialog', value: uri});
+            } else if (content) {
+              options.push({icon, label, format: 'insert', value: content});
+            }
           }
         });
       }

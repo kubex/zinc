@@ -37,6 +37,10 @@
     }
   }
 
+  &--align-end .description-item__content {
+    text-align: right;
+  }
+
   &__header {
     display: flex;
     align-items: flex-start;
@@ -66,6 +70,11 @@
 
   &__content-inner {
     width: 100%;
+
+    ::slotted(zn-icon) {
+      vertical-align: middle;
+      margin-right: var(--zn-spacing-2x-small);
+    }
   }
 
   &__caption {

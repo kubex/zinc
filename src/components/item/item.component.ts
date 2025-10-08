@@ -47,6 +47,9 @@ export default class ZnItem extends ZincElement {
 
   @property({type: Boolean, attribute: 'no-padding'}) noPadding: boolean;
 
+  // align items to the right
+  @property({type: Boolean, attribute: 'align-end'}) alignEnd: boolean;
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -73,16 +76,17 @@ export default class ZnItem extends ZincElement {
     return html`
       <div
         class=${classMap({
-          'item': true,
-          'item--stacked': this.stacked,
-          'item--edit-on-hover': this.editOnHover,
-          'item--inline': this.inline,
-          'item--grid': this.grid,
-          'item--small': this.size === 'small',
-          'item--medium': this.size === 'medium',
-          'item--large': this.size === 'large',
-          'item--has-icon': hasIcon,
-          'item--no-padding': this.noPadding
+          'description-item': true,
+          'description-item--stacked': this.stacked,
+          'description-item--edit-on-hover': this.editOnHover,
+          'description-item--inline': this.inline,
+          'description-item--grid': this.grid,
+          'description-item--small': this.size === 'small',
+          'description-item--medium': this.size === 'medium',
+          'description-item--large': this.size === 'large',
+          'description-item--has-icon': hasIcon,
+          'description-item--no-padding': this.noPadding,
+          'description-item--align-end': this.alignEnd
         })}
         part="base">
 

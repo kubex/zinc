@@ -34,6 +34,10 @@ class Dialog {
     return litToHTML<DialogComponent>(tpl);
   }
 
+  public isOpen() {
+    return this._component.dialogEl.open;
+  }
+
   public close() {
     this._component.dialogEl.close();
   }

@@ -21,8 +21,6 @@ import ZnTextarea from "../textarea";
 import type {OnEvent} from "../../utilities/on";
 import type {Range} from "quill";
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type ContextMenuComponent from "./modules/context-menu/context-menu-component";
-import type HeadlessEmojiComponent from "./modules/emoji/headless/headless-emoji.component";
 import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
@@ -327,59 +325,42 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _getQuillKeyboardBindings() {
-    const bindings = {
-      'remove-formatting': {
-        key: 'V',
-        shiftKey: true,
-        handler: (_range: any, context: any) => {
-          const clipboard = context.event.clipboardData;
-          const text = clipboard.getData('text/plain');
-          const html = clipboard.getData('text/html');
-          const delta = this.quillElement.clipboard.convert({html: html, text: text});
-          this.quillElement.setContents(delta, Quill.sources.SILENT);
-          this.quillElement.setSelection(delta.length(), Quill.sources.SILENT);
-        }
-      },
-    };
-
     const empty = (value: string) => {
       const match = value.match(/[^<pbr\s>/]/);
       return match === null;
     };
 
     // Always add an Enter binding to support emoji selection in all interaction types
-    // @ts-expect-error bindings has no type
-    bindings['enter'] = {
-      key: 'Enter',
-      shiftKey: false,
-      handler: () => {
-        const emoji = document.querySelector('zn-headless-emoji') as HeadlessEmojiComponent | null;
-        const isEmojiOpen = emoji?.open ?? false;
-        const contextMenu = document.querySelector('zn-context-menu') as ContextMenuComponent | null;
-        const isContextMenuOpen = contextMenu?.open ?? false;
-        if (isEmojiOpen || isContextMenuOpen) {
-          return false;
-        }
-
-        if (this.interactionType === 'chat') {
-          const form = this.closest('form');
-          if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
-            this.emit('zn-submit', {detail: {value: this.value, element: this}});
-            form.requestSubmit();
-            this.quillElement.setText('');
-            // prevent default Enter (submit completed)
+    return {
+      'enter': {
+        key: 'Enter',
+        shiftKey: false,
+        handler: () => {
+          const emoji = this.quillElement.getModule('headlessEmoji') as HeadlessEmoji;
+          const menu = this.quillElement.getModule('contextMenu') as ContextMenu;
+          const dialog = this.quillElement.getModule('dialog') as Dialog;
+          if (emoji.isOpen() || menu.isOpen() || dialog.isOpen()) {
             return false;
           }
-          // If we didn't submit, allow default so Enter inserts newline
+
+          if (this.interactionType === 'chat') {
+            const form = this.closest('form');
+            if (form && this.value && this.value.trim().length > 0 && !empty(this.value)) {
+              this.emit('zn-submit', {detail: {value: this.value, element: this}});
+              form.requestSubmit();
+              this.quillElement.setText('');
+              // prevent default Enter (submit completed)
+              return false;
+            }
+            // If we didn't submit, allow default so Enter inserts newline
+            return true;
+          }
+
+          // For non-chat interactions, allow default behavior (newline)
           return true;
-        }
-
-        // For non-chat interactions, allow default behavior (newline)
-        return true;
-      },
+        },
+      }
     };
-
-    return bindings;
   }
 
   private _handleEditorChange(e: OnEvent) {

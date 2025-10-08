@@ -214,6 +214,10 @@ class HeadlessEmoji {
     this._startIndex = -1;
     this._quill.container.ownerDocument.removeEventListener('click', this._docClickHandler);
   }
+
+  public isOpen() {
+    return this._component?.open;
+  }
 }
 
 export default HeadlessEmoji;

@@ -4196,6 +4196,7 @@ declare module "components/editor/modules/context-menu/context-menu" {
         private _getOptions;
         private show;
         private hide;
+        isOpen(): boolean;
     }
     export default ContextMenu;
 }
@@ -4222,6 +4223,7 @@ declare module "components/editor/modules/dialog/dialog" {
         });
         private _initDialog;
         private createComponent;
+        isOpen(): boolean;
         close(): void;
     }
     export default Dialog;
@@ -4312,6 +4314,7 @@ declare module "components/editor/modules/emoji/headless/headless-emoji" {
         private replaceAtQuery;
         private show;
         private hide;
+        isOpen(): boolean;
     }
     export default HeadlessEmoji;
 }
@@ -4607,7 +4610,6 @@ declare module "components/editor/editor.component" {
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _handleTextChange;
         private _getQuillKeyboardBindings;
-        private _supplyPlaceholderDialog;
         private _handleEditorChange;
         private _replaceTextAtSelection;
         private _insertTextAtSelection;

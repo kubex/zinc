@@ -5,20 +5,17 @@ import AITooltipComponent from "./tooltip/ai-tooltip.component";
 import Quill from "quill";
 import ZnTextarea from "../../../textarea";
 import type {Range} from "quill";
-import type ZnEditor from "../../editor.component";
 
 class QuillAI {
   private _quill: Quill;
-  private readonly _editor: ZnEditor;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
   private _selectedText: string = '';
   private _prompt: string = '';
   private _aiResponseContent: string = '';
 
-  constructor(quill: Quill, options: { editor: ZnEditor; path: string }) {
+  constructor(quill: Quill, options: { path: string }) {
     this._quill = quill;
-    this._editor = options.editor;
     this._path = options.path;
 
     this._initComponent();
@@ -178,7 +175,9 @@ class QuillAI {
   private _positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._editor.getSelectionRange();
+    const range = this._quill.getSelection();
+    if (!range) return;
+
     if (this._component instanceof AITooltipComponent) {
       const editorBounds = this._quill.container.getBoundingClientRect();
       const endIndex = range.index + range.length;

@@ -6,21 +6,18 @@ import Quill, {Delta} from "quill";
 import ZnEditorQuickAction from "../../editor-quick-action";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "../toolbar/toolbar";
-import type ZnEditor from "../../editor.component";
 
 class ContextMenu {
   private _quill: Quill;
-  private readonly _editor: ZnEditor;
   private readonly _toolbarModule: Toolbar;
   private _component: ContextMenuComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill, options: { editor: ZnEditor; container: ContextMenuComponent }) {
+  constructor(quill: Quill) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
-    this._editor = options.editor;
 
     this.initComponent();
     this.attachEvents();
@@ -33,7 +30,7 @@ class ContextMenu {
 
   private attachEvents() {
     this._quill.on(Quill.events.TEXT_CHANGE, () => this.updateFromEditor());
-    this._quill.on(Quill.events.SELECTION_CHANGE, () => this.updateFromEditor());
+    this._quill.on(Quill.events.EDITOR_CHANGE, () => this.updateFromEditor());
     this._quill.root.addEventListener('keydown', this._keydownHandler);
     this._component.addEventListener('zn-format-select', (e: Event) => this.onToolbarSelect(e as CustomEvent<ResultItem>));
     this._quill.on('editor-change', () => this.positionComponent());
@@ -80,7 +77,9 @@ class ContextMenu {
   private positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._editor.getSelectionRange();
+    const range = this._quill.getSelection();
+    if (!range) return;
+
     const bounds = this._quill.getBounds(range.index);
     if (!bounds) return;
 
@@ -88,15 +87,14 @@ class ContextMenu {
     const left = Math.max(0, editorBounds.left + bounds.left);
     const top = editorBounds.top + bounds.bottom + 4;
     this._component.setPosition(left, top);
-
   }
 
   private getToolbarQuery(): { start: number; formatQuery: string } | null {
     try {
-      const sel = this._quill.getSelection();
-      if (!sel) return null;
+      const range = this._quill.getSelection();
+      if (!range) return null;
 
-      const cursor = sel.index;
+      const cursor = range.index;
       const characterLimit = 50;
       const textBefore = this._quill.getText(Math.max(0, cursor - characterLimit), Math.min(characterLimit, cursor));
       const offset = cursor - Math.max(0, cursor - characterLimit);

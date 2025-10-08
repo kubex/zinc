@@ -35,7 +35,7 @@ class HeadlessEmoji {
 
   private attachEvents() {
     this._quill.on(Quill.events.TEXT_CHANGE, () => this.updateFromEditor());
-    this._quill.on(Quill.events.SELECTION_CHANGE, () => this.updateFromEditor());
+    this._quill.on(Quill.events.EDITOR_CHANGE, () => this.updateFromEditor());
     this._quill.root.addEventListener('keydown', this._keydownHandler);
     this._component.addEventListener('zn-emoji-select', (e: Event) => this.onEmojiSelect(e as CustomEvent));
     this._quill.on('editor-change', () => this.positionComponent());

@@ -152,9 +152,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         toolbar: {
           container: this.toolbar,
         },
-        contextMenu: {
-          editor: this,
-        },
+        contextMenu: {},
         keyboard: {
           bindings: bindings
         },
@@ -165,7 +163,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         headlessEmoji: {},
         datePicker: {},
         ai: {
-          editor: this,
           path: this.aiPath
         },
         timeTracking: {
@@ -307,11 +304,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
      * Subscribe to selection change separately, because emitter in Quill doesn't catch this event in Shadow DOM
      **/
     document.addEventListener('selectionchange', () => {
-      const range = this.quillElement.getSelection();
-      if (range) {
-        this._selectionRange = range;
-      }
-      this.quillElement.selection.update()
+      this.quillElement.selection.update();
     });
 
     document.addEventListener('zn-editor-update', this._handleTextChange.bind(this));
@@ -319,7 +312,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     // Track selection range inside the editor so other modules can access it
     quill.on(Quill.events.SELECTION_CHANGE, (range: Range, oldRange: Range) => {
-      this._selectionRange = range?.length > 0 ? range : oldRange;
+      this._selectionRange = range ?? oldRange;
     });
 
     const delta = quill.clipboard.convert({html: this.value});
@@ -327,10 +320,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
-  }
-
-  getSelectionRange = (): Range => {
-    return this._selectionRange;
   }
 
   private _handleTextChange() {
@@ -461,7 +450,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
 
     this._closePopups();
-
   }
 
   private _insertTextAtSelection() {

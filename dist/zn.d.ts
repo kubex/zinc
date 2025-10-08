@@ -4173,20 +4173,14 @@ declare module "components/editor/editor-quick-action/index" {
 declare module "components/editor/modules/context-menu/context-menu" {
     import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
-    import type ContextMenuComponent from "components/editor/modules/context-menu/context-menu-component";
-    import type ZnEditor from "components/editor/editor.component";
     class ContextMenu {
         private _quill;
-        private readonly _editor;
         private readonly _toolbarModule;
         private _component;
         private _startIndex;
         private _keydownHandler;
         private _docClickHandler;
-        constructor(quill: Quill, options: {
-            editor: ZnEditor;
-            container: ContextMenuComponent;
-        });
+        constructor(quill: Quill);
         private initComponent;
         private attachEvents;
         private createComponent;
@@ -4521,17 +4515,14 @@ declare module "components/textarea/index" {
 }
 declare module "components/editor/modules/ai/index" {
     import Quill from "quill";
-    import type ZnEditor from "components/editor/editor.component";
     class QuillAI {
         private _quill;
-        private readonly _editor;
         private readonly _path;
         private _component;
         private _selectedText;
         private _prompt;
         private _aiResponseContent;
         constructor(quill: Quill, options: {
-            editor: ZnEditor;
             path: string;
         });
         private _initComponent;
@@ -4574,7 +4565,6 @@ declare module "components/editor/modules/time-tracking/time-tracking" {
 declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import type { Range } from "quill";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -4615,7 +4605,6 @@ declare module "components/editor/editor.component" {
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        getSelectionRange: () => Range;
         private _handleTextChange;
         private _getQuillKeyboardBindings;
         private _supplyPlaceholderDialog;

@@ -27,20 +27,14 @@ export default class ZnPanel extends ZincElement {
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
-
   @property() caption: string;
-
   @property() description: string;
-
   @property({type: Boolean}) tabbed: boolean;
-
   @property({type: Boolean}) cosmic: boolean;
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
   @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
-
   @property({type: Boolean}) transparent: boolean;
-
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);

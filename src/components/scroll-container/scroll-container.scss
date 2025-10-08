@@ -1,6 +1,15 @@
 @use "../../wc";
 
 :host {
+  display: contents;
+  --zn-scroll-footer-height: 0px;
+}
+
+:host([flex-end]) ::slotted(*) {
+  // margin-top: auto;
+}
+
+.scroll-container {
   @include wc.scrollbars;
   container-type: inline-size;
   display: flex;
@@ -10,8 +19,16 @@
   max-width: 100%;
   width: 100%;
   overflow-y: auto;
+  padding-bottom: var(--zn-scroll-footer-height, 0px)
 }
 
-:host([flex-end]) ::slotted(*) {
-  // margin-top: auto;
+slot[name="footer"] {
+  padding: 0;
+  margin: 0;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
 }

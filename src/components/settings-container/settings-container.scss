@@ -1,20 +1,20 @@
 @use "../../wc";
 
 :host {
-  display: block;
-  height: 100%;
-  width: 100%;
-  position: relative;
+  display: contents;
 }
 
 .container {
+}
+
+.container--scroll {
   height: 100%;
   width: 100%;
   overflow: hidden;
   position: relative;
 }
 
-.scroll-content {
+.container--scroll .scroll-content {
   height: 100%;
   width: 100%;
   overflow: auto;
@@ -31,6 +31,7 @@
   padding: 4px;
   background: rgba(var(--zn-panel, 0.8));
   box-shadow: var(--zn-shadow-small);
+  transition: bottom 0.2s ease;
 
   &:hover {
     background: rgba(var(--zn-panel, 1));
@@ -50,13 +51,13 @@
   }
 
   &--bottom-end {
-    bottom: var(--zn-spacing-medium);
+    bottom: calc(var(--zn-spacing-medium) + var(--zn-scroll-footer-height, 0px));
     right: var(--zn-spacing-medium);
     top: auto;
   }
 
   &--bottom-start {
-    bottom: var(--zn-spacing-medium);
+    bottom: calc(var(--zn-spacing-medium) + var(--zn-scroll-footer-height, 0px));
     left: var(--zn-spacing-medium);
     top: auto;
   }

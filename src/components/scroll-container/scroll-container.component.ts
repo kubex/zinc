@@ -35,6 +35,9 @@ export default class ZnScrollContainer extends ZincElement {
     }
   }
 
+  private _footer: HTMLSlotElement | null = null;
+  private _footerResizeObserver?: ResizeObserver;
+
   connectedCallback() {
     super.connectedCallback();
     if (this.startScrolled) {
@@ -42,14 +45,35 @@ export default class ZnScrollContainer extends ZincElement {
         setTimeout(() => {
           this.scrollTop = this.scrollHeight;
         }, 100);
+        if (!this._footer) {
+          this._footer = this.shadowRoot?.querySelector('slot[name="footer"]') as HTMLSlotElement;
+          if (this._footer) {
+            // Initialize height immediately
+            this.style.setProperty('--zn-scroll-footer-height', `${this._footer.clientHeight}px`);
+            // Attach ResizeObserver to watch for size changes
+            this._footerResizeObserver = new ResizeObserver(() => {
+              this.style.setProperty('--zn-scroll-footer-height', `${this._footer?.clientHeight ?? 0}px`);
+            });
+            this._footerResizeObserver.observe(this._footer);
+          }
+        }
       });
       observer.observe(this, {childList: true, subtree: true});
     }
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._footerResizeObserver?.disconnect();
+    this._footerResizeObserver = undefined;
+  }
+
   render() {
     return html`
-      <slot></slot>
+      <div class="scroll-container">
+        <slot></slot>
+      </div>
+      <slot name="footer"></slot>
     `;
   }
 }

@@ -41,6 +41,7 @@ export default class ZnSettingsContainer extends ZincElement {
   @property() position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start' = 'bottom-start';
 
   @property({attribute: 'store-key'}) storeKey: string;
+  @property({attribute: 'no-scroll'}) noScroll: boolean;
 
   private _mutationObserver: MutationObserver | null = null;
 
@@ -192,7 +193,10 @@ export default class ZnSettingsContainer extends ZincElement {
     }
 
     return html`
-      <div class="container">
+      <div class="${classMap({
+        'container': true,
+        'container--scroll': !this.noScroll,
+      })}">
         <div class="scroll-content">
           <slot @slotchange="${this.handleContentSlotChange}"></slot>
         </div>

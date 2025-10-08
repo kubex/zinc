@@ -4149,6 +4149,27 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
+declare module "components/editor/editor-quick-action/editor-quick-action.component" {
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorQuickAction extends ZincElement {
+        uri: string;
+        label: string;
+        content: string;
+        key: string;
+        icon: string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/editor-quick-action/index" {
+    import ZnEditorQuickAction from "components/editor/editor-quick-action/editor-quick-action.component";
+    export * from "components/editor/editor-quick-action/editor-quick-action.component";
+    export default ZnEditorQuickAction;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-editor-quick-action': ZnEditorQuickAction;
+        }
+    }
+}
 declare module "components/editor/modules/context-menu/context-menu" {
     import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
@@ -4636,27 +4657,6 @@ declare module "components/editor/editor-tool/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor-tool': ZnEditorTool;
-        }
-    }
-}
-declare module "components/editor/editor-quick-action/editor-quick-action.component" {
-    import ZincElement from "internal/zinc-element";
-    export default class ZnEditorQuickAction extends ZincElement {
-        uri: string;
-        caption: string;
-        description: string;
-        key: string;
-        icon: string;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/editor/editor-quick-action/index" {
-    import ZnEditorQuickAction from "components/editor/editor-quick-action/editor-quick-action.component";
-    export * from "components/editor/editor-quick-action/editor-quick-action.component";
-    export default ZnEditorQuickAction;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-editor-quick-action': ZnEditorQuickAction;
         }
     }
 }

@@ -229,29 +229,25 @@ class ContextMenu {
     const options: ResultItem[] = [];
 
     // 1) Quick Actions
-    try {
-      const root = this._quill.container.getRootNode() as ShadowRoot;
-      if (root?.host) {
-        const slot = root.querySelector('slot[name="context-items"]') as HTMLSlotElement | null;
-        const assigned = slot ? slot.assignedElements({flatten: true}) : [];
-        assigned.forEach((quickAction: Element) => {
-          if (!(quickAction instanceof ZnEditorQuickAction)) return;
+    const root = this._quill.container.getRootNode() as ShadowRoot;
+    if (root?.host) {
+      const slot = root.querySelector('slot[name="context-items"]') as HTMLSlotElement | null;
+      const assigned = slot ? slot.assignedElements({flatten: true}) : [];
+      assigned.forEach((quickAction: Element) => {
+        if (!(quickAction instanceof ZnEditorQuickAction)) return;
 
-          const {label, content, uri, icon, key} = quickAction;
+        const {label, content, uri, icon, key} = quickAction;
 
-          if (label && icon) {
-            if (key) {
-              options.push({icon, label, format: 'toolbar', key: key});
-            } else if (uri) {
-              options.push({icon, label, format: 'dialog', value: uri});
-            } else if (content) {
-              options.push({icon, label, format: 'insert', value: content});
-            }
+        if (label && icon) {
+          if (key) {
+            options.push({icon, label, format: 'toolbar', key: key});
+          } else if (uri) {
+            options.push({icon, label, format: 'dialog', value: uri});
+          } else if (content) {
+            options.push({icon, label, format: 'insert', value: content});
           }
-        });
-      }
-    } catch {
-      // no-op
+        }
+      });
     }
 
     // 2) Built-in Actions

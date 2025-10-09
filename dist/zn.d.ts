@@ -4025,11 +4025,54 @@ declare module "components/bulk-actions/index" {
         }
     }
 }
-declare module "components/editor/modules/toolbar/toolbar.component" {
+declare module "components/editor/modules/toolbar/tool/tool.component" {
     import { type CSSResultGroup } from "lit";
+    import ZincElement from "internal/zinc-element";
+    export default class ZnEditorTool extends ZincElement {
+        static styles: CSSResultGroup;
+        uri: string;
+        label: string;
+        key: string;
+        icon: string;
+        handler: string;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/editor/modules/toolbar/tool/index" {
+    import ZnEditorTool from "components/editor/modules/toolbar/tool/tool.component";
+    export * from "components/editor/modules/toolbar/tool/tool.component";
+    export default ZnEditorTool;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-editor-tool': ZnEditorTool;
+        }
+    }
+}
+declare module "components/editor/modules/toolbar/toolbar.component" {
+    import { type CSSResultGroup, type PropertyValues } from "lit";
     import ZincElement from "internal/zinc-element";
     export default class ToolbarComponent extends ZincElement {
         static styles: CSSResultGroup;
+        containerWidth: number;
+        private _toolbarEl;
+        private _groups;
+        private _slottedElements;
+        private _overflowMenu;
+        private _overflowGroup;
+        private _resizeObserver;
+        private _resizeId;
+        private _movedContent;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        handleResize: () => void;
+        private getToolbarWidth;
+        private getOverflowGroupWidth;
+        private restoreMovedContent;
+        private moveContentTo;
+        private calculateOverflow;
+        private _dispatchOverflowEvent;
+        private populateOverflowMenu;
         render(): import("lit").TemplateResult<1>;
         private _textOptions;
         private _formatOptions;
@@ -4065,6 +4108,28 @@ declare module "components/editor/modules/dialog/dialog.component" {
         render(): import("lit").TemplateResult<1>;
     }
 }
+declare module "components/editor/modules/emoji/emoji" {
+    import Quill from 'quill';
+    export interface EmojiResult {
+        native?: string;
+        skins?: {
+            native?: string;
+        }[];
+        id?: string;
+        shortcodes?: string;
+    }
+    class Emoji {
+        private readonly _quill;
+        private _mo;
+        constructor(quill: Quill);
+        private getHostEditor;
+        private getToolbarEmojiContainer;
+        private getTheme;
+        initPicker(): void;
+        private onEmojiSelect;
+    }
+    export default Emoji;
+}
 declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
     import Quill from "quill";
@@ -4082,6 +4147,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         callFormat(key: string, value?: string | boolean | undefined): void;
         trigger(key: string): void;
         private _attachToolbarHandlers;
+        private _onToolbarClick;
         private _syncToolbarState;
         private _updateHeadingFormatMenu;
         private _updateListFormatMenu;
@@ -4094,6 +4160,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _insertDivider;
         private _openDatePicker;
         private _openDialog;
+        private _handleOverflowUpdate;
     }
     export default Toolbar;
 }
@@ -4248,28 +4315,6 @@ declare module "components/editor/modules/drag-drop/drag-drop" {
         handleDrop: (e: DragEvent) => void;
     }
     export const getFileDataUrl: (file: any) => Promise<unknown>;
-}
-declare module "components/editor/modules/emoji/emoji" {
-    import Quill from 'quill';
-    export interface EmojiResult {
-        native?: string;
-        skins?: {
-            native?: string;
-        }[];
-        id?: string;
-        shortcodes?: string;
-    }
-    class Emoji {
-        private readonly _quill;
-        private _mo;
-        constructor(quill: Quill);
-        private getHostEditor;
-        private getToolbarEmojiContainer;
-        private getTheme;
-        private initPicker;
-        private onEmojiSelect;
-    }
-    export default Emoji;
 }
 declare module "components/editor/modules/emoji/headless/headless-emoji.component" {
     import ZincElement from "internal/zinc-element";
@@ -4629,28 +4674,6 @@ declare module "components/editor/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor': ZnEditor;
-        }
-    }
-}
-declare module "components/editor/modules/toolbar/tool/tool.component" {
-    import { type CSSResultGroup } from "lit";
-    import ZincElement from "internal/zinc-element";
-    export default class ZnEditorTool extends ZincElement {
-        static styles: CSSResultGroup;
-        uri: string;
-        key: string;
-        icon: string;
-        handler: string;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/editor/modules/toolbar/tool/index" {
-    import ZnEditorTool from "components/editor/modules/toolbar/tool/tool.component";
-    export * from "components/editor/modules/toolbar/tool/tool.component";
-    export default ZnEditorTool;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-editor-tool': ZnEditorTool;
         }
     }
 }

@@ -286,7 +286,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  value="${this.value}"
                  help-text="${ifDefined(this.helpText)}"
                  size="${this.size}"
-                 placeholder=" ${this.placeholder}"
+                 placeholder="${this.placeholder}"
                  @zn-input="${this.handleInput}"
                  @zn-blur="${this.handleBlur}">
         ${Object.keys(this.options).map(key => html`

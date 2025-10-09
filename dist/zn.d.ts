@@ -4056,7 +4056,6 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         containerWidth: number;
         private _toolbarEl;
         private _groups;
-        private _slottedElements;
         private _overflowMenu;
         private _overflowGroup;
         private _resizeObserver;
@@ -4070,6 +4069,9 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private getOverflowGroupWidth;
         private restoreMovedContent;
         private moveContentTo;
+        private isGroupEmpty;
+        private updateEmptyGroups;
+        private _updateDividerClasses;
         private calculateOverflow;
         private _dispatchOverflowEvent;
         private populateOverflowMenu;

@@ -21,6 +21,9 @@
     font-size: var(--zn-font-size-large);
     color: rgba(var(--zn-text-panel-title), 100%);
     margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &--has-breadcrumb {
@@ -110,6 +113,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    max-width: 100%;
     height: fit-content;
     gap: 10px;
     margin: 0 auto;
@@ -123,13 +127,15 @@
     flex-direction: column;
     gap: 1px;
     min-height: 43px;
-    flex-shrink: 0;
+    flex-shrink: 1;
+    max-width: 100%;
   }
 
   &__right {
     flex-grow: 1;
     flex-shrink: 1;
     overflow: hidden;
+    min-width: 20px;
   }
 
   &__description {
@@ -180,6 +186,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    max-width: 100%;
 
     a {
       display: flex;

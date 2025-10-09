@@ -3,6 +3,18 @@
 :host {
   display: contents;
   --zn-scroll-footer-height: 0px;
+  --zn-scroll-header-height: 0px;
+}
+
+.container {
+  max-height: 100%;
+  max-width: 100%;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 :host([flex-end]) ::slotted(*) {
@@ -19,10 +31,16 @@
   max-width: 100%;
   width: 100%;
   overflow-y: auto;
-  padding-bottom: var(--zn-scroll-footer-height, 0px)
+  flex-grow: 1;
+  margin: 0;
+  padding: 0 0 var(--zn-scroll-footer-height, 0px) 0;
 }
 
-slot[name="footer"] {
+.scroll-header {
+  display: contents;
+}
+
+.scroll-footer {
   padding: 0;
   margin: 0;
 

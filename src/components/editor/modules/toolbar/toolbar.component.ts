@@ -1,6 +1,6 @@
 import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from "lit";
-import {property, query, queryAll, queryAssignedElements} from "lit/decorators.js";
+import {property, query, queryAll} from "lit/decorators.js";
 import ZincElement from "../../../../internal/zinc-element";
 import ZnButton from "../../../button";
 import ZnEditorTool from "./tool";
@@ -18,7 +18,6 @@ export default class ToolbarComponent extends ZincElement {
   @query('.toolbar') private _toolbarEl!: HTMLElement;
 
   @queryAll('.toolbar__group') private _groups!: HTMLElement[];
-  @queryAssignedElements({slot: '', flatten: true}) private _slottedElements!: HTMLElement[];
 
   @query('.toolbar__overflow-menu') private _overflowMenu!: HTMLElement;
   @query('.toolbar__group--overflow') private _overflowGroup!: HTMLElement;
@@ -60,6 +59,11 @@ export default class ToolbarComponent extends ZincElement {
     super.firstUpdated(_changedProperties);
 
     this.containerWidth = this.getToolbarWidth();
+    this.updateEmptyGroups();
+
+    const slotElement = this.renderRoot?.querySelector('slot') as HTMLSlotElement | null;
+    slotElement?.addEventListener('slotchange', () => this.calculateOverflow());
+
     this.updateComplete.then(() => this.calculateOverflow());
   }
 
@@ -131,17 +135,56 @@ export default class ToolbarComponent extends ZincElement {
     this._movedContent.set(element, {placeholder, originalParent});
   }
 
+  private isGroupEmpty(group: HTMLElement): boolean {
+    const slotElement = group.querySelector('slot') as HTMLSlotElement | null;
+    if (slotElement) {
+      const assigned = slotElement.assignedElements({flatten: true});
+      return assigned.length === 0;
+    }
+
+    return group.childElementCount === 0;
+  }
+
+  private updateEmptyGroups() {
+    const groups = Array.from(this._groups || []);
+    groups.forEach(group => {
+      const empty = this.isGroupEmpty(group);
+      group.classList.toggle('toolbar__group--empty', empty);
+    });
+  }
+
+  private _updateDividerClasses() {
+    const groups = Array.from(this._groups || []);
+    let seenVisible = false;
+    groups.forEach(group => {
+      const isEmpty = group.classList.contains('toolbar__group--empty');
+      const isHidden = (group as HTMLElement).style.display === 'none';
+      const isVisible = !isEmpty && !isHidden;
+
+      group.classList.toggle('toolbar__group--has-prev-visible', isVisible && seenVisible);
+      if (isVisible) {
+        seenVisible = true;
+      }
+    });
+  }
+
   private calculateOverflow() {
     const groups = Array.from(this._groups || []);
     if (!groups.length) return;
 
     this.restoreMovedContent();
+    this.updateEmptyGroups();
 
-    const nonOverflowGroups = groups.filter(group => !group.classList.contains('toolbar__group--overflow'));
+    const nonOverflowGroups = groups.filter(group => !group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty'));
 
-    nonOverflowGroups.forEach(group => (group.style.display = 'flex'));
+    nonOverflowGroups.forEach(group => {
+      group.style.display = 'flex';
+      group.classList.remove('toolbar__group--hidden', 'toolbar__group--has-prev-visible');
+    });
+
     if (this._overflowGroup) {
       this._overflowGroup.style.display = 'none';
+      this._overflowGroup.classList.remove('toolbar__group--hidden', 'toolbar__group--has-prev-visible');
     }
 
     const containerWidth = this.getToolbarWidth();
@@ -157,6 +200,7 @@ export default class ToolbarComponent extends ZincElement {
         this._overflowMenu.innerHTML = '';
       }
 
+      this._updateDividerClasses();
       this._dispatchOverflowEvent();
       return;
     }
@@ -185,6 +229,7 @@ export default class ToolbarComponent extends ZincElement {
         this._overflowMenu.innerHTML = '';
       }
 
+      this._updateDividerClasses();
       this._dispatchOverflowEvent();
       return;
     }
@@ -206,9 +251,16 @@ export default class ToolbarComponent extends ZincElement {
       group.style.display = index < visibleCount ? 'flex' : 'none';
     });
 
+    nonOverflowGroups.forEach((group, index) => {
+      const hidden = index >= visibleCount;
+      group.classList.toggle('toolbar__group--hidden', hidden);
+    });
+
     if (this._overflowGroup) {
       this._overflowGroup.style.display = 'flex';
     }
+
+    this._updateDividerClasses();
 
     const hiddenGroups = nonOverflowGroups.slice(visibleCount);
     this.populateOverflowMenu(hiddenGroups);
@@ -378,9 +430,11 @@ export default class ToolbarComponent extends ZincElement {
 
       // 4) Slotted elements (when slot group is hidden)
       if (group.querySelector('slot')) {
-        if (!this._slottedElements.length) return;
+        const slotElement = group.querySelector('slot') as HTMLSlotElement | null;
+        const assigned = slotElement ? slotElement.assignedElements({flatten: true}) : [];
+        if (!assigned.length) return;
 
-        this._slottedElements.forEach((element: HTMLElement) => {
+        assigned.forEach((element: Element) => {
           if (element instanceof ZnEditorTool) {
             const icon = element.icon;
             const text = element.label;

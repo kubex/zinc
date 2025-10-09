@@ -14,8 +14,24 @@
       display: none;
     }
 
-    /* Divider between toolbar groups */
-    & + &::before {
+    &--empty {
+      display: none;
+    }
+
+    /* Divider between toolbar groups (only when the previous group is not empty and not hidden) */
+    &:not(&--empty):not(&--hidden) + &::before {
+      content: "";
+      display: inline-block;
+      width: 1px;
+      height: 18px;
+      background-color: var(--zn-color-gray-300);
+      opacity: 0.8;
+      margin-inline: var(--zn-spacing-2x-small);
+      border-radius: 10px;
+    }
+
+    /* Ensure divider appears when a group has any previous visible group (skips hidden/empty in between) */
+    &--has-prev-visible::before {
       content: "";
       display: inline-block;
       width: 1px;

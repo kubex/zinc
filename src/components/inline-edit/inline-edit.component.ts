@@ -5,9 +5,9 @@ import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';

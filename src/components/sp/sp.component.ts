@@ -51,6 +51,7 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'flush-l', type: Boolean, reflect: true}) flushL: boolean = false;
   @property({attribute: 'flush-r', type: Boolean, reflect: true}) flushR: boolean = false;
   @property({attribute: 'width-container', type: Boolean, reflect: true}) widthContainer: boolean = false;
+  @property({attribute: 'form-container', type: Boolean, reflect: true}) formContainer: boolean = false;
 
   connectedCallback() {
     if (this.gap) {
@@ -79,6 +80,7 @@ export default class ZnSp extends ZincElement {
         'sp--flush-l': this.flushL,
         'sp--flush-r': this.flushR,
         'width-container': this.widthContainer,
+        'form-container': this.formContainer,
       })}">
         <slot></slot>
       </div>`;

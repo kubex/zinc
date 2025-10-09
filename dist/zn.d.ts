@@ -3679,7 +3679,6 @@ declare module "components/sp/sp.component" {
         flushL: boolean;
         flushR: boolean;
         widthContainer: boolean;
-        formContainer: boolean;
         connectedCallback(): void;
         protected render(): unknown;
     }

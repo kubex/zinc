@@ -370,7 +370,7 @@ export default class ZnDropdown extends ZincElement {
           @focus=${this.handlePreload}
         ></slot>
 
-        <div aria-hidden=${this.open ? 'false' : 'true'} aria-labelledby="dropdown">
+        <div aria-hidden=${this.open ? 'false' : 'true'} ?inert=${!this.open} aria-labelledby="dropdown">
           ${this.fetchedContent ? unsafeHTML(this.fetchedContent) : ''}
           <slot part="panel" class="dropdown__panel"></slot>
         </div>

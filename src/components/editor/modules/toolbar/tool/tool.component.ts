@@ -8,6 +8,7 @@ export default class ZnEditorTool extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() uri: string;
+  @property() label: string;
   @property() key: string;
   @property() icon: string;
   @property() handler: string = 'dialog';
@@ -20,7 +21,8 @@ export default class ZnEditorTool extends ZincElement {
                  icon-size="18"
                  data-format="${this.handler}"
                  data-format-type="${this.uri}"
-                 data-toolbar-key="${this.key}"></zn-button>
+                 data-toolbar-key="${this.key}"
+                 aria-label="${this.label}"></zn-button>
       <div class="${this.handler}"></div>`
   }
 }

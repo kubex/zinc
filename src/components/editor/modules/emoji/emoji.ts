@@ -2,7 +2,6 @@ import {init, Picker} from 'emoji-mart';
 import data from '@emoji-mart/data';
 import Quill from 'quill';
 import type ToolbarComponent from "../toolbar/toolbar.component";
-import type ZnDialog from "../../../dialog";
 
 export interface EmojiResult {
   native?: string;
@@ -59,7 +58,7 @@ class Emoji {
     return t === 'dark' ? 'dark' : 'light';
   }
 
-  private initPicker() {
+  public initPicker() {
     this.getToolbarEmojiContainer().then((container) => {
       if (!container) return;
 
@@ -80,29 +79,27 @@ class Emoji {
   }
 
   private onEmojiSelect(emoji: EmojiResult | null) {
-    try {
-      const text: string = (emoji?.native) ?? (emoji?.skins?.[0]?.native) ?? '';
-      if (!text || !this._quill) return;
+    const text: string = (emoji?.native) ?? (emoji?.skins?.[0]?.native) ?? '';
+    if (!text || !this._quill) return;
 
-      const range = this._quill.getSelection(true);
-      if (range) {
-        this._quill.insertText(range.index, text, Quill.sources.USER);
-        this._quill.setSelection(range.index + text.length, 0, Quill.sources.USER);
-      } else {
-        const index = Math.max(0, this._quill.getLength() - 1);
-        this._quill.insertText(index, text, Quill.sources.USER);
-        this._quill.setSelection(index + text.length, 0, Quill.sources.USER);
-      }
-
-      this.getToolbarEmojiContainer().then((container) => {
-        const dialog = container?.parentElement as ZnDialog;
-        if (dialog) {
-          dialog.hide();
-        }
-      });
-    } catch {
-      // no-op
+    const range = this._quill.getSelection(true);
+    if (range) {
+      this._quill.insertText(range.index, text, Quill.sources.USER);
+      this._quill.setSelection(range.index + text.length, 0, Quill.sources.USER);
+    } else {
+      const index = Math.max(0, this._quill.getLength() - 1);
+      this._quill.insertText(index, text, Quill.sources.USER);
+      this._quill.setSelection(index + text.length, 0, Quill.sources.USER);
     }
+
+    this.getToolbarEmojiContainer().then((container) => {
+      if (!container) return;
+
+      const root = container.getRootNode() as ShadowRoot;
+      const host = root.host as HTMLElement | undefined;
+      const dialog = host?.closest?.('zn-dialog') as { hide?: () => void } | null;
+      dialog?.hide?.();
+    });
   }
 }
 

@@ -2,7 +2,9 @@ import './toolbar.component';
 import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
 import type DialogComponent from "../dialog/dialog.component";
+import type Emoji from "../emoji/emoji";
 import type ToolbarComponent from "./toolbar.component";
+import type ZnDropdown from "../../../dropdown";
 import type ZnMenuItem from "../../../menu-item";
 
 class Toolbar extends QuillToolbar {
@@ -31,6 +33,7 @@ class Toolbar extends QuillToolbar {
     this._component.updateComplete.then(() => {
       this._attachToolbarHandlers();
       this._syncToolbarState = this._syncToolbarState.bind(this);
+      this._component.addEventListener('zn-toolbar-overflow-updated', this._handleOverflowUpdate);
 
       if (quill) {
         quill.on('selection-change', this._syncToolbarState);
@@ -73,13 +76,25 @@ class Toolbar extends QuillToolbar {
 
   public trigger(key: string) {
     const container = this.container;
-    if (container) {
-      const matches = this._formatters.filter(
-        formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
-      );
-      const tool = (matches?.length ? matches[0] as HTMLElement : null);
-      if (tool) {
-        tool.click();
+    if (!container) return;
+
+    const matches = this._formatters.filter(
+      formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
+    );
+
+    const tool = (matches?.length ? (matches[0] as HTMLElement) : null);
+    if (tool) {
+      tool.click();
+      return;
+    }
+
+    const shadowRoot = this._component.shadowRoot;
+    const element = shadowRoot?.querySelector(`[data-toolbar-key="${key}"]`) as HTMLElement | null;
+    if (element) {
+      const format = element.getAttribute('data-format');
+      const type = element.getAttribute('data-format-type') ?? undefined;
+      if (format) {
+        this.callFormat(format, type);
       }
     }
   }
@@ -90,31 +105,41 @@ class Toolbar extends QuillToolbar {
     const slottedFormatters: Element[] = [];
     const slot = shadowRoot?.querySelector('slot');
     if (slot) {
-      const assigned = (slot as HTMLSlotElement).assignedElements({flatten: true});
-      assigned.forEach(el => {
-        const formatEl = el.shadowRoot?.querySelector('[data-format]')
-        if (formatEl) {
-          slottedFormatters.push(formatEl);
+      const assigned = slot.assignedElements({flatten: true});
+      assigned.forEach(element => {
+        const formatElement = element.shadowRoot?.querySelector('[data-format]');
+        if (formatElement) {
+          slottedFormatters.push(formatElement);
         }
       });
     }
 
     this._formatters = [...shadowFormatters, ...slottedFormatters];
-    if (this._formatters.length) {
-      this._formatters.forEach((formatter: Element) => {
-        formatter.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = e.currentTarget as HTMLElement | null;
-          if (!target) return;
 
-          const format = target.getAttribute('data-format');
-          if (!format) return;
-
-          const type: string | undefined = target.getAttribute('data-format-type') ?? undefined;
-          this.callFormat(format, type);
-        });
-      });
+    if (shadowRoot) {
+      shadowRoot.addEventListener('click', this._onToolbarClick);
     }
+  }
+
+  private _onToolbarClick = (e: Event) => {
+    const path = (e.composedPath()) || [];
+    let targetEl: HTMLElement | null = null;
+
+    for (const node of path as EventTarget[]) {
+      if (node instanceof HTMLElement) {
+        if (node.hasAttribute && node.hasAttribute('data-format')) {
+          targetEl = node;
+          break;
+        }
+      }
+    }
+    if (!targetEl) return;
+
+    const format = targetEl.getAttribute('data-format');
+    if (!format) return;
+
+    const type: string | undefined = targetEl.getAttribute('data-format-type') ?? undefined;
+    this.callFormat(format, type);
   }
 
   private _syncToolbarState() {
@@ -234,41 +259,57 @@ class Toolbar extends QuillToolbar {
   }
 
   private _insertDivider() {
-    try {
-      if (!this._quill) return;
-      const selection = this._quill.getSelection(true);
-      let index = selection ? selection.index + selection.length : this._quill.getLength();
+    if (!this._quill) return;
 
-      const prevChar = index > 0 ? this._quill.getText(index - 1, 1) : '\n';
-      if (prevChar !== '\n') {
-        this._quill.insertText(index, '\n', Quill.sources.USER);
-        index += 1;
-      }
+    const selection = this._quill.getSelection(true);
+    let index = selection ? selection.index + selection.length : this._quill.getLength();
 
-      this._quill.insertEmbed(index, 'hr', true, Quill.sources.USER);
-      this._quill.insertText(index + 1, '\n', Quill.sources.USER);
-      this._quill.setSelection(index + 1, 0, Quill.sources.USER);
-
-      this._syncToolbarState();
-    } catch (e) {
-      // no-op
+    const prevChar = index > 0 ? this._quill.getText(index - 1, 1) : '\n';
+    if (prevChar !== '\n') {
+      this._quill.insertText(index, '\n', Quill.sources.USER);
+      index += 1;
     }
+
+    this._quill.insertEmbed(index, 'hr', true, Quill.sources.USER);
+    this._quill.insertText(index + 1, '\n', Quill.sources.USER);
+    this._quill.setSelection(index + 1, 0, Quill.sources.USER);
+
+    this._syncToolbarState();
   }
 
   private _openDatePicker() {
-    const button = this._component.shadowRoot?.querySelector(`zn-button.toolbar__date-dropdown-trigger`) as HTMLElement | null;
-    if (!button) return;
+    const shadow = this._component.shadowRoot;
+    if (!shadow) return;
 
-    button.click();
+    const button = shadow.querySelector(`zn-button.toolbar__date-dropdown-trigger`) as HTMLElement | null;
+    const isVisible = (el: HTMLElement | null) => (el?.offsetParent !== null);
+
+    if (isVisible(button)) {
+      button!.click();
+      return;
+    }
+
+    const overflowDropdown = shadow.querySelector('zn-dropdown.toolbar__overflow') as ZnDropdown | null;
+    if (overflowDropdown) {
+      overflowDropdown.show().then();
+
+      const overflowMenu = shadow.querySelector('.toolbar__overflow-menu') as HTMLElement | null;
+      const dateParentItem = overflowMenu?.querySelector('zn-menu-item[data-overflow-source="date"]') as HTMLElement | null;
+
+      if (dateParentItem) {
+        // Trigger submenu open by simulating hover/focus
+        dateParentItem.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
+        dateParentItem.focus?.();
+      }
+    }
   }
 
   private _openDialog(uri: string) {
     if (this._lastDialogUri === uri) {
       const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
-      if (dialog) {
-        dialog.dialogEl.showModal();
-      }
-      return;
+      if (!dialog) return;
+
+      dialog.dialogEl.showModal();
     }
 
     const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
@@ -276,6 +317,11 @@ class Toolbar extends QuillToolbar {
 
     dialog.dialogEl.showModal();
     dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
+  }
+
+  private _handleOverflowUpdate = () => {
+    const emoji = this._quill.getModule('emoji') as Emoji;
+    emoji?.initPicker();
   }
 }
 

@@ -10,6 +10,10 @@
     align-items: center;
     position: relative;
 
+    &--overflow {
+      display: none;
+    }
+
     /* Divider between toolbar groups */
     & + &::before {
       content: "";
@@ -19,7 +23,7 @@
       background-color: var(--zn-color-gray-300);
       opacity: 0.8;
       margin-inline: var(--zn-spacing-2x-small);
-      border-radius: 1px;
+      border-radius: 10px;
     }
   }
 
@@ -34,16 +38,17 @@
   }
 
   &__format-button,
-  &__action-button {
+  &__action-button,
+  &__overflow-trigger {
     width: 28px;
     height: 28px;
     margin: 3px 2px;
+  }
 
-    /* Move underline icon down a bit */
-    &[icon="format_underlined"]::part(base) {
-      position: relative;
-      top: 1px;
-    }
+  /* Move underline icon down a bit */
+  &__format-button[icon="format_underlined"]::part(base) {
+    position: relative;
+    top: 1px;
   }
 }
 

@@ -40,9 +40,13 @@ export default class ZnChip extends ZincElement {
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
   render() {
+    const hasContent = this.hasSlotController.test('[default]')
     return html`
-      <div class=${classMap({
+      <div class="${classMap({
         'chip': true,
+        'chip--with-content': hasContent,
+        'chip--no-content': !hasContent,
+        'chip--with-icon': this.icon,
         'chip--flush': this.flush,
         'chip--flush-x': this.flushX,
         'chip--flush-y': this.flushY,
@@ -57,10 +61,10 @@ export default class ZnChip extends ZincElement {
         'chip--small': this.size === 'small',
         'chip--medium': this.size === 'medium',
         'chip--large': this.size === 'large',
-      })}>
+      })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
-        ${this.hasSlotController.test('[default]') ? html`
+        ${hasContent ? html`
           <slot></slot>` : ''}
         ${this.hasSlotController.test('action') ? html`
           <slot name="action" class="chip__action"></slot>` : ''}

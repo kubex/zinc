@@ -6014,7 +6014,7 @@ declare module "components/page-nav/page-nav.component" {
         items: PageNavigationItem[];
     }
     interface PageNavigationItem {
-        icon: string;
+        icon?: string;
         label: string;
         uri: string;
     }

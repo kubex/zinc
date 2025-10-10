@@ -258,6 +258,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 name="${this.name}"
                 size="${this.size}"
                 value="${this.value}"
+                placeholder="${this.placeholder}"
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
                 @zn-input="${this.handleInput}"
@@ -272,6 +273,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 name="${this.name}"
                 size="${this.size}"
                 value="${this.value}"
+                placeholder="${this.placeholder}"
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
                 @zn-input="${this.handleInput}"

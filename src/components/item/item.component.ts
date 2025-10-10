@@ -29,6 +29,7 @@ export default class ZnItem extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() caption: string;
+  @property() description: string;
 
   @property({type: Boolean}) stacked: boolean;
 
@@ -63,6 +64,12 @@ export default class ZnItem extends ZincElement {
   render() {
     const hasIcon = this.icon && this.icon.length > 0;
 
+    const headings = html`
+      <div class="item__headings">
+        <div class="item__caption" part="caption">${this.caption}</div>
+        ${this.description ? html`<div class="item__description">${this.description}</div>` : ''}
+      </div>`;
+
     return html`
       <div
         class=${classMap({
@@ -84,9 +91,8 @@ export default class ZnItem extends ZincElement {
             <div class="item__icon">
               <zn-icon src="${this.icon}" size="20" part="icon"></zn-icon>
             </div>
-            <div class="item__caption" part="caption">${this.caption}</div>
-          </div>` : html`
-          <div class="item__caption" part="caption">${this.caption}</div>`}
+            ${headings}
+          </div>` : headings}
 
         <div class="item__content">
           <div class="item__content-inner">

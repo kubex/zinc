@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: row;
   padding: 0 var(--zn-spacing-medium);
+  gap: var(--zn-spacing-2x-small);
 
   @include wc.container-query(null, md) {
     --zn-item-label-max-width: 200px;
@@ -38,6 +39,7 @@
 
   &__header {
     display: flex;
+    align-items: flex-start;
     max-width: var(--zn-item-label-max-width);
     width: 100%;
 
@@ -45,6 +47,14 @@
       width: unset;
       max-width: unset;
     }
+  }
+
+  &__headings {
+    display: flex;
+    flex-direction: column;
+    max-width: var(--zn-item-label-max-width);
+    width: 100%;
+    flex-shrink: 0;
   }
 
   &__content {
@@ -61,7 +71,7 @@
   &__caption {
     font-weight: 500;
     color: rgb(var(--zn-text-heading));
-    line-height: 33px;
+    line-height: var(--zn-line-height-normal);
     max-width: var(--zn-item-label-max-width);
     width: 100%;
     flex-shrink: 0;
@@ -69,6 +79,17 @@
     @include wc.container-query(null, sm) {
       line-height: var(--zn-line-height-normal);
     }
+  }
+
+  &__description {
+    display: block;
+    font-weight: 400;
+    margin: var(--zn-spacing-2x-small) 0 0;
+    font-size: var(--zn-font-size-small);
+    color: rgb(var(--zn-text-color));
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &__action-wrapper {
@@ -140,6 +161,15 @@
     .item__caption {
       width: unset;
       max-width: unset;
+    }
+
+    .item__headings {
+      width: unset;
+      max-width: unset;
+    }
+
+    .item__description {
+      margin: 0;
     }
 
     @include wc.container-query(null, sm) {

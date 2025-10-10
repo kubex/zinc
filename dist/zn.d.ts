@@ -3804,8 +3804,10 @@ declare module "components/scroll-container/scroll-container.component" {
     export default class ZnScrollContainer extends ZincElement {
         static styles: CSSResultGroup;
         startScrolled: boolean;
+        private container;
+        private footer;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        private _footer;
+        scrollEnd(): void;
         private _footerResizeObserver?;
         connectedCallback(): void;
         disconnectedCallback(): void;

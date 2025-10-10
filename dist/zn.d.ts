@@ -5703,6 +5703,7 @@ declare module "components/item/item.component" {
         };
         static styles: CSSResultGroup;
         caption: string;
+        description: string;
         stacked: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;

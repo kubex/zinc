@@ -1,6 +1,6 @@
 import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
 import ZincElement from '../../internal/zinc-element';
-import {property} from "lit/decorators.js";
+import {property, query} from "lit/decorators.js";
 
 import styles from './scroll-container.scss';
 
@@ -26,36 +26,38 @@ export default class ZnScrollContainer extends ZincElement {
 
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
 
+  @query('.scroll-container')
+  private container: HTMLElement;
+
+  @query('.scroll-footer')
+  private footer: HTMLElement;
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
-    if (this.startScrolled) {
-      setTimeout(() => {
-        this.scrollTop = this.scrollHeight;
-      }, 1000);
+    if (this.startScrolled && this.container) {
+      setTimeout(this.scrollEnd.bind(this), 10);
     }
   }
 
-  private _footer: HTMLElement | null = null;
+  scrollEnd() {
+    this.container.scrollTop = this.container.scrollHeight;
+  }
+
   private _footerResizeObserver?: ResizeObserver;
 
   connectedCallback() {
     super.connectedCallback();
     if (this.startScrolled) {
       const observer = new MutationObserver(() => {
-        setTimeout(() => {
-          this.scrollTop = this.scrollHeight;
-        }, 100);
-        if (!this._footer) {
-          this._footer = this.shadowRoot?.querySelector('.scroll-footer') as HTMLElement;
-          if (this._footer) {
-            // Initialize height immediately
-            this.style.setProperty('--zn-scroll-footer-height', `${this._footer.clientHeight}px`);
-            // Attach ResizeObserver to watch for size changes
-            this._footerResizeObserver = new ResizeObserver(() => {
-              this.style.setProperty('--zn-scroll-footer-height', `${this._footer?.clientHeight ?? 0}px`);
-            });
-            this._footerResizeObserver.observe(this._footer);
-          }
+        setTimeout(this.scrollEnd.bind(this), 100);
+        if (this.footer) {
+          // Initialize height immediately
+          this.style.setProperty('--zn-scroll-footer-height', `${this.footer.clientHeight}px`);
+          // Attach ResizeObserver to watch for size changes
+          this._footerResizeObserver = new ResizeObserver(() => {
+            this.style.setProperty('--zn-scroll-footer-height', `${this.footer?.clientHeight ?? 0}px`);
+          });
+          this._footerResizeObserver.observe(this.footer);
         }
       });
       observer.observe(this, {childList: true, subtree: true});

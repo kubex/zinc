@@ -5712,6 +5712,7 @@ declare module "components/item/item.component" {
         inline: boolean;
         grid: boolean;
         noPadding: boolean;
+        alignEnd: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;

@@ -105,6 +105,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     document.addEventListener('keydown', this.escKeyHandler);
     document.addEventListener('keydown', this.submitKeyHandler);
     document.addEventListener('click', this.mouseEventHandler);
+    this.addEventListener('mousedown', this.captureMouseDown, {capture: true});
+    this.addEventListener('keydown', this.captureKeyDown, {capture: true});
   }
 
   disconnectedCallback() {
@@ -112,6 +114,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     document.removeEventListener('keydown', this.escKeyHandler);
     document.removeEventListener('keydown', this.submitKeyHandler);
     document.removeEventListener('click', this.mouseEventHandler);
+    this.removeEventListener('mousedown', this.captureMouseDown, true);
+    this.removeEventListener('keydown', this.captureKeyDown, true);
   }
 
   async firstUpdated() {
@@ -157,6 +161,19 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     }
   }
 
+  captureMouseDown = (e: MouseEvent) => {
+    if (this.disabled && !this.isEditing) {
+      e.stopPropagation();
+    }
+  }
+
+  captureKeyDown = (e: KeyboardEvent) => {
+    if (this.disabled && !this.isEditing) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }
+
   handleEditClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -183,6 +200,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   };
 
   handleInput = (e: Event) => {
+    if (this.disabled || !this.isEditing) {
+      return;
+    }
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
   };
 
@@ -224,7 +244,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--padded': this.padded,
       })}">
 
-        <div class="ai__left" @click="${this.handleEditClick}">
+        <div class="ai__left" @click="${this.disabled ? undefined : this.handleEditClick}">
           ${input}
         </div>
 
@@ -232,10 +252,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
           ${!this.isEditing ?
             html`
               ${hasEditText ? html`
-                <zn-button @click="${this.handleEditClick}" size="x-small" color="secondary">
+                <zn-button @click="${this.disabled ? undefined : this.handleEditClick}" size="x-small"
+                           color="secondary">
                   ${this.editText}
                 </zn-button>` : html`
-                <zn-button @click="${this.handleEditClick}"
+                <zn-button @click="${this.disabled ? undefined : this.handleEditClick}"
                            class="button--edit"
                            icon="edit"
                            size="x-small"

@@ -1,8 +1,15 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {litToHTML} from "../../utilities/lit-to-html";
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnButton from "../button";
+import ZnInput from "../input";
+import ZnOption from "../option";
+import ZnSelect from "../select";
+import type {ZnChangeEvent} from "../../events/zn-change";
+import type {ZnInputEvent} from "../../events/zn-input";
 
 import styles from './bulk-actions.scss';
 
@@ -29,7 +36,10 @@ export interface BulkActionItem {
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-button
+ * @dependency zn-input
+ * @dependency zn-option
+ * @dependency zn-select
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -42,9 +52,15 @@ export interface BulkActionItem {
  */
 export default class ZnBulkActions extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-button': ZnButton,
+    'zn-input': ZnInput,
+    'zn-option': ZnOption,
+    'zn-select': ZnSelect,
+  };
 
   @query('.bulk-actions') container: HTMLDivElement;
-  @query('.add-rule') addRule: HTMLSelectElement;
+  @query('.add-rule') addRule: ZnSelect;
   @query('input#main-input') input: HTMLInputElement;
 
   @property() name: string;
@@ -73,12 +89,13 @@ export default class ZnBulkActions extends ZincElement {
       <div class="${classMap({
         'bulk-actions': true
       })}">
-        <select class="add-rule" @change="${this._addRule}">
-          <option value="">Select Filter</option>
+        <zn-select class="add-rule" placeholder="Select Filter" @zn-change="${this._addRule}">
           ${this.actions.map((item: BulkActionItem) => html`
-            <option value="${item.id}">${item.name.charAt(0).toUpperCase() + item.name.slice(1)}</option>`)}
-        </select>
-        <input id="main-input" name="${this.name}" value="${this.value}" type="hidden">
+            <zn-option value="${item.id}">
+              ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+            </zn-option>`)}
+        </zn-select>
+        <input id="main-input" name="${this.name}" value="${this.value}" hidden>
       </div>
     `;
   }
@@ -95,8 +112,9 @@ export default class ZnBulkActions extends ZincElement {
     this.value = btoa(JSON.stringify(data));
   }
 
-  private _addRule(event: Event | null, value: string = "") {
-    const id = value ? value : event ? (event.target as HTMLSelectElement).value : '';
+  private _addRule(event: Event | null, value: string = "", pos?: number) {
+    const target = event?.target as ZnSelect;
+    const id = value ? value : target?.value || '';
     if (id === '') return;
 
     const filter = this.actions.find(item => item.id === id);
@@ -109,104 +127,154 @@ export default class ZnBulkActions extends ZincElement {
       value: ''
     });
 
-    const row = document.createElement('div');
-    row.classList.add('query-builder__row');
-    row.id = uniqueId;
+    const keySelect = html`
+      <zn-select class="query-builder__key"
+                 @zn-change="${(e: ZnChangeEvent) => this._changeRule(uniqueId, e)}"
+                 value="${filter.id}">
+        ${this.actions.map((item: BulkActionItem) => html`
+          <zn-option value="${item.id}">
+            ${item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+          </zn-option>
+        `)}
+      </zn-select>
+    `;
 
-    const select = document.createElement('select');
-    this.actions.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.id;
-      option.text = item.name.charAt(0).toUpperCase() + item.name.slice(1);
-      option.selected = item.id === filter.id;
-      select.appendChild(option);
-    });
-    select.addEventListener('change', (e: Event) => this._changeRule(uniqueId, e));
-    select.classList.add('query-builder__key');
+    const input = this._createInput(uniqueId, filter);
 
-    row.appendChild(select);
+    const remove = html`
+      <zn-button class="query-builder__remove"
+                 icon="delete"
+                 icon-size="24"
+                 color="transparent"
+                 size="square"
+                 @click="${(e: Event) => this._removeRule(uniqueId, e)}">
+      </zn-button>`;
 
-    let input: HTMLSelectElement | HTMLInputElement | HTMLDivElement;
-    if (filter.options) {
-      input = document.createElement('select');
-      const options = Object.keys(filter.options);
-      options.forEach((item: string) => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.text = filter.options ? (filter.options[item]) : '';
-        input.appendChild(option);
-      });
-      this._updateValue(uniqueId, {target: input});
-      input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
-    } else if (filter.type === 'bool' || filter.type === 'boolean') {
-      input = document.createElement('select');
-      const option1 = document.createElement('option');
-      option1.value = '1';
-      option1.text = 'True';
-      input.appendChild(option1);
-      const option2 = document.createElement('option');
-      option2.value = '0';
-      option2.text = 'False';
-      input.appendChild(option2);
-      input.addEventListener('change', (e: Event) => this._updateValue(uniqueId, e));
-    } else if (filter.type === 'number') {
-      input = document.createElement('input');
-      input.setAttribute('type', 'number');
-      input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
-    } else if (filter.type === 'date') {
-      input = document.createElement('input');
-      input.setAttribute('type', 'date');
-      input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+    const wrapper = html`
+      <div class="query-builder__wrapper">
+        ${input}
+        ${remove}
+      </div>
+    `;
+
+    const rowElement = html`
+      <div id="${uniqueId}" class="query-builder__row">
+        ${keySelect}
+        ${wrapper}
+      </div>
+    `;
+
+    const row = litToHTML<HTMLDivElement>(rowElement);
+    if (!row) return;
+
+    if (pos !== undefined) {
+      this.container.insertBefore(row, this.container.children[pos]);
     } else {
-      input = document.createElement('input');
-      input.setAttribute('type', 'text');
-      input.addEventListener('input', (e: Event) => this._updateValue(uniqueId, e));
+      this.container.insertBefore(row, this.addRule);
     }
 
-    input.classList.add('query-builder__value');
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('query-builder__wrapper');
-    wrapper.appendChild(input);
-    row.appendChild(wrapper);
-
-    const remove = document.createElement('zn-button');
-    remove.setAttribute('icon', 'delete');
-    remove.setAttribute('icon-size', '24');
-    remove.setAttribute('color', 'transparent');
-    remove.setAttribute('size', 'square');
-    remove.addEventListener('click', (e: Event) => this._removeRule(uniqueId, e));
-    remove.classList.add('query-builder__remove');
-    row.appendChild(remove);
-
-    this.container.insertBefore(row, this.addRule);
+    // Reset back to default placeholder
     this.addRule.value = '';
+    this.addRule.displayLabel = '';
+    if (this.addRule.selectedOptions?.length) {
+      this.addRule.selectedOptions[0].selected = false;
+    }
+
     this._handleChange();
   }
 
-  private _updateValue(id: string, event: Event | { target: HTMLSelectElement | HTMLInputElement | HTMLDivElement }) {
+  private _createInput(uniqueId: string, filter: BulkActionItem): ZnSelect | ZnInput | null {
+    if (filter.options) {
+      const input = html`
+        <zn-select class="query-builder__value"
+                   @zn-change="${(e: ZnChangeEvent) => this._updateValue(uniqueId, e)}">
+          ${Object.keys(filter.options).map(key => html`
+            <zn-option value="${key}">
+              ${filter.options ? filter.options[key] : ''}
+            </zn-option>
+          `)}
+        </zn-select>`;
+      const el = litToHTML<ZnSelect>(input);
+      if (el) {
+        // initialize with current selection
+        this._updateValue(uniqueId, {target: el} as unknown as Event);
+      }
+      return el;
+    }
+
+    if (filter.type === 'bool' || filter.type === 'boolean') {
+      const input = html`
+        <zn-select class="query-builder__value"
+                   @zn-change="${(e: ZnChangeEvent) => this._updateValue(uniqueId, e)}">
+          <zn-option value="1">True</zn-option>
+          <zn-option value="0">False</zn-option>
+        </zn-select>`;
+      return litToHTML<ZnSelect>(input);
+    }
+
+    if (filter.type === 'number') {
+      const input = html`
+        <zn-input type="number"
+                  class="query-builder__value"
+                  @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+        </zn-input>`;
+      return litToHTML<ZnInput>(input);
+    }
+
+    if (filter.type === 'date') {
+      const input = html`
+        <zn-input type="date"
+                  class="query-builder__value"
+                  @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+        </zn-input>`;
+      return litToHTML<ZnInput>(input);
+    }
+
+    const input = html`
+      <zn-input type="text"
+                class="query-builder__value"
+                @zn-input="${(e: ZnInputEvent) => this._updateValue(uniqueId, e)}">
+      </zn-input>`;
+    return litToHTML<ZnInput>(input);
+  }
+
+  private _updateValue(id: string, event: Event | { target: ZnSelect | ZnInput | HTMLDivElement }) {
     const filter = this._selectedRules.get(id);
     if (!filter) return;
 
-    const input = event.target as HTMLSelectElement | HTMLInputElement;
-    filter.value = input.value;
+    const input = event.target as ZnSelect | ZnInput;
+    filter.value = input.value as string;
 
     this._selectedRules.set(id, filter);
     this._handleChange();
   }
 
-  private _changeRule(id: string, event: Event) {
+  private _getRulePosition(id: string): number {
+    const rules = this.container.querySelectorAll('.query-builder__row');
+    let position: number = -1;
+    rules.forEach((item, index) => {
+      if ((item as HTMLDivElement).id === id) {
+        position = index;
+      }
+    });
+    return position;
+  }
+
+  private _changeRule(id: string, event: ZnChangeEvent) {
     // remove the element from the dom
-    const button = event.target as HTMLSelectElement;
-    button.parentElement?.remove();
+    const pos: number = this._getRulePosition(id);
+    const select = event.target as ZnSelect;
+    select.popup.active = false;
+    select?.parentElement?.remove();
     // recreate the element based on the selected value;
-    this._removeRule(id, event);
-    this._addRule(event);
+    this._removeRule(id, event as unknown as Event);
+    this._addRule(event as unknown as Event, '', pos);
   }
 
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
-    const button = event.target as HTMLButtonElement;
-    button.parentElement?.remove();
+    const button = event.target as ZnButton;
+    button?.closest('.query-builder__row')?.remove();
     this._handleChange();
   }
 

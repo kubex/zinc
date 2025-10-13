@@ -41,6 +41,8 @@ export default class ZnButtonMenu extends ZincElement {
 
   @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
 
+  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 24;
+
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
   @property({type: Boolean, attribute: 'no-padding'}) public noPadding: boolean;
@@ -277,7 +279,7 @@ export default class ZnButtonMenu extends ZincElement {
       })}>
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent" size="${this.size}"></zn-button>
+          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent" size="${this.size}"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

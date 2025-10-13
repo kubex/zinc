@@ -5752,6 +5752,7 @@ declare module "components/button-menu/button-menu.component" {
         limit: number;
         maxLevel: number;
         size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
+        iconSize: number;
         noGap: boolean;
         noPadding: boolean;
         private _buttons;

@@ -2903,6 +2903,7 @@ declare module "components/chart/chart.component" {
         categories: string | string[];
         xAxis: string;
         datapointSize: number;
+        stacked: boolean;
         live: boolean;
         dataUrl: string;
         liveInterval: number;

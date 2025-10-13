@@ -186,7 +186,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  @blur=${this.blur}
                  value="${this.value}"
                  placeholder="Choose a ${localProvider.getName}"
-                 exportparts="combobox,expand-icon,form-control-help-text,form-control-input">
+                 exportparts="combobox,expand-icon,form-control-help-text,form-control-input,display-input">
         ${this.iconPosition !== 'none' ? html`
           <div id="select__prefix" slot="prefix" class="select__prefix"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`

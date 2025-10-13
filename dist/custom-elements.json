@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -219,79 +292,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/bulk-actions/bulk-actions.js",
       "declarations": [
         {
@@ -323,6 +323,15 @@
           "members": [
             {
               "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-input': ZnInput, 'zn-option': ZnOption, 'zn-select': ZnSelect, }"
+            },
+            {
+              "kind": "field",
               "name": "container",
               "type": {
                 "text": "HTMLDivElement"
@@ -332,7 +341,7 @@
               "kind": "field",
               "name": "addRule",
               "type": {
-                "text": "HTMLSelectElement"
+                "text": "ZnSelect"
               }
             },
             {
@@ -423,6 +432,37 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "pos",
+                  "optional": true,
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_createInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnSelect | ZnInput | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "uniqueId",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "BulkActionItem"
+                  }
                 }
               ]
             },
@@ -440,7 +480,25 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event | { target: HTMLSelectElement | HTMLInputElement | HTMLDivElement }"
+                    "text": "Event | { target: ZnSelect | ZnInput | HTMLDivElement }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_getRulePosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
@@ -459,7 +517,7 @@
                 {
                   "name": "event",
                   "type": {
-                    "text": "Event"
+                    "text": "ZnChangeEvent"
                   }
                 }
               ]
@@ -566,12 +624,15 @@
           "tagNameWithoutPrefix": "bulk-actions",
           "tagName": "zn-bulk-actions",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/bulk-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-input\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/bulk-actions",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-button",
+            "zn-input",
+            "zn-option",
+            "zn-select"
           ]
         }
       ],

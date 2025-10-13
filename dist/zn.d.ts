@@ -3962,6 +3962,10 @@ declare module "components/order-table/index" {
 declare module "components/bulk-actions/bulk-actions.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
     export interface CreatedRule {
         id: string;
         name: string;
@@ -3982,7 +3986,10 @@ declare module "components/bulk-actions/bulk-actions.component" {
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-button
+     * @dependency zn-input
+     * @dependency zn-option
+     * @dependency zn-select
      *
      * @event zn-event-name - Emitted as an example.
      *
@@ -3995,8 +4002,14 @@ declare module "components/bulk-actions/bulk-actions.component" {
      */
     export default class ZnBulkActions extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-input': typeof ZnInput;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
+        };
         container: HTMLDivElement;
-        addRule: HTMLSelectElement;
+        addRule: ZnSelect;
         input: HTMLInputElement;
         name: string;
         value: PropertyKey;
@@ -4009,7 +4022,9 @@ declare module "components/bulk-actions/bulk-actions.component" {
         render(): import("lit").TemplateResult<1>;
         private _handleChange;
         private _addRule;
+        private _createInput;
         private _updateValue;
+        private _getRulePosition;
         private _changeRule;
         private _removeRule;
         checkValidity(): boolean;

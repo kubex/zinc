@@ -1,5 +1,5 @@
-import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ApexCharts from "apexcharts";
 import ZincElement from '../../internal/zinc-element';
 
@@ -26,21 +26,22 @@ export default class ZnChart extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() type: 'area' | 'bar' | 'line' = 'bar';
-  @property({ type: Array }) data: any[] = [];
-  @property({ type: Array }) categories: string | string[] = '';
+  @property({type: Array}) data: any[] = [];
+  @property({type: Array}) categories: string | string[] = '';
 
   @property() xAxis: string;
-  @property({ type: Number, attribute: 'd-size' }) datapointSize: number = 1;
+  @property({type: Number, attribute: 'd-size'}) datapointSize: number = 1;
+  @property({type: Boolean}) stacked = false;
 
   // Live
-  @property({ type: Boolean }) live = false;
-  @property({ attribute: 'data-url' }) dataUrl = '';
-  @property({ attribute: 'live-interval', type: Number }) liveInterval = 1000;
-  @property({ type: Number, reflect: true }) height = 300;
+  @property({type: Boolean}) live = false;
+  @property({attribute: 'data-url'}) dataUrl = '';
+  @property({attribute: 'live-interval', type: Number}) liveInterval = 1000;
+  @property({type: Number, reflect: true}) height = 300;
 
-  @property({ attribute: 'enable-animations', type: Boolean }) enableAnimations = false;
+  @property({attribute: 'enable-animations', type: Boolean}) enableAnimations = false;
 
-  @property({ attribute: 'y-axis-append' }) yAxisAppend: string;
+  @property({attribute: 'y-axis-append'}) yAxisAppend: string;
 
   private chart: ApexCharts;
 
@@ -54,10 +55,11 @@ export default class ZnChart extends ZincElement {
       animations: this.enableAnimations,
       chart: {
         type: this.type,
-        toolbar: { show: false },
+        toolbar: {show: false},
         foreColor: theme == 'dark' ? "rgb(149, 163, 184)" : "rgb(123, 112, 151)",
         height: this.height + 'px',
         fontFamily: '"Inter", sans',
+        stacked: this.stacked,
         zoom: {
           enabled: false
         },

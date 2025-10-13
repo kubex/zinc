@@ -134,8 +134,14 @@
   }
 
   &--disabled {
-    .ai__right {
-      display: none !important;
+    &:not(.ai--editing) {
+      .ai__input::part(input), .ai__input::part(combobox) {
+        text-decoration: none;
+      }
+
+      .ai__right {
+        display: none !important;
+      }
     }
   }
 }

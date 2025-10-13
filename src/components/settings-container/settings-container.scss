@@ -5,6 +5,7 @@
 }
 
 .container {
+  padding-bottom: 30px;
 }
 
 .container--scroll {
@@ -19,7 +20,6 @@
   width: 100%;
   overflow: auto;
   box-sizing: border-box;
-  padding-bottom: 60px;
 }
 
 .setting-container__dropdown {
@@ -32,6 +32,9 @@
   background: rgba(var(--zn-panel, 0.8));
   box-shadow: var(--zn-shadow-small);
   transition: bottom 0.2s ease;
+  opacity: 0.7;
+  transition-duration: 0.3s;
+  transition-property: opacity;
 
   &:hover {
     background: rgba(var(--zn-panel, 1));
@@ -63,13 +66,17 @@
   }
 }
 
+.setting-container__dropdown[open], .setting-container__dropdown:hover {
+  opacity: 1;
+}
+
 .setting-container__dropdown[open] .setting-container__toggle-button::part(icon), .setting-container__toggle-button:hover::part(icon) {
   color: rgb(var(--zn-primary));
   cursor: pointer;
-  transition-duration: 0.8s;
+  transition-duration: 0.9s;
   transition-property: rotate, color;
-  rotate: 480deg;
-  transition-timing-function: ease-out;
+  rotate: 380deg;
+  transition-timing-function: ease-in-out;
 }
 
 zn-button {

@@ -6229,6 +6229,7 @@ declare module "components/content-block/content-block.component" {
         protected render(): import("lit").TemplateResult<1>;
         protected truncateText(): string;
         protected getTextSections(): TextRow[];
+        private transformLineForImages;
         showReply(e: MouseEvent): void;
     }
 }

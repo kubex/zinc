@@ -700,26 +700,22 @@ export default class ZnDataTable extends ZincElement {
         const tokens = new Set(styleStr.split(',').filter(Boolean));
 
         const isMono = tokens.has('mono') || tokens.has('code');
-        const isPrimary = tokens.has('primary');
-        const isError = tokens.has('error');
-        const isSuccess = tokens.has('success');
-        const isInfo = tokens.has('info');
-        const isWarning = tokens.has('warning');
-        const isAccent = tokens.has('accent');
         const isBorder = tokens.has('border');
         const isCenter = tokens.has('center');
+
+        if (tokens.has('bold') || tokens.has('strong')) {
+          content = html`<strong>${content}</strong>`;
+        }
+
+        if (tokens.has('italic')) {
+          content = html`<em>${content}</em>`;
+        }
 
         content = html`
           <zn-style
             font="${isMono ? 'mono' : nothing}"
-            primary=${isPrimary || nothing}
-            error=${isError || nothing}
-            success=${isSuccess || nothing}
-            info=${isInfo || nothing}
-            warning=${isWarning || nothing}
-            accent=${isAccent || nothing}
-            border=${isBorder || nothing}
-            center=${isCenter || nothing}
+            border="${isBorder || nothing}"
+            center="${isCenter || nothing}"
             color="${ifDefined(data.color)}">${content}
           </zn-style>`;
       }

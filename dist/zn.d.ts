@@ -1622,6 +1622,41 @@ declare module "components/skeleton/index" {
         }
     }
 }
+declare module "components/style/style.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export default class ZnStyle extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        color: string;
+        border: boolean;
+        error: boolean;
+        success: boolean;
+        info: boolean;
+        warning: boolean;
+        primary: boolean;
+        accent: boolean;
+        center: boolean;
+        font: string;
+        width: string;
+        height: string;
+        pad: string;
+        margin: string;
+        autoMargin: string;
+        connectedCallback(): void;
+        createRenderRoot(): this;
+    }
+}
+declare module "components/style/index" {
+    import ZnStyle from "components/style/style.component";
+    export * from "components/style/style.component";
+    export default ZnStyle;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-style': ZnStyle;
+        }
+    }
+}
 declare module "components/data-select/providers/country-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
     export const countryDataProvider: LocalDataProvider<DataProviderOption>;
@@ -2464,6 +2499,7 @@ declare module "components/data-table/data-table.component" {
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
     import ZnSkeleton from "components/skeleton/index";
+    import ZnStyle from "components/style/index";
     interface Cell {
         text: string;
         column: string;
@@ -2559,6 +2595,7 @@ declare module "components/data-table/data-table.component" {
             'zn-button-group': typeof ZnButtonGroup;
             'zn-confirm': typeof ZnConfirm;
             'zn-skeleton': typeof ZnSkeleton;
+            'zn-style': typeof ZnStyle;
         };
         dataUri: string;
         data: any;
@@ -6157,40 +6194,6 @@ declare module "components/split-button/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-split-button': ZnSplitButton;
-        }
-    }
-}
-declare module "components/style/style.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export default class ZnStyle extends ZincElement {
-        static styles: CSSResultGroup;
-        private readonly localize;
-        color: string;
-        border: boolean;
-        error: boolean;
-        success: boolean;
-        info: boolean;
-        warning: boolean;
-        primary: boolean;
-        accent: boolean;
-        center: boolean;
-        width: string;
-        height: string;
-        pad: string;
-        margin: string;
-        autoMargin: string;
-        connectedCallback(): void;
-        createRenderRoot(): this;
-    }
-}
-declare module "components/style/index" {
-    import ZnStyle from "components/style/style.component";
-    export * from "components/style/style.component";
-    export default ZnStyle;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-style': ZnStyle;
         }
     }
 }

@@ -25,7 +25,6 @@ import styles from './cols.scss';
 export default class ZnCols extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-
   @property({reflect: true, attribute: 'layout'}) layout: string = '';
 
   @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
@@ -35,7 +34,11 @@ export default class ZnCols extends ZincElement {
   @property({type: Boolean}) border: boolean = false;
 
   @property({type: Boolean}) pad: boolean;
+
+  @property({type: Boolean}) divide: boolean = false;
+
   @property({attribute: 'pad-x', type: Boolean}) padX: boolean;
+
   @property({attribute: 'pad-y', type: Boolean}) padY: boolean;
 
   render() {
@@ -47,7 +50,7 @@ export default class ZnCols extends ZincElement {
 
     this.layout = layout.join(',');
 
-    this.maxColumns = Math.min(5, layout.reduce((a, b) => a + b, 0));
+    this.maxColumns = layout.reduce((a, b) => a + b, 0);
 
     const prefix = 'zn-col-';
     this.querySelectorAll(':scope > *').forEach((element: HTMLElement, index) => {
@@ -66,7 +69,8 @@ export default class ZnCols extends ZincElement {
         'cols--pad': this.pad,
         'cols--pad-x': this.padX,
         'cols--pad-y': this.padY,
-        [`cols--layout-${this.layout.replace(',', '')}`]: !!this.layout,
+        'cols--divide': this.divide,
+        [`cols--layout-${this.layout.replaceAll(',', '')}`]: !!this.layout,
         [`cols--mc-${this.maxColumns}`]: !!this.maxColumns,
       })}">
         <slot></slot>

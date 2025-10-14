@@ -26,20 +26,10 @@
     }
   }
 
-  &--mc-2 {
-    --col-width: 40%;
-  }
-
-  &--mc-3 {
-    --col-width: 30%;
-  }
-
-  &--mc-4 {
-    --col-width: 23%;
-  }
-
-  &--mc-5 {
-    --col-width: 18%;
+  @for $i from 1 through 12 {
+    &--mc-#{$i} {
+      --col-width: calc(100% / #{$i + 1});
+    }
   }
 
   &--layout-121 {
@@ -50,6 +40,24 @@
       @include wc.container-query(hd) {
         order: initial;
         min-width: 46%;
+      }
+    }
+  }
+
+  &--divide {
+    ::slotted(*:not(:last-child)) {
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 1px;
+        top: 0;
+        height: 100%;
+        max-height: 100%;
+        right: calc((var(--zn-spacing-small) / 2) * -1);
+        background-color: rgb(var(--zn-border-color));
       }
     }
   }

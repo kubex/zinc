@@ -331,12 +331,15 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
       || this.hasSlotController.test(ActionSlots.filter.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter_top.valueOf())
-      || this.hasSlotController.test(ActionSlots.inputs.valueOf());
+      || this.hasSlotController.test(ActionSlots.filter_top.valueOf());
+
+    const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
 
     // Headers do not need to be re-rendered with new data
     return html`
       <div class="table-container" ${ref((el) => (this.tableContainer = el))}>
+        ${hasInputs ? html`
+          <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>` : null}
         ${hasActions ? this.getTableHeader() : html``}
         ${tableBody}
       </div>
@@ -455,7 +458,6 @@ export default class ZnDataTable extends ZincElement {
   getTableHeader() {
     return html`
       <slot name="${ActionSlots.filter_top.valueOf()}"></slot>
-      <slot name="${ActionSlots.inputs.valueOf()}" style="display: none"></slot>
       <div class="table__header">
         <div class="table__header__actions">
           ${this.getActions()}

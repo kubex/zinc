@@ -20,6 +20,7 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) primary = false;
   @property({type: Boolean}) accent = false;
   @property({type: Boolean}) center = false;
+  @property() font = '';
   @property() width = '';
   @property() height = '';
   @property() pad = '';
@@ -55,6 +56,12 @@ export default class ZnStyle extends ZincElement {
       display = "flex"
       this.classList.toggle('flex-mid', true);
       this.classList.toggle('flex-jc', true);
+    }
+
+    if (this.font) {
+      if (this.font === 'mono') {
+        this.classList.toggle('zn-mono', true);
+      }
     }
 
     if (this.width === "f") {
@@ -157,7 +164,6 @@ export default class ZnStyle extends ZincElement {
         }
       }
     }
-
 
     this.style.display = display;
   }

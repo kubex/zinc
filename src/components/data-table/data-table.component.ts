@@ -19,7 +19,7 @@ import ZnHoverContainer from "../hover-container";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
 import ZnSkeleton from "../skeleton";
-
+import ZnStyle from "../style";
 import type ZnDataSelect from "../data-select";
 import type ZnInput from "../input";
 import type ZnQueryBuilder from "../query-builder";
@@ -148,6 +148,7 @@ export default class ZnDataTable extends ZincElement {
     'zn-button-group': ZnButtonGroup,
     'zn-confirm': ZnConfirm,
     'zn-skeleton': ZnSkeleton,
+    'zn-style': ZnStyle,
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
@@ -690,12 +691,34 @@ export default class ZnDataTable extends ZincElement {
 
   renderCell(data: Cell) {
     if (data && typeof data === 'object') {
-      let content: TemplateResult = html`${data.text}`;
+      let content: TemplateResult | ZincElement = html`${data.text}`;
 
       if (data.style || data.color) {
+        const styleStr = typeof data.style === 'string' ? data.style : '';
+        const tokens = new Set(styleStr.split(',').filter(Boolean));
+
+        const isMono = tokens.has('mono') || tokens.has('code');
+        const isPrimary = tokens.has('primary');
+        const isError = tokens.has('error');
+        const isSuccess = tokens.has('success');
+        const isInfo = tokens.has('info');
+        const isWarning = tokens.has('warning');
+        const isAccent = tokens.has('accent');
+        const isBorder = tokens.has('border');
+        const isCenter = tokens.has('center');
+
         content = html`
-          <zn-style ${ifDefined(data.style || nothing)}
-                    color="${ifDefined(data.color || nothing)}">${content}
+          <zn-style
+            font="${ifDefined(isMono ? 'mono' : nothing)}"
+            primary=${ifDefined(isPrimary || nothing)}
+            error=${ifDefined(isError || nothing)}
+            success=${ifDefined(isSuccess || nothing)}
+            info=${ifDefined(isInfo || nothing)}
+            warning=${ifDefined(isWarning || nothing)}
+            accent=${ifDefined(isAccent || nothing)}
+            border=${ifDefined(isBorder || nothing)}
+            center=${ifDefined(isCenter || nothing)}
+            color="${ifDefined(data.color || nothing)}">${content}
           </zn-style>`;
       }
 

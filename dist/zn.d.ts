@@ -2708,6 +2708,7 @@ declare module "components/cols/cols.component" {
         noGap: boolean;
         border: boolean;
         pad: boolean;
+        divide: boolean;
         padX: boolean;
         padY: boolean;
         render(): import("lit").TemplateResult<1>;

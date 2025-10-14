@@ -709,16 +709,16 @@ export default class ZnDataTable extends ZincElement {
 
         content = html`
           <zn-style
-            font="${ifDefined(isMono ? 'mono' : nothing)}"
-            primary=${ifDefined(isPrimary || nothing)}
-            error=${ifDefined(isError || nothing)}
-            success=${ifDefined(isSuccess || nothing)}
-            info=${ifDefined(isInfo || nothing)}
-            warning=${ifDefined(isWarning || nothing)}
-            accent=${ifDefined(isAccent || nothing)}
-            border=${ifDefined(isBorder || nothing)}
-            center=${ifDefined(isCenter || nothing)}
-            color="${ifDefined(data.color || nothing)}">${content}
+            font="${isMono ? 'mono' : nothing}"
+            primary=${isPrimary || nothing}
+            error=${isError || nothing}
+            success=${isSuccess || nothing}
+            info=${isInfo || nothing}
+            warning=${isWarning || nothing}
+            accent=${isAccent || nothing}
+            border=${isBorder || nothing}
+            center=${isCenter || nothing}
+            color="${ifDefined(data.color)}">${content}
           </zn-style>`;
       }
 

@@ -2652,7 +2652,7 @@ declare module "components/data-table/data-table.component" {
         goToLastPage(): void;
         updateRowsPerPage(event: Event): void;
         selectAll(event: Event): void;
-        selectRow(e: PointerEvent): void;
+        selectRow(e: Event): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
         renderCell(data: Cell): TemplateResult;

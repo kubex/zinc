@@ -4223,6 +4223,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _openDatePicker;
         private _openDialog;
         private _handleOverflowUpdate;
+        private _addImage;
     }
     export default Toolbar;
 }

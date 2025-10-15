@@ -504,6 +504,7 @@ declare module "components/icon/icon.component" {
         library: IconLibrary;
         color: IconColor;
         padded: boolean;
+        blink: boolean;
         squared: boolean;
         gravatarOptions: string;
         defaultLibrary: IconLibrary;

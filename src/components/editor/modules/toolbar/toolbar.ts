@@ -347,7 +347,7 @@ class Toolbar extends QuillToolbar {
         const images = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
         const inserted = images.reverse().find(img => img.getAttribute('src') === dataUrl) || null;
         if (inserted) {
-          inserted.setAttribute('alt', file.name);
+          inserted.setAttribute('alt', file.name.replace(/\.[^/.]+$/, ''));
           inserted.setAttribute('title', file.name);
         }
 

@@ -63,12 +63,12 @@ export default class ZnItem extends ZincElement {
     if (inlineEdit) {
       inlineEdit.setAttribute('size', this.size);
     }
+    this.shadowRoot?.querySelector('.item')?.classList.toggle('item--with-content', this._hasContent());
+  }
 
-    const itm = this.shadowRoot?.querySelector('.item')
-    const content = this.shadowRoot?.querySelector('.item__content-inner');
-    if (content?.querySelector('slot')?.hasChildNodes()) {
-      itm?.classList.add('item--with-content');
-    }
+  protected _hasContent(): boolean {
+    const slotContent = this.querySelectorAll(":scope > :not([slot])")?.length || 0;
+    return slotContent > 0 || this.innerText.length > 0 || !(this.value === undefined || this.value === null)
   }
 
   render() {
@@ -85,7 +85,7 @@ export default class ZnItem extends ZincElement {
       <div
         class="${classMap({
           'item': true,
-          'item--with-content': !(this.value === undefined || this.value === null),
+          'item--with-content': this._hasContent(),
           'item--stacked': this.stacked,
           'item--edit-on-hover': this.editOnHover,
           'item--inline': this.inline,

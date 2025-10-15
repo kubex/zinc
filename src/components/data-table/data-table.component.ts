@@ -424,7 +424,7 @@ export default class ZnDataTable extends ZincElement {
           'table': true,
           'table--standalone': this.standalone,
           'with-hover': !this.unsortable,
-          'table-with--checkboxes': !this.hideCheckboxes,
+          'table--with-checkboxes': !this.hideCheckboxes,
         })}">
           <thead>
           <tr>
@@ -634,29 +634,33 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-  selectRow(e: PointerEvent) {
+  selectRow(e: Event) {
     if (!(e.target && (e.target instanceof Element))) {
       return;
     }
 
-    let target: HTMLElement = e.target as HTMLElement;
+    const target: Element | null = e.target;
     // if is a button or a link continue
-    if (target.tagName === 'ZN-BUTTON' || target.tagName === 'A' || target.tagName === 'BUTTON') {
-      return
-    }
-
-    // traverse parent until we reach a tr
-    while (target && target.tagName !== 'TR') {
-      target = target.parentElement as HTMLElement;
-    }
-
-    if (target === null) {
+    if (target?.tagName === 'ZN-BUTTON' || target?.tagName === 'A' || target?.tagName === 'BUTTON') {
       return;
     }
 
-    const checkbox = target.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    // Find the parent row
+    let parent: Element | null = target.closest ? target.closest('tr') : target.parentElement;
+    while (parent && parent.tagName !== 'TR') {
+      parent = parent.parentElement;
+    }
+
+    if (parent === null) {
+      return;
+    }
+
+    const checkbox: HTMLInputElement | null = parent.querySelector('input[type="checkbox"]');
     if (checkbox) {
-      checkbox.checked = !checkbox.checked;
+      const isCheckboxTarget = target instanceof HTMLInputElement && target.type === 'checkbox';
+      if (!isCheckboxTarget) {
+        checkbox.checked = !checkbox.checked;
+      }
     }
 
     this.selectedRows = this._rows.filter((_, index) => {

@@ -5773,6 +5773,7 @@ declare module "components/item/item.component" {
         alignEnd: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
+        protected _hasContent(): boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }

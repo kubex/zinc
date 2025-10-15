@@ -6229,11 +6229,11 @@ declare module "components/content-block/content-block.component" {
         private _collapseContent;
         private _toggleText;
         private _toggleHtml;
+        private _resizeIframe;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): import("lit").TemplateResult<1>;
         protected truncateText(): string;
         protected getTextSections(): TextRow[];
-        private transformLineForImages;
         showReply(e: MouseEvent): void;
     }
 }

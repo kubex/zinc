@@ -6224,9 +6224,7 @@ declare module "components/content-block/content-block.component" {
         iframe: Promise<HTMLIFrameElement>;
         private readonly hasSlotController;
         private _textRows;
-        private _themeChangeObserver?;
         connectedCallback(): void;
-        disconnectedCallback(): void;
         private _collapseContent;
         private _toggleText;
         private _toggleHtml;

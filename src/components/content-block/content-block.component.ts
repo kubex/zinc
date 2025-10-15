@@ -28,6 +28,7 @@ export default class ContentBlock extends ZincElement {
 
   @property({type: Boolean, reflect: true}) outbound = false;
   @property({type: Boolean, reflect: true}) short = false;
+  @property({attribute: 'default-display', reflect: true}) defaultDisplay: 'text' | 'html' = 'text';
 
   @queryAssignedNodes({slot: 'html', flatten: true}) htmlNodes!: Node[];
 
@@ -130,6 +131,7 @@ export default class ContentBlock extends ZincElement {
     const hasTextSlot = this.hasSlotController.test('text');
     const hasHtmlSlot = this.hasSlotController.test('html');
     const showActions = hasTextSlot && hasHtmlSlot;
+    const initialShowHtml = hasHtmlSlot && (!hasTextSlot || this.defaultDisplay === 'html');
 
     return html`
       <zn-panel flush tabbed class="${classMap({
@@ -167,10 +169,10 @@ export default class ContentBlock extends ZincElement {
         </zn-header>
 
         <zn-sp no-gap>
-          <iframe class="hidden" title="Content block HTML preview"></iframe>
+          <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>
           <slot class="html-content" name="html" style="display: none;"></slot>
           <slot name="text" style="display: none;"></slot>
-          <div class="text-content">
+          <div class="${classMap({'text-content': true, 'hidden': initialShowHtml})}">
             ${text.map((section) => html`
               ${section.type === 'reply' ? html`
                 <div class="toggle-reply" @click="${this.showReply}">...</div>` : ''}

@@ -56,27 +56,7 @@ export default class ContentBlock extends ZincElement {
       }
 
       iframe.addEventListener("load", () => {
-        // Save original styles
-        const originalDisplay = iframe.style.display;
-        const originalVisibility = iframe.style.visibility;
-        const originalPosition = iframe.style.position;
-
-        // Make iframe render but stay hidden
-        iframe.style.display = 'block';
-        iframe.style.visibility = 'hidden';
-        iframe.style.position = 'absolute';
-
-        setTimeout(() => {
-          const iframeBody = iframe.contentDocument?.body;
-          if (iframeBody) {
-            const height = iframeBody.scrollHeight;
-            iframe.style.height = `${height + 30}px`;
-          }
-          // Restore original styles
-          iframe.style.display = originalDisplay;
-          iframe.style.visibility = originalVisibility;
-          iframe.style.position = originalPosition;
-        }, 50);
+        setTimeout(() => this._resizeIframe(iframe), 50);
       });
     });
   }
@@ -89,6 +69,15 @@ export default class ContentBlock extends ZincElement {
     if (headerClick && target.slot !== 'nav') {
       this.short = !this.short;
       this.requestUpdate();
+      this.updateComplete.then(() => {
+        if (!this.short) {
+          this.iframe.then((iframe) => {
+            if (iframe && !iframe.classList.contains('hidden')) {
+              this._resizeIframe(iframe);
+            }
+          });
+        }
+      });
     }
   }
 
@@ -108,8 +97,44 @@ export default class ContentBlock extends ZincElement {
       if (textContent) {
         iframe.classList.remove('hidden');
         textContent.classList.add('hidden');
+        setTimeout(() => this._resizeIframe(iframe), 0);
       }
     });
+  }
+
+  private _resizeIframe(iframe?: HTMLIFrameElement) {
+    const resize = (frame: HTMLIFrameElement) => {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+
+      // Allow the iframe to shrink as well as grow
+      frame.style.height = 'auto';
+
+      const body = doc.body;
+      const element = doc.documentElement;
+
+      const heights = [
+        body?.scrollHeight ?? 0,
+        element?.scrollHeight ?? 0,
+        body?.offsetHeight ?? 0,
+        element?.offsetHeight ?? 0
+      ];
+      const height = Math.max(...heights);
+
+      if (height > 0) {
+        frame.style.height = `${height}px`;
+      }
+    };
+
+    if (iframe) {
+      resize(iframe);
+    } else {
+      this.iframe.then((frame) => {
+        if (frame?.contentDocument) {
+          requestAnimationFrame(() => resize(frame));
+        }
+      });
+    }
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

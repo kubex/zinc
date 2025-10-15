@@ -333,8 +333,7 @@ class Toolbar extends QuillToolbar {
 
     input.onchange = () => {
       const file = input.files?.[0];
-      if (!file) return;
-      if (!file.type || !file.type.startsWith('image/')) return;
+      if (!file?.type || !file.type.startsWith('image/')) return;
 
       const reader = new window.FileReader();
       reader.onload = () => {

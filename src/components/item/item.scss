@@ -14,11 +14,11 @@
   gap: var(--zn-spacing-2x-small);
 
   @include wc.container-query(null, md) {
-    --zn-item-label-max-width: 200px;
+    --zn-item-label-max-width: 220px;
   }
 
   @include wc.container-query(null, smp) {
-    --zn-item-label-max-width: 150px;
+    --zn-item-label-max-width: 180px;
   }
 
   @include wc.container-query(null, sm) {
@@ -54,12 +54,15 @@
   &__headings {
     display: flex;
     flex-direction: column;
-    max-width: 40%;
+    flex-shrink: 0;
+  }
+
+  &--with-content &__headings {
+    max-width: 45%;
     @include wc.container-query(null, sm) {
       max-width: unset;
     }
     width: var(--zn-item-label-max-width);
-    flex-shrink: 0;
   }
 
   &__content {

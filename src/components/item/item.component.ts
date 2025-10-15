@@ -63,6 +63,12 @@ export default class ZnItem extends ZincElement {
     if (inlineEdit) {
       inlineEdit.setAttribute('size', this.size);
     }
+
+    const itm = this.shadowRoot?.querySelector('.item')
+    const content = this.shadowRoot?.querySelector('.item__content-inner');
+    if (content?.querySelector('slot')?.hasChildNodes()) {
+      itm?.classList.add('item--with-content');
+    }
   }
 
   render() {
@@ -71,13 +77,15 @@ export default class ZnItem extends ZincElement {
     const headings = html`
       <div class="item__headings">
         <div class="item__caption" part="caption">${this.caption}</div>
-        ${this.description ? html`<div class="item__description">${this.description}</div>` : ''}
+        ${this.description ? html`
+          <div class="item__description">${this.description}</div>` : ''}
       </div>`;
 
     return html`
       <div
-        class=${classMap({
+        class="${classMap({
           'item': true,
+          'item--with-content': !(this.value === undefined || this.value === null),
           'item--stacked': this.stacked,
           'item--edit-on-hover': this.editOnHover,
           'item--inline': this.inline,
@@ -88,7 +96,7 @@ export default class ZnItem extends ZincElement {
           'item--has-icon': hasIcon,
           'item--no-padding': this.noPadding,
           'item--align-end': this.alignEnd
-        })}
+        })}"
         part="base">
 
         ${this.icon ? html`

@@ -26,6 +26,7 @@ class Toolbar extends QuillToolbar {
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
     this.addHandler('dialog', (value: string) => this._openDialog(value));
+    this.addHandler('image', () => this._addImage());
 
     this._quill = quill;
     this._component = options.container;
@@ -322,6 +323,44 @@ class Toolbar extends QuillToolbar {
   private _handleOverflowUpdate = () => {
     const emoji = this._quill.getModule('emoji') as Emoji;
     emoji?.initPicker();
+  }
+
+  private _addImage() {
+    const input = document.createElement('input')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    input.click()
+
+    input.onchange = () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      if (!file.type || !file.type.startsWith('image/')) return;
+
+      const reader = new window.FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+
+        const selection = this._quill.getSelection(true);
+        const index = selection ? selection.index + selection.length : this._quill.getLength();
+
+        // Insert the image with src set to the Data URL
+        this._quill.insertEmbed(index, 'image', dataUrl, Quill.sources.USER);
+
+        // Assign useful attributes to the inserted image element
+        const root = this._quill.root as HTMLElement;
+        const images = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
+        const inserted = images.reverse().find(img => img.getAttribute('src') === dataUrl) || null;
+        if (inserted) {
+          inserted.setAttribute('alt', file.name);
+          inserted.setAttribute('title', file.name);
+        }
+
+        // Place cursor after the image and sync toolbar state
+        this._quill.setSelection(index + 1, 0, Quill.sources.USER);
+        this._syncToolbarState();
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
 

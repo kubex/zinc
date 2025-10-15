@@ -38,47 +38,80 @@ export default class ContentBlock extends ZincElement {
 
   private _textRows: TextRow[] = [];
 
+  private _themeChangeObserver?: MutationObserver;
+
   connectedCallback() {
     super.connectedCallback();
     this.iframe.then((iframe) => {
-      if (iframe.contentDocument) {
+      const rebuild = () => {
         const div = this.htmlNodes[0] as HTMLDivElement;
-        if (div) {
-          let convertedHtml = div?.innerHTML ?? '';
-          convertedHtml = convertedHtml.replace(/&nbsp;/g, ' ');
-          convertedHtml = convertedHtml.replace(/&lt;/g, '<');
-          convertedHtml = convertedHtml.replace(/&gt;/g, '>');
-          convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        if (!div) return;
 
-          const baseStyles = "<style>body,html{padding: 0; margin: 0; font-size: 13px; font-family: Arial;}img{max-width:100%; max-height: 500px;}</style>";
-          iframe.srcdoc = baseStyles + convertedHtml;
-        }
-      }
+        let convertedHtml = div?.innerHTML ?? '';
+        convertedHtml = convertedHtml.replace(/&nbsp;/g, ' ');
+        convertedHtml = convertedHtml.replace(/&lt;/g, '<');
+        convertedHtml = convertedHtml.replace(/&gt;/g, '>');
+        convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
-      iframe.addEventListener("load", () => {
-        // Save original styles
-        const originalDisplay = iframe.style.display;
-        const originalVisibility = iframe.style.visibility;
-        const originalPosition = iframe.style.position;
+        const themeAttr = document.documentElement.getAttribute('t') || document.body.getAttribute('t') || '';
 
-        // Make iframe render but stay hidden
-        iframe.style.display = 'block';
-        iframe.style.visibility = 'hidden';
-        iframe.style.position = 'absolute';
+        // Pull stylesheet links from host to inherit Zinc styles
+        const linkTags = Array.from(document.head.querySelectorAll('link[rel="stylesheet"]'))
+          .map((element: Element) => {
+            const href = (element as HTMLLinkElement).getAttribute('href') || (element as HTMLLinkElement).href || '';
+            return href ? `<link rel="stylesheet" href="${href}">` : '';
+          })
+          .join('');
 
-        setTimeout(() => {
-          const iframeBody = iframe.contentDocument?.body;
-          if (iframeBody) {
-            const height = iframeBody.scrollHeight;
-            iframe.style.height = `${height + 30}px`;
+        const baseStyles = `<style>
+          html, body {
+            background-color: var(--zn-panel-background-color);
+            container-type: size;
+            margin: 0;
           }
-          // Restore original styles
-          iframe.style.display = originalDisplay;
-          iframe.style.visibility = originalVisibility;
-          iframe.style.position = originalPosition;
-        }, 50);
-      });
+
+          hr {
+            height: 0;
+            border: none;
+            border-top: 1px solid rgb(var(--zn-border-color));
+          }
+
+          code, kbd, samp, pre, .mono {
+            font-family: var(--zn-font-family-mono),sans-serif;
+            font-size: 1em;
+          }
+
+          small {
+            font-size: 80%;
+          }
+        </style>`;
+
+        const head = `${linkTags}${baseStyles}`;
+        const htmlAttrs = `${themeAttr ? ` t="${themeAttr}"` : ''}`;
+        const baseHref = document.baseURI || window.location.href;
+
+        iframe.srcdoc = `<!doctype html><html${htmlAttrs}><head><base href="${baseHref}" target="_blank">${head}</head><body>${convertedHtml}</body></html>`;
+      };
+
+      rebuild();
+
+      // Observe theme changes on both attribute and theme classes on html and body
+      this._themeChangeObserver = new MutationObserver(() => rebuild());
+      this._themeChangeObserver.observe(document.documentElement, {attributes: true, attributeFilter: ['t', 'class']});
+      this._themeChangeObserver.observe(document.body, {attributes: true, attributeFilter: ['t', 'class']});
+
+      const doc = iframe.contentDocument;
+      if (!doc) return;
+
+      iframe.style.height = (75 + doc.body.scrollHeight) + 'px';
+      iframe.style.width = '100%';
+      iframe.style.border = '0';
     });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._themeChangeObserver?.disconnect();
   }
 
   private _collapseContent(e: Event) {

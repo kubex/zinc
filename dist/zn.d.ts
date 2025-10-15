@@ -6218,11 +6218,14 @@ declare module "components/content-block/content-block.component" {
         avatar: string;
         outbound: boolean;
         short: boolean;
+        defaultDisplay: 'text' | 'html';
         htmlNodes: Node[];
         iframe: Promise<HTMLIFrameElement>;
         private readonly hasSlotController;
         private _textRows;
+        private _themeChangeObserver?;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         private _collapseContent;
         private _toggleText;
         private _toggleHtml;

@@ -4104,6 +4104,16 @@
             },
             {
               "kind": "field",
+              "name": "defaultDisplay",
+              "type": {
+                "text": "'text' | 'html'"
+              },
+              "default": "'text'",
+              "attribute": "default-display",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "htmlNodes",
               "type": {
                 "text": "Node[]"
@@ -4131,6 +4141,14 @@
               },
               "privacy": "private",
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_themeChangeObserver",
+              "type": {
+                "text": "MutationObserver | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -4241,6 +4259,14 @@
               },
               "default": "false",
               "fieldName": "short"
+            },
+            {
+              "name": "default-display",
+              "type": {
+                "text": "'text' | 'html'"
+              },
+              "default": "'text'",
+              "fieldName": "defaultDisplay"
             }
           ],
           "superclass": {

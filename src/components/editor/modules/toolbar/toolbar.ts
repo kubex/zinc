@@ -339,14 +339,11 @@ class Toolbar extends QuillToolbar {
       const reader = new window.FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
-
         const selection = this._quill.getSelection(true);
         const index = selection ? selection.index + selection.length : this._quill.getLength();
 
-        // Insert the image with src set to the Data URL
         this._quill.insertEmbed(index, 'image', dataUrl, Quill.sources.USER);
 
-        // Assign useful attributes to the inserted image element
         const root = this._quill.root as HTMLElement;
         const images = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
         const inserted = images.reverse().find(img => img.getAttribute('src') === dataUrl) || null;
@@ -355,7 +352,6 @@ class Toolbar extends QuillToolbar {
           inserted.setAttribute('title', file.name);
         }
 
-        // Place cursor after the image and sync toolbar state
         this._quill.setSelection(index + 1, 0, Quill.sources.USER);
         this._syncToolbarState();
       };

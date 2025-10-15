@@ -119,6 +119,10 @@
     border-radius: 50%;
   }
 
+  &--blink {
+    animation: blink-animation 1.5s steps(5, start) infinite;
+  }
+
   &--avatar {
     background-color: var(--avatar-color, var(--icon-color));
     color: hsl(from var(--avatar-color, var(--icon-color)) h s 95);
@@ -195,5 +199,14 @@
   img {
     max-width: 100%;
     vertical-align: middle;
+  }
+}
+
+@keyframes blink-animation {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }

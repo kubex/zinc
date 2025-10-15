@@ -64,6 +64,7 @@ export default class ZnIcon extends ZincElement {
   @property({reflect: true}) color: IconColor;
 
   @property({type: Boolean}) padded: boolean = false;
+  @property({type: Boolean}) blink: boolean = false;
 
   @property({type: Boolean}) squared: boolean = false;
 
@@ -192,6 +193,7 @@ export default class ZnIcon extends ZincElement {
           'icon--grey': this.color === "grey",
           'icon--avatar': this.library === "avatar",
           'icon--padded': this.padded,
+          'icon--blink': this.blink,
           'icon--squared': this.squared,
         })}" style="${styleMap({
           '--icon-size': this.size + "px",

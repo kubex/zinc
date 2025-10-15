@@ -247,7 +247,6 @@ export default class ContentBlock extends ZincElement {
         if (row.startsWith('Sent from')) type = 'reply';
         if (row.trim() === '' && previousType === 'reply') type = 'reply';
         if (type === 'reply' && row.startsWith('>')) row = row.substring(1).trim();
-        row = this.transformLineForImages(row);
 
         if (previousType === type) {
           if (textRows.length === 0) {
@@ -265,36 +264,6 @@ export default class ContentBlock extends ZincElement {
 
     this._textRows = textRows;
     return this._textRows;
-  }
-
-  private transformLineForImages(line: string): string {
-    let out = line;
-
-    // Replace Markdown image syntax ![alt](url) for http(s)
-    const mdHttpImg = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+?\.(?:png|jpe?g|gif|webp|bmp|svg))\)/gi;
-    out = out.replace(mdHttpImg, (_match, alt, url) => {
-      return `<img src="${url}" alt="${alt || 'image'}" loading="lazy" style="max-width:100%;max-height:500px;">`;
-    });
-
-    // Replace Markdown image syntax with data URI (base64)
-    const mdDataImg = /!\[([^\]]*)\]\((data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=]+)\)/gi;
-    out = out.replace(mdDataImg, (_match, alt, url) => {
-      return `<img src="${url}" alt="${alt || 'image'}" loading="lazy" style="max-width:100%;max-height:500px;">`;
-    });
-
-    // Replace bare http(s) image URLs with <img>
-    const httpImg = /(https?:\/\/[^\s]+?\.(?:png|jpe?g|gif|webp|bmp|svg))(?!\S)/gi;
-    out = out.replace(httpImg, (_m, url) => {
-      return `<img src="${url}" alt="image" loading="lazy" style="max-width:100%;max-height:500px;">`;
-    });
-
-    // Replace bare data URI images with <img>
-    const dataImg = /(data:image\/[a-zA-Z0-9.+-]+;base64,[A-Za-z0-9+/=]+)(?!\S)/gi;
-    out = out.replace(dataImg, (_m, url) => {
-      return `<img src="${url}" alt="image" loading="lazy" style="max-width:100%;max-height:500px;">`;
-    });
-
-    return out;
   }
 
   showReply(e: MouseEvent) {

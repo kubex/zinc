@@ -1503,7 +1503,10 @@
               "name": "empty-state-icon",
               "value": { "type": "string", "default": "\"data_alert\"" }
             },
-            { "name": "hide-checkboxes", "value": { "type": "boolean" } },
+            {
+              "name": "hide-checkboxes",
+              "value": { "type": "boolean", "default": "true" }
+            },
             { "name": "filters", "value": { "type": "[]", "default": "[]" } },
             {
               "name": "method",
@@ -1545,7 +1548,6 @@
               { "name": "method", "type": "'GET' | 'POST'" },
               { "name": "noInitialLoad", "type": "boolean" },
               { "name": "requestParams", "type": "Record<string, any>" },
-              { "name": "builtinRequestParams", "type": "Record<string, any>" },
               { "name": "changeEventListener" }
             ],
             "events": [

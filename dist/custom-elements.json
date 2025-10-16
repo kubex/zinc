@@ -5193,6 +5193,7 @@
               "type": {
                 "text": "boolean"
               },
+              "default": "true",
               "attribute": "hide-checkboxes"
             },
             {
@@ -5333,14 +5334,6 @@
             {
               "kind": "field",
               "name": "requestParams",
-              "type": {
-                "text": "Record<string, any>"
-              },
-              "default": "{}"
-            },
-            {
-              "kind": "field",
-              "name": "builtinRequestParams",
               "type": {
                 "text": "Record<string, any>"
               },
@@ -5544,6 +5537,24 @@
                   "name": "value",
                   "type": {
                     "text": "Cell"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isRowSelected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
                   }
                 }
               ]
@@ -5788,6 +5799,7 @@
               "type": {
                 "text": "boolean"
               },
+              "default": "true",
               "fieldName": "hideCheckboxes"
             },
             {

@@ -2639,7 +2639,6 @@ declare module "components/data-table/data-table.component" {
         private _dataTask;
         private rowHasActions;
         requestParams: Record<string, any>;
-        builtinRequestParams: Record<string, any>;
         refresh(): void;
         render(): TemplateResult<1>;
         connectedCallback(): void;
@@ -2667,6 +2666,7 @@ declare module "components/data-table/data-table.component" {
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
+        private isRowSelected;
         private getRows;
         private getSelectedKeys;
         private updateKeys;

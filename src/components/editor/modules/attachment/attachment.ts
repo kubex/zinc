@@ -1,4 +1,5 @@
-import type Quill from 'quill';
+import Quill from 'quill';
+import type {Parchment} from 'quill';
 import type Toolbar from "../toolbar/toolbar";
 
 interface AttachmentOptions {
@@ -18,6 +19,7 @@ export default class Attachment {
   private _options: AttachmentOptions;
 
   private _fileHolder: HTMLInputElement | null;
+  private _pendingImageInserts: Record<string, { index: number; alt: string; title: string }> = {};
 
   constructor(quill: Quill, options: AttachmentOptions) {
     this._quill = quill;
@@ -51,24 +53,113 @@ export default class Attachment {
     }
 
     const file = this._fileHolder.files[0];
+    this.addAttachment(file);
+  }
+
+  public addAttachment(file: File, dataUrl?: string) {
     const attachmentId = generateId();
-    const fileReader = new FileReader();
 
-    fileReader.addEventListener('load', () => {
-      const base64Content = fileReader.result as string;
-      this._insertAttachment({dataUrl: base64Content, file, id: attachmentId});
-    }, false);
+    if (file.type && file.type.startsWith('image/')) {
+      const selection = this._quill.getSelection(true);
+      const index = selection ? selection.index + selection.length : this._quill.getLength();
+      const alt = file.name.replace(/\.[^/.]+$/, '');
+      const title = file.name;
+      this._pendingImageInserts[attachmentId] = {index, alt, title};
+    }
 
-    if (file) {
+    const insertWithDataUrl = (base64: string) => {
+      this._insertAttachment({dataUrl: base64, file, id: attachmentId});
+
+      if (file.type && file.type.startsWith('image/')) {
+        const pending = this._pendingImageInserts[attachmentId];
+        try {
+          const insertIndex = pending ? pending.index : (this._quill.getSelection(true)?.index ?? this._quill.getLength());
+          this._quill.insertEmbed(insertIndex, 'image', base64, Quill.sources.USER);
+
+          const images = Array.from(this._quill.root.querySelectorAll('img')) as HTMLImageElement[];
+          const inserted = images.reverse().find(img => img.getAttribute('src') === base64) || null;
+          if (inserted) {
+            inserted.setAttribute('alt', pending?.alt ?? file.name.replace(/\.[^/.]+$/, ''));
+            inserted.setAttribute('title', pending?.title ?? file.name);
+            inserted.setAttribute('data-attachment-id', attachmentId);
+          }
+
+          this._quill.setSelection(insertIndex + 1, 0, Quill.sources.USER);
+        } catch (e) {
+          console.warn('[Quill Attachment Module] Failed to insert placeholder image into editor', e);
+        }
+      }
+    };
+
+    if (dataUrl) {
+      insertWithDataUrl(dataUrl);
+    } else {
+      const fileReader = new FileReader();
+      fileReader.addEventListener('load', () => {
+        const base64Content = fileReader.result as string;
+        insertWithDataUrl(base64Content);
+      }, false);
       fileReader.readAsDataURL(file);
     }
 
-    this._options.upload(file).then(({path, url}: { path: string; url: string }) => {
-      this._uploadAttachment(file, url);
-      this._updateAttachment(attachmentId, url, path);
-    }).catch((err: { message: string }) => {
-      console.warn(err.message);
-    });
+    if (typeof this._options.upload === 'function') {
+      this._options.upload(file).then(({path, url}: { path: string; url: string }) => {
+        this._uploadAttachment(file, url);
+        this._updateAttachment(attachmentId, url, path);
+
+        const pending = this._pendingImageInserts[attachmentId];
+        try {
+          const root = this._quill.root as HTMLElement;
+          const placeholder = root.querySelector(`img[data-attachment-id="${attachmentId}"]`) as HTMLImageElement | null;
+
+          if (placeholder) {
+            const blot = Quill.find(placeholder);
+            if (!blot) return;
+
+            const index = this._quill.getIndex(blot as Parchment.Blot);
+
+            if (index !== null && index !== undefined) {
+              this._quill.deleteText(index, 1, Quill.sources.SILENT);
+              this._quill.insertEmbed(index, 'image', url, Quill.sources.USER);
+              this._quill.setSelection(index + 1, 0, Quill.sources.USER);
+
+              const images = Array.from(this._quill.root.querySelectorAll('img')) as HTMLImageElement[];
+              const inserted = images.reverse().find(img => img.getAttribute('src') === url) || null;
+              if (inserted && pending) {
+                inserted.setAttribute('alt', pending.alt);
+                inserted.setAttribute('title', pending.title);
+              }
+            } else {
+              placeholder.setAttribute('src', url);
+              if (pending) {
+                placeholder.setAttribute('alt', pending.alt);
+                placeholder.setAttribute('title', pending.title);
+              }
+            }
+          } else if (pending) {
+            this._quill.insertEmbed(pending.index, 'image', url, Quill.sources.USER);
+            this._quill.setSelection(pending.index + 1, 0, Quill.sources.USER);
+            const images = Array.from(this._quill.root.querySelectorAll('img')) as HTMLImageElement[];
+            const inserted = images.reverse().find(img => img.getAttribute('src') === url) || null;
+            if (inserted) {
+              inserted.setAttribute('alt', pending.alt);
+              inserted.setAttribute('title', pending.title);
+            }
+          }
+        } catch (err) {
+          console.warn('[Quill Attachment Module] Failed to replace placeholder image with uploaded URL', err);
+        } finally {
+          if (this._pendingImageInserts[attachmentId]) {
+            delete this._pendingImageInserts[attachmentId];
+          }
+        }
+      }).catch((err: { message: string }) => {
+        console.warn(err.message);
+        if (this._pendingImageInserts[attachmentId]) {
+          delete this._pendingImageInserts[attachmentId];
+        }
+      });
+    }
   }
 
   private _attachmentContainer = document.createElement('div');

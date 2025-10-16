@@ -1,6 +1,7 @@
 import './toolbar.component';
 import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
+import type Attachment from "../attachment/attachment";
 import type DialogComponent from "../dialog/dialog.component";
 import type Emoji from "../emoji/emoji";
 import type ToolbarComponent from "./toolbar.component";
@@ -335,26 +336,12 @@ class Toolbar extends QuillToolbar {
       const file = input.files?.[0];
       if (!file?.type || !file.type.startsWith('image/')) return;
 
-      const reader = new window.FileReader();
-      reader.onload = () => {
-        const dataUrl = reader.result as string;
-        const selection = this._quill.getSelection(true);
-        const index = selection ? selection.index + selection.length : this._quill.getLength();
-
-        this._quill.insertEmbed(index, 'image', dataUrl, Quill.sources.USER);
-
-        const root = this._quill.root as HTMLElement;
-        const images = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
-        const inserted = images.reverse().find(img => img.getAttribute('src') === dataUrl) || null;
-        if (inserted) {
-          inserted.setAttribute('alt', file.name.replace(/\.[^/.]+$/, ''));
-          inserted.setAttribute('title', file.name);
-        }
-
-        this._quill.setSelection(index + 1, 0, Quill.sources.USER);
-        this._syncToolbarState();
-      };
-      reader.readAsDataURL(file);
+      try {
+        const attachmentModule = this._quill.getModule('attachment') as Attachment | undefined;
+        attachmentModule?.addAttachment(file);
+      } catch (err) {
+        console.warn('[Toolbar] Failed to process image with attachment handler', err);
+      }
     }
   }
 }

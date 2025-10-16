@@ -7,13 +7,12 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
+import {type CSSResultGroup, html, nothing, unsafeCSS, PropertyValues} from 'lit';
 import {FormControlController} from "../../internal/form";
-import {html, nothing, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import ZincElement from '../../internal/zinc-element';
-import type {CSSResultGroup} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
+import ZincElement from '../../internal/zinc-element';
 import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
@@ -37,15 +36,22 @@ import styles from './data-select.scss';
  */
 export default class ZnDataSelect extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
   @query('#select') select: ZnSelect;
   @query('#select__prefix') selectPrefix: HTMLElement;
+
   /** The name of the select. Used for form submission. */
   @property() name: string;
+
   /** The value of the select. Used for form submission. */
   @property() value: string;
+
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country' | 'phone';
+
+  /** The position of the icon. */
   @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
+
   /** An array of keys to use for filtering the options in the selected provider. */
   @property({
     attribute: 'filter',
@@ -54,27 +60,39 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       toAttribute: (value: string[]) => value.join(',')
     }
   }) filter: string[];
+
   /** The selects size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+
   /** Should we show the clear button */
   @property({type: Boolean}) clearable: boolean;
+
   /** Include an "All" option at the top. */
   @property({type: Boolean, attribute: 'allow-all'}) allowAll = false;
+
   /** The selects label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
+
   /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
   @property({attribute: 'label-tooltip'}) labelTooltip = '';
+
   /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
   @property({attribute: 'context-note'}) contextNote = '';
+
   /**
    * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
    * inside the viewport.
    */
   @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
+
   /** The selects help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
+
   /** The selects required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  @property({attribute: "icon-only", type: Boolean, reflect: true}) iconOnly = false;
+
   protected readonly formControlController = new FormControlController(this);
 
   get validationMessage() {
@@ -85,6 +103,13 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     return this.select.validity;
   }
 
+  constructor() {
+    super();
+    if (this.iconOnly && this.iconPosition === 'none') {
+      this.iconPosition = 'start';
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('keydown', this.closeOnTab);
@@ -93,6 +118,11 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.closeOnTab);
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+    this._updatePrefix();
   }
 
   checkValidity(): boolean {
@@ -185,15 +215,15 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}
                  value="${this.value}"
-                 placeholder="Choose a ${localProvider.getName}"
+                 placeholder="${this.getPlaceholder(localProvider)}"
                  exportparts="combobox,expand-icon,form-control-help-text,form-control-input,display-input">
-        ${this.iconPosition !== 'none' ? html`
+        ${(this.iconPosition !== 'none' || this.iconOnly) ? html`
           <div id="select__prefix" slot="prefix" class="select__prefix"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`
           <zn-option class="select__option" value="${item.key}">
-            ${this.iconPosition !== 'none' ? html`<span
+            ${(this.iconPosition !== 'none' || this.iconOnly) ? html`<span
               slot="${this.iconPosition === 'end' ? 'suffix' : 'prefix'}">${item.prefix}</span>` : ''}
-            ${item.value}
+            ${this.iconOnly ? undefined : item.value}
           </zn-option>`)}
       </zn-select>`;
   }
@@ -201,19 +231,30 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   private _updatePrefix() {
     // Set the prefix of the select to the selected values prefix
     const selectedOption = this.select.selectedOptions[0];
-    if (selectedOption && (this.iconPosition !== 'none')) {
+    console.log('selectedOption', selectedOption);
+    if (selectedOption && (this.iconPosition !== 'none' || this.iconOnly) && this.selectPrefix) {
+      if (this.iconPosition === 'none' && this.iconOnly) {
+        this.iconPosition = 'start';
+      }
       const slot = this.iconPosition === 'start'
         ? selectedOption.querySelector('[slot="prefix"]')
         : selectedOption.querySelector('[slot="suffix"]');
-
       if (slot) {
         this.selectPrefix.innerHTML = '';
         this.selectPrefix.appendChild(slot.cloneNode(true));
       } else {
         this.selectPrefix.innerHTML = '';
       }
-    } else {
+    } else if (this.selectPrefix) {
       this.selectPrefix.innerHTML = '';
     }
+  }
+
+  private getPlaceholder(localProvider: LocalDataProvider<any>) {
+    if (this.value) {
+      return '';
+    }
+
+    return `Choose a ${localProvider.getName}`
   }
 }

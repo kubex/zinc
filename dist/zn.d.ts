@@ -4254,6 +4254,7 @@ declare module "components/editor/modules/attachment/attachment" {
         constructor(quill: Quill, options: AttachmentOptions);
         private _selectLocalImage;
         private _fileChanged;
+        addAttachment(file: File, dataUrl?: string): void;
         private _attachmentContainer;
         private _createAttachmentContainer;
         private _insertAttachment;
@@ -6233,7 +6234,10 @@ declare module "components/content-block/content-block.component" {
         iframe: Promise<HTMLIFrameElement>;
         private readonly hasSlotController;
         private _textRows;
+        private _footerObserver?;
+        private _replaceDebounce;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         private _collapseContent;
         private _toggleText;
         private _toggleHtml;
@@ -6241,6 +6245,9 @@ declare module "components/content-block/content-block.component" {
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected render(): import("lit").TemplateResult<1>;
         protected truncateText(): string;
+        private _handleSlotChange;
+        private _debouncedReplace;
+        private _replaceImagePlaceholders;
         protected getTextSections(): TextRow[];
         showReply(e: MouseEvent): void;
     }

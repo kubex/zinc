@@ -184,7 +184,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
   // Hide the checkbox column
-  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
+  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean = true;
 
   @property() filters: [] = [];
 
@@ -277,8 +277,6 @@ export default class ZnDataTable extends ZincElement {
   private rowHasActions: boolean = false;
 
   requestParams: Record<string, any> = {};
-
-  builtinRequestParams: Record<string, any> = {};
 
   refresh() {
     // Allow manual refresh to trigger the first data load when no-initial-load is set
@@ -424,7 +422,6 @@ export default class ZnDataTable extends ZincElement {
           'table': true,
           'table--standalone': this.standalone,
           'with-hover': !this.unsortable,
-          'table--with-checkboxes': !this.hideCheckboxes,
         })}">
           <thead>
           <tr>
@@ -439,11 +436,7 @@ export default class ZnDataTable extends ZincElement {
           </thead>
           <tbody>
           ${this._rows.map((row: Row) => html`
-            <tr>
-              ${this.hideCheckboxes ? html`` : html`
-                <td class="${classMap({'hidden': !hasSelectedRows})}">
-                  <div><input type="checkbox" @change="${this.selectRow}"></div>
-                </td>`}
+            <tr class="${classMap({'table__row--selected': this.isRowSelected(row)})}">
               ${row.cells.map((value: Cell, index: number) => this.renderCellBody(index, value))}
               ${this.rowHasActions ? this.renderActions(row) : null}
             </tr>`)}
@@ -490,7 +483,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getRowsSelected() {
-    if (this.hideCheckboxes || this.selectedRows.length <= 0) return null;
+    if (this.selectedRows.length <= 0) return null;
 
     return html`
       <p>${this.numberOfRowsSelected} of ${this._rows.length} rows selected</p>`
@@ -624,7 +617,7 @@ export default class ZnDataTable extends ZincElement {
     const checked = checkbox.checked;
 
     // go through all the checkboxes and check them
-    for (const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')) {
+    for (const row of this.renderRoot.querySelectorAll('tbody zn-checkbox')) {
       (row as HTMLInputElement).checked = checked;
     }
 
@@ -655,17 +648,19 @@ export default class ZnDataTable extends ZincElement {
       return;
     }
 
-    const checkbox: HTMLInputElement | null = parent.querySelector('input[type="checkbox"]');
-    if (checkbox) {
-      const isCheckboxTarget = target instanceof HTMLInputElement && target.type === 'checkbox';
-      if (!isCheckboxTarget) {
-        checkbox.checked = !checkbox.checked;
-      }
-    }
+    const rows = Array.from(this.renderRoot.querySelectorAll('tbody tr'));
+    const index = rows.indexOf(parent as HTMLTableRowElement);
+    if (index === -1) return;
 
-    this.selectedRows = this._rows.filter((_, index) => {
-      return (this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')[index] as HTMLInputElement)?.checked;
-    });
+    const row = this._rows[index] as Row;
+    if (!row) return;
+
+    const alreadySelected = this.selectedRows.some((r: Row) => r.id === row.id);
+    if (alreadySelected) {
+      this.selectedRows = this.selectedRows.filter((r: Row) => r.id !== row.id);
+    } else {
+      this.selectedRows = [...(this.selectedRows as Row[]), row];
+    }
 
     this.numberOfRowsSelected = this.selectedRows.length;
     this.updateKeys();
@@ -676,13 +671,9 @@ export default class ZnDataTable extends ZincElement {
     const button = event.target as ZnButton;
     if (button.disabled) return;
 
-    (this.renderRoot.querySelectorAll('thead input[type="checkbox"]')[0] as HTMLInputElement).checked = false;
-    for (const row of this.renderRoot.querySelectorAll('tbody input[type="checkbox"]')) {
-      (row as HTMLInputElement).checked = false;
-    }
-
     this.selectedRows = [];
     this.numberOfRowsSelected = 0;
+    this.updateKeys();
     this.requestUpdate();
   }
 
@@ -850,6 +841,10 @@ export default class ZnDataTable extends ZincElement {
         })}">
         <div>${this.renderCell(value)}</div>
       </td>`;
+  }
+
+  private isRowSelected(row: Row): boolean {
+    return this.selectedRows.some((r: Row) => r.id === row.id);
   }
 
   private getRows(data: Response): Row[] {

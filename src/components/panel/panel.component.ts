@@ -34,6 +34,7 @@ export default class ZnPanel extends ZincElement {
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
   @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
+  @property({attribute: 'flush-footer', type: Boolean}) flushFooter: boolean;
   @property({type: Boolean}) transparent: boolean;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -81,6 +82,7 @@ export default class ZnPanel extends ZincElement {
         'panel--flush': this.flush || this.tabbed,
         'panel--flush-x': this.flushX,
         'panel--flush-y': this.flushY,
+        'panel--flush-footer': this.flushFooter,
         'panel--tabbed': this.tabbed,
         'panel--transparent': this.transparent,
         'panel--has-actions': hasActionSlot,

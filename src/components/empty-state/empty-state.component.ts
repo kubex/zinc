@@ -1,7 +1,8 @@
-import {property} from 'lit/decorators.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import ZincElement from '../../internal/zinc-element';
 import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {property} from 'lit/decorators.js';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './empty-state.scss';
 
@@ -35,6 +36,8 @@ export default class ZnEmptyState extends ZincElement {
 
   @property({type: Boolean}) padded: boolean = false;
 
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description');
+
   render() {
     return html`
       <div class="${classMap({
@@ -45,16 +48,21 @@ export default class ZnEmptyState extends ZincElement {
         'empty-state--padded': this.padded
       })}">
         <div class="empty-state__wrapper">
-          ${this.icon
-            ? html`<zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
-            : ''}
-          ${this.caption
+          ${this.icon || this.hasSlotController.test('icon')
             ? html`
-              <div class="caption">${this.caption}</div>`
+              <zn-icon src="${this.icon}" size="48" color="${this.type ? this.type : 'primary'}"></zn-icon>`
             : ''}
-          ${this.description
+          ${this.caption || this.hasSlotController.test('caption')
             ? html`
-              <div class="description">${this.description}</div>`
+              <div class="caption">
+                <slot name="caption">${this.caption}</slot>
+              </div>`
+            : ''}
+          ${this.description || this.hasSlotController.test('description')
+            ? html`
+              <div class="description">
+                <slot name="description">${this.description}</slot>
+              </div>`
             : ''}
           <slot></slot>
         </div>

@@ -1,6 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {HasSlotController} from "../../internal/slot";
-import {html, unsafeCSS} from 'lit';
+import {html, nothing, unsafeCSS} from 'lit';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
@@ -159,10 +159,13 @@ export default class ContentBlock extends ZincElement {
     const initialShowHtml = hasHtmlSlot && (!hasTextSlot || this.defaultDisplay === 'html');
 
     return html`
-      <zn-panel flush tabbed class="${classMap({
-        'content-block--outbound': this.outbound,
-        'content-block--short': this.short
-      })}">
+      <zn-panel flush
+                tabbed
+                flush-footer="${hasFooter || nothing}"
+                class="${classMap({
+                  'content-block--outbound': this.outbound,
+                  'content-block--short': this.short
+                })}">
 
         <zn-header class="content-block-header"
                    caption="${this.sender}"

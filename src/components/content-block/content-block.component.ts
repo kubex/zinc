@@ -1,4 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
+import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {html, nothing, unsafeCSS} from 'lit';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
@@ -6,7 +7,6 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
-import {deepQuerySelectorAll} from "../../utilities/query";
 
 import styles from './content-block.scss';
 

@@ -5,6 +5,8 @@ import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
+import type ZnTile from "../tile";
+import {deepQuerySelectorAll} from "../../utilities/query";
 
 import styles from './content-block.scss';
 
@@ -38,6 +40,9 @@ export default class ContentBlock extends ZincElement {
 
   private _textRows: TextRow[] = [];
 
+  private _footerObserver?: MutationObserver;
+  private _replaceDebounce: number = 0;
+
   connectedCallback() {
     super.connectedCallback();
     this.iframe.then((iframe) => {
@@ -50,7 +55,7 @@ export default class ContentBlock extends ZincElement {
           convertedHtml = convertedHtml.replace(/&gt;/g, '>');
           convertedHtml = convertedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
-          const baseStyles = "<style>body,html{padding: 0; margin: 0; font-size: 13px; font-family: Arial;}img{max-width:100%; max-height: 500px;}</style>";
+          const baseStyles = "<style>body,html{background-color: #ffffff}img{max-width:100%; max-height: 500px;}</style>";
           iframe.srcdoc = baseStyles + convertedHtml;
         }
       }
@@ -59,6 +64,23 @@ export default class ContentBlock extends ZincElement {
         setTimeout(() => this._resizeIframe(iframe), 50);
       });
     });
+  }
+
+  disconnectedCallback() {
+    try {
+      if (this._footerObserver) {
+        this._footerObserver.disconnect();
+        this._footerObserver = undefined;
+      }
+      if (this._replaceDebounce) {
+        clearTimeout(this._replaceDebounce);
+        this._replaceDebounce = 0;
+      }
+    } finally {
+      // Ensure base class cleanup
+      // @ts-ignore - base may or may not implement disconnectedCallback
+      super.disconnectedCallback?.();
+    }
   }
 
   private _collapseContent(e: Event) {
@@ -217,7 +239,7 @@ export default class ContentBlock extends ZincElement {
         </zn-sp>
 
         ${hasFooter ? html`
-          <slot slot="footer" name="footer"></slot>` : ''}
+          <slot slot="footer" name="footer" @slotchange="${this._handleSlotChange}"></slot>` : ''}
       </zn-panel>
     `;
   }
@@ -227,6 +249,88 @@ export default class ContentBlock extends ZincElement {
     if (!textContent) return '';
     const trimmed = textContent.innerText.replace(/<[^>]*>/g, '').trim();
     return trimmed.length > 32 ? trimmed.substring(0, 32) + '...' : trimmed;
+  }
+
+  private _handleSlotChange(e: Event) {
+    const slot = e.target as HTMLSlotElement;
+    const assignedEls: Element[] = slot.assignedElements({flatten: true});
+    if (!assignedEls || assignedEls.length === 0) return;
+
+    // Reset and attach a new observer to watch for dynamic content inside the footer subtree
+    if (this._footerObserver) {
+      this._footerObserver.disconnect();
+      this._footerObserver = undefined;
+    }
+
+    const obs = new MutationObserver(() => {
+      this._debouncedReplace();
+    });
+    this._footerObserver = obs;
+
+    assignedEls.forEach(el => {
+      obs.observe(el, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['href', 'download', 'caption']
+      });
+    });
+
+    // Run now and again shortly after to catch async rendering
+    this._replaceImagePlaceholders();
+    setTimeout(() => this._replaceImagePlaceholders(), 50);
+  }
+
+  private _debouncedReplace() {
+    if (this._replaceDebounce) {
+      clearTimeout(this._replaceDebounce);
+    }
+    this._replaceDebounce = window.setTimeout(() => this._replaceImagePlaceholders(), 50);
+  }
+
+  private _replaceImagePlaceholders() {
+    const textContainer = this.shadowRoot?.querySelector('.text-content') as HTMLDivElement | null;
+    if (!textContainer) {
+      // If the shadow content hasn't been rendered yet, try after the next update
+      this.updateComplete.then(() => this._replaceImagePlaceholders());
+      return;
+    }
+
+    const footer = this.querySelector(':scope > [slot="footer"]') as HTMLElement | null;
+    if (!footer) return;
+
+    const anchors = deepQuerySelectorAll('a[href]', footer, '') as HTMLAnchorElement[];
+    if (anchors.length === 0) return;
+
+    let textContent = textContainer.innerHTML;
+    const extensions = new Set(['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'heic', 'tiff', 'tif', 'avif']);
+    anchors.forEach((a) => {
+      const candidates = new Set<string>();
+      const tile = a.querySelector('zn-tile') as ZnTile | null;
+
+      const caption = (tile?.caption ?? tile?.getAttribute?.('caption') ?? '').trim();
+      if (caption) candidates.add(caption);
+
+      const downloadAttr = (a.getAttribute('download') || '').trim();
+      if (downloadAttr) candidates.add(downloadAttr);
+
+      const url = a.getAttribute('href') || '';
+      candidates.forEach((rawName) => {
+        const name = (rawName || '').trim();
+        if (!name) return;
+
+        const base = name.includes('/') ? name.split('/').pop()! : name;
+        const lowerBase = base.toLowerCase();
+        const ext = lowerBase.includes('.') ? lowerBase.split('.').pop()! : '';
+        if (ext && !extensions.has(ext)) return;
+
+        const alt = base.replace(/"/g, '&quot;');
+        textContent = textContent.replace(`[image: ${base}]`, () => `<img src="${url}" alt="${alt}" style="max-height: 500px; max-width: 100%">`);
+      });
+    });
+
+    // Update the generated content directly without triggering a re-render
+    textContainer.innerHTML = textContent;
   }
 
   protected getTextSections(): TextRow[] {

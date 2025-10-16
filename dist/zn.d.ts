@@ -1519,6 +1519,7 @@ declare module "components/empty-state/empty-state.component" {
         description: string;
         type: 'error' | 'info' | 'primary' | '';
         padded: boolean;
+        private readonly hasSlotController;
         render(): import("lit").TemplateResult<1>;
     }
 }

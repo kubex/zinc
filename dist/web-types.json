@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -1290,6 +1290,7 @@
             },
             {
               "name": "icon-position",
+              "description": "The position of the icon.",
               "value": {
                 "type": "'start' | 'end' | 'none'",
                 "default": "'none'"
@@ -1347,6 +1348,10 @@
               "name": "required",
               "description": "The selects required attribute.",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "icon-only",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -1375,7 +1380,11 @@
                 "description": "The provider of the select.",
                 "type": "'color' | 'currency' | 'country' | 'phone'"
               },
-              { "name": "iconPosition", "type": "'start' | 'end' | 'none'" },
+              {
+                "name": "iconPosition",
+                "description": "The position of the icon.",
+                "type": "'start' | 'end' | 'none'"
+              },
               {
                 "name": "filter",
                 "description": "An array of keys to use for filtering the options in the selected provider.",
@@ -1426,6 +1435,7 @@
                 "description": "The selects required attribute.",
                 "type": "boolean"
               },
+              { "name": "iconOnly", "type": "boolean" },
               { "name": "validationMessage" },
               { "name": "validity", "type": "ValidityState" },
               { "name": "closeOnTab" },

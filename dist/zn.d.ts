@@ -2034,10 +2034,10 @@ declare module "components/select/index" {
 }
 declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
+    import { type CSSResultGroup, PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup } from 'lit';
     import type { ZincFormControl } from "internal/zinc-element";
+    import ZincElement from "internal/zinc-element";
     import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2066,6 +2066,7 @@ declare module "components/data-select/data-select.component" {
         value: string;
         /** The provider of the select. */
         provider: 'color' | 'currency' | 'country' | 'phone';
+        /** The position of the icon. */
         iconPosition: 'start' | 'end' | 'none';
         /** An array of keys to use for filtering the options in the selected provider. */
         filter: string[];
@@ -2090,11 +2091,14 @@ declare module "components/data-select/data-select.component" {
         helpText: string;
         /** The selects required attribute. */
         required: boolean;
+        iconOnly: boolean;
         protected readonly formControlController: FormControlController;
         get validationMessage(): string;
         get validity(): ValidityState;
+        constructor();
         connectedCallback(): void;
         disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
@@ -2107,6 +2111,7 @@ declare module "components/data-select/data-select.component" {
         blur: () => void;
         protected render(): import("lit").TemplateResult<1>;
         private _updatePrefix;
+        private getPlaceholder;
     }
 }
 declare module "components/data-select/index" {

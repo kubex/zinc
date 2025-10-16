@@ -2,7 +2,7 @@ import type Quill from 'quill';
 import type Toolbar from "../toolbar/toolbar";
 
 interface AttachmentOptions {
-  upload: (file: File) => Promise<{ path: any, url: any, filename: any }>;
+  upload: (file: File) => Promise<{ path: any; url: any; filename: any }>;
   onFileUploaded?: (node: HTMLElement, {url}: { url: string }) => void;
   attachmentInput?: HTMLInputElement;
 }
@@ -25,6 +25,9 @@ export default class Attachment {
 
     if (typeof (this._options.upload) !== "function") {
       console.warn("[Quill Attachment Module] No upload function provided");
+    }
+    if (typeof (this._options.onFileUploaded) !== "function") {
+      console.warn("[Quill Attachment Module] No file uploaded function provided");
     }
 
     (this._quill
@@ -60,10 +63,10 @@ export default class Attachment {
       fileReader.readAsDataURL(file);
     }
 
-    this._options.upload(file).then(({path, url}) => {
+    this._options.upload(file).then(({path, url}: { path: string; url: string }) => {
       this._uploadAttachment(file, url);
       this._updateAttachment(attachmentId, url, path);
-    }).catch(err => {
+    }).catch((err: { message: string }) => {
       console.warn(err.message);
     });
   }
@@ -85,37 +88,36 @@ export default class Attachment {
     this._quill.container.appendChild(attachmentContainer);
   }
 
-  private _insertAttachment({dataUrl, file, id}: { dataUrl: string, file: File, id: string }) {
+  private _insertAttachment({dataUrl, file, id}: { dataUrl: string; file: File; id: string }) {
     this._attachmentContainer.appendChild(this._createAttachment(dataUrl, file, id));
   }
 
   private _updateAttachment(id: string, url: string, filename: string) {
-    const element = this._quill.container.querySelector(`#${id}`) as HTMLAnchorElement;
-    if (element) {
-      element.setAttribute('href', url);
-      let attachmentName = element.querySelector('.attachment-name');
-      if (attachmentName) {
-        if (filename) {
-          attachmentName.textContent = filename;
-        } else {
-          attachmentName.textContent = 'Error uploading file';
-        }
-      }
+    const element = this._quill.container.querySelector(`#${id}`);
+    if (!element) return;
 
-      if (typeof this._options.onFileUploaded === 'function') {
-        this._options.onFileUploaded(element, {url});
+    element.setAttribute('href', url);
+    const attachmentName = element.querySelector('.attachment-name');
+    if (attachmentName) {
+      if (filename) {
+        attachmentName.textContent = filename;
+      } else {
+        attachmentName.textContent = 'Error uploading file';
       }
+    }
 
+    if (this._options.onFileUploaded) {
+      this._options.onFileUploaded(element as HTMLElement, {url});
+    }
 
-      // add the url to the hidden input
-      const attachments = this._options.attachmentInput;
-      if (attachments && filename) {
-        // value should be an array of attachment names
-        const value = attachments.value;
-        const data = value ? JSON.parse(value) : [];
-        data.push(filename);
-        attachments.value = JSON.stringify(data);
-      }
+    // add the url to the hidden input
+    const attachments = this._options.attachmentInput;
+    if (attachments && filename) {
+      // value should be an array of attachment names
+      const value = attachments.value;
+      const data: string[] = value ? JSON.parse(value) as string[] : [];
+      data.push(filename);
+      attachments.value = JSON.stringify(data);
     }
   }
 
@@ -162,9 +164,9 @@ export default class Attachment {
     if (attachments) {
       // value should be an array of attachment names
       const value = attachments.value;
-      let attachmentName = attachment?.querySelector('.attachment-name');
-      const data = value ? JSON.parse(value) : [];
-      const index = data.indexOf(attachmentName ? attachmentName.textContent : '');
+      const attachmentName = attachment?.querySelector('.attachment-name');
+      const data: string[] = value ? JSON.parse(value) as string[] : [];
+      const index = data.indexOf(attachmentName?.textContent ? attachmentName.textContent : '');
       if (index > -1) {
         data.splice(index, 1);
         attachments.value = JSON.stringify(data);

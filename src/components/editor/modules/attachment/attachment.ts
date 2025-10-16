@@ -51,24 +51,34 @@ export default class Attachment {
     }
 
     const file = this._fileHolder.files[0];
+    this.addAttachment(file);
+  }
+
+  public addAttachment(file: File, dataUrl?: string) {
     const attachmentId = generateId();
-    const fileReader = new FileReader();
+    const insertWithDataUrl = (base64: string) => {
+      this._insertAttachment({ dataUrl: base64, file, id: attachmentId });
+    };
 
-    fileReader.addEventListener('load', () => {
-      const base64Content = fileReader.result as string;
-      this._insertAttachment({dataUrl: base64Content, file, id: attachmentId});
-    }, false);
-
-    if (file) {
+    if (dataUrl) {
+      insertWithDataUrl(dataUrl);
+    } else {
+      const fileReader = new FileReader();
+      fileReader.addEventListener('load', () => {
+        const base64Content = fileReader.result as string;
+        insertWithDataUrl(base64Content);
+      }, false);
       fileReader.readAsDataURL(file);
     }
 
-    this._options.upload(file).then(({path, url}: { path: string; url: string }) => {
-      this._uploadAttachment(file, url);
-      this._updateAttachment(attachmentId, url, path);
-    }).catch((err: { message: string }) => {
-      console.warn(err.message);
-    });
+    if (typeof this._options.upload === 'function') {
+      this._options.upload(file).then(({ path, url }: { path: string; url: string }) => {
+        this._uploadAttachment(file, url);
+        this._updateAttachment(attachmentId, url, path);
+      }).catch((err: { message: string }) => {
+        console.warn(err.message);
+      });
+    }
   }
 
   private _attachmentContainer = document.createElement('div');

@@ -1,6 +1,7 @@
 import './toolbar.component';
 import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
+import type Attachment from "../attachment/attachment";
 import type DialogComponent from "../dialog/dialog.component";
 import type Emoji from "../emoji/emoji";
 import type ToolbarComponent from "./toolbar.component";
@@ -353,6 +354,13 @@ class Toolbar extends QuillToolbar {
 
         this._quill.setSelection(index + 1, 0, Quill.sources.USER);
         this._syncToolbarState();
+
+        try {
+          const attachmentModule = this._quill.getModule('attachment') as Attachment | undefined;
+          attachmentModule?.addAttachment(file, dataUrl);
+        } catch (err) {
+          console.warn('[Toolbar] Failed to process image with attachment handler', err);
+        }
       };
       reader.readAsDataURL(file);
     }

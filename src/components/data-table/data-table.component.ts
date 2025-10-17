@@ -549,7 +549,7 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
-    if (!this.hideCheckboxes) {
+    if (!this.hideCheckboxes && this._rows.length > 0) {
       actions.push(html`
         <zn-button @click="${this.selectAll}"
                    id="select-all-rows"

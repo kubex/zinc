@@ -2625,6 +2625,7 @@ declare module "components/data-table/data-table.component" {
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
+        selectAllButton: ZnButton;
         private _initialLoad;
         private _lastTableContent;
         private resizeObserver;
@@ -2657,7 +2658,7 @@ declare module "components/data-table/data-table.component" {
         goToNextPage(): void;
         goToLastPage(): void;
         updateRowsPerPage(event: Event): void;
-        selectAll(): void;
+        selectAll(event: Event): void;
         selectRow(e: Event): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;
@@ -2670,6 +2671,7 @@ declare module "components/data-table/data-table.component" {
         private getRows;
         private getSelectedKeys;
         private updateKeys;
+        private updateSelectAll;
         private updateModifyKeys;
         private updateDeleteKeys;
         private extractComparable;

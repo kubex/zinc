@@ -7305,6 +7305,333 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/editor/editor.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEditor",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "editor",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "editorHtml",
+              "type": {
+                "text": "HTMLTextAreaElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "toolbar",
+              "type": {
+                "text": "ToolbarComponent"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "id",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "interactionType",
+              "type": {
+                "text": "'ticket' | 'chat'"
+              },
+              "default": "'chat'",
+              "attribute": "interaction-type"
+            },
+            {
+              "kind": "field",
+              "name": "uploadAttachmentUrl",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "attachment-url"
+            },
+            {
+              "kind": "field",
+              "name": "aiPath",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "ai-path"
+            },
+            {
+              "kind": "field",
+              "name": "quillElement",
+              "type": {
+                "text": "Quill"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_content",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_selectionRange",
+              "type": {
+                "text": "Range"
+              },
+              "privacy": "private",
+              "default": "{index: 0, length: 0}"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleTextChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_getQuillKeyboardBindings",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleEditorChange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "OnEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_replaceTextAtSelection",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_insertTextAtSelection",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_closePopups",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_closeAiPanel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_closeDialog",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "id"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "interaction-type",
+              "type": {
+                "text": "'ticket' | 'chat'"
+              },
+              "default": "'chat'",
+              "fieldName": "interactionType"
+            },
+            {
+              "name": "attachment-url",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uploadAttachmentUrl"
+            },
+            {
+              "name": "ai-path",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "aiPath"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "editor",
+          "tagName": "zn-editor",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/editor",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEditor",
+            "module": "components/editor/editor.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/dropdown/dropdown.js",
       "declarations": [
         {
@@ -7725,333 +8052,6 @@
           "declaration": {
             "name": "ZnDropdown",
             "module": "components/dropdown/dropdown.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/editor/editor.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnEditor",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "default": "new FormControlController(this, {})"
-            },
-            {
-              "kind": "field",
-              "name": "editor",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "editorHtml",
-              "type": {
-                "text": "HTMLTextAreaElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "toolbar",
-              "type": {
-                "text": "ToolbarComponent"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "id",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "id",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "interactionType",
-              "type": {
-                "text": "'ticket' | 'chat'"
-              },
-              "default": "'chat'",
-              "attribute": "interaction-type"
-            },
-            {
-              "kind": "field",
-              "name": "uploadAttachmentUrl",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "attachment-url"
-            },
-            {
-              "kind": "field",
-              "name": "aiPath",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "ai-path"
-            },
-            {
-              "kind": "field",
-              "name": "quillElement",
-              "type": {
-                "text": "Quill"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_content",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "_selectionRange",
-              "type": {
-                "text": "Range"
-              },
-              "privacy": "private",
-              "default": "{index: 0, length: 0}"
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "type": {
-                "text": "ValidityState"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "type": {
-                "text": "string"
-              },
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleTextChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_getQuillKeyboardBindings",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_handleEditorChange",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "OnEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_replaceTextAtSelection",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_insertTextAtSelection",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_closePopups",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_closeAiPanel",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_closeDialog",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "id",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "id"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "interaction-type",
-              "type": {
-                "text": "'ticket' | 'chat'"
-              },
-              "default": "'chat'",
-              "fieldName": "interactionType"
-            },
-            {
-              "name": "attachment-url",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "uploadAttachmentUrl"
-            },
-            {
-              "name": "ai-path",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "aiPath"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "editor",
-          "tagName": "zn-editor",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/editor",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnEditor",
-            "module": "components/editor/editor.js"
           }
         }
       ]

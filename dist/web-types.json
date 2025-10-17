@@ -1997,6 +1997,50 @@
           }
         },
         {
+          "name": "zn-editor",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "id", "value": { "type": "string" } },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "string" } },
+            {
+              "name": "interaction-type",
+              "value": { "type": "'ticket' | 'chat'", "default": "'chat'" }
+            },
+            { "name": "attachment-url", "value": { "type": "string" } },
+            {
+              "name": "ai-path",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "id", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "interactionType", "type": "'ticket' | 'chat'" },
+              { "name": "uploadAttachmentUrl", "type": "string" },
+              { "name": "aiPath", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "validationMessage", "type": "string" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-dropdown",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **show()** - Opens the dropdown\n- **hide()** - Closes the dropdown\n- **reposition()** - Instructs the dropdown to reposition itself\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -2113,50 +2157,6 @@
               { "name": "uri", "type": "string" },
               { "name": "fetchedContent", "type": "string" },
               { "name": "handlePanelSelect", "description": "Events" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-editor",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "id", "value": { "type": "string" } },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "string" } },
-            {
-              "name": "interaction-type",
-              "value": { "type": "'ticket' | 'chat'", "default": "'chat'" }
-            },
-            { "name": "attachment-url", "value": { "type": "string" } },
-            {
-              "name": "ai-path",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "id", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "interactionType", "type": "'ticket' | 'chat'" },
-              { "name": "uploadAttachmentUrl", "type": "string" },
-              { "name": "aiPath", "type": "string" },
-              { "name": "validity", "type": "ValidityState" },
-              { "name": "validationMessage", "type": "string" }
             ],
             "events": [
               {

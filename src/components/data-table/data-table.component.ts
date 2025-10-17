@@ -184,7 +184,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: "empty-state-icon"}) emptyStateIcon: string = "data_alert";
 
   // Hide the checkbox column
-  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean = true;
+  @property({attribute: 'hide-checkboxes', type: Boolean}) hideCheckboxes: boolean;
 
   @property() filters: [] = [];
 
@@ -421,14 +421,10 @@ export default class ZnDataTable extends ZincElement {
         <table class="${classMap({
           'table': true,
           'table--standalone': this.standalone,
-          'with-hover': !this.unsortable,
+          'with-hover': !this.unsortable && !this.hideCheckboxes,
         })}">
           <thead>
           <tr>
-            ${this.hideCheckboxes || !hasSelectedRows ? html`` : html`
-              <th>
-                <div><input type="checkbox" @change="${this.selectAll}"></div>
-              </th>`}
             ${filteredHeaders.map((header: HeaderConfig) => this.renderCellHeader(header))}
             ${this.rowHasActions ? html`
               <th></th>` : html``}
@@ -552,6 +548,19 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
+    if (!this.hideCheckboxes) {
+        actions.push(html`
+          <zn-button @click="${this.selectAll}"
+                     color="transparent"
+                     size="x-small"
+                     icon="check_box"
+                     icon-size="22"
+                     icon-color="primary"
+                     tooltip="Select All"
+                     slot="trigger">
+          </zn-button>`);
+    }
+
     if (this.selectedRows.length > 0) {
       actions.push(html`
         <zn-button @click="${this.clearSelectedRows}"
@@ -559,7 +568,6 @@ export default class ZnDataTable extends ZincElement {
                    size="x-small"
                    icon="disabled_by_default"
                    icon-size="22"
-                   icon-color="primary"
                    tooltip="Clear Selection"
                    slot="trigger">
         </zn-button>`);
@@ -618,22 +626,18 @@ export default class ZnDataTable extends ZincElement {
     this._dataTask.run().then(r => r);
   }
 
-  selectAll(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    const checked = checkbox.checked;
-
-    // go through all the checkboxes and check them
-    for (const row of this.renderRoot.querySelectorAll('tbody zn-checkbox')) {
-      (row as HTMLInputElement).checked = checked;
-    }
-
-    this.selectedRows = checked ? this._rows : [];
+  selectAll() {
+    this.selectedRows = this._rows;
     this.numberOfRowsSelected = this.selectedRows.length;
     this.updateKeys();
     this.requestUpdate();
   }
 
   selectRow(e: Event) {
+    if (this.hideCheckboxes) {
+      return;
+    }
+
     if (!(e.target && (e.target instanceof Element))) {
       return;
     }
@@ -839,7 +843,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <td
-        @click="${this.selectRow}"
+        @click="${this.hideCheckboxes ? undefined : this.selectRow}"
         class="${classMap({
           'table__cell': true,
           'table__cell--wide': headerKey === this.wideColumn,

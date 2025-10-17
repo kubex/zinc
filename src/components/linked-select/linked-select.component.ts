@@ -123,6 +123,7 @@ export default class ZnLinkedSelect extends ZincElement implements ZincFormContr
   }
 
   public handleLinkedSelectChange = () => {
+    this.value = "";
     this.requestUpdate();
     this.formControlController.updateValidity();
   };

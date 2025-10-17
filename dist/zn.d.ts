@@ -2657,7 +2657,7 @@ declare module "components/data-table/data-table.component" {
         goToNextPage(): void;
         goToLastPage(): void;
         updateRowsPerPage(event: Event): void;
-        selectAll(event: Event): void;
+        selectAll(): void;
         selectRow(e: Event): void;
         clearSelectedRows(event: Event): void;
         updateSort(key: string): () => void;

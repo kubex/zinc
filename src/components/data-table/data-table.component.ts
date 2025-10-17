@@ -2,7 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property} from 'lit/decorators.js';
+import {property, query} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
@@ -191,6 +191,8 @@ export default class ZnDataTable extends ZincElement {
   @property() method: 'GET' | 'POST' = 'POST';
 
   @property({attribute: "no-initial-load", type: Boolean}) noInitialLoad: boolean = false;
+
+  @query('#select-all-rows') selectAllButton: ZnButton;
 
   // Data Table Properties
   private _initialLoad = true;
@@ -548,16 +550,17 @@ export default class ZnDataTable extends ZincElement {
     const actions = [];
 
     if (!this.hideCheckboxes) {
-        actions.push(html`
-          <zn-button @click="${this.selectAll}"
-                     color="transparent"
-                     size="x-small"
-                     icon="check_box"
-                     icon-size="22"
-                     icon-color="primary"
-                     tooltip="Select All"
-                     slot="trigger">
-          </zn-button>`);
+      actions.push(html`
+        <zn-button @click="${this.selectAll}"
+                   id="select-all-rows"
+                   color="transparent"
+                   size="x-small"
+                   icon="indeterminate_check_box"
+                   icon-size="22"
+                   icon-color="primary"
+                   tooltip="Select All"
+                   slot="trigger">
+        </zn-button>`);
     }
 
     if (this.selectedRows.length > 0) {
@@ -625,7 +628,15 @@ export default class ZnDataTable extends ZincElement {
     this._dataTask.run().then(r => r);
   }
 
-  selectAll() {
+  selectAll(event: Event) {
+    const button = event.target as ZnButton;
+    if (button.disabled) return;
+
+    if (this.numberOfRowsSelected === this._rows.length) {
+      this.clearSelectedRows(event);
+      return;
+    }
+
     this.selectedRows = this._rows;
     this.numberOfRowsSelected = this.selectedRows.length;
     this.updateKeys();
@@ -898,8 +909,17 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private updateKeys() {
+    this.updateSelectAll();
     this.updateModifyKeys();
     this.updateDeleteKeys();
+  }
+
+  private updateSelectAll() {
+    if (this.numberOfRowsSelected === this._rows.length) {
+      this.selectAllButton.icon = 'check_box';
+    } else {
+      this.selectAllButton.icon = 'indeterminate_check_box';
+    }
   }
 
   private updateModifyKeys() {

@@ -396,7 +396,6 @@ export default class ZnDataTable extends ZincElement {
 
     this._rows = this.getRows(data);
 
-    const hasSelectedRows = this.selectedRows.length > 0;
     this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
 
     // To make sure the cells are in the same order as the headers, we need to map them cell.col to heading.key

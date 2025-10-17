@@ -554,8 +554,14 @@ export default class ZnDataTable extends ZincElement {
 
     if (this.selectedRows.length > 0) {
       actions.push(html`
-        <zn-button @click="${this.clearSelectedRows}" size="small" outline>
-          Clear Selection
+        <zn-button @click="${this.clearSelectedRows}"
+                   color="transparent"
+                   size="x-small"
+                   icon="disabled_by_default"
+                   icon-size="22"
+                   icon-color="primary"
+                   tooltip="Clear Selection"
+                   slot="trigger">
         </zn-button>`);
 
       if (this.hasSlotController.test(ActionSlots.delete.valueOf())) {

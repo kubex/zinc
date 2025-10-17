@@ -231,7 +231,7 @@ export default class ZnExpandingAction extends ZincElement {
         this.color = color;
       }
     } catch {
-      console.log('Unable to fetch context headers');
+      //console.log('Unable to fetch context headers');
     }
   }
 

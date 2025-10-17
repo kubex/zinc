@@ -182,7 +182,7 @@ export default class ZnNavbar extends ZincElement {
   }
 
   showMore() {
-    console.log("Showing More")
+    //console.log("Showing More")
   }
 
   render() {

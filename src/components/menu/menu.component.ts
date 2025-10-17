@@ -169,7 +169,6 @@ export default class ZnMenu extends ZincElement {
     // get the parent dropdown and close it
     (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
 
-    console.log('emitting select')
     this.emit('zn-select', {detail: {item}});
   }
 

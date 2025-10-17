@@ -231,7 +231,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   private _updatePrefix() {
     // Set the prefix of the select to the selected values prefix
     const selectedOption = this.select.selectedOptions[0];
-    console.log('selectedOption', selectedOption);
     if (selectedOption && (this.iconPosition !== 'none' || this.iconOnly) && this.selectPrefix) {
       if (this.iconPosition === 'none' && this.iconOnly) {
         this.iconPosition = 'start';

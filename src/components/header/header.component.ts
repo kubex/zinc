@@ -136,7 +136,8 @@ export default class ZnHeader extends ZincElement {
 
 
         <div class="content" part="content">
-          ${hasBreadcrumb ? html`<slot name="breadcrumb" class="breadcrumb"></slot>` : null}
+          ${hasBreadcrumb ? html`
+            <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
 
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"
@@ -151,7 +152,9 @@ export default class ZnHeader extends ZincElement {
 
           <div class="caption">
             <div part="header-left" class="header__left">
-              <span class="header__caption" part="header-caption">${this.caption}</span>
+              <span class="header__caption" part="header-caption">
+                <slot name="caption">${this.caption}</slot>
+                </span>
               ${this.description ? html`
                   <span class="header__description"
                         part="header-description">${this.description}</span>`

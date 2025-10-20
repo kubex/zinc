@@ -54,7 +54,9 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
 
   @property({type: Boolean}) disabled: boolean = false;
 
-  @property() getSymbol: (value: number) => string = () => '<zn-icon src="warning"></zn-icon>';
+  @property({}) size: 'small' | 'medium' | 'large' = 'medium';
+
+  @property() getSymbol: (value: number) => string = () => '<zn-icon src="star" library="material"></zn-icon>';
 
   /** Gets the validity state object */
   get validity() {
@@ -170,6 +172,9 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
           rating: true,
           'rating--readonly': this.readonly,
           'rating--disabled': this.disabled,
+          'rating--small': this.size === 'small',
+          'rating--medium': this.size === 'medium',
+          'rating--large': this.size === 'large'
         })}"
         role="slider"
         aria-label="${this.label}"
@@ -196,21 +201,18 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
                     'rating__partial-symbol-container': true,
                     'rating__symbol--hover': this.isHovering && Math.ceil(displayValue) === index + 1
                   })}
-                  role="presentation"
-                >
+                  role="presentation">
                   <div
                     style=${styleMap({
                       clipPath: `inset(0 0 0 ${(displayValue - index) * 100}%)`
-                    })}
-                  >
+                    })}>
                     ${unsafeHTML(this.getSymbol(index + 1))}
                   </div>
                   <div
                     class="rating__partial--filled"
                     style=${styleMap({
                       clipPath: `inset(0 ${100 - (displayValue - index) * 100}% 0 0)`
-                    })}
-                  >
+                    })}>
                     ${unsafeHTML(this.getSymbol(index + 1))}
                   </div>
                 </span>
@@ -223,8 +225,7 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
                   'rating__symbol--hover': this.isHovering && Math.ceil(displayValue) === index + 1,
                   'rating__symbol--active': displayValue >= index + 1
                 })}
-                role="presentation"
-              >
+                role="presentation">
                 ${unsafeHTML(this.getSymbol(index + 1))}
               </span>`;
           })}

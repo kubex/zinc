@@ -2,7 +2,7 @@
 
 :host {
   --symbol-color: rgb(var(--zn-border-color));
-  --symbol-color-active: rgb(var(--zn-primary));
+  --symbol-color-active: var(--zn-color-amber-400);
   --symbol-size: 1.2rem;
   --symbol-spacing: 4px;
 
@@ -78,5 +78,19 @@
 
   &--disabled .rating__symbols {
     cursor: not-allowed;
+  }
+
+  &--small {
+    --symbol-size: 1rem;
+    --symbol-spacing: 2px;
+  }
+
+  &--medium {
+    --symbol-size: 1.2rem;
+  }
+
+  &--large {
+    --symbol-size: 1.5rem;
+    --symbol-spacing: 6px;
   }
 }

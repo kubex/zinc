@@ -1,8 +1,27 @@
-import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './order-table.scss';
+
+interface OrderTableData {
+  headers: string[];
+  items: {
+    caption?: string;
+    summary?: string;
+    data: string[];
+    sub?: {
+      caption?: string;
+      summary?: string;
+      data: string[];
+    }[];
+  }[];
+  tax?: string;
+  discount?: string;
+  total?: string;
+  paid?: string;
+  remaining?: string;
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -24,41 +43,43 @@ import styles from './order-table.scss';
 export default class ZnOrderTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({type: Object, reflect: true}) data: Object;
+  @property({type: Object, reflect: true}) data: OrderTableData;
 
   private isMobile: boolean = false;
-  private modifiedData: any = null;
-
-  constructor() {
-    super();
-    this.modifiedData = this.data;
-  }
-
+  private modifiedData: OrderTableData;
 
   connectedCallback() {
     this.isMobile = window.innerWidth < 768;
+    this.modifiedData = this.data;
 
-    window.addEventListener('resize', () => {
-      if (window.innerWidth < 768 && !this.isMobile) {
-        this.isMobile = true;
-        this.requestUpdate();
-      } else if (window.innerWidth >= 768 && this.isMobile) {
-        this.isMobile = false;
-        this.requestUpdate();
-      }
-    });
+    window.addEventListener('resize', this.resizeEventHandler);
 
     if (this.data === null || this.data === undefined) {
       if (this.childNodes.length > 0 && this.childNodes[0].nodeType === 3) {
-        const data: any = this.childNodes[0];
+        // @ts-ignore
+        const data: ChildNode & { textContent: string } = this.childNodes[0];
         try {
-          this.data = JSON.parse(data.textContent);
+          this.data = JSON.parse(data?.textContent) as OrderTableData;
         } catch (e) { /* empty */
         }
       }
     }
 
     super.connectedCallback();
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('resize', this.resizeEventHandler);
+  }
+
+  resizeEventHandler = () => {
+    if (window.innerWidth < 768 && !this.isMobile) {
+      this.isMobile = true;
+      this.requestUpdate();
+    } else if (window.innerWidth >= 768 && this.isMobile) {
+      this.isMobile = false;
+      this.requestUpdate();
+    }
   }
 
   render() {
@@ -107,7 +128,7 @@ export default class ZnOrderTable extends ZincElement {
     const rows = [];
 
 
-    if (data && data['items']) {
+    if (data?.['items']) {
       for (const item of data['items']) {
         const caption = this.getCaption(item);
         const rowData = item['data'];
@@ -136,8 +157,8 @@ export default class ZnOrderTable extends ZincElement {
   }
 
   getCaption(item: any) {
-    const caption = item['caption'];
-    const summary = item['summary'];
+    const caption: string = item['caption'];
+    const summary: string = item['summary'];
 
     return html`
       <div class="row-item row-caption">
@@ -184,7 +205,7 @@ export default class ZnOrderTable extends ZincElement {
 
   getSummary() {
     let tax = html``;
-    if (this.modifiedData && this.modifiedData['tax']) {
+    if (this.modifiedData?.['tax']) {
       tax = html`
         <div class="summary-item">
           <div class="summary-item-title">Tax</div>
@@ -193,7 +214,7 @@ export default class ZnOrderTable extends ZincElement {
     }
 
     let discount = html``;
-    if (this.modifiedData && this.modifiedData['discount']) {
+    if (this.modifiedData?.['discount']) {
       discount = html`
         <div class="summary-item">
           <div class="summary-item-title">Discount</div>
@@ -202,7 +223,7 @@ export default class ZnOrderTable extends ZincElement {
     }
 
     let total = html``;
-    if (this.modifiedData && this.modifiedData['total']) {
+    if (this.modifiedData?.['total']) {
       total = html`
         <div class="summary-item">
           <div class="summary-item-title">Grand Total</div>
@@ -212,7 +233,7 @@ export default class ZnOrderTable extends ZincElement {
 
 
     let paid = html``;
-    if (this.modifiedData && this.modifiedData['paid']) {
+    if (this.modifiedData?.['paid']) {
       paid = html`
         <div class="summary-item">
           <div class="summary-item-title">Amount Paid</div>
@@ -222,7 +243,7 @@ export default class ZnOrderTable extends ZincElement {
 
 
     let remaining = html``;
-    if (this.modifiedData && this.modifiedData['remaining']) {
+    if (this.modifiedData?.['remaining']) {
       remaining = html`
         <div class="summary-item">
           <div class="summary-item-title">Amount Outstanding</div>

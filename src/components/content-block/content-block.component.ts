@@ -1,11 +1,11 @@
 import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
+import type {PropertyValues} from 'lit';
 import {html, nothing, unsafeCSS} from 'lit';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
-import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
 
 import styles from './content-block.scss';
@@ -29,7 +29,11 @@ export default class ContentBlock extends ZincElement {
   @property() avatar = '';
 
   @property({type: Boolean, reflect: true}) outbound = false;
+
+  @property({type: Boolean, attribute: "no-collapse"}) noCollapse = false;
+
   @property({type: Boolean, reflect: true}) short = false;
+
   @property({attribute: 'default-display', reflect: true}) defaultDisplay: 'text' | 'html' = 'text';
 
   @queryAssignedNodes({slot: 'html', flatten: true}) htmlNodes!: Node[];
@@ -84,6 +88,9 @@ export default class ContentBlock extends ZincElement {
   }
 
   private _collapseContent(e: Event) {
+    if (this.noCollapse) {
+      return;
+    }
     const target = e.target as HTMLElement;
     const headerClick = target.classList.contains('content-block-header') ||
       target.parentElement?.classList.contains('content-block-header');
@@ -186,20 +193,24 @@ export default class ContentBlock extends ZincElement {
                 flush-footer="${hasFooter || nothing}"
                 class="${classMap({
                   'content-block--outbound': this.outbound,
-                  'content-block--short': this.short
+                  'content-block--short': this.short,
+                  'content-block--collapsible': !this.noCollapse
                 })}">
 
         <zn-header class="content-block-header"
-                   caption="${this.sender}"
                    description="${this.truncateText()}"
                    @click="${this._collapseContent}">
 
-          <zn-icon src="${this.avatar}"
-                   library="avatar"
-                   round></zn-icon>
+          <slot name="icon">
+            <zn-icon src="${this.avatar}"
+                     library="avatar"
+                     round></zn-icon>
+          </slot>
+
+          <slot name="caption" slot="caption">${this.sender}</slot>
 
           <div slot="actions">
-            <small>${this.time}</small>
+            <slot name="actions"><small>${this.time}</small></slot>
             ${showActions ? html`
               <zn-dropdown>
                 <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent"

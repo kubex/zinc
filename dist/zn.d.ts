@@ -3965,6 +3965,24 @@ declare module "components/progress-bar/index" {
 declare module "components/order-table/order-table.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    interface OrderTableData {
+        headers: string[];
+        items: {
+            caption?: string;
+            summary?: string;
+            data: string[];
+            sub?: {
+                caption?: string;
+                summary?: string;
+                data: string[];
+            }[];
+        }[];
+        tax?: string;
+        discount?: string;
+        total?: string;
+        paid?: string;
+        remaining?: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/order-table
@@ -3984,11 +4002,12 @@ declare module "components/order-table/order-table.component" {
      */
     export default class ZnOrderTable extends ZincElement {
         static styles: CSSResultGroup;
-        data: Object;
+        data: OrderTableData;
         private isMobile;
         private modifiedData;
-        constructor();
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        resizeEventHandler: () => void;
         render(): import("lit").TemplateResult<1>;
         getHeaders(): import("lit").TemplateResult<1>;
         getRows(): import("lit").TemplateResult<1>;
@@ -5302,6 +5321,7 @@ declare module "components/rating/rating.component" {
         precision: number;
         readonly: boolean;
         disabled: boolean;
+        size: 'small' | 'medium' | 'large';
         getSymbol: (value: number) => string;
         /** Gets the validity state object */
         get validity(): ValidityState;
@@ -6212,8 +6232,8 @@ declare module "components/split-button/index" {
     }
 }
 declare module "components/content-block/content-block.component" {
-    import ZincElement from "internal/zinc-element";
     import type { PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
     interface TextRow {
         lines: string[];
         type: 'reply' | 'text';
@@ -6230,6 +6250,7 @@ declare module "components/content-block/content-block.component" {
         sender: string;
         avatar: string;
         outbound: boolean;
+        noCollapse: boolean;
         short: boolean;
         defaultDisplay: 'text' | 'html';
         htmlNodes: Node[];

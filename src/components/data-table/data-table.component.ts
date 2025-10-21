@@ -604,6 +604,14 @@ export default class ZnDataTable extends ZincElement {
   getActions() {
     const actions = [];
 
+    const hasSlots = this.hasSlotController.test(ActionSlots.delete.valueOf())
+      || this.hasSlotController.test(ActionSlots.modify.valueOf())
+      || this.hasSlotController.test(ActionSlots.create.valueOf());
+
+    if(!hasSlots) {
+      return [];
+    }
+
     if (!this.hideCheckboxes && this._rows.length > 0) {
       actions.push(html`
         <zn-button @click="${this.selectAll}"

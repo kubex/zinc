@@ -408,7 +408,11 @@ export default class ZnTabs extends ZincElement {
 
   removeTabAndPanel(tabId: string) {
     if (this._panels.has(tabId)) {
-      this._panels.delete(tabId);
+      const panel = this._panels.get(tabId);
+      if (panel instanceof HTMLElement) {
+        panel.remove();
+      }
+      //this._panels.delete(tabId);
     }
 
     for (const tab of this._tabs) {

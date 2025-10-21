@@ -4,7 +4,7 @@ import {FormControlController, validValidityState} from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {property, query} from 'lit/decorators.js';
+import {property, query, queryAll} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
@@ -49,6 +49,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, '[default]');
   private _autoClickTimeout: number | undefined;
   private _fixedWidth: number | null = null;
+  private _loadingState = {
+    countdown: null as number | null,
+    interval: undefined as number | undefined,
+  };
 
   @query('.button') button: HTMLButtonElement;
 
@@ -105,6 +109,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     attribute: 'loading-text-position'
   }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
   @property({type: Boolean}) loading = false;
+
+  @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
   get validity() {
     if (this._isButton() && this.button) {
@@ -172,6 +178,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         this.button.classList.remove('button--loading-bg');
         this.button.classList.remove('button--loading-bg-transparent');
       }
+
+      this.updateCountdownText();
     }
   }
 
@@ -240,19 +248,52 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   setupAutoClick() {
     if (!this.button) return;
+
     if (this._autoClickTimeout) {
       window.clearTimeout(this._autoClickTimeout);
       this._autoClickTimeout = undefined;
     }
+
+    if (this._loadingState.interval) {
+      window.clearInterval(this._loadingState.interval);
+      this._loadingState.interval = undefined;
+    }
+
     this._fixedWidth = this.button.offsetWidth;
     this.button.style.width = `${this._fixedWidth}px`;
+
     this.loading = true;
+    this._loadingState.countdown = Math.ceil(this.autoClickDelay / 1000);
+    this.updateCountdownText();
+
+    this._loadingState.interval = window.setInterval(() => {
+      if (this._loadingState.countdown && this._loadingState.countdown > 0) {
+        this._loadingState.countdown--;
+        this.updateCountdownText();
+      }
+    }, 1000);
 
     this._autoClickTimeout = window.setTimeout(() => {
       this.loading = false;
+      this._loadingState.countdown = null;
+      this.updateCountdownText();
+
+      if (this._loadingState.interval) {
+        window.clearInterval(this._loadingState.interval);
+        this._loadingState.interval = undefined;
+      }
+
       // this.button?.click();
-      this.button?.click();
     }, this.autoClickDelay);
+  }
+
+  updateCountdownText() {
+    const text = this._loadingState.countdown && this._loadingState.countdown > 0 ? ` (${this._loadingState.countdown}s)` : '';
+    if (this.countdownContainer) {
+      for (const container of this.countdownContainer) {
+        container.textContent = text;
+      }
+    }
   }
 
   teardownAutoClick() {
@@ -260,7 +301,15 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       window.clearTimeout(this._autoClickTimeout);
       this._autoClickTimeout = undefined;
     }
+
+    if (this._loadingState.interval) {
+      window.clearInterval(this._loadingState.interval);
+      this._loadingState.interval = undefined;
+    }
+
     this.loading = false;
+    this._loadingState.countdown = null;
+
     if (this.button) {
       this.button.style.width = '';
     }
@@ -327,17 +376,23 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         </slot>
         ${this.iconPosition === 'right' ? icon : ''}
         ${this.loading ? html`
-          <div part="loading-container" class="button--loading-container">
-            <span class=${classMap({
-              'button--loading-text-bottom': true,
-              'button--loading-text-bottom-transparent': this.color === 'transparent',
-              [`button--loading-text-bottom-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
-            })}>${this.loadingText}</span>
-            <span class=${classMap({
-              'button--loading-text-top': true,
-              'button--loading-text-top-transparent': this.color === 'transparent',
-              [`button--loading-text-top-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
-            })}>${this.loadingText}</span>
+          <div class="button--loading-container">
+            <span
+              class=${classMap({
+                'button--loading-text-bottom': true,
+                'button--loading-text-bottom-transparent': this.color === 'transparent',
+                [`button--loading-text-bottom-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
+              })}>
+              ${this.loadingText}<span class="loading-countdown"></span>
+            </span>
+            <span
+              class=${classMap({
+                'button--loading-text-top': true,
+                'button--loading-text-top-transparent': this.color === 'transparent',
+                [`button--loading-text-top-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
+              })}>
+              ${this.loadingText}<span class="loading-countdown"></span>
+            </span>
           </div>
         ` : null}
       </${tag}>`;

@@ -39,6 +39,7 @@ export default class ZnHeader extends ZincElement {
   @property({type: Boolean}) transparent: boolean = false;
 
   @property() caption: string;
+  @property() icon: string;
 
   @property() description: string;
 
@@ -153,6 +154,8 @@ export default class ZnHeader extends ZincElement {
           <div class="caption">
             <div part="header-left" class="header__left">
               <span class="header__caption" part="header-caption">
+                ${this.icon ? html`
+                  <zn-icon class="header__icon" src="${this.icon}"></zn-icon>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
               ${this.description ? html`

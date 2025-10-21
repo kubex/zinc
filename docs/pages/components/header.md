@@ -37,6 +37,13 @@ layout: component
   <zn-header caption="John Jones" description="This is the description of the header"></zn-header>
 </div>
 ```
+### Simple Header with Icon
+
+```html:preview
+<div style="background-color: #f5f5f5; padding: 20px;">
+  <zn-header icon="person" caption="John Jones" description="This is the description of the header"></zn-header>
+</div>
+```
 
 
 ### Simple Header with actions

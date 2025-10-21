@@ -28,6 +28,7 @@ export default class ZnPanel extends ZincElement {
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
+  @property() icon: string;
   @property() description: string;
   @property({type: Boolean}) tabbed: boolean;
   @property({type: Boolean}) cosmic: boolean;
@@ -94,8 +95,9 @@ export default class ZnPanel extends ZincElement {
         <div class="panel__inner">
           ${hasHeader ? html`
             <zn-header class="panel__header"
+                       icon="${this.icon}"
                        caption="${this.caption}"
-                       description=${ifDefined(this.description)}
+                       description="${ifDefined(this.description)}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

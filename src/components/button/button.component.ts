@@ -251,6 +251,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     this._autoClickTimeout = window.setTimeout(() => {
       this.loading = false;
       // this.button?.click();
+      this.button?.click();
     }, this.autoClickDelay);
   }
 

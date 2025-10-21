@@ -13598,6 +13598,44 @@
               "default": "''",
               "attribute": "body",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "collapseAtLines",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "attribute": "collapse-at-lines",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_isOverflowing",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_toggleExpand",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_measureOverflow",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -13637,6 +13675,14 @@
               },
               "default": "''",
               "fieldName": "body"
+            },
+            {
+              "name": "collapse-at-lines",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "fieldName": "collapseAtLines"
             }
           ],
           "superclass": {

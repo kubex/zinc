@@ -39,6 +39,10 @@
   &.button--success {
     --btn-color: var(--zn-color-success);
   }
+
+  &__label--hidden {
+    visibility: hidden;
+  }
 }
 
 .button.button--muted-notification {
@@ -303,6 +307,116 @@
       background-color: rgba(var(--btn-color));
       color: white;
     }
+  }
+}
+
+.button--loading-bg {
+  background-color: #e0e0e0;
+
+  &-transparent {
+    background-color: transparent;
+  }
+}
+
+.button--loading-fill {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 99%;
+  width: 0;
+  z-index: 1;
+  background-color: rgba(var(--btn-color), .85);
+  border-radius: 4px;
+  transition: width 0s;
+  animation: loading-fill-grow var(--loading-duration, 2s) linear forwards;
+
+  &-transparent {
+    background-color: rgba(var(--zn-primary), 0.1);
+  }
+}
+
+.button--loading {
+  &-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  &-text-bottom, &-text-top {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: inherit;
+    font-weight: inherit;
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  &-text-bottom {
+    z-index: 2;
+    color: rgba(var(--btn-color), .85);
+
+    &-transparent {
+      color: inherit;
+    }
+  }
+
+  &-text-top {
+    z-index: 3;
+    color: inherit;
+    /* Animate the reveal from left to right using a mask */
+    mask-image: linear-gradient(90deg, #000 0%, #000 100%);
+    mask-size: 0 100%;
+    mask-repeat: no-repeat;
+    animation: loading-text-reveal var(--loading-duration, 2s) linear forwards;
+  }
+}
+
+@keyframes loading-bar-move {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes loading-fill-grow {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes loading-fill-gradient-move {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+@keyframes loading-text-reveal {
+  from {
+    mask-size: 0 100%;
+  }
+  to {
+    mask-size: 100% 100%;
   }
 }
 

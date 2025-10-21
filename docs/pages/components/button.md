@@ -11,6 +11,20 @@ layout: component
 
 ## Examples
 
+### Auto Click
+
+The `auto-click` attribute can be added to a button to make it automatically click after a given time
+
+```html:preview
+<zn-button auto-click>
+  Test Auto Button
+</zn-button auto-click>
+
+<zn-button auto-click color="transparent">
+  Test Auto Button
+</zn-button auto-click>
+```
+
 ### Variants
 
 Use the `color` attribute to set the button's color.

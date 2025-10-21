@@ -47,6 +47,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   private readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this, '[default]');
+  private _autoClickTimeout: number | undefined;
+  private _fixedWidth: number | null = null;
 
   @query('.button') button: HTMLButtonElement;
 
@@ -94,6 +96,12 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   // Tooltip Specific
   @property() tooltip: string;
 
+  // Auto Click Specific
+  @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
+  @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
+  @property({type: String, attribute: 'loading-text'}) loadingText = 'Loading...';
+  @property({type: Boolean}) loading = false;
+
   get validity() {
     if (this._isButton() && this.button) {
       return (this.button as HTMLButtonElement).validity;
@@ -101,7 +109,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
     return validValidityState;
   }
-
 
   get validationMessage() {
     if (this._isButton() && this.button) {
@@ -114,6 +121,53 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   firstUpdated() {
     if (this._isButton()) {
       this.formControlController.updateValidity();
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.teardownAutoClick();
+  }
+
+  protected updated(changedProps: Map<string, any>) {
+    super.updated(changedProps);
+    if (changedProps.has('autoClick')) {
+      if (this.autoClick) {
+        this.setupAutoClick();
+      } else {
+        this.teardownAutoClick();
+      }
+    }
+    if (!this.autoClick && this._fixedWidth) {
+      this._fixedWidth = null;
+      if (this.button) {
+        this.button.style.width = '';
+      }
+    }
+    if (this.button) {
+      const oldOverlay = this.button.querySelector('.button--loading-fill');
+      if (oldOverlay) {
+        oldOverlay.remove();
+      }
+
+      if (this.loading) {
+        // Add loading overlay
+        const duration = `${this.autoClickDelay / 1000}s`;
+        const overlay = document.createElement('div');
+        overlay.classList.add('button--loading-fill');
+        overlay.setAttribute('style', `--loading-duration: ${duration}`);
+
+        if (this.button.classList.contains('button--transparent')) {
+          overlay.classList.add('button--loading-fill-transparent')
+          this.button.classList.add('button--loading-bg-transparent');
+        }
+
+        this.button.prepend(overlay);
+        this.button.classList.add('button--loading-bg');
+      } else {
+        this.button.classList.remove('button--loading-bg');
+        this.button.classList.remove('button--loading-bg-transparent');
+      }
     }
   }
 
@@ -180,14 +234,41 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     return !this._isLink();
   }
 
+  setupAutoClick() {
+    if (!this.button) return;
+    if (this._autoClickTimeout) {
+      window.clearTimeout(this._autoClickTimeout);
+      this._autoClickTimeout = undefined;
+    }
+    this._fixedWidth = this.button.offsetWidth;
+    this.button.style.width = `${this._fixedWidth}px`;
+    this.loading = true;
+
+    this._autoClickTimeout = window.setTimeout(() => {
+      this.loading = false;
+      this.button?.click();
+    }, this.autoClickDelay);
+  }
+
+  teardownAutoClick() {
+    if (this._autoClickTimeout) {
+      window.clearTimeout(this._autoClickTimeout);
+      this._autoClickTimeout = undefined;
+    }
+    this.loading = false;
+    if (this.button) {
+      this.button.style.width = '';
+    }
+    this._fixedWidth = null;
+  }
+
   protected render(): unknown {
     const isLink = this._isLink();
-
     const icon = this.icon ? html`
       <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
                color="${this.iconColor ? this.iconColor : null}"></zn-icon>` : '';
-
     const tag = isLink ? literal`a` : literal`button`;
+    const loadingDurationStyle = this.loading ? `--loading-duration: ${this.autoClickDelay / 1000}s;` : '';
 
     let content = html`
       <${tag}
@@ -221,6 +302,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--muted-notification': this.mutedNotifications || (this.notification !== undefined && this.notification === -2),
           'button--notification-dot': this.notification !== undefined && this.notification < 0,
         })}"
+        style="${loadingDurationStyle}${this._fixedWidth ? `width: ${this._fixedWidth}px;` : ''}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
         target="${ifDefined(isLink ? this.target : undefined)}"
@@ -230,8 +312,27 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-notification="${ifDefined(this.notification)}"
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
-        <slot part="label" class="button__label">${this.content}</slot>
+        <slot part="label"
+              class="${classMap({
+                'button__label': true,
+                'button__label--hidden': this.loading
+              })}"
+              style="--loading-duration: ${this.autoClickDelay / 1000}s">
+          ${this.content}
+        </slot>
         ${this.iconPosition === 'right' ? icon : ''}
+        ${this.loading ? html`
+          <div class="button--loading-container">
+            <span class=${classMap({
+              'button--loading-text-bottom': true,
+              'button--loading-text-bottom-transparent': this.color === 'transparent'
+            })}>${this.loadingText}</span>
+            <span class=${classMap({
+              'button--loading-text-top': true,
+              'button--loading-text-top-transparent': this.color === 'transparent'
+            })}>${this.loadingText}</span>
+          </div>
+        ` : null}
       </${tag}>`;
 
     if (this.tooltip !== undefined) {

@@ -23,6 +23,7 @@
   border-color: transparent;
   height: 100%;
   display: inline-flex;
+  position: relative;
 
   &.button--info {
     --btn-color: var(--zn-color-info);
@@ -318,25 +319,22 @@
   }
 }
 
-.button--loading-fill {
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 99%;
-  width: 0;
-  z-index: 1;
-  background-color: rgba(var(--btn-color), .85);
-  border-radius: 4px;
-  transition: width 0s;
-  animation: loading-fill-grow var(--loading-duration, 2s) linear forwards;
-
-  &-transparent {
-    background-color: rgba(var(--zn-primary), 0.1);
-  }
-}
-
 .button--loading {
+  &-fill {
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(var(--btn-color), .85);
+    border-radius: inherit;
+    transition: width 0s;
+    animation: loading-fill-grow var(--loading-duration, 2s) linear forwards;
+    inset: -1px;
+
+    &-transparent {
+      background-color: rgba(var(--zn-primary), 0.1);
+    }
+  }
+
   &-container {
     position: absolute;
     top: 0;
@@ -398,13 +396,11 @@
   }
 }
 
-@keyframes loading-bar-move {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100%);
-  }
+.button--relative-wrapper {
+  position: relative;
+  display: inline-flex;
+  height: 100%;
+  width: 100%;
 }
 
 @keyframes loading-fill-grow {
@@ -413,15 +409,6 @@
   }
   to {
     width: 100%;
-  }
-}
-
-@keyframes loading-fill-gradient-move {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: 0 0;
   }
 }
 

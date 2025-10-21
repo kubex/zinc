@@ -30,6 +30,7 @@ import styles from './button.scss';
  * @slot - The button's label.
  * @slot prefix - A presentational prefix icon or similar element.
  * @slot suffix - A presentational suffix icon or similar element.
+ * @slot cancel - Slot for custom cancel button/content when autoClick is active.
  *
  * @csspart base - The component's base wrapper.
  * @csspart prefix - The container that wraps the prefix.
@@ -48,7 +49,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   private readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this, '[default]');
   private _autoClickTimeout: number | undefined;
-  private _fixedWidth: number | null = null;
   private _loadingState = {
     countdown: null as number | null,
     interval: undefined as number | undefined,
@@ -146,12 +146,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         this.teardownAutoClick();
       }
     }
-    if (!this.autoClick && this._fixedWidth) {
-      this._fixedWidth = null;
-      if (this.button) {
-        this.button.style.width = '';
-      }
-    }
     if (this.button) {
       const oldOverlay = this.button.querySelector('.button--loading-fill');
       if (oldOverlay) {
@@ -166,7 +160,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         overlay.setAttribute('style', `--loading-duration: ${duration}`);
 
         if (this.button.classList.contains('button--transparent')) {
-          overlay.classList.add('button--loading-fill-transparent')
+          overlay.classList.add('button--loading-fill-transparent');
           this.button.classList.add('button--loading-bg-transparent');
         }
 
@@ -257,9 +251,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       this._loadingState.interval = undefined;
     }
 
-    this._fixedWidth = this.button.offsetWidth;
-    this.button.style.width = `${this._fixedWidth}px`;
-
     this.loading = true;
     this._loadingState.countdown = Math.ceil(this.autoClickDelay / 1000);
     this.updateCountdownText();
@@ -311,18 +302,18 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     if (this.button) {
       this.button.style.width = '';
     }
-    this._fixedWidth = null;
   }
 
   protected render(): unknown {
     const isLink = this._isLink();
-    const icon = this.icon ? html`
-      <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
-               color="${this.iconColor ? this.iconColor : null}"></zn-icon>` : '';
+    const showCancel = this.loading && this.autoClick;
+    const icon = this.icon && !this.loading ? html`
+        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
+                 color="${this.iconColor ? this.iconColor : null}"></zn-icon>`
+      : '';
     const tag = isLink ? literal`a` : literal`button`;
-    const loadingDurationStyle = this.loading ? `--loading-duration: ${this.autoClickDelay / 1000}s;` : '';
 
-    let content = html`
+    const buttonContent = html`
       <${tag}
         part="base"
         class="${classMap({
@@ -354,7 +345,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--muted-notification': this.mutedNotifications || (this.notification !== undefined && this.notification === -2),
           'button--notification-dot': this.notification !== undefined && this.notification < 0,
         })}"
-        style="${loadingDurationStyle}${this._fixedWidth ? `width: ${this._fixedWidth}px;` : ''}"
         type="${ifDefined(this.type)}"
         href="${ifDefined(this.href)}"
         target="${ifDefined(isLink ? this.target : undefined)}"
@@ -394,6 +384,15 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           </div>
         ` : null}
       </${tag}>`;
+
+    let content = this.autoClick ? html`
+      <div class="button--relative-wrapper">
+        ${buttonContent}
+        ${showCancel ? html`
+          <slot name="cancel" @click="${this.teardownAutoClick}"></slot>
+        ` : null}
+      </div>
+    ` : buttonContent;
 
     if (this.tooltip !== undefined) {
       content = html`

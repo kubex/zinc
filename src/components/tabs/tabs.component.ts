@@ -295,7 +295,6 @@ export default class ZnTabs extends ZincElement {
     let hasActive = false;
     this._tabs.forEach(tab => {
 
-
       if (tab.hasAttribute('tab-uri') && this._knownUri.has(tab.getAttribute('tab-uri')!)) {
         tab.setAttribute('tab', this._knownUri.get(tab.getAttribute('tab-uri')!)!);
       }
@@ -407,23 +406,38 @@ export default class ZnTabs extends ZincElement {
   }
 
   removeTabAndPanel(tabId: string) {
-    if (this._panels.has(tabId)) {
-      const panel = this._panels.get(tabId);
-      if (panel instanceof HTMLElement) {
-        panel.remove();
-      }
-      //this._panels.delete(tabId);
+    if (this._current === tabId) {
+      this.setActiveTab('', true, false);
     }
 
     for (const tab of this._tabs) {
       if (tab.getAttribute('tab') === tabId) {
-        tab.remove();
+
+        if (tab.hasAttribute('tab-uri')) {
+          const tabUri = tab.getAttribute('tab-uri')!;
+          if (this._knownUri.has(tabUri)) {
+            this._knownUri.delete(tabUri);
+          }
+        }
+
+        //tab.remove();
+        tab.parentElement?.removeChild(tab)
         this._tabs.splice(this._tabs.indexOf(tab), 1);
       }
     }
 
-    if (this._current === tabId) {
-      this.setActiveTab('', true, false);
+    if (this._panels.has(tabId)) {
+      const panel = this._panels.get(tabId);
+      if (panel instanceof HTMLElement) {
+        panel.remove();
+      } else if (panel instanceof Array) {
+        panel.forEach((item) => {
+          if (item instanceof HTMLElement) {
+            item.remove();
+          }
+        })
+      }
+      this._panels.delete(tabId);
     }
   }
 

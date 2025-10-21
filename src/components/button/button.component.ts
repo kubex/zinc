@@ -142,8 +142,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     if (changedProps.has('autoClick')) {
       if (this.autoClick) {
         this.setupAutoClick();
-      } else {
-        this.teardownAutoClick();
       }
     }
     if (this.button) {

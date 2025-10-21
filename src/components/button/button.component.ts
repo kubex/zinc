@@ -100,6 +100,10 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
   @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
   @property({type: String, attribute: 'loading-text'}) loadingText = 'Loading...';
+  @property({
+    type: String,
+    attribute: 'loading-text-position'
+  }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
   @property({type: Boolean}) loading = false;
 
   get validity() {
@@ -246,7 +250,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
     this._autoClickTimeout = window.setTimeout(() => {
       this.loading = false;
-      this.button?.click();
+      // this.button?.click();
     }, this.autoClickDelay);
   }
 
@@ -322,14 +326,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         </slot>
         ${this.iconPosition === 'right' ? icon : ''}
         ${this.loading ? html`
-          <div class="button--loading-container">
+          <div part="loading-container" class="button--loading-container">
             <span class=${classMap({
               'button--loading-text-bottom': true,
-              'button--loading-text-bottom-transparent': this.color === 'transparent'
+              'button--loading-text-bottom-transparent': this.color === 'transparent',
+              [`button--loading-text-bottom-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
             })}>${this.loadingText}</span>
             <span class=${classMap({
               'button--loading-text-top': true,
-              'button--loading-text-top-transparent': this.color === 'transparent'
+              'button--loading-text-top-transparent': this.color === 'transparent',
+              [`button--loading-text-top-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
             })}>${this.loadingText}</span>
           </div>
         ` : null}

@@ -3131,6 +3131,7 @@ declare module "components/header/header.component" {
         entityIdShow: boolean;
         transparent: boolean;
         caption: string;
+        icon: string;
         description: string;
         navigation: never[];
         fullWidth: boolean;
@@ -3461,6 +3462,7 @@ declare module "components/panel/panel.component" {
         private readonly hasSlotController;
         basis: number;
         caption: string;
+        icon: string;
         description: string;
         tabbed: boolean;
         cosmic: boolean;

@@ -281,7 +281,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         this._loadingState.interval = undefined;
       }
 
-      // this.button?.click();
+      this.button?.click();
     }, this.autoClickDelay);
   }
 

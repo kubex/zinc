@@ -1058,6 +1058,7 @@ declare module "components/button/button.component" {
      * @slot - The button's label.
      * @slot prefix - A presentational prefix icon or similar element.
      * @slot suffix - A presentational suffix icon or similar element.
+     * @slot cancel - Slot for custom cancel button/content when autoClick is active.
      *
      * @csspart base - The component's base wrapper.
      * @csspart prefix - The container that wraps the prefix.
@@ -1074,7 +1075,10 @@ declare module "components/button/button.component" {
         };
         private readonly formControlController;
         private readonly hasSlotController;
+        private _autoClickTimeout;
+        private _loadingState;
         button: HTMLButtonElement;
+        countdownContainer: HTMLElement[];
         color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
         size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
         text: boolean;
@@ -1106,9 +1110,16 @@ declare module "components/button/button.component" {
         dataTarget: 'modal' | 'slide' | string;
         rel: string;
         tooltip: string;
+        autoClick: boolean;
+        autoClickDelay: number;
+        loadingText: string;
+        loadingTextPosition: 'left' | 'right' | 'center' | string;
+        loading: boolean;
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(): void;
+        disconnectedCallback(): void;
+        protected updated(changedProps: Map<string, any>): void;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
@@ -1116,6 +1127,9 @@ declare module "components/button/button.component" {
         handleClick: () => void;
         private _isLink;
         private _isButton;
+        setupAutoClick(): void;
+        updateCountdownText(): void;
+        teardownAutoClick(): void;
         protected render(): unknown;
     }
 }

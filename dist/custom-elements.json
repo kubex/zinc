@@ -693,6 +693,10 @@
             {
               "description": "A presentational suffix icon or similar element.",
               "name": "suffix"
+            },
+            {
+              "description": "Slot for custom cancel button/content when autoClick is active.",
+              "name": "cancel"
             }
           ],
           "members": [
@@ -721,9 +725,33 @@
             },
             {
               "kind": "field",
+              "name": "_autoClickTimeout",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_loadingState",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ countdown: null as number | null, interval: undefined as number | undefined, }"
+            },
+            {
+              "kind": "field",
               "name": "button",
               "type": {
                 "text": "HTMLButtonElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "countdownContainer",
+              "type": {
+                "text": "HTMLElement[]"
               }
             },
             {
@@ -990,6 +1018,51 @@
             },
             {
               "kind": "field",
+              "name": "autoClick",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "auto-click"
+            },
+            {
+              "kind": "field",
+              "name": "autoClickDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "attribute": "auto-click-delay"
+            },
+            {
+              "kind": "field",
+              "name": "loadingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading...'",
+              "attribute": "loading-text"
+            },
+            {
+              "kind": "field",
+              "name": "loadingTextPosition",
+              "type": {
+                "text": "'left' | 'right' | 'center' | string"
+              },
+              "default": "'center'",
+              "attribute": "loading-text-position"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "loading"
+            },
+            {
+              "kind": "field",
               "name": "validity",
               "readonly": true
             },
@@ -1040,6 +1113,18 @@
               "kind": "method",
               "name": "_isButton",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "setupAutoClick"
+            },
+            {
+              "kind": "method",
+              "name": "updateCountdownText"
+            },
+            {
+              "kind": "method",
+              "name": "teardownAutoClick"
             }
           ],
           "events": [
@@ -1287,6 +1372,46 @@
                 "text": "string"
               },
               "fieldName": "tooltip"
+            },
+            {
+              "name": "auto-click",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "autoClick"
+            },
+            {
+              "name": "auto-click-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "fieldName": "autoClickDelay"
+            },
+            {
+              "name": "loading-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading...'",
+              "fieldName": "loadingText"
+            },
+            {
+              "name": "loading-text-position",
+              "type": {
+                "text": "'left' | 'right' | 'center' | string"
+              },
+              "default": "'center'",
+              "fieldName": "loadingTextPosition"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "loading"
             }
           ],
           "superclass": {
@@ -1297,7 +1422,7 @@
           "tagNameWithoutPrefix": "button",
           "tagName": "zn-button",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Buttons represent actions that are available to the user.\n * @documentation https://inc.style/components/button\n * @status stable\n * @since 2.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the button loses focus.\n * @event zn-focus - Emitted when the button gains focus.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot - The button's label.\n * @slot prefix - A presentational prefix icon or similar element.\n * @slot suffix - A presentational suffix icon or similar element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart label - The button's label.\n * @csspart suffix - The container that wraps the suffix.\n * @csspart caret - The button's caret icon, an `<zn-icon>` element.\n * @csspart spinner - The spinner that shows when the button is in the loading state.\n */",
+          "jsDoc": "/**\n * @summary Buttons represent actions that are available to the user.\n * @documentation https://inc.style/components/button\n * @status stable\n * @since 2.0\n *\n * @dependency zn-icon\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the button loses focus.\n * @event zn-focus - Emitted when the button gains focus.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot - The button's label.\n * @slot prefix - A presentational prefix icon or similar element.\n * @slot suffix - A presentational suffix icon or similar element.\n * @slot cancel - Slot for custom cancel button/content when autoClick is active.\n *\n * @csspart base - The component's base wrapper.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart label - The button's label.\n * @csspart suffix - The container that wraps the suffix.\n * @csspart caret - The button's caret icon, an `<zn-icon>` element.\n * @csspart spinner - The spinner that shows when the button is in the loading state.\n */",
           "documentation": "https://inc.style/components/button",
           "status": "stable",
           "since": "2.0",

@@ -76,7 +76,7 @@
     },
     {
       "name": "zn-button",
-      "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
+      "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
       "attributes": [
         {
           "name": "color",
@@ -175,7 +175,19 @@
           "values": [{ "name": "modal" }, { "name": "slide" }]
         },
         { "name": "rel", "values": [] },
-        { "name": "tooltip", "values": [] }
+        { "name": "tooltip", "values": [] },
+        { "name": "auto-click", "values": [] },
+        { "name": "auto-click-delay", "values": [] },
+        { "name": "loading-text", "values": [] },
+        {
+          "name": "loading-text-position",
+          "values": [
+            { "name": "left" },
+            { "name": "right" },
+            { "name": "center" }
+          ]
+        },
+        { "name": "loading", "values": [] }
       ],
       "references": [
         {

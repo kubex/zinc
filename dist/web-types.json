@@ -132,7 +132,7 @@
         },
         {
           "name": "zn-button",
-          "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
+          "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
           "doc-url": "",
           "attributes": [
             {
@@ -231,7 +231,30 @@
               "name": "rel",
               "value": { "type": "string", "default": "'noreferrer noopener'" }
             },
-            { "name": "tooltip", "value": { "type": "string" } }
+            { "name": "tooltip", "value": { "type": "string" } },
+            {
+              "name": "auto-click",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "auto-click-delay",
+              "value": { "type": "number", "default": "2000" }
+            },
+            {
+              "name": "loading-text",
+              "value": { "type": "string", "default": "'Loading...'" }
+            },
+            {
+              "name": "loading-text-position",
+              "value": {
+                "type": "'left' | 'right' | 'center' | string",
+                "default": "'center'"
+              }
+            },
+            {
+              "name": "loading",
+              "value": { "type": "boolean", "default": "false" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The button's label." },
@@ -242,6 +265,10 @@
             {
               "name": "suffix",
               "description": "A presentational suffix icon or similar element."
+            },
+            {
+              "name": "cancel",
+              "description": "Slot for custom cancel button/content when autoClick is active."
             }
           ],
           "events": [
@@ -261,6 +288,7 @@
           "js": {
             "properties": [
               { "name": "button", "type": "HTMLButtonElement" },
+              { "name": "countdownContainer", "type": "HTMLElement[]" },
               {
                 "name": "color",
                 "type": "'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star'"
@@ -307,6 +335,14 @@
               { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
               { "name": "rel", "type": "string" },
               { "name": "tooltip", "type": "string" },
+              { "name": "autoClick", "type": "boolean" },
+              { "name": "autoClickDelay", "type": "number" },
+              { "name": "loadingText", "type": "string" },
+              {
+                "name": "loadingTextPosition",
+                "type": "'left' | 'right' | 'center' | string"
+              },
+              { "name": "loading", "type": "boolean" },
               { "name": "validity" },
               { "name": "validationMessage" },
               { "name": "handleClick" }

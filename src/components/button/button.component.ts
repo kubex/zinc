@@ -55,6 +55,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   };
 
   @query('.button') button: HTMLButtonElement;
+  @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
   @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
     'transparent' | 'star' = 'default';
@@ -64,7 +65,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
-
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
@@ -109,8 +109,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     attribute: 'loading-text-position'
   }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
   @property({type: Boolean}) loading = false;
-
-  @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
   get validity() {
     if (this._isButton() && this.button) {

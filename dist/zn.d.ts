@@ -2625,6 +2625,8 @@ declare module "components/data-table/data-table.component" {
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
+        groupBy: string;
+        groups: string;
         selectAllButton: ZnButton;
         private _initialLoad;
         private _lastTableContent;
@@ -2647,6 +2649,8 @@ declare module "components/data-table/data-table.component" {
         changeEventListener: (e: ZnFilterChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
+        humanize(str: string): string;
+        renderTableData(data: any): TemplateResult<1>;
         getTableHeader(): TemplateResult<1>;
         getTableFooter(): TemplateResult<1>;
         getRowsSelected(): TemplateResult<1> | null;

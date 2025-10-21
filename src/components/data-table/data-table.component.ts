@@ -427,6 +427,13 @@ export default class ZnDataTable extends ZincElement {
         }
       });
 
+      // remove empty groups
+      Object.keys(groupedRows).forEach((groupKey) => {
+        if (groupedRows[groupKey].length === 0) {
+          delete groupedRows[groupKey];
+        }
+      });
+
       // render a table for each group
       return html`
         <zn-sp flush>
@@ -608,7 +615,7 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.modify.valueOf())
       || this.hasSlotController.test(ActionSlots.create.valueOf());
 
-    if(!hasSlots) {
+    if (!hasSlots) {
       return [];
     }
 

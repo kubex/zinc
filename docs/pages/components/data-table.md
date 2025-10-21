@@ -30,6 +30,27 @@ fullWidth: true
 
 ## Examples
 
+### Grouping Split Tables
+
+Splits table into groups based on a specified column. (Will request all data upfront)
+
+```html:preview
+
+<zn-data-table data-uri="/data/products-table.json" method="GET" group="category"
+               headers="[{&quot;key&quot;:&quot;name&quot;,&quot;label&quot;:&quot;Name&quot;},
+  {&quot;key&quot;:&quot;category&quot;,&quot;label&quot;:&quot;Category&quot;},
+  {&quot;key&quot;:&quot;price&quot;,&quot;label&quot;:&quot;Price&quot;},
+  {&quot;key&quot;:&quot;discountPercentage&quot;,&quot;label&quot;:&quot;Discount %&quot;},
+  {&quot;key&quot;:&quot;stock&quot;,&quot;label&quot;:&quot;Stock&quot;},
+  {&quot;key&quot;:&quot;rating&quot;,&quot;label&quot;:&quot;Rating&quot;}]">
+
+  <zn-empty-state slot="empty-state" icon="inventory_2" caption="No products found">
+    <p>Use the filters to search for products</p>
+  </zn-empty-state>
+
+</zn-data-table>
+```
+
 ### Filter-top Slot
 
 Add complex filtering options to the top of the table using the `filter-top` slot.

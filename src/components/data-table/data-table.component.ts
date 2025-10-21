@@ -192,6 +192,10 @@ export default class ZnDataTable extends ZincElement {
 
   @property({attribute: "no-initial-load", type: Boolean}) noInitialLoad: boolean = false;
 
+  @property({attribute: 'group-by'}) groupBy = '';
+
+  @property() groups = '';
+
   @query('#select-all-rows') selectAllButton: ZnButton;
 
   // Data Table Properties
@@ -226,6 +230,11 @@ export default class ZnDataTable extends ZincElement {
     task: async ([dataUri, requestParams], {signal}) => {
       if (dataUri === undefined || this.noInitialLoad && this._initialLoad) {
         return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0};
+      }
+
+      if (this.groupBy) {
+        // we want to load all the data possible so we can group and show multiple tables
+        this.itemsPerPage = 1000;
       }
 
       const requestData: DataRequest = {
@@ -392,11 +401,57 @@ export default class ZnDataTable extends ZincElement {
       return this.emptyState();
     }
 
+    this._rows = this.getRows(data);
+
+    if (this.groupBy) {
+      // we need to group the rows by the group column
+      const groupedRows: Record<string, Row[]> = {};
+
+      // add groups to the current rows
+      const toAdd = this.groups.split(',').map(g => g.trim()).filter(g => g.length > 0);
+      toAdd.forEach((group) => {
+        if (!groupedRows[this.humanize(group)]) {
+          groupedRows[this.humanize(group)] = [];
+        }
+      });
+
+      this._rows.forEach((row: Row) => {
+        const groupCell = row.cells.find((cell: Cell) => cell.column === this.groupBy);
+        const groupValue = groupCell ? groupCell.text : 'Ungrouped';
+        if (!groupedRows[this.humanize(groupValue)] && (!this.groups || groupValue === 'Ungrouped')) {
+          groupedRows[this.humanize(groupValue)] = [];
+        }
+
+        if (groupedRows[this.humanize(groupValue)]) {
+          groupedRows[this.humanize(groupValue)].push(row);
+        }
+      });
+
+      // render a table for each group
+      return html`
+        <zn-sp flush>
+          ${Object.keys(groupedRows).map((groupKey) => html`
+            <div class="table-group">
+              <h3 class="table-group__title">${groupKey === "Ungrouped" ? "" : groupKey}</h3>
+              ${this.renderTableData(groupedRows[groupKey])}
+            </div>`
+          )}
+        </zn-sp>
+      `;
+    }
+
+
+    return this.renderTableData(this._rows);
+  }
+
+  public humanize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  public renderTableData(data: any) {
     const filteredHeaders = Object.values(this.headers).filter((header) => {
       return !Object.values(this.hiddenColumns).includes(header.key);
     });
-
-    this._rows = this.getRows(data);
 
     this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
 
@@ -432,7 +487,7 @@ export default class ZnDataTable extends ZincElement {
           </tr>
           </thead>
           <tbody>
-          ${this._rows.map((row: Row) => html`
+          ${data.map((row: Row) => html`
             <tr class="${classMap({'table__row--selected': this.isRowSelected(row)})}">
               ${row.cells.map((value: Cell, index: number) => this.renderCellBody(index, value))}
               ${this.rowHasActions ? this.renderActions(row) : null}

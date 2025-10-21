@@ -4,7 +4,7 @@ import {FormControlController, validValidityState} from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {property, query} from 'lit/decorators.js';
+import {property, query, queryAll} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
@@ -30,6 +30,7 @@ import styles from './button.scss';
  * @slot - The button's label.
  * @slot prefix - A presentational prefix icon or similar element.
  * @slot suffix - A presentational suffix icon or similar element.
+ * @slot cancel - Slot for custom cancel button/content when autoClick is active.
  *
  * @csspart base - The component's base wrapper.
  * @csspart prefix - The container that wraps the prefix.
@@ -47,8 +48,14 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
   private readonly formControlController = new FormControlController(this);
   private readonly hasSlotController = new HasSlotController(this, '[default]');
+  private _autoClickTimeout: number | undefined;
+  private _loadingState = {
+    countdown: null as number | null,
+    interval: undefined as number | undefined,
+  };
 
   @query('.button') button: HTMLButtonElement;
+  @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
   @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
     'transparent' | 'star' = 'default';
@@ -58,7 +65,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
-
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
@@ -94,6 +100,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   // Tooltip Specific
   @property() tooltip: string;
 
+  // Auto Click Specific
+  @property({type: Boolean, attribute: 'auto-click'}) autoClick = false;
+  @property({type: Number, attribute: 'auto-click-delay'}) autoClickDelay = 2000;
+  @property({type: String, attribute: 'loading-text'}) loadingText = 'Loading...';
+  @property({
+    type: String,
+    attribute: 'loading-text-position'
+  }) loadingTextPosition: 'left' | 'right' | 'center' | string = 'center';
+  @property({type: Boolean}) loading = false;
+
   get validity() {
     if (this._isButton() && this.button) {
       return (this.button as HTMLButtonElement).validity;
@@ -101,7 +117,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
     return validValidityState;
   }
-
 
   get validationMessage() {
     if (this._isButton() && this.button) {
@@ -114,6 +129,47 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   firstUpdated() {
     if (this._isButton()) {
       this.formControlController.updateValidity();
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.teardownAutoClick();
+  }
+
+  protected updated(changedProps: Map<string, any>) {
+    super.updated(changedProps);
+    if (changedProps.has('autoClick')) {
+      if (this.autoClick) {
+        this.setupAutoClick();
+      }
+    }
+    if (this.button) {
+      const oldOverlay = this.button.querySelector('.button--loading-fill');
+      if (oldOverlay) {
+        oldOverlay.remove();
+      }
+
+      if (this.loading) {
+        // Add loading overlay
+        const duration = `${this.autoClickDelay / 1000}s`;
+        const overlay = document.createElement('div');
+        overlay.classList.add('button--loading-fill');
+        overlay.setAttribute('style', `--loading-duration: ${duration}`);
+
+        if (this.button.classList.contains('button--transparent')) {
+          overlay.classList.add('button--loading-fill-transparent');
+          this.button.classList.add('button--loading-bg-transparent');
+        }
+
+        this.button.prepend(overlay);
+        this.button.classList.add('button--loading-bg');
+      } else {
+        this.button.classList.remove('button--loading-bg');
+        this.button.classList.remove('button--loading-bg-transparent');
+      }
+
+      this.updateCountdownText();
     }
   }
 
@@ -180,16 +236,82 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     return !this._isLink();
   }
 
+  setupAutoClick() {
+    if (!this.button) return;
+
+    if (this._autoClickTimeout) {
+      window.clearTimeout(this._autoClickTimeout);
+      this._autoClickTimeout = undefined;
+    }
+
+    if (this._loadingState.interval) {
+      window.clearInterval(this._loadingState.interval);
+      this._loadingState.interval = undefined;
+    }
+
+    this.loading = true;
+    this._loadingState.countdown = Math.ceil(this.autoClickDelay / 1000);
+    this.updateCountdownText();
+
+    this._loadingState.interval = window.setInterval(() => {
+      if (this._loadingState.countdown && this._loadingState.countdown > 0) {
+        this._loadingState.countdown--;
+        this.updateCountdownText();
+      }
+    }, 1000);
+
+    this._autoClickTimeout = window.setTimeout(() => {
+      this.loading = false;
+      this._loadingState.countdown = null;
+      this.updateCountdownText();
+
+      if (this._loadingState.interval) {
+        window.clearInterval(this._loadingState.interval);
+        this._loadingState.interval = undefined;
+      }
+
+      this.button?.click();
+    }, this.autoClickDelay);
+  }
+
+  updateCountdownText() {
+    const text = this._loadingState.countdown && this._loadingState.countdown > 0 ? ` (${this._loadingState.countdown}s)` : '';
+    if (this.countdownContainer) {
+      for (const container of this.countdownContainer) {
+        container.textContent = text;
+      }
+    }
+  }
+
+  teardownAutoClick() {
+    if (this._autoClickTimeout) {
+      window.clearTimeout(this._autoClickTimeout);
+      this._autoClickTimeout = undefined;
+    }
+
+    if (this._loadingState.interval) {
+      window.clearInterval(this._loadingState.interval);
+      this._loadingState.interval = undefined;
+    }
+
+    this.loading = false;
+    this._loadingState.countdown = null;
+
+    if (this.button) {
+      this.button.style.width = '';
+    }
+  }
+
   protected render(): unknown {
     const isLink = this._isLink();
-
-    const icon = this.icon ? html`
-      <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
-               color="${this.iconColor ? this.iconColor : null}"></zn-icon>` : '';
-
+    const showCancel = this.loading && this.autoClick;
+    const icon = this.icon && !this.loading ? html`
+        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
+                 color="${this.iconColor ? this.iconColor : null}"></zn-icon>`
+      : '';
     const tag = isLink ? literal`a` : literal`button`;
 
-    let content = html`
+    const buttonContent = html`
       <${tag}
         part="base"
         class="${classMap({
@@ -230,9 +352,45 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         data-notification="${ifDefined(this.notification)}"
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
-        <slot part="label" class="button__label">${this.content}</slot>
+        <slot part="label"
+              class="${classMap({
+                'button__label': true,
+                'button__label--hidden': this.loading
+              })}"
+              style="--loading-duration: ${this.autoClickDelay / 1000}s">
+          ${this.content}
+        </slot>
         ${this.iconPosition === 'right' ? icon : ''}
+        ${this.loading ? html`
+          <div class="button--loading-container">
+            <span
+              class=${classMap({
+                'button--loading-text-bottom': true,
+                'button--loading-text-bottom-transparent': this.color === 'transparent',
+                [`button--loading-text-bottom-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
+              })}>
+              ${this.loadingText}<span class="loading-countdown"></span>
+            </span>
+            <span
+              class=${classMap({
+                'button--loading-text-top': true,
+                'button--loading-text-top-transparent': this.color === 'transparent',
+                [`button--loading-text-top-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
+              })}>
+              ${this.loadingText}<span class="loading-countdown"></span>
+            </span>
+          </div>
+        ` : null}
       </${tag}>`;
+
+    let content = this.autoClick ? html`
+      <div class="button--relative-wrapper">
+        ${buttonContent}
+        ${showCancel ? html`
+          <slot name="cancel" @click="${this.teardownAutoClick}"></slot>
+        ` : null}
+      </div>
+    ` : buttonContent;
 
     if (this.tooltip !== undefined) {
       content = html`

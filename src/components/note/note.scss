@@ -42,11 +42,33 @@ $colors: (
     }
   }
 
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--zn-spacing-3x-small);
+  &__body-container {
+    position: relative;
     max-width: var(--zn-container-md);
+  }
+
+  &__body {
+    display: block;
+  }
+
+  &__body--clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--note-collapse-lines, 0);
+    overflow: hidden;
+  }
+
+  &__toggle {
+    margin-top: var(--zn-spacing-2x-small);
+  }
+
+  &__toggle__btn {
+    background: none;
+    border: none;
+    color: var(--zn-color-primary-500, currentColor);
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
   }
 
   @each $name, $color in $colors {

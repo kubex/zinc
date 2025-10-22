@@ -1131,6 +1131,7 @@ declare module "components/button/button.component" {
         updateCountdownText(): void;
         teardownAutoClick(): void;
         protected render(): unknown;
+        private _getLoadingContainer;
     }
 }
 declare module "components/button/index" {

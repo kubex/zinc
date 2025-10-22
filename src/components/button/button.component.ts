@@ -361,26 +361,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           ${this.content}
         </slot>
         ${this.iconPosition === 'right' ? icon : ''}
-        ${this.loading ? html`
-          <div class="button--loading-container">
-            <span
-              class=${classMap({
-                'button--loading-text-bottom': true,
-                'button--loading-text-bottom-transparent': this.color === 'transparent',
-                [`button--loading-text-bottom-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
-              })}>
-              ${this.loadingText}<span class="loading-countdown"></span>
-            </span>
-            <span
-              class=${classMap({
-                'button--loading-text-top': true,
-                'button--loading-text-top-transparent': this.color === 'transparent',
-                [`button--loading-text-top-${this.loadingTextPosition}`]: !!this.loadingTextPosition,
-              })}>
-              ${this.loadingText}<span class="loading-countdown"></span>
-            </span>
-          </div>
-        ` : null}
+        ${this._getLoadingContainer()}
       </${tag}>`;
 
     let content = this.autoClick ? html`
@@ -400,5 +381,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     }
 
     return content;
+  }
+
+  private _getLoadingContainer() {
+    return html`
+      ${this.loading ? html`
+        <div class="button--loading-container">
+            <span class="button--loading-text">
+              ${this.loadingText}<span class="loading-countdown"></span>
+            </span>
+        </div>
+      ` : null}`;
   }
 }

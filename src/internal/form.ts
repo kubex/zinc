@@ -235,12 +235,50 @@ export class FormControlController implements ReactiveController {
       name.length > 0 &&
       typeof value !== 'undefined'
     ) {
-      if (Array.isArray(value)) {
+      const appendPrimitive = (val: string | number | boolean) => {
+        event.formData.append(name, val.toString());
+      };
+      const appendFile = (file: Blob, filename?: string) => {
+        // If a filename is provided or it's a File (has name), FormData will use it properly
+        const maybeFile = file as unknown as File;
+        const fname = filename ?? (typeof maybeFile.name === 'string' ? maybeFile.name : undefined);
+        // Overloads: append(name, blob, filename?)
+        if (typeof fname === 'string') {
+          event.formData.append(name, file, fname);
+        } else {
+          event.formData.append(name, file);
+        }
+      };
+
+      const isFileList = (val: unknown): val is FileList => typeof FileList !== 'undefined' && val instanceof FileList;
+      const isBlob = (val: unknown): val is Blob => typeof Blob !== 'undefined' && val instanceof Blob;
+
+      if (isFileList(value)) {
+        // Match native input[type=file] behavior: append each File; if empty, append nothing
+        if (value.length > 0) {
+          for (let i = 0; i < value.length; i++) {
+            const f = value.item(i);
+            if (f) appendFile(f, f.name);
+          }
+        }
+      } else if (isBlob(value)) {
+        appendFile(value, (value as unknown as File).name);
+      } else if (Array.isArray(value)) {
         (value as unknown[]).forEach(val => {
-          event.formData.append(name, (val as string | number | boolean).toString());
+          if (isBlob(val)) {
+            appendFile(val as Blob, (val as unknown as File).name);
+          } else if (isFileList(val)) {
+            const fl = val as FileList;
+            for (let i = 0; i < fl.length; i++) {
+              const f = fl.item(i);
+              if (f) appendFile(f, f.name);
+            }
+          } else {
+            appendPrimitive(val as string | number | boolean);
+          }
         });
       } else {
-        event.formData.append(name, (value as string | number | boolean).toString());
+        appendPrimitive(value as string | number | boolean);
       }
 
       this.host.dispatchEvent(new CustomEvent('zn-formdata', {bubbles: true, composed: true}));

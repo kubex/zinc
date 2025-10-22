@@ -31,6 +31,7 @@ export default class ZnPanel extends ZincElement {
   @property() icon: string;
   @property() description: string;
   @property({type: Boolean}) tabbed: boolean;
+  @property({attribute: 'header-underline', type: Boolean}) underlineHeader: boolean;
   @property({type: Boolean}) cosmic: boolean;
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
@@ -94,7 +95,10 @@ export default class ZnPanel extends ZincElement {
 
         <div class="panel__inner">
           ${hasHeader ? html`
-            <zn-header class="panel__header"
+            <zn-header class="${classMap({
+              "panel__header": true,
+              "panel__header--underline": this.underlineHeader,
+            })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
                        description="${ifDefined(this.description)}"

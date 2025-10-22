@@ -3479,6 +3479,7 @@ declare module "components/panel/panel.component" {
         icon: string;
         description: string;
         tabbed: boolean;
+        underlineHeader: boolean;
         cosmic: boolean;
         flush: boolean;
         flushX: boolean;

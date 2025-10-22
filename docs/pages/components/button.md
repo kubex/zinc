@@ -34,6 +34,20 @@ The `auto-click` attribute can be added to a button to make it automatically cli
     color="transparent"
   ></zn-button>
 </zn-button auto-click>
+
+<br>
+<br>
+
+<zn-button color="success" auto-click auto-click-delay="10000" loading-text="Accepting">
+  Test Auto Button
+  <zn-style slot="cancel" margin="l">
+    <zn-button
+      icon="call_end"
+      icon-size="18"
+      type="button"
+      color="error"
+    ></zn-button></zn-style>
+</zn-button>
 ```
 
 ### Variants

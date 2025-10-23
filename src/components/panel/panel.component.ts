@@ -38,6 +38,7 @@ export default class ZnPanel extends ZincElement {
   @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
   @property({attribute: 'flush-footer', type: Boolean}) flushFooter: boolean;
   @property({type: Boolean}) transparent: boolean;
+  @property({type: Boolean}) shadow: boolean;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -79,7 +80,7 @@ export default class ZnPanel extends ZincElement {
     const hasHeader = this.caption || hasActionSlot;
 
     return html`
-      <div part="base" class="${classMap({
+      <div class="${classMap({
         panel: true,
         'panel--flush': this.flush || this.tabbed,
         'panel--flush-x': this.flushX,
@@ -90,7 +91,8 @@ export default class ZnPanel extends ZincElement {
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
         'panel--has-header': hasHeader,
-        'panel--cosmic': this.cosmic
+        'panel--cosmic': this.cosmic,
+        'panel--shadow': this.shadow
       })}">
 
         <div class="panel__inner">

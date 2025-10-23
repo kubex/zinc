@@ -2577,6 +2577,8 @@ declare module "components/data-table/data-table.component" {
         default?: boolean;
         sortable?: boolean;
         filterable?: boolean;
+        hideHeader?: boolean;
+        hideColumn?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.

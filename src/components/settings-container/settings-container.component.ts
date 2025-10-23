@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
 import {property, state} from "lit/decorators.js";
 import {Store} from "../../internal/storage";
 import {type ZnChangeEvent} from "../../events/zn-change";
@@ -7,7 +8,6 @@ import ZincElement from '../../internal/zinc-element';
 import type ZnCheckbox from "../checkbox";
 
 import styles from './settings-container.scss';
-import {deepQuerySelectorAll} from "../../utilities/query";
 
 interface SettingsContainerFilter {
   attribute: string;

@@ -31,7 +31,6 @@
   padding: 4px;
   background: rgba(var(--zn-panel, 0.8));
   box-shadow: var(--zn-shadow-small);
-  transition: bottom 0.2s ease;
   opacity: 0.7;
   transition-duration: 0.3s;
   transition-property: opacity;
@@ -70,13 +69,15 @@
   opacity: 1;
 }
 
+.setting-container__toggle-button::part(icon) {
+  rotate: 0deg;
+  transition: rotate 0.9s ease-in-out, color 0.9s ease-in-out;
+}
+
 .setting-container__dropdown[open] .setting-container__toggle-button::part(icon), .setting-container__toggle-button:hover::part(icon) {
   color: rgb(var(--zn-primary));
   cursor: pointer;
-  transition-duration: 0.9s;
-  transition-property: rotate, color;
   rotate: 380deg;
-  transition-timing-function: ease-in-out;
 }
 
 zn-button {

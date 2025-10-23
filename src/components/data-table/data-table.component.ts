@@ -90,6 +90,8 @@ interface HeaderConfig {
   default?: boolean;
   sortable?: boolean;
   filterable?: boolean;
+  hideHeader?: boolean;
+  hideColumn?: boolean;
 }
 
 interface DataRequest {
@@ -456,7 +458,10 @@ export default class ZnDataTable extends ZincElement {
   }
 
   public renderTableData(data: any) {
-    const filteredHeaders = Object.values(this.headers).filter((header) => {
+    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+      if (header.hideHeader || header.hideColumn) {
+        return false;
+      }
       return !Object.values(this.hiddenColumns).includes(header.key);
     });
 
@@ -916,6 +921,13 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellBody(index: number, value: Cell) {
+    const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+      if (header.hideHeader || header.hideColumn) {
+        return false;
+      }
+      return !Object.values(this.hiddenColumns).includes(header.key);
+    });
+
     const headerKeys: string[] = Object.keys(this.headers).filter(
       (key) => !Object.values(this.hiddenColumns).includes(key)
     );
@@ -927,7 +939,7 @@ export default class ZnDataTable extends ZincElement {
         class="${classMap({
           'table__cell': true,
           'table__cell--wide': headerKey === this.wideColumn,
-          'table__cell--last': headerKey === headerKeys[headerKeys.length - 1],
+          'table__cell--last': index === filteredHeaders.length - 1,
         })}">
         <div>${this.renderCell(value)}</div>
       </td>`;

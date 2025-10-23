@@ -6401,6 +6401,7 @@ declare module "components/settings-container/settings-container.component" {
         updateFilters(): void;
         updateFilter(e: ZnChangeEvent): void;
         render(): import("lit").TemplateResult<1>;
+        private getDropdownContent;
     }
 }
 declare module "components/settings-container/index" {

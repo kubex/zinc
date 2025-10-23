@@ -202,25 +202,31 @@ export default class ZnSettingsContainer extends ZincElement {
         </div>
         <zn-dropdown placement="${placement}" class="${classMap({
           'setting-container__dropdown': true,
-          'setting-container__dropdown--top-end': this.position === 'top-end',
-          'setting-container__dropdown--top-start': this.position === 'top-start',
-          'setting-container__dropdown--bottom-end': this.position === 'bottom-end',
-          'setting-container__dropdown--bottom-start': this.position === 'bottom-start',
+          [`setting-container__dropdown--${this.position}`]: true,
         })}">
           <zn-icon class="setting-container__toggle-button" slot="trigger" size="24" src="settings" round></zn-icon>
-          <div class="settings-container__dropdown-content">
-            <slot name="filter" style="display: none;" @slotchange="${this.handleFiltersSlotChange}"></slot>
-            ${this.filters.map(filter => html`
-              <zn-checkbox class="settings-container__dropdown-item"
-                           data-attribute="${filter.attribute}"
-                           ?checked="${filter.checked}"
-                           @zn-change="${this.updateFilter}">
-                ${filter.label}
-              </zn-checkbox>
-            `)}
-          </div>
+          ${this.getDropdownContent()}
         </zn-dropdown>
       </div>
     `;
+  }
+
+  private getDropdownContent() {
+    const hasDropdownContent = this.querySelector('[slot="dropdown-content"]');
+    if (hasDropdownContent) {
+      return html`
+        <slot name="dropdown-content"></slot>`;
+    }
+    return html`
+      <div class="settings-container__dropdown-content">
+        <slot name="filter" style="display: none;" @slotchange="${this.handleFiltersSlotChange}"></slot>
+        ${this.filters.map(filter => html`
+          <zn-checkbox class="settings-container__dropdown-item"
+                       data-attribute="${filter.attribute}"
+                       .checked=${filter.checked}
+                       @zn-change=${this.updateFilter}>
+            ${filter.label}
+          </zn-checkbox>`)}
+      </div>`;
   }
 }

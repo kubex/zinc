@@ -575,6 +575,7 @@ declare module "components/menu-item/menu-item.component" {
         dataTarget: 'modal' | 'slide' | string;
         rel: string;
         gaid: string;
+        confirm: boolean;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;

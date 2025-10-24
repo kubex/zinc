@@ -76,6 +76,8 @@ export default class ZnMenuItem extends ZincElement {
 
   @property({attribute: 'gaid'}) gaid: string;
 
+  @property({type: Boolean, reflect: true}) confirm = false;
+
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
   private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
@@ -118,6 +120,8 @@ export default class ZnMenuItem extends ZincElement {
     if (!this.isSubmenu()) {
       const composedPath = event.composedPath();
       const closestMenu: Element | null = composedPath.find((el: Element) => el?.getAttribute?.('role') === 'menu') as Element;
+      if (this.confirm) return;
+
       (closestMenu?.closest('zn-dropdown') as ZnDropdown | null)?.hide();
       this.emit('zn-menu-select', {detail: {value: this.value, element: this}});
     }

@@ -112,7 +112,8 @@ export default class ZnMenu extends ZincElement {
                           action="${item.confirm?.action}"></zn-confirm>
               <zn-menu-item @mousedown=${this.handleMouseDown}
                             @keydown=${this.handleKeyDown}
-                            id="${item.confirm?.trigger}">
+                            id="${item.confirm?.trigger}"
+                            confirm>
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                 ${item.title}

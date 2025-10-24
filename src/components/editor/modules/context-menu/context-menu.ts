@@ -199,7 +199,7 @@ class ContextMenu {
           Quill.sources.USER
         );
 
-        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length(), 0, Quill.sources.SILENT), 0);
+        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length()+1, 0, Quill.sources.SILENT), 0);
       }
       this._quill.focus();
       this.hide();

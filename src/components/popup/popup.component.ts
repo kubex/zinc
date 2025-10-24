@@ -1,22 +1,11 @@
-import {
-  arrow,
-  autoUpdate,
-  computePosition,
-  flip,
-  offset,
-  platform,
-  shift,
-  size
-} from '@floating-ui/dom';
+import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';
 import {offsetParent} from 'composed-offset-position';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
-import type {
-  MiddlewareData
-} from '@floating-ui/dom';
+import type {MiddlewareData} from '@floating-ui/dom';
 
 import styles from './popup.scss';
 
@@ -210,7 +199,9 @@ export default class ZnPopup extends ZincElement {
 
     // Start the positioner after the first update
     await this.updateComplete;
-    this.start();
+    if (this.active) {
+      this.start();
+    }
   }
 
   disconnectedCallback() {

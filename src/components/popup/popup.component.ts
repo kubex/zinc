@@ -251,7 +251,7 @@ export default class ZnPopup extends ZincElement {
     }
 
     // If the anchor is valid, start it up
-    if (this.anchorEl) {
+    if (this.anchorEl && this.active) {
       this.start();
     }
   }
@@ -261,7 +261,6 @@ export default class ZnPopup extends ZincElement {
     if (!this.anchorEl) {
       return;
     }
-
     this.cleanup = autoUpdate(this.anchorEl, this.popup, () => {
       this.reposition();
     });
@@ -518,26 +517,26 @@ export default class ZnPopup extends ZincElement {
 
   render() {
     return html`
-      <slot class="anchor" name="anchor" @slotchange=${this.handleAnchorChange}></slot>
+      <slot class="anchor" name="anchor" @slotchange="${this.handleAnchorChange}"></slot>
 
       <span
         part="hover-bridge"
-        class=${classMap({
+        class="${classMap({
           'popup-hover-bridge': true,
           'popup-hover-bridge--visible': this.hoverBridge && this.active
-        })}
+        })}"
       ></span>
 
       <div
         id="popup"
         part="popup"
         popover
-        class=${classMap({
+        class="${classMap({
           popup: true,
           'popup--active': this.active,
           'popup--fixed': this.strategy === 'fixed',
           'popup--has-arrow': this.arrow
-        })}
+        })}"
       >
         <slot></slot>
         ${this.arrow ? html`

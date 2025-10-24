@@ -191,14 +191,14 @@ export default class ZnTooltip extends ZincElement {
       <zn-popup
         part="base"
         exportparts="popup:base__popup,arrow:base__arrow"
-        class=${classMap({
+        class="${classMap({
           tooltip: true,
           'tooltip--open': this.open
-        })}
-        placement=${this.placement}
-        distance=${this.distance}
-        skidding=${this.skidding}
-        strategy=${this.hoist ? 'fixed' : 'absolute'}
+        })}"
+        placement="${this.placement}"
+        distance="${this.distance}"
+        skidding="${this.skidding}"
+        strategy="${this.hoist ? 'fixed' : 'absolute'}"
         flip
         shift
         arrow
@@ -206,7 +206,7 @@ export default class ZnTooltip extends ZincElement {
         <slot slot="anchor"></slot>
         <div part="body" id="tooltip" class="tooltip__body"
              role="tooltip"
-             aria-live=${this.open ? 'polite' : 'off'}
+             aria-live="${this.open ? 'polite' : 'off'}"
              aria-label="tooltip">
           <slot name="content">${this.content}</slot>
         </div>

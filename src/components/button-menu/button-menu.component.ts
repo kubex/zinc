@@ -307,6 +307,7 @@ export default class ZnButtonMenu extends ZincElement {
   public setDynamicButtons(btns: NodeListOf<ZnButton>) {
     // remove all buttons that have the zn-button-menu__added class
     this.removeAllButtons();
+    if (!btns || btns.length === 0) return;
 
     // add the new buttons
     btns.forEach((button: ZnButton) => {

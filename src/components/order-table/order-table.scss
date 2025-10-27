@@ -2,13 +2,16 @@
 
 
 .table {
-  display: table;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
 
 .header {
-  display: table-header-group;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .header-item, .row-item {
@@ -32,11 +35,17 @@
   }
 
   @include wc.container-query(md) {
-    display: table-cell;
+    flex: 1;
     border-bottom: 1px solid rgb(var(--zn-border-color));
 
     &:first-child {
-      width: 50%;
+      width: 35%;
+      flex-basis: 35%;
+      align-items: flex-start;
+
+      &.row-caption {
+        text-align: left;
+      }
     }
 
     &:last-child {
@@ -66,6 +75,7 @@
   font-size: 14px;
   font-weight: 600;
   color: rgb(var(--zn-text-heading));
+  white-space: nowrap;
 }
 
 .row-caption .content {
@@ -78,10 +88,8 @@
 
 .rows {
   width: 100%;
-
-  @include wc.container-query(md) {
-    display: table-row-group;
-  }
+  display: flex;
+  flex-direction: column;
 }
 
 .row {
@@ -91,7 +99,6 @@
   width: 100%;
 
   @include wc.container-query(md) {
-    display: table-row;
     border-bottom: none;
   }
 }
@@ -111,7 +118,6 @@
   width: 100%;
 
   @include wc.container-query(md) {
-    display: table-row;
     border-bottom: none;
   }
 }

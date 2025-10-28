@@ -78,17 +78,17 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
-  /* Permission Attributes */
-  @property({attribute: 'code-blocks-enabled', type: Boolean}) codeBlocksEnabled: boolean = false;
-  @property({attribute: 'dividers-enabled', type: Boolean}) dividersEnabled: boolean = false;
-  @property({attribute: 'links-enabled', type: Boolean}) linksEnabled: boolean = false;
-  @property({attribute: 'attachments-enabled', type: Boolean}) attachmentsEnabled: boolean = false;
-  @property({attribute: 'images-enabled', type: Boolean}) imagesEnabled: boolean = false;
-  @property({attribute: 'videos-enabled', type: Boolean}) videosEnabled: boolean = false;
-  @property({attribute: 'dates-enabled', type: Boolean}) datesEnabled: boolean = false;
-  @property({attribute: 'emojis-enabled', type: Boolean}) emojisEnabled: boolean = false;
-  @property({attribute: 'code-enabled', type: Boolean}) codeEnabled: boolean = false;
-  @property({attribute: 'ai-enabled', type: Boolean}) aiEnabled: boolean = false;
+  /* Feature Permission Attributes */
+  @property({attribute: 'code-blocks', type: Boolean}) codeBlocksEnabled: boolean = false;
+  @property({attribute: 'dividers', type: Boolean}) dividersEnabled: boolean = false;
+  @property({attribute: 'links', type: Boolean}) linksEnabled: boolean = false;
+  @property({attribute: 'attachments', type: Boolean}) attachmentsEnabled: boolean = false;
+  @property({attribute: 'images', type: Boolean}) imagesEnabled: boolean = false;
+  @property({attribute: 'videos', type: Boolean}) videosEnabled: boolean = false;
+  @property({attribute: 'dates', type: Boolean}) datesEnabled: boolean = false;
+  @property({attribute: 'emojis', type: Boolean}) emojisEnabled: boolean = false;
+  @property({attribute: 'code', type: Boolean}) codeEnabled: boolean = false;
+  @property({attribute: 'ai', type: Boolean}) aiEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
   private quillElement: Quill;

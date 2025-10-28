@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -8056,7 +8056,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "code-blocks-enabled"
+              "attribute": "code-blocks"
             },
             {
               "kind": "field",
@@ -8065,7 +8065,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "dividers-enabled"
+              "attribute": "dividers"
             },
             {
               "kind": "field",
@@ -8074,7 +8074,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "links-enabled"
+              "attribute": "links"
             },
             {
               "kind": "field",
@@ -8083,7 +8083,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "attachments-enabled"
+              "attribute": "attachments"
             },
             {
               "kind": "field",
@@ -8092,7 +8092,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "images-enabled"
+              "attribute": "images"
             },
             {
               "kind": "field",
@@ -8101,7 +8101,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "videos-enabled"
+              "attribute": "videos"
             },
             {
               "kind": "field",
@@ -8110,7 +8110,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "dates-enabled"
+              "attribute": "dates"
             },
             {
               "kind": "field",
@@ -8119,7 +8119,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "emojis-enabled"
+              "attribute": "emojis"
             },
             {
               "kind": "field",
@@ -8128,7 +8128,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "code-enabled"
+              "attribute": "code"
             },
             {
               "kind": "field",
@@ -8137,7 +8137,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "ai-enabled"
+              "attribute": "ai"
             },
             {
               "kind": "field",
@@ -8327,7 +8327,7 @@
               "fieldName": "uploadAttachmentUrl"
             },
             {
-              "name": "code-blocks-enabled",
+              "name": "code-blocks",
               "type": {
                 "text": "boolean"
               },
@@ -8335,7 +8335,7 @@
               "fieldName": "codeBlocksEnabled"
             },
             {
-              "name": "dividers-enabled",
+              "name": "dividers",
               "type": {
                 "text": "boolean"
               },
@@ -8343,7 +8343,7 @@
               "fieldName": "dividersEnabled"
             },
             {
-              "name": "links-enabled",
+              "name": "links",
               "type": {
                 "text": "boolean"
               },
@@ -8351,7 +8351,7 @@
               "fieldName": "linksEnabled"
             },
             {
-              "name": "attachments-enabled",
+              "name": "attachments",
               "type": {
                 "text": "boolean"
               },
@@ -8359,7 +8359,7 @@
               "fieldName": "attachmentsEnabled"
             },
             {
-              "name": "images-enabled",
+              "name": "images",
               "type": {
                 "text": "boolean"
               },
@@ -8367,7 +8367,7 @@
               "fieldName": "imagesEnabled"
             },
             {
-              "name": "videos-enabled",
+              "name": "videos",
               "type": {
                 "text": "boolean"
               },
@@ -8375,7 +8375,7 @@
               "fieldName": "videosEnabled"
             },
             {
-              "name": "dates-enabled",
+              "name": "dates",
               "type": {
                 "text": "boolean"
               },
@@ -8383,7 +8383,7 @@
               "fieldName": "datesEnabled"
             },
             {
-              "name": "emojis-enabled",
+              "name": "emojis",
               "type": {
                 "text": "boolean"
               },
@@ -8391,7 +8391,7 @@
               "fieldName": "emojisEnabled"
             },
             {
-              "name": "code-enabled",
+              "name": "code",
               "type": {
                 "text": "boolean"
               },
@@ -8399,7 +8399,7 @@
               "fieldName": "codeEnabled"
             },
             {
-              "name": "ai-enabled",
+              "name": "ai",
               "type": {
                 "text": "boolean"
               },

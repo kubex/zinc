@@ -4171,6 +4171,7 @@ declare module "components/editor/modules/toolbar/tool/index" {
 declare module "components/editor/modules/toolbar/toolbar.component" {
     import { type CSSResultGroup, type PropertyValues } from "lit";
     import ZincElement from "internal/zinc-element";
+    import type { EditorFeatureConfig } from "components/editor/editor.component";
     export default class ToolbarComponent extends ZincElement {
         static styles: CSSResultGroup;
         containerWidth: number;
@@ -4178,6 +4179,7 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _groups;
         private _overflowMenu;
         private _overflowGroup;
+        private _featureConfig;
         private _resizeObserver;
         private _resizeId;
         private _movedContent;
@@ -4185,6 +4187,7 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleResize: () => void;
+        configureToolbar(config: EditorFeatureConfig): void;
         private getToolbarWidth;
         private getOverflowGroupWidth;
         private restoreMovedContent;
@@ -4256,6 +4259,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
     import "components/editor/modules/toolbar/toolbar.component";
     import Quill from "quill";
     import QuillToolbar from "quill/modules/toolbar";
+    import type { EditorFeatureConfig } from "components/editor/editor.component";
     import type ToolbarComponent from "components/editor/modules/toolbar/toolbar.component";
     class Toolbar extends QuillToolbar {
         private readonly _quill;
@@ -4265,6 +4269,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         constructor(quill: Quill, options: {
             container: ToolbarComponent;
             handlers?: Record<string, (value?: any) => void>;
+            config?: EditorFeatureConfig;
         });
         callFormat(key: string, value?: string | boolean | undefined): void;
         trigger(key: string): void;
@@ -4367,6 +4372,7 @@ declare module "components/editor/modules/context-menu/quick-action/index" {
 declare module "components/editor/modules/context-menu/context-menu" {
     import "components/editor/modules/context-menu/context-menu-component";
     import Quill from "quill";
+    import type { EditorFeatureConfig } from "components/editor/editor.component";
     class ContextMenu {
         private _quill;
         private readonly _toolbarModule;
@@ -4374,7 +4380,10 @@ declare module "components/editor/modules/context-menu/context-menu" {
         private _startIndex;
         private _keydownHandler;
         private _docClickHandler;
-        constructor(quill: Quill);
+        private _featureConfig;
+        constructor(quill: Quill, options: {
+            config: EditorFeatureConfig;
+        });
         private initComponent;
         private attachEvents;
         private createComponent;
@@ -4741,6 +4750,17 @@ declare module "components/editor/editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
+    export interface EditorFeatureConfig {
+        codeBlocksEnabled?: boolean;
+        dividersEnabled?: boolean;
+        linksEnabled?: boolean;
+        attachmentsEnabled?: boolean;
+        imagesEnabled?: boolean;
+        videosEnabled?: boolean;
+        datesEnabled?: boolean;
+        emojisEnabled?: boolean;
+        codeEnabled?: boolean;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/editor
@@ -4769,6 +4789,15 @@ declare module "components/editor/editor.component" {
         value: string;
         interactionType: 'ticket' | 'chat';
         uploadAttachmentUrl: string;
+        codeBlocksEnabled: boolean;
+        dividersEnabled: boolean;
+        linksEnabled: boolean;
+        attachmentsEnabled: boolean;
+        imagesEnabled: boolean;
+        videosEnabled: boolean;
+        datesEnabled: boolean;
+        emojisEnabled: boolean;
+        codeEnabled: boolean;
         aiEnabled: boolean;
         aiPath: string;
         private quillElement;

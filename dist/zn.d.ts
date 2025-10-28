@@ -4331,6 +4331,7 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
         format?: string;
         key?: string;
         value?: string | boolean;
+        order?: number;
     }
     export default class ContextMenuComponent extends ZincElement {
         static styles: CSSResultGroup;
@@ -4356,6 +4357,7 @@ declare module "components/editor/modules/context-menu/quick-action/quick-action
         content: string;
         key: string;
         icon: string;
+        order?: number | null;
         render(): import("lit").TemplateResult<1>;
     }
 }

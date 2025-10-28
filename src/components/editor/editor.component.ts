@@ -25,6 +25,18 @@ import type ToolbarComponent from "./modules/toolbar/toolbar.component";
 
 import styles from './editor.scss';
 
+export interface EditorFeatureConfig {
+  codeBlocksEnabled?: boolean;
+  dividersEnabled?: boolean;
+  linksEnabled?: boolean;
+  attachmentsEnabled?: boolean;
+  imagesEnabled?: boolean;
+  videosEnabled?: boolean;
+  datesEnabled?: boolean;
+  emojisEnabled?: boolean;
+  codeEnabled?: boolean;
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/editor
@@ -66,7 +78,17 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
-  @property({attribute: 'ai-enabled', type: Boolean, reflect: true}) aiEnabled: boolean = false;
+  /* Permission Attributes */
+  @property({attribute: 'code-blocks-enabled', type: Boolean}) codeBlocksEnabled: boolean = false;
+  @property({attribute: 'dividers-enabled', type: Boolean}) dividersEnabled: boolean = false;
+  @property({attribute: 'links-enabled', type: Boolean}) linksEnabled: boolean = false;
+  @property({attribute: 'attachments-enabled', type: Boolean}) attachmentsEnabled: boolean = false;
+  @property({attribute: 'images-enabled', type: Boolean}) imagesEnabled: boolean = false;
+  @property({attribute: 'videos-enabled', type: Boolean}) videosEnabled: boolean = false;
+  @property({attribute: 'dates-enabled', type: Boolean}) datesEnabled: boolean = false;
+  @property({attribute: 'emojis-enabled', type: Boolean}) emojisEnabled: boolean = false;
+  @property({attribute: 'code-enabled', type: Boolean}) codeEnabled: boolean = false;
+  @property({attribute: 'ai-enabled', type: Boolean}) aiEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
   private quillElement: Quill;
@@ -112,10 +134,16 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     });
 
     Quill.register({'modules/toolbar': Toolbar}, true);
-    Quill.register({'modules/datePicker': DatePicker}, true);
-    Quill.register({'modules/emoji': Emoji}, true);
-    Quill.register({'modules/headlessEmoji': HeadlessEmoji}, true);
-    Quill.register({'modules/attachment': Attachment}, true);
+    if (this.datesEnabled) {
+      Quill.register({'modules/datePicker': DatePicker}, true);
+    }
+    if (this.emojisEnabled) {
+      Quill.register({'modules/emoji': Emoji}, true);
+      Quill.register({'modules/headlessEmoji': HeadlessEmoji}, true);
+    }
+    if (this.attachmentsEnabled) {
+      Quill.register({'modules/attachment': Attachment}, true);
+    }
     Quill.register({'modules/timeTracking': TimeTracking}, true);
     Quill.register({'modules/dragAndDrop': DragAndDrop}, true);
     Quill.register({'modules/imageResize': ImageResize}, true);
@@ -128,41 +156,61 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     }
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
-    const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
+    if (this.dividersEnabled) {
+      const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
 
-    class HrBlot extends BlockEmbed {
-      static blotName = 'hr';
-      static tagName = 'HR';
-      static className = 'ql-hr';
+      class HrBlot extends BlockEmbed {
+        static blotName = 'hr';
+        static tagName = 'HR';
+        static className = 'ql-hr';
 
-      static create(): HTMLElement {
-        const node = document.createElement('hr');
-        node.classList.add('ql-hr');
-        return node;
+        static create(): HTMLElement {
+          const node = document.createElement('hr');
+          node.classList.add('ql-hr');
+          return node;
+        }
       }
+
+      Quill.register({'formats/hr': HrBlot}, true);
     }
 
-    Quill.register({'formats/hr': HrBlot}, true);
-
-    const attachmentInput = this.getForm()?.querySelector('input[name="attachments"]');
     const startTimeInput = this.getForm()?.querySelector('input[name="startTime"]');
     const openTimeInput = this.getForm()?.querySelector('input[name="openTime"]');
+
+    const featureConfig: EditorFeatureConfig = {
+      codeBlocksEnabled: this.codeBlocksEnabled,
+      dividersEnabled: this.dividersEnabled,
+      linksEnabled: this.linksEnabled,
+      attachmentsEnabled: this.attachmentsEnabled,
+      imagesEnabled: this.imagesEnabled,
+      videosEnabled: this.videosEnabled,
+      datesEnabled: this.datesEnabled,
+      emojisEnabled: this.emojisEnabled,
+      codeEnabled: this.codeEnabled,
+    };
 
     const quill = new Quill(this.editor, {
       modules: {
         toolbar: {
           container: this.toolbar,
+          config: featureConfig
         },
-        contextMenu: {},
+        contextMenu: {
+          config: featureConfig
+        },
         keyboard: {
           bindings: bindings
         },
         dialog: {
           editorId: this.id
         },
-        emoji: {},
-        headlessEmoji: {},
-        datePicker: {},
+        ...(this.datesEnabled && {
+          datePicker: {}
+        }),
+        ...(this.emojisEnabled && {
+          emoji: {},
+          headlessEmoji: {},
+        }),
         ...(this.aiEnabled && {
           ai: {
             path: this.aiPath
@@ -172,35 +220,37 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           startTimeInput: startTimeInput as HTMLInputElement,
           openTimeInput: openTimeInput as HTMLInputElement
         },
-        attachment: {
-          attachmentInput: attachmentInput,
-          onFileUploaded: () => {
-            window.onbeforeunload = () => null;
-          },
-          upload: (file: File) => {
-            window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
-            return new Promise((resolve) => {
-              const fd = new FormData();
-              fd.append('filename', file.name);
-              fd.append('size', file.size.toString());
-              fd.append('mimeType', file.type);
+        ...(this.attachmentsEnabled && {
+          attachment: {
+            attachmentInput: this.getForm()?.querySelector('input[name="attachments"]'),
+            onFileUploaded: () => {
+              window.onbeforeunload = () => null;
+            },
+            upload: (file: File) => {
+              window.onbeforeunload = () => 'You have unsaved changes. Are you sure you want to leave?';
+              return new Promise((resolve) => {
+                const fd = new FormData();
+                fd.append('filename', file.name);
+                fd.append('size', file.size.toString());
+                fd.append('mimeType', file.type);
 
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', this.uploadAttachmentUrl, true);
-              xhr.onload = () => {
-                if (xhr.status === 200) {
-                  const response = JSON.parse(xhr.responseText) as {
-                    uploadPath: string;
-                    uploadUrl: string;
-                    originalFilename: string;
-                  };
-                  resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
-                }
-              };
-              xhr.send(fd);
-            });
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', this.uploadAttachmentUrl, true);
+                xhr.onload = () => {
+                  if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText) as {
+                      uploadPath: string;
+                      uploadUrl: string;
+                      originalFilename: string;
+                    };
+                    resolve({path: response.uploadPath, url: response.uploadUrl, filename: response.originalFilename});
+                  }
+                };
+                xhr.send(fd);
+              });
+            },
           },
-        },
+        }),
         imageResize: {},
         history: {}
       },
@@ -344,7 +394,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
           const emoji = this.quillElement.getModule('headlessEmoji') as HeadlessEmoji;
           const menu = this.quillElement.getModule('contextMenu') as ContextMenu;
           const dialog = this.quillElement.getModule('dialog') as Dialog;
-          if (emoji.isOpen() || menu.isOpen() || dialog.isOpen()) {
+          if (emoji?.isOpen() || menu?.isOpen() || dialog?.isOpen()) {
             return false;
           }
 

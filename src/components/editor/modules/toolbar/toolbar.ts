@@ -1,6 +1,7 @@
 import './toolbar.component';
 import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
+import type {EditorFeatureConfig} from "../../editor.component";
 import type Attachment from "../attachment/attachment";
 import type DialogComponent from "../dialog/dialog.component";
 import type Emoji from "../emoji/emoji";
@@ -17,20 +18,34 @@ class Toolbar extends QuillToolbar {
   constructor(quill: Quill, options: {
     container: ToolbarComponent;
     handlers?: Record<string, (value?: any) => void>;
+    config?: EditorFeatureConfig;
   }) {
     super(quill, options);
 
+    const featureConfig = options.config;
+
     // Add handlers after parent Toolbar initialization
-    this.addHandler('attachment', () => null);
-    this.addHandler('date', () => this._openDatePicker());
-    this.addHandler('divider', () => this._insertDivider());
+    if (featureConfig?.attachmentsEnabled) {
+      this.addHandler('attachment', () => null);
+    }
+    if (featureConfig?.datesEnabled) {
+      this.addHandler('date', () => this._openDatePicker());
+    }
+    if (featureConfig?.dividersEnabled) {
+      this.addHandler('divider', () => this._insertDivider());
+    }
+    if (featureConfig?.imagesEnabled) {
+      this.addHandler('image', () => this._addImage());
+    }
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
     this.addHandler('dialog', (value: string) => this._openDialog(value));
-    this.addHandler('image', () => this._addImage());
 
     this._quill = quill;
     this._component = options.container;
+    if (featureConfig) {
+      this._component.configureToolbar(featureConfig)
+    }
 
     this._component.updateComplete.then(() => {
       this._attachToolbarHandlers();

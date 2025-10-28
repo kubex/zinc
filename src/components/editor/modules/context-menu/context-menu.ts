@@ -4,6 +4,7 @@ import {litToHTML} from "../../../../utilities/lit-to-html";
 import {type ResultItem} from "./context-menu-component";
 import Quill, {Delta} from "quill";
 import ZnEditorQuickAction from "./quick-action";
+import type {EditorFeatureConfig} from "../../editor.component";
 import type ContextMenuComponent from "./context-menu-component";
 import type Toolbar from "../toolbar/toolbar";
 
@@ -14,10 +15,12 @@ class ContextMenu {
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
+  private _featureConfig: EditorFeatureConfig = {};
 
-  constructor(quill: Quill) {
+  constructor(quill: Quill, options: { config: EditorFeatureConfig }) {
     this._quill = quill;
     this._toolbarModule = quill.getModule('toolbar') as Toolbar;
+    this._featureConfig = options.config || {};
 
     this.initComponent();
     this.attachEvents();
@@ -199,7 +202,7 @@ class ContextMenu {
           Quill.sources.USER
         );
 
-        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length()+1, 0, Quill.sources.SILENT), 0);
+        setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length() + 1, 0, Quill.sources.SILENT), 0);
       }
       this._quill.focus();
       this.hide();
@@ -248,29 +251,47 @@ class ContextMenu {
       });
     }
 
-    // 2) Built-in Actions
+    // 2) Built-in Actions (In order they should appear)
     options.push(
       {icon: 'format_bold', label: 'Bold', format: 'bold'},
       {icon: 'format_italic', label: 'Italic', format: 'italic'},
       {icon: 'format_underlined', label: 'Underline', format: 'underline'},
       {icon: 'strikethrough_s', label: 'Strikethrough', format: 'strike'},
       {icon: 'format_quote', label: 'Blockquote', format: 'blockquote'},
-      {icon: 'code', label: 'Inline Code', format: 'code'},
-      {icon: 'code_blocks', label: 'Code Block', format: 'code-block'},
+    );
+    if (this._featureConfig.codeEnabled !== false) {
+      options.push({icon: 'code', label: 'Inline Code', format: 'code'});
+    }
+    if (this._featureConfig.codeBlocksEnabled !== false) {
+      options.push({icon: 'code_blocks', label: 'Code Block', format: 'code-block'});
+    }
+    options.push(
       {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1'},
       {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2'},
       {icon: 'match_case', label: 'Normal Text', format: 'header', value: ''},
       {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet'},
       {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered'},
-      {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'},
-      {icon: 'link', label: 'Link', format: 'link', value: true},
-      {icon: 'horizontal_rule', label: 'Divider', format: 'divider'},
-      {icon: 'attachment', label: 'Attachment', format: 'attachment'},
-      {icon: 'image', label: 'Image', format: 'image'},
-      {icon: 'video_camera_back', label: 'Video', format: 'video'},
-      {icon: 'calendar_today', label: 'Date', format: 'date'},
-      {icon: 'format_clear', label: 'Clear Formatting', format: 'clean'}
+      {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'}
     );
+    if (this._featureConfig.linksEnabled !== false) {
+      options.push({icon: 'link', label: 'Link', format: 'link', value: true});
+    }
+    if (this._featureConfig.dividersEnabled !== false) {
+      options.push({icon: 'horizontal_rule', label: 'Divider', format: 'divider'});
+    }
+    if (this._featureConfig.attachmentsEnabled !== false) {
+      options.push({icon: 'attachment', label: 'Attachment', format: 'attachment'});
+    }
+    if (this._featureConfig.imagesEnabled !== false) {
+      options.push({icon: 'image', label: 'Image', format: 'image'});
+    }
+    if (this._featureConfig.videosEnabled !== false) {
+      options.push({icon: 'video_camera_back', label: 'Video', format: 'video'});
+    }
+    if (this._featureConfig.datesEnabled !== false) {
+      options.push({icon: 'calendar_today', label: 'Date', format: 'date'});
+    }
+    options.push({icon: 'format_clear', label: 'Clear Formatting', format: 'clean'});
 
     return options;
   }

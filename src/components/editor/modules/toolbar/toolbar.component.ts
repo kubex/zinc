@@ -6,6 +6,7 @@ import ZnButton from "../../../button";
 import ZnEditorTool from "./tool";
 import ZnMenu from "../../../menu";
 import ZnMenuItem from "../../../menu-item";
+import type {EditorFeatureConfig} from "../../editor.component";
 
 import styles from './toolbar.scss';
 
@@ -22,6 +23,7 @@ export default class ToolbarComponent extends ZincElement {
   @query('.toolbar__overflow-menu') private _overflowMenu!: HTMLElement;
   @query('.toolbar__group--overflow') private _overflowGroup!: HTMLElement;
 
+  private _featureConfig: EditorFeatureConfig = {};
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeId: number | null = null;
 
@@ -76,6 +78,10 @@ export default class ToolbarComponent extends ZincElement {
       this.calculateOverflow();
       this._resizeId = null;
     });
+  }
+
+  public configureToolbar(config: EditorFeatureConfig) {
+    this._featureConfig = config;
   }
 
   private getToolbarWidth() {
@@ -456,6 +462,13 @@ export default class ToolbarComponent extends ZincElement {
   }
 
   render() {
+    const showInsertOptions = this._featureConfig.dividersEnabled ||
+      this._featureConfig.linksEnabled ||
+      this._featureConfig.attachmentsEnabled ||
+      this._featureConfig.imagesEnabled ||
+      this._featureConfig.videosEnabled;
+    const showInsertGroup = showInsertOptions || this._featureConfig.datesEnabled || this._featureConfig.emojisEnabled;
+
     return html`
       <div class="toolbar">
         <div class="toolbar__group">${this._textOptions()}</div>
@@ -463,11 +476,12 @@ export default class ToolbarComponent extends ZincElement {
         <div class="toolbar__group">${this._historyOptions()}</div>
         <div class="toolbar__group">${this._colorOptions()}</div>
         <div class="toolbar__group">${this._listOptions()}</div>
-        <div class="toolbar__group">
-          ${this._insertOptions()}
-          ${this._dateOption()}
-          ${this._emojiOptions()}
-        </div>
+        ${showInsertGroup ? html`
+          <div class="toolbar__group">
+            ${showInsertOptions ? html`${this._insertOptions()}` : ''}
+            ${this._featureConfig.datesEnabled ? html`${this._dateOption()}` : ''}
+            ${this._featureConfig.emojisEnabled ? html`${this._emojiOptions()}` : ''}
+          </div>` : ''}
         <div class="toolbar__group">
           <slot></slot>
         </div>
@@ -550,14 +564,18 @@ export default class ToolbarComponent extends ZincElement {
             <zn-icon src="format_quote" size="18" slot="prefix"></zn-icon>
             Quote
           </zn-menu-item>
-          <zn-menu-item type="checkbox" checked-position="right" data-format="code">
-            <zn-icon src="code" size="18" slot="prefix"></zn-icon>
-            Code
-          </zn-menu-item>
-          <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
-            <zn-icon src="code_blocks" size="18" slot="prefix"></zn-icon>
-            Code Block
-          </zn-menu-item>
+          ${this._featureConfig.codeEnabled ? html`
+            <zn-menu-item type="checkbox" checked-position="right" data-format="code">
+              <zn-icon src="code" size="18" slot="prefix"></zn-icon>
+              Code
+            </zn-menu-item>
+          ` : ''}
+          ${this._featureConfig.codeBlocksEnabled ? html`
+            <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
+              <zn-icon src="code_blocks" size="18" slot="prefix"></zn-icon>
+              Code Block
+            </zn-menu-item>
+          ` : ''}
           <zn-menu-item data-format="clean">
             <zn-icon src="format_clear" size="18" slot="prefix"></zn-icon>
             Clear Formatting
@@ -680,26 +698,36 @@ export default class ToolbarComponent extends ZincElement {
           <zn-icon src="add" size="18"></zn-icon>
         </zn-button>
         <zn-menu>
-          <zn-menu-item checked-position="right" data-format="divider">
-            <zn-icon src="horizontal_rule" size="18" slot="prefix"></zn-icon>
-            Divider
-          </zn-menu-item>
-          <zn-menu-item checked-position="right" data-format="link">
-            <zn-icon src="link" size="18" slot="prefix"></zn-icon>
-            Link
-          </zn-menu-item>
-          <zn-menu-item checked-position="right" data-format="attachment">
-            <zn-icon src="attachment" size="18" slot="prefix"></zn-icon>
-            Attachment
-          </zn-menu-item>
-          <zn-menu-item checked-position="right" data-format="image">
-            <zn-icon src="image" size="18" slot="prefix"></zn-icon>
-            Image
-          </zn-menu-item>
-          <zn-menu-item checked-position="right" data-format="video">
-            <zn-icon src="video_camera_back" size="18" slot="prefix"></zn-icon>
-            Video
-          </zn-menu-item>
+          ${this._featureConfig.dividersEnabled ? html`
+            <zn-menu-item checked-position="right" data-format="divider">
+              <zn-icon src="horizontal_rule" size="18" slot="prefix"></zn-icon>
+              Divider
+            </zn-menu-item>
+          ` : ''}
+          ${this._featureConfig.linksEnabled ? html`
+            <zn-menu-item checked-position="right" data-format="link">
+              <zn-icon src="link" size="18" slot="prefix"></zn-icon>
+              Link
+            </zn-menu-item>
+          ` : ''}
+          ${this._featureConfig.attachmentsEnabled ? html`
+            <zn-menu-item checked-position="right" data-format="attachment">
+              <zn-icon src="attachment" size="18" slot="prefix"></zn-icon>
+              Attachment
+            </zn-menu-item>
+          ` : ''}
+          ${this._featureConfig.imagesEnabled ? html`
+            <zn-menu-item checked-position="right" data-format="image">
+              <zn-icon src="image" size="18" slot="prefix"></zn-icon>
+              Image
+            </zn-menu-item>
+          ` : ''}
+          ${this._featureConfig.videosEnabled ? html`
+            <zn-menu-item checked-position="right" data-format="video">
+              <zn-icon src="video_camera_back" size="18" slot="prefix"></zn-icon>
+              Video
+            </zn-menu-item>
+          ` : ''}
         </zn-menu>
       </zn-dropdown>`;
   }

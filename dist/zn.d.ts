@@ -4769,6 +4769,7 @@ declare module "components/editor/editor.component" {
         value: string;
         interactionType: 'ticket' | 'chat';
         uploadAttachmentUrl: string;
+        aiEnabled: boolean;
         aiPath: string;
         private quillElement;
         private _content;

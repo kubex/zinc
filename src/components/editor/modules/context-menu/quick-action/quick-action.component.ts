@@ -8,6 +8,7 @@ export default class ZnEditorQuickAction extends ZincElement {
   @property() content: string;
   @property() key: string;
   @property() icon: string;
+  @property({type: Number}) order?: number | null;
 
   render() {
     return html`

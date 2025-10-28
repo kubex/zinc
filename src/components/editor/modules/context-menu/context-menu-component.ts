@@ -10,6 +10,7 @@ export interface ResultItem {
   format?: string;
   key?: string;
   value?: string | boolean;
+  order?: number;
 }
 
 export default class ContextMenuComponent extends ZincElement {

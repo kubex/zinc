@@ -228,6 +228,7 @@ class ContextMenu {
 
   private _getOptions(): ResultItem[] {
     const options: ResultItem[] = [];
+    let orderCounter = 0;
 
     // 1) Quick Actions
     const root = this._quill.container.getRootNode() as ShadowRoot;
@@ -239,13 +240,20 @@ class ContextMenu {
 
         const {label, content, uri, icon, key} = quickAction;
 
+        let order: number;
+        if (typeof quickAction.order === 'number') {
+          order = quickAction.order!;
+        } else {
+          order = orderCounter++;
+        }
+
         if (label && icon) {
           if (key) {
-            options.push({icon, label, format: 'toolbar', key: key});
+            options.push({icon, label, format: 'toolbar', key: key, order});
           } else if (uri) {
-            options.push({icon, label, format: 'dialog', value: uri});
+            options.push({icon, label, format: 'dialog', value: uri, order});
           } else if (content) {
-            options.push({icon, label, format: 'insert', value: content});
+            options.push({icon, label, format: 'insert', value: content, order});
           }
         }
       });
@@ -253,45 +261,48 @@ class ContextMenu {
 
     // 2) Built-in Actions (In order they should appear)
     options.push(
-      {icon: 'format_bold', label: 'Bold', format: 'bold'},
-      {icon: 'format_italic', label: 'Italic', format: 'italic'},
-      {icon: 'format_underlined', label: 'Underline', format: 'underline'},
-      {icon: 'strikethrough_s', label: 'Strikethrough', format: 'strike'},
-      {icon: 'format_quote', label: 'Blockquote', format: 'blockquote'},
+      {icon: 'format_bold', label: 'Bold', format: 'bold', order: orderCounter++},
+      {icon: 'format_italic', label: 'Italic', format: 'italic', order: orderCounter++},
+      {icon: 'format_underlined', label: 'Underline', format: 'underline', order: orderCounter++},
+      {icon: 'strikethrough_s', label: 'Strikethrough', format: 'strike', order: orderCounter++},
+      {icon: 'format_quote', label: 'Blockquote', format: 'blockquote', order: orderCounter++},
     );
     if (this._featureConfig.codeEnabled !== false) {
-      options.push({icon: 'code', label: 'Inline Code', format: 'code'});
+      options.push({icon: 'code', label: 'Inline Code', format: 'code', order: orderCounter++});
     }
     if (this._featureConfig.codeBlocksEnabled !== false) {
-      options.push({icon: 'code_blocks', label: 'Code Block', format: 'code-block'});
+      options.push({icon: 'code_blocks', label: 'Code Block', format: 'code-block', order: orderCounter++});
     }
     options.push(
-      {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1'},
-      {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2'},
-      {icon: 'match_case', label: 'Normal Text', format: 'header', value: ''},
-      {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet'},
-      {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered'},
-      {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked'}
+      {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1', order: orderCounter++},
+      {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2', order: orderCounter++},
+      {icon: 'match_case', label: 'Normal Text', format: 'header', value: '', order: orderCounter++},
+      {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet', order: orderCounter++},
+      {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered', order: orderCounter++},
+      {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked', order: orderCounter++}
     );
     if (this._featureConfig.linksEnabled !== false) {
-      options.push({icon: 'link', label: 'Link', format: 'link', value: true});
+      options.push({icon: 'link', label: 'Link', format: 'link', value: true, order: orderCounter++});
     }
     if (this._featureConfig.dividersEnabled !== false) {
-      options.push({icon: 'horizontal_rule', label: 'Divider', format: 'divider'});
+      options.push({icon: 'horizontal_rule', label: 'Divider', format: 'divider', order: orderCounter++});
     }
     if (this._featureConfig.attachmentsEnabled !== false) {
-      options.push({icon: 'attachment', label: 'Attachment', format: 'attachment'});
+      options.push({icon: 'attachment', label: 'Attachment', format: 'attachment', order: orderCounter++});
     }
     if (this._featureConfig.imagesEnabled !== false) {
-      options.push({icon: 'image', label: 'Image', format: 'image'});
+      options.push({icon: 'image', label: 'Image', format: 'image', order: orderCounter++});
     }
     if (this._featureConfig.videosEnabled !== false) {
-      options.push({icon: 'video_camera_back', label: 'Video', format: 'video'});
+      options.push({icon: 'video_camera_back', label: 'Video', format: 'video', order: orderCounter++});
     }
     if (this._featureConfig.datesEnabled !== false) {
-      options.push({icon: 'calendar_today', label: 'Date', format: 'date'});
+      options.push({icon: 'calendar_today', label: 'Date', format: 'date', order: orderCounter++});
     }
-    options.push({icon: 'format_clear', label: 'Clear Formatting', format: 'clean'});
+    options.push({icon: 'format_clear', label: 'Clear Formatting', format: 'clean', order: orderCounter++});
+
+    // Sort options by order property
+    options.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
     return options;
   }

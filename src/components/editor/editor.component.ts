@@ -66,6 +66,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   @property({attribute: 'attachment-url', type: String})
   uploadAttachmentUrl: string;
 
+  @property({attribute: 'ai-enabled', type: Boolean, reflect: true}) aiEnabled: boolean = false;
   @property({attribute: 'ai-path'}) aiPath: string = '';
 
   private quillElement: Quill;
@@ -122,7 +123,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     Quill.register({'modules/dialog': Dialog}, true);
 
     /* AI Modules */
-    Quill.register('modules/ai', QuillAI as any, true);
+    if (this.aiEnabled) {
+      Quill.register('modules/ai', QuillAI as any, true);
+    }
 
     // Register a custom HR blot so we can insert an inline horizontal rule block
     const BlockEmbed = Quill.import('blots/block/embed') as { new(...args: any[]): any };
@@ -160,9 +163,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
         emoji: {},
         headlessEmoji: {},
         datePicker: {},
-        ai: {
-          path: this.aiPath
-        },
+        ...(this.aiEnabled && {
+          ai: {
+            path: this.aiPath
+          }
+        }),
         timeTracking: {
           startTimeInput: startTimeInput as HTMLInputElement,
           openTimeInput: openTimeInput as HTMLInputElement

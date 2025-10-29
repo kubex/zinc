@@ -127,7 +127,18 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
-  @property({attribute: 'value'}) defaultValue: string | string[] = '';
+  @property({
+    attribute: 'value',
+    converter: {
+      fromAttribute: (value) => {
+        if (!value || Array.isArray(value)) return value
+        return value.includes(' ') ? value.split(' ') : value;
+      },
+      toAttribute: (value) => {
+        return Array.isArray(value) ? value.join(' ') : value;
+      }
+    }
+  }) defaultValue: string | string[] = '';
 
   /** The select's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -234,9 +245,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   connectedCallback() {
     super.connectedCallback();
 
-    setTimeout(() => {
-      this.handleDefaultSlotChange();
-    });
+    this.updateComplete.then(() => this.handleDefaultSlotChange());
 
     // Because this is a form control, it shouldn't be opened initially
     this.open = false;

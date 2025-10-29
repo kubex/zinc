@@ -414,6 +414,7 @@ declare module "components/popup/popup.component" {
         disconnectedCallback(): void;
         updated(changedProps: Map<string, unknown>): Promise<void>;
         private handleAnchorChange;
+        handleAnchorHover: () => void;
         private start;
         private stop;
         /** Forces the popup to recalculate and reposition itself. */

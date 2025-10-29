@@ -251,7 +251,14 @@ export default class ZnPopup extends ZincElement {
     }
 
     // If the anchor is valid, start it up
-    if (this.anchorEl && this.active) {
+    if (this.anchorEl && !this.active && this.anchorEl instanceof Element) {
+      this.anchorEl.removeEventListener('mouseover', this.handleAnchorHover);
+      this.anchorEl.addEventListener('mouseover', this.handleAnchorHover);
+    }
+  }
+
+  public handleAnchorHover = () => {
+    if (!this.active) {
       this.start();
     }
   }

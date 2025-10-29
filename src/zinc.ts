@@ -79,10 +79,16 @@ export {default as Skeleton} from './components/skeleton';
 export {default as Style} from './components/style';
 export {default as ContentBlock} from './components/content-block';
 export {default as FilterWrapper} from './components/filter-wrapper';
-export { default as SettingsContainer } from './components/settings-container';
+export {default as SettingsContainer} from './components/settings-container';
 /* plop:component */
 
+// Base Component
+export * from './internal/zinc-element';
+
 // Utilities
+export * from './utilities/on';
+export * from './utilities/query';
+export * from './utilities/lit-to-html';
 
 // Events
 export * from './events/events';

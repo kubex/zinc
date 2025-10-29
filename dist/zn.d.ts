@@ -6588,7 +6588,7 @@ declare module "zinc" {
     export { default as ContentBlock } from "components/content-block/index";
     export { default as FilterWrapper } from "components/filter-wrapper/index";
     export { default as SettingsContainer } from "components/settings-container/index";
-    export * from "internal/zinc-element";
+    export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";
     export * from "utilities/lit-to-html";

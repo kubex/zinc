@@ -83,7 +83,7 @@ export {default as SettingsContainer} from './components/settings-container';
 /* plop:component */
 
 // Base Component
-export * from './internal/zinc-element';
+export {default as ZincElement} from './internal/zinc-element';
 
 // Utilities
 export * from './utilities/on';

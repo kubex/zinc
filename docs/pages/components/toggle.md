@@ -6,14 +6,17 @@ layout: component
 ---
 
 ```html:preview
-<zn-toggle on-text="On" off-text="off" label="Renew?"></zn-toggle>
+<zn-toggle></zn-toggle>
 ```
 
 ## Examples
 
-### First Example
+### With Tooltip
 
-TODO
+```html:preview
+
+<zn-toggle on-text="Available" off-text="Unavailable" label="Status"></zn-toggle>
+```
 
 ### Second Example
 

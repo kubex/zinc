@@ -163,6 +163,34 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         />`;
     }
 
+    const tooltipContent = this.checked ? this.onText : this.offText;
+    const showTooltip = !!tooltipContent;
+
+    const toggle = html`
+      <div class="switch__input-wrapper" part="base">
+        ${fallback}
+        <input
+          class="switch__input"
+          type="checkbox"
+          title=${this.title}
+          name=${this.name}
+          value=${ifDefined(this.value)}
+          .checked=${live(this.checked)}
+          .disabled=${this.disabled}
+          .required=${this.required}
+          role="switch"
+          aria-checked=${this.checked ? 'true' : 'false'}
+          aria-describedby="help-text"
+          @click=${this.handleClick}
+          @input=${this.handleInput}
+          @invalid=${this.handleInvalid}
+          @blur=${this.handleBlur}
+          @focus=${this.handleFocus}
+          @keydown=${this.handleKeyDown}
+        />
+        <span part="control" class="switch__control"></span>
+      </div>`;
+
     return html`
       <div class="${classMap({
         'switch__wrapper': true,
@@ -174,29 +202,11 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
       })}">
         <label>
           ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}
-          <div class="switch__input-wrapper" part="base">
-            ${fallback}
-            <input
-              class="switch__input"
-              type="checkbox"
-              title=${this.title}
-              name=${this.name}
-              value=${ifDefined(this.value)}
-              .checked=${live(this.checked)}
-              .disabled=${this.disabled}
-              .required=${this.required}
-              role="switch"
-              aria-checked=${this.checked ? 'true' : 'false'}
-              aria-describedby="help-text"
-              @click=${this.handleClick}
-              @input=${this.handleInput}
-              @invalid=${this.handleInvalid}
-              @blur=${this.handleBlur}
-              @focus=${this.handleFocus}
-              @keydown=${this.handleKeyDown}
-            />
-            <span part="control" class="switch__control"></span>
-          </div>
+          ${!showTooltip ? html`
+            ${toggle}` : html`
+            <zn-tooltip content="${tooltipContent}">
+              ${toggle}
+            </zn-tooltip>`}
         </label>
       </div>`;
   }

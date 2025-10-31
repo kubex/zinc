@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>Timer</title>
+    <title>Hover Container</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,8 +12,8 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/timer" />
-    <meta property="og:title" content="Timer" />
+    <meta property="og:url" content="https://zinc.style/components/hover-container" />
+    <meta property="og:title" content="Hover Container" />
     <meta property="og:description" content="" />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -251,7 +251,7 @@
               </li>
 
               <li>
-                <a href="/components/hover-container"> Hover Container </a>
+                <a href="/components/hover-container" class="active-link"> Hover Container </a>
               </li>
 
               <li>
@@ -419,7 +419,7 @@
               </li>
 
               <li>
-                <a href="/components/timer" class="active-link"> Timer </a>
+                <a href="/components/timer"> Timer </a>
               </li>
 
               <li>
@@ -448,25 +448,22 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Timer</a></li>
+            <li class="top"><a href="#">Hover Container</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#first-example">First Example</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
-            <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Timer</h1>
+            <h1>Hover Container</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-timer&gt; | ZnTimer</code>
+              <code>&lt;zn-hover-container&gt; | ZnHoverContainer</code>
             </div>
 
             <div class="component-header__info">
@@ -475,21 +472,24 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            The HoverContainer component is used to display additional information when a user hovers over or clicks on
+            an element.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-timer timestamp="1743070352"></zn-timer>
+              <zn-hover-container></zn-hover-container>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-244">
+            <div class="code-preview__source-group" id="code-preview-source-group-117">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-467"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-timer</span> <span class="token attr-name">timestamp</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1743070352<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-timer</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-467"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-213"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-hover-container</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-hover-container</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-213"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -498,7 +498,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-244"
+                aria-controls="code-preview-source-group-117"
               >
                 Source
                 <svg
@@ -548,7 +548,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-468"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.12/dist/components/timer/timer.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-468"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-214"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.12/dist/components/hover-container/hover-container.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-214"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -563,12 +563,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-469"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.12/dist/components/timer/timer.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-469"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-215"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.12/dist/components/hover-container/hover-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-215"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-470"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/timer/timer.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-470"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-216"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/hover-container/hover-container.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-216"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -584,14 +584,14 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
+                  <td>The content of the hover-container</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
-                    <code>example</code>
+                    <code>anchor</code>
                   </td>
-                  <td>An example slot.</td>
+                  <td>The anchor the hover-container is attached to.</td>
                 </tr>
               </tbody>
             </table>
@@ -615,9 +615,30 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-show</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the hover-container is shown.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-after-show</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted after the hover-container is shown.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-hide</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the hover-container is hidden.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-after-hide</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted after the hover-container is hidden.</td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -627,69 +648,6 @@
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
           </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
-          </p>
-
-          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
-          </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

@@ -2051,10 +2051,10 @@ declare module "components/select/index" {
 }
 declare module "components/data-select/data-select.component" {
     import { type DataProviderOption, type LocalDataProvider } from "components/data-select/providers/provider";
-    import { type CSSResultGroup, PropertyValues } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnSelect from "components/select/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2109,6 +2109,7 @@ declare module "components/data-select/data-select.component" {
         /** The selects required attribute. */
         required: boolean;
         iconOnly: boolean;
+        multiple: boolean;
         protected readonly formControlController: FormControlController;
         get validationMessage(): string;
         get validity(): ValidityState;

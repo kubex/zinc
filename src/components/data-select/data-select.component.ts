@@ -7,12 +7,12 @@ import {
   emptyDataProvider,
   type LocalDataProvider,
 } from "./providers/provider";
-import {type CSSResultGroup, html, nothing, unsafeCSS, PropertyValues} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
@@ -92,6 +92,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   @property({type: Boolean, reflect: true}) required = false;
 
   @property({attribute: "icon-only", type: Boolean, reflect: true}) iconOnly = false;
+
+  @property({type: Boolean}) multiple = false;
 
   protected readonly formControlController = new FormControlController(this);
 
@@ -215,6 +217,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}
                  value="${this.value}"
+                 ?multiple=${this.multiple}
                  placeholder="${this.getPlaceholder(localProvider)}"
                  exportparts="combobox,expand-icon,form-control-help-text,form-control-input,display-input">
         ${(this.iconPosition !== 'none' || this.iconOnly) ? html`

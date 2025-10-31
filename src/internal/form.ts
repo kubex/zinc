@@ -309,6 +309,11 @@ export class FormControlController implements ReactiveController {
           ? this.form?.getAttribute('data-loading-text') || 'Processing...'
           : content;
       }, 20);
+
+      setTimeout(() => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = content;
+      }, 5000);
     }
 
     if (this.form && !this.form.noValidate && !disabled && !reportValidity(this.host)) {

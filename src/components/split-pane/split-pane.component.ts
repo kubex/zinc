@@ -106,7 +106,8 @@ export default class ZnSplitPane extends ZincElement {
 
     this.mouseMoveHandler = function (e: any) {
       let offset = (this.vertical ? e.y : e.x);
-      if (e instanceof TouchEvent) {
+      //'touches' in e fixes Safari
+      if ('touches' in e && e instanceof TouchEvent) {
         offset = (this.vertical ? e.touches[0].clientY : e.touches[0].clientX);
       }
       this.setSize(offset - pageOffset);

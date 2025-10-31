@@ -79,6 +79,26 @@ export default class ZnFilterContainer extends ZincElement {
       });
     }
 
+    // if nothing is visible, show a "no results found" message
+    const anyVisibleElements = Array.from(filterableElements).some((el) => {
+      return (el as HTMLElement).style.display !== 'none';
+    });
+
+    let noResultsMessage = this.querySelector('.no-results-message') as HTMLElement;
+    if (!anyVisibleElements) {
+      if (!noResultsMessage) {
+        noResultsMessage = document.createElement('div');
+        noResultsMessage.className = 'no-results-message';
+        noResultsMessage.textContent = 'No results found';
+        this.appendChild(noResultsMessage);
+      }
+      noResultsMessage.style.display = '';
+    } else {
+      if (noResultsMessage) {
+        noResultsMessage.style.display = 'none';
+      }
+    }
+
   }
 
   render() {

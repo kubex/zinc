@@ -6,6 +6,7 @@ import {property, query} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
+import topLayerManager from '../../utilities/top-layer-manager';
 import ZincElement from '../../internal/zinc-element';
 import type {ZnSelectEvent} from "../../events/zn-select";
 import type ZnButton from "../button";
@@ -324,6 +325,7 @@ export default class ZnDropdown extends ZincElement {
 
     if (this.open) {
       this.emit('zn-show');
+      topLayerManager.registerDropdown(this);
       this.addOpenListeners();
       this.panel.hidden = false;
       this.popup.active = true;
@@ -331,6 +333,7 @@ export default class ZnDropdown extends ZincElement {
       this.emit('zn-after-show');
     } else {
       this.emit('zn-hide');
+      topLayerManager.unregisterDropdown(this);
       this.removeOpenListeners();
       this.panel.blur();
       this.panel.hidden = true;

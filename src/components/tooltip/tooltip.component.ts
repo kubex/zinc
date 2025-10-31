@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
+import topLayerManager from '../../utilities/top-layer-manager';
 import ZincElement from '../../internal/zinc-element';
 import type Popup from "../popup";
 
@@ -82,13 +83,13 @@ export default class ZnTooltip extends ZincElement {
   }
 
   private handleBlur = () => {
-    if (this.hasTrigger('focus')) {
+    if (this.hasTrigger('focus') && !topLayerManager.isDropdownOpen()) {
       this.hide();
     }
   };
 
   private handleClick = () => {
-    if (this.hasTrigger('click')) {
+    if (this.hasTrigger('click') && !topLayerManager.isDropdownOpen()) {
       if (this.open) {
         this.hide()
       }
@@ -97,7 +98,7 @@ export default class ZnTooltip extends ZincElement {
   };
 
   private handleFocus = () => {
-    if (this.hasTrigger('focus')) {
+    if (this.hasTrigger('focus') && !topLayerManager.isDropdownOpen()) {
       this.show();
     }
   };
@@ -110,14 +111,14 @@ export default class ZnTooltip extends ZincElement {
   };
 
   private handleMouseOver() {
-    if (this.hasTrigger('hover')) {
+    if (this.hasTrigger('hover') && !topLayerManager.isDropdownOpen()) {
       clearTimeout(this.hoverTimeout);
       this.hoverTimeout = window.setTimeout(() => this.show(), 0);
     }
   }
 
   private handleMouseOut() {
-    if (this.hasTrigger('hover')) {
+    if (this.hasTrigger('hover') && !topLayerManager.isDropdownOpen()) {
       clearTimeout(this.hoverTimeout);
       this.hoverTimeout = window.setTimeout(() => this.hide(), 0);
     }
@@ -126,6 +127,8 @@ export default class ZnTooltip extends ZincElement {
   @watch('open', {waitUntilFirstUpdate: true})
   handleOpenChange() {
     if (this.open) {
+      topLayerManager.registerTooltip(this);
+
       if (this.disabled) {
         return;
       }
@@ -145,6 +148,8 @@ export default class ZnTooltip extends ZincElement {
       this.popup.reposition();
       this.emit('zn-after-show');
     } else {
+      topLayerManager.unregisterTooltip(this);
+
       this.emit('zn-hide');
       this.popup.active = false;
       this.body.hidden = true;

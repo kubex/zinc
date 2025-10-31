@@ -313,7 +313,7 @@ export class FormControlController implements ReactiveController {
       setTimeout(() => {
         submitButton.disabled = false;
         submitButton.innerHTML = content;
-      }, 5000);
+      }, 15000);
     }
 
     if (this.form && !this.form.noValidate && !disabled && !reportValidity(this.host)) {

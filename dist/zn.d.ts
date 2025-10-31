@@ -255,6 +255,20 @@ declare module "internal/watch" {
      */
     export function watch(propertyName: string | string[], options?: WatchOptions): <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => void;
 }
+declare module "utilities/top-layer-manager" {
+    class TopLayerManager {
+        private openDropdowns;
+        private openTooltips;
+        registerDropdown(el: HTMLElement): void;
+        unregisterDropdown(el: HTMLElement): void;
+        isDropdownOpen(): boolean;
+        registerTooltip(el: HTMLElement): void;
+        unregisterTooltip(el: HTMLElement): void;
+        isTooltipOpen(): boolean;
+    }
+    const topLayerManager: TopLayerManager;
+    export default topLayerManager;
+}
 declare module "translations/en" {
     import { type Translation } from "utilities/localize";
     const translation: Translation;

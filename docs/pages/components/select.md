@@ -124,7 +124,7 @@ the most common for selects), include an empty option that people can select to 
 :::
 
 ```html:preview
-<zn-select label="Clearable multi-choice select" clearable multiple value="option-1 option-2" help-text="For multi-choice selects only, display an icon button to let people clear their selections">
+<zn-select label="Clearable multi-choice select" clearable multiple help-text="For multi-choice selects only, display an icon button to let people clear their selections">
   <zn-option value="option-1">Option 1</zn-option>
   <zn-option value="option-2">Option 2</zn-option>
   <zn-option value="option-3">Option 3</zn-option>

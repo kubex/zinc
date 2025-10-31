@@ -20,17 +20,9 @@
   line-height: var(--zn-line-height-normal);
   letter-spacing: var(--zn-letter-spacing-normal);
   color: var(--zn-input-color);
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-2x-large) var(--zn-spacing-x-small) var(--zn-spacing-2x-small);
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
   transition: var(--zn-transition-fast) fill;
   cursor: pointer;
-}
-
-.option--singular:not(.option--selected) {
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-2x-large) var(--zn-spacing-x-small) var(--zn-spacing-large);
-
-  zn-icon {
-    display: none;
-  }
 }
 
 
@@ -71,6 +63,10 @@
 
 .option--selected .option__check {
   visibility: visible;
+}
+
+.option--selected {
+  background-color: var(--zn-color-primary-200);
 }
 
 .option__prefix,

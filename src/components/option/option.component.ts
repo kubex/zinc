@@ -140,15 +140,15 @@ export default class ZnOption extends ZincElement {
         })}
         @mouseenter=${this.handleMouseEnter}
         @mouseleave=${this.handleMouseLeave}>
+        <slot part="prefix" name="prefix" class="option__prefix"></slot>
+        <slot part="label" class="option__label" @slotchange=${this.handleDefaultSlotChange}></slot>
+        <slot part="suffix" name="suffix" class="option__suffix"></slot>
         <zn-icon
           part="checked-option-icon"
           class="option__check"
           src="check_small"
           aria-hidden="true"
         ></zn-icon>
-        <slot part="prefix" name="prefix" class="option__prefix"></slot>
-        <slot part="label" class="option__label" @slotchange=${this.handleDefaultSlotChange}></slot>
-        <slot part="suffix" name="suffix" class="option__suffix"></slot>
       </div>
     `;
   }

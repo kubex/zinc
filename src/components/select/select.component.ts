@@ -10,11 +10,11 @@ import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
 import type ZnOption from "../option";
 
@@ -228,6 +228,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         removable
         @zn-remove=${(event: ZnRemoveEvent) => this.handleTagRemove(event, option)}>
         ${option.getTextLabel()}
+        <zn-icon slot="action" src="close" size="16"
+                 @click=${(e: any) => this.handleTagRemove(e as ZnRemoveEvent, option)}></zn-icon>
       </zn-chip>
     `;
   };
@@ -448,10 +450,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   private handleComboboxMouseDown(event: MouseEvent) {
     const path = event.composedPath();
-    const isIconButton = path.some(el => el instanceof Element && el.tagName.toLowerCase() === 'zn-icon-button');
+    const isIcon = path.some(el => el instanceof Element && el.tagName.toLowerCase() === 'zn-icon');
 
     // Ignore disabled controls and clicks on tags (remove buttons)
-    if (this.disabled || isIconButton) {
+    if (this.disabled || isIcon) {
       return;
     }
 
@@ -550,6 +552,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   private handleTagRemove(event: ZnRemoveEvent, option: ZnOption) {
     event.stopPropagation();
+    event.stopImmediatePropagation();
 
     if (!this.disabled) {
       this.toggleOptionSelection(option, false);

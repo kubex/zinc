@@ -1,12 +1,12 @@
 ---
 meta:
-  title: Filter Wrapper
+  title: Hover Container
   description:
 layout: component
 ---
 
 ```html:preview
-<zn-filter-wrapper></zn-filter-wrapper>
+<zn-hover-container></zn-hover-container>
 ```
 
 ## Examples

@@ -6465,6 +6465,43 @@ declare module "components/settings-container/index" {
         }
     }
 }
+declare module "components/filter-container/filter-container.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/filter-container
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnFilterContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        attr: string;
+        handleSearchChange(event: Event): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/filter-container/index" {
+    import ZnFilterContainer from "components/filter-container/filter-container.component";
+    export * from "components/filter-container/filter-container.component";
+    export default ZnFilterContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-filter-container': ZnFilterContainer;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6604,6 +6641,7 @@ declare module "zinc" {
     export { default as ContentBlock } from "components/content-block/index";
     export { default as FilterWrapper } from "components/filter-wrapper/index";
     export { default as SettingsContainer } from "components/settings-container/index";
+    export { default as FilterContainer } from "components/filter-container/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

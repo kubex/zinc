@@ -224,7 +224,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               remove-button:tag__remove-button,
               remove-button__base:tag__remove-button__base"
         ?pill=${this.pill}
-        size=${this.size}
+        size="x-small"
+        type="primary"
         removable
         @zn-remove=${(event: ZnRemoveEvent) => this.handleTagRemove(event, option)}>
         ${option.getTextLabel()}

@@ -1,6 +1,6 @@
 import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS, PropertyValues} from 'lit';
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
@@ -234,6 +234,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       </zn-chip>
     `;
   };
+
+  @property() link = "";
 
   /** Gets the validity state object */
   get validity() {
@@ -681,6 +683,31 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleInvalid(event: Event) {
     this.formControlController.setValidity(false);
     this.formControlController.emitInvalidEvent(event);
+  }
+
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    super.firstUpdated(_changedProperties);
+
+    if (this.link !== "") {
+      // if we are linked to another zn-data-select remove the selected values from that select from this select
+      const linkedSelect = document.querySelector(`zn-select[id="${this.link}"]`) as ZnSelect;
+      if (linkedSelect) {
+        linkedSelect.addEventListener('zn-input', () => {
+          const linkedValues = Array.isArray(linkedSelect.value) ? linkedSelect.value : [linkedSelect.value];
+          const options = this.getAllOptions().map(option => option as HTMLElement);
+          options.forEach(option => {
+            if (linkedValues.includes((option as ZnOption).value)) {
+              option.style.display = 'none';
+            } else {
+              option.style.display = '';
+            }
+          });
+        });
+
+        // trigger the event once to initialize
+        linkedSelect.dispatchEvent(new Event('zn-input'));
+      }
+    }
   }
 
   @watch('disabled', {waitUntilFirstUpdate: true})

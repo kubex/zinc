@@ -39,6 +39,26 @@ This component works with standard `<form>` elements. Please refer to the sectio
 on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
 :::
 
+### Linked Selects
+
+Linked Selects
+
+```html:preview
+
+<div class="form-spacing">
+  <zn-select provider="country" multiple name="country-one" id="country-one" link="country-two">
+    <zn-option value="0">Option 0</zn-option>
+    <zn-option value="1">Option 1</zn-option>
+    <zn-option value="2">Option 2</zn-option>
+  </zn-select>
+  <zn-select provider="country" multiple name="country-two" id="country-two" link="country-one">
+    <zn-option value="0">Option 0</zn-option>
+    <zn-option value="1">Option 1</zn-option>
+    <zn-option value="2">Option 2</zn-option>
+  </zn-select>
+</div>
+```
+
 ### Help Text
 
 Add descriptive help text to a select with the `help-text` attribute. For help texts that contain HTML, use the

@@ -1855,7 +1855,7 @@ declare module "components/option/index" {
     }
 }
 declare module "components/select/select.component" {
-    import { type CSSResultGroup, type TemplateResult } from 'lit';
+    import { type CSSResultGroup, type TemplateResult, PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
     import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
@@ -2002,6 +2002,7 @@ declare module "components/select/select.component" {
          * the specified value.
          */
         getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
+        link: string;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */
@@ -2030,6 +2031,7 @@ declare module "components/select/select.component" {
         private selectionChanged;
         protected get tags(): TemplateResult<1>[];
         private handleInvalid;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
         handleDisabledChange(): void;
         attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         handleValueChange(): void;

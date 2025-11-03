@@ -81,6 +81,7 @@ export {default as ContentBlock} from './components/content-block';
 export {default as FilterWrapper} from './components/filter-wrapper';
 export {default as SettingsContainer} from './components/settings-container';
 export { default as FilterContainer } from './components/filter-container';
+export { default as Reveal } from './components/reveal';
 /* plop:component */
 
 // Base Component

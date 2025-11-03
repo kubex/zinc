@@ -314,10 +314,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleDocumentKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement;
     const isClearButton = target.closest('.select__clear') !== null;
-    const isIconButton = target.closest('zn-icon-button') !== null;
+    const isIconButton = target.closest('zn-icon') !== null;
+
+    // and isn't keyboard_arrow_down icon
+    const isExpandIcon = target.closest('.select__expand-icon') !== null;
 
     // Ignore presses when the target is an icon button (e.g. the remove button in <zn-tag>)
-    if (isClearButton || isIconButton) {
+    if ((isClearButton || isIconButton) && !isExpandIcon) {
       return;
     }
 
@@ -457,8 +460,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const path = event.composedPath();
     const isIcon = path.some(el => el instanceof Element && el.tagName.toLowerCase() === 'zn-icon');
 
+    // not the keyboard_arrow_down icon
+    const isExpandIcon = path.some(el => el instanceof Element && el.classList.contains('select__expand-icon'));
     // Ignore disabled controls and clicks on tags (remove buttons)
-    if (this.disabled || isIcon) {
+    if ((this.disabled || isIcon) && !isExpandIcon) {
       return;
     }
 

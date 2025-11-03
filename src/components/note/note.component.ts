@@ -80,6 +80,7 @@ export default class ZnNote extends ZincElement {
           <slot name="date" class="note__header__date">
             <small>${this.date}</small>
           </slot>
+          <slot name="action"></slot>
         </div>
         <div class="${classMap({
           'note__body-container': true,

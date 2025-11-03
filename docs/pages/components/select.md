@@ -39,19 +39,37 @@ This component works with standard `<form>` elements. Please refer to the sectio
 on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
 :::
 
-### Linked Selects
+### Distinct Selects
 
-Linked Selects
 
 ```html:preview
 
 <div class="form-spacing">
-  <zn-select provider="country" multiple name="country-one" id="country-one" link="country-two">
+  <zn-select provider="country" multiple name="country-one" id="country-one" distinct="country-two">
     <zn-option value="0">Option 0</zn-option>
     <zn-option value="1">Option 1</zn-option>
     <zn-option value="2">Option 2</zn-option>
   </zn-select>
-  <zn-select provider="country" multiple name="country-two" id="country-two" link="country-one">
+  <zn-select provider="country" multiple name="country-two" id="country-two" distinct="country-one">
+    <zn-option value="0">Option 0</zn-option>
+    <zn-option value="1">Option 1</zn-option>
+    <zn-option value="2">Option 2</zn-option>
+  </zn-select>
+</div>
+```
+
+### Conditional Selects
+
+
+```html:preview
+
+<div class="form-spacing">
+  <zn-select provider="conditional" multiple name="conditional-one" id="conditional-one" conditional="conditional-two">
+    <zn-option value="0">Option 0</zn-option>
+    <zn-option value="1">Option 1</zn-option>
+    <zn-option value="2">Option 2</zn-option>
+  </zn-select>
+  <zn-select provider="conditional" multiple name="conditional-two" id="conditional-two" conditional="conditional-one">
     <zn-option value="0">Option 0</zn-option>
     <zn-option value="1">Option 1</zn-option>
     <zn-option value="2">Option 2</zn-option>

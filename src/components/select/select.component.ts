@@ -235,7 +235,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     `;
   };
 
-  @property() link = "";
+  @property() distinct = "";
+
+  @property() conditional = "";
 
   /** Gets the validity state object */
   get validity() {
@@ -688,11 +690,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    if (this.link !== "") {
+    if (this.distinct !== "") {
       // if we are linked to another zn-data-select remove the selected values from that select from this select
-      const linkedSelect = document.querySelector(`zn-select[id="${this.link}"]`) as ZnSelect;
+      const linkedSelect = document.querySelector(`zn-select[id="${this.distinct}"]`) as ZnSelect;
       if (linkedSelect) {
-        linkedSelect.addEventListener('zn-input', () => {
+        linkedSelect.addEventListener('zn-change', () => {
           const linkedValues = Array.isArray(linkedSelect.value) ? linkedSelect.value : [linkedSelect.value];
           const options = this.getAllOptions().map(option => option as HTMLElement);
           options.forEach(option => {
@@ -706,6 +708,24 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
         // trigger the event once to initialize
         linkedSelect.dispatchEvent(new Event('zn-input'));
+      }
+
+    }
+
+    if (this.conditional !== "") {
+      const conditionalSelect = document.querySelector(`zn-select[id="${this.conditional}"]`) as ZnSelect;
+      console.log('conditionalSelect', conditionalSelect);
+      if (conditionalSelect) {
+        // disable if the other has any options selected
+        conditionalSelect.addEventListener('zn-change', () => {
+          let linkedValues = Array.isArray(conditionalSelect.value) ? conditionalSelect.value : [conditionalSelect.value];
+          linkedValues = linkedValues.filter(v => v !== '');
+          console.log('linkedValues', linkedValues);
+          this.disabled = linkedValues.length > 0;
+        });
+
+        // trigger the event once to initialize
+        conditionalSelect.dispatchEvent(new Event('zn-input'));
       }
     }
   }

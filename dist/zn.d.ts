@@ -2002,7 +2002,8 @@ declare module "components/select/select.component" {
          * the specified value.
          */
         getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
-        link: string;
+        distinct: string;
+        conditional: string;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */

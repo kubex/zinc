@@ -57,32 +57,33 @@ export default class ZnFormGroup extends ZincElement {
         aria-describedby="help-text">
 
         <zn-cols layout="1,2" mc="2" part="form-control-container" class="form-control__container">
-          <div>
-            <label
-              part="form-control-label"
-              id="label"
-              class="form-control__label"
-              aria-hidden=${hasLabel ? 'false' : 'true'}>
-              <slot name="label">${this.label}</slot>
-              ${hasLabelTooltip
-                ? html`
-                  <zn-tooltip class="form-control--label-tooltip">
-                    <div slot="content">
-                      <slot name="label-tooltip">${this.labelTooltip}</slot>
-                    </div>
-                    <zn-icon src="info"></zn-icon>
-                  </zn-tooltip>`
-                : ''}
-            </label>
+          ${hasLabel ? html`
+            <div>
+              <label
+                part="form-control-label"
+                id="label"
+                class="form-control__label"
+                aria-hidden=${hasLabel ? 'false' : 'true'}>
+                <slot name="label">${this.label}</slot>
+                ${hasLabelTooltip
+                  ? html`
+                    <zn-tooltip class="form-control--label-tooltip">
+                      <div slot="content">
+                        <slot name="label-tooltip">${this.labelTooltip}</slot>
+                      </div>
+                      <zn-icon src="info"></zn-icon>
+                    </zn-tooltip>`
+                  : ''}
+              </label>
 
-            <div
-              part="form-control-help-text"
-              id="help-text"
-              class="form-control__help-text"
-              aria-hidden=${hasHelpText ? 'false' : 'true'}>
-              <slot name="help-text">${this.helpText}</slot>
-            </div>
-          </div>
+              ${hasHelpText ? html`
+                <div
+                  part="form-control-help-text"
+                  id="help-text"
+                  class="form-control__help-text">
+                  <slot name="help-text">${this.helpText}</slot>
+                </div>` : html``}
+            </div>` : html``}
 
           <div part="form-control-input" class="form-control-input">
             <slot></slot>

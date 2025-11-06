@@ -5,6 +5,7 @@ import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query, queryAll} from 'lit/decorators.js';
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
@@ -137,13 +138,18 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     this.teardownAutoClick();
   }
 
+  @watch('autoClick')
+  async handleAutoClickChange(_old: boolean, value: boolean) {
+    if (value) {
+      await this.updateComplete;
+      this.setupAutoClick();
+    } else {
+      this.teardownAutoClick();
+    }
+  }
+
   protected updated(changedProps: Map<string, any>) {
     super.updated(changedProps);
-    if (changedProps.has('autoClick')) {
-      if (this.autoClick) {
-        this.setupAutoClick();
-      }
-    }
     if (this.button) {
       const oldOverlay = this.button.querySelector('.button--loading-fill');
       if (oldOverlay) {

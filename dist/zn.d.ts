@@ -214,17 +214,6 @@ declare module "internal/slot" {
      */
     export function getTextContent(slot: HTMLSlotElement | undefined | null): string;
 }
-declare module "internal/tabbable" {
-    /**
-     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
-     * element because it short-circuits after finding the first and last ones.
-     */
-    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
-        start: HTMLElement;
-        end: HTMLElement;
-    };
-    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
-}
 declare module "internal/watch" {
     import type { LitElement } from "lit";
     type UpdateHandler = (prev?: unknown, next?: unknown) => void;
@@ -254,6 +243,17 @@ declare module "internal/watch" {
      * @param options
      */
     export function watch(propertyName: string | string[], options?: WatchOptions): <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => void;
+}
+declare module "internal/tabbable" {
+    /**
+     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
+     * element because it short-circuits after finding the first and last ones.
+     */
+    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
+        start: HTMLElement;
+        end: HTMLElement;
+    };
+    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
 }
 declare module "utilities/top-layer-manager" {
     class TopLayerManager {
@@ -1135,6 +1135,7 @@ declare module "components/button/button.component" {
         get validationMessage(): string;
         firstUpdated(): void;
         disconnectedCallback(): void;
+        handleAutoClickChange(_old: boolean, value: boolean): Promise<void>;
         protected updated(changedProps: Map<string, any>): void;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;

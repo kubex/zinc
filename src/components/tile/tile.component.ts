@@ -90,7 +90,9 @@ export default class ZnTile extends ZincElement {
             <div class="tile__left">
               <slot name="image" part="image" class="tile__image"></slot>
               <div class="tile__content">
-                <p part="caption" class="tile__caption">${this.caption}</p>
+                <p part="caption" class="tile__caption">
+                  <slot name="caption">${this.caption}</slot>
+                </p>
                 <p part="description" class="tile__description">${this.description}</p>
               </div>
             </div>

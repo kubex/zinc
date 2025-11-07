@@ -374,7 +374,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _handleTextChange() {
-    this.value = this.quillElement.root.innerHTML;
+    this.value = this.quillElement.getSemanticHTML();
     this.editorHtml.value = this.value;
     this.emit('zn-change');
   }

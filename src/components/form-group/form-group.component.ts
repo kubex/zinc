@@ -35,6 +35,8 @@ export default class ZnFormGroup extends ZincElement {
   /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
 
+  /** Stretch inputs to fill the available width of the form group. */
+  @property({type: Boolean}) grow = false;
 
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
@@ -85,7 +87,11 @@ export default class ZnFormGroup extends ZincElement {
                 </div>` : html``}
             </div>` : html``}
 
-          <div part="form-control-input" class="form-control-input">
+          <div part="form-control-input"
+               class=${classMap({
+                 'form-control-input': true,
+                 'form-control-input--grow': this.grow
+               })}>
             <slot></slot>
           </div>
         </zn-cols>

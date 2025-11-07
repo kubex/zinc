@@ -43,7 +43,10 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--zn-spacing-medium) var(--zn-spacing-small);
-  flex: 1 1 auto;
+
+  &--grow {
+    flex: 1 1 auto;
+  }
 
   @include wc.media-query(md) {
     grid-template-columns: repeat(6, 1fr);

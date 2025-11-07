@@ -5180,8 +5180,6 @@ declare module "components/form-group/form-group.component" {
         labelTooltip: string;
         /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
         helpText: string;
-        /** Stretch inputs to fill the available width of the form group. */
-        grow: boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }

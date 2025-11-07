@@ -73,33 +73,17 @@ zn-panel:not(.content-block--short) zn-header::part(header-description) {
   display: none;
 }
 
-li[data-list="ordered"] {
-  counter-increment: list-0 1;
+ol {
+  counter-reset: list-0 0;
 }
 
 @supports (counter-set:none) {
-  li[data-list] {
+  ol li, ul li {
     counter-set: list-1 0 list-2 0 list-3 0 list-4 0 list-5 0 list-6 0 list-7 0 list-8 0 list-9 0;
   }
 }
 
-li[data-list=bullet] > .ql-ui:before {
-  content: "•";
-}
-
-li[data-list=checked] > .ql-ui:before {
-  content: "☑";
-}
-
-li[data-list=unchecked] > .ql-ui:before {
-  content: "☐";
-}
-
-li[data-list="ordered"] > .ql-ui::before {
-  content: counter(list-0) ". ";
-}
-
-ol {
+ol, ul {
   padding: 0;
   margin: 0;
 }
@@ -108,21 +92,49 @@ li[data-list=checked] > .ql-ui, li[data-list=unchecked] > .ql-ui {
   color: #777;
 }
 
-.ql-ui {
-  position: absolute;
-}
-
 li {
   list-style-type: none;
   padding-left: 1em;
   position: relative;
 }
 
-li > .ql-ui::before {
+ul > li::before {
+  content: "•";
+}
+
+ol > li {
+  counter-increment: list-0;
+}
+
+ol > li::before {
+  content: counter(list-0) ". ";
+}
+
+/* Checkbox list markers */
+li[data-list="checked"]::before {
+  content: "☑";
+}
+
+li[data-list="unchecked"]::before {
+  content: "☐";
+}
+
+li[data-list="checked"]::before,
+li[data-list="unchecked"]::before {
+  color: #777;
+}
+
+ol li::before,
+ul li::before {
   display: inline-block;
   margin-left: -1.5em;
   margin-right: 0.3em;
   text-align: right;
   white-space: nowrap;
   width: 1.2em;
+}
+
+li:has(> .ql-ui)::before {
+  content: none;
+  display: none;
 }

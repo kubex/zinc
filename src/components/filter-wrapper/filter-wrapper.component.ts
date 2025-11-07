@@ -47,7 +47,7 @@ export default class ZnFilterWrapper extends ZincElement {
     event.preventDefault();
     const dataTable: ZnDataTable | null = this.closest('zn-data-table');
     if (dataTable) {
-      const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'input', 'select', 'textarea'];
+      const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'zn-datepicker', 'input', 'select', 'textarea'];
       const inputs = Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[];
       const params: Record<string, any> = {};
       inputs.forEach(input => {

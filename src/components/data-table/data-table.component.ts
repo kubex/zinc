@@ -252,7 +252,7 @@ export default class ZnDataTable extends ZincElement {
       const params: Record<string, any> = {};
       if (inputs) {
         inputs.forEach((input) => {
-          const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'input', 'select', 'textarea'];
+          const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea'];
           if (allowedInputs.includes(input.tagName.toLowerCase())) {
             const value = (input as AllowedInputElement).value as string || input.getAttribute('value');
             const name = (input as AllowedInputElement).name || input.getAttribute('name');

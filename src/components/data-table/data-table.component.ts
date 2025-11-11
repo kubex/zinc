@@ -292,6 +292,7 @@ export default class ZnDataTable extends ZincElement {
 
   private _expandedRows: Set<string> = new Set();
   private _hiddenCells: Map<string, Cell[]> = new Map();
+  private _secondaryHeaders: HeaderConfig[];
 
   requestParams: Record<string, any> = {};
 
@@ -472,7 +473,7 @@ export default class ZnDataTable extends ZincElement {
     });
 
     // Secondary headers (shown in expandable details)
-    const secondaryHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
+    this._secondaryHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
       if (header.hideColumn) return false;
 
       if (Object.values(this.hiddenColumns).includes(header.key)) return false;
@@ -483,7 +484,7 @@ export default class ZnDataTable extends ZincElement {
     this.rowHasActions = this._rows.some((row: Row) => row.actions && row.actions.length > 0);
 
     // Compute and store hidden cells per row (secondary items only), and reorder visible cells to match header order
-    const secondaryKeys = new Set(secondaryHeaders.map(h => h.key));
+    const secondaryKeys = new Set(this._secondaryHeaders.map(h => h.key));
     this._hiddenCells.clear();
     const visibleRowCells: Map<string, Cell[]> = new Map();
 
@@ -987,10 +988,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private hasHiddenColumns(): boolean {
-    for (const cells of this._hiddenCells.values()) {
-      if (cells && cells.length > 0) return true;
-    }
-    return false;
+    return this._secondaryHeaders.length > 0;
   }
 
   private renderExpanderCell(row: Row) {

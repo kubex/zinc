@@ -2600,6 +2600,7 @@ declare module "components/data-table/data-table.component" {
         filterable?: boolean;
         hideHeader?: boolean;
         hideColumn?: boolean;
+        secondary?: boolean;
     }
     /**
      * @summary Short summary of the component's intended use.
@@ -2679,6 +2680,9 @@ declare module "components/data-table/data-table.component" {
         private hasSlotController;
         private _dataTask;
         private rowHasActions;
+        private _expandedRows;
+        private _hiddenCells;
+        private _secondaryHeaders;
         requestParams: Record<string, any>;
         refresh(): void;
         render(): TemplateResult<1>;
@@ -2709,6 +2713,10 @@ declare module "components/data-table/data-table.component" {
         private getTableSortIcon;
         private renderCellHeader;
         private renderCellBody;
+        private hasHiddenColumns;
+        private renderExpanderCell;
+        private renderDetailsRow;
+        private toggleRowExpansion;
         private isRowSelected;
         private getRows;
         private getSelectedKeys;

@@ -5539,6 +5539,32 @@
             },
             {
               "kind": "field",
+              "name": "_expandedRows",
+              "type": {
+                "text": "Set<string>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "_hiddenCells",
+              "type": {
+                "text": "Map<string, Cell[]>"
+              },
+              "privacy": "private",
+              "default": "new Map()"
+            },
+            {
+              "kind": "field",
+              "name": "_secondaryHeaders",
+              "type": {
+                "text": "HeaderConfig[]"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
               "name": "requestParams",
               "type": {
                 "text": "Record<string, any>"
@@ -5769,6 +5795,67 @@
                   "name": "value",
                   "type": {
                     "text": "Cell"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "hasHiddenColumns",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderExpanderCell",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderDetailsRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
+                  }
+                },
+                {
+                  "name": "colSpan",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toggleRowExpansion",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "Row"
                   }
                 }
               ]

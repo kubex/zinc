@@ -22,11 +22,12 @@ table {
     background-color: unset !important;
   }
 
-  tbody tr.table__row--data.table__row--odd {
-    &:not(.table__row--selected) td,
-    & + tr.table__row--details td {
-      background-color: rgba(var(--zn-body));
-    }
+  tbody tr.table__row--data.table__row--odd:not(.table__row--selected) td {
+    background-color: rgba(var(--zn-body));
+  }
+
+  tbody tr.table__row--details td {
+    background-color: rgb(var(--zn-shadow));
   }
 
   &.table--standalone {

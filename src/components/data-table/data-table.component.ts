@@ -530,8 +530,8 @@ export default class ZnDataTable extends ZincElement {
             <tr class="${classMap({
               'table__row--selected': this.isRowSelected(row),
               'table__row--data': true,
-              'table__row--even': (rowIndex % 2) === 1,
-              'table__row--odd': (rowIndex % 2) === 0,
+              'table__row--even': (rowIndex % 2) === 0,
+              'table__row--odd': (rowIndex % 2) === 1,
             })}" data-row-id="${row.id}">
               ${anyHidden ? this.renderExpanderCell(row) : nothing}
               ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value))}

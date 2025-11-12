@@ -14214,13 +14214,10 @@
             },
             {
               "kind": "field",
-              "name": "collapseAtLines",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "attribute": "collapse-at-lines",
-              "reflects": true
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'caption', 'date', '[default]', 'snippet', 'footer')"
             },
             {
               "kind": "field",
@@ -14232,23 +14229,14 @@
               "default": "false"
             },
             {
-              "kind": "field",
-              "name": "_isOverflowing",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_toggleExpand",
-              "privacy": "private"
-            },
-            {
               "kind": "method",
-              "name": "_measureOverflow",
-              "privacy": "private"
+              "name": "_toggleExpand",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             }
           ],
           "events": [
@@ -14288,14 +14276,6 @@
               },
               "default": "''",
               "fieldName": "body"
-            },
-            {
-              "name": "collapse-at-lines",
-              "type": {
-                "text": "number"
-              },
-              "default": "3",
-              "fieldName": "collapseAtLines"
             }
           ],
           "superclass": {

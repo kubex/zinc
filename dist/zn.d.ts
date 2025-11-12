@@ -2875,13 +2875,9 @@ declare module "components/note/note.component" {
         caption: string;
         date: string;
         body: string;
-        collapseAtLines: number;
+        private readonly hasSlotController;
         private expanded;
-        private _isOverflowing;
         private _toggleExpand;
-        private _measureOverflow;
-        protected firstUpdated(): void;
-        protected updated(): void;
         protected render(): unknown;
     }
 }

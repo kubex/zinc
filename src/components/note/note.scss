@@ -64,6 +64,14 @@ $colors: (
     padding: 0;
   }
 
+  &__body--clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--note-collapse-lines, 0);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   @each $name, $color in $colors {
     &--#{'' + $name} {
       .note__header__caption {

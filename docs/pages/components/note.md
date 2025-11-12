@@ -7,9 +7,18 @@ layout: component
 
 ```html:preview
 
-<zn-note color="gray">
+<zn-note color="gray" collapse-at-characters="100">
   <span slot="caption">The caption</span>
-  <span>The body</span>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, autem deleniti, dolore dolores ea enim fugit
+  harum incidunt minima numquam possimus praesentium quaerat quasi sequi sunt temporibus ut velit, veniam. Aut dolor
+  eius quae. Consequatur deleniti ipsum itaque pariatur ullam velit! Alias aut delectus dolores esse fuga iure laborum
+  magnam maiores minima, minus, natus placeat provident quasi ratione ullam ut? Fugit nisi placeat quidem suscipit
+  voluptatum? Adipisci aspernatur assumenda consequatur dolore ea esse exercitationem ipsum maiores minima neque saepe,
+  voluptates voluptatibus! A ab adipisci consequatur, esse eveniet itaque sed soluta! Aliquid animi blanditiis dolores
+  dolorum eum facere fugit harum id illo, laboriosam laborum libero magni minus natus nihil perspiciatis porro quae
+  quisquam, ratione rem repellat sequi sit suscipit voluptas voluptatum. Atque delectus eos fugit illo sit soluta
+  suscipit vero? At consectetur culpa dolor, dolores ea earum enim error et expedita iste laudantium nam necessitatibus
+  quaerat, quis sed tempora vel voluptatum?
   <span slot="date">
     <small>11/10/24</small>
   </span>

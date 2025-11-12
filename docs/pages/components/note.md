@@ -7,8 +7,9 @@ layout: component
 
 ```html:preview
 
-<zn-note color="gray" collapse-at-characters="100">
+<zn-note color="gray">
   <span slot="caption">The caption</span>
+  <div slot="snippet">This is a short version of the below.</div>
   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, autem deleniti, dolore dolores ea enim fugit
   harum incidunt minima numquam possimus praesentium quaerat quasi sequi sunt temporibus ut velit, veniam. Aut dolor
   eius quae. Consequatur deleniti ipsum itaque pariatur ullam velit! Alias aut delectus dolores esse fuga iure laborum

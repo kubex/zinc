@@ -2877,6 +2877,7 @@ declare module "components/note/note.component" {
         body: string;
         collapseAtLines: number;
         private expanded;
+        private _isOverflowing;
         private _toggleExpand;
         private _measureOverflow;
         protected firstUpdated(): void;

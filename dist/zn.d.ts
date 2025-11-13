@@ -2647,6 +2647,7 @@ declare module "components/data-table/data-table.component" {
         data: any;
         sortColumn: string;
         sortDirection: string;
+        localSort: boolean;
         filter: string;
         wideColumn: string;
         key: string;
@@ -2726,6 +2727,7 @@ declare module "components/data-table/data-table.component" {
         private updateDeleteKeys;
         private extractComparable;
         private sortData;
+        private sortLocalData;
         private loadingTable;
         private renderActions;
     }

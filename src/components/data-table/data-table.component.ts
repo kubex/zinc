@@ -158,6 +158,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'data', type: Object, reflect: true}) data: any;
   @property({attribute: 'sort-column'}) sortColumn: string;
   @property({attribute: 'sort-direction'}) sortDirection: string = "asc";
+  @property({attribute: 'local-sort', type: Boolean}) localSort: boolean = false;
   @property({attribute: 'filter'}) filter: string = '';
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
@@ -813,7 +814,13 @@ export default class ZnDataTable extends ZincElement {
     return () => {
       this.sortColumn = key;
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-      this._dataTask.run().then(r => r);
+
+      if (this.localSort) {
+        this._rows = this.sortLocalData(this._rows as Row[]);
+        this.requestUpdate();
+      } else {
+        this._dataTask.run().then(r => r);
+      }
     };
   }
 
@@ -1051,23 +1058,11 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private getRows(data: Response): Row[] {
-    const sourceRows = data.rows;
+    // Copy rows to avoid mutating original data
+    const sourceRows = Array.isArray(data.rows) ? data.rows.slice() : [];
 
-    if (this.sortColumn) {
-      const headerKeys = Object.keys(this.headers);
-      const sortIndex = headerKeys.indexOf(this.sortColumn);
-
-      sourceRows.sort((rowA: Row, rowB: Row) => {
-        const getCellForSort = (row: Row): Cell => {
-          const byHeading = row.cells.find((cell: Cell) => cell.column === this.sortColumn);
-          if (byHeading !== undefined) return byHeading as unknown as Cell;
-          return row.cells[sortIndex];
-        };
-
-        const aVal = getCellForSort(rowA);
-        const bVal = getCellForSort(rowB);
-        return this.sortData(aVal, bVal);
-      });
+    if (this.localSort && this.sortColumn) {
+      return this.sortLocalData(sourceRows);
     }
 
     return sourceRows;
@@ -1134,6 +1129,25 @@ export default class ZnDataTable extends ZincElement {
     }
 
     return aNormal < bNormal ? 1 : aNormal > bNormal ? -1 : 0;
+  }
+
+  private sortLocalData(rows: Row[]): Row[] {
+    if (!this.sortColumn) return rows;
+
+    const headerKeys = Object.keys(this.headers);
+    const sortIndex = headerKeys.indexOf(this.sortColumn);
+
+    const getCellForSort = (row: Row): Cell => {
+      const byHeading = row.cells.find((cell: Cell) => cell.column === this.sortColumn);
+      if (byHeading !== undefined) return byHeading as unknown as Cell;
+      return row.cells[sortIndex];
+    };
+
+    return rows.slice().sort((rowA: Row, rowB: Row) => {
+      const aVal = getCellForSort(rowA);
+      const bVal = getCellForSort(rowB);
+      return this.sortData(aVal, bVal);
+    });
   }
 
   private loadingTable() {

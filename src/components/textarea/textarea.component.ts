@@ -43,6 +43,8 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   });
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private resizeObserver: ResizeObserver;
+  /** Ensures we only attempt to derive the initial value from light DOM content once */
+  private _didInitFromContent = false;
 
   @query('.form-control-input') formControl: HTMLElement;
   @query('.textarea__control') input: HTMLTextAreaElement;
@@ -93,6 +95,8 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
    * the same document or shadow root for this to work.
    */
   @property({reflect: true}) form = '';
+
+  @property({type: Boolean, reflect: true}) flush = false;
 
   /** Makes the textarea a required field. */
   @property({type: Boolean, reflect: true}) required = false;
@@ -155,6 +159,34 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
 
   connectedCallback() {
     super.connectedCallback();
+    // Initialize the value from the element's light DOM text content when no value attribute/property is set.
+    // This allows usage like: <zn-textarea>Initial content</zn-textarea>
+    if (!this._didInitFromContent) {
+      this._didInitFromContent = true;
+
+      const hasValueAttribute = this.hasAttribute('value');
+      const hasProgrammaticValue = typeof this.value === 'string' && this.value.length > 0;
+
+      if (!hasValueAttribute && !hasProgrammaticValue) {
+        // Collect only top-level text nodes to avoid pulling in slotted element text (e.g., label/help-text)
+        const textNodes = Array.from(this.childNodes).filter(n => n.nodeType === Node.TEXT_NODE);
+        const raw = textNodes.map(n => n.textContent ?? '').join('');
+        const content = raw.replace(/\r\n/g, '\n').trim();
+
+        if (content.length > 0) {
+          this.value = content;
+          this.defaultValue = content;
+          // Remove the consumed text nodes to prevent stray light DOM text
+          textNodes.forEach(n => {
+            // Only remove nodes that actually contributed non-whitespace content
+            if ((n.textContent ?? '').trim().length > 0) {
+              n.parentNode?.removeChild(n);
+            }
+          });
+        }
+      }
+    }
+
     this.resizeObserver = new ResizeObserver(() => this.setTextareaHeight());
 
     this.updateComplete.then(() => {
@@ -360,7 +392,10 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
             name="context-note">${this.contextNote}</slot></span>`
           : ''}
 
-        <div part="form-control-input" class="form-control-input">
+        <div part="form-control-input" class=${classMap({
+          "form-control-input": true,
+          "form-control-input--flush": this.flush
+        })}>
           <div
             part="base"
             class=${classMap({

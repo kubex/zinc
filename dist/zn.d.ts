@@ -4609,6 +4609,8 @@ declare module "components/textarea/textarea.component" {
         private readonly formControlController;
         private readonly hasSlotController;
         private resizeObserver;
+        /** Ensures we only attempt to derive the initial value from light DOM content once */
+        private _didInitFromContent;
         formControl: HTMLElement;
         input: HTMLTextAreaElement;
         hasFocus: boolean;
@@ -4643,6 +4645,7 @@ declare module "components/textarea/textarea.component" {
          * the same document or shadow root for this to work.
          */
         form: string;
+        flush: boolean;
         /** Makes the textarea a required field. */
         required: boolean;
         /** The minimum length of input that will be considered valid. */

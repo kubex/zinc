@@ -1254,7 +1254,7 @@ export default class ZnDataTable extends ZincElement {
                               caption="${action.confirmTitle}"
                               content="${action.confirmContent}"
                               action="${action.uri}"></zn-confirm>
-                  <zn-menu-item id="${triggerId}">
+                  <zn-menu-item id="${triggerId}" confirm>
                     ${(action.icon) ? html`
                       <zn-icon src="${action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                     ${action.text}

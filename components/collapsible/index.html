@@ -459,6 +459,7 @@
             <li class="top"><a href="#">Collapsible</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#default-open">Default Open</a></li>
+            <li data-level="3"><a href="#checkbox-stuff">Checkbox stuff</a></li>
             <li data-level="3"><a href="#expanded-attribute">Expanded Attribute</a></li>
             <li data-level="3"><a href="#flush-attribute">Flush Attribute</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
@@ -594,6 +595,113 @@
             </div>
           </div>
 
+          <h3 id="checkbox-stuff" class="anchor-heading">
+            Checkbox stuff<a href="#checkbox-stuff" aria-label='Direct link to "Checkbox stuff"'></a>
+          </h3>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-collapsible caption="Collapsible with Checkbox">
+                <div class="flex-mid" slot="caption">
+                  <div class="grow zn-pr">Billing</div>
+                  <zn-toggle name="enabled"></zn-toggle>
+                </div>
+                <div class="permission" data-filter="Example Permission">
+                  <div class="flex-row zn-pad">
+                    <div class="flex-mid">
+                      <div class="grow flex-col flex-jc">
+                        <strong>Example Permission</strong>
+                        <span>Example Permission Description</span>
+                      </div>
+                      <div class="flex-mid">
+                        <zn-toggle class="permission-toggle" name="enabled" value="1" fallback="0" size="medium">
+                        </zn-toggle>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="permission" data-filter="Example Permission">
+                  <div class="flex-row zn-pad">
+                    <div class="flex-mid">
+                      <div class="grow flex-col flex-jc">
+                        <strong>Example Permission 2</strong>
+                        <span>Example Permission 2 Description</span>
+                      </div>
+                      <div class="flex-mid">
+                        <zn-toggle name="enabled" size="medium"></zn-toggle>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </zn-collapsible>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-64">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-100">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Collapsible with Checkbox<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-mid<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>caption<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grow zn-pr<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Billing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>permission<span class="token punctuation">"</span></span> <span class="token attr-name">data-filter</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Example Permission<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-row zn-pad<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-mid<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grow flex-col flex-jc<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Example Permission<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>Example Permission Description<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-mid<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>permission-toggle<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span> <span class="token attr-name">fallback</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>permission<span class="token punctuation">"</span></span> <span class="token attr-name">data-filter</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Example Permission<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-row zn-pad<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-mid<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>grow flex-col flex-jc<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Example Permission 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span>Example Permission 2 Description<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>flex-mid<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-100"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-64"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h3 id="expanded-attribute" class="anchor-heading">
             Expanded Attribute<a href="#expanded-attribute" aria-label='Direct link to "Expanded Attribute"'></a>
           </h3>
@@ -613,14 +721,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-64">
+            <div class="code-preview__source-group" id="code-preview-source-group-65">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-100"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Expanded Attribute<span class="token punctuation">"</span></span> 
+                <pre><code class="language-html" id="code-block-101">
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Expanded Attribute<span class="token punctuation">"</span></span>
                 <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Adding the expanded attribute will open the collapsible<span class="token punctuation">"</span></span>
                 <span class="token attr-name">expanded</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Button<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-100"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-101"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -629,7 +738,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-64"
+                aria-controls="code-preview-source-group-65"
               >
                 Source
                 <svg
@@ -665,14 +774,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-65">
+            <div class="code-preview__source-group" id="code-preview-source-group-66">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-101"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Flush<span class="token punctuation">"</span></span> 
+                <pre><code class="language-html" id="code-block-102"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-collapsible</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Flush<span class="token punctuation">"</span></span> 
                 <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>The flush attribute removes the left margin of the content<span class="token punctuation">"</span></span>
                 <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span><span class="token punctuation">&gt;</span></span>Button<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-collapsible</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-101"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-102"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -681,7 +790,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-65"
+                aria-controls="code-preview-source-group-66"
               >
                 Source
                 <svg
@@ -719,7 +828,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-102"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.15/dist/components/collapsible/collapsible.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-102"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-103"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.15/dist/components/collapsible/collapsible.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-103"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -734,12 +843,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-103"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.15/dist/components/collapsible/collapsible.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-103"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-104"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.15/dist/components/collapsible/collapsible.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-104"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-104"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/collapsible/collapsible.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-104"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-105"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/collapsible/collapsible.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-105"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

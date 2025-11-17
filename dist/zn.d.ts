@@ -1209,10 +1209,92 @@ declare module "internal/storage" {
         cleanup(): void;
     }
 }
+declare module "events/zn-input" {
+    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-input': ZnInputEvent;
+        }
+    }
+}
+declare module "internal/default-value" {
+    import type { ReactiveElement } from 'lit';
+    export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
+}
+declare module "components/toggle/toggle.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/toggle
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnToggle extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private readonly formControlController;
+        input: HTMLInputElement;
+        hasFocus: boolean;
+        title: string;
+        name: string;
+        value: string;
+        fallbackValue: string;
+        size: 'small' | 'medium' | 'large';
+        disabled: boolean;
+        checked: boolean;
+        defaultChecked: boolean;
+        form: string;
+        required: boolean;
+        helpText: string;
+        triggerSubmit: boolean;
+        onText: string;
+        offText: string;
+        label: string;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        firstUpdated(_changedProperties: PropertyValues): void;
+        private handleBlur;
+        private handleInvalid;
+        private handleInput;
+        private handleClick;
+        private handleFocus;
+        private handleKeyDown;
+        click(): void;
+        focus(options?: FocusOptions): void;
+        blur(): void;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/toggle/index" {
+    import ZnToggle from "components/toggle/toggle.component";
+    export * from "components/toggle/toggle.component";
+    export default ZnToggle;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-toggle': ZnToggle;
+        }
+    }
+}
 declare module "components/collapsible/collapsible.component" {
     import { type CSSResultGroup } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
+    import { ZnInputEvent } from "events/zn-input";
     /**
      * @summary Toggles between showing and hiding content when clicked
      * @documentation https://zinc.style/components/collapsible
@@ -1241,7 +1323,9 @@ declare module "components/collapsible/collapsible.component" {
         protected _store: Store;
         private readonly hasSlotController;
         private observer;
-        connectedCallback(): void;
+        private showArrow;
+        connectedCallback(): Promise<void>;
+        handleCaptionToggle: (e: ZnInputEvent) => void;
         disconnectedCallback(): void;
         handleCollapse: (e: MouseEvent) => void;
         recalculateNumberOfItems: () => void;
@@ -2160,10 +2244,6 @@ declare module "components/data-select/index" {
         }
     }
 }
-declare module "internal/default-value" {
-    import type { ReactiveElement } from 'lit';
-    export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
-}
 declare module "components/input/input.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
@@ -2383,14 +2463,6 @@ declare module "events/zn-change" {
     global {
         interface GlobalEventHandlersEventMap {
             'zn-change': ZnChangeEvent;
-        }
-    }
-}
-declare module "events/zn-input" {
-    export type ZnInputEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-input': ZnInputEvent;
         }
     }
 }
@@ -4861,75 +4933,6 @@ declare module "components/editor/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor': ZnEditor;
-        }
-    }
-}
-declare module "components/toggle/toggle.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/toggle
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnToggle extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        private readonly formControlController;
-        input: HTMLInputElement;
-        hasFocus: boolean;
-        title: string;
-        name: string;
-        value: string;
-        fallbackValue: string;
-        size: 'small' | 'medium' | 'large';
-        disabled: boolean;
-        checked: boolean;
-        defaultChecked: boolean;
-        form: string;
-        required: boolean;
-        helpText: string;
-        triggerSubmit: boolean;
-        onText: string;
-        offText: string;
-        label: string;
-        get validity(): ValidityState;
-        get validationMessage(): string;
-        firstUpdated(_changedProperties: PropertyValues): void;
-        private handleBlur;
-        private handleInvalid;
-        private handleInput;
-        private handleClick;
-        private handleFocus;
-        private handleKeyDown;
-        click(): void;
-        focus(options?: FocusOptions): void;
-        blur(): void;
-        checkValidity(): boolean;
-        getForm(): HTMLFormElement | null;
-        reportValidity(): boolean;
-        setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/toggle/index" {
-    import ZnToggle from "components/toggle/toggle.component";
-    export * from "components/toggle/toggle.component";
-    export default ZnToggle;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-toggle': ZnToggle;
         }
     }
 }

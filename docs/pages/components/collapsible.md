@@ -31,10 +31,50 @@ Used instead of directly setting the `expanded` attribute on the element.
 </zn-collapsible>
 ```
 
+### Checkbox stuff
+
+```html:preview
+
+<zn-collapsible caption="Collapsible with Checkbox">
+  <div class="flex-mid" slot="caption">
+    <div class="grow zn-pr">Billing</div>
+    <zn-toggle name="enabled"></zn-toggle>
+  </div>
+  <div class="permission" data-filter="Example Permission">
+    <div class="flex-row zn-pad">
+      <div class="flex-mid">
+        <div class="grow flex-col flex-jc">
+          <strong>Example Permission</strong>
+          <span>Example Permission Description</span>
+        </div>
+        <div class="flex-mid">
+          <zn-toggle class="permission-toggle" name="enabled" value="1" fallback="0" size="medium">
+          </zn-toggle>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="permission" data-filter="Example Permission">
+    <div class="flex-row zn-pad">
+      <div class="flex-mid">
+        <div class="grow flex-col flex-jc">
+          <strong>Example Permission 2</strong>
+          <span>Example Permission 2 Description</span>
+        </div>
+        <div class="flex-mid">
+          <zn-toggle name="enabled" size="medium"></zn-toggle>
+        </div>
+      </div>
+    </div>
+  </div>
+</zn-collapsible>
+```
+
 ### Expanded Attribute
 
 ```html:preview
-<zn-collapsible caption="Expanded Attribute" 
+
+<zn-collapsible caption="Expanded Attribute"
                 description="Adding the expanded attribute will open the collapsible"
                 expanded>
   <zn-button>Button</zn-button>

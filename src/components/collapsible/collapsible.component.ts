@@ -1,11 +1,13 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {HasSlotController} from "../../internal/slot";
-import {property, state} from 'lit/decorators.js';
-import {Store} from "../../internal/storage";
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { HasSlotController } from "../../internal/slot";
+import { property, state } from 'lit/decorators.js';
+import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './collapsible.scss';
+import { ZnInputEvent } from "../../events/zn-input";
+import ZnToggle from "../toggle";
 
 /**
  * @summary Toggles between showing and hiding content when clicked
@@ -21,28 +23,28 @@ import styles from './collapsible.scss';
 export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({reflect: true}) caption = '';
+  @property({ reflect: true }) caption = '';
 
-  @property({reflect: true}) description: string;
+  @property({ reflect: true }) description: string;
 
-  @property({reflect: true}) label = '';
+  @property({ reflect: true }) label = '';
 
-  @property({type: Boolean, attribute: 'show-number', reflect: true}) showNumber: boolean = false;
+  @property({ type: Boolean, attribute: 'show-number', reflect: true }) showNumber: boolean = false;
 
   // what element name to count
-  @property({type: String, attribute: 'count-element'}) countElement: string = '*';
+  @property({ type: String, attribute: 'count-element' }) countElement: string = '*';
 
-  @property({type: Boolean, reflect: true}) expanded: boolean = false;
+  @property({ type: Boolean, reflect: true }) expanded: boolean = false;
 
-  @property({attribute: 'default'}) defaultState: 'open' | 'closed';
+  @property({ attribute: 'default' }) defaultState: 'open' | 'closed';
 
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
 
-  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
+  @property({ attribute: 'store-key', reflect: true }) storeKey: string = "";
 
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
 
-  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({ attribute: 'flush', type: Boolean, reflect: true }) flush: boolean = false;
 
   @state() numberOfItems: number = 0;
 
@@ -52,7 +54,9 @@ export default class ZnCollapsible extends ZincElement {
 
   private observer: MutationObserver;
 
-  connectedCallback() {
+  private showArrow: boolean = true;
+
+  async connectedCallback() {
     super.connectedCallback();
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "zncla:", this.storeTtl);
     this.expanded = this.defaultState === 'open';
@@ -70,7 +74,28 @@ export default class ZnCollapsible extends ZincElement {
       this.observer = new MutationObserver(() => {
         this.recalculateNumberOfItems();
       });
-      this.observer.observe(slot, {childList: true, subtree: true});
+      this.observer.observe(slot, { childList: true, subtree: true });
+    }
+
+    await this.updateComplete;
+
+    const captionSlot = this.hasSlotController.getSlot('caption') as HTMLDivElement;
+    if (captionSlot) {
+      const toggles = captionSlot.querySelectorAll('zn-toggle');
+      // remove the drop arrow
+      this.showArrow = false;
+      toggles.forEach(toggle => {
+        toggle.removeEventListener('zn-input', this.handleCaptionToggle);
+        toggle.addEventListener('zn-input', this.handleCaptionToggle);
+      });
+    }
+  }
+
+  // this is for handling global toggles
+  public handleCaptionToggle = (e: ZnInputEvent) => {
+    const toggle = e.target as ZnToggle;
+    if (toggle) {
+      this.expanded = toggle.checked;
     }
   }
 
@@ -82,6 +107,11 @@ export default class ZnCollapsible extends ZincElement {
   }
 
   handleCollapse = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName.toLowerCase() === 'input' && (target as HTMLInputElement).type === 'checkbox') {
+      return;
+    }
+
     if (this.expanded) {
       this.expanded = false;
       e.stopPropagation();
@@ -120,7 +150,8 @@ export default class ZnCollapsible extends ZincElement {
             <slot name="label"><p class="label">${this.label}</p></slot>
             ${this.showNumber && !this.expanded ? html`
               <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>` : ''}
-            <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>
+            ${this.showArrow  ? html`
+              <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>
         <div class="${classMap({

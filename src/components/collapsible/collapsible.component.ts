@@ -1,11 +1,11 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
 import {property, state} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './collapsible.scss';
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Toggles between showing and hiding content when clicked
@@ -23,7 +23,7 @@ export default class ZnCollapsible extends ZincElement {
 
   @property({reflect: true}) caption = '';
 
-  @property({reflect: true}) description = '';
+  @property({reflect: true}) description: string;
 
   @property({reflect: true}) label = '';
 
@@ -112,7 +112,9 @@ export default class ZnCollapsible extends ZincElement {
             <p class="caption">
               <slot name="caption">${this.caption}</slot>
             </p>
-            <p class="description">${this.description}</p>
+            <p class="description">
+              <slot name="description">${this.description}</slot>
+            </p>
           </div>
           <div class="header__right">
             <slot name="label"><p class="label">${this.label}</p></slot>

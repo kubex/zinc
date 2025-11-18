@@ -18,10 +18,10 @@ instead.
 ```html:preview
 
 <form method="get" action="#">
-  <zn-select name="something" label="Select one option" value="0">
+  <zn-select name="something" label="Select one option">
     <zn-option value="0">Option 0</zn-option>
     <zn-option value="1">Option 1</zn-option>
-    <zn-option value="2">Option 2</zn-option>
+    <zn-option value="2" selected>Option 2</zn-option>
     <zn-option value="3">Option 3</zn-option>
     <zn-option value="4">Option 4</zn-option>
     <zn-option value="5">Option 5</zn-option>

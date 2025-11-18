@@ -1,8 +1,8 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
-import {LocalizeController} from "../../utilities/localize";
-import {property, query, state} from 'lit/decorators.js';
-import {watch} from '../../internal/watch';
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, unsafeCSS } from 'lit';
+import { LocalizeController } from "../../utilities/localize";
+import { property, query, state } from 'lit/decorators.js';
+import { watch } from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 
@@ -28,7 +28,7 @@ import styles from './option.scss';
  */
 export default class ZnOption extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-  static dependencies = {'zn-icon': ZnIcon};
+  static dependencies = { 'zn-icon': ZnIcon };
 
   private cachedTextLabel: string;
   // @ts-expect-error - Controller is currently unused
@@ -39,7 +39,6 @@ export default class ZnOption extends ZincElement {
   @query('.option__label') defaultSlot: HTMLSlotElement;
 
   @state() current = false; // the user has keyed into the option, but hasn't selected it yet (shows a highlight)
-  @state() selected = false; // the option is selected and has aria-selected="true"
   @state() hasHover = false; // we need this because Safari doesn't honor :hover styles while dragging
 
   /**
@@ -47,10 +46,12 @@ export default class ZnOption extends ZincElement {
    * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
    * multiple values.
    */
-  @property({reflect: true}) value = '';
+  @property({ reflect: true }) value = '';
 
   /** Draws the option in a disabled state, preventing selection. */
-  @property({type: Boolean, reflect: true}) disabled = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
+
+  @property({ type: Boolean, reflect: true }) selected = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -70,7 +71,7 @@ export default class ZnOption extends ZincElement {
     // When the label changes, emit a slotchange event so parent controls see it
     if (textLabel !== this.cachedTextLabel) {
       this.cachedTextLabel = textLabel;
-      this.emit('slotchange', {bubbles: true, composed: false, cancelable: false});
+      this.emit('slotchange', { bubbles: true, composed: false, cancelable: false });
     }
   }
 

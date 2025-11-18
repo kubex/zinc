@@ -1907,7 +1907,6 @@ declare module "components/option/option.component" {
         multiple: boolean;
         defaultSlot: HTMLSlotElement;
         current: boolean;
-        selected: boolean;
         hasHover: boolean;
         /**
          * The option's value. When selected, the containing form control will receive this value. The value must be unique
@@ -1917,6 +1916,7 @@ declare module "components/option/option.component" {
         value: string;
         /** Draws the option in a disabled state, preventing selection. */
         disabled: boolean;
+        selected: boolean;
         connectedCallback(): void;
         private handleDefaultSlotChange;
         private handleMouseEnter;
@@ -1940,7 +1940,7 @@ declare module "components/option/index" {
     }
 }
 declare module "components/select/select.component" {
-    import { type CSSResultGroup, type TemplateResult, PropertyValues } from 'lit';
+    import { type CSSResultGroup, PropertyValues, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
     import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";

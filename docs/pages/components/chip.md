@@ -50,9 +50,11 @@ layout: component
 
 ## Examples
 
-### First Example
+### Tooltip Example
 
-TODO
+```html:preview
+<zn-chip icon="home" tooltip="Here is a tooltip">Tooltip Test</zn-chip>
+```
 
 ### Second Example
 

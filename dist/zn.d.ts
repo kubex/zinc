@@ -1755,8 +1755,7 @@ declare module "components/style/style.component" {
         primary: boolean;
         accent: boolean;
         center: boolean;
-        block: boolean;
-        flex: boolean;
+        display: string;
         font: string;
         width: string;
         height: string;

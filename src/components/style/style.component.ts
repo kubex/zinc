@@ -20,6 +20,8 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) primary = false;
   @property({type: Boolean}) accent = false;
   @property({type: Boolean}) center = false;
+  @property({type: Boolean}) block = false;
+  @property({type: Boolean}) flex = false;
   @property() font = '';
   @property() width = '';
   @property() height = '';
@@ -163,6 +165,12 @@ export default class ZnStyle extends ZincElement {
             break;
         }
       }
+    }
+
+    if (this.block) {
+      display = 'block'
+    } else if (this.flex) {
+      display = 'flex'
     }
 
     this.style.display = display;

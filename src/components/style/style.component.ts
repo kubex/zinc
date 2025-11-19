@@ -20,8 +20,7 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) primary = false;
   @property({type: Boolean}) accent = false;
   @property({type: Boolean}) center = false;
-  @property({type: Boolean}) block = false;
-  @property({type: Boolean}) flex = false;
+  @property({type: String}) display = 'contents';
   @property() font = '';
   @property() width = '';
   @property() height = '';
@@ -32,7 +31,7 @@ export default class ZnStyle extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
-    let display = 'contents';
+    let display = this.display || 'contents';
 
     if (this.color === '') {
       if (this.error) {
@@ -167,10 +166,9 @@ export default class ZnStyle extends ZincElement {
       }
     }
 
-    if (this.block) {
-      display = 'block'
-    } else if (this.flex) {
-      display = 'flex'
+    if (this.display) {
+      // Force attribute display
+      display = this.display
     }
 
     this.style.display = display;

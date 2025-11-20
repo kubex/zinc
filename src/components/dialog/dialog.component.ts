@@ -57,9 +57,7 @@ export default class ZnDialog extends ZincElement {
   private closeWatcher: CloseWatcher | null;
 
   @query('.dialog') dialog: HTMLDialogElement;
-  @query('.dialog__panel') panel: HTMLElement;
-  @query('.dialog__overlay') overlay: HTMLElement;
-
+  @query('.dialog__close') closer: HTMLButtonElement;
 
   /** The dialog's theme variant. */
   @property({reflect: true}) variant: 'default' | 'warning' | 'announcement' = 'default';

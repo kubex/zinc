@@ -1,9 +1,9 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import ZincElement from "../../internal/zinc-element";
 import ZnDialog from "../dialog";
 
@@ -62,6 +62,11 @@ export default class ZnConfirm extends ZincElement {
   @property({type: Boolean, attribute: 'hide-icon'}) hideIcon: boolean = false;
 
   /**
+   * Show a loading state when the dialog is submitted.
+   */
+  @property({type: Boolean, attribute: 'show-loading'}) showLoading: boolean = false;
+
+  /**
    * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
    * will need to manually open the dialog using the `show()` method.
    */
@@ -74,6 +79,9 @@ export default class ZnConfirm extends ZincElement {
   @property({attribute: 'footer-text'}) footerText: string = '';
 
   @query('zn-dialog') dialog: ZnDialog;
+
+  /** Internal loading state used when showLoading is enabled */
+  @state() private loading: boolean = false;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -108,10 +116,12 @@ export default class ZnConfirm extends ZincElement {
   show = (event: Event | undefined = undefined) => {
     const trigger = event?.target as HTMLButtonElement
     if (trigger?.disabled) return;
+    this.loading = false;
     this.dialog.show();
   }
 
   hide() {
+    this.loading = false;
     this.dialog.hide();
   }
 
@@ -143,12 +153,18 @@ export default class ZnConfirm extends ZincElement {
           : ''}
 
         <div class="confirm-dialog__content">
-          ${this.content ? html`${this.content}` : ''}
-          <slot></slot>
+          ${!this.loading ? html`
+            ${this.content ? html`${this.content}` : ''}
+            <slot></slot>` : html`
+            Loading...`}
         </div>
 
-        <zn-button outline color="${this.type}" slot="footer" dialog-closer>${this.cancelText}</zn-button>
-        <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}"> ${this.confirmText}</zn-button>
+        <zn-button outline color="${this.type}" slot="footer" dialog-closer disabled=${this.loading || nothing}>
+          ${this.cancelText}
+        </zn-button>
+        <zn-button color="${this.type}" slot="footer" @click="${this.submitDialog}" disabled=${this.loading || nothing}>
+          ${this.confirmText}
+        </zn-button>
 
         <slot name="footer-text" slot="footer-text">${this.footerText}</slot>
       </zn-dialog>`;
@@ -174,7 +190,12 @@ export default class ZnConfirm extends ZincElement {
         detail: {element: form}
       }))
       form.requestSubmit();
-      this.hide();
+      if (!this.showLoading) {
+        this.hide();
+      } else {
+        this.loading = true;
+        this.dialog.closer.disabled = true;
+      }
     }
   }
 }

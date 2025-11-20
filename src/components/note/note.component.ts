@@ -1,11 +1,11 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type colors} from "../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
 import {property, state} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './note.scss';
-import {HasSlotController} from "../../internal/slot";
 
 /**
  * @summary Short summary of the component's intended use.

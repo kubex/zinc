@@ -61,10 +61,12 @@ export default class ZnNote extends ZincElement {
       })}">
         <div class="note__header">
           <slot name="caption" class="note__header__caption">${this.caption}</slot>
-          <slot name="date" class="note__header__date">
-            <small>${this.date}</small>
-          </slot>
-          <slot name="action"></slot>
+          <div class="note__header__end">
+            <slot name="date" class="note__header__date">
+              <small>${this.date}</small>
+            </slot>
+            <slot name="action"></slot>
+          </div>
         </div>
 
         ${this.expanded && showExpandableButton ?

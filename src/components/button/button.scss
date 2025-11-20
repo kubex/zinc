@@ -92,7 +92,7 @@
   outline-offset: 2px;
 }
 
-.button--disabled {
+[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
 
@@ -107,11 +107,11 @@
     border-color: var(--zn-color-neutral-50);
     color: rgb(var(--zn-primary));
 
-    &:hover:not(.button--disabled) {
+    &:hover:not([disabled]) {
       background-color: var(--zn-color-neutral-100)
     }
 
-    &:active:not(.button--disabled) {
+    &:active:not([disabled]) {
       background-color: var(--zn-color-neutral-100)
     }
   }
@@ -121,11 +121,11 @@
   border-color: rgb(var(--btn-color));
   color: rgba(255, 255, 255, 0.9);
 
-  &:hover:not(.button--disabled) {
+  &:hover:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.8);
   }
 
-  &:active:not(.button--disabled) {
+  &:active:not([disabled]) {
     background-color: rgba(var(--btn-color));
   }
 }
@@ -136,7 +136,7 @@
   border-color: rgb(var(--btn-color));
   color: rgb(var(--btn-color));
 
-  &:hover:not(.button--disabled), &:active:not(.button--disabled) {
+  &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgb(var(--btn-color));
     color: white;
   }
@@ -144,7 +144,7 @@
   &.button--secondary {
     border-color: #F3EFFF;
 
-    &:hover:not(.button--disabled), &:active:not(.button--disabled) {
+    &:hover:not([disabled]), &:active:not([disabled]) {
       background-color: rgb(221, 218, 236);
     }
   }
@@ -155,7 +155,7 @@
   background: none;
   color: rgb(var(--btn-color));
 
-  &:hover:not(.button--disabled), &:active:not(.button--disabled) {
+  &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.1);
   }
 
@@ -274,11 +274,11 @@
   border-color: transparent !important;
   color: inherit;
 
-  &:hover:not(.button--disabled) {
+  &:hover:not([disabled]) {
     background-color: rgba(var(--zn-primary), 0.1);
   }
 
-  &:active:not(.button--disabled) {
+  &:active:not([disabled]) {
     background-color: rgba(var(--zn-primary), 0.2);
   }
 }
@@ -290,7 +290,7 @@
   color: white;
   opacity: 1 !important;
 
-  &:hover {
+  &:hover:not([disabled]) {
     background-color: rgb(var(--btn-color));
   }
 
@@ -303,7 +303,7 @@
     border-color: rgb(var(--btn-color));
     color: rgb(var(--btn-color));
 
-    &:hover, &:active {
+    &:hover:not([disabled]), &:active:not([disabled]) {
       background-color: rgba(var(--btn-color));
       color: white;
     }

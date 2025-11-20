@@ -1,5 +1,5 @@
 import {classMap} from 'lit/directives/class-map.js';
-import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {type CSSResultGroup, nothing, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
@@ -339,7 +339,6 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--text': (this.text && !this.outline),
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,
-          'button--disabled': this.disabled,
           'button--with-icon': this.icon,
           'button--icon-left': this.iconPosition === 'left',
           'button--icon-right': this.iconPosition === 'right',
@@ -356,6 +355,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
         data-notification="${ifDefined(this.notification)}"
+        disabled=${this.disabled || nothing}
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label"

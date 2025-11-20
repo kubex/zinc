@@ -10,14 +10,15 @@ import { scrollIntoView } from "../../internal/scroll";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { waitForEvent } from "../../internal/event";
 import { watch } from '../../internal/watch';
-import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
+import type { ZincFormControl } from '../../internal/zinc-element';
 import type { ZnRemoveEvent } from "../../events/zn-remove";
 import type ZnOption from "../option";
 
+import {deepQuerySelectorAll} from "../../utilities/query";
 import styles from './select.scss';
 
 /**
@@ -730,9 +731,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     if (this.conditional !== "") {
-      const conditionalSelect = document.querySelector(`zn-select[id="${this.conditional}"]`) as ZnSelect;
-      console.log('conditionalSelect', conditionalSelect);
-      if (conditionalSelect) {
+      const conditionalSelectList = deepQuerySelectorAll(`#${this.conditional}`, document.documentElement, '') as ZnSelect[];
+      conditionalSelectList.forEach((conditionalSelect) => {
         // disable if the other has any options selected
         conditionalSelect.addEventListener('zn-change', () => {
           let linkedValues = Array.isArray(conditionalSelect.value) ? conditionalSelect.value : [conditionalSelect.value];
@@ -743,7 +743,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
         // trigger the event once to initialize
         conditionalSelect.dispatchEvent(new Event('zn-input'));
-      }
+      });
     }
   }
 

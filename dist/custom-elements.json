@@ -4008,6 +4008,16 @@
             },
             {
               "kind": "field",
+              "name": "showLoading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading state when the dialog is submitted.",
+              "attribute": "show-loading"
+            },
+            {
+              "kind": "field",
               "name": "trigger",
               "type": {
                 "text": "string"
@@ -4042,6 +4052,16 @@
               "type": {
                 "text": "ZnDialog"
               }
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Internal loading state used when showLoading is enabled"
             },
             {
               "kind": "method",
@@ -4150,6 +4170,15 @@
               },
               "default": "false",
               "fieldName": "hideIcon"
+            },
+            {
+              "name": "show-loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Show a loading state when the dialog is submitted.",
+              "fieldName": "showLoading"
             },
             {
               "name": "trigger",
@@ -7457,16 +7486,9 @@
             },
             {
               "kind": "field",
-              "name": "panel",
+              "name": "closer",
               "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "overlay",
-              "type": {
-                "text": "HTMLElement"
+                "text": "HTMLButtonElement"
               }
             },
             {

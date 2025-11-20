@@ -709,8 +709,7 @@ declare module "components/dialog/dialog.component" {
         private readonly hasSlotController;
         private closeWatcher;
         dialog: HTMLDialogElement;
-        panel: HTMLElement;
-        overlay: HTMLElement;
+        closer: HTMLButtonElement;
         /** The dialog's theme variant. */
         variant: 'default' | 'warning' | 'announcement';
         /** The dialog's size. */
@@ -805,6 +804,10 @@ declare module "components/confirm/confirm.component" {
         cancelText: string;
         hideIcon: boolean;
         /**
+         * Show a loading state when the dialog is submitted.
+         */
+        showLoading: boolean;
+        /**
          * The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you
          * will need to manually open the dialog using the `show()` method.
          */
@@ -814,6 +817,8 @@ declare module "components/confirm/confirm.component" {
         /** The Dialogs footer text. */
         footerText: string;
         dialog: ZnDialog;
+        /** Internal loading state used when showLoading is enabled */
+        private loading;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         updateTriggers(): void;

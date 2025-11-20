@@ -1135,6 +1135,11 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
+              "name": "show-loading",
+              "description": "Show a loading state when the dialog is submitted.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "trigger",
               "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
               "value": { "type": "string" }
@@ -1185,6 +1190,11 @@
               { "name": "confirmText", "type": "string" },
               { "name": "cancelText", "type": "string" },
               { "name": "hideIcon", "type": "boolean" },
+              {
+                "name": "showLoading",
+                "description": "Show a loading state when the dialog is submitted.",
+                "type": "boolean"
+              },
               {
                 "name": "trigger",
                 "description": "The dialog's trigger element. This is used to open the dialog when clicked. If you do not provide a trigger, you\nwill need to manually open the dialog using the `show()` method.",
@@ -1999,8 +2009,7 @@
           "js": {
             "properties": [
               { "name": "dialog", "type": "HTMLDialogElement" },
-              { "name": "panel", "type": "HTMLElement" },
-              { "name": "overlay", "type": "HTMLElement" },
+              { "name": "closer", "type": "HTMLButtonElement" },
               {
                 "name": "variant",
                 "description": "The dialog's theme variant.",

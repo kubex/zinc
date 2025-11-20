@@ -1,6 +1,7 @@
 import { animateTo, stopAnimations } from '../../internal/animate.js';
 import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, nothing, PropertyValues, type TemplateResult, unsafeCSS } from 'lit';
+import {deepQuerySelectorAll} from "../../utilities/query";
 import { FormControlController } from "../../internal/form";
 import { getAnimation, setDefaultAnimation } from "../../utilities/animation-registry";
 import { HasSlotController } from "../../internal/slot";
@@ -18,7 +19,6 @@ import type { ZincFormControl } from '../../internal/zinc-element';
 import type { ZnRemoveEvent } from "../../events/zn-remove";
 import type ZnOption from "../option";
 
-import {deepQuerySelectorAll} from "../../utilities/query";
 import styles from './select.scss';
 
 /**

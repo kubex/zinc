@@ -1760,7 +1760,7 @@ declare module "components/style/style.component" {
         primary: boolean;
         accent: boolean;
         center: boolean;
-        display: string;
+        display: null;
         font: string;
         width: string;
         height: string;

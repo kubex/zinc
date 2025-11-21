@@ -20,7 +20,7 @@ export default class ZnStyle extends ZincElement {
   @property({type: Boolean}) primary = false;
   @property({type: Boolean}) accent = false;
   @property({type: Boolean}) center = false;
-  @property({type: String}) display = 'contents';
+  @property({type: String}) display = null;
   @property() font = '';
   @property() width = '';
   @property() height = '';

@@ -1948,11 +1948,11 @@ declare module "components/option/index" {
 declare module "components/select/select.component" {
     import { type CSSResultGroup, PropertyValues, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2087,6 +2087,7 @@ declare module "components/select/select.component" {
         /** The select's required attribute. */
         required: boolean;
         cacheKey: string;
+        triggerSubmit: boolean;
         /**
          * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
          * is the current tag's index.  The function should return either a Lit TemplateResult or a string containing trusted HTML of the symbol to render at

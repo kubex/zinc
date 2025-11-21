@@ -1,7 +1,7 @@
 import { animateTo, stopAnimations } from '../../internal/animate.js';
 import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, nothing, PropertyValues, type TemplateResult, unsafeCSS } from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
+import { deepQuerySelectorAll } from "../../utilities/query";
 import { FormControlController } from "../../internal/form";
 import { getAnimation, setDefaultAnimation } from "../../utilities/animation-registry";
 import { HasSlotController } from "../../internal/slot";
@@ -11,11 +11,11 @@ import { scrollIntoView } from "../../internal/scroll";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import { waitForEvent } from "../../internal/event";
 import { watch } from '../../internal/watch';
+import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
-import type { ZincFormControl } from '../../internal/zinc-element';
 import type { ZnRemoveEvent } from "../../events/zn-remove";
 import type ZnOption from "../option";
 
@@ -209,6 +209,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @property({ type: Boolean, reflect: true }) required = false;
 
   @property({ attribute: 'cache-key' }) cacheKey: string = "";
+
+  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
 
   /**
    * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
@@ -539,6 +541,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       if (!this.multiple) {
         this.hide();
         this.displayInput.focus({ preventScroll: true });
+      }
+
+      if (this.triggerSubmit) {
+        this.formControlController.submit();
       }
     }
   }

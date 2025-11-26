@@ -417,21 +417,47 @@ export default class ZnDataTable extends ZincElement {
 
       // add groups to the current rows
       const toAdd = this.groups.split(',').map(g => g.trim()).filter(g => g.length > 0);
-      toAdd.forEach((group) => {
-        if (!groupedRows[this.humanize(group)]) {
-          groupedRows[this.humanize(group)] = [];
+
+      const hasWildcard = toAdd.includes('*');
+      const explicitGroups = new Set(
+        toAdd
+          .filter(g => g !== '*')
+          .map(g => this.humanize(g))
+      );
+
+      // pre-create explicit groups
+      explicitGroups.forEach((group) => {
+        if (!groupedRows[group]) {
+          groupedRows[group] = [];
         }
       });
 
+      // pre-create wildcard grouping if requested
+      if (hasWildcard) {
+        groupedRows['*'] = [];
+      }
+
       this._rows.forEach((row: Row) => {
         const groupCell = row.cells.find((cell: Cell) => cell.column === this.groupBy);
-        const groupValue = groupCell ? groupCell.text : 'Ungrouped';
-        if (!groupedRows[this.humanize(groupValue)] && (!this.groups || groupValue === 'Ungrouped')) {
-          groupedRows[this.humanize(groupValue)] = [];
+        const rawGroupValue = groupCell ? groupCell.text : 'Ungrouped';
+        const groupValue = this.humanize(rawGroupValue);
+
+        if (explicitGroups.has(groupValue)) {
+          groupedRows[groupValue].push(row);
+          return;
         }
 
-        if (groupedRows[this.humanize(groupValue)]) {
-          groupedRows[this.humanize(groupValue)].push(row);
+        if (hasWildcard) {
+          groupedRows['*'].push(row);
+          return;
+        }
+
+        // If no groups specified, or handling ungrouped fallback, create groups dynamically
+        if (!this.groups || groupValue === 'Ungrouped') {
+          if (!groupedRows[groupValue]) {
+            groupedRows[groupValue] = [];
+          }
+          groupedRows[groupValue].push(row);
         }
       });
 
@@ -447,7 +473,7 @@ export default class ZnDataTable extends ZincElement {
         <zn-sp flush>
           ${Object.keys(groupedRows).map((groupKey) => html`
             <div class="table-group">
-              <h3 class="table-group__title">${groupKey === "Ungrouped" ? "" : groupKey}</h3>
+              <h3 class="table-group__title">${(groupKey === "Ungrouped" || groupKey === "*") ? "" : groupKey}</h3>
               ${this.renderTableData(groupedRows[groupKey])}
             </div>`
           )}

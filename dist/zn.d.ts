@@ -2025,7 +2025,7 @@ declare module "components/select/select.component" {
         currentOption: ZnOption;
         selectedOptions: ZnOption[];
         private valueHasChanged;
-        private hasCheckboxPrefix;
+        private inputPrefix;
         /** The name of the select, submitted as a name/value pair with form data. */
         name: string;
         private _value;
@@ -2103,7 +2103,7 @@ declare module "components/select/select.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         connectedCallback(): void;
-        private updateHasCheckboxPrefix;
+        private updateHasInputPrefix;
         private addOpenListeners;
         private removeOpenListeners;
         private handleFocus;
@@ -4951,6 +4951,7 @@ declare module "components/checkbox/checkbox.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
+    type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/checkbox
@@ -4961,7 +4962,7 @@ declare module "components/checkbox/checkbox.component" {
      *
      * @slot - The checkbox's label.
      * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
-     *  @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
+     * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
      *
      * @event zn-blur - Emitted when the checkbox loses focus.
      * @event zn-change - Emitted when the checked state changes.
@@ -4974,6 +4975,7 @@ declare module "components/checkbox/checkbox.component" {
      * @csspart control--checked - Matches the control part when the checkbox is checked.
      * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
      * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
      * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
      * @csspart label - The container that wraps the checkbox's label.
      * @csspart description - The container that wraps the checkbox's description.
@@ -5022,6 +5024,16 @@ declare module "components/checkbox/checkbox.component" {
         description: string;
         label: string;
         labelTooltip: string;
+        /** The icon to show when the checkbox is checked. */
+        checkedIcon: string;
+        /** The icon to show when the checkbox is unchecked. */
+        uncheckedIcon: string;
+        /** The color of the checkbox. */
+        color: ColorOption;
+        /** The color of the checkbox when checked. Overrides `color`. */
+        checkedColor: ColorOption;
+        /** The color of the checkbox when unchecked. Overrides `color`. */
+        uncheckedColor: ColorOption;
         /** Gets the validity state object */
         get validity(): ValidityState;
         get isChecked(): boolean;
@@ -6580,6 +6592,54 @@ declare module "components/reveal/index" {
         }
     }
 }
+declare module "components/audio-select/audio-select.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZnChangeEvent } from "events/zn-change";
+    interface AudioFile {
+        name: string;
+        url: string;
+    }
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/audio-select
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot.
+     * @slot actions - The actions slot.
+     * @slot footer - The footer slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnAudioSelect extends ZincElement {
+        static styles: CSSResultGroup;
+        private _selectedUrl;
+        private _isPlaying;
+        private readonly _audio;
+        label: string;
+        placeholder: string;
+        files: AudioFile[];
+        constructor();
+        disconnectedCallback(): void;
+        _stopAudio(): void;
+        handleSelectChange(e: ZnChangeEvent): void;
+        togglePreview(e: CustomEvent): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/audio-select/index" {
+    import ZnAudioSelect from "components/audio-select/audio-select.component";
+    export * from "components/audio-select/audio-select.component";
+    export default ZnAudioSelect;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-audio-select': ZnAudioSelect;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6721,6 +6781,7 @@ declare module "zinc" {
     export { default as SettingsContainer } from "components/settings-container/index";
     export { default as FilterContainer } from "components/filter-container/index";
     export { default as Reveal } from "components/reveal/index";
+    export { default as AudioSelect } from "components/audio-select/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

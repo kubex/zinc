@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,247 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/audio-select/audio-select.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnAudioSelect",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "The actions slot.",
+              "name": "actions"
+            },
+            {
+              "description": "The footer slot.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_selectedUrl",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_isPlaying",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_audio",
+              "type": {
+                "text": "HTMLAudioElement"
+              },
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Audio()"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "files",
+              "type": {
+                "text": "AudioFile[]"
+              },
+              "attribute": "files"
+            },
+            {
+              "kind": "method",
+              "name": "_stopAudio"
+            },
+            {
+              "kind": "method",
+              "name": "handleSelectChange",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "togglePreview",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "CustomEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "label"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "files",
+              "type": {
+                "text": "AudioFile[]"
+              },
+              "fieldName": "files"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "audio-select",
+          "tagName": "zn-audio-select",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/audio-select\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot actions - The actions slot.\n * @slot footer - The footer slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/audio-select",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnAudioSelect",
+            "module": "components/audio-select/audio-select.js"
           }
         }
       ]
@@ -2223,6 +2391,10 @@
               "name": "checked-icon"
             },
             {
+              "description": "The unchecked icon, an `<zn-icon>` element.",
+              "name": "unchecked-icon"
+            },
+            {
               "description": "The indeterminate icon, an `<zn-icon>` element.",
               "name": "indeterminate-icon"
             },
@@ -2443,6 +2615,55 @@
                 "text": "string"
               },
               "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "checkedIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The icon to show when the checkbox is checked.",
+              "attribute": "checked-icon"
+            },
+            {
+              "kind": "field",
+              "name": "uncheckedIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The icon to show when the checkbox is unchecked.",
+              "attribute": "unchecked-icon"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "ColorOption"
+              },
+              "default": "'default'",
+              "description": "The color of the checkbox.",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "checkedColor",
+              "type": {
+                "text": "ColorOption"
+              },
+              "description": "The color of the checkbox when checked. Overrides `color`.",
+              "attribute": "checked-color"
+            },
+            {
+              "kind": "field",
+              "name": "uncheckedColor",
+              "type": {
+                "text": "ColorOption"
+              },
+              "description": "The color of the checkbox when unchecked. Overrides `color`.",
+              "attribute": "unchecked-color"
             },
             {
               "kind": "field",
@@ -2715,6 +2936,49 @@
                 "text": "string"
               },
               "fieldName": "labelTooltip"
+            },
+            {
+              "name": "checked-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The icon to show when the checkbox is checked.",
+              "fieldName": "checkedIcon"
+            },
+            {
+              "name": "unchecked-icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The icon to show when the checkbox is unchecked.",
+              "fieldName": "uncheckedIcon"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "ColorOption"
+              },
+              "default": "'default'",
+              "description": "The color of the checkbox.",
+              "fieldName": "color"
+            },
+            {
+              "name": "checked-color",
+              "type": {
+                "text": "ColorOption"
+              },
+              "description": "The color of the checkbox when checked. Overrides `color`.",
+              "fieldName": "checkedColor"
+            },
+            {
+              "name": "unchecked-color",
+              "type": {
+                "text": "ColorOption"
+              },
+              "description": "The color of the checkbox when unchecked. Overrides `color`.",
+              "fieldName": "uncheckedColor"
             }
           ],
           "superclass": {
@@ -2725,7 +2989,7 @@
           "tagNameWithoutPrefix": "checkbox",
           "tagName": "zn-checkbox",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n *  @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/checkbox\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The checkbox's label.\n * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n *\n * @event zn-blur - Emitted when the checkbox loses focus.\n * @event zn-change - Emitted when the checked state changes.\n * @event zn-focus - Emitted when the checkbox gains focus.\n * @event zn-input - Emitted when the checkbox receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart base - The component's base wrapper.\n * @csspart control - The square container that wraps the checkbox's checked state.\n * @csspart control--checked - Matches the control part when the checkbox is checked.\n * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.\n * @csspart checked-icon - The checked icon, an `<zn-icon>` element.\n * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.\n * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.\n * @csspart label - The container that wraps the checkbox's label.\n * @csspart description - The container that wraps the checkbox's description.\n * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.\n */",
           "documentation": "https://zinc.style/components/checkbox",
           "status": "experimental",
           "since": "1.0",
@@ -19775,7 +20039,7 @@
             },
             {
               "kind": "field",
-              "name": "hasCheckboxPrefix",
+              "name": "inputPrefix",
               "type": {
                 "text": "boolean"
               },
@@ -20052,7 +20316,7 @@
             },
             {
               "kind": "method",
-              "name": "updateHasCheckboxPrefix",
+              "name": "updateHasInputPrefix",
               "privacy": "private"
             },
             {
@@ -26536,7 +26800,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "author": "",
     "license": "MIT"
   }

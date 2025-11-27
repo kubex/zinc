@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -90,6 +68,55 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-audio-select",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **actions** - The actions slot.\n- **footer** - The footer slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "placeholder",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "files", "value": { "type": "AudioFile[]" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "actions", "description": "The actions slot." },
+            { "name": "footer", "description": "The footer slot." }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "label", "type": "string" },
+              { "name": "placeholder", "type": "string" },
+              { "name": "files", "type": "AudioFile[]" }
+            ],
+            "events": []
           }
         },
         {
@@ -533,7 +560,7 @@
         },
         {
           "name": "zn-checkbox",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the checkbox loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the checkbox gains focus.\n- **zn-input** - Emitted when the checkbox receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the checkbox.\n- **focus(options: _FocusOptions_)** - Sets focus on the checkbox.\n- **blur()** - Removes focus from the checkbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The checkbox's label.\n- **description** - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the checkbox's checked state.\n- **control--checked** - Matches the control part when the checkbox is checked.\n- **control--indeterminate** - Matches the control part when the checkbox is indeterminate.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **indeterminate-icon** - The indeterminate icon, an `<zn-icon>` element.\n- **label** - The container that wraps the checkbox's label.\n- **description** - The container that wraps the checkbox's description.\n- **selected-content** - The container that wraps optional content that appears when a checkbox is checked.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the checkbox loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the checkbox gains focus.\n- **zn-input** - Emitted when the checkbox receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the checkbox.\n- **focus(options: _FocusOptions_)** - Sets focus on the checkbox.\n- **blur()** - Removes focus from the checkbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The checkbox's label.\n- **description** - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the checkbox's checked state.\n- **control--checked** - Matches the control part when the checkbox is checked.\n- **control--indeterminate** - Matches the control part when the checkbox is indeterminate.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **unchecked-icon** - The unchecked icon, an `<zn-icon>` element.\n- **indeterminate-icon** - The indeterminate icon, an `<zn-icon>` element.\n- **label** - The container that wraps the checkbox's label.\n- **description** - The container that wraps the checkbox's description.\n- **selected-content** - The container that wraps optional content that appears when a checkbox is checked.",
           "doc-url": "",
           "attributes": [
             { "name": "title", "value": { "type": "string", "default": "''" } },
@@ -596,7 +623,32 @@
               "value": { "type": "string", "default": "''" }
             },
             { "name": "label", "value": { "type": "string" } },
-            { "name": "label-tooltip", "value": { "type": "string" } }
+            { "name": "label-tooltip", "value": { "type": "string" } },
+            {
+              "name": "checked-icon",
+              "description": "The icon to show when the checkbox is checked.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "unchecked-icon",
+              "description": "The icon to show when the checkbox is unchecked.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "color",
+              "description": "The color of the checkbox.",
+              "value": { "type": "ColorOption", "default": "'default'" }
+            },
+            {
+              "name": "checked-color",
+              "description": "The color of the checkbox when checked. Overrides `color`.",
+              "value": { "type": "ColorOption" }
+            },
+            {
+              "name": "unchecked-color",
+              "description": "The color of the checkbox when unchecked. Overrides `color`.",
+              "value": { "type": "ColorOption" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The checkbox's label." },
@@ -697,6 +749,31 @@
               },
               { "name": "label", "type": "string" },
               { "name": "labelTooltip", "type": "string" },
+              {
+                "name": "checkedIcon",
+                "description": "The icon to show when the checkbox is checked.",
+                "type": "string"
+              },
+              {
+                "name": "uncheckedIcon",
+                "description": "The icon to show when the checkbox is unchecked.",
+                "type": "string"
+              },
+              {
+                "name": "color",
+                "description": "The color of the checkbox.",
+                "type": "ColorOption"
+              },
+              {
+                "name": "checkedColor",
+                "description": "The color of the checkbox when checked. Overrides `color`.",
+                "type": "ColorOption"
+              },
+              {
+                "name": "uncheckedColor",
+                "description": "The color of the checkbox when unchecked. Overrides `color`.",
+                "type": "ColorOption"
+              },
               {
                 "name": "validity",
                 "description": "Gets the validity state object"

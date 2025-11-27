@@ -13,6 +13,8 @@ import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './checkbox.scss';
 
+type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/checkbox
@@ -23,7 +25,7 @@ import styles from './checkbox.scss';
  *
  * @slot - The checkbox's label.
  * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
- *  @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
+ * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
  *
  * @event zn-blur - Emitted when the checkbox loses focus.
  * @event zn-change - Emitted when the checked state changes.
@@ -36,6 +38,7 @@ import styles from './checkbox.scss';
  * @csspart control--checked - Matches the control part when the checkbox is checked.
  * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
  * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+ * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
  * @csspart indeterminate-icon - The indeterminate icon, an `<zn-icon>` element.
  * @csspart label - The container that wraps the checkbox's label.
  * @csspart description - The container that wraps the checkbox's description.
@@ -104,6 +107,21 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   @property() label: string;
 
   @property({attribute: 'label-tooltip'}) labelTooltip: string;
+
+  /** The icon to show when the checkbox is checked. */
+  @property({attribute: 'checked-icon'}) checkedIcon = '';
+
+  /** The icon to show when the checkbox is unchecked. */
+  @property({attribute: 'unchecked-icon'}) uncheckedIcon = '';
+
+  /** The color of the checkbox. */
+  @property({reflect: true}) color: ColorOption = 'default';
+
+  /** The color of the checkbox when checked. Overrides `color`. */
+  @property({attribute: 'checked-color'}) checkedColor: ColorOption;
+
+  /** The color of the checkbox when unchecked. Overrides `color`. */
+  @property({attribute: 'unchecked-color'}) uncheckedColor: ColorOption;
 
   /** Gets the validity state object */
   get validity() {
@@ -216,6 +234,11 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     const hasLabelTooltip = this.hasSlotController.test('label-tooltip');
     const hasLabel = this.label || hasLabelSlot;
 
+    // Determine the effective color
+    const effectiveColor = (this.checked || this.indeterminate)
+      ? (this.checkedColor || this.color)
+      : (this.uncheckedColor || this.color);
+
     //
     // NOTE: we use a <div> around the label slot because of this Chrome bug.
     //
@@ -262,6 +285,14 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--small': this.size === 'small',
             'checkbox--medium': this.size === 'medium',
             'checkbox--large': this.size === 'large',
+            'checkbox--default': effectiveColor === 'default',
+            'checkbox--primary': effectiveColor === 'primary',
+            'checkbox--secondary': effectiveColor === 'secondary',
+            'checkbox--error': effectiveColor === 'error',
+            'checkbox--info': effectiveColor === 'info',
+            'checkbox--success': effectiveColor === 'success',
+            'checkbox--warning': effectiveColor === 'warning',
+            'checkbox--transparent': effectiveColor === 'transparent',
             'checkbox--has-description': hasDescription,
             'checkbox--has-selected-content': this.hasSlotController.test('selected-content')
           })}>
@@ -289,15 +320,28 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
               ? ' control--indeterminate'
               : ''}"
             class="checkbox__control">
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="4"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 class="svg-icon">
-              <polyline class="checkbox__checked-icon" points="20 6 9 17 4 12"></polyline>
-            </svg>
+
+            ${this.checked && !this.indeterminate
+              ? this.checkedIcon
+                ? html`
+                  <zn-icon part="checked-icon" class="checkbox__icon" src="${this.checkedIcon}"></zn-icon>`
+                : html`
+                  <svg viewBox="0 0 24 24"
+                       fill="none"
+                       stroke="currentColor"
+                       stroke-width="4"
+                       stroke-linecap="round"
+                       stroke-linejoin="round"
+                       class="svg-icon">
+                    <polyline class="checkbox__checked-icon" points="20 6 9 17 4 12"></polyline>
+                  </svg>`
+              : ''}
+
+            ${!this.checked && !this.indeterminate && this.uncheckedIcon
+              ? html`
+                <zn-icon part="unchecked-icon" class="checkbox__icon" src="${this.uncheckedIcon}"></zn-icon>`
+              : ''}
+
             ${!this.checked && this.indeterminate
               ? html`
                 <zn-icon

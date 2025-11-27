@@ -82,6 +82,7 @@ export {default as FilterWrapper} from './components/filter-wrapper';
 export {default as SettingsContainer} from './components/settings-container';
 export { default as FilterContainer } from './components/filter-container';
 export { default as Reveal } from './components/reveal';
+export { default as AudioSelect } from './components/audio-select';
 /* plop:component */
 
 // Base Component

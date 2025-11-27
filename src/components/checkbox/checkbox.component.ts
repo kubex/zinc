@@ -7,9 +7,9 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
+import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './checkbox.scss';
 
@@ -289,10 +289,15 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
               ? ' control--indeterminate'
               : ''}"
             class="checkbox__control">
-            ${this.checked
-              ? html`
-                <zn-icon part="checked-icon" class="checkbox__checked-icon" size="16" src="check"></zn-icon>`
-              : ''}
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="4"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="svg-icon">
+              <polyline class="checkbox__checked-icon" points="20 6 9 17 4 12"></polyline>
+            </svg>
             ${!this.checked && this.indeterminate
               ? html`
                 <zn-icon

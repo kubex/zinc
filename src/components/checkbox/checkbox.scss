@@ -8,6 +8,7 @@
 .form-control {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .form-control .form-control__label {
@@ -23,6 +24,7 @@
   color: var(--zn-input-label-color);
   vertical-align: middle;
   cursor: pointer;
+  height: 100%;
 }
 
 .checkbox--small {
@@ -76,7 +78,6 @@
   pointer-events: none;
 }
 
-.checkbox__checked-icon,
 .checkbox__indeterminate-icon {
   --icon-size: var(--toggle-size);
   --icon-color: var(--zn-color-neutral-0);
@@ -84,6 +85,32 @@
   display: inline-flex;
   width: var(--toggle-size);
   height: var(--toggle-size);
+}
+
+.svg-icon {
+  width: 70%;
+  height: 70%;
+  --icon-color: var(--zn-color-neutral-0);
+
+  .checkbox__checked-icon {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.checkbox--indeterminate .svg-icon {
+  color: transparent;
+}
+
+.checkbox--checked {
+  .svg-icon {
+    color: var(--zn-color-neutral-0);
+  }
+
+  .checkbox__checked-icon {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Hover */
@@ -199,4 +226,24 @@
   border: 1px solid var(--zn-color-purple-600);
   outline: 1px solid var(--zn-color-purple-600);
   transition: var(--zn-transition-medium) all;
+}
+
+/** Select prefix slot */
+:host([slot="prefix"]) {
+  height: 100%;
+  aspect-ratio: 1;
+
+  .checkbox__control {
+    height: 100%;
+    width: 100%;
+    border-left: unset;
+    border-top: unset;
+    border-bottom: unset;
+    box-shadow: unset;
+    background-color: var(--zn-color-purple-50);
+  }
+
+  .checkbox--checked .checkbox__control {
+    background-color: var(--zn-color-primary-600);
+  }
 }

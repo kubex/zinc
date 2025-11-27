@@ -475,6 +475,7 @@
             <li data-level="3"><a href="#sizes">Sizes</a></li>
             <li data-level="3"><a href="#placement">Placement</a></li>
             <li data-level="3"><a href="#prefix-icons">Prefix Icons</a></li>
+            <li data-level="3"><a href="#checkbox-prefix">Checkbox Prefix</a></li>
             <li data-level="3"><a href="#custom-tags">Custom Tags</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
@@ -1823,6 +1824,84 @@
             </div>
           </div>
 
+          <h3 id="checkbox-prefix" class="anchor-heading">
+            Checkbox Prefix<a href="#checkbox-prefix" aria-label='Direct link to "Checkbox Prefix"'></a>
+          </h3>
+          <p>
+            You can place a checkbox in the <code>prefix</code> slot to visually join it to the select. The checkbox
+            will match the height of the control and can be interacted with independently (clicking or toggling it won’t
+            open the select).
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-select
+                label="Notify me about"
+                help-text="Use the checkbox to enable/disable notifications; choose a channel with the select"
+              >
+                <zn-checkbox slot="prefix" aria-label="Enable notifications"></zn-checkbox>
+                <zn-option value="email">Email</zn-option>
+                <zn-option value="sms">SMS</zn-option>
+                <zn-option value="push">Push</zn-option>
+              </zn-select>
+
+              <br />
+
+              <zn-select label="Large with checkbox" size="large" value="email">
+                <zn-checkbox slot="prefix" size="large" aria-label="Enable notifications"></zn-checkbox>
+                <zn-option value="email">Email</zn-option>
+                <zn-option value="sms">SMS</zn-option>
+                <zn-option value="push">Push</zn-option>
+              </zn-select>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-205">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-380"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notify me about<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Use the checkbox to enable/disable notifications; choose a channel with the select<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-checkbox</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prefix<span class="token punctuation">"</span></span> <span class="token attr-name">aria-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enable notifications<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-checkbox</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Email<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sms<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>SMS<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>push<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Push<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Large with checkbox<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-checkbox</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prefix<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span> <span class="token attr-name">aria-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enable notifications<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-checkbox</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Email<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sms<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>SMS<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>push<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Push<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-380"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-205"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
           <h3 id="custom-tags" class="anchor-heading">
             Custom Tags<a href="#custom-tags" aria-label='Direct link to "Custom Tags"'></a>
           </h3>
@@ -1914,9 +1993,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-205">
+            <div class="code-preview__source-group" id="code-preview-source-group-206">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-380"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span>
+                <pre><code class="language-html" id="code-block-381"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span>
   <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select one<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email phone<span class="token punctuation">"</span></span>
   <span class="token attr-name">multiple</span>
@@ -1953,7 +2032,7 @@
     </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-380"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-381"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1962,7 +2041,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-205"
+                aria-controls="code-preview-source-group-206"
               >
                 Source
                 <svg
@@ -2007,7 +2086,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-381"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.17/dist/components/select/select.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-381"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-382"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.17/dist/components/select/select.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-382"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2022,12 +2101,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-382"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.17/dist/components/select/select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-382"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-383"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.17/dist/components/select/select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-383"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-383"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/select/select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-383"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-384"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/select/select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-384"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

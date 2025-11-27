@@ -1946,13 +1946,13 @@ declare module "components/option/index" {
     }
 }
 declare module "components/select/select.component" {
-    import { type CSSResultGroup, PropertyValues, type TemplateResult } from 'lit';
     import { FormControlController } from "internal/form";
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2019,11 +2019,13 @@ declare module "components/select/select.component" {
         displayInput: HTMLInputElement;
         valueInput: HTMLInputElement;
         listbox: HTMLSlotElement;
+        prefixSlot: HTMLSlotElement;
         private hasFocus;
         displayLabel: string;
         currentOption: ZnOption;
         selectedOptions: ZnOption[];
         private valueHasChanged;
+        private hasCheckboxPrefix;
         /** The name of the select, submitted as a name/value pair with form data. */
         name: string;
         private _value;
@@ -2101,6 +2103,7 @@ declare module "components/select/select.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         connectedCallback(): void;
+        private updateHasCheckboxPrefix;
         private addOpenListeners;
         private removeOpenListeners;
         private handleFocus;
@@ -4945,9 +4948,9 @@ declare module "components/editor/index" {
 }
 declare module "components/checkbox/checkbox.component" {
     import { type CSSResultGroup } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/checkbox

@@ -103,26 +103,22 @@ export default class ZnAudioSelect extends ZincElement {
 
   render() {
     return html`
-      <div class="container">
-        <div class="select-wrapper">
-          <zn-select label="${this.label}" @zn-change="${this.handleSelectChange}">
-            <zn-checkbox
-              slot="prefix"
-              checked-icon="pause"
-              unchecked-icon="play_arrow"
-              checked-color="primary"
-              unchecked-color="secondary"
-              ?checked="${this._isPlaying}"
-              @zn-change="${this.togglePreview}">
-            </zn-checkbox>
+      <zn-select label="${this.label}" @zn-change="${this.handleSelectChange}">
+        <zn-checkbox
+          slot="prefix"
+          checked-icon="pause"
+          unchecked-icon="play_arrow"
+          checked-color="primary"
+          unchecked-color="secondary"
+          ?checked="${this._isPlaying}"
+          @zn-change="${this.togglePreview}">
+        </zn-checkbox>
 
-            <zn-option value="" disabled selected>${this.placeholder || 'Select audio'}</zn-option>
-            ${this.files.map(file => html`
-              <zn-option value="${file.url}">${file.name}</zn-option>
-            `)}
-          </zn-select>
-        </div>
-      </div>
+        <zn-option value="" disabled selected>${this.placeholder || 'Select audio'}</zn-option>
+        ${this.files.map(file => html`
+          <zn-option value="${file.url}">${file.name}</zn-option>
+        `)}
+      </zn-select>
     `;
   }
 }

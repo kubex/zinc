@@ -98,7 +98,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() currentOption: ZnOption;
   @state() selectedOptions: ZnOption[] = [];
   @state() private valueHasChanged: boolean = false;
-  @state() private hasCheckboxPrefix: boolean = false;
+  @state() private inputPrefix: boolean = false;
 
   /** The name of the select, submitted as a name/value pair with form data. */
   @property() name = '';
@@ -271,13 +271,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  private updateHasCheckboxPrefix() {
-    try {
-      const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];
-      this.hasCheckboxPrefix = assigned.some(el => el.tagName === 'ZN-CHECKBOX');
-    } catch {
-      this.hasCheckboxPrefix = false;
-    }
+  private updateHasInputPrefix() {
+    const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];
+    this.inputPrefix = assigned.length > 0;
   }
 
   private addOpenListeners() {
@@ -772,7 +768,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       });
     }
 
-    this.updateHasCheckboxPrefix();
+    this.updateHasInputPrefix();
   }
 
   @watch('disabled', {waitUntilFirstUpdate: true})
@@ -971,7 +967,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--small': this.size === 'small',
               'select--medium': this.size === 'medium',
               'select--large': this.size === 'large',
-              'select--has-checkbox-prefix': this.hasCheckboxPrefix
+              'select--has-input-prefix': this.inputPrefix
             })}
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}
@@ -989,7 +985,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               <slot part="prefix"
                     name="prefix"
                     class="select__prefix"
-                    @slotchange=${() => this.updateHasCheckboxPrefix()}></slot>
+                    @slotchange=${() => this.updateHasInputPrefix()}></slot>
 
               <input
                 part="display-input"

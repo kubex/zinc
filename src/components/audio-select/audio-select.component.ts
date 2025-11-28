@@ -49,21 +49,21 @@ export default class ZnAudioSelect extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._stopAudio();
+    this.stopAudio();
   }
 
   updated(changedProperties: PropertyValues) {
     super.updated(changedProperties);
 
     if (changedProperties.has('value')) {
-      this._stopAudio();
+      this.stopAudio();
       if (this.value) {
         this._audio.src = this.value;
       }
     }
   }
 
-  _stopAudio() {
+  stopAudio() {
     if (this._audio) {
       this._audio.pause();
       this._audio.currentTime = 0;

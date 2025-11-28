@@ -6625,7 +6625,7 @@ declare module "components/audio-select/audio-select.component" {
         constructor();
         disconnectedCallback(): void;
         updated(changedProperties: PropertyValues): void;
-        _stopAudio(): void;
+        stopAudio(): void;
         handleSelectChange(e: ZnChangeEvent): void;
         togglePreview(e: CustomEvent): void;
         render(): import("lit").TemplateResult<1>;

@@ -345,32 +345,40 @@ export default class ZnTabs extends ZincElement {
     }
 
     let inSlot = true;
-    this._panels.forEach((elements, key) => {
-      const isActive = key === tabName;
-      elements.forEach((element) => {
-        if (isActive && element.parentNode !== this) {
-          inSlot = false;
-        }
-        element.toggleAttribute('selected', isActive);
-        if (isActive && refresh) {
-          let uri = "";
-          let gaid = "";
-          if (this._activeTab && this._activeTab.hasAttribute('tab-uri')) {
-            uri = this._activeTab.getAttribute('tab-uri')!;
-            gaid = this._activeTab.getAttribute('gaid')!;
+    const updateTabs = () => {
+      this._panels.forEach((elements, key) => {
+        const isActive = key === tabName;
+        elements.forEach((element) => {
+          if (isActive && element.parentNode !== this) {
+            inSlot = false;
           }
-          document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-            detail: {element: element, uri: uri, gaid: gaid}
-          }));
-        }
+          element.toggleAttribute('selected', isActive);
+          if (isActive && refresh) {
+            let uri = "";
+            let gaid = "";
+            if (this._activeTab && this._activeTab.hasAttribute('tab-uri')) {
+              uri = this._activeTab.getAttribute('tab-uri')!;
+              gaid = this._activeTab.getAttribute('gaid')!;
+            }
+            document.dispatchEvent(new CustomEvent('zn-refresh-element', {
+              detail: {element: element, uri: uri, gaid: gaid}
+            }));
+          }
+        });
       });
-    });
 
-    if (this._panel) {
-      this._panel.classList.toggle('contents-slot', !inSlot);
+      if (this._panel) {
+        this._panel.classList.toggle('contents-slot', !inSlot);
+      }
+      this._current = tabName;
+    };
+
+    if ('startViewTransition' in document) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (document as any).startViewTransition(() => updateTabs());
+    } else {
+      updateTabs();
     }
-
-    this._current = tabName;
 
     return true;
   }

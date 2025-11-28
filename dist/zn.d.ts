@@ -3214,7 +3214,7 @@ declare module "components/navbar/navbar.component" {
         appendItem(item: Element): void;
         connectedCallback(): void;
         handleResize: () => void;
-        addItem(item: any): any;
+        addItem(item: Element): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         showMore(): void;
         render(): import("lit").TemplateResult<1>;

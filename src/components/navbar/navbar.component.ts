@@ -126,16 +126,21 @@ export default class ZnNavbar extends ZincElement {
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
 
-  public addItem(item: any) {
-    if (this._openedTabs.includes(item.getAttribute('tab-uri'))) {
+  public addItem(item: Element): void {
+    const tabUri = item.getAttribute('tab-uri');
+    if (typeof tabUri !== 'string' || this._openedTabs.includes(tabUri)) {
       return;
     }
-    this._openedTabs.push(item.getAttribute('tab-uri'));
+    this._openedTabs.push(tabUri);
     const ul = this.shadowRoot?.querySelector('ul');
     const dropdown = this.shadowRoot?.querySelector('[id="dropdown-item"]');
     // @ts-expect-error
     dropdown.querySelector('zn-dropdown').hide();
-    return dropdown ? ul?.insertBefore(item, dropdown) : ul?.appendChild(item);
+    if (dropdown) {
+      ul?.insertBefore(item, dropdown);
+    } else {
+      ul?.appendChild(item);
+    }
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

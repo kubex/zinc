@@ -48,6 +48,14 @@
   var(--zn-transition-fast) background-color;
 }
 
+/* Prefix area: allow a leading control (e.g., checkbox) full-height */
+.select__prefix {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  height: 100%;
+}
+
 .select__display-input {
   position: relative;
   width: 100%;
@@ -175,6 +183,10 @@
   padding-inline: var(--zn-input-spacing-medium);
 }
 
+.select--has-input-prefix.select--medium .select__combobox {
+  padding-inline-start: 0;
+}
+
 .select--medium .select__clear {
   margin-inline-start: var(--zn-input-spacing-medium);
 }
@@ -198,6 +210,10 @@
   min-height: var(--zn-input-height-large);
   padding-block: 0;
   padding-inline: var(--zn-input-spacing-large);
+}
+
+.select--has-input-prefix.select--large .select__combobox {
+  padding-inline-start: 0;
 }
 
 .select--large .select__clear {
@@ -239,6 +255,11 @@
   display: inline-flex;
   align-items: center;
   color: var(--zn-input-icon-color);
+}
+
+/* When a checkbox is used in the prefix, remove left padding so the prefix joins flush */
+.select--has-input-prefix.select--standard .select__combobox {
+  padding-inline-start: 0;
 }
 
 /* Clear button */

@@ -41,7 +41,6 @@ on [form controls](/getting-started/form-controls) to learn more about form subm
 
 ### Distinct Selects
 
-
 ```html:preview
 
 <div class="form-spacing">
@@ -59,7 +58,6 @@ on [form controls](/getting-started/form-controls) to learn more about form subm
 ```
 
 ### Conditional Selects
-
 
 ```html:preview
 
@@ -420,6 +418,29 @@ so that we can consider whether the pattern needs to be updated.
   <zn-option value="option-2">Option 2 (shifted 4px right due to icon size)</zn-option>
   <zn-option value="option-3">Option 3 (shifted 4px right due to icon size)</zn-option>
   <zn-option value="option-4">Option 4 (shifted 4px right due to icon size)</zn-option>
+</zn-select>
+```
+
+### Checkbox Prefix
+
+You can place a checkbox in the `prefix` slot to visually join it to the select. The checkbox will match the height of
+the control and can be interacted with independently (clicking or toggling it won’t open the select).
+
+```html:preview
+<zn-select label="Notify me about" help-text="Use the checkbox to enable/disable notifications; choose a channel with the select">
+  <zn-checkbox slot="prefix" aria-label="Enable notifications"></zn-checkbox>
+  <zn-option value="email">Email</zn-option>
+  <zn-option value="sms">SMS</zn-option>
+  <zn-option value="push">Push</zn-option>
+</zn-select>
+
+<br />
+
+<zn-select label="Large with checkbox" size="large" value="email">
+  <zn-checkbox slot="prefix" size="large" aria-label="Enable notifications"></zn-checkbox>
+  <zn-option value="email">Email</zn-option>
+  <zn-option value="sms">SMS</zn-option>
+  <zn-option value="push">Push</zn-option>
 </zn-select>
 ```
 

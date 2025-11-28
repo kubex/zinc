@@ -254,7 +254,12 @@ export default class ZnTabs extends ZincElement {
     // ts-ignore
     const target = (event.relatedTarget ?? event.target) as HTMLElement;
     if (target) {
-      this.clickTab(target, event.altKey);
+      if ('startViewTransition' in document) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (document as any).startViewTransition(() => this.clickTab(target, event.altKey));
+      } else {
+        this.clickTab(target, event.altKey)
+      }
     }
   }
 
@@ -333,8 +338,9 @@ export default class ZnTabs extends ZincElement {
       return false;
     }
 
+    const sameTab = this._current === tabName;
     // Multi click on an active tab will refresh the tab
-    if (this._current === tabName) {
+    if (sameTab) {
       this._activeClicks++;
       if (this._activeClicks > 2) {
         refresh = true;
@@ -373,12 +379,7 @@ export default class ZnTabs extends ZincElement {
       this._current = tabName;
     };
 
-    if ('startViewTransition' in document) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (document as any).startViewTransition(() => updateTabs());
-    } else {
-      updateTabs();
-    }
+    updateTabs();
 
     return true;
   }

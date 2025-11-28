@@ -2639,6 +2639,7 @@ declare module "components/data-table/data-table.component" {
         sortValue?: string;
         uri?: string;
         target?: string;
+        copyable?: boolean;
     }
     interface Row {
         id: string;

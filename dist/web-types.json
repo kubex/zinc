@@ -97,12 +97,16 @@
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **actions** - The actions slot.\n- **footer** - The footer slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
+            { "name": "value", "value": { "type": "string", "default": "''" } },
             { "name": "label", "value": { "type": "string", "default": "''" } },
             {
               "name": "placeholder",
               "value": { "type": "string", "default": "''" }
             },
-            { "name": "files", "value": { "type": "AudioFile[]" } }
+            {
+              "name": "files",
+              "value": { "type": "AudioFile[]", "default": "[]" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -112,6 +116,7 @@
           "events": [],
           "js": {
             "properties": [
+              { "name": "value", "type": "string" },
               { "name": "label", "type": "string" },
               { "name": "placeholder", "type": "string" },
               { "name": "files", "type": "AudioFile[]" }

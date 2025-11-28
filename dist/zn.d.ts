@@ -6593,7 +6593,7 @@ declare module "components/reveal/index" {
     }
 }
 declare module "components/audio-select/audio-select.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { ZnChangeEvent } from "events/zn-change";
     interface AudioFile {
@@ -6616,14 +6616,15 @@ declare module "components/audio-select/audio-select.component" {
      */
     export default class ZnAudioSelect extends ZincElement {
         static styles: CSSResultGroup;
-        private _selectedUrl;
         private _isPlaying;
         private readonly _audio;
+        value: string;
         label: string;
         placeholder: string;
         files: AudioFile[];
         constructor();
         disconnectedCallback(): void;
+        updated(changedProperties: PropertyValues): void;
         _stopAudio(): void;
         handleSelectChange(e: ZnChangeEvent): void;
         togglePreview(e: CustomEvent): void;

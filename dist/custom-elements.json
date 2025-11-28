@@ -327,15 +327,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "_selectedUrl",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
               "name": "_isPlaying",
               "type": {
                 "text": "boolean"
@@ -352,6 +343,15 @@
               "privacy": "private",
               "readonly": true,
               "default": "new Audio()"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
             },
             {
               "kind": "field",
@@ -377,6 +377,7 @@
               "type": {
                 "text": "AudioFile[]"
               },
+              "default": "[]",
               "attribute": "files"
             },
             {
@@ -410,6 +411,14 @@
           ],
           "attributes": [
             {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
               "name": "label",
               "type": {
                 "text": "string"
@@ -430,6 +439,7 @@
               "type": {
                 "text": "AudioFile[]"
               },
+              "default": "[]",
               "fieldName": "files"
             }
           ],

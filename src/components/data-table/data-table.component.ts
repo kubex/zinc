@@ -44,6 +44,7 @@ interface Cell {
   sortValue?: string;
   uri?: string;
   target?: string;
+  copyable?: boolean;
 }
 
 interface Row {
@@ -923,6 +924,12 @@ export default class ZnDataTable extends ZincElement {
 
         return html`
           <zn-icon src="${src}" color="${color}"></zn-icon> ${content}`;
+      }
+
+      if (data.copyable) {
+        return html`
+          ${content}
+          <zn-copy-button value="${data.text}"></zn-copy-button>`;
       }
 
       return content;

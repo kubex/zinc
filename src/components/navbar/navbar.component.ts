@@ -50,6 +50,7 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
   @property({type: Boolean}) isolated = false;
 
+  @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'store-key', type: String}) storeKey: string = '';
   @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
@@ -84,6 +85,10 @@ export default class ZnNavbar extends ZincElement {
 
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     this.resizeObserver.observe(this as HTMLElement); // Observe the parent node
+
+    if (!this.masterId) {
+      this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
+    }
 
     if (this.storeKey && this.storeTtl === 0) {
       this.storeTtl = 300;
@@ -262,10 +267,6 @@ export default class ZnNavbar extends ZincElement {
     } catch (e) {
       console.warn('ZnNavbar: Failed to save tab', e);
     }
-  }
-
-  showMore() {
-    //console.log("Showing More")
   }
 
   private handleClick = (e: MouseEvent) => {

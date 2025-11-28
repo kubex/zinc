@@ -2,11 +2,17 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
+import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
 import styles from './navbar.scss';
+
+interface StoredTab {
+  uri: string;
+  title: string;
+}
 
 /**
  * @summary Short summary of the component's intended use.
@@ -44,6 +50,10 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
   @property({type: Boolean}) isolated = false;
 
+  @property({attribute: 'store-key', type: String}) storeKey: string = '';
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
+
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
   @property()
@@ -59,6 +69,8 @@ export default class ZnNavbar extends ZincElement {
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
 
+  protected _store: Store;
+
   appendItem(item: Element) {
     this._appended = this._appended || [];
     this._appended.push(item);
@@ -72,6 +84,12 @@ export default class ZnNavbar extends ZincElement {
 
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     this.resizeObserver.observe(this as HTMLElement); // Observe the parent node
+
+    if (this.storeKey && this.storeTtl === 0) {
+      this.storeTtl = 300;
+    }
+
+    this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znnav:", this.storeTtl);
   }
 
 
@@ -92,7 +110,7 @@ export default class ZnNavbar extends ZincElement {
     let parent = this.parentElement;
     let availableWidth = this.offsetWidth || parent?.offsetWidth || 0;
 
-    // Needs to grab the first available width that is not 0
+    // Needs to grab the first available width that is 0
     // This is to avoid issues with the parent/navbar not being visible
     while (availableWidth === 0 && parent?.parentElement) {
       parent = parent.parentElement;
@@ -129,7 +147,7 @@ export default class ZnNavbar extends ZincElement {
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
 
-  public addItem(item: Element): void {
+  public addItem(item: Element, persist: boolean = true): void {
     const tabUri = item.getAttribute('tab-uri');
     if (typeof tabUri !== 'string' || this._openedTabs.includes(tabUri)) {
       return;
@@ -137,8 +155,15 @@ export default class ZnNavbar extends ZincElement {
     this._openedTabs.push(tabUri);
     const ul = this.shadowRoot?.querySelector('ul');
     const dropdown = this.shadowRoot?.querySelector('[id="dropdown-item"]');
-    // @ts-expect-error
-    dropdown.querySelector('zn-dropdown').hide();
+
+    if (persist && dropdown) {
+      dropdown.querySelector('zn-dropdown')?.hide();
+      this._saveTabToStorage({
+        uri: tabUri,
+        title: (item as HTMLElement).innerText
+      });
+    }
+
     if (dropdown) {
       ul?.insertBefore(item, dropdown);
     } else {
@@ -161,6 +186,9 @@ export default class ZnNavbar extends ZincElement {
       this._navItemsGap = parseInt(computed.columnGap);
     }
 
+    // Load persisted tabs before calculating widths
+    this._loadStoredTabs();
+
     setTimeout(() => {
       const items = this._navItems?.querySelectorAll('li') || [];
       for (const item of items) {
@@ -182,13 +210,57 @@ export default class ZnNavbar extends ZincElement {
             const li = document.createElement('li');
             li.setAttribute('tab-uri', (e.detail.element as HTMLElement).getAttribute('data-path')!);
             li.innerText = e.detail.value;
-            this.addItem(li);
+            this.addItem(li, true);
             setTimeout(() => {
               li.click();
             }, 300);
           }
         });
       }
+    }
+  }
+
+  private _loadStoredTabs() {
+    if (!this.storeKey || !this._store) return;
+
+    const storedData = this._store.get(this.storeKey);
+    if (storedData) {
+      try {
+        const tabs = JSON.parse(storedData) as StoredTab[];
+        if (Array.isArray(tabs)) {
+          tabs.forEach(tab => {
+            if (tab.uri && tab.title) {
+              const li = document.createElement('li');
+              li.setAttribute('tab-uri', tab.uri);
+              li.innerText = tab.title;
+              // Pass false to avoid re-saving what was just read
+              this.addItem(li, false);
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('ZnNavbar: Failed to load stored tabs', e);
+      }
+    }
+  }
+
+  private _saveTabToStorage(newTab: StoredTab) {
+    if (!this.storeKey || !this._store) return;
+
+    try {
+      const storedData = this._store.get(this.storeKey);
+      let tabs: StoredTab[] = [];
+      if (storedData) {
+        tabs = JSON.parse(storedData) as StoredTab[];
+      }
+
+      // Ensure we don't save duplicates
+      if (!tabs.some(t => t.uri === newTab.uri)) {
+        tabs.push(newTab);
+        this._store.set(this.storeKey, JSON.stringify(tabs));
+      }
+    } catch (e) {
+      console.warn('ZnNavbar: Failed to save tab', e);
     }
   }
 

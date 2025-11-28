@@ -1,4 +1,4 @@
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property, state} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
 import type {ZnChangeEvent} from "../../events/zn-change";
@@ -27,13 +27,13 @@ interface AudioFile {
 export default class ZnAudioSelect extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private _selectedUrl: string = '';
   @state() private _isPlaying: boolean = false;
   private readonly _audio: HTMLAudioElement;
 
+  @property() value = '';
   @property() label = '';
   @property() placeholder = '';
-  @property({type: Object}) files: AudioFile[];
+  @property({type: Object}) files: AudioFile[] = [];
 
   constructor() {
     super();
@@ -52,6 +52,17 @@ export default class ZnAudioSelect extends ZincElement {
     this._stopAudio();
   }
 
+  updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('value')) {
+      this._stopAudio();
+      if (this.value) {
+        this._audio.src = this.value;
+      }
+    }
+  }
+
   _stopAudio() {
     if (this._audio) {
       this._audio.pause();
@@ -65,20 +76,13 @@ export default class ZnAudioSelect extends ZincElement {
       return;
     }
 
-    const url = (e.target as HTMLSelectElement).value;
-    this._selectedUrl = url;
-
-    this._stopAudio();
-
-    if (url) {
-      this._audio.src = url;
-    }
+    this.value = (e.target as HTMLSelectElement).value;
   }
 
   togglePreview(e: CustomEvent) {
     e.stopPropagation();
 
-    if (!this._selectedUrl) {
+    if (!this.value) {
       e.preventDefault();
       this._isPlaying = false;
       this.requestUpdate();
@@ -103,7 +107,10 @@ export default class ZnAudioSelect extends ZincElement {
 
   render() {
     return html`
-      <zn-select label="${this.label}" @zn-change="${this.handleSelectChange}">
+      <zn-select
+        label="${this.label}"
+        value="${this.value}"
+        @zn-change="${this.handleSelectChange}">
         <zn-checkbox
           slot="prefix"
           checked-icon="pause"
@@ -114,7 +121,7 @@ export default class ZnAudioSelect extends ZincElement {
           @zn-change="${this.togglePreview}">
         </zn-checkbox>
 
-        <zn-option value="" disabled selected>${this.placeholder || 'Select audio'}</zn-option>
+        <zn-option value="" disabled>${this.placeholder || 'Select audio'}</zn-option>
         ${this.files.map(file => html`
           <zn-option value="${file.url}">${file.name}</zn-option>
         `)}

@@ -208,7 +208,9 @@ export default class ZnNavbar extends ZincElement {
           'navbar--slim': this.slim,
           'navbar--border': this.border,
           'navbar--flush': this.flush,
-          'navbar--no-pad': this.noPad
+          'navbar--no-pad': this.noPad,
+          'navbar--stacked': this.stacked,
+          'navbar--icon-bar': this.iconBar
         })}">
           ${this._preItems}
           ${this.navigation.map((item: any) => {

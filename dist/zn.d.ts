@@ -4996,6 +4996,8 @@ declare module "components/checkbox/checkbox.component" {
         name: string;
         /** The current value of the checkbox, submitted as a name/value pair with form data. */
         value: string;
+        /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
+        uncheckedValue: string;
         /** The checkbox's size. */
         size: 'small' | 'medium' | 'large';
         /** Disables the checkbox. */

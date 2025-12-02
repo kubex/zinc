@@ -5021,6 +5021,8 @@ declare module "components/checkbox/checkbox.component" {
         form: string;
         /** Makes the checkbox a required field. */
         required: boolean;
+        /** Submits the form when checkbox is clicked. */
+        submitOnClick: boolean;
         /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
         description: string;
         label: string;

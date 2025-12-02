@@ -51,6 +51,9 @@ export default class ZnItem extends ZincElement {
   // align items to the right
   @property({type: Boolean, attribute: 'align-end'}) alignEnd: boolean;
 
+  // align items in the center
+  @property({type: Boolean, attribute: 'align-center'}) alignCenter: boolean;
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
@@ -95,7 +98,8 @@ export default class ZnItem extends ZincElement {
           'item--large': this.size === 'large',
           'item--has-icon': hasIcon,
           'item--no-padding': this.noPadding,
-          'item--align-end': this.alignEnd
+          'item--align-end': this.alignEnd,
+          'item--align-center': this.alignCenter
         })}"
         part="base">
 

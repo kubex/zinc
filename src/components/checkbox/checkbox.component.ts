@@ -49,7 +49,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   static dependencies = {'zn-icon': ZnIcon};
 
   private readonly formControlController = new FormControlController(this, {
-    value: (control: ZnCheckbox) => (control.checked ? control.value || 'on' : undefined),
+    value: (control: ZnCheckbox) => (control.checked ? control.value || 'on' : control.uncheckedValue || undefined),
     defaultValue: (control: ZnCheckbox) => control.defaultChecked,
     setValue: (control: ZnCheckbox, checked: boolean) => (control.checked = checked)
   });
@@ -66,6 +66,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
 
   /** The current value of the checkbox, submitted as a name/value pair with form data. */
   @property() value: string;
+
+  /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
+  @property({attribute: 'unchecked-value', reflect: true}) uncheckedValue: string;
 
   /** The checkbox's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';

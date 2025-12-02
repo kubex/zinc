@@ -101,6 +101,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** Makes the checkbox a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Submits the form when checkbox is clicked. */
+  @property({attribute: 'submit-on-click', type: Boolean, reflect: true}) submitOnClick: boolean = false;
+
   /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
   @property({attribute: 'description'}) description = '';
 
@@ -149,6 +152,11 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     this.checked = !this.checked;
     this.indeterminate = false;
     this.emit('zn-change');
+
+    const form = this.getForm();
+    if (this.submitOnClick && form) {
+      form.requestSubmit();
+    }
   }
 
   private handleBlur() {

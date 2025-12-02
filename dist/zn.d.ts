@@ -5922,6 +5922,7 @@ declare module "components/item/item.component" {
         grid: boolean;
         noPadding: boolean;
         alignEnd: boolean;
+        alignCenter: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         protected _hasContent(): boolean;

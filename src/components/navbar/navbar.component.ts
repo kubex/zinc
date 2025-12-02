@@ -189,6 +189,16 @@ export default class ZnNavbar extends ZincElement {
     if (this._navItems) {
       const computed = getComputedStyle(this._navItems);
       this._navItemsGap = parseInt(computed.columnGap);
+
+      this._navItems.addEventListener('click', (e) => {
+        const target = (e.target as HTMLElement).closest('li[tab-uri]');
+        if (target && this.storeKey) {
+          const uri = target.getAttribute('tab-uri');
+          if (uri) {
+            this._store.set(this.storeKey + ':active', uri);
+          }
+        }
+      });
     }
 
     // Load persisted tabs before calculating widths
@@ -229,6 +239,7 @@ export default class ZnNavbar extends ZincElement {
     if (!this.storeKey || !this._store) return;
 
     const storedData = this._store.get(this.storeKey);
+    const activeUri = this._store.get(this.storeKey + ':active');
     if (storedData) {
       try {
         const tabs = JSON.parse(storedData) as StoredTab[];
@@ -240,6 +251,12 @@ export default class ZnNavbar extends ZincElement {
               li.innerText = tab.title;
               // Pass false to avoid re-saving what was just read
               this.addItem(li, false);
+
+              if (activeUri && tab.uri === activeUri) {
+                setTimeout(() => {
+                  li.click();
+                }, 100);
+              }
             }
           });
         }

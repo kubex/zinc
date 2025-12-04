@@ -6721,6 +6721,8 @@ declare module "components/translations/translations.component" {
         private handleNavbarClick;
         private handleValueUpdate;
         private updateValue;
+        private handleKeyDown;
+        private handleSubmit;
         render(): import("lit").TemplateResult<1>;
     }
 }

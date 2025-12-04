@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <title>Rating</title>
+    <meta name="description" content="A wrapper component that groups inputs and selects visually." />
+    <title>Input Group</title>
 
     <meta name="turbo-cache-control" />
 
@@ -12,9 +12,9 @@
     <meta name="twitter:creator" content="kubex" />
     <meta name="twitter:image" content="https://zinc.style/assets" />
 
-    <meta property="og:url" content="https://zinc.style/components/rating" />
-    <meta property="og:title" content="Rating" />
-    <meta property="og:description" content="" />
+    <meta property="og:url" content="https://zinc.style/components/input-group" />
+    <meta property="og:title" content="Input Group" />
+    <meta property="og:description" content="A wrapper component that groups inputs and selects visually." />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -275,7 +275,7 @@
               </li>
 
               <li>
-                <a href="/components/input-group"> Input Group </a>
+                <a href="/components/input-group" class="active-link"> Input Group </a>
               </li>
 
               <li>
@@ -351,7 +351,7 @@
               </li>
 
               <li>
-                <a href="/components/rating" class="active-link"> Rating </a>
+                <a href="/components/rating"> Rating </a>
               </li>
 
               <li>
@@ -464,27 +464,24 @@
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
           <ul>
-            <li class="top"><a href="#">Rating</a></li>
+            <li class="top"><a href="#">Input Group</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#form-example-with-value-and-name">Form example with Value and Name</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#mixed-inputs-and-selects">Mixed Inputs and Selects</a></li>
+            <li data-level="3"><a href="#multiple-inputs">Multiple Inputs</a></li>
+            <li data-level="3"><a href="#labeled-group">Labeled Group</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#methods">Methods</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
         <div class="content__body">
           <header class="component-header">
-            <h1>Rating</h1>
+            <h1>Input Group</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-rating&gt; | ZnRating</code>
+              <code>&lt;zn-input-group&gt; | ZnInputGroup</code>
             </div>
 
             <div class="component-header__info">
@@ -493,21 +490,29 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">A wrapper component that groups inputs and selects visually.</p>
+
+          <p>Input Groups allow you to group multiple form controls together into a single visual unit.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-rating></zn-rating>
+              <zn-input-group>
+                <zn-input placeholder="First Name"></zn-input>
+                <zn-input placeholder="Last Name"></zn-input>
+              </zn-input-group>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-188">
+            <div class="code-preview__source-group" id="code-preview-source-group-129">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-357"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-rating</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-rating</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-357"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-238"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>First Name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Last Name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-238"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -516,7 +521,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-188"
+                aria-controls="code-preview-source-group-129"
               >
                 Source
                 <svg
@@ -536,33 +541,39 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="form-example-with-value-and-name" class="anchor-heading">
-            Form example with Value and Name<a
-              href="#form-example-with-value-and-name"
-              aria-label='Direct link to "Form example with Value and Name"'
+          <h3 id="mixed-inputs-and-selects" class="anchor-heading">
+            Mixed Inputs and Selects<a
+              href="#mixed-inputs-and-selects"
+              aria-label='Direct link to "Mixed Inputs and Selects"'
             ></a>
           </h3>
+          <p>You can combine inputs and selects.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <form action="#" method="get">
-                <zn-rating value="2" name="rating"></zn-rating>
-                <zn-button type="submit">Submit</zn-button>
-              </form>
+              <zn-input-group>
+                <zn-select value="http://" style="width: 125px">
+                  <zn-option value="http://">http://</zn-option>
+                  <zn-option value="https://">https://</zn-option>
+                </zn-select>
+                <zn-input placeholder="example.com"></zn-input>
+              </zn-input-group>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-189">
+            <div class="code-preview__source-group" id="code-preview-source-group-130">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-358">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>get<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-rating</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rating<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-rating</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-358"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-239"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">width</span><span class="token punctuation">:</span> 125px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>http://<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>https://<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-239"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -571,7 +582,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-189"
+                aria-controls="code-preview-source-group-130"
               >
                 Source
                 <svg
@@ -588,10 +599,104 @@
             </div>
           </div>
 
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <h3 id="multiple-inputs" class="anchor-heading">
+            Multiple Inputs<a href="#multiple-inputs" aria-label='Direct link to "Multiple Inputs"'></a>
           </h3>
-          <p>TODO</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-input-group>
+                <zn-input placeholder="City"></zn-input>
+                <zn-input placeholder="State"></zn-input>
+                <zn-input placeholder="Zip"></zn-input>
+              </zn-input-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-131">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-240"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>City<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>State<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Zip<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-240"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-131"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="labeled-group" class="anchor-heading">
+            Labeled Group<a href="#labeled-group" aria-label='Direct link to "Labeled Group"'></a>
+          </h3>
+          <p>Use the <code>label</code> attribute to add a label to the input group.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-input-group label="Personal Information">
+                <zn-input placeholder="First Name"></zn-input>
+                <zn-input placeholder="Last Name"></zn-input>
+              </zn-input-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-132">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-241"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Personal Information<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>First Name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Last Name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-241"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-132"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -614,7 +719,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-359"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.19/dist/components/rating/rating.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-359"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-242"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.19/dist/components/input-group/input-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-242"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -629,12 +734,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-360"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.19/dist/components/rating/rating.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-360"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-243"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.19/dist/components/input-group/input-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-243"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-361"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/rating/rating.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-361"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-244"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/input-group/input-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-244"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -650,14 +755,14 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
+                  <td>The default slot for inputs and selects.</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
-                    <code>example</code>
+                    <code>label</code>
                   </td>
-                  <td>An example slot.</td>
+                  <td>The input group’s label. Alternatively, you can use the <code>label</code> attribute.</td>
                 </tr>
               </tbody>
             </table>
@@ -685,22 +790,16 @@
               <tbody>
                 <tr>
                   <td>
-                    <code class="nowrap">validity</code>
+                    <code class="nowrap">label</code>
                   </td>
-                  <td>Gets the validity state object</td>
+                  <td>The input group’s label. If you need to display HTML, use the <code>label</code> slot.</td>
                   <td style="text-align: center"></td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-
-                <tr>
                   <td>
-                    <code class="nowrap">validationMessage</code>
+                    <code>string</code>
                   </td>
-                  <td>Gets the validation message</td>
-                  <td style="text-align: center"></td>
-                  <td>-</td>
-                  <td>-</td>
+                  <td>
+                    <code>''</code>
+                  </td>
                 </tr>
 
                 <tr>
@@ -724,111 +823,6 @@
             >
           </p>
 
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="methods" class="anchor-heading">
-            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-arguments">Arguments</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>checkValidity()</code></td>
-                  <td>
-                    Checks the validity but does not show a validation message. Returns <code>true</code> when valid and
-                    <code>false</code> when invalid.
-                  </td>
-                  <td>-</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>getForm()</code></td>
-                  <td>Gets the associated form, if one exists.</td>
-                  <td>-</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>reportValidity()</code></td>
-                  <td>Checks for validity and shows the browser’s validation message if the control is invalid.</td>
-                  <td>-</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap"><code>setCustomValidity()</code></td>
-                  <td>Sets a custom validation message. Pass an empty string to restore validity.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
-          </p>
-
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
 
           <div class="table-scroll">
@@ -844,6 +838,21 @@
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>form-control</code></td>
+                  <td>The form control wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>form-control-label</code></td>
+                  <td>The label’s wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>form-control-input</code></td>
+                  <td>The input group container.</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -851,16 +860,6 @@
           <p>
             <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
           </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

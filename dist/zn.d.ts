@@ -5233,6 +5233,43 @@ declare module "components/form-group/index" {
         }
     }
 }
+declare module "components/input-group/input-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A wrapper component that groups inputs and selects visually.
+     * @documentation https://zinc.style/components/input-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot for inputs and selects.
+     * @slot label - The input group's label. Alternatively, you can use the `label` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart form-control - The form control wrapper.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The input group container.
+     */
+    export default class ZnInputGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly hasSlotController;
+        defaultSlot: HTMLSlotElement;
+        /** The input group's label. If you need to display HTML, use the `label` slot. */
+        label: string;
+        private handleSlotChange;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/input-group/index" {
+    import ZnInputGroup from "components/input-group/input-group.component";
+    export * from "components/input-group/input-group.component";
+    export default ZnInputGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-input-group': ZnInputGroup;
+        }
+    }
+}
 declare module "components/linked-select/linked-select.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -6763,6 +6800,7 @@ declare module "zinc" {
     export { default as Checkbox } from "components/checkbox/index";
     export { default as Datepicker } from "components/datepicker/index";
     export { default as FormGroup } from "components/form-group/index";
+    export { default as InputGroup } from "components/input-group/index";
     export { default as LinkedSelect } from "components/linked-select/index";
     export { default as Radio } from "components/radio/index";
     export { default as Rating } from "components/rating/index";

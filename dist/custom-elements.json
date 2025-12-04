@@ -13037,6 +13037,109 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/input-group/input-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnInputGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The form control wrapper.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input group container.",
+              "name": "form-control-input"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for inputs and selects.",
+              "name": ""
+            },
+            {
+              "description": "The input group's label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "attribute": "label"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "fieldName": "label"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A wrapper component that groups inputs and selects visually.",
+          "tagNameWithoutPrefix": "input-group",
+          "tagName": "zn-input-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A wrapper component that groups inputs and selects visually.\n * @documentation https://zinc.style/components/input-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for inputs and selects.\n * @slot label - The input group's label. Alternatively, you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input group container.\n */",
+          "documentation": "https://zinc.style/components/input-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnInputGroup",
+            "module": "components/input-group/input-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/item/item.js",
       "declarations": [
         {

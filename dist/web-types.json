@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -3948,6 +3948,10 @@
               "value": { "type": "array", "default": "[]" }
             },
             { "name": "no-pad", "value": { "type": "false" } },
+            {
+              "name": "manual-add-items",
+              "value": { "type": "boolean", "default": "false" }
+            },
             { "name": "_appended", "value": { "type": "Element[]" } }
           ],
           "slots": [
@@ -3969,6 +3973,7 @@
               { "name": "stacked", "type": "boolean" },
               { "name": "dropdown", "type": "array" },
               { "name": "noPad", "type": "false" },
+              { "name": "manualAddItems", "type": "boolean" },
               { "name": "handleResize" }
             ],
             "events": [
@@ -6959,6 +6964,53 @@
                 "description": "Emitted after the tooltip is hidden."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-translations",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "value",
+              "value": { "type": "string", "default": "'{\"en\":\"\"}'" }
+            },
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "required",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "languages",
+              "value": {
+                "type": "Record<string, string>",
+                "default": "{ 'en': 'English' }"
+              }
+            },
+            {
+              "name": "values",
+              "value": { "type": "Record<string, string>", "default": "{}" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "label", "type": "string" },
+              { "name": "disabled", "type": "boolean" },
+              { "name": "required", "type": "boolean" },
+              { "name": "languages", "type": "Record<string, string>" },
+              { "name": "values", "type": "Record<string, string>" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "validationMessage" }
+            ],
+            "events": []
           }
         },
         {

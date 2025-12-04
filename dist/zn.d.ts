@@ -3199,6 +3199,7 @@ declare module "components/navbar/navbar.component" {
         stacked: boolean;
         dropdown: never[];
         noPad: false;
+        manualAddItems: boolean;
         private _preItems;
         private _postItems;
         private _appended;
@@ -6684,6 +6685,50 @@ declare module "components/audio-select/index" {
         }
     }
 }
+declare module "components/translations/translations.component" {
+    import ZincElement from "internal/zinc-element";
+    import ZnInlineEdit from "components/inline-edit/index";
+    import ZnInput from "components/input/index";
+    import ZnNavbar from "components/navbar/index";
+    import type { PropertyValues } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
+    export default class ZnTranslations extends ZincElement implements ZincFormControl {
+        static styles: import("lit").CSSResult;
+        static dependencies: {
+            'zn-navbar': typeof ZnNavbar;
+            'zn-input': typeof ZnInput;
+            'zn-inline-edit': typeof ZnInlineEdit;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        name: string;
+        value: string;
+        label: string;
+        disabled: boolean;
+        required: boolean;
+        languages: Record<string, string>;
+        values: Record<string, string>;
+        private _activeLanguage;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(): void;
+        protected firstUpdated(): void;
+        willUpdate(changedProperties: PropertyValues): void;
+        private handleLanguageAdd;
+        private handleNavbarClick;
+        private handleValueUpdate;
+        private updateValue;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/translations/index" {
+    import ZnTranslations from "components/translations/translations.component";
+    export * from "components/translations/translations.component";
+    export default ZnTranslations;
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6827,6 +6872,7 @@ declare module "zinc" {
     export { default as FilterContainer } from "components/filter-container/index";
     export { default as Reveal } from "components/reveal/index";
     export { default as AudioSelect } from "components/audio-select/index";
+    export { default as Translations } from "components/translations/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

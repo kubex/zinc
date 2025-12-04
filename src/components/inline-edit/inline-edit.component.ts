@@ -156,6 +156,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   submitKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && this.isEditing) {
       this.isEditing = false;
+      this.emit('zn-submit', {detail: {value: this.value, element: this}});
       this.formControlController.submit();
       this.input.blur();
     }
@@ -186,6 +187,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   handleSubmitClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
+    this.emit('zn-submit', {detail: {value: this.value, element: this}});
     this.formControlController.submit();
   };
 

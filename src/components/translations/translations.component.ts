@@ -150,6 +150,24 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     this.emit('zn-input');
   }
 
+  private handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (event.target instanceof ZnInlineEdit) {
+        return;
+      }
+
+      const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+
+      if (!hasModifier && !event.defaultPrevented && !event.isComposing) {
+        this.formControlController.submit();
+      }
+    }
+  }
+
+  private handleSubmit() {
+    this.formControlController.submit();
+  }
+
   render() {
     const availableLanguages = Object.entries(this.languages)
       .filter(([code]) => !Object.prototype.hasOwnProperty.call(this.values, code))
@@ -178,7 +196,8 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
              'form-control': true,
              'form-control--medium': true,
              'form-control--has-label': hasLabel,
-           })}">
+           })}"
+           @keydown="${this.handleKeyDown}">
         <label part="form-control-label" class="form-control__label" for="input"
                aria-hidden=${hasLabel ? 'false' : 'true'}>
           <slot name="label">${this.label}</slot>
@@ -196,12 +215,15 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
             ${useInlineEdit ? html`
               <zn-inline-edit
                 .value=${currentTranslation}
+                name="${this.name}"
                 @zn-change="${this.handleValueUpdate}"
                 @zn-input="${this.handleValueUpdate}"
+                @zn-submit="${this.handleSubmit}"
               ></zn-inline-edit>
             ` : html`
               <zn-input
                 .value="${currentTranslation || ''}"
+                name="${this.name}"
                 placeholder="Enter translation..."
                 @zn-change="${this.handleValueUpdate}"
               ></zn-input>

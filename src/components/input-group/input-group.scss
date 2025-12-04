@@ -8,7 +8,7 @@
 .input-group {
   display: flex;
   flex-wrap: nowrap;
-  align-items: stretch;
+  align-items: center;
   width: 100%;
 }
 
@@ -47,4 +47,19 @@
   --zn-input-border-radius-large: 0 var(--zn-border-radius-medium) var(--zn-border-radius-medium) 0;
 
   margin-inline-end: 0;
+}
+
+/* Button overrides */
+::slotted(zn-button[data-zn-input-group__input])::part(base) {
+  border-radius: 0;
+}
+
+::slotted(zn-button[data-zn-input-group__input--first])::part(base) {
+  border-start-start-radius: var(--zn-border-radius-medium);
+  border-end-start-radius: var(--zn-border-radius-medium);
+}
+
+::slotted(zn-button[data-zn-input-group__input--last])::part(base) {
+  border-start-end-radius: var(--zn-border-radius-medium);
+  border-end-end-radius: var(--zn-border-radius-medium);
 }

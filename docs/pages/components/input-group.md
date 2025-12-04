@@ -50,3 +50,12 @@ Use the `label` attribute to add a label to the input group.
   <zn-input placeholder="Last Name"></zn-input>
 </zn-input-group>
 ```
+
+### Input with Submit Button
+
+```html:preview
+<zn-input-group>
+  <zn-input placeholder="Email Address" type="email"></zn-input>
+  <zn-button>Subscribe</zn-button>
+</zn-input-group>
+```

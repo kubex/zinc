@@ -34,7 +34,7 @@ export default class ZnInputGroup extends ZincElement {
     const slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
     // Filter for inputs and selects
-    const supportedTags = ['ZN-INPUT', 'ZN-SELECT'];
+    const supportedTags = ['ZN-INPUT', 'ZN-SELECT', 'ZN-BUTTON'];
     const controls = slottedElements.filter(el => supportedTags.includes(el.tagName));
 
     controls.forEach(el => {

@@ -1,0 +1,50 @@
+@use "../../wc";
+@use "../../form-control";
+
+:host {
+  display: block;
+}
+
+.input-group {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Common styles for slotted inputs */
+::slotted([data-zn-input-group__input]) {
+  /* Overlap borders */
+  margin-inline-end: -1px;
+
+  /* Ensure focus ring is above */
+  position: relative;
+  z-index: 1;
+}
+
+::slotted([data-zn-input-group__input]:focus-within) {
+  z-index: 2;
+}
+
+::slotted([data-zn-input-group__input--first]) {
+  --zn-input-border-radius-x-small: var(--zn-border-radius-medium) 0 0 var(--zn-border-radius-medium);
+  --zn-input-border-radius-small: var(--zn-border-radius-medium) 0 0 var(--zn-border-radius-medium);
+  --zn-input-border-radius-medium: var(--zn-border-radius-medium) 0 0 var(--zn-border-radius-medium);
+  --zn-input-border-radius-large: var(--zn-border-radius-medium) 0 0 var(--zn-border-radius-medium);
+}
+
+::slotted([data-zn-input-group__input--inner]) {
+  --zn-input-border-radius-x-small: 0;
+  --zn-input-border-radius-small: 0;
+  --zn-input-border-radius-medium: 0;
+  --zn-input-border-radius-large: 0;
+}
+
+::slotted([data-zn-input-group__input--last]) {
+  --zn-input-border-radius-x-small: 0 var(--zn-border-radius-medium) var(--zn-border-radius-medium) 0;
+  --zn-input-border-radius-small: 0 var(--zn-border-radius-medium) var(--zn-border-radius-medium) 0;
+  --zn-input-border-radius-medium: 0 var(--zn-border-radius-medium) var(--zn-border-radius-medium) 0;
+  --zn-input-border-radius-large: 0 var(--zn-border-radius-medium) var(--zn-border-radius-medium) 0;
+
+  margin-inline-end: 0;
+}

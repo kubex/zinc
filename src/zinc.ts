@@ -57,6 +57,7 @@ export {default as Textarea} from './components/textarea';
 export {default as Checkbox} from './components/checkbox';
 export {default as Datepicker} from './components/datepicker';
 export {default as FormGroup} from './components/form-group';
+export {default as InputGroup} from './components/input-group';
 export {default as LinkedSelect} from './components/linked-select';
 export {default as Radio} from './components/radio';
 export {default as Rating} from './components/rating';

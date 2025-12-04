@@ -622,7 +622,7 @@ declare module "components/menu-item/index" {
 declare module "events/zn-select" {
     import type ZnMenuItem from "components/menu-item/index";
     export type ZnSelectEvent = CustomEvent<{
-        item: ZnMenuItem;
+        item: ZnMenuItem | HTMLElement;
     }>;
     global {
         interface GlobalEventHandlersEventMap {
@@ -3200,6 +3200,7 @@ declare module "components/navbar/navbar.component" {
         dropdown: never[];
         noPad: false;
         manualAddItems: boolean;
+        isolated: boolean;
         private _preItems;
         private _postItems;
         private _appended;
@@ -3218,6 +3219,7 @@ declare module "components/navbar/navbar.component" {
         addItem(item: Element): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         showMore(): void;
+        private handleClick;
         render(): import("lit").TemplateResult<1>;
     }
 }

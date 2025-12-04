@@ -14393,6 +14393,15 @@
             },
             {
               "kind": "field",
+              "name": "isolated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "isolated"
+            },
+            {
+              "kind": "field",
               "name": "_preItems",
               "type": {
                 "text": "NodeListOf<Element>"
@@ -14533,6 +14542,11 @@
             {
               "kind": "method",
               "name": "showMore"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -14622,6 +14636,14 @@
               },
               "default": "false",
               "fieldName": "manualAddItems"
+            },
+            {
+              "name": "isolated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "isolated"
             },
             {
               "name": "_appended",
@@ -26886,43 +26908,19 @@
               "name": "setCustomValidity"
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleLanguageAdd",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "ZnMenuSelectEvent"
-                  }
-                }
-              ]
+              "privacy": "private"
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleNavbarClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
+              "privacy": "private"
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleValueUpdate",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "CustomEvent"
-                  }
-                }
-              ]
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -26930,20 +26928,12 @@
               "privacy": "private"
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
+              "privacy": "private"
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "handleSubmit",
               "privacy": "private"
             }
@@ -27267,7 +27257,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.20",
+    "version": "1.0.21",
     "author": "",
     "license": "MIT"
   }

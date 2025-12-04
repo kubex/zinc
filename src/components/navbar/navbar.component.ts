@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
@@ -41,6 +42,7 @@ export default class ZnNavbar extends ZincElement {
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
+  @property({type: Boolean}) isolated = false;
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
@@ -194,6 +196,17 @@ export default class ZnNavbar extends ZincElement {
     //console.log("Showing More")
   }
 
+  private handleClick = (e: MouseEvent) => {
+    const path = e.composedPath();
+    const tabAttr = this.isolated ? 'data-tab' : 'tab';
+    const li = path.find(el => el instanceof HTMLElement && el.tagName === 'LI' && (el.hasAttribute(tabAttr) || el.hasAttribute('tab-uri'))) as HTMLElement;
+
+    if (li) {
+      e.stopPropagation();
+      this.emit('zn-select', {detail: {item: li}});
+    }
+  };
+
   render() {
     if (!this.navigation) {
       this.navigation = [];
@@ -211,7 +224,7 @@ export default class ZnNavbar extends ZincElement {
         'navbar__container--stacked': this.stacked,
         'navbar__container--icon-bar': this.iconBar
       })}">
-        <ul class="${classMap({
+        <ul @click="${this.handleClick}" class="${classMap({
           'navbar': true,
           'navbar--slim': this.slim,
           'navbar--border': this.border,
@@ -232,7 +245,11 @@ export default class ZnNavbar extends ZincElement {
                 <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
             }
             return html`
-              <li class="${classMap({'active': item.active})}" tab="${item.tab}">${content}</li>`;
+              <li class="${classMap({'active': item.active})}"
+                  tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
+                  data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">
+                ${content}
+              </li>`;
           })}
           <li class="more">
             <zn-dropdown placement="bottom-end" id="extended-dropdown">

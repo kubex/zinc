@@ -10,6 +10,7 @@ import ZnNavbar from '../navbar';
 import type {PropertyValues} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
+import type {ZnSelectEvent} from "../../events/zn-select";
 
 import styles from './translations.scss';
 
@@ -110,7 +111,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
   }
 
-  private handleLanguageAdd(e: ZnMenuSelectEvent) {
+  private handleLanguageAdd = (e: ZnMenuSelectEvent) => {
     const element = e.detail.element as HTMLElement;
     const languageCode = element.getAttribute('data-path');
     if (languageCode) {
@@ -119,21 +120,21 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       this._activeLanguage = languageCode;
       this.updateValue();
     }
-  }
+  };
 
-  private handleNavbarClick(e: MouseEvent) {
-    const path = e.composedPath();
-    const li = path.find(el => el instanceof HTMLElement && el.tagName === 'LI' && el.hasAttribute('tab')) as HTMLElement;
+  private handleNavbarClick = (e: ZnSelectEvent) => {
+    e.stopPropagation();
+    const li = e.detail.item as HTMLElement;
     if (li) {
-      const tab = li.getAttribute('tab');
+      const tab = li.getAttribute('tab') || li.getAttribute('data-tab');
       if (tab) {
         this._activeLanguage = tab;
         this.requestUpdate();
       }
     }
-  }
+  };
 
-  private handleValueUpdate(e: CustomEvent) {
+  private handleValueUpdate = (e: CustomEvent) => {
     const target = e.target as (ZnInput | ZnInlineEdit);
     if (this._activeLanguage) {
       const newValue: string = target.value as string;
@@ -142,7 +143,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         this.updateValue();
       }
     }
-  }
+  };
 
   private updateValue() {
     this.value = JSON.stringify(this.values);
@@ -150,7 +151,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     this.emit('zn-input');
   }
 
-  private handleKeyDown(event: KeyboardEvent) {
+  private handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
       if (event.target instanceof ZnInlineEdit) {
         return;
@@ -162,11 +163,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         this.formControlController.submit();
       }
     }
-  }
+  };
 
-  private handleSubmit() {
+  private handleSubmit = () => {
     this.formControlController.submit();
-  }
+  };
 
   render() {
     const availableLanguages = Object.entries(this.languages)
@@ -206,7 +207,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         <zn-navbar
           .navigation="${navigation}"
           .dropdown="${availableLanguages}"
-          @click="${this.handleNavbarClick}"
+          name="${this.name}-translations-navbar"
+          isolated
+          @zn-select="${this.handleNavbarClick}"
           @zn-menu-select="${this.handleLanguageAdd}"
           manual-add-items
         ></zn-navbar>

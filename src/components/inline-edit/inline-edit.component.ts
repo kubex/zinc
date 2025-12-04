@@ -140,7 +140,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   mouseEventHandler = (e: MouseEvent) => {
     if (this.isEditing && !this.contains(e.target as Node)) {
       this.isEditing = false;
-      this.value = this.defaultValue;
+      this.emit('zn-change');
       this.input.blur();
     }
   };
@@ -204,6 +204,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       return;
     }
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+    this.emit('zn-input');
   };
 
   protected render() {

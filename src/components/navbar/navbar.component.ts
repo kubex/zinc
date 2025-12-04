@@ -40,6 +40,7 @@ export default class ZnNavbar extends ZincElement {
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false
+  @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
 
   private _preItems: NodeListOf<Element>;
   private _postItems: NodeListOf<Element>;
@@ -171,6 +172,9 @@ export default class ZnNavbar extends ZincElement {
       const menu = this.shadowRoot?.querySelector('zn-menu');
       if (menu) {
         menu.addEventListener('zn-menu-select', (e: ZnMenuSelectEvent) => {
+          if (this.manualAddItems) {
+            return;
+          }
           const element = e.detail.element;
           if (element.hasAttribute('data-path')) {
             const li = document.createElement('li');

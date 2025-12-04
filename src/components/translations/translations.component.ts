@@ -36,7 +36,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   };
   @property({type: Object}) values: Record<string, string> = {};
 
-  @state() private _activeLanguage = '';
+  @state() private _activeLanguage = 'en';
 
   get validity(): ValidityState {
     return validValidityState;
@@ -100,12 +100,12 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       this.value = JSON.stringify(this.values);
 
       // Ensure active language is valid
-      if (!this._activeLanguage || !Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage)) {
+      if (!this._activeLanguage || (!Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage) && this._activeLanguage !== 'en')) {
         const keys = Object.keys(this.values);
         if (keys.length > 0) {
           this._activeLanguage = keys[0];
         } else {
-          this._activeLanguage = '';
+          this._activeLanguage = 'en';
         }
       }
     }
@@ -171,21 +171,25 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   render() {
     const availableLanguages = Object.entries(this.languages)
-      .filter(([code]) => !Object.prototype.hasOwnProperty.call(this.values, code))
+      .filter(([code]) => code !== 'en' && !Object.prototype.hasOwnProperty.call(this.values, code))
       .map(([code, name]) => ({
         title: name,
         type: 'dropdown',
         path: code
       }));
 
-    const navigation = Object.keys(this.values).map(code => ({
+    const visibleTabs = Object.keys(this.values);
+    if (!visibleTabs.includes('en')) {
+      visibleTabs.unshift('en');
+    }
+
+    const navigation = visibleTabs.map(code => ({
       title: this.languages[code] || code,
       active: code === this._activeLanguage,
       tab: code
     }));
 
     const currentTranslation = this.values[this._activeLanguage];
-    const useInlineEdit = currentTranslation && currentTranslation.length > 0;
 
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabel = this.label ? true : hasLabelSlot;
@@ -214,24 +218,14 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           manual-add-items
         ></zn-navbar>
         <div class="input-container">
-          ${this._activeLanguage ? html`
-            ${useInlineEdit ? html`
-              <zn-inline-edit
-                .value=${currentTranslation}
-                name="${this.name}"
-                @zn-change="${this.handleValueUpdate}"
-                @zn-input="${this.handleValueUpdate}"
-                @zn-submit="${this.handleSubmit}"
-              ></zn-inline-edit>
-            ` : html`
-              <zn-input
-                .value="${currentTranslation || ''}"
-                name="${this.name}"
-                placeholder="Enter translation..."
-                @zn-change="${this.handleValueUpdate}"
-              ></zn-input>
-            `}
-          ` : ''}
+          <zn-inline-edit
+            .value=${currentTranslation}
+            name="${this.name}"
+            placeholder="Enter translation..."
+            @zn-change="${this.handleValueUpdate}"
+            @zn-input="${this.handleValueUpdate}"
+            @zn-submit="${this.handleSubmit}"
+          ></zn-inline-edit>
         </div>
       </div>
     `;

@@ -1,7 +1,7 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {FormControlController, validValidityState} from '../../internal/form';
 import {HasSlotController} from '../../internal/slot';
-import {html, unsafeCSS} from 'lit';
+import {html, nothing, unsafeCSS} from 'lit';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnInlineEdit from '../inline-edit';
@@ -30,6 +30,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property() label: string = '';
   @property({type: Boolean, reflect: true}) disabled = false;
   @property({type: Boolean, reflect: true}) required = false;
+  @property({type: Boolean, reflect: true}) flush = false;
 
   @property({type: Object}) languages: Record<string, string> = {
     'en': 'English'
@@ -212,9 +213,10 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           .navigation="${navigation}"
           .dropdown="${availableLanguages}"
           name="${this.name}-translations-navbar"
-          isolated
           @zn-select="${this.handleNavbarClick}"
           @zn-menu-select="${this.handleLanguageAdd}"
+          flush=${this.flush || nothing}
+          isolated
           manual-add-items
         ></zn-navbar>
         <div class="input-container">

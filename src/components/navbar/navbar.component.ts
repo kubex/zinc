@@ -273,7 +273,10 @@ export default class ZnNavbar extends ZincElement {
           ${this._postItems}
           ${this._appended}
         </ul>
-        <div class="expandables">${this._expanding}</div>
+        <div class="expandables">
+          ${this._expanding}
+          <slot name="expand"></slot>
+        </div>
       </div>`;
   }
 }

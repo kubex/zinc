@@ -218,7 +218,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           flush=${this.flush || nothing}
           isolated
           manual-add-items
-        ></zn-navbar>
+        >
+          <slot name="expand" slot="expand"></slot>
+        </zn-navbar>
         <div class="input-container">
           <zn-inline-edit
             .value=${currentTranslation}

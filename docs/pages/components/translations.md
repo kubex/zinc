@@ -22,13 +22,14 @@ between languages.
 
 ## Examples
 
-### With Label
+### With Label and extra button
 
 ```html:preview
 
 <zn-translations
   label="Description"
   languages='{&quot;en&quot;:&quot;English&quot;,&quot;fr&quot;:&quot;French&quot;,&quot;de&quot;:&quot;German&quot;}'>
+  <zn-button slot="expand" size="x-small" color="transparent" icon="translate"></zn-button>
 </zn-translations>
 ```
 

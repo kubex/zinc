@@ -33,7 +33,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Boolean, reflect: true}) flush = false;
 
   @property({type: Object}) languages: Record<string, string> = {
-    'en': 'English'
+    'en': 'EN'
   };
   @property({type: Object}) values: Record<string, string> = {};
 

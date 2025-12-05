@@ -52,7 +52,7 @@ export default class ZnItem extends ZincElement {
   @property({type: Boolean, attribute: 'align-end'}) alignEnd: boolean;
 
   // align items in the center
-  @property({type: Boolean, attribute: 'align-center'}) alignCenter: boolean;
+  @property({type: Boolean, attribute: 'align-center'})  alignCenter: boolean;
 
   connectedCallback() {
     super.connectedCallback();

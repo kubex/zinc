@@ -8,9 +8,26 @@
   display: flex;
   flex-direction: column;
   padding: 0 var(--zn-spacing-medium);
-  gap: var(--zn-spacing-small);
+  gap: var(--zn-spacing-3x-small);
 }
 
 .input-container {
   padding: var(--zn-spacing-small) 0;
+}
+
+
+zn-navbar {
+  overflow: hidden;
+}
+
+zn-navbar::part(navbar) {
+  padding: 0;
+  gap: 5px;
+}
+
+zn-navbar::part(navbar-item) {
+  font-size: var(--zn-font-size-x-small);
+  padding: 0 var(--zn-spacing-small);
+
+  --zn-spacing-medium: 2px;
 }

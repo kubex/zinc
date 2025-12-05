@@ -224,7 +224,7 @@ export default class ZnNavbar extends ZincElement {
         'navbar__container--stacked': this.stacked,
         'navbar__container--icon-bar': this.iconBar
       })}">
-        <ul @click="${this.handleClick}" class="${classMap({
+        <ul @click="${this.handleClick}" part="navbar" class="${classMap({
           'navbar': true,
           'navbar--slim': this.slim,
           'navbar--border': this.border,
@@ -242,10 +242,11 @@ export default class ZnNavbar extends ZincElement {
             }
             if (item.path != undefined) {
               return html`
-                <li class="${classMap({'active': item.active})}" tab-uri="${item.path}">${content}</li>`;
+                <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}</li>`;
             }
             return html`
-              <li class="${classMap({'active': item.active})}"
+              <li class="${classMap({ 'active': item.active })}"
+                  part="navbar-item"
                   tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
                   data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">
                 ${content}

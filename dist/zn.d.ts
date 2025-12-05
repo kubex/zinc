@@ -6708,6 +6708,7 @@ declare module "components/translations/translations.component" {
         label: string;
         disabled: boolean;
         required: boolean;
+        flush: boolean;
         languages: Record<string, string>;
         values: Record<string, string>;
         private _activeLanguage;

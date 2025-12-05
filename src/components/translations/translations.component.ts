@@ -1,16 +1,16 @@
-import {classMap} from 'lit/directives/class-map.js';
-import {FormControlController, validValidityState} from '../../internal/form';
-import {HasSlotController} from '../../internal/slot';
-import {html, nothing, unsafeCSS} from 'lit';
-import {property, state} from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { FormControlController, validValidityState } from '../../internal/form';
+import { HasSlotController } from '../../internal/slot';
+import type { PropertyValues } from 'lit';
+import { html, nothing, unsafeCSS } from 'lit';
+import { property, state } from 'lit/decorators.js';
+import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
 import ZnNavbar from '../navbar';
-import type {PropertyValues} from 'lit';
-import type {ZincFormControl} from '../../internal/zinc-element';
-import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
-import type {ZnSelectEvent} from "../../events/zn-select";
+import type { ZnMenuSelectEvent } from '../../events/zn-menu-select';
+import type { ZnSelectEvent } from "../../events/zn-select";
 
 import styles from './translations.scss';
 
@@ -28,14 +28,14 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property() name = '';
   @property() value = '{"en":""}';
   @property() label: string = '';
-  @property({type: Boolean, reflect: true}) disabled = false;
-  @property({type: Boolean, reflect: true}) required = false;
-  @property({type: Boolean, reflect: true}) flush = false;
+  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({ type: Boolean, reflect: true }) required = false;
+  @property({ type: Boolean, reflect: true }) flush = false;
 
-  @property({type: Object}) languages: Record<string, string> = {
+  @property({ type: Object }) languages: Record<string, string> = {
     'en': 'EN'
   };
-  @property({type: Object}) values: Record<string, string> = {};
+  @property({ type: Object }) values: Record<string, string> = {};
 
   @state() private _activeLanguage = 'en';
 
@@ -117,7 +117,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     const languageCode = element.getAttribute('data-path');
     if (languageCode) {
       // Add new language with empty string
-      this.values = {...this.values, [languageCode]: ''};
+      this.values = { ...this.values, [languageCode]: '' };
       this._activeLanguage = languageCode;
       this.updateValue();
     }
@@ -140,7 +140,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     if (this._activeLanguage) {
       const newValue: string = target.value as string;
       if (newValue !== this.values[this._activeLanguage]) {
-        this.values = {...this.values, [this._activeLanguage]: newValue};
+        this.values = { ...this.values, [this._activeLanguage]: newValue };
         this.updateValue();
       }
     }
@@ -185,7 +185,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
 
     const navigation = visibleTabs.map(code => ({
-      title: this.languages[code] || code,
+      title: code.toUpperCase(),
       active: code === this._activeLanguage,
       tab: code
     }));

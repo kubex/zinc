@@ -6688,12 +6688,12 @@ declare module "components/audio-select/index" {
     }
 }
 declare module "components/translations/translations.component" {
+    import type { PropertyValues } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnInlineEdit from "components/inline-edit/index";
     import ZnInput from "components/input/index";
     import ZnNavbar from "components/navbar/index";
-    import type { PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     export default class ZnTranslations extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult;
         static dependencies: {

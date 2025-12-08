@@ -327,6 +327,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     }
 
     const target = event.target as HTMLElement;
+    if (target.tagName === 'ZN-CHECKBOX' && (target.slot === 'prefix' || target.closest('[slot="prefix"]'))) {
+      return;
+    }
+
     if (target.classList.contains('input__prefix') || target.slot === 'prefix' || (target.hasAttribute('part') && target.getAttribute('part') === 'base')) {
       this.handleFocus();
       this.input.focus();

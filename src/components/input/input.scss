@@ -128,6 +128,8 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
+  align-self: stretch;
+  height: 100%;
   cursor: default;
   color: var(--zn-input-icon-color);
   font-size: var(--zn-font-size-small);
@@ -177,7 +179,9 @@
 }
 
 .input--x-small .input__suffix ::slotted(zn-button),
-.input--x-small .input__prefix ::slotted(zn-button) {
+.input--x-small .input__prefix ::slotted(zn-button),
+.input--x-small .input__suffix ::slotted(zn-checkbox),
+.input--x-small .input__prefix ::slotted(zn-checkbox), {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
@@ -209,7 +213,9 @@
 }
 
 .input--small .input__suffix ::slotted(zn-button),
-.input--small .input__prefix ::slotted(zn-button) {
+.input--small .input__prefix ::slotted(zn-button),
+.input--small .input__suffix ::slotted(zn-checkbox),
+.input--small .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
@@ -241,7 +247,9 @@
 }
 
 .input--medium .input__suffix ::slotted(zn-button),
-.input--medium .input__prefix ::slotted(zn-button) {
+.input--medium .input__prefix ::slotted(zn-button),
+.input--medium .input__suffix ::slotted(zn-checkbox),
+.input--medium .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
@@ -264,7 +272,8 @@
 
 .input--large .input__suffix ::slotted(zn-button),
 .input--large .input__prefix ::slotted(zn-button),
-{
+.input--large .input__suffix ::slotted(zn-checkbox),
+.input--large .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }

@@ -975,7 +975,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderCellHeader(header: HeaderConfig) {
-    const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable;
+    const sortable = !Object.values(this.unsortableHeaders).includes(header.key) && !Object.values(this.hiddenHeaders).includes(header.key) && !this.unsortable && header.sortable !== false;
 
     // Determine the last visible header considering secondary flags and hidden columns
     const lastVisibleHeaderKey = Object.values(this.headers)

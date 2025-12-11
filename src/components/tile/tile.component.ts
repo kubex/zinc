@@ -99,8 +99,10 @@ export default class ZnTile extends ZincElement {
           </div>
 
           <div class="tile__right">
-            <slot name="properties" part="properties" class="tile__properties"></slot>
-            <slot name="actions" part="actions" class="tile__actions"></slot>
+            ${hasProperties ? html`
+              <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}
+            ${hasActions ? html`
+              <slot name="actions" part="actions" class="tile__actions"></slot>` : ''}
           </div>`}
       </${tag}>`;
   }

@@ -88,6 +88,9 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
   /** Draws a container around the checkbox. */
   @property({type: Boolean, reflect: true}) contained = false;
 
+  /** Removes a container around the checkbox. */
+  @property({type: Boolean, reflect: true}) borderless = false;
+
   /** Applies styles relevant to checkboxes in a horizontal layout. */
   @property({type: Boolean, reflect: true}) horizontal = false;
 
@@ -292,6 +295,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--focused': this.hasFocus,
             'checkbox--indeterminate': this.indeterminate,
             'checkbox--contained': this.contained,
+            'checkbox--no-border': this.borderless,
             'checkbox--horizontal': this.horizontal,
             'checkbox--small': this.size === 'small',
             'checkbox--medium': this.size === 'medium',

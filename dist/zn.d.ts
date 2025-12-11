@@ -5014,6 +5014,8 @@ declare module "components/checkbox/checkbox.component" {
         indeterminate: boolean;
         /** Draws a container around the checkbox. */
         contained: boolean;
+        /** Removes a container around the checkbox. */
+        borderless: boolean;
         /** Applies styles relevant to checkboxes in a horizontal layout. */
         horizontal: boolean;
         /** The default value of the form control. Primarily used for resetting the form control. */

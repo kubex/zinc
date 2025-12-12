@@ -24,51 +24,58 @@ import styles from './chip.scss';
  * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnChip extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+    static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property() icon: string = '';
+    @property() icon: string = '';
+    @property() tooltip: string = '';
 
-  @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
-    'transparent' | 'custom' | 'neutral' = 'neutral';
+    @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
+        'transparent' | 'custom' | 'neutral' = 'neutral';
 
-  @property() size: 'small' | 'medium' | 'large'; // Defaults to base chip styling
+    @property() size: 'small' | 'medium' | 'large'; // Defaults to base chip styling
 
-  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
-  @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
-  @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
+    @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+    @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
+    @property({attribute: 'flush-y', type: Boolean, reflect: true}) flushY: boolean = false;
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
+    private readonly hasSlotController = new HasSlotController(this, '[default]', 'action');
 
-  render() {
-    const hasContent = this.hasSlotController.test('[default]')
-    return html`
-      <div class="${classMap({
-        'chip': true,
-        'chip--with-content': hasContent,
-        'chip--no-content': !hasContent,
-        'chip--with-icon': this.icon,
-        'chip--flush': this.flush,
-        'chip--flush-x': this.flushX,
-        'chip--flush-y': this.flushY,
-        'chip--info': this.type === 'info',
-        'chip--success': this.type === 'success',
-        'chip--warning': this.type === 'warning',
-        'chip--error': this.type === 'error',
-        'chip--primary': this.type === 'primary',
-        'chip--transparent': this.type === 'transparent',
-        'chip--custom': this.type === 'custom',
-        'chip--neutral': this.type === 'neutral',
-        'chip--small': this.size === 'small',
-        'chip--medium': this.size === 'medium',
-        'chip--large': this.size === 'large',
-      })}">
-        ${this.icon ? html`
-          <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
-        ${hasContent ? html`
-          <slot></slot>` : ''}
-        ${this.hasSlotController.test('action') ? html`
-          <slot name="action" class="chip__action"></slot>` : ''}
-      </div>
-    `;
-  }
+    render() {
+        return html`
+          ${this.tooltip ? html`
+            <zn-tooltip content="${this.tooltip}">${this.getContent()}</zn-tooltip>` : html`${this.getContent()}`}
+        `;
+    }
+
+    getContent() {
+        const hasContent = this.hasSlotController.test('[default]');
+        return html`
+          <div class="${classMap({
+            'chip': true,
+            'chip--with-content': hasContent,
+            'chip--no-content': !hasContent,
+            'chip--with-icon': this.icon,
+            'chip--flush': this.flush,
+            'chip--flush-x': this.flushX,
+            'chip--flush-y': this.flushY,
+            'chip--info': this.type === 'info',
+            'chip--success': this.type === 'success',
+            'chip--warning': this.type === 'warning',
+            'chip--error': this.type === 'error',
+            'chip--primary': this.type === 'primary',
+            'chip--transparent': this.type === 'transparent',
+            'chip--custom': this.type === 'custom',
+            'chip--neutral': this.type === 'neutral',
+            'chip--small': this.size === 'small',
+            'chip--medium': this.size === 'medium',
+            'chip--large': this.size === 'large',
+          })}">
+            ${this.icon ? html`
+              <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
+            ${hasContent ? html`
+              <slot></slot>` : ''}
+            ${this.hasSlotController.test('action') ? html`
+              <slot name="action" class="chip__action"></slot>` : ''}
+          </div>`
+    }
 }

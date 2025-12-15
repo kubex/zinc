@@ -539,7 +539,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
               maxlength=${ifDefined(this.maxlength)}
               min=${ifDefined(this.min)}
               max=${ifDefined(this.max)}
-              step=${ifDefined(this.step)}
+              step=${ifDefined(this.type === 'currency' ? 0.01 : this.step)}
               .value=${live(this.value)}
               autocapitalize=${ifDefined(this.autocapitalize)}
               autocomplete=${ifDefined(this.autocomplete)}

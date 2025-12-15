@@ -1947,12 +1947,12 @@ declare module "components/option/index" {
 }
 declare module "components/select/select.component" {
     import { FormControlController } from "internal/form";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
-    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.

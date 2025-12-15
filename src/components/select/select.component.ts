@@ -4,6 +4,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
+import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
 import {html, nothing, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
@@ -11,12 +12,11 @@ import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
-import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
 import type ZnOption from "../option";
 
@@ -753,19 +753,29 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     if (this.conditional !== "") {
-      const conditionalSelectList = deepQuerySelectorAll(`#${this.conditional}`, document.documentElement, '') as ZnSelect[];
-      conditionalSelectList.forEach((conditionalSelect) => {
-        // disable if the other has any options selected
-        conditionalSelect.addEventListener('zn-change', () => {
-          let linkedValues = Array.isArray(conditionalSelect.value) ? conditionalSelect.value : [conditionalSelect.value];
-          linkedValues = linkedValues.filter(v => v !== '');
-          console.log('linkedValues', linkedValues);
-          this.disabled = linkedValues.length > 0;
-        });
+      const ids = this.conditional.split(',').map(id => id.trim());
+      const conditionals: ZnSelect[] = [];
 
-        // trigger the event once to initialize
-        conditionalSelect.dispatchEvent(new Event('zn-input'));
+      ids.forEach(id => {
+        const elements = deepQuerySelectorAll(`#${id}`, document.documentElement, '') as ZnSelect[];
+        conditionals.push(...elements);
       });
+
+      const checkConditionals = () => {
+        this.disabled = conditionals.some(select => {
+          let linkedValues = Array.isArray(select.value) ? select.value : [select.value];
+          linkedValues = linkedValues.filter(v => v !== '');
+          return linkedValues.length > 0;
+        });
+      };
+
+      conditionals.forEach(select => {
+        select.addEventListener('zn-change', checkConditionals);
+        select.addEventListener('zn-input', checkConditionals);
+      });
+
+      // trigger the check once to initialize
+      checkConditionals();
     }
 
     this.updateHasInputPrefix();

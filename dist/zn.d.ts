@@ -5261,6 +5261,11 @@ declare module "components/input-group/input-group.component" {
         defaultSlot: HTMLSlotElement;
         /** The input group's label. If you need to display HTML, use the `label` slot. */
         label: string;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private handleDependencyChange;
+        private updateDependencyState;
+        private toggleDisabled;
         private handleSlotChange;
         render(): import("lit").TemplateResult<1>;
     }

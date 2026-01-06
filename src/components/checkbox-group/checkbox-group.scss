@@ -9,6 +9,12 @@
 :host([horizontal]) .form-control-input {
   display: flex;
   column-gap: var(--zn-spacing-2x-large);
+  flex-wrap: wrap;
+}
+
+::slotted(zn-checkbox[horizontal]) {
+  flex-basis: 20%;
+  min-width: 100px;
 }
 
 :host([contained]) .form-control-input {
@@ -35,6 +41,7 @@
   margin-top: 0;
   height: 100%;
 }
+
 
 .form-control {
   position: relative;

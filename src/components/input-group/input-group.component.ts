@@ -80,12 +80,7 @@ export default class ZnInputGroup extends ZincElement {
 
   private updateDependencyState(target: HTMLElement, trigger: ZnInput | ZnSelect) {
     const disableValue = target.getAttribute('data-disable-value');
-
-    console.log('Updating dependency state for', target, 'based on trigger', trigger);
-
-    // If data-disable-value is set, we check for a match
     if (disableValue !== null) {
-      console.log('Checking disable value:', disableValue, 'against trigger value:', trigger.value);
       const triggerValue = String(trigger.value);
       const valuesToCheck = disableValue.split(',').map(v => v.trim());
       const shouldDisable = valuesToCheck.includes(triggerValue);

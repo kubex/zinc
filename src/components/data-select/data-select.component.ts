@@ -70,6 +70,9 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** Include an "All" option at the top. */
   @property({type: Boolean, attribute: 'allow-all'}) allowAll = false;
 
+  /** Include a "Common" option that selects multiple common currencies. */
+  @property({type: Boolean, attribute: 'allow-common'}) allowCommon = false;
+
   /** The selects label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
@@ -169,7 +172,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       case 'color':
         return colorDataProvider;
       case 'currency':
-        return currencyDataProvider;
+        return currencyDataProvider(this.allowCommon);
       case 'country':
         return countryDataProvider;
       case 'phone':

@@ -312,17 +312,31 @@ const commonCurrencyCodes = [
 ];
 
 const sortedCurrencyCodes = [...Object.keys(currencyCodeToName)].sort((a, b) => a.localeCompare(b));
-const allCurrencyCodes = [...commonCurrencyCodes, ...sortedCurrencyCodes];
-const uniqueCurrencyCodes = Array.from(new Set(allCurrencyCodes));
 
-export const currencyDataProvider: LocalDataProvider<DataProviderOption> = {
-  getName: 'currency',
-  getData: uniqueCurrencyCodes.map((code => {
+export const currencyDataProvider = (allowCommon: boolean = false): LocalDataProvider<DataProviderOption> => {
+  const otherCurrencyCodes = sortedCurrencyCodes.filter(code => !commonCurrencyCodes.includes(code));
+  const currencyCodes = [...commonCurrencyCodes, ...otherCurrencyCodes];
+
+  const data: DataProviderOption[] = currencyCodes.map((code => {
     return {
       key: code,
       value: code.concat(' - ').concat(currencyCodeToName[code]),
       prefix: currencyCodeToSymbol[code] ? currencyCodeToSymbol[code] : ''
     }
-  }))
+  }));
+
+  if (allowCommon) {
+    const commonOption: DataProviderOption = {
+      key: commonCurrencyCodes.join(','),
+      value: 'Common - USD, EUR, GBP, CAD & AUD',
+      prefix: ''
+    };
+    data.unshift(commonOption);
+  }
+
+  return {
+    getName: 'currency',
+    getData: data
+  };
 };
 

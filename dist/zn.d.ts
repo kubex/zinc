@@ -1787,7 +1787,7 @@ declare module "components/data-select/providers/country-data-provider" {
 }
 declare module "components/data-select/providers/currency-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
-    export const currencyDataProvider: LocalDataProvider<DataProviderOption>;
+    export const currencyDataProvider: (allowCommon?: boolean) => LocalDataProvider<DataProviderOption>;
 }
 declare module "components/data-select/providers/color-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
@@ -2205,6 +2205,8 @@ declare module "components/data-select/data-select.component" {
         clearable: boolean;
         /** Include an "All" option at the top. */
         allowAll: boolean;
+        /** Include a "Common" option that selects multiple common currencies. */
+        allowCommon: boolean;
         /** The selects label. If you need to display HTML, use the `label` slot instead. */
         label: string;
         /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */

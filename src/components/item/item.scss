@@ -95,6 +95,12 @@
     line-height: var(--zn-line-height-loose);
     width: 100%;
     flex-shrink: 0;
+
+    &--required::after {
+      content: var(--zn-input-required-content);
+      margin-inline-start: var(--zn-input-required-content-offset);
+      color: var(--zn-input-required-content-color);
+    }
   }
 
   &__description {

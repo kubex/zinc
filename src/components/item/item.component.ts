@@ -52,7 +52,7 @@ export default class ZnItem extends ZincElement {
   @property({type: Boolean, attribute: 'align-end'}) alignEnd: boolean;
 
   // align items in the center
-  @property({type: Boolean, attribute: 'align-center'})  alignCenter: boolean;
+  @property({type: Boolean, attribute: 'align-center'}) alignCenter: boolean;
 
   connectedCallback() {
     super.connectedCallback();
@@ -74,12 +74,21 @@ export default class ZnItem extends ZincElement {
     return slotContent > 0 || this.innerText.length > 0 || !(this.value === undefined || this.value === null)
   }
 
+  protected _hasRequiredSlot(): boolean {
+    const slotElements = this.querySelectorAll(":scope > *:not([slot])");
+    return Array.from(slotElements).some(el => el.hasAttribute && el.hasAttribute('required'));
+  }
+
   render() {
     const hasIcon = this.icon && this.icon.length > 0;
 
     const headings = html`
       <div class="item__headings">
-        <div class="item__caption" part="caption">${this.caption}</div>
+        <div class=${classMap({
+          'item__caption': true,
+          'item__caption--required': this._hasRequiredSlot()
+        })} part="caption">${this.caption}
+        </div>
         ${this.description ? html`
           <div class="item__description">${this.description}</div>` : ''}
       </div>`;

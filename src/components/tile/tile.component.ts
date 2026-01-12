@@ -28,7 +28,7 @@ import styles from './tile.scss';
 export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  private readonly hasSlotController = new HasSlotController(this, '[default]');
+  private readonly hasSlotController = new HasSlotController(this, '[default]', 'properties', 'actions', 'image');
 
   @property({attribute: 'caption'}) caption: string;
 

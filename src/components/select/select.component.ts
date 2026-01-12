@@ -4,7 +4,6 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
-import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
 import {html, nothing, unsafeCSS} from 'lit';
 import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
@@ -12,11 +11,12 @@ import {scrollIntoView} from "../../internal/scroll";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {waitForEvent} from "../../internal/event";
 import {watch} from '../../internal/watch';
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
+import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnRemoveEvent} from "../../events/zn-remove";
 import type ZnOption from "../option";
 
@@ -128,6 +128,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     this.valueHasChanged = true;
     this._value = val;
+
+    if (this.hasUpdated) {
+      this.updateDependencies();
+    }
   }
 
   /** The default value of the form control. Primarily used for resetting the form control. */
@@ -779,6 +783,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     this.updateHasInputPrefix();
+    this.updateDependencies();
   }
 
   @watch('disabled', {waitUntilFirstUpdate: true})
@@ -816,6 +821,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Select only the options that match the new value
     this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
+    this.updateDependencies();
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
@@ -912,6 +918,65 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Removes focus from the control. */
   blur() {
     this.displayInput.blur();
+  }
+
+  private updateDependencies() {
+    const root = this.getRootNode() as Document | ShadowRoot;
+    if (!root?.querySelectorAll) return;
+
+    const dependentElements = root.querySelectorAll('[data-disable-on]');
+    dependentElements.forEach(el => {
+      const selector = el.getAttribute('data-disable-on');
+      if (!selector) return;
+
+      let trigger: Element | null = null;
+      try {
+        trigger = root.querySelector(selector);
+      } catch (e) {
+        // no-op
+      }
+
+      if (!trigger) {
+        const idSelector = selector.startsWith('#') ? selector : `#${selector}`;
+        try {
+          trigger = root.querySelector(idSelector);
+        } catch (e) {
+          // no-op
+        }
+      }
+
+      if (trigger === this) {
+        this.updateDependencyState(el as HTMLElement);
+      }
+    });
+  }
+
+  private updateDependencyState(target: HTMLElement) {
+    const disableValue = target.getAttribute('data-disable-value');
+    if (disableValue !== null) {
+      const valuesToCheck = disableValue.split(',').map(v => v.trim());
+      let shouldDisable: boolean;
+
+      if (Array.isArray(this.value)) {
+        shouldDisable = this.value.some(v => valuesToCheck.includes(v));
+      } else {
+        shouldDisable = valuesToCheck.includes(String(this.value));
+      }
+
+      this.toggleDisabled(target, shouldDisable);
+    }
+  }
+
+  private toggleDisabled(target: HTMLElement, disabled: boolean) {
+    if ('disabled' in target) {
+      target.disabled = disabled;
+    } else {
+      if (disabled) {
+        target.setAttribute('disabled', '');
+      } else {
+        target.removeAttribute('disabled');
+      }
+    }
   }
 
   render() {

@@ -5979,6 +5979,7 @@ declare module "components/item/item.component" {
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         protected _hasContent(): boolean;
+        protected _hasRequiredSlot(): boolean;
         render(): import("lit").TemplateResult<1>;
     }
 }

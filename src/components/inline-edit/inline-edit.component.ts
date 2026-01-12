@@ -285,6 +285,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 placeholder="${this.placeholder}"
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
+                required=${ifDefined(this.required)}
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;
@@ -300,6 +301,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 placeholder="${this.placeholder}"
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
+                required=${ifDefined(this.required)}
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;
@@ -313,6 +315,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  help-text="${ifDefined(this.helpText)}"
                  size="${this.size}"
                  placeholder="${this.placeholder}"
+                 required=${ifDefined(this.required)}
                  @zn-input="${this.handleInput}"
                  @zn-blur="${this.handleBlur}">
         ${Object.keys(this.options).map(key => html`
@@ -331,6 +334,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                       help-text="${ifDefined(this.helpText)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"
+                      required=${ifDefined(this.required)}
                       @zn-input="${this.handleInput}"
                       @zn-blur="${this.handleBlur}">
       </zn-data-select>`;

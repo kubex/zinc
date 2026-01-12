@@ -28,6 +28,8 @@ export default class ZnChip extends ZincElement {
 
   @property() icon: string = '';
 
+  @property({attribute: 'icon-size', type: Number}) iconSize: number = 18;
+
   @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
     'transparent' | 'custom' | 'neutral' = 'neutral';
 
@@ -63,7 +65,7 @@ export default class ZnChip extends ZincElement {
         'chip--large': this.size === 'large',
       })}">
         ${this.icon ? html`
-          <zn-icon src="${this.icon}" size="18"></zn-icon>` : ''}
+          <zn-icon src="${this.icon}" size="${this.iconSize}"></zn-icon>` : ''}
         ${hasContent ? html`
           <slot></slot>` : ''}
         ${this.hasSlotController.test('action') ? html`

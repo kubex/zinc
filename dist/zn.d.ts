@@ -1453,6 +1453,7 @@ declare module "components/chip/chip.component" {
     export default class ZnChip extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
+        iconSize: number;
         type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'custom' | 'neutral';
         size: 'small' | 'medium' | 'large';
         flush: boolean;

@@ -1947,12 +1947,12 @@ declare module "components/option/index" {
 }
 declare module "components/select/select.component" {
     import { FormControlController } from "internal/form";
-    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -2148,6 +2148,9 @@ declare module "components/select/select.component" {
         focus(options?: FocusOptions): void;
         /** Removes focus from the control. */
         blur(): void;
+        private updateDependencies;
+        private updateDependencyState;
+        private toggleDisabled;
         render(): TemplateResult<1>;
     }
 }
@@ -5264,11 +5267,6 @@ declare module "components/input-group/input-group.component" {
         defaultSlot: HTMLSlotElement;
         /** The input group's label. If you need to display HTML, use the `label` slot. */
         label: string;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private handleDependencyChange;
-        private updateDependencyState;
-        private toggleDisabled;
         private handleSlotChange;
         render(): import("lit").TemplateResult<1>;
     }

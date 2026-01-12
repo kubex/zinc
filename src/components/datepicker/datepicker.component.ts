@@ -96,6 +96,8 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    */
   @property({reflect: true}) form: string;
 
+  @property({type: Boolean, reflect: true}) flush = false;
+
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
@@ -246,7 +248,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
             <span class="form-control__label-context-note"><slot name="context-note">${this.contextNote}</slot></span>`
           : ''}
 
-        <div part="form-control-input" class="form-control-input">
+        <div part="form-control-input" class=${classMap({
+          "form-control-input": true,
+          "form-control-input--flush": this.flush
+        })}>
           <div part="base"
                class=${classMap({
                  'input': true,

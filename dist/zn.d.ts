@@ -5157,6 +5157,7 @@ declare module "components/datepicker/datepicker.component" {
          * in the same document or shadow root for this to work.
          */
         form: string;
+        flush: boolean;
         /** Makes the input a required field. */
         required: boolean;
         /** Makes the input a range picker. **/

@@ -57,9 +57,8 @@ export default class ZnSettingsContainer extends ZincElement {
     this._store = new Store(window.sessionStorage, this.storeKey);
 
     this.recomputeFiltersFromSlot();
-    this.updateFilters();
 
-    // Load saved filter states
+    // Load saved filter states before applying filters
     if (this.storeKey) {
       const savedFilters = this._store.get('filters');
       if (savedFilters) {
@@ -68,9 +67,10 @@ export default class ZnSettingsContainer extends ZincElement {
           ...filter,
           checked: Object.prototype.hasOwnProperty.call(parsedFilters, filter.attribute) ? parsedFilters[filter.attribute] : filter.checked
         }));
-        this.updateFilters();
       }
     }
+
+    this.updateFilters();
 
     this._mutationObserver = new MutationObserver(mutations => {
       for (const mutation of mutations) {
@@ -127,33 +127,57 @@ export default class ZnSettingsContainer extends ZincElement {
     this.filters = nextFilters;
   }
 
+  private updateSingleFilter(filter: SettingsContainerFilter, checked: boolean) {
+    let items;
+    const attrAppend = filter.attribute === "*" ? `` : `[${filter.attribute}]`;
+    if (filter.itemSelector && filter.itemSelector.startsWith('>')) {
+      items = deepQuerySelectorAll(filter.itemSelector.substring(1) + attrAppend, this, "");
+    } else {
+      items = this.querySelectorAll(filter.itemSelector + attrAppend);
+    }
+    items.forEach(item => {
+      if (checked) {
+        const shouldStayHidden = this.filters.some(f => {
+          if (f.attribute === filter.attribute || f.checked) return false;
+          const fAttrAppend = f.attribute === "*" ? `` : `[${f.attribute}]`;
+          let fItems;
+          if (f.itemSelector && f.itemSelector.startsWith('>')) {
+            fItems = deepQuerySelectorAll(f.itemSelector.substring(1) + fAttrAppend, this, "");
+          } else {
+            fItems = this.querySelectorAll(f.itemSelector + fAttrAppend);
+          }
+          return Array.from(fItems).includes(item);
+        });
+
+        if (!shouldStayHidden) {
+          item.removeAttribute('hidden');
+          this._hiddenElements.delete(item);
+        }
+      } else {
+        item.setAttribute('hidden', 'true');
+        this._hiddenElements.add(item);
+      }
+    });
+  }
+
   updateFilters() {
     // reset all items
     this._hiddenElements.forEach(el => el.removeAttribute('hidden'));
+    this._hiddenElements.clear();
 
     // apply filters
     this.filters.forEach(filter => {
-      let items;
-      const attrAppend = filter.attribute === "*" ? `` : `[${filter.attribute}]`;
-      if (filter.itemSelector && filter.itemSelector.startsWith('>')) {
-        items = deepQuerySelectorAll(filter.itemSelector.substring(1) + attrAppend, this, "");
-      } else {
-        items = this.querySelectorAll(filter.itemSelector + attrAppend);
-      }
-      items.forEach(item => {
-        if (filter.checked) {
-          item.removeAttribute('hidden');
-        } else {
-          item.setAttribute('hidden', 'true');
-          this._hiddenElements.add(item);
-        }
-      });
+      this.updateSingleFilter(filter, filter.checked);
     });
   }
 
   updateFilter(e: ZnChangeEvent) {
     const attribute = (e.target as ZnCheckbox).getAttribute('data-attribute');
     const checked = (e.target as ZnCheckbox).isChecked
+
+    // Find the specific filter that changed
+    const changedFilter = this.filters.find(f => f.attribute === attribute);
+    if (!changedFilter) return;
 
     this.filters = this.filters.map(filter => {
       if (filter.attribute === attribute) {
@@ -171,7 +195,8 @@ export default class ZnSettingsContainer extends ZincElement {
       this._store.set('filters', JSON.stringify(filterStates));
     }
 
-    this.updateFilters();
+    // Only update elements affected by this specific filter
+    this.updateSingleFilter(changedFilter, checked);
   }
 
   render() {

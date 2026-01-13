@@ -25,7 +25,7 @@ export default class ZnKeyContainer extends ZincElement {
   @query('slot:not([name])') defaultSlot: HTMLSlotElement;
 
   @property() position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start' = 'bottom-start';
-  @property() for: string = ''; // ID of the target element containing items
+  @property() target: string = ''; // ID of the target element containing items
   @property({attribute: 'item-selector'}) itemSelector: string = '[data-type]';
   @property({attribute: 'filter-attribute'}) filterAttribute: string = '';
   @property({attribute: 'no-scroll', type: Boolean}) noScroll: boolean = false;
@@ -39,9 +39,9 @@ export default class ZnKeyContainer extends ZincElement {
   }
 
   firstUpdated() {
-    if (this.for) {
+    if (this.target) {
       const rootNode = this.getRootNode() as Document | ShadowRoot;
-      this._targetElement = rootNode.getElementById ? rootNode.getElementById(this.for) : document.getElementById(this.for);
+      this._targetElement = rootNode.getElementById ? rootNode.getElementById(this.target) : document.getElementById(this.target);
     }
     this.updateFilters();
   }
@@ -70,33 +70,18 @@ export default class ZnKeyContainer extends ZincElement {
     this._hiddenElements.forEach(el => el.removeAttribute('hidden'));
     this._hiddenElements.clear();
 
-    let root: Element | Document | DocumentFragment | null = null;
-
-    if (this.for) {
-      if (this._targetElement) {
-        root = this._targetElement;
-      } else {
-        const rootNode = this.getRootNode() as Document | ShadowRoot;
-        const found = rootNode.getElementById ? rootNode.getElementById(this.for) : document.getElementById(this.for);
-        if (found) {
-          this._targetElement = found;
-          root = found;
-        } else {
-          return;
-        }
-      }
-    } else {
-      const slotElements = this.defaultSlot ? this.defaultSlot.assignedElements({flatten: true}) : [];
-      const hasContent = slotElements.some(el => el.tagName.toLowerCase() !== 'zn-key');
-
-      if (hasContent) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        root = this;
-      } else {
-        root = this.parentElement ?? (this.parentNode as DocumentFragment);
-      }
+    if (this.target && !this._targetElement) {
+      const rootNode = this.getRootNode() as Document | ShadowRoot;
+      this._targetElement = rootNode.getElementById?.(this.target) ?? document.getElementById(this.target);
     }
+    let root: Element | Document | DocumentFragment | null = this._targetElement ?? null;
 
+    if (!root) {
+      const slotElements = this.defaultSlot?.assignedElements({flatten: true}) ?? [];
+      root = slotElements.some(el => el.tagName !== 'ZN-KEY')
+        ? this
+        : this.parentElement ?? (this.parentNode as DocumentFragment);
+    }
     if (!root) return;
 
     const selector = this.filterAttribute ? `[${this.filterAttribute}]` : this.itemSelector;
@@ -146,7 +131,7 @@ export default class ZnKeyContainer extends ZincElement {
         'key-container': true,
         'key-container--scroll': !this.noScroll,
       })}" @zn-change="${this._handleKeyChange}">
-        ${this.for ? '' : html`
+        ${this.target ? '' : html`
           <div class="key-container__content">
             <slot @slotchange="${this.updateFilters.bind(this)}" class="key-container__keys"></slot>
           </div>

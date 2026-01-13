@@ -1,0 +1,33 @@
+@use "../../wc";
+
+:host {
+  display: contents;
+}
+
+.key-container--scroll {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.key-container__content {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.key-container__keys {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+}
+
+::slotted(zn-key) {
+  flex: 0 0 auto;
+}
+
+::slotted([hidden]) {
+  display: none !important;
+}

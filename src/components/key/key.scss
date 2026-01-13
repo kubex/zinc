@@ -1,0 +1,52 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.key {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  gap: var(--zn-spacing-medium);
+  align-items: center;
+  text-align: left;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__label {
+    font-weight: 500;
+    font-size: var(--zn-font-size-medium);
+    color: rgb(var(--zn-text-body));
+    line-height: var(--zn-line-height-dense);
+  }
+
+  &__description {
+    font-size: var(--zn-font-size-small);
+    color: rgb(var(--zn-text-body));
+    opacity: 0.7;
+    line-height: var(--zn-line-height-normal);
+  }
+}
+
+:host([active]) .key__label {
+  color: rgb(var(--zn-text-heading));
+  font-weight: 600;
+}
+
+:host(:not([active])) {
+
+  .key__label,
+  .key__description {
+    opacity: 0.6;
+  }
+
+  zn-chip {
+    --zn-chip-color: rgb(var(--zn-text-body));
+    opacity: 0.5;
+  }
+}

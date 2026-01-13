@@ -13490,6 +13490,388 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/key/key.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnKey",
+          "slots": [
+            {
+              "description": "The description of the key.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "attribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "attribute"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "'primary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'"
+              },
+              "default": "'primary'",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "active",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "iconSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "attribute": "icon-size"
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "label"
+            },
+            {
+              "name": "attribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "attribute"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "'primary' | 'success' | 'warning' | 'error' | 'info' | 'neutral'"
+              },
+              "default": "'primary'",
+              "fieldName": "color"
+            },
+            {
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "active"
+            },
+            {
+              "name": "icon-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "fieldName": "iconSize"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A key item used within a key container to filter content.",
+          "tagNameWithoutPrefix": "key",
+          "tagName": "zn-key",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A key item used within a key container to filter content.\n * @documentation https://zinc.style/components/key\n * @status experimental\n * @since 1.0\n *\n * @slot - The description of the key.\n */",
+          "documentation": "https://zinc.style/components/key",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnKey",
+            "module": "components/key/key.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/key-container/key-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnKeyContainer",
+          "slots": [
+            {
+              "description": "The content to be filtered.",
+              "name": ""
+            },
+            {
+              "description": "The key items (zn-key) that define the filters.",
+              "name": "keys"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "keysSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "for"
+            },
+            {
+              "kind": "field",
+              "name": "itemSelector",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[data-type]'",
+              "attribute": "item-selector"
+            },
+            {
+              "kind": "field",
+              "name": "filterAttribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "filter-attribute"
+            },
+            {
+              "kind": "field",
+              "name": "noScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-scroll"
+            },
+            {
+              "kind": "field",
+              "name": "_hiddenElements",
+              "type": {
+                "text": "Set<Element>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "_targetElement",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_handleKeyChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getKeys",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnKey[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "updateFilters",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "itemMatchesKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "ZnKey"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the set of active keys changes.",
+              "name": "zn-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "fieldName": "position"
+            },
+            {
+              "name": "for",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "for"
+            },
+            {
+              "name": "item-selector",
+              "type": {
+                "text": "string"
+              },
+              "default": "'[data-type]'",
+              "fieldName": "itemSelector"
+            },
+            {
+              "name": "filter-attribute",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "filterAttribute"
+            },
+            {
+              "name": "no-scroll",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noScroll"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A container that manages key items and filters content based on active keys.",
+          "tagNameWithoutPrefix": "key-container",
+          "tagName": "zn-key-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A container that manages key items and filters content based on active keys.\n * @documentation https://zinc.style/components/key-container\n * @status experimental\n * @since 1.0\n *\n * @slot - The content to be filtered.\n * @slot keys - The key items (zn-key) that define the filters.\n *\n * @event zn-change - Emitted when the set of active keys changes.\n */",
+          "documentation": "https://zinc.style/components/key-container",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnKeyContainer",
+            "module": "components/key-container/key-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/linked-select/linked-select.js",
       "declarations": [
         {
@@ -16661,7 +17043,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer', 'side')"
             },
             {
               "kind": "field",
@@ -16766,6 +17148,38 @@
                 "text": "boolean"
               },
               "attribute": "shadow"
+            },
+            {
+              "kind": "field",
+              "name": "sidebarPosition",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "attribute": "sidebar-position"
+            },
+            {
+              "kind": "field",
+              "name": "sidebarOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "sidebar-open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "enableSidebarToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "enable-sidebar-toggle"
+            },
+            {
+              "kind": "method",
+              "name": "toggleSidebar"
             }
           ],
           "attributes": [
@@ -16859,6 +17273,30 @@
                 "text": "boolean"
               },
               "fieldName": "shadow"
+            },
+            {
+              "name": "sidebar-position",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "fieldName": "sidebarPosition"
+            },
+            {
+              "name": "sidebar-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "sidebarOpen"
+            },
+            {
+              "name": "enable-sidebar-toggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "enableSidebarToggle"
             }
           ],
           "superclass": {
@@ -21336,6 +21774,25 @@
               "kind": "method",
               "name": "recomputeFiltersFromSlot",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateSingleFilter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "SettingsContainerFilter"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -27396,7 +27853,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.38",
+    "version": "1.0.39",
     "author": "",
     "license": "MIT"
   }

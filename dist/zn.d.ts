@@ -3576,7 +3576,19 @@ declare module "components/tabs/index" {
         }
     }
 }
+declare module "events/zn-sidebar-toggle" {
+    export type ZnSidebarToggleEvent = CustomEvent<{
+        element: Element;
+        open: boolean;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-sidebar-toggle': ZnSidebarToggleEvent;
+        }
+    }
+}
 declare module "components/panel/panel.component" {
+    import "events/zn-sidebar-toggle";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
@@ -3609,8 +3621,12 @@ declare module "components/panel/panel.component" {
         flushFooter: boolean;
         transparent: boolean;
         shadow: boolean;
+        sidebarPosition: 'left' | 'right';
+        sidebarOpen: boolean;
+        enableSidebarToggle: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
+        toggleSidebar(): void;
         protected render(): unknown;
     }
 }
@@ -6544,6 +6560,7 @@ declare module "components/settings-container/settings-container.component" {
         private handleContentSlotChange;
         private handleFiltersSlotChange;
         private recomputeFiltersFromSlot;
+        private updateSingleFilter;
         updateFilters(): void;
         updateFilter(e: ZnChangeEvent): void;
         render(): import("lit").TemplateResult<1>;
@@ -6744,6 +6761,84 @@ declare module "components/translations/index" {
     export * from "components/translations/translations.component";
     export default ZnTranslations;
 }
+declare module "components/key/key.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A key item used within a key container to filter content.
+     * @documentation https://zinc.style/components/key
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The description of the key.
+     */
+    export default class ZnKey extends ZincElement {
+        static styles: CSSResultGroup;
+        icon: string;
+        label: string;
+        attribute: string;
+        value: string;
+        color: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'neutral';
+        active: boolean;
+        iconSize: number;
+        private _handleClick;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/key/index" {
+    import ZnKey from "components/key/key.component";
+    export * from "components/key/key.component";
+    export default ZnKey;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-key': ZnKey;
+        }
+    }
+}
+declare module "components/key-container/key-container.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A container that manages key items and filters content based on active keys.
+     * @documentation https://zinc.style/components/key-container
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The content to be filtered.
+     * @slot keys - The key items (zn-key) that define the filters.
+     *
+     * @event zn-change - Emitted when the set of active keys changes.
+     */
+    export default class ZnKeyContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        keysSlot: HTMLSlotElement;
+        defaultSlot: HTMLSlotElement;
+        position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
+        for: string;
+        itemSelector: string;
+        filterAttribute: string;
+        noScroll: boolean;
+        private _hiddenElements;
+        private _targetElement;
+        connectedCallback(): void;
+        firstUpdated(): void;
+        private _handleKeyChange;
+        private getKeys;
+        private updateFilters;
+        private itemMatchesKey;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/key-container/index" {
+    import ZnKeyContainer from "components/key-container/key-container.component";
+    export * from "components/key-container/key-container.component";
+    export default ZnKeyContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-key-container': ZnKeyContainer;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6888,6 +6983,8 @@ declare module "zinc" {
     export { default as Reveal } from "components/reveal/index";
     export { default as AudioSelect } from "components/audio-select/index";
     export { default as Translations } from "components/translations/index";
+    export { default as Key } from "components/key/index";
+    export { default as KeyContainer } from "components/key-container/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

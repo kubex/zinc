@@ -6814,7 +6814,7 @@ declare module "components/key-container/key-container.component" {
         keysSlot: HTMLSlotElement;
         defaultSlot: HTMLSlotElement;
         position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
-        for: string;
+        target: string;
         itemSelector: string;
         filterAttribute: string;
         noScroll: boolean;

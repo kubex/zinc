@@ -16,7 +16,6 @@ export default class ZnKey extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() icon: string = '';
-  @property() label: string = '';
   @property() attribute: string = '';
   @property() value: string = '';
   @property() color: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'neutral' = 'primary';
@@ -39,11 +38,8 @@ export default class ZnKey extends ZincElement {
           .type="${chipType}"
           size="medium"
         ></zn-chip>
-        <div class="key__content">
-          <div class="key__label">${this.label}</div>
-          <div class="key__description">
-            <slot></slot>
-          </div>
+        <div class="key__description">
+          <slot></slot>
         </div>
       </div>
     `;

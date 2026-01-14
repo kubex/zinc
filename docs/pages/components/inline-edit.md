@@ -26,7 +26,7 @@ layout: component
 
 <zn-sp>
   <form action="#" method="get">
-    <zn-inline-edit caption="Something" name="something" value="Awesome" inline></zn-inline-edit>
+    <zn-inline-edit caption="Something" name="something" input-type="textarea"  value="Awesome" inline></zn-inline-edit>
   </form>
   <zn-inline-edit caption="Something" value="1" action="#" method="GET" inline
                   options="{&quot;1&quot;: &quot;Option 1&quot;,&quot;2&quot;: &quot;Option 2&quot;}">

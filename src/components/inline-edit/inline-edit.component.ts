@@ -284,6 +284,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         class="ai__input"
         name="${this.name}"
         size="${this.size}"
+        resize="auto"
+        rows="1"
         .value="${this.value}"
         placeholder="${this.placeholder}"
         help-text="${ifDefined(this.helpText)}"

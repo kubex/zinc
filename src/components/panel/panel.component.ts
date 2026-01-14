@@ -1,9 +1,9 @@
 import '../../events/zn-sidebar-toggle';
-import { classMap } from "lit/directives/class-map.js";
-import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
-import { HasSlotController } from "../../internal/slot";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { property } from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
@@ -27,23 +27,25 @@ export default class ZnPanel extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer', 'side');
 
-  @property({ attribute: 'basis-px', type: Number }) basis: number;
+  @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
   @property() icon: string;
   @property() description: string;
-  @property({ type: Boolean }) tabbed: boolean;
-  @property({ attribute: 'header-underline', type: Boolean }) underlineHeader: boolean;
-  @property({ type: Boolean }) cosmic: boolean;
-  @property({ type: Boolean }) flush: boolean;
-  @property({ attribute: 'flush-x', type: Boolean }) flushX: boolean;
-  @property({ attribute: 'flush-y', type: Boolean }) flushY: boolean;
-  @property({ attribute: 'flush-footer', type: Boolean }) flushFooter: boolean;
-  @property({ type: Boolean }) transparent: boolean;
-  @property({ type: Boolean }) shadow: boolean;
+  @property({type: Boolean}) tabbed: boolean;
+  @property({attribute: 'header-underline', type: Boolean}) underlineHeader: boolean;
+  @property({type: Boolean}) cosmic: boolean;
+  @property({type: Boolean}) flush: boolean;
+  @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
+  @property({attribute: 'flush-y', type: Boolean}) flushY: boolean;
+  @property({attribute: 'flush-footer', type: Boolean}) flushFooter: boolean;
+  @property({type: Boolean}) transparent: boolean;
+  @property({type: Boolean}) shadow: boolean;
 
-  @property({ attribute: 'sidebar-position' }) sidebarPosition: 'left' | 'right' = 'left';
-  @property({ attribute: 'sidebar-open', type: Boolean, reflect: true }) sidebarOpen: boolean = true;
-  @property({ attribute: 'enable-sidebar-toggle', type: Boolean }) enableSidebarToggle: boolean = false;
+  @property({attribute: 'sidebar-position'}) sidebarPosition: 'left' | 'right' = 'left';
+  @property({attribute: 'sidebar-tooltip'}) sidebarTooltip: string;
+  @property({attribute: 'sidebar-icon'}) sidebarIcon: string;
+  @property({attribute: 'sidebar-open', type: Boolean, reflect: true}) sidebarOpen: boolean = true;
+  @property({attribute: 'enable-sidebar-toggle', type: Boolean}) enableSidebarToggle: boolean = false;
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -81,7 +83,7 @@ export default class ZnPanel extends ZincElement {
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
-    this.emit('zn-sidebar-toggle', { detail: { element: this, open: this.sidebarOpen } });
+    this.emit('zn-sidebar-toggle', {detail: {element: this, open: this.sidebarOpen}});
   }
 
   protected render(): unknown {
@@ -91,22 +93,22 @@ export default class ZnPanel extends ZincElement {
 
     return html`
       <div class="${classMap({
-      panel: true,
-      'panel--flush': this.flush || this.tabbed,
-      'panel--flush-x': this.flushX,
-      'panel--flush-y': this.flushY,
-      'panel--flush-footer': this.flushFooter,
-      'panel--tabbed': this.tabbed,
-      'panel--transparent': this.transparent,
-      'panel--has-actions': hasActionSlot || this.enableSidebarToggle,
-      'panel--has-footer': hasFooterSlot,
-      'panel--has-header': hasHeader,
-      'panel--cosmic': this.cosmic,
-      'panel--shadow': this.shadow,
-      'panel--has-sidebar': this.hasSlotController.test('side'),
-      'panel--sidebar-right': this.sidebarPosition === 'right',
-      'panel--sidebar-collapsed': !this.sidebarOpen
-    })}">
+        panel: true,
+        'panel--flush': this.flush || this.tabbed,
+        'panel--flush-x': this.flushX,
+        'panel--flush-y': this.flushY,
+        'panel--flush-footer': this.flushFooter,
+        'panel--tabbed': this.tabbed,
+        'panel--transparent': this.transparent,
+        'panel--has-actions': hasActionSlot || this.enableSidebarToggle,
+        'panel--has-footer': hasFooterSlot,
+        'panel--has-header': hasHeader,
+        'panel--cosmic': this.cosmic,
+        'panel--shadow': this.shadow,
+        'panel--has-sidebar': this.hasSlotController.test('side'),
+        'panel--sidebar-right': this.sidebarPosition === 'right',
+        'panel--sidebar-collapsed': !this.sidebarOpen
+      })}">
 
         <div class="panel__inner">
           ${hasHeader ? html`
@@ -123,10 +125,10 @@ export default class ZnPanel extends ZincElement {
               ${this.enableSidebarToggle ? html`
                 <zn-button color="transparent"
                            size="x-small"
-                           icon="event_list"
+                           icon="${this.sidebarIcon || 'menu'}"
                            icon-size="24"
                            slot="actions"
-                           tooltip="Keys"
+                           tooltip="${this.sidebarTooltip || 'Toggle Sidebar'}"
                            @click="${this.toggleSidebar}"></zn-icon>` : null}
             </zn-header>` : null}
 

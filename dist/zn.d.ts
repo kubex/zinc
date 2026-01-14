@@ -1505,7 +1505,7 @@ declare module "components/well/index" {
 declare module "components/copy-button/copy-button.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import ZnTooltip from "components/tooltip/index";
+    import type ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/copy-button
@@ -1534,6 +1534,7 @@ declare module "components/copy-button/copy-button.component" {
         value: string;
         copyLabel: string;
         src: string;
+        size: number;
         /**
          * An id that references an element in the same document from which data will be copied. If both this and `value` are
          * present, this value will take precedence. By default, the target element's `textContent` will be copied. To copy an

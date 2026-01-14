@@ -6775,7 +6775,6 @@ declare module "components/key/key.component" {
     export default class ZnKey extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
-        label: string;
         attribute: string;
         value: string;
         color: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'neutral';

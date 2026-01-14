@@ -11663,7 +11663,7 @@
               "kind": "field",
               "name": "inputType",
               "type": {
-                "text": "'select' | 'text' | 'data-select' | 'number'"
+                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
               },
               "default": "'text'",
               "attribute": "input-type"
@@ -11844,6 +11844,16 @@
             },
             {
               "kind": "method",
+              "name": "_getTextAreaInput",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "_getTextInput",
               "privacy": "protected",
               "return": {
@@ -11964,7 +11974,7 @@
             {
               "name": "input-type",
               "type": {
-                "text": "'select' | 'text' | 'data-select' | 'number'"
+                "text": "'select' | 'text' | 'data-select' | 'number' | 'textarea'"
               },
               "default": "'text'",
               "fieldName": "inputType"

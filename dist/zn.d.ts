@@ -3623,6 +3623,8 @@ declare module "components/panel/panel.component" {
         transparent: boolean;
         shadow: boolean;
         sidebarPosition: 'left' | 'right';
+        sidebarTooltip: string;
+        sidebarIcon: string;
         sidebarOpen: boolean;
         enableSidebarToggle: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;

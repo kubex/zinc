@@ -1,10 +1,10 @@
-import {property, query, state} from 'lit/decorators.js';
+import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property, query, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import type ZnTooltip from "../tooltip";
 
 import styles from './copy-button.scss';
-import {classMap} from "lit/directives/class-map.js";
-import ZnTooltip from "../tooltip";
 
 /**
  * @summary Short summary of the component's intended use.

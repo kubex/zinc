@@ -81,7 +81,7 @@ export default class ZnCopyButton extends ZincElement {
     `;
   }
 
-  private async showStatus(status: 'success' | 'error') {
+  private showStatus(status: 'success' | 'error') {
     const iconToShow = status === 'success' ? this.successIcon : this.errorIcon;
     this.tooltip.content = status === 'success' ? 'Copied!' : 'Error!';
 
@@ -104,7 +104,7 @@ export default class ZnCopyButton extends ZincElement {
     }
     this.isCopying = true;
 
-    let valueToCopy = this.value||this.textContent;
+    let valueToCopy = this.value || this.textContent;
 
     if (this.from) {
       const root = this.getRootNode() as ShadowRoot | Document;
@@ -141,14 +141,14 @@ export default class ZnCopyButton extends ZincElement {
 
     if (!valueToCopy) {
       console.error('No value to copy. Please provide a value or a valid "from" attribute.');
-      await this.showStatus('error');
+      this.showStatus('error');
       this.emit('zn-error');
       return;
     }
 
     try {
       await navigator.clipboard.writeText(valueToCopy);
-      await this.showStatus('success');
+      this.showStatus('success');
       this.emit('zn-copy', {
         detail: {
           value: valueToCopy
@@ -156,7 +156,7 @@ export default class ZnCopyButton extends ZincElement {
       })
     } catch (error) {
       console.error('Failed to copy text: ', error);
-      await this.showStatus('error');
+      this.showStatus('error');
       this.emit('zn-error');
     }
 

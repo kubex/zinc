@@ -228,7 +228,8 @@ export default class ZnDataTable extends ZincElement {
     ActionSlots.create.valueOf(),
     ActionSlots.filter.valueOf(),
     ActionSlots.sort.valueOf(),
-    ActionSlots.inputs.valueOf()
+    ActionSlots.inputs.valueOf(),
+    'empty-state'
   );
 
   private _dataTask = new Task(this, {
@@ -392,6 +393,13 @@ export default class ZnDataTable extends ZincElement {
   }
 
   emptyState() {
+    if (this.hasSlotController.test('empty-state')) {
+      return html`
+        <div class="table--empty">
+          <slot name="empty-state"></slot>
+        </div>`;
+    }
+
     return html`
       <div class="table--empty">
         <zn-empty-state

@@ -5,3 +5,5 @@ export type { ZnBlurEvent } from './zn-blur';
 export type { ZnFocusEvent } from './zn-focus';
 export type { ZnInputEvent } from './zn-input';
 export type { ZnShowEvent } from './zn-show';
+export type { ZnPurchaseEvent } from './zn-purchase';
+export type { ZnRedirectEvent } from './zn-redirect';

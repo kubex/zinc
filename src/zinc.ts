@@ -87,6 +87,7 @@ export { default as AudioSelect } from './components/audio-select';
 export { default as Translations } from './components/translations';
 export { default as Key } from './components/key';
 export { default as KeyContainer } from './components/key-container';
+export { default as AnimatedButton } from './components/animated-button';
 /* plop:component */
 
 // Base Component

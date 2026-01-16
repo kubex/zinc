@@ -19,28 +19,28 @@ export default class ZnAnimatedButton extends ZincElement {
   @state() private errorMessage = '';
 
   /** The text to display in the idle state */
-  @property({ attribute: 'idle-text' }) idleText = 'Purchase';
+  @property({attribute: 'idle-text'}) idleText = 'Purchase';
 
   /** The text to display in the processing state */
-  @property({ attribute: 'processing-text' }) processingText = 'Purchasing';
+  @property({attribute: 'processing-text'}) processingText = 'Purchasing';
 
   /** The text to display in the success state */
-  @property({ attribute: 'success-text' }) successText = 'Success';
+  @property({attribute: 'success-text'}) successText = 'Success';
 
   /** The text to display in the failure state */
-  @property({ attribute: 'failure-text' }) failureText = 'Failed';
+  @property({attribute: 'failure-text'}) failureText = 'Failed';
 
   /** The URL to redirect to after successful purchase */
-  @property({ attribute: 'redirect-url' }) redirectUrl = '';
+  @property({attribute: 'redirect-url'}) redirectUrl = '';
 
   /** Delay in milliseconds before redirecting after success (default: 1500ms) */
-  @property({ type: Number, attribute: 'redirect-delay' }) redirectDelay = 1500;
+  @property({type: Number, attribute: 'redirect-delay'}) redirectDelay = 1500;
 
   /** Delay in milliseconds before resetting from failure state (default: 2000ms) */
-  @property({ type: Number, attribute: 'failure-reset-delay' }) failureResetDelay = 2000;
+  @property({type: Number, attribute: 'failure-reset-delay'}) failureResetDelay = 2000;
 
   /** Disabled state */
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   /** The name of the form control (required for form submission) */
   @property() name = '';
@@ -68,12 +68,12 @@ export default class ZnAnimatedButton extends ZincElement {
   }
 
   /** Programmatically trigger the purchase flow */
-  public async purchase(): Promise<void> {
+  public purchase(): void {
     if (this.currentState !== 'idle' || this.disabled) {
       return;
     }
 
-    await this.handlePurchase();
+    this.handlePurchase();
   }
 
   /** Set the button to success state manually */
@@ -98,7 +98,7 @@ export default class ZnAnimatedButton extends ZincElement {
     this.errorMessage = '';
   }
 
-  private async handlePurchase() {
+  private handlePurchase() {
     this.clearTimeouts();
     this.currentState = 'processing';
 
@@ -123,7 +123,7 @@ export default class ZnAnimatedButton extends ZincElement {
         window.location.href = this.redirectUrl;
       }
       this.emit('zn-redirect', {
-        detail: { url: this.redirectUrl }
+        detail: {url: this.redirectUrl}
       });
     }, this.redirectDelay);
   }
@@ -170,7 +170,7 @@ export default class ZnAnimatedButton extends ZincElement {
       >
         ${showSpinner
           ? html`
-              <span class="animated-button__content">
+            <span class="animated-button__content">
                 <zn-icon
                   class="animated-button__spinner"
                   src="progress_activity"
@@ -179,11 +179,11 @@ export default class ZnAnimatedButton extends ZincElement {
                 ></zn-icon>
                 <span class="animated-button__text">${buttonText}</span>
               </span>
-              <span class="animated-button__shimmer"></span>
-            `
+            <span class="animated-button__shimmer"></span>
+          `
           : showSuccess
             ? html`
-                <span class="animated-button__content">
+              <span class="animated-button__content">
                   <svg
                     class="animated-button__icon animated-button__icon--success"
                     width="20"
@@ -203,10 +203,10 @@ export default class ZnAnimatedButton extends ZincElement {
                   </svg>
                   <span class="animated-button__text">${buttonText}</span>
                 </span>
-              `
+            `
             : showFailure
               ? html`
-                  <span class="animated-button__content">
+                <span class="animated-button__content">
                     <zn-icon
                       class="animated-button__icon animated-button__icon--failure"
                       src="cancel"
@@ -217,12 +217,12 @@ export default class ZnAnimatedButton extends ZincElement {
                       ${buttonText}${this.errorMessage ? `: ${this.errorMessage}` : ''}
                     </span>
                   </span>
-                `
+              `
               : html`
-                  <span class="animated-button__content">
+                <span class="animated-button__content">
                     <span class="animated-button__text">${buttonText}</span>
                   </span>
-                `}
+              `}
       </button>
     `;
   }

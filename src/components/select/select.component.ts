@@ -946,12 +946,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       if (trigger === this) {
-        this.updateDependencyState(el as HTMLElement);
+        this.updateDependencyState(el as HTMLInputElement);
       }
     });
   }
 
-  private updateDependencyState(target: HTMLElement) {
+  private updateDependencyState(target: HTMLInputElement) {
     const disableValue = target.getAttribute('data-disable-value');
     if (disableValue !== null) {
       const valuesToCheck = disableValue.split(',').map(v => v.trim());
@@ -967,15 +967,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  private toggleDisabled(target: HTMLElement, disabled: boolean) {
-    if ('disabled' in target) {
-      target.disabled = disabled;
-    } else {
-      if (disabled) {
-        target.setAttribute('disabled', '');
-      } else {
-        target.removeAttribute('disabled');
+  private toggleDisabled(target: HTMLInputElement, disabled: boolean) {
+    const reset = () => {
+      if ('defaultValue' in target && typeof target.defaultValue !== 'undefined') {
+        target.value = target.defaultValue;
       }
+    }
+
+    target.disabled = disabled;
+
+    if (disabled) {
+      reset();
     }
   }
 

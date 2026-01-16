@@ -1,8 +1,9 @@
-import { property, state } from 'lit/decorators.js';
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { classMap } from 'lit/directives/class-map.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon/icon.component';
+
 import styles from './animated-button.scss';
 
 type AnimatedButtonState = 'idle' | 'processing' | 'success' | 'failure';

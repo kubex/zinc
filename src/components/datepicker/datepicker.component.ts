@@ -7,7 +7,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import AirDatepicker, {type AirDatepickerLocale} from "air-datepicker";
+import AirDatepicker, {type AirDatepickerLocale, type AirDatepickerOptions} from "air-datepicker";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
@@ -104,6 +104,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   /** Makes the input a range picker. **/
   @property({type: Boolean}) range = false;
 
+  /** Disallows selecting past dates. **/
+  @property({type: Boolean, attribute: 'disable-past-dates'}) disablePastDates = false;
+
   private _instance: AirDatepicker<HTMLInputElement>;
 
 
@@ -174,13 +177,21 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
     const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
     if (inputElement) {
-      this._instance = new AirDatepicker(inputElement, {
+      const options: AirDatepickerOptions = {
         locale: enLocale,
         range: this.range,
         onSelect: () => {
           this.handleChange();
         }
-      });
+      };
+
+      if (this.disablePastDates) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        options.minDate = today;
+      }
+
+      this._instance = new AirDatepicker(inputElement, options);
     }
   }
 

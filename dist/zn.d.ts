@@ -6848,6 +6848,66 @@ declare module "components/key-container/index" {
         }
     }
 }
+declare module "components/animated-button/animated-button.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/icon.component";
+    export default class ZnAnimatedButton extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private currentState;
+        private errorMessage;
+        /** The text to display in the idle state */
+        idleText: string;
+        /** The text to display in the processing state */
+        processingText: string;
+        /** The text to display in the success state */
+        successText: string;
+        /** The text to display in the failure state */
+        failureText: string;
+        /** The URL to redirect to after successful purchase */
+        redirectUrl: string;
+        /** Delay in milliseconds before redirecting after success (default: 1500ms) */
+        redirectDelay: number;
+        /** Delay in milliseconds before resetting from failure state (default: 2000ms) */
+        failureResetDelay: number;
+        /** Disabled state */
+        disabled: boolean;
+        /** The name of the form control (required for form submission) */
+        name: string;
+        /** The value of the form control */
+        value: string;
+        private resetTimeout?;
+        private redirectTimeout?;
+        disconnectedCallback(): void;
+        private clearTimeouts;
+        /** Programmatically trigger the purchase flow */
+        purchase(): void;
+        /** Set the button to success state manually */
+        setSuccess(): void;
+        /** Set the button to failure state manually with optional error message */
+        setFailure(message?: string): void;
+        /** Reset the button to idle state */
+        reset(): void;
+        private handlePurchase;
+        private scheduleRedirect;
+        private scheduleReset;
+        private handleClick;
+        protected render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/animated-button/index" {
+    import ZnAnimatedButton from "components/animated-button/animated-button.component";
+    export * from "components/animated-button/animated-button.component";
+    export default ZnAnimatedButton;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-animated-button': ZnAnimatedButton;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -6896,6 +6956,28 @@ declare module "events/zn-show" {
         }
     }
 }
+declare module "events/zn-purchase" {
+    export type ZnPurchaseEvent = CustomEvent<{
+        value: string;
+        setSuccess: () => void;
+        setFailure: (message?: string) => void;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-purchase': ZnPurchaseEvent;
+        }
+    }
+}
+declare module "events/zn-redirect" {
+    export type ZnRedirectEvent = CustomEvent<{
+        url: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-redirect': ZnRedirectEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -6904,6 +6986,8 @@ declare module "events/events" {
     export type { ZnFocusEvent } from "events/zn-focus";
     export type { ZnInputEvent } from "events/zn-input";
     export type { ZnShowEvent } from "events/zn-show";
+    export type { ZnPurchaseEvent } from "events/zn-purchase";
+    export type { ZnRedirectEvent } from "events/zn-redirect";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -6994,6 +7078,7 @@ declare module "zinc" {
     export { default as Translations } from "components/translations/index";
     export { default as Key } from "components/key/index";
     export { default as KeyContainer } from "components/key-container/index";
+    export { default as AnimatedButton } from "components/animated-button/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -90,6 +90,119 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-animated-button",
+          "description": "\n---\n\n\n### **Methods:**\n - **purchase(): _void_** - Programmatically trigger the purchase flow\n- **setSuccess(): _void_** - Set the button to success state manually\n- **setFailure(message): _void_** - Set the button to failure state manually with optional error message\n- **reset(): _void_** - Reset the button to idle state",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "idle-text",
+              "description": "The text to display in the idle state",
+              "value": { "type": "string", "default": "'Purchase'" }
+            },
+            {
+              "name": "processing-text",
+              "description": "The text to display in the processing state",
+              "value": { "type": "string", "default": "'Purchasing'" }
+            },
+            {
+              "name": "success-text",
+              "description": "The text to display in the success state",
+              "value": { "type": "string", "default": "'Success'" }
+            },
+            {
+              "name": "failure-text",
+              "description": "The text to display in the failure state",
+              "value": { "type": "string", "default": "'Failed'" }
+            },
+            {
+              "name": "redirect-url",
+              "description": "The URL to redirect to after successful purchase",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "redirect-delay",
+              "description": "Delay in milliseconds before redirecting after success (default: 1500ms)",
+              "value": { "type": "number", "default": "1500" }
+            },
+            {
+              "name": "failure-reset-delay",
+              "description": "Delay in milliseconds before resetting from failure state (default: 2000ms)",
+              "value": { "type": "number", "default": "2000" }
+            },
+            {
+              "name": "disabled",
+              "description": "Disabled state",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "name",
+              "description": "The name of the form control (required for form submission)",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "value",
+              "description": "The value of the form control",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "idleText",
+                "description": "The text to display in the idle state",
+                "type": "string"
+              },
+              {
+                "name": "processingText",
+                "description": "The text to display in the processing state",
+                "type": "string"
+              },
+              {
+                "name": "successText",
+                "description": "The text to display in the success state",
+                "type": "string"
+              },
+              {
+                "name": "failureText",
+                "description": "The text to display in the failure state",
+                "type": "string"
+              },
+              {
+                "name": "redirectUrl",
+                "description": "The URL to redirect to after successful purchase",
+                "type": "string"
+              },
+              {
+                "name": "redirectDelay",
+                "description": "Delay in milliseconds before redirecting after success (default: 1500ms)",
+                "type": "number"
+              },
+              {
+                "name": "failureResetDelay",
+                "description": "Delay in milliseconds before resetting from failure state (default: 2000ms)",
+                "type": "number"
+              },
+              {
+                "name": "disabled",
+                "description": "Disabled state",
+                "type": "boolean"
+              },
+              {
+                "name": "name",
+                "description": "The name of the form control (required for form submission)",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The value of the form control",
+                "type": "string"
+              }
+            ],
+            "events": []
           }
         },
         {

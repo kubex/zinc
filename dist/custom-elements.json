@@ -292,6 +292,347 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/animated-button/animated-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnAnimatedButton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
+            },
+            {
+              "kind": "field",
+              "name": "currentState",
+              "type": {
+                "text": "AnimatedButtonState"
+              },
+              "privacy": "private",
+              "default": "'idle'"
+            },
+            {
+              "kind": "field",
+              "name": "errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "idleText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Purchase'",
+              "description": "The text to display in the idle state",
+              "attribute": "idle-text"
+            },
+            {
+              "kind": "field",
+              "name": "processingText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Purchasing'",
+              "description": "The text to display in the processing state",
+              "attribute": "processing-text"
+            },
+            {
+              "kind": "field",
+              "name": "successText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Success'",
+              "description": "The text to display in the success state",
+              "attribute": "success-text"
+            },
+            {
+              "kind": "field",
+              "name": "failureText",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Failed'",
+              "description": "The text to display in the failure state",
+              "attribute": "failure-text"
+            },
+            {
+              "kind": "field",
+              "name": "redirectUrl",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The URL to redirect to after successful purchase",
+              "attribute": "redirect-url"
+            },
+            {
+              "kind": "field",
+              "name": "redirectDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Delay in milliseconds before redirecting after success (default: 1500ms)",
+              "attribute": "redirect-delay"
+            },
+            {
+              "kind": "field",
+              "name": "failureResetDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "description": "Delay in milliseconds before resetting from failure state (default: 2000ms)",
+              "attribute": "failure-reset-delay"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled state",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the form control (required for form submission)",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The value of the form control",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "resetTimeout",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "redirectTimeout",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "clearTimeouts",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "purchase",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Programmatically trigger the purchase flow"
+            },
+            {
+              "kind": "method",
+              "name": "setSuccess",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Set the button to success state manually"
+            },
+            {
+              "kind": "method",
+              "name": "setFailure",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "default": "''"
+                }
+              ],
+              "description": "Set the button to failure state manually with optional error message"
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "Reset the button to idle state"
+            },
+            {
+              "kind": "method",
+              "name": "handlePurchase",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "scheduleRedirect",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "scheduleReset",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "idle-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Purchase'",
+              "description": "The text to display in the idle state",
+              "fieldName": "idleText"
+            },
+            {
+              "name": "processing-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Purchasing'",
+              "description": "The text to display in the processing state",
+              "fieldName": "processingText"
+            },
+            {
+              "name": "success-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Success'",
+              "description": "The text to display in the success state",
+              "fieldName": "successText"
+            },
+            {
+              "name": "failure-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Failed'",
+              "description": "The text to display in the failure state",
+              "fieldName": "failureText"
+            },
+            {
+              "name": "redirect-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The URL to redirect to after successful purchase",
+              "fieldName": "redirectUrl"
+            },
+            {
+              "name": "redirect-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "1500",
+              "description": "Delay in milliseconds before redirecting after success (default: 1500ms)",
+              "fieldName": "redirectDelay"
+            },
+            {
+              "name": "failure-reset-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "2000",
+              "description": "Delay in milliseconds before resetting from failure state (default: 2000ms)",
+              "fieldName": "failureResetDelay"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disabled state",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the form control (required for form submission)",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The value of the form control",
+              "fieldName": "value"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "animated-button",
+          "tagName": "zn-animated-button",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnAnimatedButton",
+            "module": "components/animated-button/animated-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/audio-select/audio-select.js",
       "declarations": [
         {
@@ -27947,7 +28288,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.45",
+    "version": "1.0.46",
     "author": "",
     "license": "MIT"
   }

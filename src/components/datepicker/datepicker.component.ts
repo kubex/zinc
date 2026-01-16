@@ -107,6 +107,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   /** Disallows selecting past dates. **/
   @property({type: Boolean, attribute: 'disable-past-dates'}) disablePastDates = false;
 
+  /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
+  @property({attribute: 'min-date'}) minDate?: string | Date;
+
+  /** Maximum date that can be selected. Accepts Date object or date string. **/
+  @property({attribute: 'max-date'}) maxDate?: string | Date;
+
   private _instance: AirDatepicker<HTMLInputElement>;
 
 
@@ -185,10 +191,16 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         }
       };
 
-      if (this.disablePastDates) {
+      if (this.minDate) {
+        options.minDate = typeof this.minDate === 'string' ? new Date(this.minDate) : this.minDate;
+      } else if (this.disablePastDates) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         options.minDate = today;
+      }
+
+      if (this.maxDate) {
+        options.maxDate = typeof this.maxDate === 'string' ? new Date(this.maxDate) : this.maxDate;
       }
 
       this._instance = new AirDatepicker(inputElement, options);

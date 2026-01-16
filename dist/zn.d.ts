@@ -5186,6 +5186,12 @@ declare module "components/datepicker/datepicker.component" {
         required: boolean;
         /** Makes the input a range picker. **/
         range: boolean;
+        /** Disallows selecting past dates. **/
+        disablePastDates: boolean;
+        /** Minimum date that can be selected. Overrides disable-past-dates if both are set. Accepts Date object or date string. **/
+        minDate?: string | Date;
+        /** Maximum date that can be selected. Accepts Date object or date string. **/
+        maxDate?: string | Date;
         private _instance;
         /** Gets the validity state object */
         get validity(): ValidityState;

@@ -7333,6 +7333,16 @@
             },
             {
               "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Help text displayed below the search input.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
               "name": "searchUri",
               "type": {
                 "text": "string"
@@ -7462,6 +7472,15 @@
               "fieldName": "placeholder"
             },
             {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "Help text displayed below the search input.",
+              "fieldName": "helpText"
+            },
+            {
               "name": "search-uri",
               "type": {
                 "text": "string"
@@ -7487,7 +7506,7 @@
           "tagNameWithoutPrefix": "data-table-search",
           "tagName": "zn-data-table-search",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
+          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} helpText - Help text displayed below the search input.\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
           "documentation": "https://zinc.style/components/data-table-search",
           "status": "experimental",
           "since": "1.0",

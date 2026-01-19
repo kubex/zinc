@@ -35,6 +35,7 @@ type AllowedInputElement =
  * @property {string} name - The name of the search input field (default: "search").
  * @property {string} value - The current search value.
  * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
+ * @property {string} helpText - Help text displayed below the search input.
  * @property {string} searchUri - Optional URI to use for search operations.
  * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
  */
@@ -52,6 +53,8 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
   @property() value: string = "";
 
   @property() placeholder: string = "Search...";
+
+  @property({attribute: 'help-text'}) helpText: string = "";
 
   @property({attribute: 'search-uri'}) searchUri: string | undefined;
 
@@ -167,6 +170,7 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
           type="search"
           name="${this.name}"
           placeholder="${this.placeholder}"
+          help-text="${this.helpText}"
           value="${this.value}"
           clearable
           @zn-input="${this.handleInput}"

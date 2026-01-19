@@ -1879,64 +1879,6 @@ declare module "components/data-select/providers/provider" {
     export * from "components/data-select/providers/color-data-provider";
     export * from "components/data-select/providers/country-code-data-provider";
 }
-declare module "internal/animate" {
-    /**
-     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
-     */
-    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
-    /** Parses a CSS duration and returns the number of milliseconds. */
-    export function parseDuration(delay: number | string): number;
-    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
-    export function prefersReducedMotion(): boolean;
-    /**
-     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
-     */
-    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
-    /**
-     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
-     * element's scrollHeight before the animation.
-     */
-    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
-        height: string | number | null | undefined;
-        composite?: CompositeOperationOrAuto;
-        easing?: string;
-        offset?: number | null;
-    }[];
-}
-declare module "utilities/animation-registry" {
-    export interface ElementAnimation {
-        keyframes: Keyframe[];
-        rtlKeyframes?: Keyframe[];
-        options?: KeyframeAnimationOptions;
-    }
-    export interface ElementAnimationMap {
-        [animationName: string]: ElementAnimation;
-    }
-    export interface GetAnimationOptions {
-        /**
-         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
-         * available using getAnimation().
-         */
-        dir: string;
-    }
-    /**
-     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
-     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
-     */
-    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
-    /** Sets a custom animation for the specified element. */
-    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
-    /** Gets an element's animation. Falls back to the default if no animation is found. */
-    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
-}
-declare module "events/zn-remove" {
-    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-remove': ZnRemoveEvent;
-        }
-    }
-}
 declare module "components/option/option.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -1998,6 +1940,64 @@ declare module "components/option/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-option': ZnOption;
+        }
+    }
+}
+declare module "internal/animate" {
+    /**
+     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
+     */
+    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
+    /** Parses a CSS duration and returns the number of milliseconds. */
+    export function parseDuration(delay: number | string): number;
+    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+    export function prefersReducedMotion(): boolean;
+    /**
+     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
+     */
+    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
+    /**
+     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
+     * element's scrollHeight before the animation.
+     */
+    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
+        height: string | number | null | undefined;
+        composite?: CompositeOperationOrAuto;
+        easing?: string;
+        offset?: number | null;
+    }[];
+}
+declare module "utilities/animation-registry" {
+    export interface ElementAnimation {
+        keyframes: Keyframe[];
+        rtlKeyframes?: Keyframe[];
+        options?: KeyframeAnimationOptions;
+    }
+    export interface ElementAnimationMap {
+        [animationName: string]: ElementAnimation;
+    }
+    export interface GetAnimationOptions {
+        /**
+         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
+         * available using getAnimation().
+         */
+        dir: string;
+    }
+    /**
+     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
+     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
+     */
+    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
+    /** Sets a custom animation for the specified element. */
+    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
+    /** Gets an element's animation. Falls back to the default if no animation is found. */
+    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
+}
+declare module "events/zn-remove" {
+    export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-remove': ZnRemoveEvent;
         }
     }
 }
@@ -2225,33 +2225,44 @@ declare module "components/data-select/data-select.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
     import ZincElement from "internal/zinc-element";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
     import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnSelect from "components/select/index";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A select component with built-in data providers for common options like colors, currencies, and countries.
      * @documentation https://zinc.style/components/data-select
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-select
+     * @dependency zn-option
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-input - Emitted when the select's value changes.
+     * @event zn-clear - Emitted when the clear button is activated.
+     * @event blur - Emitted when the select loses focus.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot label - The select's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot help-text - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.
      *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart combobox - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).
+     * @csspart expand-icon - The container that wraps the expand icon (forwarded from zn-select).
+     * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).
+     * @csspart form-control-input - The select's wrapper (forwarded from zn-select).
+     * @csspart display-input - The element that displays the selected option's label (forwarded from zn-select).
      */
     export default class ZnDataSelect extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-select': typeof ZnSelect;
+            'zn-option': typeof ZnOption;
+        };
         select: ZnSelect;
-        selectPrefix: HTMLElement;
         /** The name of the select. Used for form submission. */
         name: string;
-        /** The value of the select. Used for form submission. */
-        value: string;
+        /** The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings. */
+        value: string | string[];
         /** The provider of the select. */
         provider: 'color' | 'currency' | 'country' | 'phone';
         /** The position of the icon. */
@@ -2289,7 +2300,8 @@ declare module "components/data-select/data-select.component" {
         constructor();
         connectedCallback(): void;
         disconnectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
+        protected updated(_changedProperties: PropertyValues): Promise<void>;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
@@ -2302,6 +2314,7 @@ declare module "components/data-select/data-select.component" {
         blur: () => void;
         protected render(): import("lit").TemplateResult<1>;
         private _updatePrefix;
+        private _updateIconEmptyState;
         private getPlaceholder;
     }
 }

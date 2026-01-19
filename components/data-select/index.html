@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.0.48">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.0.49">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -72,7 +72,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.0.48</div>
+        <div class="sidebar-version">1.0.49</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -494,7 +494,6 @@
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -514,7 +513,9 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            A select component with built-in data providers for common options like colors, currencies, and countries.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -790,7 +791,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-152"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.48/dist/components/data-select/data-select.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-152"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-152"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.49/dist/components/data-select/data-select.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-152"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -805,7 +806,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-153"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.48/dist/components/data-select/data-select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-153"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-153"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.49/dist/components/data-select/data-select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-153"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -825,15 +826,40 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
+                  <td class="nowrap">
+                    <code>label</code>
+                  </td>
+                  <td>The select’s label. Alternatively, you can use the <code>label</code> attribute.</td>
                 </tr>
 
                 <tr>
                   <td class="nowrap">
-                    <code>example</code>
+                    <code>label-tooltip</code>
                   </td>
-                  <td>An example slot.</td>
+                  <td>
+                    Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the
+                    <code>label-tooltip</code> attribute.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>context-note</code>
+                  </td>
+                  <td>
+                    Used to add contextual text that is displayed above the select, on the right. Alternatively, you can
+                    use the <code>context-note</code> attribute.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>help-text</code>
+                  </td>
+                  <td>
+                    Text that describes how to use the select. Alternatively, you can use the
+                    <code>help-text</code> attribute.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -875,12 +901,17 @@
                   <td>
                     <code class="nowrap">value</code>
                   </td>
-                  <td>The value of the select. Used for form submission.</td>
+                  <td>
+                    The value of the select. Used for form submission. When <code>multiple</code> is enabled, this is an
+                    array of strings.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
-                    <code>string</code>
+                    <code>string | string[]</code>
                   </td>
-                  <td>-</td>
+                  <td>
+                    <code>''</code>
+                  </td>
                 </tr>
 
                 <tr>
@@ -1153,9 +1184,23 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-input</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the select’s value changes.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-clear</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the clear button is activated.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">blur</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when the select loses focus.</td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -1164,36 +1209,6 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
@@ -1208,8 +1223,31 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
+                  <td class="nowrap"><code>combobox</code></td>
+                  <td>
+                    The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from
+                    zn-select).
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>expand-icon</code></td>
+                  <td>The container that wraps the expand icon (forwarded from zn-select).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>form-control-help-text</code></td>
+                  <td>The help text’s wrapper (forwarded from zn-select).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>form-control-input</code></td>
+                  <td>The select’s wrapper (forwarded from zn-select).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>display-input</code></td>
+                  <td>The element that displays the selected option’s label (forwarded from zn-select).</td>
                 </tr>
               </tbody>
             </table>
@@ -1227,6 +1265,16 @@
 
           <ul>
             <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-option&gt;</code></li>
+
+            <li><code>&lt;zn-popup&gt;</code></li>
+
+            <li><code>&lt;zn-select&gt;</code></li>
+
+            <li><code>&lt;zn-tag&gt;</code></li>
           </ul>
         </div>
       </article>

@@ -720,7 +720,7 @@
     },
     {
       "name": "zn-data-select",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "A select component with built-in data providers for common options like colors, currencies, and countries.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the select's value changes.\n- **zn-clear** - Emitted when the clear button is activated.\n- **blur** - Emitted when the select loses focus.\n\n### **Slots:**\n - **label** - The select's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **combobox** - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).\n- **expand-icon** - The container that wraps the expand icon (forwarded from zn-select).\n- **form-control-help-text** - The help text's wrapper (forwarded from zn-select).\n- **form-control-input** - The select's wrapper (forwarded from zn-select).\n- **display-input** - The element that displays the selected option's label (forwarded from zn-select).",
       "attributes": [
         {
           "name": "name",
@@ -729,8 +729,8 @@
         },
         {
           "name": "value",
-          "description": "The value of the select. Used for form submission.",
-          "values": []
+          "description": "The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings.",
+          "values": [{ "name": "string[]" }]
         },
         {
           "name": "provider",

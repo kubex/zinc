@@ -12,39 +12,50 @@ import {FormControlController} from "../../internal/form";
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
+import ZnOption from "../option";
+import ZnSelect from "../select";
 import type {ZincFormControl} from '../../internal/zinc-element';
-import type ZnSelect from "../select";
 
 import styles from './data-select.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A select component with built-in data providers for common options like colors, currencies, and countries.
  * @documentation https://zinc.style/components/data-select
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-select
+ * @dependency zn-option
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-input - Emitted when the select's value changes.
+ * @event zn-clear - Emitted when the clear button is activated.
+ * @event blur - Emitted when the select loses focus.
  *
- * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot label - The select's label. Alternatively, you can use the `label` attribute.
+ * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+ * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
+ * @slot help-text - Text that describes how to use the select. Alternatively, you can use the `help-text` attribute.
  *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
+ * @csspart combobox - The container that wraps the prefix, combobox, clear icon, and expand button (forwarded from zn-select).
+ * @csspart expand-icon - The container that wraps the expand icon (forwarded from zn-select).
+ * @csspart form-control-help-text - The help text's wrapper (forwarded from zn-select).
+ * @csspart form-control-input - The select's wrapper (forwarded from zn-select).
+ * @csspart display-input - The element that displays the selected option's label (forwarded from zn-select).
  */
 export default class ZnDataSelect extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-select': ZnSelect,
+    'zn-option': ZnOption,
+  };
 
   @query('#select') select: ZnSelect;
-  @query('#select__prefix') selectPrefix: HTMLElement;
 
   /** The name of the select. Used for form submission. */
   @property() name: string;
 
-  /** The value of the select. Used for form submission. */
-  @property() value: string;
+  /** The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings. */
+  @property() value: string | string[] = '';
 
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country' | 'phone';
@@ -125,9 +136,29 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     window.removeEventListener('keydown', this.closeOnTab);
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
+  protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
+
+    if (this.select) {
+      await this.select.updateComplete;
+      this.select.addEventListener('zn-change', () => {
+        this._updatePrefix();
+      });
+    }
     this._updatePrefix();
+  }
+
+  protected async updated(_changedProperties: PropertyValues) {
+    super.updated(_changedProperties);
+
+    if (_changedProperties.has('value') ||
+      _changedProperties.has('provider') ||
+      _changedProperties.has('iconPosition')) {
+      if (this.select) {
+        await this.select.updateComplete;
+      }
+      this._updatePrefix();
+    }
   }
 
   checkValidity(): boolean {
@@ -148,7 +179,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   closeOnTab = (e: KeyboardEvent) => {
     if (this.select.open && e.key === 'Tab') {
-      this.select.hide();
+      this.select.hide().then();
     }
   }
 
@@ -156,15 +187,20 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
+    if (this.select) {
+      await this.select.updateComplete;
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
     this._updatePrefix();
   }
 
   handleInput = (e: Event) => {
-    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+    const target = e.target as ZnSelect;
+    this.value = target.value ?? (this.multiple ? [] : '');
   };
 
   handleClear = () => {
-    this.value = '';
+    this.value = this.multiple ? [] : '';
   }
 
   getLocalProvider(name: string): LocalDataProvider<DataProviderOption> {
@@ -192,7 +228,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     let data = localProvider.getData;
 
     if (filterKeys.length) {
-      data = localProvider.getData.filter(item => filterKeys.includes(item.key));
+      const normalizedFilterKeys = filterKeys.map(key => key.toUpperCase());
+      data = localProvider.getData.filter(item => normalizedFilterKeys.includes(item.key.toUpperCase()));
     }
 
     if (this.provider !== 'color' && this.allowAll) {
@@ -219,44 +256,83 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}
-                 value="${this.value}"
+                 .value="${this.value}"
                  ?multiple=${this.multiple}
                  placeholder="${this.getPlaceholder(localProvider)}"
                  exportparts="combobox,expand-icon,form-control-help-text,form-control-input,display-input">
         ${(this.iconPosition !== 'none' || this.iconOnly) ? html`
-          <div id="select__prefix" slot="prefix" class="select__prefix"></div>` : ''}
+          <div slot="prefix"
+               class="select__icon ${this.iconPosition === 'end' ? 'select__icon--end' : ''}"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`
           <zn-option class="select__option" value="${item.key}">
             ${(this.iconPosition !== 'none' || this.iconOnly) ? html`<span
-              slot="${this.iconPosition === 'end' ? 'suffix' : 'prefix'}">${item.prefix}</span>` : ''}
+              slot="prefix">${item.prefix}</span>` : ''}
             ${this.iconOnly ? undefined : item.value}
           </zn-option>`)}
       </zn-select>`;
   }
 
   private _updatePrefix() {
-    // Set the prefix of the select to the selected values prefix
-    const selectedOption = this.select.selectedOptions[0];
-    if (selectedOption && (this.iconPosition !== 'none' || this.iconOnly) && this.selectPrefix) {
-      if (this.iconPosition === 'none' && this.iconOnly) {
-        this.iconPosition = 'start';
-      }
-      const slot = this.iconPosition === 'start'
-        ? selectedOption.querySelector('[slot="prefix"]')
-        : selectedOption.querySelector('[slot="suffix"]');
-      if (slot) {
-        this.selectPrefix.innerHTML = '';
-        this.selectPrefix.appendChild(slot.cloneNode(true));
-      } else {
-        this.selectPrefix.innerHTML = '';
-      }
-    } else if (this.selectPrefix) {
-      this.selectPrefix.innerHTML = '';
+    if (!this.select || !this.shadowRoot) {
+      return;
+    }
+
+    const selectIcon = this.shadowRoot.querySelector('.select__icon')!;
+    const shouldShowIcon = this.iconPosition !== 'none' || this.iconOnly;
+    if (!shouldShowIcon) {
+      if (selectIcon) selectIcon.innerHTML = '';
+      this._updateIconEmptyState();
+      return;
+    }
+
+    if (this.iconPosition === 'none' && this.iconOnly) {
+      this.iconPosition = 'start';
+    }
+
+    const selectedOptions = this.select.selectedOptions;
+    if (!selectedOptions || selectedOptions.length === 0) {
+      if (selectIcon) selectIcon.innerHTML = '';
+      this._updateIconEmptyState();
+      return;
+    }
+
+    if (!selectIcon) {
+      return;
+    }
+
+    const selectedOption = selectedOptions[0];
+    const slot = selectedOption.querySelector('[slot="prefix"]');
+
+    if (slot) {
+      selectIcon.innerHTML = '';
+      selectIcon.appendChild(slot.cloneNode(true));
+    } else {
+      selectIcon.innerHTML = '';
+    }
+
+    this._updateIconEmptyState();
+  }
+
+  private _updateIconEmptyState() {
+    if (!this.shadowRoot) return;
+
+    const selectIcon = this.shadowRoot.querySelector('.select__icon');
+    const isEmpty = !selectIcon || selectIcon.innerHTML.trim() === '';
+
+    if (isEmpty) {
+      this.setAttribute('icon-empty', '');
+    } else {
+      this.removeAttribute('icon-empty');
     }
   }
 
   private getPlaceholder(localProvider: LocalDataProvider<any>) {
-    if (this.value) {
+    if (!this.value) {
+      return `Choose a ${localProvider.getName}`;
+    }
+
+    const hasValue = Array.isArray(this.value) ? this.value.length > 0 : this.value.length > 0;
+    if (hasValue) {
       return '';
     }
 

@@ -1,5 +1,6 @@
 @use "../../wc";
 
+// Color icon palette
 $colors: (
   red: var(--zn-color-red-500),
   blue: var(--zn-color-blue-500),
@@ -12,15 +13,47 @@ $colors: (
   gray: var(--zn-color-gray-500)
 );
 
+// Size spacing configuration
+$sizes: (
+  small: var(--zn-input-spacing-small),
+  medium: var(--zn-input-spacing-medium),
+  large: var(--zn-input-spacing-large)
+);
+
+// Mixin for icon spacing based on size
+@mixin icon-spacing($size, $spacing) {
+  :host([size="#{$size}"]) .select__icon {
+    padding-inline-start: $spacing;
+    margin-inline-end: $spacing;
+  }
+}
+
+// Mixin for end-positioned icon spacing
+@mixin icon-end-spacing($size, $spacing) {
+  :host([size="#{$size}"]) .select__icon--end {
+    padding-inline-start: 0;
+    padding-inline-end: $spacing;
+    margin-inline-end: 0;
+    margin-inline-start: auto;
+  }
+}
+
+// Mixin for combobox padding restoration
+@mixin combobox-padding($condition, $size, $spacing) {
+  :host([#{$condition}][size="#{$size}"]) zn-select::part(combobox) {
+    padding-inline-start: $spacing !important;
+  }
+}
+
 :host {
   display: block;
 }
 
 .color-icon {
-  width: 15px;
-  height: 15px;
+  width: var(--zn-spacing-medium);
+  height: var(--zn-spacing-medium);
   display: block;
-  border-radius: 100%;
+  border-radius: var(--zn-border-radius-circle);
   flex-shrink: 0;
 
   @each $name, $color in $colors {
@@ -34,10 +67,37 @@ zn-select::part(listbox) {
   max-height: 300px;
 }
 
-.select__prefix {
-  font-size: 20px;
+.select__icon {
+  font-size: var(--zn-font-size-x-large);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 
   &:empty {
-    display: contents;
+    display: none;
   }
+}
+
+@each $size, $spacing in $sizes {
+  @include icon-spacing($size, $spacing);
+  @include icon-end-spacing($size, $spacing);
+  @include combobox-padding('icon-position="end"', $size, $spacing);
+  @include combobox-padding('icon-position="start"][icon-empty', $size, $spacing);
+}
+
+:host(:not([size])) .select__icon {
+  padding-inline-start: var(--zn-input-spacing-medium);
+  margin-inline-end: var(--zn-input-spacing-medium);
+}
+
+:host(:not([size])) .select__icon--end {
+  padding-inline-start: 0;
+  padding-inline-end: var(--zn-input-spacing-medium);
+  margin-inline-end: 0;
+  margin-inline-start: auto;
+}
+
+:host([icon-position="end"]:not([size])) zn-select::part(combobox),
+:host([icon-position="start"][icon-empty]:not([size])) zn-select::part(combobox) {
+  padding-inline-start: var(--zn-input-spacing-medium) !important;
 }

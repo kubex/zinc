@@ -7,12 +7,14 @@ import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
+import {type ZnSearchChangeEvent} from "../../events/zn-search-change";
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 import ZnButtonGroup from "../button-group";
 import ZnChip from "../chip";
 import ZnConfirm from "../confirm";
 import ZnDataTableFilter from "../data-table-filter";
+import ZnDataTableSearch from "../data-table-search";
 import ZnDropdown from "../dropdown";
 import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
@@ -69,6 +71,7 @@ export enum ActionSlots {
   filter = 'filter',
   filter_top = 'filter-top',
   sort = 'sort',
+  search = 'search',
   inputs = 'inputs'
 }
 
@@ -102,6 +105,7 @@ interface DataRequest {
   sortColumn: string;
   sortDirection: string;
   filter: string;
+  search: string;
 }
 
 type AllowedInputElement =
@@ -129,11 +133,20 @@ type AllowedInputElement =
  * @dependency zn-button-group
  * @dependency zn-confirm
  * @dependency zn-skeleton
+ * @dependency zn-data-table-search
  *
  * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot search - Slot for search component.
+ * @slot sort - Slot for sort component.
+ * @slot filter - Slot for filter component.
+ * @slot filter-top - Slot for top-level filter component.
+ * @slot delete-action - Slot for delete action button.
+ * @slot modify-action - Slot for modify action button.
+ * @slot create-action - Slot for create action button.
+ * @slot inputs - Slot for additional input controls.
+ * @slot empty-state - Slot for custom empty state.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -153,6 +166,7 @@ export default class ZnDataTable extends ZincElement {
     'zn-confirm': ZnConfirm,
     'zn-skeleton': ZnSkeleton,
     'zn-style': ZnStyle,
+    'zn-data-table-search': ZnDataTableSearch,
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
@@ -161,6 +175,7 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'sort-direction'}) sortDirection: string = "asc";
   @property({attribute: 'local-sort', type: Boolean}) localSort: boolean = false;
   @property({attribute: 'filter'}) filter: string = '';
+  @property({attribute: 'search'}) search: string = '';
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
   @property({attribute: 'headers', type: Object}) headers: Record<string, HeaderConfig> = {};
@@ -222,7 +237,7 @@ export default class ZnDataTable extends ZincElement {
   private hasSlotController = new HasSlotController(
     this,
     '[default]',
-    'search-action',
+    ActionSlots.search.valueOf(),
     ActionSlots.delete.valueOf(),
     ActionSlots.modify.valueOf(),
     ActionSlots.create.valueOf(),
@@ -249,6 +264,7 @@ export default class ZnDataTable extends ZincElement {
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
         filter: this.filter,
+        search: this.search,
       };
 
       // get all inputs that are in the inputs slot and add them to the
@@ -350,7 +366,8 @@ export default class ZnDataTable extends ZincElement {
       || this.hasSlotController.test(ActionSlots.create.valueOf())
       || this.hasSlotController.test(ActionSlots.sort.valueOf())
       || this.hasSlotController.test(ActionSlots.filter.valueOf())
-      || this.hasSlotController.test(ActionSlots.filter_top.valueOf());
+      || this.hasSlotController.test(ActionSlots.filter_top.valueOf())
+      || this.hasSlotController.test(ActionSlots.search.valueOf());
 
     const hasInputs = this.hasSlotController.test(ActionSlots.inputs.valueOf());
 
@@ -374,7 +391,8 @@ export default class ZnDataTable extends ZincElement {
       }
     });
 
-    this.addEventListener('zn-filter-change', this.changeEventListener);
+    this.addEventListener('zn-filter-change', this.filterChangeListener);
+    this.addEventListener('zn-search-change', this.searchChangeListener);
   }
 
   disconnectedCallback() {
@@ -382,12 +400,43 @@ export default class ZnDataTable extends ZincElement {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-    this.removeEventListener('zn-filter-change', this.changeEventListener);
+    this.removeEventListener('zn-filter-change', this.filterChangeListener);
+    this.removeEventListener('zn-search-change', this.searchChangeListener);
   }
 
-  changeEventListener = (e: ZnFilterChangeEvent) => {
+  filterChangeListener = (e: ZnFilterChangeEvent) => {
     if (e.target instanceof ZnDataTableFilter) {
       this.filter = (e.target as ZnDataTableFilter).value as string;
+      this._dataTask.run().then(r => r);
+    }
+  }
+
+  searchChangeListener = (e: ZnSearchChangeEvent) => {
+    const target = e.target as ZnDataTableSearch | null;
+    if (target && target.tagName === 'ZN-DATA-TABLE-SEARCH') {
+      this.search = target.value as string;
+
+      // Get form data and search URI from event detail if available
+      if (e.detail) {
+        const { formData, searchUri } = e.detail as { formData?: Record<string, unknown>; searchUri?: string };
+
+        // Merge form data into request params
+        if (formData && typeof formData === 'object') {
+          this.requestParams = { ...this.requestParams, ...formData };
+        }
+
+        // Temporarily override dataUri for this search if searchUri is provided
+        if (searchUri) {
+          const originalUri = this.dataUri;
+          this.dataUri = searchUri;
+          this._dataTask.run().then(() => {
+            // Restore original URI after search
+            this.dataUri = originalUri;
+          });
+          return;
+        }
+      }
+
       this._dataTask.run().then(r => r);
     }
   }
@@ -592,6 +641,7 @@ export default class ZnDataTable extends ZincElement {
           ${this.getActions()}
         </div>
         <div class="table__header__right">
+          <slot name="${ActionSlots.search.valueOf()}"></slot>
           <slot name="${ActionSlots.sort.valueOf()}"></slot>
           <slot name="${ActionSlots.filter.valueOf()}"></slot>
         </div>

@@ -1565,6 +1565,18 @@ declare module "events/zn-filter-change" {
         }
     }
 }
+declare module "events/zn-search-change" {
+    export type ZnSearchChangeEvent = CustomEvent<{
+        value: string;
+        formData: Record<string, any>;
+        searchUri?: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-search-change': ZnSearchChangeEvent;
+        }
+    }
+}
 declare module "components/data-table-filter/data-table-filter.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
@@ -1615,171 +1627,213 @@ declare module "components/data-table-filter/index" {
         }
     }
 }
-declare module "components/empty-state/empty-state.component" {
-    import { type CSSResultGroup } from 'lit';
+declare module "components/input/input.component" {
     import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/empty-state
+     * @documentation https://zinc.style/components/input
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon
+     * @dependency zn-tooltip
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-blur - Emitted when the control loses focus.
+     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
+     * @event zn-clear - Emitted when the clear button is activated.
+     * @event zn-focus - Emitted when the control gains focus.
+     * @event zn-input - Emitted when the control receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
+     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
+     * @slot suffix - Used to append a presentational icon or similar element to the input.
+     * @slot clear-icon - An icon to use in lieu of the default clear icon.
+     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
+     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
      *
+     * @csspart form-control - The form control that wraps the label, input, and help text.
+     * @csspart form-control-label - The label's wrapper.
+     * @csspart form-control-input - The input's wrapper.
+     * @csspart form-control-help-text - The help text's wrapper.
      * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart input - The internal `<input>` control.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart clear-button - The clear button.
+     * @csspart password-toggle-button - The password toggle button.
+     * @csspart suffix - The container that wraps the suffix.
      */
-    export default class ZnEmptyState extends ZincElement {
-        static styles: CSSResultGroup;
-        icon: string;
-        caption: string;
-        description: string;
-        type: 'error' | 'info' | 'primary' | '';
-        padded: boolean;
+    export default class ZnInput extends ZincElement implements ZincFormControl {
+        static styles: import("lit").CSSResult;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        private readonly formControlController;
         private readonly hasSlotController;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/empty-state/index" {
-    import ZnEmptyState from "components/empty-state/empty-state.component";
-    export * from "components/empty-state/empty-state.component";
-    export default ZnEmptyState;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-empty-state': ZnEmptyState;
-        }
-    }
-}
-declare module "components/hover-container/hover-container.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import type Popup from "components/popup/index";
-    /**
-     * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks
-     * on an element.
-     *
-     * @documentation https://zinc.style/components/hover-container
-     * @status experimental
-     * @since 1.0
-     *
-     * @event zn-show - Emitted when the hover-container is shown.
-     * @event zn-after-show - Emitted after the hover-container is shown.
-     * @event zn-hide - Emitted when the hover-container is hidden.
-     * @event zn-after-hide - Emitted after the hover-container is hidden.
-     *
-     * @slot - The content of the hover-container
-     * @slot anchor - The anchor the hover-container is attached to.
-     */
-    export default class ZnHoverContainer extends ZincElement {
-        static styles: CSSResultGroup;
-        private hoverTimeout;
-        private closeWatcher;
-        defaultSlot: HTMLSlotElement;
-        body: HTMLElement;
-        popup: Popup;
-        content: string;
-        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
-        disabled: boolean;
-        distance: number;
-        open: boolean;
-        skidding: number;
-        trigger: string;
-        hoist: boolean;
-        constructor();
-        disconnectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        private hasTrigger;
-        private handleBlur;
-        private handleClick;
-        private handleFocus;
-        private handleDocumentKeyDown;
-        private handleMouseOver;
-        private handleMouseOut;
-        handleOpenChange(): void;
-        handleOptionsChange(): Promise<void>;
-        handleDisabledChange(): void;
-        show(): Promise<void>;
-        hide(): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/hover-container/index" {
-    import ZnHoverContainer from "components/hover-container/hover-container.component";
-    export * from "components/hover-container/hover-container.component";
-    export default ZnHoverContainer;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-hover-container': ZnHoverContainer;
-        }
-    }
-}
-declare module "components/skeleton/skeleton.component" {
-    import ZincElement from "internal/zinc-element";
-    import type { CSSResultGroup } from "lit";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/skeleton
-     * @status experimental
-     * @since 1.0
-     */
-    export default class ZnSkeleton extends ZincElement {
-        static styles: CSSResultGroup;
-        speed: string;
-        width: string;
-        height: string;
-        radius: string;
-        protected render(): unknown;
-    }
-}
-declare module "components/skeleton/index" {
-    import ZnSkeleton from "components/skeleton/skeleton.component";
-    export * from "components/skeleton/skeleton.component";
-    export default ZnSkeleton;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-skeleton': ZnSkeleton;
-        }
-    }
-}
-declare module "components/style/style.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    export default class ZnStyle extends ZincElement {
-        static styles: CSSResultGroup;
         private readonly localize;
-        color: string;
-        border: boolean;
-        error: boolean;
-        success: boolean;
-        info: boolean;
-        warning: boolean;
-        primary: boolean;
-        accent: boolean;
-        center: boolean;
-        display: null;
-        font: string;
-        width: string;
-        height: string;
-        pad: string;
-        margin: string;
-        autoMargin: string;
-        connectedCallback(): void;
-        createRenderRoot(): this;
+        input: HTMLInputElement;
+        private hasFocus;
+        title: string;
+        private __numberInput;
+        private __dateInput;
+        /**
+         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
+         * to `text`
+         */
+        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        /** The name of the input, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the input, submitted as a name/value pair with form data. */
+        value: any;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultValue: string;
+        /** The inputs size **/
+        size: 'x-small' | 'small' | 'medium' | 'large';
+        /** Draws a pill-styled input **/
+        pill: boolean;
+        /** The inputs label. If you need to display HTML, use the `label` slot. **/
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
+         * `label-tooltip` slot.
+         * **/
+        labelTooltip: string;
+        /**
+         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
+         * in this text, use the `context-note` slot instead
+         */
+        contextNote: string;
+        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
+        helpText: string;
+        /** Adds a clear button when the input is not empty **/
+        clearable: boolean;
+        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
+         * optional icon.
+         */
+        optionalIcon: boolean;
+        /** Disables the input **/
+        disabled: boolean;
+        /** Fills the input background white **/
+        filled: boolean;
+        /** Placeholder text to show as a hint when the input is empty. */
+        placeholder: string;
+        /** Makes the input read-only **/
+        readonly: boolean;
+        /** Adds a button to toggle the passwords visibility, only applies to password types **/
+        passwordToggle: boolean;
+        /** Determines whether or no the password is currently visible. Only applies to password types **/
+        passwordVisible: boolean;
+        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
+        noSpinButtons: boolean;
+        /**
+         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
+         * in the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the input a required field. */
+        required: boolean;
+        /** A regular expression pattern to validate input against. */
+        pattern: string;
+        /** The minimum length of input that will be considered valid. */
+        minlength: number;
+        /** The maximum length of input that will be considered valid. */
+        maxlength: number;
+        /** The input's minimum value. Only applies to date and number input types. */
+        min: number | string;
+        /** The input's maximum value. Only applies to date and number input types. */
+        max: number | string;
+        /**
+         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
+         * implied, allowing any numeric value. Only applies to date and number input types.
+         */
+        step: number | 'any';
+        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
+        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
+        /** Indicates whether the browser's autocorrect feature is on or off. */
+        autocorrect: 'off' | 'on';
+        /**
+         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
+         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
+         */
+        autocomplete: string;
+        /** Indicates that the input should receive focus on page load. */
+        autofocus: boolean;
+        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
+        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
+        /** Enables spell checking on the input. */
+        spellcheck: boolean;
+        /**
+         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
+         * keyboard on supportive devices.
+         */
+        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
+        /**
+         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
+         * the native `<input type="{{type}}">` implementation and may result in an error.
+         */
+        get valueAsDate(): Date | null;
+        set valueAsDate(newValue: Date | null);
+        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
+        get valueAsNumber(): number;
+        set valueAsNumber(newValue: number);
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        private validateMinMax;
+        private handleBlur;
+        private handleChange;
+        private handleClearClick;
+        private handleFocus;
+        private handleInput;
+        private handleInvalid;
+        private handleKeyDown;
+        private handlePasswordToggle;
+        private focusInput;
+        handleDisabledChange(): void;
+        handleStepChange(): void;
+        handleValueChange(): Promise<void>;
+        /** Sets focus on the input. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the input. */
+        blur(): void;
+        /** Selects all the text in the input. */
+        select(): void;
+        /** Sets the start and end positions of the text selection (0-based). */
+        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
+        /** Replaces a range of text with a new string. */
+        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
+        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
+        showPicker(): void;
+        /** Increments the value of a numeric input type by the value of the step attribute. */
+        stepUp(): void;
+        /** Decrements the value of a numeric input type by the value of the step attribute. */
+        stepDown(): void;
+        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message: string): void;
+        render(): import("lit").TemplateResult<1>;
     }
 }
-declare module "components/style/index" {
-    import ZnStyle from "components/style/style.component";
-    export * from "components/style/style.component";
-    export default ZnStyle;
+declare module "components/input/index" {
+    import ZnInput from "components/input/input.component";
+    export * from "components/input/input.component";
+    export default ZnInput;
     global {
         interface HTMLElementTagNameMap {
-            'zn-style': ZnStyle;
+            'zn-input': ZnInput;
         }
     }
 }
@@ -2261,216 +2315,6 @@ declare module "components/data-select/index" {
         }
     }
 }
-declare module "components/input/input.component" {
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import ZnTooltip from "components/tooltip/index";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/input
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-blur - Emitted when the control loses focus.
-     * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
-     * @event zn-clear - Emitted when the clear button is activated.
-     * @event zn-focus - Emitted when the control gains focus.
-     * @event zn-input - Emitted when the control receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @slot label - The input's label. Alternatively, you can use the `label` attribute.
-     * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
-     * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute.
-     * @slot prefix - Used to prepend a presentational icon or similar element to the input.
-     * @slot suffix - Used to append a presentational icon or similar element to the input.
-     * @slot clear-icon - An icon to use in lieu of the default clear icon.
-     * @slot show-password-icon - An icon to use in lieu of the default show password icon.
-     * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
-     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
-     *
-     * @csspart form-control - The form control that wraps the label, input, and help text.
-     * @csspart form-control-label - The label's wrapper.
-     * @csspart form-control-input - The input's wrapper.
-     * @csspart form-control-help-text - The help text's wrapper.
-     * @csspart base - The component's base wrapper.
-     * @csspart input - The internal `<input>` control.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart clear-button - The clear button.
-     * @csspart password-toggle-button - The password toggle button.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnInput extends ZincElement implements ZincFormControl {
-        static styles: import("lit").CSSResult;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        private readonly localize;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        private __numberInput;
-        private __dateInput;
-        /**
-         * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
-         * to `text`
-         */
-        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
-        /** The name of the input, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the input, submitted as a name/value pair with form data. */
-        value: any;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultValue: string;
-        /** The inputs size **/
-        size: 'x-small' | 'small' | 'medium' | 'large';
-        /** Draws a pill-styled input **/
-        pill: boolean;
-        /** The inputs label. If you need to display HTML, use the `label` slot. **/
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the
-         * `label-tooltip` slot.
-         * **/
-        labelTooltip: string;
-        /**
-         * Text that appears above the input, on the right, to add additional context. If you need to display HTML
-         * in this text, use the `context-note` slot instead
-         */
-        contextNote: string;
-        /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-        helpText: string;
-        /** Adds a clear button when the input is not empty **/
-        clearable: boolean;
-        /** Adds the default optional icon for this input type. Currently only types `email` and `tel` have a default
-         * optional icon.
-         */
-        optionalIcon: boolean;
-        /** Disables the input **/
-        disabled: boolean;
-        /** Fills the input background white **/
-        filled: boolean;
-        /** Placeholder text to show as a hint when the input is empty. */
-        placeholder: string;
-        /** Makes the input read-only **/
-        readonly: boolean;
-        /** Adds a button to toggle the passwords visibility, only applies to password types **/
-        passwordToggle: boolean;
-        /** Determines whether or no the password is currently visible. Only applies to password types **/
-        passwordVisible: boolean;
-        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
-        noSpinButtons: boolean;
-        /**
-         * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be
-         * in the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the input a required field. */
-        required: boolean;
-        /** A regular expression pattern to validate input against. */
-        pattern: string;
-        /** The minimum length of input that will be considered valid. */
-        minlength: number;
-        /** The maximum length of input that will be considered valid. */
-        maxlength: number;
-        /** The input's minimum value. Only applies to date and number input types. */
-        min: number | string;
-        /** The input's maximum value. Only applies to date and number input types. */
-        max: number | string;
-        /**
-         * Specifies the granularity that the value must adhere to, or the special value `any` which means no stepping is
-         * implied, allowing any numeric value. Only applies to date and number input types.
-         */
-        step: number | 'any';
-        /** Controls whether and how text input is automatically capitalized as it is entered by the user. */
-        autocapitalize: 'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters';
-        /** Indicates whether the browser's autocorrect feature is on or off. */
-        autocorrect: 'off' | 'on';
-        /**
-         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
-         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
-         */
-        autocomplete: string;
-        /** Indicates that the input should receive focus on page load. */
-        autofocus: boolean;
-        /** Used to customize the label or icon of the Enter key on virtual keyboards. */
-        enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
-        /** Enables spell checking on the input. */
-        spellcheck: boolean;
-        /**
-         * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
-         * keyboard on supportive devices.
-         */
-        inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
-        /**
-         * Gets or sets the current value as `date` object. Returns `null` if the value can't be converted. This will use
-         * the native `<input type="{{type}}">` implementation and may result in an error.
-         */
-        get valueAsDate(): Date | null;
-        set valueAsDate(newValue: Date | null);
-        /** Gets or sets the current value as a number. Return `null` if the value can't be converted. */
-        get valueAsNumber(): number;
-        set valueAsNumber(newValue: number);
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        private validateMinMax;
-        private handleBlur;
-        private handleChange;
-        private handleClearClick;
-        private handleFocus;
-        private handleInput;
-        private handleInvalid;
-        private handleKeyDown;
-        private handlePasswordToggle;
-        private focusInput;
-        handleDisabledChange(): void;
-        handleStepChange(): void;
-        handleValueChange(): Promise<void>;
-        /** Sets focus on the input. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the input. */
-        blur(): void;
-        /** Selects all the text in the input. */
-        select(): void;
-        /** Sets the start and end positions of the text selection (0-based). */
-        setSelectionRange(selectionStart: number, selectionEnd: number, selectionDirection?: 'forward' | 'backward' | 'none'): void;
-        /** Replaces a range of text with a new string. */
-        setRangeText(replacement: string, start?: number, end?: number, selectMode?: 'select' | 'start' | 'end' | 'preserve'): void;
-        /** Displays the browser picker for an input element (only works if the browser supports it for the input type). */
-        showPicker(): void;
-        /** Increments the value of a numeric input type by the value of the step attribute. */
-        stepUp(): void;
-        /** Decrements the value of a numeric input type by the value of the step attribute. */
-        stepDown(): void;
-        /** Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/input/index" {
-    import ZnInput from "components/input/input.component";
-    export * from "components/input/input.component";
-    export default ZnInput;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-input': ZnInput;
-        }
-    }
-}
 declare module "utilities/lit-to-html" {
     import { type TemplateResult } from "lit";
     export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
@@ -2617,14 +2461,251 @@ declare module "components/query-builder/index" {
         }
     }
 }
+declare module "components/data-table-search/data-table-search.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    import ZnInput from "components/input/index";
+    /**
+     * @summary A search component for data tables.
+     * @documentation https://zinc.style/components/data-table-search
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-input
+     *
+     * @event zn-search-change - Emitted when the search value changes (debounced).
+     *
+     * @slot - The default slot for additional form inputs.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @property {string} name - The name of the search input field (default: "search").
+     * @property {string} value - The current search value.
+     * @property {string} placeholder - The placeholder text for the search input (default: "Search...").
+     * @property {string} searchUri - Optional URI to use for search operations.
+     * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).
+     */
+    export default class ZnDataTableSearch extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-input': typeof ZnInput;
+        };
+        private _formController;
+        private _searchTimeout?;
+        name: string;
+        value: string;
+        placeholder: string;
+        searchUri: string | undefined;
+        debounceDelay: number;
+        get validationMessage(): string;
+        get validity(): ValidityState;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        /**
+         * Collects form data from slotted input elements
+         */
+        getFormData(): Record<string, any>;
+        handleInput: (e: Event) => void;
+        handleClear: () => void;
+        disconnectedCallback(): void;
+        /**
+         * Emit the search change event with form data
+         */
+        private emitSearchChange;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/data-table-search/index" {
+    import ZnDataTableSearch from "components/data-table-search/data-table-search.component";
+    export * from "components/data-table-search/data-table-search.component";
+    export default ZnDataTableSearch;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-table-search': ZnDataTableSearch;
+        }
+    }
+}
+declare module "components/empty-state/empty-state.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/empty-state
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnEmptyState extends ZincElement {
+        static styles: CSSResultGroup;
+        icon: string;
+        caption: string;
+        description: string;
+        type: 'error' | 'info' | 'primary' | '';
+        padded: boolean;
+        private readonly hasSlotController;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/empty-state/index" {
+    import ZnEmptyState from "components/empty-state/empty-state.component";
+    export * from "components/empty-state/empty-state.component";
+    export default ZnEmptyState;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-empty-state': ZnEmptyState;
+        }
+    }
+}
+declare module "components/hover-container/hover-container.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type Popup from "components/popup/index";
+    /**
+     * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks
+     * on an element.
+     *
+     * @documentation https://zinc.style/components/hover-container
+     * @status experimental
+     * @since 1.0
+     *
+     * @event zn-show - Emitted when the hover-container is shown.
+     * @event zn-after-show - Emitted after the hover-container is shown.
+     * @event zn-hide - Emitted when the hover-container is hidden.
+     * @event zn-after-hide - Emitted after the hover-container is hidden.
+     *
+     * @slot - The content of the hover-container
+     * @slot anchor - The anchor the hover-container is attached to.
+     */
+    export default class ZnHoverContainer extends ZincElement {
+        static styles: CSSResultGroup;
+        private hoverTimeout;
+        private closeWatcher;
+        defaultSlot: HTMLSlotElement;
+        body: HTMLElement;
+        popup: Popup;
+        content: string;
+        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
+        disabled: boolean;
+        distance: number;
+        open: boolean;
+        skidding: number;
+        trigger: string;
+        hoist: boolean;
+        constructor();
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private hasTrigger;
+        private handleBlur;
+        private handleClick;
+        private handleFocus;
+        private handleDocumentKeyDown;
+        private handleMouseOver;
+        private handleMouseOut;
+        handleOpenChange(): void;
+        handleOptionsChange(): Promise<void>;
+        handleDisabledChange(): void;
+        show(): Promise<void>;
+        hide(): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/hover-container/index" {
+    import ZnHoverContainer from "components/hover-container/hover-container.component";
+    export * from "components/hover-container/hover-container.component";
+    export default ZnHoverContainer;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-hover-container': ZnHoverContainer;
+        }
+    }
+}
+declare module "components/skeleton/skeleton.component" {
+    import ZincElement from "internal/zinc-element";
+    import type { CSSResultGroup } from "lit";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/skeleton
+     * @status experimental
+     * @since 1.0
+     */
+    export default class ZnSkeleton extends ZincElement {
+        static styles: CSSResultGroup;
+        speed: string;
+        width: string;
+        height: string;
+        radius: string;
+        protected render(): unknown;
+    }
+}
+declare module "components/skeleton/index" {
+    import ZnSkeleton from "components/skeleton/skeleton.component";
+    export * from "components/skeleton/skeleton.component";
+    export default ZnSkeleton;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-skeleton': ZnSkeleton;
+        }
+    }
+}
+declare module "components/style/style.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    export default class ZnStyle extends ZincElement {
+        static styles: CSSResultGroup;
+        private readonly localize;
+        color: string;
+        border: boolean;
+        error: boolean;
+        success: boolean;
+        info: boolean;
+        warning: boolean;
+        primary: boolean;
+        accent: boolean;
+        center: boolean;
+        display: null;
+        font: string;
+        width: string;
+        height: string;
+        pad: string;
+        margin: string;
+        autoMargin: string;
+        connectedCallback(): void;
+        createRenderRoot(): this;
+    }
+}
+declare module "components/style/index" {
+    import ZnStyle from "components/style/style.component";
+    export * from "components/style/style.component";
+    export default ZnStyle;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-style': ZnStyle;
+        }
+    }
+}
 declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type TemplateResult } from 'lit';
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
+    import { type ZnSearchChangeEvent } from "events/zn-search-change";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnButtonGroup from "components/button-group/index";
     import ZnChip from "components/chip/index";
     import ZnConfirm from "components/confirm/index";
+    import ZnDataTableSearch from "components/data-table-search/index";
     import ZnDropdown from "components/dropdown/index";
     import ZnEmptyState from "components/empty-state/index";
     import ZnHoverContainer from "components/hover-container/index";
@@ -2668,6 +2749,7 @@ declare module "components/data-table/data-table.component" {
         filter = "filter",
         filter_top = "filter-top",
         sort = "sort",
+        search = "search",
         inputs = "inputs"
     }
     interface ActionConfig {
@@ -2708,11 +2790,20 @@ declare module "components/data-table/data-table.component" {
      * @dependency zn-button-group
      * @dependency zn-confirm
      * @dependency zn-skeleton
+     * @dependency zn-data-table-search
      *
      * @event zn-event-name - Emitted as an example.
      *
      * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot search - Slot for search component.
+     * @slot sort - Slot for sort component.
+     * @slot filter - Slot for filter component.
+     * @slot filter-top - Slot for top-level filter component.
+     * @slot delete-action - Slot for delete action button.
+     * @slot modify-action - Slot for modify action button.
+     * @slot create-action - Slot for create action button.
+     * @slot inputs - Slot for additional input controls.
+     * @slot empty-state - Slot for custom empty state.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -2732,6 +2823,7 @@ declare module "components/data-table/data-table.component" {
             'zn-confirm': typeof ZnConfirm;
             'zn-skeleton': typeof ZnSkeleton;
             'zn-style': typeof ZnStyle;
+            'zn-data-table-search': typeof ZnDataTableSearch;
         };
         dataUri: string;
         data: any;
@@ -2739,6 +2831,7 @@ declare module "components/data-table/data-table.component" {
         sortDirection: string;
         localSort: boolean;
         filter: string;
+        search: string;
         wideColumn: string;
         key: string;
         headers: Record<string, HeaderConfig>;
@@ -2779,7 +2872,8 @@ declare module "components/data-table/data-table.component" {
         render(): TemplateResult<1>;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        changeEventListener: (e: ZnFilterChangeEvent) => void;
+        filterChangeListener: (e: ZnFilterChangeEvent) => void;
+        searchChangeListener: (e: ZnSearchChangeEvent) => void;
         emptyState(): TemplateResult<1>;
         renderTable(data: Response): TemplateResult<1>;
         humanize(str: string): string;
@@ -6988,6 +7082,7 @@ declare module "events/events" {
     export type { ZnShowEvent } from "events/zn-show";
     export type { ZnPurchaseEvent } from "events/zn-purchase";
     export type { ZnRedirectEvent } from "events/zn-redirect";
+    export type { ZnSearchChangeEvent } from "events/zn-search-change";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -7062,6 +7157,7 @@ declare module "zinc" {
     export { default as Slideout } from "components/slideout/index";
     export { default as DataTableFilter } from "components/data-table-filter/index";
     export { default as DataTableSort } from "components/data-table-sort/index";
+    export { default as DataTableSearch } from "components/data-table-search/index";
     export { default as ActionBar } from "components/action-bar/index";
     export { default as ExpandingAction } from "components/expanding-action/index";
     export { default as PageNav } from "components/page-nav/index";

@@ -5976,8 +5976,40 @@
               "name": ""
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "Slot for search component.",
+              "name": "search"
+            },
+            {
+              "description": "Slot for sort component.",
+              "name": "sort"
+            },
+            {
+              "description": "Slot for filter component.",
+              "name": "filter"
+            },
+            {
+              "description": "Slot for top-level filter component.",
+              "name": "filter-top"
+            },
+            {
+              "description": "Slot for delete action button.",
+              "name": "delete-action"
+            },
+            {
+              "description": "Slot for modify action button.",
+              "name": "modify-action"
+            },
+            {
+              "description": "Slot for create action button.",
+              "name": "create-action"
+            },
+            {
+              "description": "Slot for additional input controls.",
+              "name": "inputs"
+            },
+            {
+              "description": "Slot for custom empty state.",
+              "name": "empty-state"
             }
           ],
           "members": [
@@ -5988,7 +6020,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-empty-state': ZnEmptyState, 'zn-chip': ZnChip, 'zn-hover-container': ZnHoverContainer, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-button-group': ZnButtonGroup, 'zn-confirm': ZnConfirm, 'zn-skeleton': ZnSkeleton, 'zn-style': ZnStyle, }"
+              "default": "{ 'zn-button': ZnButton, 'zn-empty-state': ZnEmptyState, 'zn-chip': ZnChip, 'zn-hover-container': ZnHoverContainer, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-button-group': ZnButtonGroup, 'zn-confirm': ZnConfirm, 'zn-skeleton': ZnSkeleton, 'zn-style': ZnStyle, 'zn-data-table-search': ZnDataTableSearch, }"
             },
             {
               "kind": "field",
@@ -6041,6 +6073,15 @@
               },
               "default": "''",
               "attribute": "filter"
+            },
+            {
+              "kind": "field",
+              "name": "search",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "search"
             },
             {
               "kind": "field",
@@ -6297,13 +6338,13 @@
               "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
-              "default": "new HasSlotController( this, '[default]', 'search-action', ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state' )"
+              "default": "new HasSlotController( this, '[default]', ActionSlots.search.valueOf(), ActionSlots.delete.valueOf(), ActionSlots.modify.valueOf(), ActionSlots.create.valueOf(), ActionSlots.filter.valueOf(), ActionSlots.sort.valueOf(), ActionSlots.inputs.valueOf(), 'empty-state' )"
             },
             {
               "kind": "field",
               "name": "_dataTask",
               "privacy": "private",
-              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { if (dataUri === undefined || this.noInitialLoad && this._initialLoad) { return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0}; } if (this.groupBy) { // we want to load all the data possible so we can group and show multiple tables this.itemsPerPage = 1000; } const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, }; // get all inputs that are in the inputs slot and add them to the const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf()); const params: Record<string, any> = {}; if (inputs) { inputs.forEach((input) => { const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea']; if (allowedInputs.includes(input.tagName.toLowerCase())) { const value = (input as AllowedInputElement).value as string || input.getAttribute('value'); const name = (input as AllowedInputElement).name || input.getAttribute('name'); if (name) { params[name] = value; } } }); Object.assign(requestData, params); } // Add any extra request params if (requestParams && typeof requestParams === 'object') { Object.assign(requestData, requestParams); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
+              "default": "new Task(this, { task: async ([dataUri, requestParams], {signal}) => { if (dataUri === undefined || this.noInitialLoad && this._initialLoad) { return {rows: [], page: 1, perPage: this.itemsPerPage, total: 0}; } if (this.groupBy) { // we want to load all the data possible so we can group and show multiple tables this.itemsPerPage = 1000; } const requestData: DataRequest = { page: this.page, perPage: this.itemsPerPage, sortColumn: this.sortColumn, sortDirection: this.sortDirection, filter: this.filter, search: this.search, }; // get all inputs that are in the inputs slot and add them to the const inputs = this.hasSlotController.getSlots(ActionSlots.inputs.valueOf()); const params: Record<string, any> = {}; if (inputs) { inputs.forEach((input) => { const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea']; if (allowedInputs.includes(input.tagName.toLowerCase())) { const value = (input as AllowedInputElement).value as string || input.getAttribute('value'); const name = (input as AllowedInputElement).name || input.getAttribute('name'); if (name) { params[name] = value; } } }); Object.assign(requestData, params); } // Add any extra request params if (requestParams && typeof requestParams === 'object') { Object.assign(requestData, requestParams); } // This is also used for Rubix, so it may not work for your application. const response = await fetch(dataUri, { method: this.method, headers: { 'x-kx-fetch-style': 'zn-data-table', }, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(requestData) : undefined }); if (!response.ok) throw new Error(response.statusText); return response.json(); }, args: () => [this.dataUri, this.requestParams] })"
             },
             {
               "kind": "field",
@@ -6354,7 +6395,11 @@
             },
             {
               "kind": "field",
-              "name": "changeEventListener"
+              "name": "filterChangeListener"
+            },
+            {
+              "kind": "field",
+              "name": "searchChangeListener"
             },
             {
               "kind": "method",
@@ -6830,6 +6875,14 @@
               "fieldName": "filter"
             },
             {
+              "name": "search",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "search"
+            },
+            {
               "name": "wide-column",
               "type": {
                 "text": "string"
@@ -6977,7 +7030,7 @@
           "tagNameWithoutPrefix": "data-table",
           "tagName": "zn-data-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-empty-state\n * @dependency zn-chip\n * @dependency zn-hover-container\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-button-group\n * @dependency zn-confirm\n * @dependency zn-skeleton\n * @dependency zn-data-table-search\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot search - Slot for search component.\n * @slot sort - Slot for sort component.\n * @slot filter - Slot for filter component.\n * @slot filter-top - Slot for top-level filter component.\n * @slot delete-action - Slot for delete action button.\n * @slot modify-action - Slot for modify action button.\n * @slot create-action - Slot for create action button.\n * @slot inputs - Slot for additional input controls.\n * @slot empty-state - Slot for custom empty state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/data-table",
           "status": "experimental",
           "since": "1.0",
@@ -6991,7 +7044,8 @@
             "zn-menu-item",
             "zn-button-group",
             "zn-confirm",
-            "zn-skeleton"
+            "zn-skeleton",
+            "zn-data-table-search"
           ]
         }
       ],
@@ -7196,6 +7250,259 @@
           "declaration": {
             "name": "ZnDataTableFilter",
             "module": "components/data-table-filter/data-table-filter.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-table-search/data-table-search.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableSearch",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for additional form inputs.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-input': ZnInput, }"
+            },
+            {
+              "kind": "field",
+              "name": "_formController",
+              "type": {
+                "text": "FormControlController"
+              },
+              "privacy": "private",
+              "default": "new FormControlController(this, {})"
+            },
+            {
+              "kind": "field",
+              "name": "_searchTimeout",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"search\"",
+              "description": "The name of the search input field (default: \"search\").",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The current search value.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search...\"",
+              "description": "The placeholder text for the search input (default: \"Search...\").",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "searchUri",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional URI to use for search operations.",
+              "attribute": "search-uri"
+            },
+            {
+              "kind": "field",
+              "name": "debounceDelay",
+              "type": {
+                "text": "number"
+              },
+              "default": "350",
+              "description": "The delay in milliseconds before triggering a search (default: 500).",
+              "attribute": "debounce-delay"
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFormData",
+              "return": {
+                "type": {
+                  "text": "Record<string, any>"
+                }
+              },
+              "description": "Collects form data from slotted input elements"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput"
+            },
+            {
+              "kind": "field",
+              "name": "handleClear"
+            },
+            {
+              "kind": "method",
+              "name": "emitSearchChange",
+              "privacy": "private",
+              "description": "Emit the search change event with form data"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the search value changes (debounced).",
+              "name": "zn-search-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"search\"",
+              "description": "The name of the search input field (default: \"search\").",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "description": "The current search value.",
+              "fieldName": "value"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search...\"",
+              "description": "The placeholder text for the search input (default: \"Search...\").",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "search-uri",
+              "type": {
+                "text": "string"
+              },
+              "description": "Optional URI to use for search operations.",
+              "fieldName": "searchUri"
+            },
+            {
+              "name": "debounce-delay",
+              "type": {
+                "text": "number"
+              },
+              "default": "350",
+              "description": "The delay in milliseconds before triggering a search (default: 500).",
+              "fieldName": "debounceDelay"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A search component for data tables.",
+          "tagNameWithoutPrefix": "data-table-search",
+          "tagName": "zn-data-table-search",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A search component for data tables.\n * @documentation https://zinc.style/components/data-table-search\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n *\n * @event zn-search-change - Emitted when the search value changes (debounced).\n *\n * @slot - The default slot for additional form inputs.\n *\n * @csspart base - The component's base wrapper.\n *\n * @property {string} name - The name of the search input field (default: \"search\").\n * @property {string} value - The current search value.\n * @property {string} placeholder - The placeholder text for the search input (default: \"Search...\").\n * @property {string} searchUri - Optional URI to use for search operations.\n * @property {number} debounceDelay - The delay in milliseconds before triggering a search (default: 500).\n */",
+          "documentation": "https://zinc.style/components/data-table-search",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableSearch",
+            "module": "components/data-table-search/data-table-search.js"
           }
         }
       ]

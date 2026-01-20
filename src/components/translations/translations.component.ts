@@ -1,14 +1,14 @@
 import { classMap } from 'lit/directives/class-map.js';
 import { FormControlController, validValidityState } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
-import type { PropertyValues } from 'lit';
 import { html, nothing, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
 import ZnNavbar from '../navbar';
+import type { PropertyValues } from 'lit';
+import type { ZincFormControl } from '../../internal/zinc-element';
 import type { ZnMenuSelectEvent } from '../../events/zn-menu-select';
 import type { ZnSelectEvent } from "../../events/zn-select";
 

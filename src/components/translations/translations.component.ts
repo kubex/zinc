@@ -170,6 +170,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     this.formControlController.submit();
   };
 
+  private isRTLLanguage(languageCode: string): boolean {
+    // Check if language is Arabic or Hebrew (including variants)
+    return languageCode.startsWith('ar') || languageCode === 'he' || languageCode === 'iw';
+  }
+
   render() {
     const availableLanguages = Object.entries(this.languages)
       .filter(([code]) => code !== 'en' && !Object.prototype.hasOwnProperty.call(this.values, code))
@@ -191,6 +196,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }));
 
     const currentTranslation = this.values[this._activeLanguage];
+    const isRTL = this.isRTLLanguage(this._activeLanguage);
 
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabel = this.label ? true : hasLabelSlot;
@@ -226,6 +232,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
             .value=${currentTranslation}
             name="${this.name}"
             placeholder="Enter translation..."
+            dir="${isRTL ? 'rtl' : 'ltr'}"
             @zn-change="${this.handleValueUpdate}"
             @zn-input="${this.handleValueUpdate}"
             @zn-submit="${this.handleSubmit}"

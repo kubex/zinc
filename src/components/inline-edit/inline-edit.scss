@@ -59,6 +59,13 @@
   &__input {
     height: unset;
     opacity: 1;
+
+    // Force left alignment for RTL text inputs
+    &[dir="rtl"]::part(input),
+    &[dir="rtl"]::part(textarea),
+    &[dir="rtl"]::part(combobox) {
+      text-align: left;
+    }
   }
 
   &--padded {

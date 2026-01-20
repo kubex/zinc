@@ -67,6 +67,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
   @property({ attribute: 'help-text' }) helpText: string = '';
 
+  /** The text direction for the input (ltr or rtl) **/
+  @property() dir: 'ltr' | 'rtl' | 'auto' = 'auto';
 
   @state() private hasFocus: boolean;
 
@@ -248,7 +250,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--disabled': this.disabled,
         'ai--inline': this.inline,
         'ai--padded': this.padded,
-      })}">
+      })}" dir="ltr">
 
         <div class="ai__left" @click="${this.disabled ? undefined : this.handleEditClick}">
           ${input}
@@ -290,6 +292,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         placeholder="${this.placeholder}"
         help-text="${ifDefined(this.helpText)}"
         pattern=${ifDefined(this.pattern)}
+        dir="${this.dir}"
         @zn-input="${this.handleInput}"
         @zn-blur="${this.handleBlur}">
       </zn-textarea>`;
@@ -306,6 +309,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
                 required=${ifDefined(this.required)}
+                dir="${this.dir}"
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;
@@ -322,6 +326,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
                 required=${ifDefined(this.required)}
+                dir="${this.dir}"
                 @zn-input="${this.handleInput}"
                 @zn-blur="${this.handleBlur}">
       </zn-input>`;
@@ -336,6 +341,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  size="${this.size}"
                  placeholder="${this.placeholder}"
                  required=${ifDefined(this.required)}
+                 dir="${this.dir}"
                  @zn-input="${this.handleInput}"
                  @zn-blur="${this.handleBlur}">
         ${Object.keys(this.options).map(key => html`
@@ -355,6 +361,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                       size="${this.size}"
                       provider="${this.selectProvider}"
                       required=${ifDefined(this.required)}
+                      dir="${this.dir}"
                       @zn-input="${this.handleInput}"
                       @zn-blur="${this.handleBlur}">
       </zn-data-select>`;

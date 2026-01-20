@@ -3405,9 +3405,9 @@ declare module "components/header/index" {
 }
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -3447,6 +3447,8 @@ declare module "components/inline-edit/inline-edit.component" {
         iconPosition: 'start' | 'end' | 'none';
         /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
         helpText: string;
+        /** The text direction for the input (ltr or rtl) **/
+        dir: 'ltr' | 'rtl' | 'auto';
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;
@@ -6834,12 +6836,12 @@ declare module "components/audio-select/index" {
     }
 }
 declare module "components/translations/translations.component" {
-    import type { PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnInlineEdit from "components/inline-edit/index";
     import ZnInput from "components/input/index";
     import ZnNavbar from "components/navbar/index";
+    import type { PropertyValues } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     export default class ZnTranslations extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult;
         static dependencies: {
@@ -6872,6 +6874,7 @@ declare module "components/translations/translations.component" {
         private updateValue;
         private handleKeyDown;
         private handleSubmit;
+        private isRTLLanguage;
         render(): import("lit").TemplateResult<1>;
     }
 }

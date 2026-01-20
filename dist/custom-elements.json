@@ -12462,6 +12462,16 @@
             },
             {
               "kind": "field",
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "default": "'auto'",
+              "description": "The text direction for the input (ltr or rtl) *",
+              "attribute": "dir"
+            },
+            {
+              "kind": "field",
               "name": "hasFocus",
               "type": {
                 "text": "boolean"
@@ -12766,6 +12776,15 @@
               "default": "''",
               "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
               "fieldName": "helpText"
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "'ltr' | 'rtl' | 'auto'"
+              },
+              "default": "'auto'",
+              "description": "The text direction for the input (ltr or rtl) *",
+              "fieldName": "dir"
             }
           ],
           "superclass": {
@@ -28321,6 +28340,24 @@
               "kind": "field",
               "name": "handleSubmit",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "isRTLLanguage",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "languageCode",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             }
           ],
           "attributes": [
@@ -28650,7 +28687,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.49",
+    "version": "1.0.50",
     "author": "",
     "license": "MIT"
   }

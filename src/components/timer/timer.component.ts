@@ -27,15 +27,28 @@ export default class ZnTimer extends ZincElement {
   @property({type: Number})
   private timestamp = '';
 
+  private _timerId: number | null = null;
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._timerId !== null) {
+      clearTimeout(this._timerId);
+      this._timerId = null;
+    }
+  }
+
   private _getLastMessage() {
     const time = new Date(parseInt(this.timestamp) * 1000);
     const diff = (new Date()).getTime() - time.getTime();
     const times = this._getTimes(diff);
 
 
-    setTimeout(() => {
+    if (this._timerId !== null) {
+      clearTimeout(this._timerId);
+    }
+    this._timerId = setTimeout(() => {
       this.requestUpdate();
-    }, 1000);
+    }, 1000) as unknown as number;
 
     return html`
       <div class="last-message upper-limit-reached">

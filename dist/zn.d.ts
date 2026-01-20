@@ -3585,6 +3585,8 @@ declare module "components/timer/timer.component" {
     export default class ZnTimer extends ZincElement {
         static styles: CSSResultGroup;
         private timestamp;
+        private _timerId;
+        disconnectedCallback(): void;
         private _getLastMessage;
         render(): import("lit").TemplateResult<1>;
         private _getTimes;

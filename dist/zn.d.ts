@@ -24,6 +24,17 @@ declare module "zinc-autoloader" {
      */
     export function discover(root: Element | ShadowRoot): Promise<void>;
 }
+declare module "internal/tabbable" {
+    /**
+     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
+     * element because it short-circuits after finding the first and last ones.
+     */
+    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
+        start: HTMLElement;
+        end: HTMLElement;
+    };
+    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
+}
 declare module "internal/theme" {
     import type { ReactiveController, ReactiveControllerHost } from "lit";
     /**
@@ -104,6 +115,32 @@ declare module "internal/zinc-element" {
         reportValidity: () => boolean;
         setCustomValidity: (message: string) => void;
     }
+}
+declare module "internal/form-navigation" {
+    export class FormNavigationController {
+        private readonly form;
+        constructor(form: HTMLFormElement);
+        private handleKeyDown;
+        private shouldSkipEnterKey;
+        private shouldExcludeFromNavigation;
+        private isSelectOption;
+        private findParentSelect;
+        private findParentGroup;
+        private getGroupItems;
+        private focusNextInGroup;
+        private focusPreviousInGroup;
+        private areRequiredFieldsFilled;
+        private getNavigableControls;
+        private findCurrentControlIndex;
+        private focusNextControl;
+        private focusPreviousControl;
+        private submitForm;
+        destroy(): void;
+    }
+    /**
+     * Gets or creates a FormNavigationController for the given form
+     */
+    export function getFormNavigationController(form: HTMLFormElement): FormNavigationController;
 }
 declare module "internal/form" {
     import type { ReactiveController, ReactiveControllerHost } from "lit";
@@ -243,17 +280,6 @@ declare module "internal/watch" {
      * @param options
      */
     export function watch(propertyName: string | string[], options?: WatchOptions): <ElemClass extends LitElement>(proto: ElemClass, decoratedFnName: UpdateHandlerFunctionKeys<ElemClass>) => void;
-}
-declare module "internal/tabbable" {
-    /**
-     * Returns the first and last bounding elements that are tabbable. This is more performant than checking every single
-     * element because it short-circuits after finding the first and last ones.
-     */
-    export function getTabbableBoundary(root: HTMLElement | ShadowRoot): {
-        start: HTMLElement;
-        end: HTMLElement;
-    };
-    export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
 }
 declare module "utilities/top-layer-manager" {
     class TopLayerManager {
@@ -1146,6 +1172,7 @@ declare module "components/button/button.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
+        click(): void;
         handleClick: () => void;
         private _isLink;
         private _isButton;

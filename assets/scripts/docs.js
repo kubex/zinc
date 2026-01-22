@@ -220,7 +220,7 @@
   document.addEventListener('click', event =>
   {
     const link = event.target.closest('a');
-    const id = (link?.hash ?? '').substr(1);
+    const id = (link?.hash ?? '').slice(1);
     const isFragment = link?.hasAttribute('href') && link?.getAttribute('href').startsWith('#');
 
     if(!link || !isFragment || link.getAttribute('data-smooth-link') === 'false')
@@ -244,7 +244,7 @@
       if(target)
       {
         event.preventDefault();
-        window.scroll({top: target.offsetTop, behavior: 'smooth'});
+        target.scrollIntoView({behavior: 'smooth', block: 'start'});
         history.pushState(undefined, undefined, `#${id}`);
       }
     }
@@ -258,19 +258,21 @@
 {
   // This will be stale if its not a function.
   const getLinks = () => [...document.querySelectorAll('.content__toc a')];
-  const linkTargets = new WeakMap();
-  const visibleTargets = new WeakSet();
-  const observer = new IntersectionObserver(handleIntersect, {rootMargin: '0px 0px'});
-  let debounce;
+  const linkTargets = new Map();
+  const visibleTargets = new Map();
+  const observer = new IntersectionObserver(handleIntersect, {
+    rootMargin: '-100px 0px -66%',
+    threshold: [0, 0.25, 0.5, 0.75, 1]
+  });
 
   function handleIntersect(entries)
   {
     entries.forEach(entry =>
     {
-      // Remember which targets are visible
+      // Remember which targets are visible and their position
       if(entry.isIntersecting)
       {
-        visibleTargets.add(entry.target);
+        visibleTargets.set(entry.target, entry.boundingClientRect.top);
       }
       else
       {
@@ -284,28 +286,47 @@
   function updateActiveLinks()
   {
     const links = getLinks();
-    // Find the first visible target and activate the respective link
-    links.find(link =>
+
+    // If no targets are visible, remove all active states
+    if(visibleTargets.size === 0)
+    {
+      links.forEach(el => el.classList.remove('active'));
+      return;
+    }
+
+    // Find the target closest to the top of the viewport
+    let closestTarget = null;
+    let closestDistance = Infinity;
+
+    visibleTargets.forEach((top, target) =>
+    {
+      const distance = Math.abs(top);
+      if(distance < closestDistance)
+      {
+        closestDistance = distance;
+        closestTarget = target;
+      }
+    });
+
+    // Activate the link corresponding to the closest target
+    links.forEach(link =>
     {
       const target = linkTargets.get(link);
-
-      if(target && visibleTargets.has(target))
-      {
-        links.forEach(el => el.classList.toggle('active', el === link));
-        return true;
-      }
-
-      return false;
+      link.classList.toggle('active', target === closestTarget);
     });
   }
 
   // Observe link targets
   function observeLinks()
   {
+    // Clear existing observations
+    visibleTargets.clear();
+    linkTargets.forEach((target) => observer.unobserve(target));
+
     getLinks().forEach(link =>
     {
       const hash = link.hash.slice(1);
-      const target = hash ? document.querySelector(`.content__body #${hash}`) : null;
+      const target = hash ? document.getElementById(hash) : null;
 
       if(target)
       {
@@ -317,8 +338,11 @@
 
   observeLinks();
 
-  document.addEventListener('turbo:load', updateActiveLinks);
-  document.addEventListener('turbo:load', observeLinks);
+  document.addEventListener('turbo:load', () =>
+  {
+    observeLinks();
+    updateActiveLinks();
+  });
 })();
 
 //

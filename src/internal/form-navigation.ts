@@ -46,6 +46,18 @@ export class FormNavigationController {
         return;
       }
 
+      // Check if we're in a group (radio-group or checkbox-group)
+      const group = this.findParentGroup(target);
+      if (group) {
+        event.preventDefault();
+        const moved = this.focusNextInGroup(target, group);
+        // If we couldn't move within the group (we're at the last item)
+        if (!moved) {
+          this.focusNextControl(group);
+        }
+        return;
+      }
+
       event.preventDefault();
 
       if (this.areRequiredFieldsFilled()) {
@@ -56,30 +68,47 @@ export class FormNavigationController {
       return;
     }
 
-    // Arrow Down - only for checkboxes and toggles
-    // Radio buttons/groups handle their own arrow key navigation internally
     if (event.key === 'ArrowDown') {
       const target = event.target as HTMLElement;
-      const tagName = target.tagName.toLowerCase();
+      const tagName = target.tagName;
+      const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
-      if (tagName === 'zn-checkbox' || tagName === 'zn-toggle') {
-        const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
-        if (!hasModifier && !event.defaultPrevented) {
+      if (!hasModifier && !event.defaultPrevented) {
+        const group = this.findParentGroup(target);
+        if (group) {
+          event.preventDefault();
+          const moved = this.focusNextInGroup(target, group);
+          if (!moved) {
+            this.focusNextControl(group);
+          }
+          return;
+        }
+
+        // Individual checkboxes and toggles (not in a group)
+        if (tagName === 'ZN-CHECKBOX' || tagName === 'ZN-TOGGLE') {
           event.preventDefault();
           this.focusNextControl(target);
         }
       }
     }
 
-    // Arrow Up - only for checkboxes and toggles
-    // Radio buttons/groups handle their own arrow key navigation internally
     if (event.key === 'ArrowUp') {
       const target = event.target as HTMLElement;
-      const tagName = target.tagName.toLowerCase();
+      const tagName = target.tagName;
+      const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
-      if (tagName === 'zn-checkbox' || tagName === 'zn-toggle') {
-        const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
-        if (!hasModifier && !event.defaultPrevented) {
+      if (!hasModifier && !event.defaultPrevented) {
+        const group = this.findParentGroup(target);
+        if (group) {
+          event.preventDefault();
+          const moved = this.focusPreviousInGroup(target, group);
+          if (!moved) {
+            this.focusPreviousControl(group);
+          }
+          return;
+        }
+
+        if (tagName === 'ZN-CHECKBOX' || tagName === 'ZN-TOGGLE') {
           event.preventDefault();
           this.focusPreviousControl(target);
         }
@@ -131,6 +160,101 @@ export class FormNavigationController {
       }
     }
     return null;
+  }
+
+  private findParentGroup(element: HTMLElement): HTMLElement | null {
+    let current: HTMLElement | null = element;
+    while (current) {
+      const tagName = current.tagName;
+      if (tagName === 'ZN-RADIO-GROUP' || tagName === 'ZN-CHECKBOX-GROUP') {
+        return current;
+      }
+
+      const rootNode = current.getRootNode();
+      if (rootNode instanceof ShadowRoot) {
+        current = rootNode.host as HTMLElement;
+      } else if (current.parentElement) {
+        current = current.parentElement;
+      } else {
+        break;
+      }
+    }
+    return null;
+  }
+
+  private getGroupItems(group: HTMLElement): HTMLElement[] {
+    const itemTagName = group.tagName === 'ZN-RADIO-GROUP' ? 'ZN-RADIO' : 'ZN-CHECKBOX';
+    const items: HTMLElement[] = [];
+    const walker = document.createTreeWalker(
+      group,
+      NodeFilter.SHOW_ELEMENT,
+      {
+        acceptNode: (node: Node) => {
+          const element = node as HTMLElement;
+          if (element.tagName === itemTagName) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_SKIP;
+        }
+      }
+    );
+
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      items.push(node as HTMLElement);
+    }
+
+    return items;
+  }
+
+  private focusNextInGroup(currentElement: HTMLElement, group: HTMLElement): boolean {
+    const items = this.getGroupItems(group);
+    if (items.length === 0) {
+      return false;
+    }
+
+    let currentIndex = -1;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i] === currentElement || items[i].contains(currentElement)) {
+        currentIndex = i;
+        break;
+      }
+    }
+
+    if (currentIndex >= 0 && currentIndex < items.length - 1) {
+      const nextItem = items[currentIndex + 1];
+      if (typeof nextItem.focus === 'function') {
+        nextItem.focus();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private focusPreviousInGroup(currentElement: HTMLElement, group: HTMLElement): boolean {
+    const items = this.getGroupItems(group);
+    if (items.length === 0) {
+      return false;
+    }
+
+    let currentIndex = -1;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i] === currentElement || items[i].contains(currentElement)) {
+        currentIndex = i;
+        break;
+      }
+    }
+
+    if (currentIndex > 0) {
+      const previousItem = items[currentIndex - 1];
+      if (typeof previousItem.focus === 'function') {
+        previousItem.focus();
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private areRequiredFieldsFilled(): boolean {

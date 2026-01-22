@@ -400,7 +400,7 @@ Different form controls have specialized navigation behaviors:
 
 - **Text inputs** – Enter moves to the next field
 - **Number/Currency inputs** – Enter moves to the next field
-- **Datepicker** - Enter moves to next field
+- **Datepicker** – Automatically opens when navigated to with Enter. Press Enter on a date to select it and move to the next field.
 - **Select dropdowns** - Automatically opens when navigated to with Enter. Press Enter on an option to select it and
   move to the next field.
 - **Radio buttons** – Arrow keys select different options within the radio group. Space or Enter selects the current option. Press Enter to move to the next form control.

@@ -222,6 +222,173 @@ Or as a Prefix
 </zn-input>
 ```
 
+### Form Navigation with Enter Key
+
+Add the `data-enter-navigation` attribute to a form to enable Enter key navigation through form inputs. When enabled, pressing Enter will move focus to the next input field, and submit the form when all named fields are filled and valid.
+
+:::tip
+**Usage:** This feature is useful for forms where users naturally want to press Enter to move between fields, such as data entry forms, registration forms, or checkout flows.
+:::
+
+#### Basic Example
+
+```html:preview
+<form class="form-nav-basic" data-enter-navigation>
+  <zn-input name="firstName" label="First Name" required></zn-input>
+  <br />
+  <zn-input name="lastName" label="Last Name" required></zn-input>
+  <br />
+  <zn-input name="email" type="email" label="Email" required></zn-input>
+  <br />
+  <zn-input name="phone" type="tel" label="Phone"></zn-input>
+  <br />
+  <zn-button type="submit" variant="primary">Submit</zn-button>
+</form>
+
+<script type="module">
+  const form = document.querySelector('.form-nav-basic');
+
+  // Wait for controls to be defined before attaching form listeners
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-input')
+  ]).then(() => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
+#### All Input Types Example
+
+This example demonstrates Enter key navigation with various input types including text, email, phone, number, currency, and date inputs:
+
+```html:preview
+<form class="form-nav-all-types" data-enter-navigation>
+  <zn-input name="fullName" label="Full Name" required></zn-input>
+  <br />
+  <zn-input name="email" type="email" label="Email Address" required></zn-input>
+  <br />
+  <zn-input name="phone" type="tel" label="Phone Number" required></zn-input>
+  <br />
+  <zn-input name="age" type="number" label="Age" min="18" max="100" required></zn-input>
+  <br />
+  <zn-input name="salary" type="currency" label="Expected Salary" required></zn-input>
+  <br />
+  <zn-datepicker name="availableDate" label="Available Start Date" required></zn-datepicker>
+  <br />
+  <zn-input name="website" type="url" label="Portfolio Website"></zn-input>
+  <br />
+  <zn-button type="submit" variant="primary">Continue</zn-button>
+</form>
+
+<script type="module">
+  const allTypesForm = document.querySelector('.form-nav-all-types');
+
+  // Wait for controls to be defined before attaching form listeners
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-datepicker'),
+    customElements.whenDefined('zn-input')
+  ]).then(() => {
+    allTypesForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(allTypesForm);
+      const data = Object.fromEntries(formData);
+      alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
+**Navigation flow:** Press Enter to move through each field. The form submits when all named fields are filled and valid.
+
+#### Mixed Form Controls
+
+Form navigation works with all Zinc form controls including selects, radios, checkboxes, toggles, and textareas. Textareas are excluded from navigation since they need Enter for their own functionality.
+
+```html:preview
+<form class="form-nav-mixed" data-enter-navigation>
+  <zn-input name="productName" label="Product Name" required></zn-input>
+  <br />
+  <zn-input name="sku" label="SKU" required></zn-input>
+  <br />
+  <zn-input name="price" type="currency" label="Price" required></zn-input>
+  <br />
+  <zn-input name="quantity" type="number" label="Quantity" required min="1"></zn-input>
+  <br />
+  <zn-select name="category" label="Category" required clearable>
+    <zn-option value="electronics">Electronics</zn-option>
+    <zn-option value="clothing">Clothing</zn-option>
+    <zn-option value="books">Books</zn-option>
+    <zn-option value="home">Home & Garden</zn-option>
+  </zn-select>
+  <br />
+  <zn-radio-group name="condition" label="Condition" required>
+    <zn-radio value="new">New</zn-radio>
+    <zn-radio value="used">Used</zn-radio>
+    <zn-radio value="refurbished">Refurbished</zn-radio>
+  </zn-radio-group>
+  <br /><br />
+  <zn-checkbox name="featured" value="yes">Feature this product</zn-checkbox>
+  <br /><br />
+  <zn-toggle name="available" value="yes">Available for purchase</zn-toggle>
+  <br /><br />
+  <zn-textarea name="description" label="Description (Press Tab to navigate, Enter for new lines)"></zn-textarea>
+  <br />
+  <zn-button type="submit" variant="primary">Add Product</zn-button>
+</form>
+
+<script type="module">
+  const mixedForm = document.querySelector('.form-nav-mixed');
+
+  // Wait for controls to be defined before attaching form listeners
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-checkbox'),
+    customElements.whenDefined('zn-input'),
+    customElements.whenDefined('zn-option'),
+    customElements.whenDefined('zn-radio'),
+    customElements.whenDefined('zn-radio-group'),
+    customElements.whenDefined('zn-select'),
+    customElements.whenDefined('zn-textarea'),
+    customElements.whenDefined('zn-toggle')
+  ]).then(() => {
+    mixedForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(mixedForm);
+      const data = Object.fromEntries(formData);
+      alert('Product added!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
+**Navigation behavior by control type:**
+- **Text inputs:** Enter moves to next field
+- **Number/Currency inputs:** Enter moves to next field
+- **Datepicker:** Enter moves to next field
+- **Select dropdowns:** Automatically opens when navigated to. Enter on an option selects it and moves to next field.
+- **Radio buttons:** Arrow keys select different options within the radio group. Space or Enter selects the current option. Press Enter to move to next field.
+- **Checkboxes:** Space toggles the checkbox. Enter, Arrow Down, or Arrow Up moves to next/previous field.
+- **Toggles:** Space toggles the toggle. Enter, Arrow Down, or Arrow Up moves to next/previous field.
+- **Textareas:** You can navigate TO a textarea with Enter, but pressing Enter inside a textarea adds newlines. Use Tab to navigate away from textareas.
+- **Search inputs:** You can navigate TO a search input with Enter, but pressing Enter inside a search input triggers search. Use Tab to navigate away from search inputs.
+
+**Keyboard shortcuts:**
+- **Enter** - Move to next field (or submit form if all fields complete)
+- **Arrow Down/Up** - On checkboxes and toggles, moves to next/previous field. On radios, selects next/previous option in group.
+- **Space** - Toggle checkboxes and toggles. Select current radio option.
+- **Tab** - Standard browser tab navigation
+
+:::warning
+**Note:** While you can navigate TO textareas and search inputs using Enter, pressing Enter while inside these controls uses the Enter key for their own functionality (new lines and search triggers, respectively). Use Tab to navigate away from these controls.
+:::
+
 ### Customizing Label Position
 
 Use [CSS parts](#css-parts) to customize the way form controls are drawn. This example uses CSS grid to position the

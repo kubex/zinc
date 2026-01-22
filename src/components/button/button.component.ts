@@ -206,6 +206,11 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     }
   }
 
+  // Override native HTMLButtonElement click method
+  click() {
+    this.handleClick()
+  }
+
   handleClick = () => {
     if (this.disabled) {
       return;

@@ -100,10 +100,17 @@
   border: none;
 }
 
+/* Focus */
+.radio:not(.radio--checked):not(.radio--disabled) .radio__input:focus-visible ~ .radio__control {
+  border-color: rgb(var(--zn-primary));
+  outline: var(--zn-focus-ring);
+  outline-offset: var(--zn-focus-ring-offset);
+}
+
 /* Checked + focus */
-:host(:focus-visible) .radio__control {
-  outline: rgb(var(--zn-primary));
-  outline-offset: 2px;
+.radio.radio--checked:not(.radio--disabled) .radio__input:focus-visible ~ .radio__control {
+  outline: var(--zn-focus-ring);
+  outline-offset: var(--zn-focus-ring-offset);
 }
 
 /* Disabled */

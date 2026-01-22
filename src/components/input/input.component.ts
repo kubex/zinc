@@ -312,6 +312,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       // When using a Input Method Editor (IME), pressing enter will cause the form to submit unexpectedly. One way
       // to check for this is to look at event.isComposing, which will be true when the IME is open.
       if (!event.defaultPrevented && !event.isComposing) {
+        // Check if form has navigation enabled - if so, let FormNavigationController handle it
+        const form = this.formControlController.getForm();
+        if (form?.hasAttribute('enter-navigation') || form?.hasAttribute('data-enter-navigation')) {
+          return; // Let FormNavigationController handle it
+        }
+
         this.formControlController.submit();
       }
     }

@@ -1,3 +1,4 @@
+import {getFormNavigationController} from "./form-navigation";
 import type {ReactiveController, ReactiveControllerHost} from "lit";
 import type {ZincFormControl} from "./zinc-element";
 import type Button from "../components/button";
@@ -154,6 +155,11 @@ export class FormControlController implements ReactiveController {
       formCollections.get(this.form)!.add(this.host);
     } else {
       formCollections.set(this.form, new Set<ZincFormControl>([this.host]));
+    }
+
+    // Initialize form navigation controller if the form has the data-enter-navigation attribute
+    if (this.form.hasAttribute('data-enter-navigation')) {
+      getFormNavigationController(this.form);
     }
 
     this.form.addEventListener('formdata', this.handleFormData);

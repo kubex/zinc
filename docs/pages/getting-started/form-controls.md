@@ -255,6 +255,168 @@ Custom validation can be applied to any form control that supports the `setCusto
 to inputs and textareas.
 :::
 
+## Form Navigation with Enter Key
+
+Zinc forms support an opt-in Enter key navigation feature that improves the user experience for data entry forms. When
+enabled using the `data-enter-navigation` attribute on a `<form>` element, pressing Enter will:
+
+- Move focus to the next input field if all named fields are not yet complete
+- Submit the form when all named fields are filled and valid
+
+This feature is particularly useful for forms where users naturally want to press Enter to advance through fields, such
+as registration forms, checkout flows, or data entry interfaces.
+
+### Basic Example
+
+```html:preview
+<form class="form-nav-example" data-enter-navigation>
+  <zn-input name="firstName" label="First Name" required></zn-input>
+  <br />
+  <zn-input name="lastName" label="Last Name" required></zn-input>
+  <br />
+  <zn-input name="email" type="email" label="Email" required></zn-input>
+  <br />
+  <zn-input name="phone" type="tel" label="Phone"></zn-input>
+  <br />
+  <zn-button type="submit" variant="primary">Submit</zn-button>
+</form>
+
+<script type="module">
+  const form = document.querySelector('.form-nav-example');
+
+  // Wait for controls to be defined before attaching form listeners
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-input')
+  ]).then(() => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Form submitted successfully!');
+    });
+  });
+</script>
+```
+
+In this example:
+
+1. Pressing Enter in "First Name" moves the focus to "Last Name"
+2. Pressing Enter in "Last Name" moves the focus to "Email"
+3. Pressing Enter in "Email" moves the focus to "Phone"
+4. Pressing Enter in "Phone" (the last field with a name) submits the form when all named fields are filled
+
+### Comprehensive Example with All Input Types
+
+This example demonstrates Enter key navigation with all available Zinc form controls:
+
+```html:preview
+<form class="form-nav-comprehensive" data-enter-navigation>
+  <zn-input name="username" label="Username" required></zn-input>
+  <br />
+  <zn-input name="email" type="email" label="Email" required></zn-input>
+  <br />
+  <zn-input name="phone" type="tel" label="Phone" required></zn-input>
+  <br />
+  <zn-input name="age" type="number" label="Age" min="18" required></zn-input>
+  <br />
+  <zn-input name="salary" type="currency" label="Salary" required></zn-input>
+  <br />
+  <zn-datepicker name="startDate" label="Start Date" required></zn-datepicker>
+  <br />
+  <zn-select name="department" label="Department" required clearable>
+    <zn-option value="engineering">Engineering</zn-option>
+    <zn-option value="sales">Sales</zn-option>
+    <zn-option value="marketing">Marketing</zn-option>
+    <zn-option value="hr">Human Resources</zn-option>
+  </zn-select>
+  <br />
+  <zn-select name="level" label="Level" required clearable>
+    <zn-option value="junior">Junior</zn-option>
+    <zn-option value="mid">Mid-level</zn-option>
+    <zn-option value="senior">Senior</zn-option>
+    <zn-option value="lead">Lead</zn-option>
+  </zn-select>
+  <br />
+  <zn-radio-group name="employment" label="Employment Type" required>
+    <zn-radio value="fulltime">Full-time</zn-radio>
+    <zn-radio value="parttime">Part-time</zn-radio>
+    <zn-radio value="contract">Contract</zn-radio>
+  </zn-radio-group>
+  <br /><br />
+  <zn-checkbox name="terms" value="accepted" required>I accept the terms and conditions</zn-checkbox>
+  <br /><br />
+  <zn-checkbox name="newsletter" value="yes">Subscribe to newsletter</zn-checkbox>
+  <br /><br />
+  <zn-toggle name="notifications" value="enabled">Enable notifications</zn-toggle>
+  <br /><br />
+  <zn-textarea name="bio" label="Bio (Press Tab to navigate, Enter for newlines)"></zn-textarea>
+  <br />
+  <zn-button type="submit" variant="primary">Submit Application</zn-button>
+</form>
+
+<script type="module">
+  const form = document.querySelector('.form-nav-comprehensive');
+
+  // Wait for controls to be defined before attaching form listeners
+  await Promise.all([
+    customElements.whenDefined('zn-button'),
+    customElements.whenDefined('zn-checkbox'),
+    customElements.whenDefined('zn-datepicker'),
+    customElements.whenDefined('zn-input'),
+    customElements.whenDefined('zn-option'),
+    customElements.whenDefined('zn-radio'),
+    customElements.whenDefined('zn-radio-group'),
+    customElements.whenDefined('zn-select'),
+    customElements.whenDefined('zn-textarea'),
+    customElements.whenDefined('zn-toggle')
+  ]).then(() => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+      alert('Application submitted!\n\n' + JSON.stringify(data, null, 2));
+    });
+  });
+</script>
+```
+
+**Navigation flow:**
+
+- Press Enter to move through: Username → Email → Phone → Age → Salary → Start Date → Department → Level → Employment
+  Type (radio group) → Terms checkbox → Newsletter checkbox → Notifications toggle → Bio
+- The form submits when all named fields are filled and valid
+- Note: Textarea uses Tab for navigation since Enter is needed for newlines
+
+### Navigation Keys
+
+The form navigation feature supports multiple keyboard shortcuts:
+
+- **Enter key** - Moves to the next field. Submits the form when all named fields are complete.
+- **Arrow Down/Up keys** – On checkboxes and toggles, moves to the next/previous field. On radio buttons, selects the next/previous option within the radio group.
+- **Tab key** – Standard browser tab navigation still works alongside form navigation.
+
+### Control-Specific Behaviors
+
+Different form controls have specialized navigation behaviors:
+
+- **Text inputs** – Enter moves to the next field
+- **Number/Currency inputs** – Enter moves to the next field
+- **Datepicker** - Enter moves to next field
+- **Select dropdowns** - Automatically opens when navigated to with Enter. Press Enter on an option to select it and
+  move to the next field.
+- **Radio buttons** – Arrow keys select different options within the radio group. Space or Enter selects the current option. Press Enter to move to the next form control.
+- **Checkboxes** – Space toggles the checkbox. Enter, Arrow Down, or Arrow Up moves to the next/previous field.
+- **Toggles** – Space toggles the toggle. Enter, Arrow Down, or Arrow Up moves to the next/previous field.
+- **Textareas** – You can navigate TO a textarea with Enter, but pressing Enter inside a textarea adds newlines. Use Tab
+  to navigate away from textareas.
+- **Search inputs** – You can navigate TO a search input with Enter, but pressing Enter inside a search input triggers
+  search. Use Tab to navigate away from search inputs.
+- **Buttons** – Excluded from navigation entirely (handle their own Enter key behavior)
+
+:::tip
+For more examples and interactive demonstrations, see
+the [Form Navigation section](/components/input#form-navigation-with-enter-key) in the Input component documentation.
+:::
+
 ## Custom Validation Styles
 
 Due to the many ways form controls are used, Zinc doesn't provide out of the box validation styles for form controls as

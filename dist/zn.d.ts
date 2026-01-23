@@ -2350,6 +2350,7 @@ declare module "components/data-select/data-select.component" {
         private getPlaceholder;
         private _observeSelectDisabled;
         private _syncDisabledState;
+        private _normalizeValue;
     }
 }
 declare module "components/data-select/index" {

@@ -2319,11 +2319,14 @@ declare module "components/data-select/data-select.component" {
         helpText: string;
         /** The selects required attribute. */
         required: boolean;
+        /** Disables the select. */
+        disabled: boolean;
         iconOnly: boolean;
         multiple: boolean;
         distinct: string;
         conditional: string;
         protected readonly formControlController: FormControlController;
+        private selectObserver?;
         get validationMessage(): string;
         get validity(): ValidityState;
         constructor();
@@ -2345,6 +2348,8 @@ declare module "components/data-select/data-select.component" {
         private _updatePrefix;
         private _updateIconEmptyState;
         private getPlaceholder;
+        private _observeSelectDisabled;
+        private _syncDisabledState;
     }
 }
 declare module "components/data-select/index" {

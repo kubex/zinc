@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="File controls allow users to select one or more files for upload through a button interface or drag-and-drop area."
+    />
     <title>File</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/file" />
     <meta property="og:title" content="File" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="File controls allow users to select one or more files for upload through a button interface or drag-and-drop area."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,11 +492,29 @@
           <ul>
             <li class="top"><a href="#">File</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#label">Label</a></li>
-            <li data-level="3"><a href="#droparea">Droparea</a></li>
+            <li data-level="3"><a href="#basic-file-upload-with-label">Basic File Upload with Label</a></li>
             <li data-level="3"><a href="#help-text">Help Text</a></li>
-            <li data-level="3"><a href="#multiple-upload">Multiple Upload</a></li>
+            <li data-level="3"><a href="#multiple-files">Multiple Files</a></li>
+            <li data-level="3"><a href="#clearable-files">Clearable Files</a></li>
+            <li data-level="3"><a href="#droparea-mode">Droparea Mode</a></li>
+            <li data-level="3"><a href="#accepted-file-types">Accepted File Types</a></li>
+            <li data-level="3"><a href="#droparea-with-accepted-types">Droparea with Accepted Types</a></li>
+            <li data-level="3"><a href="#custom-droparea-icon">Custom Droparea Icon</a></li>
+            <li data-level="3"><a href="#directory-upload">Directory Upload</a></li>
+            <li data-level="3"><a href="#directory-droparea">Directory Droparea</a></li>
+            <li data-level="3"><a href="#camera-capture">Camera Capture</a></li>
             <li data-level="3"><a href="#hide-value">Hide Value</a></li>
+            <li data-level="3"><a href="#disabled">Disabled</a></li>
+            <li data-level="3"><a href="#sizes">Sizes</a></li>
+            <li data-level="3"><a href="#required">Required</a></li>
+            <li data-level="3"><a href="#custom-trigger">Custom Trigger</a></li>
+            <li data-level="3"><a href="#handling-file-events">Handling File Events</a></li>
+            <li data-level="3"><a href="#error-handling">Error Handling</a></li>
+            <li data-level="3"><a href="#working-with-filelist">Working with FileList</a></li>
+            <li data-level="3"><a href="#form-integration">Form Integration</a></li>
+            <li data-level="3"><a href="#programmatic-file-access">Programmatic File Access</a></li>
+            <li data-level="3"><a href="#validation">Validation</a></li>
+            <li data-level="3"><a href="#custom-validation">Custom Validation</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -518,104 +542,30 @@
 
           <p class="component-summary">File controls allow selecting an arbitrary number of files for uploading.</p>
 
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-file multiple="" clearable=""></zn-file>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-115">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-208"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">multiple</span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-208"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-115"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="label" class="anchor-heading">Label<a href="#label" aria-label='Direct link to "Label"'></a></h3>
-
-          <div class="code-preview">
-            <div class="code-preview__preview">
-              <zn-file label="File Upload"></zn-file>
-
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
-            </div>
-
-            <div class="code-preview__source-group" id="code-preview-source-group-116">
-              <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-209"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>File Upload<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-209"></zn-copy-button></pre>
-              </div>
-            </div>
-
-            <div class="code-preview__buttons">
-              <button
-                type="button"
-                class="code-preview__button code-preview__toggle"
-                aria-expanded="false"
-                aria-controls="code-preview-source-group-116"
-              >
-                Source
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <h3 id="droparea" class="anchor-heading">
-            Droparea<a href="#droparea" aria-label='Direct link to "Droparea"'></a>
+          <h3 id="basic-file-upload-with-label" class="anchor-heading">
+            Basic File Upload with Label<a
+              href="#basic-file-upload-with-label"
+              aria-label='Direct link to "Basic File Upload with Label"'
+            ></a>
           </h3>
+          <p>Use the <code>label</code> attribute to give the file control an accessible label.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-file accept="text/plain,image/*" multiple="" droparea=""></zn-file>
+              <zn-file label="Upload Document"></zn-file>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-117">
+            <div class="code-preview__source-group" id="code-preview-source-group-414">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-210"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text/plain,image/*<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span> <span class="token attr-name">droparea</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-210"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-518"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Document<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-518"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -624,7 +574,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-117"
+                aria-controls="code-preview-source-group-414"
               >
                 Source
                 <svg
@@ -641,23 +591,42 @@
             </div>
           </div>
 
+          <div role="alert" class="callout callout--tip">
+            <p>
+              This component works with standard <code>&lt;form&gt;</code> elements. Please refer to the section on
+              <a href="/getting-started/form-controls">form controls</a> to learn more about form submission and
+              client-side validation.
+            </p>
+          </div>
           <h3 id="help-text" class="anchor-heading">
             Help Text<a href="#help-text" aria-label='Direct link to "Help Text"'></a>
           </h3>
+          <p>
+            Add descriptive help text to a file control with the <code>help-text</code> attribute. For help text that
+            contains HTML, use the <code>help-text</code> slot instead.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-file help-text="You can drag and drop files here"></zn-file>
+              <zn-file label="Upload Resume" help-text="Accepted formats: PDF, DOC, DOCX (Max 5MB)"></zn-file>
+              <br />
+              <zn-file label="Upload Resume">
+                <div slot="help-text">Accepted formats: <strong>PDF, DOC, DOCX</strong> (Max 5MB)</div>
+              </zn-file>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-118">
+            <div class="code-preview__source-group" id="code-preview-source-group-415">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-211"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>You can drag and drop files here<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-211"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-519"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Resume<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Accepted formats: PDF, DOC, DOCX (Max 5MB)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Resume<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>help-text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Accepted formats: <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>PDF, DOC, DOCX<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span> (Max 5MB)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-519"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -666,7 +635,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-118"
+                aria-controls="code-preview-source-group-415"
               >
                 Source
                 <svg
@@ -683,24 +652,24 @@
             </div>
           </div>
 
-          <h3 id="multiple-upload" class="anchor-heading">
-            Multiple Upload<a href="#multiple-upload" aria-label='Direct link to "Multiple Upload"'></a>
+          <h3 id="multiple-files" class="anchor-heading">
+            Multiple Files<a href="#multiple-files" aria-label='Direct link to "Multiple Files"'></a>
           </h3>
+          <p>Use the <code>multiple</code> attribute to allow users to select more than one file at a time.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-file multiple=""></zn-file>
+              <zn-file label="Upload Photos" multiple=""></zn-file>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-119">
+            <div class="code-preview__source-group" id="code-preview-source-group-416">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-212">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-212"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-520"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Photos<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-520"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -709,7 +678,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-119"
+                aria-controls="code-preview-source-group-416"
               >
                 Source
                 <svg
@@ -726,24 +695,442 @@
             </div>
           </div>
 
+          <h3 id="clearable-files" class="anchor-heading">
+            Clearable Files<a href="#clearable-files" aria-label='Direct link to "Clearable Files"'></a>
+          </h3>
+          <p>
+            Add the <code>clearable</code> attribute to display a close button next to each selected file, allowing
+            users to remove individual files from the selection.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Documents" multiple="" clearable=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-417">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-521"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Documents<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-521"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-417"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="droparea-mode" class="anchor-heading">
+            Droparea Mode<a href="#droparea-mode" aria-label='Direct link to "Droparea Mode"'></a>
+          </h3>
+          <p>
+            Use the <code>droparea</code> attribute to render the file control as a large drag-and-drop area. This mode
+            is ideal when file upload is a primary action on the page.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Files" droparea="" multiple=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-418">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-522"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Files<span class="token punctuation">"</span></span> <span class="token attr-name">droparea</span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-522"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-418"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="accepted-file-types" class="anchor-heading">
+            Accepted File Types<a href="#accepted-file-types" aria-label='Direct link to "Accepted File Types"'></a>
+          </h3>
+          <p>
+            Use the <code>accept</code> attribute to specify which file types are accepted. This controls which files
+            appear in the file picker dialog and provides client-side validation.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Images" accept="image/*" multiple=""></zn-file>
+              <br />
+              <zn-file label="Upload Document" accept=".pdf,.doc,.docx"></zn-file>
+              <br />
+              <zn-file label="Upload Text File" accept="text/plain"></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-419">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-523"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Images<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image/*<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Document<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>.pdf,.doc,.docx<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Text File<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text/plain<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-523"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-419"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--tip">
+            <p>The <code>accept</code> attribute takes a comma-separated list of:</p>
+            <ul>
+              <li>File extensions (e.g., <code>.pdf</code>, <code>.jpg</code>)</li>
+              <li>MIME types (e.g., <code>image/png</code>, <code>application/pdf</code>)</li>
+              <li>MIME type wildcards (e.g., <code>image/*</code>, <code>video/*</code>)</li>
+            </ul>
+            <p>
+              See
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/accept"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >MDN documentation</a
+              >
+              for more details.
+            </p>
+          </div>
+          <h3 id="droparea-with-accepted-types" class="anchor-heading">
+            Droparea with Accepted Types<a
+              href="#droparea-with-accepted-types"
+              aria-label='Direct link to "Droparea with Accepted Types"'
+            ></a>
+          </h3>
+          <p>
+            Combine <code>droparea</code> and <code>accept</code> for a prominent upload area with file type
+            restrictions.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Images" accept="image/*" multiple="" droparea=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-420">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-524"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Images<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image/*<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span> <span class="token attr-name">droparea</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-524"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-420"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-droparea-icon" class="anchor-heading">
+            Custom Droparea Icon<a href="#custom-droparea-icon" aria-label='Direct link to "Custom Droparea Icon"'></a>
+          </h3>
+          <p>Use the <code>droparea-icon</code> slot to customize the icon displayed in the droparea.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Photos" droparea="" multiple="">
+                <zn-icon src="photo_library" slot="droparea-icon"></zn-icon>
+              </zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-421">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-525"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Photos<span class="token punctuation">"</span></span> <span class="token attr-name">droparea</span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>photo_library<span class="token punctuation">"</span></span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>droparea-icon<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-525"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-421"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="directory-upload" class="anchor-heading">
+            Directory Upload<a href="#directory-upload" aria-label='Direct link to "Directory Upload"'></a>
+          </h3>
+          <p>
+            Use the <code>webkitdirectory</code> attribute to allow users to select entire directories instead of
+            individual files. When a directory is selected, all files within it and its subdirectories are included.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Folder" webkitdirectory=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-422">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-526"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Folder<span class="token punctuation">"</span></span> <span class="token attr-name">webkitdirectory</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-526"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-422"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--warning">
+            <p>
+              <strong>Note:</strong> The <code>webkitdirectory</code> attribute is non-standard but is supported in all
+              major browsers. When this attribute is set, the <code>multiple</code> property is automatically enabled.
+            </p>
+          </div>
+          <h3 id="directory-droparea" class="anchor-heading">
+            Directory Droparea<a href="#directory-droparea" aria-label='Direct link to "Directory Droparea"'></a>
+          </h3>
+          <p>
+            Combine <code>webkitdirectory</code> with <code>droparea</code> for a drag-and-drop folder upload interface.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Project Folder" webkitdirectory="" droparea=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-423">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-527"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Project Folder<span class="token punctuation">"</span></span> <span class="token attr-name">webkitdirectory</span> <span class="token attr-name">droparea</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-527"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-423"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="camera-capture" class="anchor-heading">
+            Camera Capture<a href="#camera-capture" aria-label='Direct link to "Camera Capture"'></a>
+          </h3>
+          <p>
+            Use the <code>capture</code> attribute to prompt users to use their device’s camera or microphone. This only
+            works on mobile devices and requires the <code>accept</code> attribute to specify the media type.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Take Photo" accept="image/*" capture="environment"></zn-file>
+              <br />
+              <zn-file label="Take Selfie" accept="image/*" capture="user"></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-424">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-528"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Take Photo<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image/*<span class="token punctuation">"</span></span> <span class="token attr-name">capture</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>environment<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Take Selfie<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image/*<span class="token punctuation">"</span></span> <span class="token attr-name">capture</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-528"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-424"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--warning">
+            <p>
+              <strong>Note:</strong> The <code>capture</code> attribute only works on mobile devices with cameras and
+              does not work with the <code>droparea</code> mode. The <code>environment</code> value activates the rear
+              camera, while <code>user</code> activates the front-facing camera.
+            </p>
+          </div>
           <h3 id="hide-value" class="anchor-heading">
             Hide Value<a href="#hide-value" aria-label='Direct link to "Hide Value"'></a>
           </h3>
+          <p>
+            Use the <code>hide-value</code> attribute to suppress the display of selected file names. This is useful
+            when you want to handle file display in a custom way or when working with the trigger slot.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-file hide-value=""></zn-file>
+              <zn-file label="Upload File" hide-value=""></zn-file>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-120">
+            <div class="code-preview__source-group" id="code-preview-source-group-425">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-213">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">hide-value</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-213"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-529"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload File<span class="token punctuation">"</span></span> <span class="token attr-name">hide-value</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-529"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -752,7 +1139,987 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-120"
+                aria-controls="code-preview-source-group-425"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="disabled" class="anchor-heading">
+            Disabled<a href="#disabled" aria-label='Direct link to "Disabled"'></a>
+          </h3>
+          <p>Use the <code>disabled</code> attribute to disable the file control.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Upload Document" disabled=""></zn-file>
+              <br />
+              <zn-file label="Upload Files" droparea="" disabled=""></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-426">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-530"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Document<span class="token punctuation">"</span></span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Files<span class="token punctuation">"</span></span> <span class="token attr-name">droparea</span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-530"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-426"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="sizes" class="anchor-heading">Sizes<a href="#sizes" aria-label='Direct link to "Sizes"'></a></h3>
+          <p>
+            Use the <code>size</code> attribute to change the file control’s size. Size <code>medium</code> is the
+            default.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file label="Small Upload" size="small"></zn-file>
+              <br />
+              <zn-file label="Medium Upload" size="medium"></zn-file>
+              <br />
+              <zn-file label="Large Upload" size="large"></zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-427">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-531"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Small Upload<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Medium Upload<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Large Upload<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-531"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-427"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="required" class="anchor-heading">
+            Required<a href="#required" aria-label='Direct link to "Required"'></a>
+          </h3>
+          <p>
+            Use the <code>required</code> attribute to make the file control mandatory. The form will not submit unless
+            at least one file is selected.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="file-required-form">
+                <zn-file name="document" label="Upload Required Document" required=""></zn-file>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.file-required-form');
+
+                await Promise.all([
+                  customElements.whenDefined('zn-button'),
+                  customElements.whenDefined('zn-file')
+                ]).then(() => {
+                  form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    alert('Form submitted with files!');
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-428">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-532"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-required-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>document<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Required Document<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-required-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted with files!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-532"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-428"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-trigger" class="anchor-heading">
+            Custom Trigger<a href="#custom-trigger" aria-label='Direct link to "Custom Trigger"'></a>
+          </h3>
+          <p>
+            Use the <code>trigger</code> slot to provide completely custom content for the file control. The trigger
+            will automatically handle click events to open the file picker and drag-and-drop functionality.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file name="custom-upload" multiple="">
+                <div
+                  slot="trigger"
+                  style="
+                    padding: 2rem;
+                    border: 2px dashed var(--zn-color-neutral-300);
+                    border-radius: var(--zn-border-radius-medium);
+                    text-align: center;
+                    cursor: pointer;
+                  "
+                >
+                  <zn-icon src="cloud_upload" style="font-size: 3rem; color: var(--zn-color-primary-600)"></zn-icon>
+                  <p style="margin: 0.5rem 0 0; font-weight: var(--zn-font-weight-semibold)">
+                    Click to upload or drag and drop
+                  </p>
+                  <p
+                    style="
+                      margin: 0.25rem 0 0;
+                      font-size: var(--zn-font-size-small);
+                      color: var(--zn-color-neutral-600);
+                    "
+                  >
+                    SVG, PNG, JPG or GIF (max. 800x400px)
+                  </p>
+                </div>
+              </zn-file>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-429">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-533"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-upload<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 2rem<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 2px dashed <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-300<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-border-radius-medium<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">text-align</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">cursor</span><span class="token punctuation">:</span> pointer<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cloud_upload<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 3rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-primary-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0.5rem 0 0<span class="token punctuation">;</span> <span class="token property">font-weight</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-font-weight-semibold<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Click to upload or drag and drop<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0.25rem 0 0<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-font-size-small<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>SVG, PNG, JPG or GIF (max. 800x400px)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-533"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-429"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--warning">
+            <p>
+              <strong>Note:</strong> When using the <code>trigger</code> slot, the following attributes will not work:
+              <code>label</code>, <code>droparea</code>, <code>help-text</code>, <code>size</code>, and
+              <code>hide-value</code>. You must handle styling for the disabled state yourself if using the
+              <code>disabled</code> attribute.
+            </p>
+          </div>
+          <h3 id="handling-file-events" class="anchor-heading">
+            Handling File Events<a href="#handling-file-events" aria-label='Direct link to "Handling File Events"'></a>
+          </h3>
+          <p>
+            Listen to <code>zn-change</code> and <code>zn-input</code> events to respond when users select files. Access
+            the selected files through the <code>files</code> property.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file class="file-events" label="Upload Files" multiple=""></zn-file>
+              <div class="file-event-output"></div>
+
+              <script type="module">
+                const fileInput = document.querySelector('.file-events');
+                const output = document.querySelector('.file-event-output');
+
+                await customElements.whenDefined('zn-file');
+
+                fileInput.addEventListener('zn-change', e => {
+                  const files = fileInput.files;
+                  if (files && files.length > 0) {
+                    const fileList = Array.from(files)
+                      .map(f => `${f.name} (${(f.size / 1024).toFixed(2)} KB)`)
+                      .join('<br>');
+                    output.innerHTML = `<strong>Selected files:</strong><br>${fileList}`;
+                  } else {
+                    output.innerHTML = '';
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-430">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-534"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-events<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Files<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-event-output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> fileInput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-events'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-event-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  fileInput<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> files <span class="token operator">=</span> fileInput<span class="token punctuation">.</span>files<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>files <span class="token operator">&amp;&amp;</span> files<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> fileList <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>files<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">f</span> <span class="token operator">=&gt;</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>f<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span>size <span class="token operator">/</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'&lt;br&gt;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;strong&gt;Selected files:&lt;/strong&gt;&lt;br&gt;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>fileList<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-534"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-430"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="error-handling" class="anchor-heading">
+            Error Handling<a href="#error-handling" aria-label='Direct link to "Error Handling"'></a>
+          </h3>
+          <p>
+            The file control emits a <code>zn-error</code> event when multiple files are dropped without the
+            <code>multiple</code> attribute being set.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file class="file-error" label="Upload Single File" droparea=""></zn-file>
+              <div class="error-output" style="color: var(--zn-color-danger-600); margin-top: 0.5rem"></div>
+
+              <script type="module">
+                const fileInput = document.querySelector('.file-error');
+                const errorOutput = document.querySelector('.error-output');
+
+                await customElements.whenDefined('zn-file');
+
+                fileInput.addEventListener('zn-error', () => {
+                  errorOutput.textContent = 'Error: Only one file can be uploaded at a time.';
+                  setTimeout(() => {
+                    errorOutput.textContent = '';
+                  }, 3000);
+                });
+
+                fileInput.addEventListener('zn-change', () => {
+                  errorOutput.textContent = '';
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-431">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-535"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-error<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Single File<span class="token punctuation">"</span></span> <span class="token attr-name">droparea</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error-output<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-danger-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> fileInput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-error'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> errorOutput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.error-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  fileInput<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-error'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    errorOutput<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Error: Only one file can be uploaded at a time.'</span><span class="token punctuation">;</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      errorOutput<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  fileInput<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    errorOutput<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-535"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-431"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="working-with-filelist" class="anchor-heading">
+            Working with FileList<a
+              href="#working-with-filelist"
+              aria-label='Direct link to "Working with FileList"'
+            ></a>
+          </h3>
+          <p>
+            The <code>files</code> property returns a <code>FileList</code> object containing <code>File</code> objects.
+            You can access file information such as name, size, type, and last modified date.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file class="file-info" label="Upload Files" multiple="" clearable=""></zn-file>
+              <div class="file-info-output"></div>
+
+              <script type="module">
+                const fileInput = document.querySelector('.file-info');
+                const output = document.querySelector('.file-info-output');
+
+                await customElements.whenDefined('zn-file');
+
+                fileInput.addEventListener('zn-change', () => {
+                  const files = fileInput.files;
+                  if (files && files.length > 0) {
+                    let html =
+                      '<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;"><thead><tr style="text-align: left; border-bottom: 1px solid var(--zn-color-neutral-200);"><th>Name</th><th>Size</th><th>Type</th></tr></thead><tbody>';
+
+                    Array.from(files).forEach(file => {
+                      const sizeKB = (file.size / 1024).toFixed(2);
+                      html += `<tr style="border-bottom: 1px solid var(--zn-color-neutral-100);"><td style="padding: 0.5rem 0;">${file.name}</td><td>${sizeKB} KB</td><td>${file.type || 'unknown'}</td></tr>`;
+                    });
+
+                    html += '</tbody></table>';
+                    output.innerHTML = html;
+                  } else {
+                    output.innerHTML = '';
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-432">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-536"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-info<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Files<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-info-output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> fileInput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-info'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-info-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  fileInput<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> files <span class="token operator">=</span> fileInput<span class="token punctuation">.</span>files<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>files <span class="token operator">&amp;&amp;</span> files<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> html <span class="token operator">=</span> <span class="token string">'&lt;table style="width: 100%; border-collapse: collapse; margin-top: 1rem;"&gt;&lt;thead&gt;&lt;tr style="text-align: left; border-bottom: 1px solid var(--zn-color-neutral-200);"&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Size&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;'</span><span class="token punctuation">;</span>
+
+      Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>files<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">file</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> sizeKB <span class="token operator">=</span> <span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">/</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        html <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;tr style="border-bottom: 1px solid var(--zn-color-neutral-100);"&gt;&lt;td style="padding: 0.5rem 0;"&gt;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>file<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/td&gt;&lt;td&gt;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>sizeKB<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB&lt;/td&gt;&lt;td&gt;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>file<span class="token punctuation">.</span>type <span class="token operator">||</span> <span class="token string">'unknown'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/td&gt;&lt;/tr&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      html <span class="token operator">+=</span> <span class="token string">'&lt;/tbody&gt;&lt;/table&gt;'</span><span class="token punctuation">;</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> html<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-536"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-432"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="form-integration" class="anchor-heading">
+            Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
+          </h3>
+          <p>
+            File controls work seamlessly with forms. The selected files are submitted as part of the form data when
+            using <code>FormData</code>.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="file-form" enctype="multipart/form-data">
+                <zn-input name="name" label="Your Name" required=""></zn-input>
+                <br />
+                <zn-file name="documents" label="Upload Documents" multiple="" clearable=""></zn-file>
+                <br />
+                <zn-button type="submit" variant="primary">Submit Form</zn-button>
+                <zn-button type="reset">Reset</zn-button>
+              </form>
+              <div class="form-output"></div>
+
+              <script type="module">
+                const form = document.querySelector('.file-form');
+                const output = document.querySelector('.form-output');
+
+                await Promise.all([
+                  customElements.whenDefined('zn-button'),
+                  customElements.whenDefined('zn-file'),
+                  customElements.whenDefined('zn-input')
+                ]).then(() => {
+                  form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+
+                    let info = `<strong>Form Data:</strong><br>Name: ${formData.get('name')}<br>`;
+                    const files = formData.getAll('documents');
+                    if (files.length > 0) {
+                      info += `<strong>Files (${files.length}):</strong><br>`;
+                      files.forEach(file => {
+                        info += `- ${file.name} (${(file.size / 1024).toFixed(2)} KB)<br>`;
+                      });
+                    }
+
+                    output.innerHTML = info;
+                  });
+
+                  form.addEventListener('reset', () => {
+                    output.innerHTML = '';
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-433">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-537"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-form<span class="token punctuation">"</span></span> <span class="token attr-name">enctype</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>multipart/form-data<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Your Name<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>documents<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Documents<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit Form<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.form-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-input'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">let</span> info <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;strong&gt;Form Data:&lt;/strong&gt;&lt;br&gt;Name: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>formData<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;br&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+      <span class="token keyword">const</span> files <span class="token operator">=</span> formData<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span><span class="token string">'documents'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>files<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        info <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;strong&gt;Files (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>files<span class="token punctuation">.</span>length<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">):&lt;/strong&gt;&lt;br&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+        files<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">file</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+          info <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">- </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>file<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">/</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB)&lt;br&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> info<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'reset'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-537"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-433"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="programmatic-file-access" class="anchor-heading">
+            Programmatic File Access<a
+              href="#programmatic-file-access"
+              aria-label='Direct link to "Programmatic File Access"'
+            ></a>
+          </h3>
+          <p>You can programmatically access and manipulate the file control’s value and files.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-file class="file-programmatic" label="Upload Files" multiple=""></zn-file>
+              <br />
+              <zn-button class="get-files-btn">Get File Names</zn-button>
+              <zn-button class="clear-files-btn">Clear Files</zn-button>
+              <div class="programmatic-output"></div>
+
+              <script type="module">
+                const fileInput = document.querySelector('.file-programmatic');
+                const getFilesBtn = document.querySelector('.get-files-btn');
+                const clearFilesBtn = document.querySelector('.clear-files-btn');
+                const output = document.querySelector('.programmatic-output');
+
+                await Promise.all([
+                  customElements.whenDefined('zn-button'),
+                  customElements.whenDefined('zn-file')
+                ]).then(() => {
+                  getFilesBtn.addEventListener('click', () => {
+                    const files = fileInput.files;
+                    if (files && files.length > 0) {
+                      const fileNames = Array.from(files)
+                        .map(f => f.name)
+                        .join(', ');
+                      output.innerHTML = `<strong>Selected files:</strong> ${fileNames}`;
+                    } else {
+                      output.innerHTML = 'No files selected';
+                    }
+                  });
+
+                  clearFilesBtn.addEventListener('click', () => {
+                    fileInput.value = '';
+                    output.innerHTML = 'Files cleared';
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-434">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-538"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-programmatic<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Files<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>get-files-btn<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Get File Names<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>clear-files-btn<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Clear Files<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>programmatic-output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> fileInput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-programmatic'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> getFilesBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.get-files-btn'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> clearFilesBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.clear-files-btn'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.programmatic-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    getFilesBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> files <span class="token operator">=</span> fileInput<span class="token punctuation">.</span>files<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>files <span class="token operator">&amp;&amp;</span> files<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> fileNames <span class="token operator">=</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>files<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">f</span> <span class="token operator">=&gt;</span> f<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">', '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;strong&gt;Selected files:&lt;/strong&gt; </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>fileNames<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">'No files selected'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    clearFilesBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      fileInput<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token string">'Files cleared'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-538"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-434"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--warning">
+            <p>
+              <strong>Note:</strong> For security reasons, you can only set the <code>value</code> property to an empty
+              string. You cannot programmatically set files. Users must select files through the file picker or
+              drag-and-drop interface.
+            </p>
+          </div>
+          <h3 id="validation" class="anchor-heading">
+            Validation<a href="#validation" aria-label='Direct link to "Validation"'></a>
+          </h3>
+          <p>
+            The file control supports standard HTML5 form validation. Use the <code>required</code> attribute to make
+            file selection mandatory.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="file-validation-form">
+                <zn-file name="avatar" label="Profile Picture" accept="image/*" required=""></zn-file>
+                <br />
+                <zn-button type="submit" variant="primary">Upload</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.file-validation-form');
+
+                await Promise.all([
+                  customElements.whenDefined('zn-button'),
+                  customElements.whenDefined('zn-file')
+                ]).then(() => {
+                  form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    alert('File uploaded successfully!');
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-435">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-539"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file-validation-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>avatar<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Profile Picture<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image/*<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Upload<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.file-validation-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'File uploaded successfully!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-539"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-435"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-validation" class="anchor-heading">
+            Custom Validation<a href="#custom-validation" aria-label='Direct link to "Custom Validation"'></a>
+          </h3>
+          <p>You can set custom validation messages using the <code>setCustomValidity()</code> method.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="custom-validation-form">
+                <zn-file class="custom-validation" name="document" label="Upload PDF (max 2MB)" accept=".pdf"></zn-file>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+              </form>
+              <div class="custom-validation-output"></div>
+
+              <script type="module">
+                const form = document.querySelector('.custom-validation-form');
+                const fileInput = document.querySelector('.custom-validation');
+                const output = document.querySelector('.custom-validation-output');
+
+                await Promise.all([
+                  customElements.whenDefined('zn-button'),
+                  customElements.whenDefined('zn-file')
+                ]).then(() => {
+                  fileInput.addEventListener('zn-change', () => {
+                    const files = fileInput.files;
+                    if (files && files.length > 0) {
+                      const file = files[0];
+                      const maxSize = 2 * 1024 * 1024; // 2MB
+
+                      if (file.size > maxSize) {
+                        fileInput.setCustomValidity('File size must not exceed 2MB');
+                        output.innerHTML = `<span style="color: var(--zn-color-danger-600);">File too large: ${(file.size / 1024 / 1024).toFixed(2)} MB (max 2MB)</span>`;
+                      } else {
+                        fileInput.setCustomValidity('');
+                        output.innerHTML = `<span style="color: var(--zn-color-success-600);">File size: ${(file.size / 1024).toFixed(2)} KB - Valid!</span>`;
+                      }
+                    }
+                  });
+
+                  form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    if (form.checkValidity()) {
+                      alert('Form submitted!');
+                    }
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-436">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-540"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-validation-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-file</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-validation<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>document<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload PDF (max 2MB)<span class="token punctuation">"</span></span> <span class="token attr-name">accept</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>.pdf<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-file</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-validation-output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.custom-validation-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> fileInput <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.custom-validation'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.custom-validation-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-file'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    fileInput<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> files <span class="token operator">=</span> fileInput<span class="token punctuation">.</span>files<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>files <span class="token operator">&amp;&amp;</span> files<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> file <span class="token operator">=</span> files<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> maxSize <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">;</span> <span class="token comment">// 2MB</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">&gt;</span> maxSize<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          fileInput<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span><span class="token string">'File size must not exceed 2MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;span style="color: var(--zn-color-danger-600);"&gt;File too large: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">/</span> <span class="token number">1024</span> <span class="token operator">/</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> MB (max 2MB)&lt;/span&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          fileInput<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          output<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;span style="color: var(--zn-color-success-600);"&gt;File size: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">/</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB - Valid!&lt;/span&gt;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>form<span class="token punctuation">.</span><span class="token function">checkValidity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-540"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-436"
               >
                 Source
                 <svg
@@ -790,7 +2157,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-214"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/file/file.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-214"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-541"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/file/file.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-541"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -805,12 +2172,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-215"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-215"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-542"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-542"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-216"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-216"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-543"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-543"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

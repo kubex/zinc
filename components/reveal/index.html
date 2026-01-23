@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="Reveals temporarily hide sensitive information and show it on hover or click, useful for displaying masked data like email addresses, passwords, or API keys."
+    />
     <title>Reveal</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/reveal" />
     <meta property="og:title" content="Reveal" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="Reveals temporarily hide sensitive information and show it on hover or click, useful for displaying masked data like email addresses, passwords, or API keys."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,8 +492,25 @@
           <ul>
             <li class="top"><a href="#">Reveal</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-usage">Basic Usage</a></li>
+            <li data-level="3"><a href="#email-address-masking">Email Address Masking</a></li>
+            <li data-level="3"><a href="#api-key-protection">API Key Protection</a></li>
+            <li data-level="3"><a href="#with-duration-temporary-reveal">With Duration (Temporary Reveal)</a></li>
+            <li data-level="3"><a href="#permanent-toggle">Permanent Toggle</a></li>
+            <li data-level="3"><a href="#short-duration">Short Duration</a></li>
+            <li data-level="3"><a href="#long-duration">Long Duration</a></li>
+            <li data-level="3"><a href="#social-security-number">Social Security Number</a></li>
+            <li data-level="3"><a href="#hover-only-behavior">Hover-Only Behavior</a></li>
+            <li data-level="3"><a href="#click-and-hover-combined">Click and Hover Combined</a></li>
+            <li data-level="3"><a href="#partial-masking-patterns">Partial Masking Patterns</a></li>
+            <li data-level="3"><a href="#in-a-table">In a Table</a></li>
+            <li data-level="3"><a href="#in-a-form">In a Form</a></li>
+            <li data-level="3"><a href="#settings-panel-example">Settings Panel Example</a></li>
+            <li data-level="3"><a href="#user-profile-example">User Profile Example</a></li>
+            <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
+            <li data-level="3"><a href="#state-monitoring">State Monitoring</a></li>
+            <li data-level="3"><a href="#custom-styling">Custom Styling</a></li>
+            <li data-level="3"><a href="#best-practices">Best Practices</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
@@ -513,6 +536,12 @@
 
           <p class="component-summary">Short summary of the component’s intended use.</p>
 
+          <p>
+            Reveals provide an interactive way to protect sensitive information while still making it accessible to
+            users when needed. They’re ideal for masking email addresses, phone numbers, API keys, or any other data
+            that should be hidden by default but can be viewed on demand.
+          </p>
+
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-reveal duration="3000" initial="******@hotmail.com" revealed="john.doe@hotmail.com"> </zn-reveal>
@@ -522,14 +551,13 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-205">
+            <div class="code-preview__source-group" id="code-preview-source-group-776">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-386">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span>
+                <pre><code class="language-html" id="code-block-970"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span>
            <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>******@hotmail.com<span class="token punctuation">"</span></span>
            <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe@hotmail.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-386"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-970"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -538,7 +566,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-205"
+                aria-controls="code-preview-source-group-776"
               >
                 Source
                 <svg
@@ -558,14 +586,1668 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="basic-usage" class="anchor-heading">
+            Basic Usage<a href="#basic-usage" aria-label='Direct link to "Basic Usage"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <p>A simple reveal that shows the full content on hover and hides it when the mouse leaves.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal initial="***-***-1234" revealed="555-123-1234"> </zn-reveal>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-777">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-971"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>***-***-1234<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>555-123-1234<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-971"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-777"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="email-address-masking" class="anchor-heading">
+            Email Address Masking<a
+              href="#email-address-masking"
+              aria-label='Direct link to "Email Address Masking"'
+            ></a>
           </h3>
-          <p>TODO</p>
+          <p>Mask email addresses to protect them from bots and scrapers while still allowing users to view them.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal initial="j***@example.com" revealed="john.doe@example.com"> </zn-reveal>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-778">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-972"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>j***@example.com<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-972"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-778"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="api-key-protection" class="anchor-heading">
+            API Key Protection<a href="#api-key-protection" aria-label='Direct link to "API Key Protection"'></a>
+          </h3>
+          <p>Hide API keys and tokens by default, revealing them only when users interact with them.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <strong>API Key:</strong>
+                  <zn-reveal initial="sk_live_••••••••••••••••" revealed="sk_live_1234567890abcdef"> </zn-reveal>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                  <strong>Secret:</strong>
+                  <zn-reveal initial="••••••••••••••••••••" revealed="super_secret_key_xyz"> </zn-reveal>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-779">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-973"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>API Key:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sk_live_••••••••••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sk_live_1234567890abcdef<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Secret:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>••••••••••••••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>super_secret_key_xyz<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-973"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-779"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-duration-temporary-reveal" class="anchor-heading">
+            With Duration (Temporary Reveal)<a
+              href="#with-duration-temporary-reveal"
+              aria-label='Direct link to "With Duration (Temporary Reveal)"'
+            ></a>
+          </h3>
+          <p>
+            Use the <code>duration</code> attribute to automatically hide the content after a specified time (in
+            milliseconds) when clicked.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal duration="3000" initial="******@hotmail.com" revealed="john.doe@hotmail.com"> </zn-reveal>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                Click to reveal for 3 seconds
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-780">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-974"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span>
+           <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>******@hotmail.com<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe@hotmail.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Click to reveal for 3 seconds
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-974"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-780"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="permanent-toggle" class="anchor-heading">
+            Permanent Toggle<a href="#permanent-toggle" aria-label='Direct link to "Permanent Toggle"'></a>
+          </h3>
+          <p>
+            When <code>duration</code> is set to <code>0</code> or not provided while clicking, the reveal will toggle
+            between states permanently until clicked again.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal duration="0" initial="Password: ••••••••" revealed="Password: MyP@ssw0rd"> </zn-reveal>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                Click to toggle on/off
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-781">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-975"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+           <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Password: ••••••••<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Password: MyP@ssw0rd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Click to toggle on/off
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-975"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-781"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="short-duration" class="anchor-heading">
+            Short Duration<a href="#short-duration" aria-label='Direct link to "Short Duration"'></a>
+          </h3>
+          <p>Use shorter durations for quick peeks at sensitive information.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal duration="1500" initial="Card: •••• •••• •••• 5678" revealed="Card: 1234 5678 9012 5678">
+              </zn-reveal>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                Click to reveal for 1.5 seconds
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-782">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-976"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1500<span class="token punctuation">"</span></span>
+           <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Card: •••• •••• •••• 5678<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Card: 1234 5678 9012 5678<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Click to reveal for 1.5 seconds
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-976"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-782"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="long-duration" class="anchor-heading">
+            Long Duration<a href="#long-duration" aria-label='Direct link to "Long Duration"'></a>
+          </h3>
+          <p>Use longer durations when users need more time to read or copy the information.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal
+                duration="5000"
+                initial="Recovery Code: ••••-••••-••••"
+                revealed="Recovery Code: AB12-CD34-EF56"
+              >
+              </zn-reveal>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                Click to reveal for 5 seconds
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-783">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-977"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5000<span class="token punctuation">"</span></span>
+           <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Recovery Code: ••••-••••-••••<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Recovery Code: AB12-CD34-EF56<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Click to reveal for 5 seconds
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-977"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-783"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="social-security-number" class="anchor-heading">
+            Social Security Number<a
+              href="#social-security-number"
+              aria-label='Direct link to "Social Security Number"'
+            ></a>
+          </h3>
+          <p>Mask sensitive personal information like social security numbers.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal initial="SSN: •••-••-1234" revealed="SSN: 123-45-1234"> </zn-reveal>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-784">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-978"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>SSN: •••-••-1234<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>SSN: 123-45-1234<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-978"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-784"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="hover-only-behavior" class="anchor-heading">
+            Hover-Only Behavior<a href="#hover-only-behavior" aria-label='Direct link to "Hover-Only Behavior"'></a>
+          </h3>
+          <p>
+            Without a duration or with hover, the content is revealed only while hovering and hidden when the mouse
+            leaves.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div>
+                  <strong>Username:</strong>
+                  <zn-reveal initial="u********" revealed="user12345"> </zn-reveal>
+                </div>
+
+                <div>
+                  <strong>Email:</strong>
+                  <zn-reveal initial="e****@example.com" revealed="email@example.com"> </zn-reveal>
+                </div>
+              </div>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">Hover to reveal</p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-785">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-979"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Username:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>u********<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user12345<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Email:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>e****@example.com<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Hover to reveal
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-979"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-785"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="click-and-hover-combined" class="anchor-heading">
+            Click and Hover Combined<a
+              href="#click-and-hover-combined"
+              aria-label='Direct link to "Click and Hover Combined"'
+            ></a>
+          </h3>
+          <p>
+            When duration is set, clicking toggles temporarily while hovering still works. After clicking, the content
+            remains revealed for the duration, and hovering won’t hide it until the duration expires.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-reveal duration="4000" initial="Token: ••••••••••••" revealed="Token: abc123xyz789"> </zn-reveal>
+              <p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                Hover to peek, click to lock for 4 seconds
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-786">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-980"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4000<span class="token punctuation">"</span></span>
+           <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Token: ••••••••••••<span class="token punctuation">"</span></span>
+           <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Token: abc123xyz789<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Hover to peek, click to lock for 4 seconds
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-980"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-786"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="partial-masking-patterns" class="anchor-heading">
+            Partial Masking Patterns<a
+              href="#partial-masking-patterns"
+              aria-label='Direct link to "Partial Masking Patterns"'
+            ></a>
+          </h3>
+          <p>Different approaches to masking information while still providing context.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div>
+                  <strong>Email (prefix):</strong>
+                  <zn-reveal initial="john***@gmail.com" revealed="john.doe.smith@gmail.com"> </zn-reveal>
+                </div>
+
+                <div>
+                  <strong>Email (suffix):</strong>
+                  <zn-reveal initial="j***e@example.com" revealed="john.doe@example.com"> </zn-reveal>
+                </div>
+
+                <div>
+                  <strong>Phone (last 4):</strong>
+                  <zn-reveal initial="(•••) •••-5678" revealed="(555) 123-5678"> </zn-reveal>
+                </div>
+
+                <div>
+                  <strong>IP Address:</strong>
+                  <zn-reveal initial="192.168.***.***" revealed="192.168.1.100"> </zn-reveal>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-787">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-981"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Email (prefix):<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john***@gmail.com<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe.smith@gmail.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Email (suffix):<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>j***e@example.com<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Phone (last 4):<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(•••) •••-5678<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(555) 123-5678<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>IP Address:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>192.168.***.***<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>192.168.1.100<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-981"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-787"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="in-a-table" class="anchor-heading">
+            In a Table<a href="#in-a-table" aria-label='Direct link to "In a Table"'></a>
+          </h3>
+          <p>Use reveals within table cells to protect sensitive data in tabular layouts.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div class="table-scroll">
+                <table style="width: 100%; border-collapse: collapse">
+                  <thead>
+                    <tr style="border-bottom: 2px solid var(--zn-color-neutral-200)">
+                      <th style="text-align: left; padding: 0.5rem">Name</th>
+                      <th style="text-align: left; padding: 0.5rem">Email</th>
+                      <th style="text-align: left; padding: 0.5rem">Phone</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid var(--zn-color-neutral-200)">
+                      <td style="padding: 0.5rem">Alice Johnson</td>
+                      <td style="padding: 0.5rem">
+                        <zn-reveal initial="a***@example.com" revealed="alice.j@example.com"> </zn-reveal>
+                      </td>
+                      <td style="padding: 0.5rem">
+                        <zn-reveal initial="•••-•••-1234" revealed="555-123-1234"> </zn-reveal>
+                      </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--zn-color-neutral-200)">
+                      <td style="padding: 0.5rem">Bob Smith</td>
+                      <td style="padding: 0.5rem">
+                        <zn-reveal initial="b***@example.com" revealed="bob.smith@example.com"> </zn-reveal>
+                      </td>
+                      <td style="padding: 0.5rem">
+                        <zn-reveal initial="•••-•••-5678" revealed="555-987-5678"> </zn-reveal>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-788">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-982"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>table</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token property">border-collapse</span><span class="token punctuation">:</span> collapse<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>thead</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">border-bottom</span><span class="token punctuation">:</span> 2px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>th</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">text-align</span><span class="token punctuation">:</span> left<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Name<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>th</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>th</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">text-align</span><span class="token punctuation">:</span> left<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Email<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>th</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>th</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">text-align</span><span class="token punctuation">:</span> left<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Phone<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>th</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>thead</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tbody</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">border-bottom</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Alice Johnson<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a***@example.com<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alice.j@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>•••-•••-1234<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>555-123-1234<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">border-bottom</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Bob Smith<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>b***@example.com<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bob.smith@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>•••-•••-5678<span class="token punctuation">"</span></span>
+                   <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>555-987-5678<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tbody</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>table</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-982"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-788"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="in-a-form" class="anchor-heading">
+            In a Form<a href="#in-a-form" aria-label='Direct link to "In a Form"'></a>
+          </h3>
+          <p>Integrate reveals into forms for password fields or sensitive input displays.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="max-width: 400px; display: flex; flex-direction: column; gap: 1rem">
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500"> Current Password </label>
+                  <zn-reveal
+                    duration="2000"
+                    initial="••••••••"
+                    revealed="MyP@ssw0rd"
+                    style="
+                      width: 100%;
+                      display: block;
+                      padding: 0.5rem;
+                      background: var(--zn-color-neutral-100);
+                      border-radius: 4px;
+                    "
+                  >
+                  </zn-reveal>
+                </div>
+
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500"> Email Address </label>
+                  <zn-reveal
+                    initial="user***@example.com"
+                    revealed="user.name@example.com"
+                    style="
+                      width: 100%;
+                      display: block;
+                      padding: 0.5rem;
+                      background: var(--zn-color-neutral-100);
+                      border-radius: 4px;
+                    "
+                  >
+                  </zn-reveal>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-789">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-983"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      Current Password
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2000<span class="token punctuation">"</span></span>
+               <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>MyP@ssw0rd<span class="token punctuation">"</span></span>
+               <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      Email Address
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user***@example.com<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user.name@example.com<span class="token punctuation">"</span></span>
+               <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-983"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-789"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="settings-panel-example" class="anchor-heading">
+            Settings Panel Example<a
+              href="#settings-panel-example"
+              aria-label='Direct link to "Settings Panel Example"'
+            ></a>
+          </h3>
+          <p>A practical example showing credential management in a settings interface.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div
+                style="
+                  max-width: 600px;
+                  border: 1px solid var(--zn-color-neutral-200);
+                  border-radius: 8px;
+                  overflow: hidden;
+                "
+              >
+                <div
+                  style="
+                    padding: 1.5rem;
+                    background: var(--zn-color-neutral-50);
+                    border-bottom: 1px solid var(--zn-color-neutral-200);
+                  "
+                >
+                  <h3 style="margin: 0">API Credentials</h3>
+                  <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--zn-color-neutral-600)">
+                    Manage your API access credentials
+                  </p>
+                </div>
+
+                <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem">
+                  <div>
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem"
+                    >
+                      <strong>Public Key</strong>
+                      <zn-chip size="small" type="success">Active</zn-chip>
+                    </div>
+                    <zn-reveal
+                      duration="5000"
+                      initial="pk_live_••••••••••••••••••••"
+                      revealed="pk_live_abcdef1234567890"
+                      style="
+                        font-family: monospace;
+                        padding: 0.75rem;
+                        background: var(--zn-color-neutral-100);
+                        border-radius: 4px;
+                        display: block;
+                      "
+                    >
+                    </zn-reveal>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--zn-color-neutral-600)">
+                      Click to reveal for 5 seconds
+                    </div>
+                  </div>
+
+                  <div>
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem"
+                    >
+                      <strong>Secret Key</strong>
+                      <zn-chip size="small" type="warning">Sensitive</zn-chip>
+                    </div>
+                    <zn-reveal
+                      duration="5000"
+                      initial="sk_live_••••••••••••••••••••"
+                      revealed="sk_live_xyz7890abcdef1234"
+                      style="
+                        font-family: monospace;
+                        padding: 0.75rem;
+                        background: var(--zn-color-neutral-100);
+                        border-radius: 4px;
+                        display: block;
+                      "
+                    >
+                    </zn-reveal>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--zn-color-neutral-600)">
+                      Click to reveal for 5 seconds
+                    </div>
+                  </div>
+
+                  <div>
+                    <div
+                      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem"
+                    >
+                      <strong>Webhook Secret</strong>
+                      <zn-chip size="small" type="info">Optional</zn-chip>
+                    </div>
+                    <zn-reveal
+                      duration="5000"
+                      initial="whsec_••••••••••••••••••••"
+                      revealed="whsec_1234567890abcdefghij"
+                      style="
+                        font-family: monospace;
+                        padding: 0.75rem;
+                        background: var(--zn-color-neutral-100);
+                        border-radius: 4px;
+                        display: block;
+                      "
+                    >
+                    </zn-reveal>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--zn-color-neutral-600)">
+                      Click to reveal for 5 seconds
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-790">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-984"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 600px<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 8px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-50<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-bottom</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>API Credentials<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0.5rem 0 0 0<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      Manage your API access credentials
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">justify-content</span><span class="token punctuation">:</span> space-between<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Public Key<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5000<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pk_live_••••••••••••••••••••<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pk_live_abcdef1234567890<span class="token punctuation">"</span></span>
+                 <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        Click to reveal for 5 seconds
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">justify-content</span><span class="token punctuation">:</span> space-between<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Secret Key<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Sensitive<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5000<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sk_live_••••••••••••••••••••<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sk_live_xyz7890abcdef1234<span class="token punctuation">"</span></span>
+                 <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        Click to reveal for 5 seconds
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">justify-content</span><span class="token punctuation">:</span> space-between<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Webhook Secret<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Optional<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5000<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>whsec_••••••••••••••••••••<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>whsec_1234567890abcdefghij<span class="token punctuation">"</span></span>
+                 <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+        Click to reveal for 5 seconds
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-984"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-790"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="user-profile-example" class="anchor-heading">
+            User Profile Example<a href="#user-profile-example" aria-label='Direct link to "User Profile Example"'></a>
+          </h3>
+          <p>Show masked personal information that can be revealed on demand.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div
+                style="
+                  max-width: 500px;
+                  border: 1px solid var(--zn-color-neutral-200);
+                  border-radius: 8px;
+                  padding: 1.5rem;
+                "
+              >
+                <h3 style="margin: 0 0 1rem 0">Personal Information</h3>
+
+                <div style="display: grid; gap: 1rem">
+                  <div style="display: grid; grid-template-columns: 140px 1fr; gap: 1rem; align-items: center">
+                    <span style="font-weight: 500">Email:</span>
+                    <zn-reveal initial="j***@example.com" revealed="john.doe@example.com"> </zn-reveal>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 140px 1fr; gap: 1rem; align-items: center">
+                    <span style="font-weight: 500">Phone:</span>
+                    <zn-reveal initial="+1 (•••) •••-5678" revealed="+1 (555) 123-5678"> </zn-reveal>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 140px 1fr; gap: 1rem; align-items: center">
+                    <span style="font-weight: 500">SSN:</span>
+                    <zn-reveal duration="3000" initial="•••-••-6789" revealed="123-45-6789"> </zn-reveal>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 140px 1fr; gap: 1rem; align-items: center">
+                    <span style="font-weight: 500">Address:</span>
+                    <zn-reveal initial="123 Main St, ••••••" revealed="123 Main St, Anytown, CA 12345"> </zn-reveal>
+                  </div>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-791">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-985"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 500px<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 8px<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0 0 1rem 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Personal Information<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span> <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 140px 1fr<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Email:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>j***@example.com<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>john.doe@example.com<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span> <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 140px 1fr<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Phone:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>+1 (•••) •••-5678<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>+1 (555) 123-5678<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span> <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 140px 1fr<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>SSN:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>•••-••-6789<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123-45-6789<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span> <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 140px 1fr<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Address:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123 Main St, ••••••<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123 Main St, Anytown, CA 12345<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-985"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-791"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="programmatic-control" class="anchor-heading">
+            Programmatic Control<a href="#programmatic-control" aria-label='Direct link to "Programmatic Control"'></a>
+          </h3>
+          <p>Control the reveal state programmatically using JavaScript.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div>
+                  <strong>Secret Code:</strong>
+                  <zn-reveal id="programmatic-reveal" duration="0" initial="••••••••" revealed="ABC12345"> </zn-reveal>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem">
+                  <zn-button id="trigger-click">Trigger Click</zn-button>
+                  <zn-button id="trigger-hover" color="secondary">Trigger Hover</zn-button>
+                  <zn-button id="trigger-leave" color="info">Trigger Leave</zn-button>
+                </div>
+              </div>
+
+              <script type="module">
+                const reveal = document.getElementById('programmatic-reveal');
+
+                document.getElementById('trigger-click').addEventListener('click', () => {
+                  reveal.handleToggleReveal();
+                });
+
+                document.getElementById('trigger-hover').addEventListener('click', () => {
+                  reveal.handleMouseEnter();
+                });
+
+                document.getElementById('trigger-leave').addEventListener('click', () => {
+                  reveal.handleMouseLeave();
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-792">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-986"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Secret Code:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>programmatic-reveal<span class="token punctuation">"</span></span>
+               <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+               <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ABC12345<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger-click<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Trigger Click<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger-hover<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Trigger Hover<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger-leave<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Trigger Leave<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> reveal <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'programmatic-reveal'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'trigger-click'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    reveal<span class="token punctuation">.</span><span class="token function">handleToggleReveal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'trigger-hover'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    reveal<span class="token punctuation">.</span><span class="token function">handleMouseEnter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'trigger-leave'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    reveal<span class="token punctuation">.</span><span class="token function">handleMouseLeave</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-986"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-792"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="state-monitoring" class="anchor-heading">
+            State Monitoring<a href="#state-monitoring" aria-label='Direct link to "State Monitoring"'></a>
+          </h3>
+          <p>Monitor when the reveal is shown or hidden using event listeners or observers.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div>
+                  <strong>Monitored Secret:</strong>
+                  <zn-reveal
+                    id="monitored-reveal"
+                    duration="2000"
+                    initial="Hidden: ••••••••"
+                    revealed="Revealed: SECRET123"
+                  >
+                  </zn-reveal>
+                </div>
+
+                <div
+                  id="state-display"
+                  style="padding: 1rem; background: var(--zn-color-neutral-100); border-radius: 4px"
+                >
+                  <strong>State:</strong> <span id="state-value">Hidden</span><br />
+                  <strong>Interactions:</strong> <span id="interaction-count">0</span>
+                </div>
+              </div>
+
+              <script type="module">
+                const reveal = document.getElementById('monitored-reveal');
+                const stateValue = document.getElementById('state-value');
+                const interactionCount = document.getElementById('interaction-count');
+                let count = 0;
+
+                // Monitor click events
+                reveal.addEventListener('click', () => {
+                  count++;
+                  interactionCount.textContent = count;
+                  stateValue.textContent = 'Revealed (click)';
+                  stateValue.style.color = 'var(--zn-color-success)';
+                });
+
+                // Monitor mouse enter
+                reveal.addEventListener('mouseenter', () => {
+                  if (!reveal._isToggled) {
+                    stateValue.textContent = 'Revealed (hover)';
+                    stateValue.style.color = 'var(--zn-color-info)';
+                  }
+                });
+
+                // Monitor mouse leave
+                reveal.addEventListener('mouseleave', () => {
+                  if (!reveal._isToggled) {
+                    stateValue.textContent = 'Hidden';
+                    stateValue.style.color = 'var(--zn-color-neutral-600)';
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-793">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-987"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Monitored Secret:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>monitored-reveal<span class="token punctuation">"</span></span>
+               <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2000<span class="token punctuation">"</span></span>
+               <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Hidden: ••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Revealed: SECRET123<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>state-display<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>State:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>state-value<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Hidden<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Interactions:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>interaction-count<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> reveal <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'monitored-reveal'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> stateValue <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'state-value'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> interactionCount <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'interaction-count'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Monitor click events</span>
+  reveal<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    count<span class="token operator">++</span><span class="token punctuation">;</span>
+    interactionCount<span class="token punctuation">.</span>textContent <span class="token operator">=</span> count<span class="token punctuation">;</span>
+    stateValue<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Revealed (click)'</span><span class="token punctuation">;</span>
+    stateValue<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> <span class="token string">'var(--zn-color-success)'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Monitor mouse enter</span>
+  reveal<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseenter'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>reveal<span class="token punctuation">.</span>_isToggled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stateValue<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Revealed (hover)'</span><span class="token punctuation">;</span>
+      stateValue<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> <span class="token string">'var(--zn-color-info)'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Monitor mouse leave</span>
+  reveal<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseleave'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>reveal<span class="token punctuation">.</span>_isToggled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stateValue<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'Hidden'</span><span class="token punctuation">;</span>
+      stateValue<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> <span class="token string">'var(--zn-color-neutral-600)'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-987"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-793"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-styling" class="anchor-heading">
+            Custom Styling<a href="#custom-styling" aria-label='Direct link to "Custom Styling"'></a>
+          </h3>
+          <p>Apply custom styles to match your design system.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <zn-reveal
+                  initial="Standard: ••••••"
+                  revealed="Standard: abc123"
+                  style="padding: 0.5rem 1rem; background: var(--zn-color-neutral-100); border-radius: 4px"
+                >
+                </zn-reveal>
+
+                <zn-reveal
+                  initial="Primary: ••••••"
+                  revealed="Primary: def456"
+                  style="
+                    padding: 0.5rem 1rem;
+                    background: var(--zn-color-primary-50);
+                    border: 1px solid var(--zn-color-primary-200);
+                    border-radius: 4px;
+                    color: var(--zn-color-primary-700);
+                  "
+                >
+                </zn-reveal>
+
+                <zn-reveal
+                  initial="Success: ••••••"
+                  revealed="Success: ghi789"
+                  style="
+                    padding: 0.5rem 1rem;
+                    background: var(--zn-color-success-50);
+                    border: 1px solid var(--zn-color-success-200);
+                    border-radius: 4px;
+                    color: var(--zn-color-success-700);
+                  "
+                >
+                </zn-reveal>
+
+                <zn-reveal
+                  initial="Monospace: ••••••"
+                  revealed="Monospace: jkl012"
+                  style="
+                    padding: 0.5rem 1rem;
+                    background: var(--zn-color-neutral-900);
+                    color: var(--zn-color-neutral-100);
+                    border-radius: 4px;
+                    font-family: 'Courier New', monospace;
+                  "
+                >
+                </zn-reveal>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-794">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-988"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Standard: ••••••<span class="token punctuation">"</span></span>
+             <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Standard: abc123<span class="token punctuation">"</span></span>
+             <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Primary: ••••••<span class="token punctuation">"</span></span>
+             <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Primary: def456<span class="token punctuation">"</span></span>
+             <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-primary-50<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-primary-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-primary-700<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Success: ••••••<span class="token punctuation">"</span></span>
+             <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Success: ghi789<span class="token punctuation">"</span></span>
+             <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-50<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-700<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Monospace: ••••••<span class="token punctuation">"</span></span>
+             <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Monospace: jkl012<span class="token punctuation">"</span></span>
+             <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 0.5rem 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-900<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">font-family</span><span class="token punctuation">:</span> <span class="token string">'Courier New'</span><span class="token punctuation">,</span> monospace<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-988"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-794"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="best-practices" class="anchor-heading">
+            Best Practices<a href="#best-practices" aria-label='Direct link to "Best Practices"'></a>
+          </h3>
+          <p>Here are some best practices when using the reveal component:</p>
+          <ol>
+            <li>
+              <strong>Use appropriate masking patterns</strong> - Show enough context (like email domain) so users know
+              what they’re revealing
+            </li>
+            <li>
+              <strong>Set appropriate durations</strong> - Use 3–5 seconds for data that needs to be copied, 1–2 seconds
+              for quick verification
+            </li>
+            <li><strong>Provide visual feedback</strong> - Style the component so it’s clear it’s interactive</li>
+            <li>
+              <strong>Consider security context</strong> - Use longer durations or permanent toggles for less sensitive
+              data, shorter durations for highly sensitive data
+            </li>
+            <li>
+              <strong>Add helper text</strong> - Include instructions like “Click to reveal” or “Hover to show” when the
+              interaction pattern isn’t obvious
+            </li>
+            <li>
+              <strong>Use in combination with other security measures</strong> - Reveals are for UI convenience, not
+              true security
+            </li>
+          </ol>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="max-width: 600px; display: flex; flex-direction: column; gap: 1.5rem">
+                <!-- Good: Clear context and instructions -->
+                <div
+                  style="
+                    padding: 1rem;
+                    border: 1px solid var(--zn-color-success-200);
+                    border-radius: 4px;
+                    background: var(--zn-color-success-50);
+                  "
+                >
+                  <div style="font-weight: 500; color: var(--zn-color-success-700); margin-bottom: 0.5rem">
+                    ✓ Good Example
+                  </div>
+                  <div style="margin-bottom: 0.5rem">
+                    <strong>API Key:</strong>
+                    <zn-reveal
+                      duration="5000"
+                      initial="pk_live_••••••••••••1234"
+                      revealed="pk_live_abc123def456789"
+                      style="
+                        font-family: monospace;
+                        padding: 0.25rem 0.5rem;
+                        background: white;
+                        border-radius: 4px;
+                        margin-left: 0.5rem;
+                      "
+                    >
+                    </zn-reveal>
+                  </div>
+                  <div style="font-size: 0.75rem; color: var(--zn-color-neutral-600)">
+                    Click to reveal for 5 seconds. Last 4 digits shown for reference.
+                  </div>
+                </div>
+
+                <!-- Bad: No context -->
+                <div
+                  style="
+                    padding: 1rem;
+                    border: 1px solid var(--zn-color-danger-200);
+                    border-radius: 4px;
+                    background: var(--zn-color-danger-50);
+                  "
+                >
+                  <div style="font-weight: 500; color: var(--zn-color-danger-700); margin-bottom: 0.5rem">
+                    ✗ Avoid This
+                  </div>
+                  <zn-reveal initial="••••••••••••••••••••" revealed="pk_live_abc123def456789"> </zn-reveal>
+                  <div style="font-size: 0.75rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem">
+                    No context about what this is or how to interact with it.
+                  </div>
+                </div>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-795">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-989"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 600px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token comment">&lt;!-- Good: Clear context and instructions --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-50<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-success-700<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      ✓ Good Example
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>API Key:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">duration</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5000<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pk_live_••••••••••••1234<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pk_live_abc123def456789<span class="token punctuation">"</span></span>
+                 <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0.25rem 0.5rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">margin-left</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      Click to reveal for 5 seconds. Last 4 digits shown for reference.
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token comment">&lt;!-- Bad: No context --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-danger-200<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-danger-50<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-weight</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-danger-700<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-bottom</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      ✗ Avoid This
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-reveal</span> <span class="token attr-name">initial</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>••••••••••••••••••••<span class="token punctuation">"</span></span>
+               <span class="token attr-name">revealed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pk_live_abc123def456789<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-reveal</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span> <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-600<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      No context about what this is or how to interact with it.
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-989"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-795"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -588,7 +2270,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-387"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/reveal/reveal.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-387"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-990"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/reveal/reveal.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-990"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -603,12 +2285,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-388"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/reveal/reveal.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-388"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-991"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/reveal/reveal.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-991"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-389"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/reveal/reveal.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-389"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-992"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/reveal/reveal.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-992"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

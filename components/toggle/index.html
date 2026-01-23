@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta name="description" content="Toggles allow the user to switch an option on or off." />
     <title>Toggle</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +14,7 @@
 
     <meta property="og:url" content="https://zinc.style/components/toggle" />
     <meta property="og:title" content="Toggle" />
-    <meta property="og:description" content="" />
+    <meta property="og:description" content="Toggles allow the user to switch an option on or off." />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,11 +486,26 @@
           <ul>
             <li class="top"><a href="#">Toggle</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#with-tooltip">With Tooltip</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-toggle">Basic Toggle</a></li>
+            <li data-level="3"><a href="#checked">Checked</a></li>
+            <li data-level="3"><a href="#disabled">Disabled</a></li>
+            <li data-level="3"><a href="#sizes">Sizes</a></li>
+            <li data-level="3"><a href="#with-label">With Label</a></li>
+            <li data-level="3"><a href="#onoff-text-with-tooltip">On/Off Text with Tooltip</a></li>
+            <li data-level="3"><a href="#help-text">Help Text</a></li>
+            <li data-level="3"><a href="#keyboard-navigation">Keyboard Navigation</a></li>
+            <li data-level="3"><a href="#form-integration">Form Integration</a></li>
+            <li data-level="3"><a href="#fallback-value">Fallback Value</a></li>
+            <li data-level="3"><a href="#required-validation">Required Validation</a></li>
+            <li data-level="3"><a href="#custom-validity">Custom Validity</a></li>
+            <li data-level="3"><a href="#submit-on-change">Submit on Change</a></li>
+            <li data-level="3"><a href="#external-form-association">External Form Association</a></li>
+            <li data-level="3"><a href="#events">Events</a></li>
+            <li data-level="3"><a href="#methods">Methods</a></li>
+            <li data-level="3"><a href="#complete-example">Complete Example</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#events-1">Events</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
@@ -507,25 +522,25 @@
 
             <div class="component-header__info">
               <zn-chip type="info"> Since 1.0 </zn-chip>
-              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+              <zn-chip type="primary" style="text-transform: capitalize"> stable </zn-chip>
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">Toggles allow the user to switch an option on or off.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-toggle></zn-toggle>
+              <zn-toggle checked="">Enable notifications</zn-toggle>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-270">
+            <div class="code-preview__source-group" id="code-preview-source-group-1034">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-514"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-514"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1296"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Enable notifications<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1296"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -534,7 +549,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-270"
+                aria-controls="code-preview-source-group-1034"
               >
                 Source
                 <svg
@@ -551,27 +566,34 @@
             </div>
           </div>
 
+          <div role="alert" class="callout callout--tip">
+            <p>
+              This component works with standard <code>&lt;form&gt;</code> elements. Please refer to the section on
+              <a href="/getting-started/form-controls">form controls</a> to learn more about form submission and
+              client-side validation.
+            </p>
+          </div>
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="with-tooltip" class="anchor-heading">
-            With Tooltip<a href="#with-tooltip" aria-label='Direct link to "With Tooltip"'></a>
+          <h3 id="basic-toggle" class="anchor-heading">
+            Basic Toggle<a href="#basic-toggle" aria-label='Direct link to "Basic Toggle"'></a>
           </h3>
+          <p>A basic toggle switch with a label.</p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-toggle on-text="Available" off-text="Unavailable" label="Status"></zn-toggle>
+              <zn-toggle label="Settings">Dark mode</zn-toggle>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-271">
+            <div class="code-preview__source-group" id="code-preview-source-group-1035">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-515">
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">on-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Available<span class="token punctuation">"</span></span> <span class="token attr-name">off-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Unavailable<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Status<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-515"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1297"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Settings<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Dark mode<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1297"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -580,7 +602,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-271"
+                aria-controls="code-preview-source-group-1035"
               >
                 Source
                 <svg
@@ -597,10 +619,1266 @@
             </div>
           </div>
 
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <h3 id="checked" class="anchor-heading">
+            Checked<a href="#checked" aria-label='Direct link to "Checked"'></a>
           </h3>
-          <p>TODO</p>
+          <p>Use the <code>checked</code> attribute to activate the toggle by default.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle checked="">Auto-save enabled</zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1036">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1298"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Auto-save enabled<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1298"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1036"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="disabled" class="anchor-heading">
+            Disabled<a href="#disabled" aria-label='Direct link to "Disabled"'></a>
+          </h3>
+          <p>Use the <code>disabled</code> attribute to disable the toggle.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle disabled="">Disabled toggle</zn-toggle>
+              <br />
+              <zn-toggle disabled="" checked="">Disabled and checked</zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1037">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1299"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span>Disabled toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">disabled</span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Disabled and checked<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1299"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1037"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="sizes" class="anchor-heading">Sizes<a href="#sizes" aria-label='Direct link to "Sizes"'></a></h3>
+          <p>
+            Use the <code>size</code> attribute to change the toggle size. Available sizes are <code>small</code>,
+            <code>medium</code> (default), and <code>large</code>.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle size="small">Small toggle</zn-toggle>
+              <br />
+              <zn-toggle size="medium">Medium toggle</zn-toggle>
+              <br />
+              <zn-toggle size="large">Large toggle</zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1038">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1300"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Small toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Medium toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Large toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1300"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1038"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-label" class="anchor-heading">
+            With Label<a href="#with-label" aria-label='Direct link to "With Label"'></a>
+          </h3>
+          <p>Use the <code>label</code> attribute to add a form control label above the toggle.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle label="User Preferences">Enable email notifications</zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1039">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1301"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User Preferences<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Enable email notifications<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1301"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1039"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="onoff-text-with-tooltip" class="anchor-heading">
+            On/Off Text with Tooltip<a
+              href="#onoff-text-with-tooltip"
+              aria-label='Direct link to "On/Off Text with Tooltip"'
+            ></a>
+          </h3>
+          <p>
+            Use the <code>on-text</code> and <code>off-text</code> attributes to display tooltips that show when the
+            toggle is in the on or off state. This provides additional context for the toggle’s current state.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle on-text="Notifications enabled" off-text="Notifications disabled" checked="">
+                Push notifications
+              </zn-toggle>
+              <br /><br />
+              <zn-toggle on-text="Available" off-text="Unavailable" label="Status"> User availability </zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1040">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1302"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">on-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notifications enabled<span class="token punctuation">"</span></span> <span class="token attr-name">off-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notifications disabled<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>
+  Push notifications
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">on-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Available<span class="token punctuation">"</span></span> <span class="token attr-name">off-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Unavailable<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Status<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  User availability
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1302"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1040"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="help-text" class="anchor-heading">
+            Help Text<a href="#help-text" aria-label='Direct link to "Help Text"'></a>
+          </h3>
+          <p>Use the <code>help-text</code> attribute to add descriptive help text to the toggle.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle help-text="When enabled, you will receive real-time notifications">
+                Enable real-time updates
+              </zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1041">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1303"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>When enabled, you will receive real-time notifications<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  Enable real-time updates
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1303"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1041"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="keyboard-navigation" class="anchor-heading">
+            Keyboard Navigation<a href="#keyboard-navigation" aria-label='Direct link to "Keyboard Navigation"'></a>
+          </h3>
+          <p>
+            Toggles support keyboard navigation using arrow keys. Press the left arrow to turn the toggle off, and the
+            right arrow to turn it on.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-toggle checked="">Try using arrow keys when focused</zn-toggle>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1042">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1304"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Try using arrow keys when focused<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1304"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1042"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <script type="module">
+            const toggle = document.currentScript.previousElementSibling;
+            const output = document.createElement('div');
+            output.style.cssText = 'margin-top: 1rem; padding: 0.75rem; background: #f5f5f5; border-radius: 4px;';
+            output.textContent = 'Focus the toggle and use left/right arrow keys';
+            toggle.insertAdjacentElement('afterend', output);
+
+            toggle.addEventListener('zn-change', e => {
+              output.textContent = `Toggle is now: ${e.target.checked ? 'ON' : 'OFF'}`;
+            });
+          </script>
+          <h3 id="form-integration" class="anchor-heading">
+            Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
+          </h3>
+          <p>Toggles work seamlessly with forms and will be submitted with form data.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="toggle-form">
+                <zn-toggle name="notifications" value="enabled">Enable notifications</zn-toggle>
+                <br />
+                <zn-toggle name="auto-save" value="on" checked="">Auto-save changes</zn-toggle>
+                <br />
+                <zn-toggle name="analytics" value="yes" required="">Accept analytics (required)</zn-toggle>
+                <br /><br />
+                <zn-button type="submit" color="primary">Submit</zn-button>
+                <zn-button type="reset" color="secondary">Reset</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('#toggle-form');
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData.entries());
+                  alert('Form submitted: ' + JSON.stringify(data, null, 2));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1043">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1305"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>toggle-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notifications<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Enable notifications<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>auto-save<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>on<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Auto-save changes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>analytics<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>yes<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>Accept analytics (required)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#toggle-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span>formData<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted: '</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1305"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1043"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="fallback-value" class="anchor-heading">
+            Fallback Value<a href="#fallback-value" aria-label='Direct link to "Fallback Value"'></a>
+          </h3>
+          <p>
+            Use the <code>fallback</code> attribute to submit a specific value when the toggle is unchecked. This is
+            useful when you need to ensure a value is always submitted for the field.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="fallback-form">
+                <zn-toggle name="premium-features" value="enabled" fallback="disabled" checked="">
+                  Premium features
+                </zn-toggle>
+                <br /><br />
+                <zn-button type="submit" color="primary">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('#fallback-form');
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  const formData = new FormData(form);
+                  alert('Value: ' + formData.get('premium-features'));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1044">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1306"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fallback-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>premium-features<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span> <span class="token attr-name">fallback</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>disabled<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>
+    Premium features
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#fallback-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Value: '</span> <span class="token operator">+</span> formData<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'premium-features'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1306"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1044"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="required-validation" class="anchor-heading">
+            Required Validation<a href="#required-validation" aria-label='Direct link to "Required Validation"'></a>
+          </h3>
+          <p>
+            Use the <code>required</code> attribute to make the toggle required. The form will not submit unless the
+            toggle is checked.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="required-form">
+                <zn-toggle name="terms" required=""> I agree to the terms and conditions </zn-toggle>
+                <br /><br />
+                <zn-button type="submit" color="primary">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('#required-form');
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  alert('Form is valid!');
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1045">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1307"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>required-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>terms<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+    I agree to the terms and conditions
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#required-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form is valid!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1307"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1045"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-validity" class="anchor-heading">
+            Custom Validity<a href="#custom-validity" aria-label='Direct link to "Custom Validity"'></a>
+          </h3>
+          <p>
+            Use the <code>setCustomValidity()</code> method to set a custom validation message. This will prevent the
+            form from submitting and make the browser display the error message you provide. To clear the error, call
+            this function with an empty string.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="toggle-custom-validity">
+                <zn-toggle>I confirm that I have reviewed all settings</zn-toggle>
+                <br />
+                <zn-button type="submit" color="primary" style="margin-top: 1rem">Submit</zn-button>
+              </form>
+              <script type="module">
+                const form = document.querySelector('.toggle-custom-validity');
+                const toggle = form.querySelector('zn-toggle');
+                const errorMessage = `You must confirm that you have reviewed the settings`;
+
+                // Set initial validity as soon as the element is defined
+                customElements.whenDefined('zn-toggle').then(async () => {
+                  await toggle.updateComplete;
+                  toggle.setCustomValidity(errorMessage);
+                });
+
+                // Update validity on change
+                toggle.addEventListener('zn-change', () => {
+                  toggle.setCustomValidity(toggle.checked ? '' : errorMessage);
+                });
+
+                // Wait for controls to be defined before attaching form listeners
+                await Promise.all([customElements.whenDefined('zn-toggle')]).then(() => {
+                  form.addEventListener('submit', event => {
+                    event.preventDefault();
+                    alert('All fields are valid!');
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1046">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1308"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>toggle-custom-validity<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>I confirm that I have reviewed all settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.toggle-custom-validity'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> toggle <span class="token operator">=</span> form<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-toggle'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> errorMessage <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">You must confirm that you have reviewed the settings</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Set initial validity as soon as the element is defined</span>
+  customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-toggle'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">await</span> toggle<span class="token punctuation">.</span>updateComplete<span class="token punctuation">;</span>
+    toggle<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span>errorMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Update validity on change</span>
+  toggle<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    toggle<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span>toggle<span class="token punctuation">.</span>checked <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> errorMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Wait for controls to be defined before attaching form listeners</span>
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-toggle'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'All fields are valid!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1308"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1046"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="submit-on-change" class="anchor-heading">
+            Submit on Change<a href="#submit-on-change" aria-label='Direct link to "Submit on Change"'></a>
+          </h3>
+          <p>
+            Use the <code>trigger-submit</code> attribute to automatically submit the containing form when the toggle is
+            changed.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="trigger-submit-form">
+                <zn-toggle name="instant" trigger-submit=""> Apply changes immediately </zn-toggle>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('#trigger-submit-form');
+                let submitCount = 0;
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  submitCount++;
+                  alert('Form submitted ' + submitCount + ' time(s)');
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1047">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1309"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trigger-submit-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>instant<span class="token punctuation">"</span></span> <span class="token attr-name">trigger-submit</span><span class="token punctuation">&gt;</span></span>
+    Apply changes immediately
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#trigger-submit-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> submitCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    submitCount<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted '</span> <span class="token operator">+</span> submitCount <span class="token operator">+</span> <span class="token string">' time(s)'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1309"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1047"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="external-form-association" class="anchor-heading">
+            External Form Association<a
+              href="#external-form-association"
+              aria-label='Direct link to "External Form Association"'
+            ></a>
+          </h3>
+          <p>
+            Use the <code>form</code> attribute to associate the toggle with a form element by ID, even if the toggle is
+            not a descendant of the form.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="external-toggle-form">
+                <zn-button type="submit" color="primary">Submit External Form</zn-button>
+              </form>
+
+              <br /><br />
+
+              <zn-toggle form="external-toggle-form" name="external-option" value="selected">
+                This toggle is associated with the form above
+              </zn-toggle>
+
+              <script type="module">
+                const form = document.querySelector('#external-toggle-form');
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  const formData = new FormData(form);
+                  alert('External option: ' + (formData.get('external-option') || 'not selected'));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1048">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1310"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>external-toggle-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit External Form<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>external-toggle-form<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>external-option<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selected<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  This toggle is associated with the form above
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#external-toggle-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'External option: '</span> <span class="token operator">+</span> <span class="token punctuation">(</span>formData<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'external-option'</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'not selected'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1310"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1048"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h3>
+          <p>Toggles emit several events that you can listen to:</p>
+          <ul>
+            <li>
+              <code>zn-change</code> - Emitted when the checked state changes (via the <code>handleClick</code> method)
+            </li>
+            <li><code>zn-input</code> - Emitted when the toggle receives input</li>
+            <li><code>zn-focus</code> - Emitted when the toggle gains focus</li>
+            <li><code>zn-blur</code> - Emitted when the toggle loses focus</li>
+            <li><code>zn-invalid</code> - Emitted when form validation fails</li>
+          </ul>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              The <code>zn-change</code> event is emitted in the <code>handleClick</code> method when the toggle is
+              clicked, so it fires after the checked state has been updated. Note that the component listens to native
+              input events and emits <code>zn-input</code>, but does not explicitly emit <code>zn-change</code>,
+              <code>zn-focus</code>, or <code>zn-blur</code> events in the component code - these would need to be added
+              if needed.
+            </p>
+          </div>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div>
+                <zn-toggle id="event-toggle" checked="">Toggle me</zn-toggle>
+                <div id="event-output" style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px">
+                  <strong>Events:</strong>
+                  <ul id="event-list" style="margin: 0.5rem 0 0 0; padding-left: 1.5rem"></ul>
+                </div>
+              </div>
+
+              <script type="module">
+                const toggle = document.querySelector('#event-toggle');
+                const eventList = document.querySelector('#event-list');
+
+                function logEvent(eventName, detail = '') {
+                  const li = document.createElement('li');
+                  li.textContent = `${eventName}${detail ? ': ' + detail : ''}`;
+                  eventList.insertBefore(li, eventList.firstChild);
+
+                  // Keep only last 5 events
+                  while (eventList.children.length > 5) {
+                    eventList.removeChild(eventList.lastChild);
+                  }
+                }
+
+                toggle.addEventListener('zn-input', e => {
+                  logEvent('zn-input', `checked = ${e.target.checked}`);
+                });
+
+                toggle.addEventListener('focus', () => {
+                  logEvent('focus');
+                });
+
+                toggle.addEventListener('blur', () => {
+                  logEvent('blur');
+                });
+
+                // Monitor checked state changes
+                let lastChecked = toggle.checked;
+                toggle.addEventListener('click', () => {
+                  if (toggle.checked !== lastChecked) {
+                    logEvent('state-change', `checked = ${toggle.checked}`);
+                    lastChecked = toggle.checked;
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1049">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1311"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-toggle<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>Toggle me<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-output<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Events:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-list<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0.5rem 0 0 0<span class="token punctuation">;</span> <span class="token property">padding-left</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> toggle <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#event-toggle'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> eventList <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#event-list'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">logEvent</span><span class="token punctuation">(</span>eventName<span class="token punctuation">,</span> detail <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> li <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'li'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    li<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>eventName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>detail <span class="token operator">?</span> <span class="token string">': '</span> <span class="token operator">+</span> detail <span class="token operator">:</span> <span class="token string">''</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    eventList<span class="token punctuation">.</span><span class="token function">insertBefore</span><span class="token punctuation">(</span>li<span class="token punctuation">,</span> eventList<span class="token punctuation">.</span>firstChild<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Keep only last 5 events</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>eventList<span class="token punctuation">.</span>children<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      eventList<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>eventList<span class="token punctuation">.</span>lastChild<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  toggle<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-input'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">logEvent</span><span class="token punctuation">(</span><span class="token string">'zn-input'</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">checked = </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>checked<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  toggle<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'focus'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">logEvent</span><span class="token punctuation">(</span><span class="token string">'focus'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  toggle<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'blur'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">logEvent</span><span class="token punctuation">(</span><span class="token string">'blur'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Monitor checked state changes</span>
+  <span class="token keyword">let</span> lastChecked <span class="token operator">=</span> toggle<span class="token punctuation">.</span>checked<span class="token punctuation">;</span>
+  toggle<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>toggle<span class="token punctuation">.</span>checked <span class="token operator">!==</span> lastChecked<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">logEvent</span><span class="token punctuation">(</span><span class="token string">'state-change'</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">checked = </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>toggle<span class="token punctuation">.</span>checked<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      lastChecked <span class="token operator">=</span> toggle<span class="token punctuation">.</span>checked<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1311"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1049"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h3>
+          <p>Toggles provide several methods for programmatic control:</p>
+          <ul>
+            <li><code>click()</code> - Simulates a click on the toggle</li>
+            <li><code>focus(options?)</code> - Sets focus on the toggle</li>
+            <li><code>blur()</code> - Removes focus from the toggle</li>
+            <li><code>checkValidity()</code> - Checks validity without showing a message</li>
+            <li><code>reportValidity()</code> - Checks validity and shows the browser’s validation message</li>
+            <li><code>setCustomValidity(message)</code> - Sets a custom validation message</li>
+            <li><code>getForm()</code> - Returns the associated form element, if one exists</li>
+          </ul>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div>
+                <zn-toggle id="method-toggle">Programmatic control</zn-toggle>
+                <br /><br />
+                <zn-button id="click-btn" size="small">Toggle State</zn-button>
+                <zn-button id="focus-btn" size="small" color="info">Focus Toggle</zn-button>
+                <zn-button id="blur-btn" size="small" color="secondary">Blur Toggle</zn-button>
+                <zn-button id="validate-btn" size="small" color="warning">Check Validity</zn-button>
+              </div>
+
+              <script type="module">
+                const toggle = document.querySelector('#method-toggle');
+
+                document.querySelector('#click-btn').addEventListener('click', () => {
+                  toggle.click();
+                });
+
+                document.querySelector('#focus-btn').addEventListener('click', () => {
+                  toggle.focus();
+                });
+
+                document.querySelector('#blur-btn').addEventListener('click', () => {
+                  toggle.blur();
+                });
+
+                document.querySelector('#validate-btn').addEventListener('click', () => {
+                  const isValid = toggle.checkValidity();
+                  alert('Toggle is ' + (isValid ? 'valid' : 'invalid'));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1050">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1312"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>method-toggle<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Programmatic control<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>click-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Toggle State<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>focus-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Focus Toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>blur-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Blur Toggle<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>validate-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Check Validity<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> toggle <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#method-toggle'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#click-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    toggle<span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#focus-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    toggle<span class="token punctuation">.</span><span class="token function">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#blur-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    toggle<span class="token punctuation">.</span><span class="token function">blur</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#validate-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> isValid <span class="token operator">=</span> toggle<span class="token punctuation">.</span><span class="token function">checkValidity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Toggle is '</span> <span class="token operator">+</span> <span class="token punctuation">(</span>isValid <span class="token operator">?</span> <span class="token string">'valid'</span> <span class="token operator">:</span> <span class="token string">'invalid'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1312"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1050"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="complete-example" class="anchor-heading">
+            Complete Example<a href="#complete-example" aria-label='Direct link to "Complete Example"'></a>
+          </h3>
+          <p>Here’s a comprehensive example demonstrating multiple toggle features together:</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="complete-form">
+                <zn-toggle
+                  label="Notification Settings"
+                  name="email-notifications"
+                  value="enabled"
+                  fallback="disabled"
+                  on-text="Email notifications are ON"
+                  off-text="Email notifications are OFF"
+                  help-text="Receive email updates about your account"
+                  checked=""
+                >
+                  Enable email notifications
+                </zn-toggle>
+
+                <br />
+
+                <zn-toggle
+                  label="Privacy Settings"
+                  name="analytics"
+                  value="allowed"
+                  on-text="Analytics tracking enabled"
+                  off-text="Analytics tracking disabled"
+                  help-text="Help us improve by sharing anonymous usage data"
+                  size="medium"
+                >
+                  Allow analytics
+                </zn-toggle>
+
+                <br />
+
+                <zn-toggle name="terms" value="accepted" required="" size="small">
+                  I agree to the terms and conditions (required)
+                </zn-toggle>
+
+                <br /><br />
+                <zn-button type="submit" color="primary">Save Settings</zn-button>
+                <zn-button type="reset" color="secondary">Reset</zn-button>
+              </form>
+
+              <div
+                id="form-output"
+                style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px; display: none"
+              >
+                <strong>Form Data:</strong>
+                <pre id="form-data" style="margin-top: 0.5rem; white-space: pre-wrap"></pre>
+              </div>
+
+              <script type="module">
+                const form = document.querySelector('#complete-form');
+                const output = document.querySelector('#form-output');
+                const dataDisplay = document.querySelector('#form-data');
+
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData.entries());
+                  dataDisplay.textContent = JSON.stringify(data, null, 2);
+                  output.style.display = 'block';
+                });
+
+                form.addEventListener('reset', () => {
+                  output.style.display = 'none';
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1051">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1313"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>complete-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notification Settings<span class="token punctuation">"</span></span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email-notifications<span class="token punctuation">"</span></span>
+    <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enabled<span class="token punctuation">"</span></span>
+    <span class="token attr-name">fallback</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>disabled<span class="token punctuation">"</span></span>
+    <span class="token attr-name">on-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email notifications are ON<span class="token punctuation">"</span></span>
+    <span class="token attr-name">off-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email notifications are OFF<span class="token punctuation">"</span></span>
+    <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Receive email updates about your account<span class="token punctuation">"</span></span>
+    <span class="token attr-name">checked</span>
+  <span class="token punctuation">&gt;</span></span>
+    Enable email notifications
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Privacy Settings<span class="token punctuation">"</span></span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>analytics<span class="token punctuation">"</span></span>
+    <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>allowed<span class="token punctuation">"</span></span>
+    <span class="token attr-name">on-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Analytics tracking enabled<span class="token punctuation">"</span></span>
+    <span class="token attr-name">off-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Analytics tracking disabled<span class="token punctuation">"</span></span>
+    <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Help us improve by sharing anonymous usage data<span class="token punctuation">"</span></span>
+    <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span>
+  <span class="token punctuation">&gt;</span></span>
+    Allow analytics
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-toggle</span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>terms<span class="token punctuation">"</span></span>
+    <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>accepted<span class="token punctuation">"</span></span>
+    <span class="token attr-name">required</span>
+    <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span>
+  <span class="token punctuation">&gt;</span></span>
+    I agree to the terms and conditions (required)
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-toggle</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Save Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-output<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Form Data:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-data<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">white-space</span><span class="token punctuation">:</span> pre-wrap<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#complete-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#form-output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> dataDisplay <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#form-data'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span>formData<span class="token punctuation">.</span><span class="token function">entries</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dataDisplay<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    output<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token string">'block'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'reset'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    output<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1313"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1051"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -623,7 +1901,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-516"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/toggle/toggle.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-516"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1314"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/toggle/toggle.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1314"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -638,12 +1916,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-517"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/toggle/toggle.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-517"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1315"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/toggle/toggle.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1315"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-518"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/toggle/toggle.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-518"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1316"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/toggle/toggle.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1316"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -659,14 +1937,7 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
+                  <td>The toggle’s label.</td>
                 </tr>
               </tbody>
             </table>
@@ -676,7 +1947,9 @@
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
           </p>
 
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+          <h2 id="events-1" class="anchor-heading">
+            Events<a href="#events-1" aria-label='Direct link to "Events"'></a>
+          </h2>
 
           <div class="table-scroll">
             <table>
@@ -690,9 +1963,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
+                  <td data-flavor="html"><code class="nowrap">zn-input</code></td>
                   <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
+                  <td>Emitted when the toggle receives input.</td>
                   <td>-</td>
                 </tr>
               </tbody>
@@ -718,8 +1991,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td class="nowrap"><code>--zn-toggle-margin</code></td>
+                  <td>The margin around the toggle switch. Defaults to <code>8px 0</code>.</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -746,7 +2019,12 @@
               <tbody>
                 <tr>
                   <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
+                  <td>The component’s base wrapper containing the toggle switch.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>control</code></td>
+                  <td>The toggle switch control (the circular button that slides).</td>
                 </tr>
               </tbody>
             </table>
@@ -763,7 +2041,7 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="Radio groups are used to group multiple radios so they function as a single form control."
+    />
     <title>Radio Group</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/radio-group" />
     <meta property="og:title" content="Radio Group" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="Radio groups are used to group multiple radios so they function as a single form control."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -487,11 +493,19 @@
             <li class="top"><a href="#">Radio Group</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#basic-radio-group">Basic Radio Group</a></li>
+            <li data-level="3"><a href="#initial-values">Initial Values</a></li>
             <li data-level="3"><a href="#help-text">Help Text</a></li>
             <li data-level="3"><a href="#label-with-tooltip">Label with Tooltip</a></li>
+            <li data-level="3"><a href="#sizes">Sizes</a></li>
             <li data-level="3"><a href="#horizontal-radio-group">Horizontal Radio Group</a></li>
             <li data-level="3"><a href="#contained-radio-group">Contained Radio Group</a></li>
             <li data-level="3"><a href="#disabling-options">Disabling Options</a></li>
+            <li data-level="3"><a href="#form-integration">Form Integration</a></li>
+            <li data-level="3"><a href="#validation">Validation</a></li>
+            <li data-level="3"><a href="#custom-validity">Custom Validity</a></li>
+            <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
+            <li data-level="3"><a href="#keyboard-navigation">Keyboard Navigation</a></li>
+            <li data-level="3"><a href="#customizing-label-position">Customizing Label Position</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -521,7 +535,7 @@
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-radio-group>
+              <zn-radio-group label="Select an option">
                 <zn-radio value="1">Option 1</zn-radio>
                 <zn-radio value="2">Option 2</zn-radio>
                 <zn-radio value="3">Option 3</zn-radio>
@@ -532,14 +546,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-195">
+            <div class="code-preview__source-group" id="code-preview-source-group-726">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-367"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-911"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select an option<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-367"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-911"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -548,7 +562,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-195"
+                aria-controls="code-preview-source-group-726"
               >
                 Source
                 <svg
@@ -565,13 +579,23 @@
             </div>
           </div>
 
+          <div role="alert" class="callout callout--tip">
+            <p>
+              This component works with standard <code>&lt;form&gt;</code> elements. Please refer to the section on
+              <a href="/getting-started/form-controls">form controls</a> to learn more about form submission and
+              client-side validation.
+            </p>
+          </div>
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
           <h3 id="basic-radio-group" class="anchor-heading">
             Basic Radio Group<a href="#basic-radio-group" aria-label='Direct link to "Basic Radio Group"'></a>
           </h3>
-          <p>A basic radio group lays out multiple radio items vertically.</p>
+          <p>
+            Use the <code>label</code> attribute to give the radio group an accessible label. For labels that contain
+            HTML, use the <code>label</code> slot instead. A basic radio group lays out multiple radio items vertically.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -586,14 +610,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-196">
+            <div class="code-preview__source-group" id="code-preview-source-group-727">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-368"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-912"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-368"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-912"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -602,7 +626,58 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-196"
+                aria-controls="code-preview-source-group-727"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="initial-values" class="anchor-heading">
+            Initial Values<a href="#initial-values" aria-label='Direct link to "Initial Values"'></a>
+          </h3>
+          <p>Use the <code>value</code> attribute to set the initial selection.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-radio-group label="Select a payment method" value="credit-card">
+                <zn-radio value="credit-card">Credit Card</zn-radio>
+                <zn-radio value="debit-card">Debit Card</zn-radio>
+                <zn-radio value="bank-transfer">Bank Transfer</zn-radio>
+              </zn-radio-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-728">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-913"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select a payment method<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>credit-card<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>credit-card<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Credit Card<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>debit-card<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Debit Card<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bank-transfer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Bank Transfer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-913"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-728"
               >
                 Source
                 <svg
@@ -638,20 +713,36 @@
                 <zn-radio value="approve-outbound">Approve outbound transfers </zn-radio>
                 <zn-radio value="export">Export transactions</zn-radio>
               </zn-radio-group>
+              <br />
+              <zn-radio-group label="Financial products permissions" name="b">
+                <zn-radio value="initiate-outbound">Initiate outbound transfers</zn-radio>
+                <zn-radio value="approve-outbound">Approve outbound transfers </zn-radio>
+                <zn-radio value="export">Export transactions</zn-radio>
+                <div slot="help-text">
+                  Outbound transfers require <strong>separate</strong> initiators and approvers
+                </div>
+              </zn-radio-group>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-197">
+            <div class="code-preview__source-group" id="code-preview-source-group-729">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-369"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-914"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-369"></zn-copy-button></pre>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>b<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>help-text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Outbound transfers require <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>separate<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span> initiators and approvers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-914"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -660,7 +751,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-197"
+                aria-controls="code-preview-source-group-729"
               >
                 Source
                 <svg
@@ -711,14 +802,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-198">
+            <div class="code-preview__source-group" id="code-preview-source-group-730">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-370"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">label-tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>These apply to cash account only<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-915"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">label-tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>These apply to cash account only<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-370"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-915"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -727,7 +818,83 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-198"
+                aria-controls="code-preview-source-group-730"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="sizes" class="anchor-heading">Sizes<a href="#sizes" aria-label='Direct link to "Sizes"'></a></h3>
+          <p>
+            Use the <code>size</code> attribute to change a radio group’s size. This size will be applied to all child
+            radios in the group. Size <code>medium</code> is the default.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-radio-group label="Small size" size="small" name="size-small">
+                <zn-radio value="option-1">Option 1</zn-radio>
+                <zn-radio value="option-2">Option 2</zn-radio>
+                <zn-radio value="option-3">Option 3</zn-radio>
+              </zn-radio-group>
+              <br />
+              <zn-radio-group label="Medium size" size="medium" name="size-medium">
+                <zn-radio value="option-1">Option 1</zn-radio>
+                <zn-radio value="option-2">Option 2</zn-radio>
+                <zn-radio value="option-3">Option 3</zn-radio>
+              </zn-radio-group>
+              <br />
+              <zn-radio-group label="Large size" size="large" name="size-large">
+                <zn-radio value="option-1">Option 1</zn-radio>
+                <zn-radio value="option-2">Option 2</zn-radio>
+                <zn-radio value="option-3">Option 3</zn-radio>
+              </zn-radio-group>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-731">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-916"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Small size<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>size-small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Medium size<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>size-medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Large size<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>size-large<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-916"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-731"
               >
                 Source
                 <svg
@@ -787,9 +954,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-199">
+            <div class="code-preview__source-group" id="code-preview-source-group-732">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-371"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>permissions<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">horizontal</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-917"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>permissions<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">horizontal</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>manage-transfers<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Manage transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
@@ -806,7 +973,7 @@
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-371"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-917"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -815,7 +982,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-199"
+                aria-controls="code-preview-source-group-732"
               >
                 Source
                 <svg
@@ -874,9 +1041,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-200">
+            <div class="code-preview__source-group" id="code-preview-source-group-733">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-372"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">contained</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-918"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Outbound transfers require separate initiators and approvers<span class="token punctuation">"</span></span> <span class="token attr-name">contained</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
@@ -887,7 +1054,7 @@
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-372"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-918"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -896,7 +1063,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-200"
+                aria-controls="code-preview-source-group-733"
               >
                 Source
                 <svg
@@ -915,7 +1082,7 @@
 
           <div role="alert" class="callout callout--tip">
             <p>
-              When <a href="/components/radio">radios</a> are wrapped with the Radio Group , adding the
+              When <a href="/components/radio">radios</a> are wrapped with the Radio Group, adding the
               <code>contained</code> attribute to the parent Radio Group or to <em>any</em> radio in the group will
               create <code>contained</code> radios for the entire group.
             </p>
@@ -934,7 +1101,6 @@
                 name="a"
                 label="Financial products permissions"
                 help-text="Exporting is currently disabled for all users"
-                required=""
               >
                 <zn-radio value="initiate-outbound">Initiate outbound transfers</zn-radio>
                 <zn-radio value="approve-outbound">Approve outbound transfers </zn-radio>
@@ -946,14 +1112,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-201">
+            <div class="code-preview__source-group" id="code-preview-source-group-734">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-373"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span>  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Exporting is currently disabled for all users<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-919"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Financial products permissions<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Exporting is currently disabled for all users<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initiate-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Initiate outbound transfers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>approve-outbound<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Approve outbound transfers <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>export<span class="token punctuation">"</span></span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span>Export transactions<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-373"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-919"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -962,7 +1128,532 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-201"
+                aria-controls="code-preview-source-group-734"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="form-integration" class="anchor-heading">
+            Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
+          </h3>
+          <p>
+            Radio group components work seamlessly with standard HTML forms. The radio group’s
+            <code>name</code> attribute determines the key in the form data, and the selected radio’s
+            <code>value</code> becomes the value.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="radio-form">
+                <zn-radio-group name="department" label="Department" value="engineering" required="">
+                  <zn-radio value="engineering">Engineering</zn-radio>
+                  <zn-radio value="design">Design</zn-radio>
+                  <zn-radio value="marketing">Marketing</zn-radio>
+                  <zn-radio value="sales">Sales</zn-radio>
+                </zn-radio-group>
+                <br />
+                <zn-radio-group name="level" label="Experience level" value="mid" required="">
+                  <zn-radio value="junior">Junior</zn-radio>
+                  <zn-radio value="mid">Mid-level</zn-radio>
+                  <zn-radio value="senior">Senior</zn-radio>
+                </zn-radio-group>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+                <zn-button type="reset">Reset</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.getElementById('radio-form');
+
+                form.addEventListener('submit', e => {
+                  e.preventDefault();
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData);
+                  alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-735">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-920"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>radio-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>department<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Department<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>engineering<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>engineering<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Engineering<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>design<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Design<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marketing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Marketing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sales<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Sales<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>level<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Experience level<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mid<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>junior<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Junior<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mid<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Mid-level<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>senior<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Senior<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'radio-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span>formData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-920"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-735"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="validation" class="anchor-heading">
+            Validation<a href="#validation" aria-label='Direct link to "Validation"'></a>
+          </h3>
+          <p>
+            Set the <code>required</code> attribute to make selecting an option mandatory. If a value has not been
+            selected, it will prevent the form from submitting and display an error message.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="validation">
+                <zn-radio-group name="a" label="Select one option" required="">
+                  <zn-radio value="option-1">Option 1</zn-radio>
+                  <zn-radio value="option-2">Option 2</zn-radio>
+                  <zn-radio value="option-3">Option 3</zn-radio>
+                </zn-radio-group>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.validation');
+
+                // Wait for controls to be defined before attaching form listeners
+                await Promise.all([customElements.whenDefined('zn-radio-group')]).then(() => {
+                  form.addEventListener('submit', event => {
+                    event.preventDefault();
+                    alert('All fields are valid!');
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-736">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-921"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>validation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select one option<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.validation'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Wait for controls to be defined before attaching form listeners</span>
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-radio-group'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'All fields are valid!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-921"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-736"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-validity" class="anchor-heading">
+            Custom Validity<a href="#custom-validity" aria-label='Direct link to "Custom Validity"'></a>
+          </h3>
+          <p>
+            Use the <code>setCustomValidity()</code> method to set a custom validation message. This will prevent the
+            form from submitting and make the browser display the error message you provide. To clear the error, call
+            this function with an empty string.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="custom-validity">
+                <zn-radio-group name="a" label="Select the second option" required="">
+                  <zn-radio value="option-1">I’m not the right choice</zn-radio>
+                  <zn-radio value="option-2">You must choose me</zn-radio>
+                  <zn-radio value="option-3">I won’t work either</zn-radio>
+                </zn-radio-group>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.custom-validity');
+                const radioGroup = form.querySelector('zn-radio-group');
+                const errorMessage = 'You must choose the second option';
+
+                // Set initial validity as soon as the element is defined
+                customElements.whenDefined('zn-radio').then(() => {
+                  radioGroup.setCustomValidity(errorMessage);
+                });
+
+                // Update validity when a selection is made
+                form.addEventListener('zn-change', () => {
+                  const isValid = radioGroup.value === 'option-2';
+                  radioGroup.setCustomValidity(isValid ? '' : errorMessage);
+                });
+
+                // Wait for controls to be defined before attaching form listeners
+                await Promise.all([customElements.whenDefined('zn-radio-group')]).then(() => {
+                  form.addEventListener('submit', event => {
+                    event.preventDefault();
+                    alert('All fields are valid!');
+                  });
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-737">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-922"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-validity<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select the second option<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>I'm not the right choice<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>You must choose me<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>I won't work either<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.custom-validity'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> radioGroup <span class="token operator">=</span> form<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-radio-group'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> errorMessage <span class="token operator">=</span> <span class="token string">'You must choose the second option'</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Set initial validity as soon as the element is defined</span>
+  customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-radio'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    radioGroup<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span>errorMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Update validity when a selection is made</span>
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> isValid <span class="token operator">=</span> radioGroup<span class="token punctuation">.</span>value <span class="token operator">===</span> <span class="token string">'option-2'</span><span class="token punctuation">;</span>
+    radioGroup<span class="token punctuation">.</span><span class="token function">setCustomValidity</span><span class="token punctuation">(</span>isValid <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> errorMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Wait for controls to be defined before attaching form listeners</span>
+  <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-radio-group'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'All fields are valid!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-922"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-737"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="programmatic-control" class="anchor-heading">
+            Programmatic Control<a href="#programmatic-control" aria-label='Direct link to "Programmatic Control"'></a>
+          </h3>
+          <p>You can control the radio group programmatically using its methods and properties:</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div class="form-spacing">
+                <zn-radio-group id="programmatic-radio" label="Programmatic control" name="programmatic">
+                  <zn-radio value="option-1">Option 1</zn-radio>
+                  <zn-radio value="option-2">Option 2</zn-radio>
+                  <zn-radio value="option-3">Option 3</zn-radio>
+                  <zn-radio value="option-4">Option 4</zn-radio>
+                </zn-radio-group>
+
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap">
+                  <zn-button id="focus-btn" size="small">Focus</zn-button>
+                  <zn-button id="set-value-btn" size="small">Set Value to Option 3</zn-button>
+                  <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
+                  <zn-button id="get-form-btn" size="small">Get Form</zn-button>
+                </div>
+              </div>
+
+              <script type="module">
+                const radioGroup = document.getElementById('programmatic-radio');
+
+                document.getElementById('focus-btn').addEventListener('click', () => radioGroup.focus());
+                document.getElementById('set-value-btn').addEventListener('click', () => {
+                  radioGroup.value = 'option-3';
+                });
+                document.getElementById('check-validity-btn').addEventListener('click', () => {
+                  alert('Valid: ' + radioGroup.checkValidity());
+                });
+                document.getElementById('get-form-btn').addEventListener('click', () => {
+                  const form = radioGroup.getForm();
+                  alert('Form: ' + (form ? form.id || 'Form found (no ID)' : 'Not in a form'));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-738">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-923"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>programmatic-radio<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Programmatic control<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>programmatic<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Option 4<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">flex-wrap</span><span class="token punctuation">:</span> wrap<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>focus-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Focus<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>set-value-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Set Value to Option 3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>check-validity-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Check Validity<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>get-form-btn<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Get Form<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> radioGroup <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'programmatic-radio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'focus-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> radioGroup<span class="token punctuation">.</span><span class="token function">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'set-value-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    radioGroup<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">'option-3'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'check-validity-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Valid: '</span> <span class="token operator">+</span> radioGroup<span class="token punctuation">.</span><span class="token function">checkValidity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'get-form-btn'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> form <span class="token operator">=</span> radioGroup<span class="token punctuation">.</span><span class="token function">getForm</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form: '</span> <span class="token operator">+</span> <span class="token punctuation">(</span>form <span class="token operator">?</span> form<span class="token punctuation">.</span>id <span class="token operator">||</span> <span class="token string">'Form found (no ID)'</span> <span class="token operator">:</span> <span class="token string">'Not in a form'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-923"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-738"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="keyboard-navigation" class="anchor-heading">
+            Keyboard Navigation<a href="#keyboard-navigation" aria-label='Direct link to "Keyboard Navigation"'></a>
+          </h3>
+          <p>The radio group component supports comprehensive keyboard navigation:</p>
+          <ul>
+            <li>
+              <strong>Tab</strong> - Move focus to/from the radio group (focuses the checked radio, or the first radio
+              if none are checked)
+            </li>
+            <li>
+              <strong>Arrow Up/Left</strong> - Select the previous radio in the group (wraps around to the last option)
+            </li>
+            <li>
+              <strong>Arrow Down/Right</strong> - Select the next radio in the group (wraps around to the first option)
+            </li>
+            <li><strong>Space</strong> - Select the currently focused radio</li>
+          </ul>
+          <h3 id="customizing-label-position" class="anchor-heading">
+            Customizing Label Position<a
+              href="#customizing-label-position"
+              aria-label='Direct link to "Customizing Label Position"'
+            ></a>
+          </h3>
+          <p>
+            Use <a href="#css-parts">CSS parts</a> to customize the way form controls are drawn. This example uses CSS
+            grid to position the label to the left of the control.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-radio-group class="label-on-left" label="Department" name="dept-custom">
+                <zn-radio value="engineering">Engineering</zn-radio>
+                <zn-radio value="design">Design</zn-radio>
+                <zn-radio value="marketing">Marketing</zn-radio>
+              </zn-radio-group>
+
+              <style>
+                .label-on-left {
+                  --label-width: 5rem;
+                }
+
+                .label-on-left::part(form-control) {
+                  display: grid;
+                  grid: auto / var(--label-width) 1fr;
+                  gap: var(--zn-spacing-3x-small) var(--zn-spacing-medium);
+                  align-items: start;
+                }
+
+                .label-on-left::part(form-control-label) {
+                  text-align: right;
+                  padding-top: 0.25rem;
+                }
+
+                .label-on-left::part(form-control-help-text) {
+                  grid-column-start: 2;
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-739">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-924"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio-group</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>label-on-left<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Department<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dept-custom<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>engineering<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Engineering<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>design<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Design<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-radio</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marketing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Marketing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-radio-group</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.label-on-left</span> <span class="token punctuation">{</span>
+    <span class="token property">--label-width</span><span class="token punctuation">:</span> 5rem<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.label-on-left::part(form-control)</span> <span class="token punctuation">{</span>
+    <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+    <span class="token property">grid</span><span class="token punctuation">:</span> auto / <span class="token function">var</span><span class="token punctuation">(</span>--label-width<span class="token punctuation">)</span> 1fr<span class="token punctuation">;</span>
+    <span class="token property">gap</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-spacing-3x-small<span class="token punctuation">)</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-spacing-medium<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">align-items</span><span class="token punctuation">:</span> start<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.label-on-left::part(form-control-label)</span> <span class="token punctuation">{</span>
+    <span class="token property">text-align</span><span class="token punctuation">:</span> right<span class="token punctuation">;</span>
+    <span class="token property">padding-top</span><span class="token punctuation">:</span> 0.25rem<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.label-on-left::part(form-control-help-text)</span> <span class="token punctuation">{</span>
+    <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-924"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-739"
               >
                 Source
                 <svg
@@ -1000,7 +1691,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-374"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/radio-group/radio-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-374"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-925"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/radio-group/radio-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-925"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1015,12 +1706,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-375"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/radio-group/radio-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-375"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-926"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/radio-group/radio-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-926"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-376"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/radio-group/radio-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-376"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-927"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/radio-group/radio-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-927"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

@@ -17880,8 +17880,8 @@
           "name": "ZnPanel",
           "cssProperties": [
             {
-              "description": "An example CSS custom property.",
-              "name": "--example"
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis"
             }
           ],
           "cssParts": [
@@ -17892,16 +17892,20 @@
           ],
           "slots": [
             {
-              "description": "The default slot.",
+              "description": "The panel's main content.",
               "name": ""
             },
             {
-              "description": "The actions slot.",
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
               "name": "actions"
             },
             {
-              "description": "The footer slot.",
+              "description": "Content displayed in the panel footer.",
               "name": "footer"
+            },
+            {
+              "description": "Sidebar content displayed on the left or right side of the panel.",
+              "name": "side"
             }
           ],
           "members": [
@@ -18065,6 +18069,12 @@
               "name": "toggleSidebar"
             }
           ],
+          "events": [
+            {
+              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.",
+              "name": "zn-sidebar-toggle"
+            }
+          ],
           "attributes": [
             {
               "name": "basis-px",
@@ -18200,11 +18210,11 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.",
           "tagNameWithoutPrefix": "panel",
           "tagName": "zn-panel",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot actions - The actions slot.\n * @slot footer - The footer slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n * @slot side - Sidebar content displayed on the left or right side of the panel.\n *\n * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
           "documentation": "https://zinc.style/components/panel",
           "status": "experimental",
           "since": "1.0"
@@ -18775,24 +18785,58 @@
           "name": "ZnProgressBar",
           "cssProperties": [
             {
-              "description": "An example CSS custom property.",
-              "name": "--example"
+              "description": "The color of the progress bar background track.",
+              "name": "--zn-border-color"
+            },
+            {
+              "description": "The color of the progress bar fill.",
+              "name": "--zn-primary"
+            },
+            {
+              "description": "The color of the caption text.",
+              "name": "--zn-text-heading"
+            },
+            {
+              "description": "The color of the progress percentage and description text.",
+              "name": "--zn-text"
+            },
+            {
+              "description": "The spacing between header/footer and the progress bar.",
+              "name": "--zn-spacing-x-small"
             }
           ],
           "cssParts": [
             {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
+              "description": "The header container that contains the caption and progress text.",
+              "name": "header"
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress percentage text element.",
+              "name": "progress"
+            },
+            {
+              "description": "The SVG element containing the progress bar.",
+              "name": "bar"
+            },
+            {
+              "description": "The background track of the progress bar.",
+              "name": "track"
+            },
+            {
+              "description": "The filled portion of the progress bar indicating progress.",
+              "name": "fill"
+            },
+            {
+              "description": "The footer container that contains the description.",
+              "name": "footer"
+            },
+            {
+              "description": "The description text element.",
+              "name": "info"
             }
           ],
           "members": [
@@ -18833,12 +18877,6 @@
               "reflects": true
             }
           ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
           "attributes": [
             {
               "name": "caption",
@@ -18873,17 +18911,14 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Progress bars provide visual feedback about the completion status of a task or process.",
           "tagNameWithoutPrefix": "progress-bar",
           "tagName": "zn-progress-bar",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Progress bars provide visual feedback about the completion status of a task or process.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @csspart header - The header container that contains the caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress percentage text element.\n * @csspart bar - The SVG element containing the progress bar.\n * @csspart track - The background track of the progress bar.\n * @csspart fill - The filled portion of the progress bar indicating progress.\n * @csspart footer - The footer container that contains the description.\n * @csspart info - The description text element.\n *\n * @cssproperty --zn-border-color - The color of the progress bar background track.\n * @cssproperty --zn-primary - The color of the progress bar fill.\n * @cssproperty --zn-text-heading - The color of the caption text.\n * @cssproperty --zn-text - The color of the progress percentage and description text.\n * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.\n */",
           "documentation": "https://zinc.style/components/progress-bar",
           "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
+          "since": "1.0"
         }
       ],
       "exports": [
@@ -23053,6 +23088,7 @@
                 "text": "string"
               },
               "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
               "attribute": "speed"
             },
             {
@@ -23062,6 +23098,7 @@
                 "text": "string"
               },
               "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
               "attribute": "width"
             },
             {
@@ -23071,6 +23108,7 @@
                 "text": "string"
               },
               "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
               "attribute": "height"
             },
             {
@@ -23080,6 +23118,7 @@
                 "text": "string"
               },
               "default": "'4px'",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
               "attribute": "radius"
             }
           ],
@@ -23090,6 +23129,7 @@
                 "text": "string"
               },
               "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
               "fieldName": "speed"
             },
             {
@@ -23098,6 +23138,7 @@
                 "text": "string"
               },
               "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
               "fieldName": "width"
             },
             {
@@ -23106,6 +23147,7 @@
                 "text": "string"
               },
               "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
               "fieldName": "height"
             },
             {
@@ -23114,6 +23156,7 @@
                 "text": "string"
               },
               "default": "'4px'",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
               "fieldName": "radius"
             }
           ],
@@ -23121,11 +23164,11 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.",
           "tagNameWithoutPrefix": "skeleton",
           "tagName": "zn-skeleton",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n */",
+          "jsDoc": "/**\n * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n *\n * @property {string} speed - Animation speed for the shimmer effect. Default: \"3s\"\n * @property {string} width - Width of the skeleton element. Default: \"100%\"\n * @property {string} height - Height of the skeleton element. Default: \"20px\"\n * @property {string} radius - Border radius of the skeleton element. Default: \"4px\"\n */",
           "documentation": "https://zinc.style/components/skeleton",
           "status": "experimental",
           "since": "1.0"
@@ -24750,26 +24793,46 @@
           "kind": "class",
           "description": "",
           "name": "ZnStepper",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
           "cssParts": [
             {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
+              "description": "The container holding the progress line and steps.",
+              "name": "step-container"
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "The background line showing the full step track.",
+              "name": "step-line"
+            },
+            {
+              "description": "The filled progress indicator showing completion.",
+              "name": "step-progress"
+            },
+            {
+              "description": "The container for individual step markers.",
+              "name": "steps"
+            },
+            {
+              "description": "An individual step marker circle.",
+              "name": "step"
+            },
+            {
+              "description": "The header container with caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress count text (e.g., \"2 / 5 steps\").",
+              "name": "progress"
+            },
+            {
+              "description": "The label text container.",
+              "name": "label"
+            },
+            {
+              "description": "The label text element.",
+              "name": "info"
             }
           ],
           "members": [
@@ -24779,6 +24842,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
               "attribute": "caption",
               "reflects": true
             },
@@ -24788,6 +24852,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
               "attribute": "label",
               "reflects": true
             },
@@ -24797,6 +24862,7 @@
               "type": {
                 "text": "number"
               },
+              "description": "The total number of steps in the process.",
               "attribute": "steps",
               "reflects": true
             },
@@ -24806,6 +24872,7 @@
               "type": {
                 "text": "number"
               },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
               "attribute": "value",
               "reflects": true
             },
@@ -24817,12 +24884,14 @@
               },
               "attribute": "show-progress",
               "reflects": true
-            }
-          ],
-          "events": [
+            },
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
+              "name": "show-progress",
+              "kind": "field"
             }
           ],
           "attributes": [
@@ -24831,6 +24900,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
               "fieldName": "caption"
             },
             {
@@ -24838,6 +24908,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
               "fieldName": "label"
             },
             {
@@ -24845,6 +24916,7 @@
               "type": {
                 "text": "number"
               },
+              "description": "The total number of steps in the process.",
               "fieldName": "steps"
             },
             {
@@ -24852,6 +24924,7 @@
               "type": {
                 "text": "number"
               },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
               "fieldName": "value"
             },
             {
@@ -24866,17 +24939,14 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
           "tagNameWithoutPrefix": "stepper",
           "tagName": "zn-stepper",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
           "documentation": "https://zinc.style/components/stepper",
           "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
+          "since": "1.0"
         }
       ],
       "exports": [
@@ -27515,24 +27585,24 @@
           "name": "ZnToggle",
           "cssProperties": [
             {
-              "description": "An example CSS custom property.",
-              "name": "--example"
+              "description": "The margin around the toggle switch. Defaults to `8px 0`.",
+              "name": "--zn-toggle-margin"
             }
           ],
           "cssParts": [
             {
-              "description": "The component's base wrapper.",
+              "description": "The component's base wrapper containing the toggle switch.",
               "name": "base"
+            },
+            {
+              "description": "The toggle switch control (the circular button that slides).",
+              "name": "control"
             }
           ],
           "slots": [
             {
-              "description": "The default slot.",
+              "description": "The toggle's label.",
               "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
             }
           ],
           "members": [
@@ -27805,8 +27875,8 @@
           ],
           "events": [
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "description": "Emitted when the toggle receives input.",
+              "name": "zn-input"
             }
           ],
           "attributes": [
@@ -27926,16 +27996,16 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Toggles allow the user to switch an option on or off.",
           "tagNameWithoutPrefix": "toggle",
           "tagName": "zn-toggle",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/toggle\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n *\n * @slot - The toggle's label.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
           "documentation": "https://zinc.style/components/toggle",
-          "status": "experimental",
+          "status": "stable",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-tooltip"
           ]
         }
       ],
@@ -28544,26 +28614,40 @@
           "kind": "class",
           "description": "",
           "name": "ZnVerticalStepper",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
           "cssParts": [
             {
-              "description": "The component's base wrapper.",
-              "name": "base"
+              "description": "The main container for the vertical stepper.",
+              "name": "vs"
+            },
+            {
+              "description": "The left section containing the icon and connecting line.",
+              "name": "vs__left"
+            },
+            {
+              "description": "The icon container.",
+              "name": "vs__icon"
+            },
+            {
+              "description": "The vertical connecting line between steps.",
+              "name": "vs__line"
+            },
+            {
+              "description": "The right section containing caption and description text.",
+              "name": "vs__right"
+            },
+            {
+              "description": "The caption/title text element.",
+              "name": "vs__caption"
+            },
+            {
+              "description": "The description text element.",
+              "name": "vs__description"
             }
           ],
           "slots": [
             {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "Optional slot for adding an icon or indicator before the step content.",
+              "name": "icon"
             }
           ],
           "members": [
@@ -28574,6 +28658,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, removes the connecting line below this step (use for the final step in a sequence).",
               "attribute": "last",
               "reflects": true
             },
@@ -28584,6 +28669,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, indicates this is the first step in the sequence (affects visual styling).",
               "attribute": "first",
               "reflects": true
             },
@@ -28594,6 +28680,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, highlights this step as the current active step in the process.",
               "attribute": "active",
               "reflects": true
             },
@@ -28603,6 +28690,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "A descriptive text explaining what happens in this step or its current status.",
               "attribute": "description",
               "reflects": true
             },
@@ -28612,14 +28700,9 @@
               "type": {
                 "text": "string"
               },
+              "description": "The main label/title for this step.",
               "attribute": "caption",
               "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
             }
           ],
           "attributes": [
@@ -28629,6 +28712,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, removes the connecting line below this step (use for the final step in a sequence).",
               "fieldName": "last"
             },
             {
@@ -28637,6 +28721,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, indicates this is the first step in the sequence (affects visual styling).",
               "fieldName": "first"
             },
             {
@@ -28645,6 +28730,7 @@
                 "text": "boolean"
               },
               "default": "false",
+              "description": "When true, highlights this step as the current active step in the process.",
               "fieldName": "active"
             },
             {
@@ -28652,6 +28738,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "A descriptive text explaining what happens in this step or its current status.",
               "fieldName": "description"
             },
             {
@@ -28659,6 +28746,7 @@
               "type": {
                 "text": "string"
               },
+              "description": "The main label/title for this step.",
               "fieldName": "caption"
             }
           ],
@@ -28666,17 +28754,14 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.",
           "tagNameWithoutPrefix": "vertical-stepper",
           "tagName": "zn-vertical-stepper",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/vertical-stepper\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n * @documentation https://zinc.style/components/vertical-stepper\n * @status experimental\n * @since 1.0\n *\n * @property {boolean} last - When true, removes the connecting line below this step (use for the final step in a sequence).\n * @property {boolean} first - When true, indicates this is the first step in the sequence (affects visual styling).\n * @property {boolean} active - When true, highlights this step as the current active step in the process.\n * @property {string} description - A descriptive text explaining what happens in this step or its current status.\n * @property {string} caption - The main label/title for this step.\n *\n * @slot icon - Optional slot for adding an icon or indicator before the step content.\n *\n * @csspart vs - The main container for the vertical stepper.\n * @csspart vs__left - The left section containing the icon and connecting line.\n * @csspart vs__icon - The icon container.\n * @csspart vs__line - The vertical connecting line between steps.\n * @csspart vs__right - The right section containing caption and description text.\n * @csspart vs__caption - The caption/title text element.\n * @csspart vs__description - The description text element.\n */",
           "documentation": "https://zinc.style/components/vertical-stepper",
           "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
+          "since": "1.0"
         }
       ],
       "exports": [

@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="A comprehensive filtering component that opens a slideout panel with a query builder interface. Supports text, number, date fields, dropdown options, and multiple filter operators."
+    />
     <title>Data Table Filter</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/data-table-filter" />
     <meta property="og:title" content="Data Table Filter" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="A comprehensive filtering component that opens a slideout panel with a query builder interface. Supports text, number, date fields, dropdown options, and multiple filter operators."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,8 +492,15 @@
           <ul>
             <li class="top"><a href="#">Data Table Filter</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-text-filters">Basic Text Filters</a></li>
+            <li data-level="3"><a href="#number-filters-with-operators">Number Filters with Operators</a></li>
+            <li data-level="3"><a href="#date-filters">Date Filters</a></li>
+            <li data-level="3"><a href="#dropdown-options">Dropdown Options</a></li>
+            <li data-level="3"><a href="#limited-options-display">Limited Options Display</a></li>
+            <li data-level="3"><a href="#mixed-filter-types">Mixed Filter Types</a></li>
+            <li data-level="3"><a href="#employee-filter-example">Employee Filter Example</a></li>
+            <li data-level="3"><a href="#e-commerce-filter-example">E-commerce Filter Example</a></li>
+            <li data-level="3"><a href="#content-library-filter">Content Library Filter</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
@@ -525,13 +538,13 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-94">
+            <div class="code-preview__source-group" id="code-preview-source-group-229">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-157">
+                <pre><code class="language-html" id="code-block-296">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
   <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>author<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Author<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>genre<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Genre<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>action<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Action<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>comedy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Comedy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>drama<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Drama<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fantasy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fantasy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>horror<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Horror<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>mystery<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mystery<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>romance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Romance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>thriller<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thriller<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>sci-fi<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>ScienceFiction<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>maxOptionsVisible<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>3<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>created<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Created<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-157"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-296"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -540,7 +553,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-94"
+                aria-controls="code-preview-source-group-229"
               >
                 Source
                 <svg
@@ -560,14 +573,470 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="basic-text-filters" class="anchor-heading">
+            Basic Text Filters<a href="#basic-text-filters" aria-label='Direct link to "Basic Text Filters"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <p>Create simple text-based filters with equality and fuzzy search operators.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"name","name":"Name","operators":["eq","fuzzy"]},{"id":"email","name":"Email","operators":["eq","fuzzy"]},{"id":"company","name":"Company","operators":["eq"]}]'
+                name="text-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-230">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-297"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>email<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Email<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>company<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Company<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-297"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-230"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="number-filters-with-operators" class="anchor-heading">
+            Number Filters with Operators<a
+              href="#number-filters-with-operators"
+              aria-label='Direct link to "Number Filters with Operators"'
+            ></a>
           </h3>
-          <p>TODO</p>
+          <p>Use number type filters with comparison operators like equal, greater than, less than.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"age","name":"Age","type":"number","operators":["eq","gt","gte","lt","lte"]},{"id":"price","name":"Price","type":"number","operators":["eq","gt","lt"]},{"id":"quantity","name":"Quantity","type":"number","operators":["eq","gte","lte"]}]'
+                name="number-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-231">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-298"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>age<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Age<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>quantity<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Quantity<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-298"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-231"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="date-filters" class="anchor-heading">
+            Date Filters<a href="#date-filters" aria-label='Direct link to "Date Filters"'></a>
+          </h3>
+          <p>Filter by dates with before, after, and equal operators.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"created","name":"Created Date","type":"date","operators":["eq","before","after"]},{"id":"modified","name":"Modified Date","type":"date","operators":["before","after"]},{"id":"due_date","name":"Due Date","type":"date","operators":["eq","before","after"]}]'
+                name="date-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-232">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-299"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>created<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Created Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>modified<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Modified Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>due_date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Due Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-299"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-232"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="dropdown-options" class="anchor-heading">
+            Dropdown Options<a href="#dropdown-options" aria-label='Direct link to "Dropdown Options"'></a>
+          </h3>
+          <p>Use predefined options for select-based filtering.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"status","name":"Status","options":{"open":"Open","in_progress":"In Progress","closed":"Closed"},"operators":["eq","in"]},{"id":"priority","name":"Priority","options":{"low":"Low","medium":"Medium","high":"High","critical":"Critical"},"operators":["eq","in"]}]'
+                name="option-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-233">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-300"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>status<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Status<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>open<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Open<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in_progress<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>In Progress<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>closed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Closed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>priority<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Priority<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>low<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Low<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>medium<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Medium<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>high<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>High<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>critical<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Critical<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>option-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-300"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-233"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="limited-options-display" class="anchor-heading">
+            Limited Options Display<a
+              href="#limited-options-display"
+              aria-label='Direct link to "Limited Options Display"'
+            ></a>
+          </h3>
+          <p>Control how many options are initially visible using <code>maxOptionsVisible</code>.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"category","name":"Category","options":{"cat1":"Category 1","cat2":"Category 2","cat3":"Category 3","cat4":"Category 4","cat5":"Category 5","cat6":"Category 6"},"maxOptionsVisible":3,"operators":["eq","in"]}]'
+                name="limited-options"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-234">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-301"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat1<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 1<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat3<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 3<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat4<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 4<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat5<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 5<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>cat6<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category 6<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>maxOptionsVisible<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:3,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>limited-options<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-301"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-234"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="mixed-filter-types" class="anchor-heading">
+            Mixed Filter Types<a href="#mixed-filter-types" aria-label='Direct link to "Mixed Filter Types"'></a>
+          </h3>
+          <p>Combine different field types in a single filter component.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"product","name":"Product Name","operators":["eq","fuzzy"]},{"id":"category","name":"Category","options":{"electronics":"Electronics","clothing":"Clothing","books":"Books"},"operators":["eq","in"]},{"id":"price","name":"Price","type":"number","operators":["eq","gt","lt"]},{"id":"in_stock","name":"In Stock","type":"boolean","operators":["eq"]}]'
+                name="mixed-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-235">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-302"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>product<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>electronics<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Electronics<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>clothing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Clothing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>books<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Books<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in_stock<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>In Stock<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>boolean<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mixed-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-302"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-235"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="employee-filter-example" class="anchor-heading">
+            Employee Filter Example<a
+              href="#employee-filter-example"
+              aria-label='Direct link to "Employee Filter Example"'
+            ></a>
+          </h3>
+          <p>A practical example for filtering employee data.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"employee_name","name":"Employee Name","operators":["eq","fuzzy"]},{"id":"department","name":"Department","options":{"engineering":"Engineering","sales":"Sales","marketing":"Marketing","hr":"Human Resources","finance":"Finance"},"operators":["eq","in"]},{"id":"hire_date","name":"Hire Date","type":"date","operators":["before","after"]},{"id":"salary","name":"Salary","type":"number","operators":["gt","lt"]}]'
+                name="employee-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-236">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-303"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>employee_name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Employee Name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>department<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Department<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>engineering<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Engineering<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>sales<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sales<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>marketing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Marketing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Human Resources<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>finance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Finance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>hire_date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Hire Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>salary<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Salary<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>employee-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-303"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-236"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="e-commerce-filter-example" class="anchor-heading">
+            E-commerce Filter Example<a
+              href="#e-commerce-filter-example"
+              aria-label='Direct link to "E-commerce Filter Example"'
+            ></a>
+          </h3>
+          <p>Filter products with various criteria.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"title","name":"Product Title","operators":["eq","fuzzy"]},{"id":"brand","name":"Brand","operators":["eq"]},{"id":"category","name":"Category","options":{"electronics":"Electronics","clothing":"Clothing","home":"Home &amp; Garden","sports":"Sports","toys":"Toys"},"maxOptionsVisible":3,"operators":["eq","in"]},{"id":"price","name":"Price","type":"number","operators":["eq","gt","gte","lt","lte"]},{"id":"rating","name":"Rating","type":"number","operators":["gte"]},{"id":"release_date","name":"Release Date","type":"date","operators":["before","after"]}]'
+                name="product-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-237">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-304"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product Title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>brand<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Brand<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Category<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>electronics<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Electronics<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>clothing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Clothing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>home<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Home <span class="token entity named-entity" title="&amp;">&amp;amp;</span> Garden<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>sports<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sports<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>toys<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Toys<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>maxOptionsVisible<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:3,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Price<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>release_date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Release Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>product-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-304"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-237"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="content-library-filter" class="anchor-heading">
+            Content Library Filter<a
+              href="#content-library-filter"
+              aria-label='Direct link to "Content Library Filter"'
+            ></a>
+          </h3>
+          <p>Filter media content like books, movies, or articles.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-data-table-filter
+                filters='[{"id":"title","name":"Title","operators":["eq","fuzzy"]},{"id":"author","name":"Author","operators":["eq","fuzzy"]},{"id":"genre","name":"Genre","options":{"action":"Action","comedy":"Comedy","drama":"Drama","fantasy":"Fantasy","horror":"Horror","mystery":"Mystery","romance":"Romance","thriller":"Thriller","sci-fi":"Science Fiction"},"maxOptionsVisible":3,"operators":["eq","in"]},{"id":"rating","name":"Rating","type":"number","operators":["eq","gt","gte","lt","lte"]},{"id":"published","name":"Published Date","type":"date","operators":["eq","before","after"]}]'
+                name="content-filters"
+              >
+              </zn-data-table-filter>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-238">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-305"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table-filter</span>
+  <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>author<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Author<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fuzzy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>genre<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Genre<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>options<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>action<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Action<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>comedy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Comedy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>drama<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Drama<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>fantasy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fantasy<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>horror<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Horror<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>mystery<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mystery<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>romance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Romance<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>thriller<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thriller<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>sci-fi<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Science Fiction<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},<span class="token entity named-entity" title="&quot;">&amp;quot;</span>maxOptionsVisible<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:3,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>in<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Rating<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>number<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>gte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lt<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>lte<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>id<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>published<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Published Date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>type<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>date<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>operators<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>eq<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>before<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>after<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content-filters<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table-filter</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-305"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-238"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -590,7 +1059,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-158"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/data-table-filter/data-table-filter.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-158"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-306"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/data-table-filter/data-table-filter.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-306"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -605,12 +1074,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-159"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/data-table-filter/data-table-filter.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-159"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-307"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/data-table-filter/data-table-filter.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-307"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-160"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table-filter/data-table-filter.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-160"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-308"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/data-table-filter/data-table-filter.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-308"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

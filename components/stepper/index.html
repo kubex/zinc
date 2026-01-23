@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="Steppers provide visual feedback about progress through a multi-step process or workflow, showing current position and total steps."
+    />
     <title>Stepper</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/stepper" />
     <meta property="og:title" content="Stepper" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="Steppers provide visual feedback about progress through a multi-step process or workflow, showing current position and total steps."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,14 +492,30 @@
           <ul>
             <li class="top"><a href="#">Stepper</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-stepper">Basic Stepper</a></li>
+            <li data-level="3"><a href="#with-caption">With Caption</a></li>
+            <li data-level="3"><a href="#with-label">With Label</a></li>
+            <li data-level="3"><a href="#showing-progress-count">Showing Progress Count</a></li>
+            <li data-level="3"><a href="#complete-progress-states">Complete Progress States</a></li>
+            <li data-level="3"><a href="#all-properties-combined">All Properties Combined</a></li>
+            <li data-level="3"><a href="#dynamic-progress-updates">Dynamic Progress Updates</a></li>
+            <li data-level="3"><a href="#multi-step-form-wizard">Multi-Step Form Wizard</a></li>
+            <li data-level="3"><a href="#installation-progress-simulation">Installation Progress Simulation</a></li>
+            <li data-level="3"><a href="#multiple-steppers">Multiple Steppers</a></li>
+            <li data-level="3"><a href="#minimal-stepper">Minimal Stepper</a></li>
+            <li data-level="3"><a href="#progress-overflow">Progress Overflow</a></li>
+            <li data-level="3"><a href="#different-step-counts">Different Step Counts</a></li>
+            <li data-level="2"><a href="#customization">Customization</a></li>
+            <li data-level="3"><a href="#styling-with-css">Styling with CSS</a></li>
+            <li data-level="3"><a href="#themed-steppers">Themed Steppers</a></li>
+            <li data-level="3"><a href="#custom-height-and-styling">Custom Height and Styling</a></li>
+            <li data-level="2"><a href="#wizard-patterns">Wizard Patterns</a></li>
+            <li data-level="3"><a href="#using-with-vertical-stepper">Using with Vertical Stepper</a></li>
+            <li data-level="3"><a href="#progressive-disclosure">Progressive Disclosure</a></li>
+            <li data-level="3"><a href="#validation-states">Validation States</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
-            <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
@@ -511,21 +533,29 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            Steppers provide visual feedback about progress through a multi-step process or workflow.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-stepper caption="Caption here" label="Label here" steps="3" value="2" show-progress=""></zn-stepper>
+              <zn-stepper
+                caption="Setup Progress"
+                label="Installation Wizard"
+                steps="5"
+                value="3"
+                show-progress=""
+              ></zn-stepper>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-248">
+            <div class="code-preview__source-group" id="code-preview-source-group-938">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-468"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Caption here<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label here<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-468"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1176"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Setup Progress<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Installation Wizard<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1176"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -534,7 +564,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-248"
+                aria-controls="code-preview-source-group-938"
               >
                 Source
                 <svg
@@ -554,14 +584,1666 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="basic-stepper" class="anchor-heading">
+            Basic Stepper<a href="#basic-stepper" aria-label='Direct link to "Basic Stepper"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <p>
+            A basic stepper displays progress through a sequence of steps. Use the <code>steps</code> attribute to
+            define the total number of steps and <code>value</code> to indicate the current step position.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper steps="4" value="2"></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-939">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1177"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1177"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-939"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-caption" class="anchor-heading">
+            With Caption<a href="#with-caption" aria-label='Direct link to "With Caption"'></a>
           </h3>
-          <p>TODO</p>
+          <p>
+            Use the <code>caption</code> attribute to add a descriptive label above the stepper. This helps users
+            understand what process or workflow the stepper represents.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper caption="Account Setup" steps="5" value="2"></zn-stepper>
+              <br />
+              <zn-stepper caption="Order Processing" steps="6" value="4"></zn-stepper>
+              <br />
+              <zn-stepper caption="Project Onboarding" steps="3" value="1"></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-940">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1178"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Account Setup<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Order Processing<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project Onboarding<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1178"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-940"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-label" class="anchor-heading">
+            With Label<a href="#with-label" aria-label='Direct link to "With Label"'></a>
+          </h3>
+          <p>
+            Use the <code>label</code> attribute to display information above the caption. This is useful for showing
+            the wizard or workflow name.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper label="New User Registration" caption="Personal Information" steps="5" value="1"></zn-stepper>
+              <br />
+              <zn-stepper label="Checkout Process" caption="Shipping Details" steps="4" value="2"></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-941">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1179"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>New User Registration<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Personal Information<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Checkout Process<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Shipping Details<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1179"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-941"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="showing-progress-count" class="anchor-heading">
+            Showing Progress Count<a
+              href="#showing-progress-count"
+              aria-label='Direct link to "Showing Progress Count"'
+            ></a>
+          </h3>
+          <p>
+            Use the <code>show-progress</code> attribute to display the current step number alongside the total number
+            of steps (e.g., “2 / 5 steps”).
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper caption="Installation" steps="5" value="2" show-progress=""></zn-stepper>
+              <br />
+              <zn-stepper caption="Data Import" steps="10" value="7" show-progress=""></zn-stepper>
+              <br />
+              <zn-stepper caption="Configuration" steps="3" value="3" show-progress=""></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-942">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1180"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Installation<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Data Import<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>7<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Configuration<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1180"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-942"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="complete-progress-states" class="anchor-heading">
+            Complete Progress States<a
+              href="#complete-progress-states"
+              aria-label='Direct link to "Complete Progress States"'
+            ></a>
+          </h3>
+          <p>Examples showing different stages of a workflow, from start to completion.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper label="Project Setup Wizard" caption="Getting Started" steps="5" value="0" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper
+                label="Project Setup Wizard"
+                caption="Configure Settings"
+                steps="5"
+                value="2"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <zn-stepper
+                label="Project Setup Wizard"
+                caption="Review &amp; Deploy"
+                steps="5"
+                value="4"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <zn-stepper label="Project Setup Wizard" caption="Complete!" steps="5" value="5" show-progress="">
+              </zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-943">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1181"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project Setup Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Getting Started<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project Setup Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Configure Settings<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project Setup Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Review &amp; Deploy<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project Setup Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Complete!<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1181"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-943"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="all-properties-combined" class="anchor-heading">
+            All Properties Combined<a
+              href="#all-properties-combined"
+              aria-label='Direct link to "All Properties Combined"'
+            ></a>
+          </h3>
+          <p>A comprehensive example showing all available properties working together.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                label="E-commerce Checkout"
+                caption="Payment Information"
+                steps="4"
+                value="3"
+                show-progress=""
+              >
+              </zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-944">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1182"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>E-commerce Checkout<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Payment Information<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1182"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-944"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="dynamic-progress-updates" class="anchor-heading">
+            Dynamic Progress Updates<a
+              href="#dynamic-progress-updates"
+              aria-label='Direct link to "Dynamic Progress Updates"'
+            ></a>
+          </h3>
+          <p>Steppers can be updated dynamically using JavaScript to reflect real-time progress through a workflow.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                id="dynamic-stepper"
+                label="Form Wizard"
+                caption="Step 1: Personal Details"
+                steps="4"
+                value="1"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <zn-button id="next-step">Next Step</zn-button>
+              <zn-button id="prev-step" color="secondary">Previous Step</zn-button>
+              <zn-button id="reset-stepper" color="transparent">Reset</zn-button>
+
+              <script type="module">
+                const stepper = document.getElementById('dynamic-stepper');
+                const nextBtn = document.getElementById('next-step');
+                const prevBtn = document.getElementById('prev-step');
+                const resetBtn = document.getElementById('reset-stepper');
+
+                const stepNames = ['Personal Details', 'Contact Information', 'Preferences', 'Review & Submit'];
+
+                function updateStepCaption() {
+                  const stepIndex = stepper.value - 1;
+                  if (stepIndex >= 0 && stepIndex < stepNames.length) {
+                    stepper.caption = `Step ${stepper.value}: ${stepNames[stepIndex]}`;
+                  } else if (stepper.value === 0) {
+                    stepper.caption = 'Getting Started';
+                  }
+                }
+
+                nextBtn.addEventListener('click', () => {
+                  if (stepper.value < stepper.steps) {
+                    stepper.value = stepper.value + 1;
+                    updateStepCaption();
+                    if (stepper.value === stepper.steps) {
+                      stepper.caption = 'Complete!';
+                    }
+                  }
+                });
+
+                prevBtn.addEventListener('click', () => {
+                  if (stepper.value > 0) {
+                    stepper.value = stepper.value - 1;
+                    updateStepCaption();
+                  }
+                });
+
+                resetBtn.addEventListener('click', () => {
+                  stepper.value = 1;
+                  updateStepCaption();
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-945">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1183"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dynamic-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Form Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Step 1: Personal Details<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>next-step<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Next Step<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>prev-step<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Previous Step<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset-stepper<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> stepper <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'dynamic-stepper'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> nextBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'next-step'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> prevBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'prev-step'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> resetBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'reset-stepper'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> stepNames <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string">'Personal Details'</span><span class="token punctuation">,</span>
+    <span class="token string">'Contact Information'</span><span class="token punctuation">,</span>
+    <span class="token string">'Preferences'</span><span class="token punctuation">,</span>
+    <span class="token string">'Review &amp; Submit'</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">updateStepCaption</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> stepIndex <span class="token operator">=</span> stepper<span class="token punctuation">.</span>value <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>stepIndex <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> stepIndex <span class="token operator">&lt;</span> stepNames<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Step </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stepper<span class="token punctuation">.</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stepNames<span class="token punctuation">[</span>stepIndex<span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>stepper<span class="token punctuation">.</span>value <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token string">'Getting Started'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  nextBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>stepper<span class="token punctuation">.</span>value <span class="token operator">&lt;</span> stepper<span class="token punctuation">.</span>steps<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stepper<span class="token punctuation">.</span>value <span class="token operator">=</span> stepper<span class="token punctuation">.</span>value <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+      <span class="token function">updateStepCaption</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>stepper<span class="token punctuation">.</span>value <span class="token operator">===</span> stepper<span class="token punctuation">.</span>steps<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        stepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token string">'Complete!'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  prevBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>stepper<span class="token punctuation">.</span>value <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stepper<span class="token punctuation">.</span>value <span class="token operator">=</span> stepper<span class="token punctuation">.</span>value <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+      <span class="token function">updateStepCaption</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  resetBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    stepper<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token function">updateStepCaption</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1183"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-945"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="multi-step-form-wizard" class="anchor-heading">
+            Multi-Step Form Wizard<a
+              href="#multi-step-form-wizard"
+              aria-label='Direct link to "Multi-Step Form Wizard"'
+            ></a>
+          </h3>
+          <p>A practical example showing a stepper integrated with a form wizard interface.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                id="wizard-stepper"
+                label="Account Creation Wizard"
+                caption="Step 1: Basic Information"
+                steps="3"
+                value="1"
+                show-progress=""
+              >
+              </zn-stepper>
+
+              <div
+                id="wizard-content"
+                style="
+                  margin-top: 20px;
+                  padding: 20px;
+                  border: 1px solid rgb(var(--zn-border-color));
+                  border-radius: 4px;
+                "
+              >
+                <div class="wizard-step" data-step="1">
+                  <h3>Basic Information</h3>
+                  <p>Please enter your basic details to get started.</p>
+                </div>
+                <div class="wizard-step" data-step="2" style="display: none">
+                  <h3>Account Settings</h3>
+                  <p>Configure your account preferences.</p>
+                </div>
+                <div class="wizard-step" data-step="3" style="display: none">
+                  <h3>Confirmation</h3>
+                  <p>Review your information and complete the setup.</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 20px">
+                <zn-button id="wizard-next" color="default">Next</zn-button>
+                <zn-button id="wizard-prev" color="secondary" style="display: none">Previous</zn-button>
+                <zn-button id="wizard-finish" color="success" style="display: none">Finish</zn-button>
+              </div>
+
+              <script type="module">
+                const wizardStepper = document.getElementById('wizard-stepper');
+                const nextBtn = document.getElementById('wizard-next');
+                const prevBtn = document.getElementById('wizard-prev');
+                const finishBtn = document.getElementById('wizard-finish');
+                const steps = document.querySelectorAll('.wizard-step');
+
+                const stepTitles = ['Basic Information', 'Account Settings', 'Confirmation'];
+
+                function updateWizard() {
+                  const currentStep = wizardStepper.value;
+
+                  // Update stepper caption
+                  wizardStepper.caption = `Step ${currentStep}: ${stepTitles[currentStep - 1]}`;
+
+                  // Show/hide content
+                  steps.forEach((step, index) => {
+                    step.style.display = index + 1 === currentStep ? 'block' : 'none';
+                  });
+
+                  // Show/hide buttons
+                  prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+                  nextBtn.style.display = currentStep < wizardStepper.steps ? 'inline-block' : 'none';
+                  finishBtn.style.display = currentStep === wizardStepper.steps ? 'inline-block' : 'none';
+                }
+
+                nextBtn.addEventListener('click', () => {
+                  if (wizardStepper.value < wizardStepper.steps) {
+                    wizardStepper.value++;
+                    updateWizard();
+                  }
+                });
+
+                prevBtn.addEventListener('click', () => {
+                  if (wizardStepper.value > 1) {
+                    wizardStepper.value--;
+                    updateWizard();
+                  }
+                });
+
+                finishBtn.addEventListener('click', () => {
+                  alert('Wizard completed!');
+                });
+
+                updateWizard();
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-946">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1184"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Account Creation Wizard<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Step 1: Basic Information<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-content<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-border-color<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-step<span class="token punctuation">"</span></span> <span class="token attr-name">data-step</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Basic Information<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Please enter your basic details to get started.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-step<span class="token punctuation">"</span></span> <span class="token attr-name">data-step</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Account Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Configure your account preferences.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-step<span class="token punctuation">"</span></span> <span class="token attr-name">data-step</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Confirmation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Review your information and complete the setup.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-next<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>default<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Next<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-prev<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Previous<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wizard-finish<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Finish<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> wizardStepper <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'wizard-stepper'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> nextBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'wizard-next'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> prevBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'wizard-prev'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> finishBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'wizard-finish'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> steps <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'.wizard-step'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> stepTitles <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string">'Basic Information'</span><span class="token punctuation">,</span>
+    <span class="token string">'Account Settings'</span><span class="token punctuation">,</span>
+    <span class="token string">'Confirmation'</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">updateWizard</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> currentStep <span class="token operator">=</span> wizardStepper<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+
+    <span class="token comment">// Update stepper caption</span>
+    wizardStepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Step </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>currentStep<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>stepTitles<span class="token punctuation">[</span>currentStep <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Show/hide content</span>
+    steps<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">step<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      step<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token punctuation">(</span>index <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">===</span> currentStep<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">'block'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Show/hide buttons</span>
+    prevBtn<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> currentStep <span class="token operator">&gt;</span> <span class="token number">1</span> <span class="token operator">?</span> <span class="token string">'inline-block'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+    nextBtn<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> currentStep <span class="token operator">&lt;</span> wizardStepper<span class="token punctuation">.</span>steps <span class="token operator">?</span> <span class="token string">'inline-block'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+    finishBtn<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> currentStep <span class="token operator">===</span> wizardStepper<span class="token punctuation">.</span>steps <span class="token operator">?</span> <span class="token string">'inline-block'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  nextBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>wizardStepper<span class="token punctuation">.</span>value <span class="token operator">&lt;</span> wizardStepper<span class="token punctuation">.</span>steps<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      wizardStepper<span class="token punctuation">.</span>value<span class="token operator">++</span><span class="token punctuation">;</span>
+      <span class="token function">updateWizard</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  prevBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>wizardStepper<span class="token punctuation">.</span>value <span class="token operator">&gt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      wizardStepper<span class="token punctuation">.</span>value<span class="token operator">--</span><span class="token punctuation">;</span>
+      <span class="token function">updateWizard</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  finishBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Wizard completed!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">updateWizard</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1184"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-946"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="installation-progress-simulation" class="anchor-heading">
+            Installation Progress Simulation<a
+              href="#installation-progress-simulation"
+              aria-label='Direct link to "Installation Progress Simulation"'
+            ></a>
+          </h3>
+          <p>A realistic example simulating an installation or setup process with automatic progress updates.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                id="install-stepper"
+                label="Software Installation"
+                caption="Click Start to begin"
+                steps="5"
+                value="0"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <zn-button id="start-install" icon="download">Start Installation</zn-button>
+              <zn-button id="cancel-install" color="secondary" disabled="">Cancel</zn-button>
+
+              <script type="module">
+                const installStepper = document.getElementById('install-stepper');
+                const startBtn = document.getElementById('start-install');
+                const cancelBtn = document.getElementById('cancel-install');
+                let installInterval;
+
+                const installSteps = [
+                  'Downloading files...',
+                  'Extracting packages...',
+                  'Installing dependencies...',
+                  'Configuring settings...',
+                  'Finalizing installation...',
+                  'Installation complete!'
+                ];
+
+                startBtn.addEventListener('click', () => {
+                  installStepper.value = 0;
+                  startBtn.disabled = true;
+                  startBtn.loading = true;
+                  cancelBtn.disabled = false;
+
+                  let currentStep = 0;
+
+                  installInterval = setInterval(() => {
+                    if (currentStep < installStepper.steps) {
+                      currentStep++;
+                      installStepper.value = currentStep;
+                      installStepper.caption = installSteps[currentStep];
+                    } else {
+                      clearInterval(installInterval);
+                      installStepper.caption = installSteps[installSteps.length - 1];
+                      startBtn.disabled = false;
+                      startBtn.loading = false;
+                      cancelBtn.disabled = true;
+                    }
+                  }, 1500);
+                });
+
+                cancelBtn.addEventListener('click', () => {
+                  clearInterval(installInterval);
+                  installStepper.caption = 'Installation cancelled';
+                  startBtn.disabled = false;
+                  startBtn.loading = false;
+                  cancelBtn.disabled = true;
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-947">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1185"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>install-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Software Installation<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click Start to begin<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>start-install<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>download<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Start Installation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cancel-install<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span>Cancel<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> installStepper <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'install-stepper'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> startBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'start-install'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> cancelBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'cancel-install'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> installInterval<span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> installSteps <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string">'Downloading files...'</span><span class="token punctuation">,</span>
+    <span class="token string">'Extracting packages...'</span><span class="token punctuation">,</span>
+    <span class="token string">'Installing dependencies...'</span><span class="token punctuation">,</span>
+    <span class="token string">'Configuring settings...'</span><span class="token punctuation">,</span>
+    <span class="token string">'Finalizing installation...'</span><span class="token punctuation">,</span>
+    <span class="token string">'Installation complete!'</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  startBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    installStepper<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    cancelBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> currentStep <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    installInterval <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>currentStep <span class="token operator">&lt;</span> installStepper<span class="token punctuation">.</span>steps<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        currentStep<span class="token operator">++</span><span class="token punctuation">;</span>
+        installStepper<span class="token punctuation">.</span>value <span class="token operator">=</span> currentStep<span class="token punctuation">;</span>
+        installStepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> installSteps<span class="token punctuation">[</span>currentStep<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">clearInterval</span><span class="token punctuation">(</span>installInterval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        installStepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> installSteps<span class="token punctuation">[</span>installSteps<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        startBtn<span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        cancelBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  cancelBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">clearInterval</span><span class="token punctuation">(</span>installInterval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    installStepper<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token string">'Installation cancelled'</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    cancelBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1185"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-947"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="multiple-steppers" class="anchor-heading">
+            Multiple Steppers<a href="#multiple-steppers" aria-label='Direct link to "Multiple Steppers"'></a>
+          </h3>
+          <p>Display multiple steppers to track different concurrent processes or workflows.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper label="Frontend Build" caption="Build Complete" steps="4" value="4" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper label="Backend Build" caption="Running Tests" steps="4" value="3" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper label="Database Migration" caption="Migrating Schema" steps="6" value="2" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper label="Asset Optimization" caption="Waiting to Start" steps="3" value="0" show-progress="">
+              </zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-948">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1186"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Frontend Build<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Build Complete<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Backend Build<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Running Tests<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Database Migration<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Migrating Schema<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Asset Optimization<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Waiting to Start<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1186"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-948"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="minimal-stepper" class="anchor-heading">
+            Minimal Stepper<a href="#minimal-stepper" aria-label='Direct link to "Minimal Stepper"'></a>
+          </h3>
+          <p>
+            A clean, minimal stepper without any text labels, useful for compact layouts or when context is provided
+            elsewhere.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper steps="5" value="1"></zn-stepper>
+              <br />
+              <zn-stepper steps="5" value="3"></zn-stepper>
+              <br />
+              <zn-stepper steps="5" value="5"></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-949">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1187"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1187"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-949"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="progress-overflow" class="anchor-heading">
+            Progress Overflow<a href="#progress-overflow" aria-label='Direct link to "Progress Overflow"'></a>
+          </h3>
+          <p>
+            The stepper handles cases where the value exceeds the total steps by capping the visual progress at 100%.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper caption="Over Limit Example" steps="5" value="7" show-progress=""> </zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-950">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Over Limit Example<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>7<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1188"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-950"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="different-step-counts" class="anchor-heading">
+            Different Step Counts<a
+              href="#different-step-counts"
+              aria-label='Direct link to "Different Step Counts"'
+            ></a>
+          </h3>
+          <p>Steppers work with any number of steps, from simple two-step processes to complex multi-step workflows.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper caption="Two Steps" steps="2" value="1" show-progress=""></zn-stepper>
+              <br />
+              <zn-stepper caption="Five Steps" steps="5" value="3" show-progress=""></zn-stepper>
+              <br />
+              <zn-stepper caption="Ten Steps" steps="10" value="6" show-progress=""></zn-stepper>
+              <br />
+              <zn-stepper caption="Twenty Steps" steps="20" value="15" show-progress=""></zn-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-951">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1189"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Two Steps<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Five Steps<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Ten Steps<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Twenty Steps<span class="token punctuation">"</span></span> <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>15<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1189"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-951"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="customization" class="anchor-heading">
+            Customization<a href="#customization" aria-label='Direct link to "Customization"'></a>
+          </h2>
+          <h3 id="styling-with-css" class="anchor-heading">
+            Styling with CSS<a href="#styling-with-css" aria-label='Direct link to "Styling with CSS"'></a>
+          </h3>
+          <p>Customize the appearance of the stepper using CSS custom properties and standard CSS.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                class="custom-stepper"
+                label="Custom Styled Stepper"
+                caption="With Custom Colors"
+                steps="5"
+                value="3"
+                show-progress=""
+              >
+              </zn-stepper>
+
+              <style>
+                .custom-stepper .step-progress {
+                  background-color: rgb(var(--zn-success));
+                }
+
+                .custom-stepper .step {
+                  background-color: rgba(var(--zn-success), 0.3);
+                }
+
+                .custom-stepper .header {
+                  color: rgb(var(--zn-success));
+                }
+
+                .custom-stepper .label {
+                  font-weight: 700;
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-952">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1190"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Custom Styled Stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>With Custom Colors<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.custom-stepper .step-progress</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-stepper .step</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-stepper .header</span> <span class="token punctuation">{</span>
+    <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-stepper .label</span> <span class="token punctuation">{</span>
+    <span class="token property">font-weight</span><span class="token punctuation">:</span> 700<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1190"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-952"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="themed-steppers" class="anchor-heading">
+            Themed Steppers<a href="#themed-steppers" aria-label='Direct link to "Themed Steppers"'></a>
+          </h3>
+          <p>Create themed steppers for different use cases or states.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper class="success-stepper" caption="Success State" steps="4" value="4" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper class="warning-stepper" caption="Warning State" steps="4" value="2" show-progress="">
+              </zn-stepper>
+              <br />
+              <zn-stepper class="error-stepper" caption="Error State" steps="4" value="1" show-progress="">
+              </zn-stepper>
+
+              <style>
+                .success-stepper .step-progress {
+                  background-color: rgb(var(--zn-success));
+                }
+                .success-stepper .step {
+                  background-color: rgba(var(--zn-success), 0.3);
+                }
+
+                .warning-stepper .step-progress {
+                  background-color: rgb(var(--zn-warning));
+                }
+                .warning-stepper .step {
+                  background-color: rgba(var(--zn-warning), 0.3);
+                }
+
+                .error-stepper .step-progress {
+                  background-color: rgb(var(--zn-error));
+                }
+                .error-stepper .step {
+                  background-color: rgba(var(--zn-error), 0.3);
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-953">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1191"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Success State<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Warning State<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Error State<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.success-stepper .step-progress</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.success-stepper .step</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.warning-stepper .step-progress</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-warning<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.warning-stepper .step</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-warning<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.error-stepper .step-progress</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-error<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.error-stepper .step</span> <span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-error<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1191"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-953"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-height-and-styling" class="anchor-heading">
+            Custom Height and Styling<a
+              href="#custom-height-and-styling"
+              aria-label='Direct link to "Custom Height and Styling"'
+            ></a>
+          </h3>
+          <p>Adjust the visual appearance of the stepper to match your design requirements.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper class="large-stepper" caption="Large Stepper" steps="4" value="2" show-progress="">
+              </zn-stepper>
+
+              <style>
+                .large-stepper .step-container {
+                  height: 20px;
+                }
+
+                .large-stepper .step {
+                  width: 24px;
+                  height: 24px;
+                  border-width: 4px;
+                }
+
+                .large-stepper .step-progress {
+                  height: 12px;
+                  top: 4px;
+                }
+
+                .large-stepper .step-line {
+                  height: 4px;
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-954">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1192"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>large-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Large Stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.large-stepper .step-container</span> <span class="token punctuation">{</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.large-stepper .step</span> <span class="token punctuation">{</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> 24px<span class="token punctuation">;</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> 24px<span class="token punctuation">;</span>
+    <span class="token property">border-width</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.large-stepper .step-progress</span> <span class="token punctuation">{</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> 12px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.large-stepper .step-line</span> <span class="token punctuation">{</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1192"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-954"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="wizard-patterns" class="anchor-heading">
+            Wizard Patterns<a href="#wizard-patterns" aria-label='Direct link to "Wizard Patterns"'></a>
+          </h2>
+          <h3 id="using-with-vertical-stepper" class="anchor-heading">
+            Using with Vertical Stepper<a
+              href="#using-with-vertical-stepper"
+              aria-label='Direct link to "Using with Vertical Stepper"'
+            ></a>
+          </h3>
+          <p>
+            Combine horizontal and vertical steppers for comprehensive workflow navigation. The horizontal stepper shows
+            overall progress while vertical steppers can show sub-steps within each main step.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                label="Multi-Stage Process"
+                caption="Stage 2: Configuration"
+                steps="3"
+                value="2"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br /><br />
+              <zn-vertical-stepper
+                caption="Database Setup"
+                description="Configure database connection"
+                first=""
+                active=""
+              ></zn-vertical-stepper>
+              <zn-vertical-stepper
+                caption="API Keys"
+                description="Enter your API credentials"
+                active=""
+              ></zn-vertical-stepper>
+              <zn-vertical-stepper
+                caption="Deployment"
+                description="Deploy to production"
+                last=""
+              ></zn-vertical-stepper>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-955">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1193"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Multi-Stage Process<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Stage 2: Configuration<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-vertical-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Database Setup<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Configure database connection<span class="token punctuation">"</span></span> <span class="token attr-name">first</span> <span class="token attr-name">active</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-vertical-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-vertical-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>API Keys<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enter your API credentials<span class="token punctuation">"</span></span> <span class="token attr-name">active</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-vertical-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-vertical-stepper</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Deployment<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Deploy to production<span class="token punctuation">"</span></span> <span class="token attr-name">last</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-vertical-stepper</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1193"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-955"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="progressive-disclosure" class="anchor-heading">
+            Progressive Disclosure<a
+              href="#progressive-disclosure"
+              aria-label='Direct link to "Progressive Disclosure"'
+            ></a>
+          </h3>
+          <p>Use steppers to guide users through complex forms with progressive disclosure of information.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                id="disclosure-stepper"
+                label="Registration Process"
+                caption="Step 1 of 4"
+                steps="4"
+                value="1"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <p>
+                Steppers help break down complex multi-step processes into manageable chunks, improving user experience
+                and reducing cognitive load.
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-956">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1194"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>disclosure-stepper<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Registration Process<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Step 1 of 4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Steppers help break down complex multi-step processes into manageable chunks, improving user experience and reducing cognitive load.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1194"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-956"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="validation-states" class="anchor-heading">
+            Validation States<a href="#validation-states" aria-label='Direct link to "Validation States"'></a>
+          </h3>
+          <p>Combine steppers with validation feedback to show progress and validation status.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-stepper
+                label="Form Validation"
+                caption="Step 2: Validation Required"
+                steps="3"
+                value="2"
+                show-progress=""
+              >
+              </zn-stepper>
+              <br />
+              <zn-alert color="warning" open="">
+                Please complete all required fields before proceeding to the next step.
+              </zn-alert>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-957">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1195"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-stepper</span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Form Validation<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Step 2: Validation Required<span class="token punctuation">"</span></span>
+  <span class="token attr-name">steps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-stepper</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-alert</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token punctuation">&gt;</span></span>
+  Please complete all required fields before proceeding to the next step.
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-alert</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1195"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-957"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -584,7 +2266,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-469"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/stepper/stepper.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-469"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1196"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/stepper/stepper.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1196"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -599,73 +2281,16 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-470"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/stepper/stepper.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-470"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1197"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/stepper/stepper.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1197"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-471"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/stepper/stepper.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-471"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1198"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/stepper/stepper.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1198"></zn-copy-button></pre>
           </zn-collapsible>
 
-          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
-          </p>
-
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
           </h2>
 
           <div class="table-scroll">
@@ -674,13 +2299,90 @@
                 <tr>
                   <th class="table-name">Name</th>
                   <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
                   <th class="table-default">Default</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td>
+                    <code class="nowrap">caption</code>
+                  </td>
+                  <td>A descriptive label displayed above the stepper to indicate the current step or phase.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">label</code>
+                  </td>
+                  <td>
+                    An optional label displayed above the caption, typically used for the wizard or workflow name.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">steps</code>
+                  </td>
+                  <td>The total number of steps in the process.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">value</code>
+                  </td>
+                  <td>The current step position (0 to steps). Progress is calculated as value/steps.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">show-progress</code>
+                  </td>
+                  <td>When true, displays the step count (e.g., “2 / 5 steps”) next to the caption.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
                   <td></td>
                 </tr>
               </tbody>
@@ -690,7 +2392,7 @@
           <p>
             <em
               >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
             >
           </p>
 
@@ -706,8 +2408,53 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
+                  <td class="nowrap"><code>step-container</code></td>
+                  <td>The container holding the progress line and steps.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>step-line</code></td>
+                  <td>The background line showing the full step track.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>step-progress</code></td>
+                  <td>The filled progress indicator showing completion.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>steps</code></td>
+                  <td>The container for individual step markers.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>step</code></td>
+                  <td>An individual step marker circle.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The header container with caption and progress text.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>caption</code></td>
+                  <td>The caption text element.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>progress</code></td>
+                  <td>The progress count text (e.g., “2 / 5 steps”).</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>label</code></td>
+                  <td>The label text container.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>info</code></td>
+                  <td>The label text element.</td>
                 </tr>
               </tbody>
             </table>
@@ -716,16 +2463,6 @@
           <p>
             <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
           </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

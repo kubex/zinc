@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.0.57">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Audio select allows you to choose audio files from a menu with built-in preview playback functionality."
+    />
+    <title>Audio Select</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/audio-select" />
+    <meta property="og:title" content="Audio Select" />
+    <meta
+      property="og:description"
+      content="Audio select allows you to choose audio files from a menu with built-in preview playback functionality."
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" size="content" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">1.0.57</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          size="small"
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          size="small"
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        size="small"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select" class="active-link"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Audio Select</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#basic-audio-select">Basic Audio Select</a></li>
+            <li data-level="3"><a href="#initial-value">Initial Value</a></li>
+            <li data-level="3"><a href="#custom-placeholder">Custom Placeholder</a></li>
+            <li data-level="3"><a href="#interactive-preview-controls">Interactive Preview Controls</a></li>
+            <li data-level="3"><a href="#listening-for-changes">Listening for Changes</a></li>
+            <li data-level="3"><a href="#programmatic-control">Programmatic Control</a></li>
+            <li data-level="3"><a href="#dynamic-file-lists">Dynamic File Lists</a></li>
+            <li data-level="3"><a href="#form-integration">Form Integration</a></li>
+            <li data-level="3">
+              <a href="#real-world-example-audio-settings-panel">Real-world Example: Audio Settings Panel</a>
+            </li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="3"><a href="#audiofile-interface">AudioFile Interface</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#css-parts">CSS Parts</a></li>
+            <li data-level="2"><a href="#css-custom-properties">CSS Custom Properties</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
+            <li data-level="2"><a href="#behavior-details">Behavior Details</a></li>
+            <li data-level="3"><a href="#audio-playback">Audio Playback</a></li>
+            <li data-level="3"><a href="#selection-behavior">Selection Behavior</a></li>
+            <li data-level="3"><a href="#playpause-button">Play/Pause Button</a></li>
+            <li data-level="2"><a href="#accessibility">Accessibility</a></li>
+            <li data-level="2"><a href="#best-practices">Best Practices</a></li>
+            <li data-level="2"><a href="#browser-compatibility">Browser Compatibility</a></li>
+            <li data-level="2"><a href="#related-components">Related Components</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots-1">Slots</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Audio Select</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-audio-select&gt; | ZnAudioSelect</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+            </div>
+          </header>
+
+          <p class="component-summary">Short summary of the component’s intended use.</p>
+
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="basic-audio-select" class="anchor-heading">
+            Basic Audio Select<a href="#basic-audio-select" aria-label='Direct link to "Basic Audio Select"'></a>
+          </h3>
+          <p>
+            The audio select component combines a standard select dropdown with an integrated audio preview player. Use
+            the <code>label</code> attribute to give the select an accessible label, provide an array of audio files via
+            the <code>files</code> property, and control the selected value with the <code>value</code> attribute.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="basic-audio-select" label="Select an audio file" placeholder="Choose a sound">
+              </zn-audio-select>
+
+              <script type="module">
+                const audioSelect = document.getElementById('basic-audio-select');
+
+                audioSelect.files = [
+                  {
+                    name: 'Notification Sound',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                  },
+                  { name: 'Alert Tone', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
+                  { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+                ];
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-42">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-66"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>basic-audio-select<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select an audio file<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Choose a sound<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'basic-audio-select'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification Sound'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Alert Tone'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Chime'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-66"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-42"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--tip">
+            <p>
+              The play/pause button in the prefix slot allows users to preview the selected audio file before confirming
+              their choice. The audio automatically stops when a new selection is made or when the component is
+              disconnected.
+            </p>
+          </div>
+          <h3 id="initial-value" class="anchor-heading">
+            Initial Value<a href="#initial-value" aria-label='Direct link to "Initial Value"'></a>
+          </h3>
+          <p>
+            Use the <code>value</code> attribute to set an initial selection. The value should match one of the URLs in
+            your files array.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="initial-value-audio" label="Select notification sound" placeholder="Choose a sound">
+              </zn-audio-select>
+
+              <script type="module">
+                const audioSelect = document.getElementById('initial-value-audio');
+
+                audioSelect.files = [
+                  {
+                    name: 'Notification Sound',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                  },
+                  { name: 'Alert Tone', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
+                  { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+                ];
+
+                // Set initial value
+                audioSelect.value = 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3';
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-43">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-67"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>initial-value-audio<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select notification sound<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Choose a sound<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'initial-value-audio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification Sound'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Alert Tone'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Chime'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Set initial value</span>
+  audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-67"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-43"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-placeholder" class="anchor-heading">
+            Custom Placeholder<a href="#custom-placeholder" aria-label='Direct link to "Custom Placeholder"'></a>
+          </h3>
+          <p>
+            Customize the placeholder text shown when no audio file is selected using the
+            <code>placeholder</code> attribute.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="custom-placeholder-audio" label="Ringtone" placeholder="Pick your ringtone">
+              </zn-audio-select>
+
+              <script type="module">
+                const audioSelect = document.getElementById('custom-placeholder-audio');
+
+                audioSelect.files = [
+                  {
+                    name: 'Classic Ring',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                  },
+                  {
+                    name: 'Modern Tone',
+                    url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'
+                  },
+                  {
+                    name: 'Gentle Chime',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+                  }
+                ];
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-44">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-68"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-placeholder-audio<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Ringtone<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Pick your ringtone<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'custom-placeholder-audio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Classic Ring'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Modern Tone'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Gentle Chime'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-68"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-44"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="interactive-preview-controls" class="anchor-heading">
+            Interactive Preview Controls<a
+              href="#interactive-preview-controls"
+              aria-label='Direct link to "Interactive Preview Controls"'
+            ></a>
+          </h3>
+          <p>
+            The audio select includes an integrated play/pause checkbox in the prefix slot. Click the play button to
+            preview the currently selected audio. The button automatically changes to a pause icon while audio is
+            playing.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="preview-demo-audio" label="Test audio playback" placeholder="Select to preview">
+              </zn-audio-select>
+
+              <div style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-100); border-radius: 4px">
+                <strong>Instructions:</strong>
+                <ol style="margin: 0.5rem 0 0 1.5rem; padding: 0">
+                  <li>Select an audio file from the dropdown</li>
+                  <li>Click the play button (arrow icon) to start playback</li>
+                  <li>Click the pause button to stop playback</li>
+                  <li>Select a different file to automatically stop current playback</li>
+                </ol>
+              </div>
+
+              <script type="module">
+                const audioSelect = document.getElementById('preview-demo-audio');
+
+                audioSelect.files = [
+                  { name: 'Short Beep', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+                  {
+                    name: 'Notification Ping',
+                    url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'
+                  },
+                  { name: 'Alert Sound', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+                ];
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-45">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-69"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>preview-demo-audio<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Test audio playback<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select to preview<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Instructions:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ol</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0.5rem 0 0 1.5rem<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Select an audio file from the dropdown<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Click the play button (arrow icon) to start playback<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Click the pause button to stop playback<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">&gt;</span></span>Select a different file to automatically stop current playback<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ol</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'preview-demo-audio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Short Beep'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification Ping'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Alert Sound'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-69"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-45"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="alert" class="callout callout--tip">
+            <p>
+              Audio playback is prevented when no file is selected. The play/pause button becomes functional only after
+              selecting an audio file from the dropdown.
+            </p>
+          </div>
+          <h3 id="listening-for-changes" class="anchor-heading">
+            Listening for Changes<a
+              href="#listening-for-changes"
+              aria-label='Direct link to "Listening for Changes"'
+            ></a>
+          </h3>
+          <p>
+            The audio select emits a <code>zn-change</code> event when the selection changes. Access the selected URL
+            through the <code>value</code> property.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="event-audio-select" label="Select your notification" placeholder="Choose one">
+              </zn-audio-select>
+
+              <div style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-100); border-radius: 4px">
+                <strong>Selection:</strong>
+                <div id="audio-selection-log" style="margin-top: 0.5rem; font-family: monospace; font-size: 0.875rem">
+                  No selection yet
+                </div>
+              </div>
+
+              <script type="module">
+                const audioSelect = document.getElementById('event-audio-select');
+                const selectionLog = document.getElementById('audio-selection-log');
+
+                audioSelect.files = [
+                  {
+                    name: 'Notification 1',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                  },
+                  {
+                    name: 'Notification 2',
+                    url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'
+                  },
+                  {
+                    name: 'Notification 3',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+                  }
+                ];
+
+                audioSelect.addEventListener('zn-change', e => {
+                  const selectedFile = audioSelect.files.find(f => f.url === e.target.value);
+                  if (selectedFile) {
+                    selectionLog.textContent = `Selected: ${selectedFile.name}\nURL: ${selectedFile.url}`;
+                  } else {
+                    selectionLog.textContent = 'No selection';
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-46">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-70"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-audio-select<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select your notification<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Choose one<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Selection:<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>audio-selection-log<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">font-family</span><span class="token punctuation">:</span> monospace<span class="token punctuation">;</span> <span class="token property">font-size</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+    No selection yet
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'event-audio-select'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> selectionLog <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'audio-selection-log'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification 1'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification 2'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Notification 3'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> selectedFile <span class="token operator">=</span> audioSelect<span class="token punctuation">.</span>files<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">f</span> <span class="token operator">=&gt;</span> f<span class="token punctuation">.</span>url <span class="token operator">===</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>selectedFile<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      selectionLog<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Selected: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>selectedFile<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">\nURL: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>selectedFile<span class="token punctuation">.</span>url<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      selectionLog<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token string">'No selection'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-70"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-46"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="programmatic-control" class="anchor-heading">
+            Programmatic Control<a href="#programmatic-control" aria-label='Direct link to "Programmatic Control"'></a>
+          </h3>
+          <p>
+            Control the audio select programmatically by setting the <code>value</code> property or manipulating the
+            <code>files</code> array.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-audio-select id="programmatic-audio" label="Programmable audio select" placeholder="Select a sound">
+              </zn-audio-select>
+
+              <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap">
+                <zn-button id="select-first" size="small">Select First</zn-button>
+                <zn-button id="select-second" size="small">Select Second</zn-button>
+                <zn-button id="clear-selection" size="small">Clear</zn-button>
+                <zn-button id="add-file" size="small">Add File</zn-button>
+              </div>
+
+              <script type="module">
+                const audioSelect = document.getElementById('programmatic-audio');
+
+                const initialFiles = [
+                  { name: 'Sound A', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+                  { name: 'Sound B', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' }
+                ];
+
+                audioSelect.files = [...initialFiles];
+
+                document.getElementById('select-first').addEventListener('click', () => {
+                  audioSelect.value = audioSelect.files[0]?.url || '';
+                });
+
+                document.getElementById('select-second').addEventListener('click', () => {
+                  audioSelect.value = audioSelect.files[1]?.url || '';
+                });
+
+                document.getElementById('clear-selection').addEventListener('click', () => {
+                  audioSelect.value = '';
+                });
+
+                document.getElementById('add-file').addEventListener('click', () => {
+                  const newFile = {
+                    name: `Sound ${audioSelect.files.length + 1}`,
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+                  };
+                  audioSelect.files = [...audioSelect.files, newFile];
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-47">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-71"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>programmatic-audio<span class="token punctuation">"</span></span>
+  <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Programmable audio select<span class="token punctuation">"</span></span>
+  <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select a sound<span class="token punctuation">"</span></span>
+<span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">flex-wrap</span><span class="token punctuation">:</span> wrap<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>select-first<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Select First<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>select-second<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Select Second<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>clear-selection<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Clear<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>add-file<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Add File<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'programmatic-audio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> initialFiles <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Sound A'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Sound B'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>initialFiles<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'select-first'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> audioSelect<span class="token punctuation">.</span>files<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">?.</span>url <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'select-second'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> audioSelect<span class="token punctuation">.</span>files<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">?.</span>url <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'clear-selection'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'add-file'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> newFile <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Sound </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>audioSelect<span class="token punctuation">.</span>files<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+      <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>audioSelect<span class="token punctuation">.</span>files<span class="token punctuation">,</span> newFile<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-71"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-47"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="dynamic-file-lists" class="anchor-heading">
+            Dynamic File Lists<a href="#dynamic-file-lists" aria-label='Direct link to "Dynamic File Lists"'></a>
+          </h3>
+          <p>
+            Update the available audio files dynamically by setting the <code>files</code> property. This is useful for
+            loading files from an API or updating based on user actions.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div class="form-spacing">
+                <zn-select id="category-selector" label="Audio category">
+                  <zn-option value="">Select a category</zn-option>
+                  <zn-option value="notifications">Notifications</zn-option>
+                  <zn-option value="alarms">Alarms</zn-option>
+                  <zn-option value="ringtones">Ringtones</zn-option>
+                </zn-select>
+
+                <zn-audio-select
+                  id="dynamic-audio-select"
+                  label="Available sounds"
+                  placeholder="First select a category"
+                >
+                </zn-audio-select>
+              </div>
+
+              <script type="module">
+                const categorySelector = document.getElementById('category-selector');
+                const audioSelect = document.getElementById('dynamic-audio-select');
+
+                const audioCategories = {
+                  notifications: [
+                    {
+                      name: 'Gentle Ping',
+                      url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                    },
+                    {
+                      name: 'Quick Beep',
+                      url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'
+                    }
+                  ],
+                  alarms: [
+                    {
+                      name: 'Wake Up Call',
+                      url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+                    },
+                    {
+                      name: 'Morning Alert',
+                      url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                    }
+                  ],
+                  ringtones: [
+                    {
+                      name: 'Classic Ring',
+                      url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'
+                    },
+                    {
+                      name: 'Modern Tone',
+                      url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+                    }
+                  ]
+                };
+
+                categorySelector.addEventListener('zn-change', e => {
+                  const category = e.target.value;
+                  if (category && audioCategories[category]) {
+                    audioSelect.files = audioCategories[category];
+                    audioSelect.value = '';
+                    audioSelect.placeholder = 'Select a sound';
+                  } else {
+                    audioSelect.files = [];
+                    audioSelect.value = '';
+                    audioSelect.placeholder = 'First select a category';
+                  }
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-48">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-72"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>category-selector<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Audio category<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Select a category<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notifications<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Notifications<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alarms<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Alarms<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ringtones<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Ringtones<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+    <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dynamic-audio-select<span class="token punctuation">"</span></span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Available sounds<span class="token punctuation">"</span></span>
+    <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>First select a category<span class="token punctuation">"</span></span>
+  <span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> categorySelector <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'category-selector'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'dynamic-audio-select'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> audioCategories <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">notifications</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Gentle Ping'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Quick Beep'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">alarms</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Wake Up Call'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Morning Alert'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">ringtones</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Classic Ring'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Modern Tone'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  categorySelector<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> category <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>category <span class="token operator">&amp;&amp;</span> audioCategories<span class="token punctuation">[</span>category<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> audioCategories<span class="token punctuation">[</span>category<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      audioSelect<span class="token punctuation">.</span>placeholder <span class="token operator">=</span> <span class="token string">'Select a sound'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      audioSelect<span class="token punctuation">.</span>placeholder <span class="token operator">=</span> <span class="token string">'First select a category'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-72"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-48"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="form-integration" class="anchor-heading">
+            Form Integration<a href="#form-integration" aria-label='Direct link to "Form Integration"'></a>
+          </h3>
+          <p>
+            The audio select component works with standard HTML forms. The selected audio URL is submitted as the form
+            value.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form id="audio-form">
+                <zn-audio-select
+                  id="form-audio-select"
+                  name="notificationSound"
+                  label="Notification sound"
+                  placeholder="Choose your notification"
+                >
+                </zn-audio-select>
+                <br />
+                <zn-button type="submit" variant="primary">Submit</zn-button>
+                <zn-button type="reset">Reset</zn-button>
+              </form>
+
+              <script type="module">
+                const form = document.getElementById('audio-form');
+                const audioSelect = document.getElementById('form-audio-select');
+
+                audioSelect.files = [
+                  { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+                  { name: 'Bell', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
+                  { name: 'Ding', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+                ];
+
+                form.addEventListener('submit', e => {
+                  e.preventDefault();
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData);
+                  alert('Form submitted!\n\n' + JSON.stringify(data, null, 2));
+                });
+
+                form.addEventListener('reset', () => {
+                  audioSelect.value = '';
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-49">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-73"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>audio-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+    <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-audio-select<span class="token punctuation">"</span></span>
+    <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notificationSound<span class="token punctuation">"</span></span>
+    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notification sound<span class="token punctuation">"</span></span>
+    <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Choose your notification<span class="token punctuation">"</span></span>
+  <span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'audio-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> audioSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'form-audio-select'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  audioSelect<span class="token punctuation">.</span>files <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Chime'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Bell'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Ding'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span>formData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Form submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'reset'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    audioSelect<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-73"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-49"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="real-world-example-audio-settings-panel" class="anchor-heading">
+            Real-world Example: Audio Settings Panel<a
+              href="#real-world-example-audio-settings-panel"
+              aria-label='Direct link to "Real-world Example: Audio Settings Panel"'
+            ></a>
+          </h3>
+          <p>
+            A complete example showing how to use the audio select in a settings interface for configuring notification
+            sounds.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div
+                style="
+                  max-width: 600px;
+                  padding: 1.5rem;
+                  background: var(--zn-color-neutral-50);
+                  border-radius: 8px;
+                  border: 1px solid var(--zn-color-neutral-200);
+                "
+              >
+                <h3 style="margin-top: 0">Audio Notification Settings</h3>
+
+                <form id="notification-settings-form" class="form-spacing">
+                  <zn-checkbox id="enable-notifications" checked=""> Enable audio notifications </zn-checkbox>
+
+                  <zn-audio-select
+                    id="new-message-sound"
+                    name="newMessageSound"
+                    label="New message"
+                    placeholder="Select a sound"
+                  >
+                  </zn-audio-select>
+
+                  <zn-audio-select id="mention-sound" name="mentionSound" label="@mention" placeholder="Select a sound">
+                  </zn-audio-select>
+
+                  <zn-audio-select id="call-sound" name="callSound" label="Incoming call" placeholder="Select a sound">
+                  </zn-audio-select>
+
+                  <div style="display: flex; gap: 0.5rem; margin-top: 1rem">
+                    <zn-button type="submit" variant="primary">Save Settings</zn-button>
+                    <zn-button type="reset">Reset</zn-button>
+                  </div>
+                </form>
+              </div>
+
+              <script type="module">
+                const form = document.getElementById('notification-settings-form');
+                const enableNotifications = document.getElementById('enable-notifications');
+                const newMessageSound = document.getElementById('new-message-sound');
+                const mentionSound = document.getElementById('mention-sound');
+                const callSound = document.getElementById('call-sound');
+
+                // Sample audio files
+                const audioFiles = [
+                  {
+                    name: 'Gentle Ping',
+                    url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'
+                  },
+                  { name: 'Quick Beep', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
+                  { name: 'Soft Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+                ];
+
+                // Set audio files for all selects
+                [newMessageSound, mentionSound, callSound].forEach(select => {
+                  select.files = audioFiles;
+                });
+
+                // Enable/disable audio selects based on checkbox
+                function updateAudioSelectsState() {
+                  const enabled = enableNotifications.checked;
+                  [newMessageSound, mentionSound, callSound].forEach(select => {
+                    select.style.opacity = enabled ? '1' : '0.5';
+                    select.style.pointerEvents = enabled ? 'auto' : 'none';
+                  });
+                }
+
+                enableNotifications.addEventListener('zn-change', updateAudioSelectsState);
+                updateAudioSelectsState();
+
+                form.addEventListener('submit', e => {
+                  e.preventDefault();
+                  if (!enableNotifications.checked) {
+                    alert('Audio notifications are disabled');
+                    return;
+                  }
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData);
+                  alert('Settings saved!\n\n' + JSON.stringify(data, null, 2));
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-50">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-74"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">max-width</span><span class="token punctuation">:</span> 600px<span class="token punctuation">;</span> <span class="token property">padding</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-50<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token property">border-radius</span><span class="token punctuation">:</span> 8px<span class="token punctuation">;</span> <span class="token property">border</span><span class="token punctuation">:</span> 1px solid <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-200<span class="token punctuation">)</span><span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin-top</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Audio Notification Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notification-settings-form<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-checkbox</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enable-notifications<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span>
+      Enable audio notifications
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-checkbox</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+      <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>new-message-sound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>newMessageSound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>New message<span class="token punctuation">"</span></span>
+      <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select a sound<span class="token punctuation">"</span></span>
+    <span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+      <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mention-sound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mentionSound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@mention<span class="token punctuation">"</span></span>
+      <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select a sound<span class="token punctuation">"</span></span>
+    <span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-audio-select</span>
+      <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>call-sound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>callSound<span class="token punctuation">"</span></span>
+      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Incoming call<span class="token punctuation">"</span></span>
+      <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Select a sound<span class="token punctuation">"</span></span>
+    <span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-audio-select</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span> <span class="token property">margin-top</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Save Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'notification-settings-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> enableNotifications <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'enable-notifications'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> newMessageSound <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'new-message-sound'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> mentionSound <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'mention-sound'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> callSound <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'call-sound'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Sample audio files</span>
+  <span class="token keyword">const</span> audioFiles <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Gentle Ping'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Quick Beep'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Soft Chime'</span><span class="token punctuation">,</span> <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Set audio files for all selects</span>
+  <span class="token punctuation">[</span>newMessageSound<span class="token punctuation">,</span> mentionSound<span class="token punctuation">,</span> callSound<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">select</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    select<span class="token punctuation">.</span>files <span class="token operator">=</span> audioFiles<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// Enable/disable audio selects based on checkbox</span>
+  <span class="token keyword">function</span> <span class="token function">updateAudioSelectsState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> enabled <span class="token operator">=</span> enableNotifications<span class="token punctuation">.</span>checked<span class="token punctuation">;</span>
+    <span class="token punctuation">[</span>newMessageSound<span class="token punctuation">,</span> mentionSound<span class="token punctuation">,</span> callSound<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">select</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      select<span class="token punctuation">.</span>style<span class="token punctuation">.</span>opacity <span class="token operator">=</span> enabled <span class="token operator">?</span> <span class="token string">'1'</span> <span class="token operator">:</span> <span class="token string">'0.5'</span><span class="token punctuation">;</span>
+      select<span class="token punctuation">.</span>style<span class="token punctuation">.</span>pointerEvents <span class="token operator">=</span> enabled <span class="token operator">?</span> <span class="token string">'auto'</span> <span class="token operator">:</span> <span class="token string">'none'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  enableNotifications<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> updateAudioSelectsState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">updateAudioSelectsState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    e<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>enableNotifications<span class="token punctuation">.</span>checked<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Audio notifications are disabled'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">const</span> formData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> data <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">fromEntries</span><span class="token punctuation">(</span>formData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Settings saved!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-74"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-50"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Attribute</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>value</code></td>
+                  <td><code>value</code></td>
+                  <td>The currently selected audio file URL. When set, the audio player loads this URL for preview.</td>
+                  <td><code>string</code></td>
+                  <td><code>''</code></td>
+                </tr>
+                <tr>
+                  <td><code>label</code></td>
+                  <td><code>label</code></td>
+                  <td>
+                    The label text displayed above the select control. For labels containing HTML, use the
+                    <code>label</code> slot instead.
+                  </td>
+                  <td><code>string</code></td>
+                  <td><code>''</code></td>
+                </tr>
+                <tr>
+                  <td><code>placeholder</code></td>
+                  <td><code>placeholder</code></td>
+                  <td>Placeholder text shown in the dropdown when no audio file is selected.</td>
+                  <td><code>string</code></td>
+                  <td><code>''</code></td>
+                </tr>
+                <tr>
+                  <td><code>files</code></td>
+                  <td><code>files</code></td>
+                  <td>
+                    Array of audio files available for selection. Each file object must have <code>name</code> (display
+                    text) and <code>url</code> (audio file URL) properties.
+                  </td>
+                  <td><code>AudioFile[]</code></td>
+                  <td><code>[]</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h3 id="audiofile-interface" class="anchor-heading">
+            AudioFile Interface<a href="#audiofile-interface" aria-label='Direct link to "AudioFile Interface"'></a>
+          </h3>
+          <pre><code class="language-typescript" id="code-block-75"><span class="token keyword">interface</span> <span class="token class-name">AudioFile</span> <span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>  <span class="token comment">// Display name shown in the dropdown</span>
+  url<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>   <span class="token comment">// URL to the audio file</span>
+<span class="token punctuation">}</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-75"></zn-copy-button></pre>
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Description</th>
+                  <th>Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>zn-change</code></td>
+                  <td>
+                    Emitted when the selected audio file changes. The event is triggered by the underlying
+                    <code>zn-select</code> component and bubbles up. Access the new value via
+                    <code>event.target.value</code>.
+                  </td>
+                  <td>Inherited from <code>zn-select</code></td>
+                </tr>
+                <tr>
+                  <td><code>zn-input</code></td>
+                  <td>
+                    Emitted when the select receives input. Inherited from the underlying
+                    <code>zn-select</code> component.
+                  </td>
+                  <td>Inherited from <code>zn-select</code></td>
+                </tr>
+                <tr>
+                  <td><code>zn-focus</code></td>
+                  <td>Emitted when the select gains focus.</td>
+                  <td>Inherited from <code>zn-select</code></td>
+                </tr>
+                <tr>
+                  <td><code>zn-blur</code></td>
+                  <td>Emitted when the select loses focus.</td>
+                  <td>Inherited from <code>zn-select</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              The audio select inherits all events from the <code>zn-select</code> component. Refer to the
+              <a href="/components/select#events">select documentation</a> for complete event details.
+            </p>
+          </div>
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>(default)</td>
+                  <td>
+                    The default slot is not used in the audio select component. Options are generated automatically from
+                    the <code>files</code> property.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>actions</code></td>
+                  <td>Optional slot for action buttons or controls. Inherited from <code>zn-select</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>footer</code></td>
+                  <td>Optional slot for footer content. Inherited from <code>zn-select</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div role="alert" class="callout callout--warning">
+            <p>
+              <strong>Note:</strong> Unlike the standard <code>zn-select</code>, the audio select component
+              auto-generates its options from the <code>files</code> property. Manual <code>zn-option</code> elements in
+              the default slot will be overwritten.
+            </p>
+          </div>
+          <h2 id="css-parts" class="anchor-heading">
+            CSS Parts<a href="#css-parts" aria-label='Direct link to "CSS Parts"'></a>
+          </h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Part</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>base</code></td>
+                  <td>The component’s base wrapper element.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              The audio select wraps a <code>zn-select</code> component internally, so all CSS parts from
+              <code>zn-select</code> are also available. See the
+              <a href="/components/select#css-parts">select component CSS parts</a> for additional customization
+              options.
+            </p>
+          </div>
+          <h2 id="css-custom-properties" class="anchor-heading">
+            CSS Custom Properties<a
+              href="#css-custom-properties"
+              aria-label='Direct link to "CSS Custom Properties"'
+            ></a>
+          </h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>--example</code></td>
+                  <td>An example CSS custom property (inherited from base component).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              The audio select inherits custom properties from the underlying <code>zn-select</code> component. See the
+              <a href="/components/select">select documentation</a> for available custom properties.
+            </p>
+          </div>
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+          <p>The audio select component provides these methods:</p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Description</th>
+                  <th>Arguments</th>
+                  <th>Returns</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>stopAudio()</code></td>
+                  <td>
+                    Stops any currently playing audio, resets playback to the beginning, and updates the play/pause
+                    button state.
+                  </td>
+                  <td>None</td>
+                  <td><code>void</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              Additional methods are available through the underlying <code>zn-select</code> component. Use standard DOM
+              methods like <code>querySelector()</code> to access the internal select and call its methods (e.g.,
+              <code>focus()</code>, <code>blur()</code>, <code>show()</code>, <code>hide()</code>).
+            </p>
+          </div>
+          <h2 id="behavior-details" class="anchor-heading">
+            Behavior Details<a href="#behavior-details" aria-label='Direct link to "Behavior Details"'></a>
+          </h2>
+          <h3 id="audio-playback" class="anchor-heading">
+            Audio Playback<a href="#audio-playback" aria-label='Direct link to "Audio Playback"'></a>
+          </h3>
+          <ul>
+            <li>The audio preview player is implemented using the HTML5 <code>Audio</code> API</li>
+            <li>Clicking play loads and plays the currently selected audio file</li>
+            <li>
+              Audio automatically stops when:
+              <ul>
+                <li>The user clicks the pause button</li>
+                <li>A different audio file is selected</li>
+                <li>The component is disconnected from the DOM</li>
+              </ul>
+            </li>
+            <li>
+              If audio playback fails (e.g., invalid URL, network error), an error is logged to the console and the
+              button returns to the play state
+            </li>
+            <li>Attempting to play without selecting a file is prevented</li>
+          </ul>
+          <h3 id="selection-behavior" class="anchor-heading">
+            Selection Behavior<a href="#selection-behavior" aria-label='Direct link to "Selection Behavior"'></a>
+          </h3>
+          <ul>
+            <li>
+              The component automatically creates a disabled placeholder option from the
+              <code>placeholder</code> property
+            </li>
+            <li>Each file in the <code>files</code> array generates a corresponding <code>zn-option</code> element</li>
+            <li>
+              When <code>value</code> changes, any playing audio is automatically stopped and the new audio URL is
+              loaded
+            </li>
+            <li>
+              The internal <code>zn-select</code> handles all dropdown behavior, keyboard navigation, and accessibility
+              features
+            </li>
+          </ul>
+          <h3 id="playpause-button" class="anchor-heading">
+            Play/Pause Button<a href="#playpause-button" aria-label='Direct link to "Play/Pause Button"'></a>
+          </h3>
+          <ul>
+            <li>Implemented as a <code>zn-checkbox</code> in the prefix slot</li>
+            <li>Shows a play icon (arrow) when audio is not playing</li>
+            <li>Shows a pause icon when audio is playing</li>
+            <li>Uses primary color when checked (playing) and secondary color when unchecked (stopped)</li>
+            <li>Button state is synchronized with audio playback state</li>
+          </ul>
+          <h2 id="accessibility" class="anchor-heading">
+            Accessibility<a href="#accessibility" aria-label='Direct link to "Accessibility"'></a>
+          </h2>
+          <p>
+            The audio select component inherits all accessibility features from the underlying
+            <code>zn-select</code> component:
+          </p>
+          <ul>
+            <li>Proper ARIA labels and roles for screen readers</li>
+            <li>Full keyboard navigation support</li>
+            <li>Focus management</li>
+            <li>High contrast mode support</li>
+          </ul>
+          <p>
+            The play/pause checkbox should include an <code>aria-label</code> for screen reader users (this is
+            implemented by default in the component).
+          </p>
+          <h2 id="best-practices" class="anchor-heading">
+            Best Practices<a href="#best-practices" aria-label='Direct link to "Best Practices"'></a>
+          </h2>
+          <ol>
+            <li><strong>File URLs</strong>: Ensure all audio file URLs are accessible and use HTTPS for security</li>
+            <li>
+              <strong>File Formats</strong>: Use widely supported audio formats (MP3, OGG, WAV) for maximum browser
+              compatibility
+            </li>
+            <li>
+              <strong>File Names</strong>: Provide clear, descriptive names in the <code>name</code> property for better
+              user experience
+            </li>
+            <li>
+              <strong>File Size</strong>: Keep audio files small for quick preview loading (notification sounds should
+              typically be under 5 seconds)
+            </li>
+            <li>
+              <strong>Error Handling</strong>: Audio playback errors are logged to the console but not shown to users;
+              consider adding custom error handling for production use
+            </li>
+            <li><strong>Performance</strong>: The component stops audio when disconnected, preventing memory leaks</li>
+            <li>
+              <strong>Accessibility</strong>: Always provide a meaningful <code>label</code> attribute for screen reader
+              users
+            </li>
+          </ol>
+          <h2 id="browser-compatibility" class="anchor-heading">
+            Browser Compatibility<a
+              href="#browser-compatibility"
+              aria-label='Direct link to "Browser Compatibility"'
+            ></a>
+          </h2>
+          <p>The audio select component requires:</p>
+          <ul>
+            <li>Modern browser with Web Components support</li>
+            <li>HTML5 Audio API support</li>
+            <li>All browsers supported by the base Zinc component library</li>
+          </ul>
+          <h2 id="related-components" class="anchor-heading">
+            Related Components<a href="#related-components" aria-label='Direct link to "Related Components"'></a>
+          </h2>
+          <ul>
+            <li><a href="/components/select">Select</a> - The underlying select component</li>
+            <li><a href="/components/checkbox">Checkbox</a> - Used for the play/pause button</li>
+            <li><a href="/components/option">Option</a> - Used for dropdown options</li>
+          </ul>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-76"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/audio-select/audio-select.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-76"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-77"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/audio-select/audio-select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-77"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-78"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/audio-select/audio-select.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-78"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <h2 id="slots-1" class="anchor-heading">Slots<a href="#slots-1" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">(default)</td>
+                  <td>The default slot.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>actions</code>
+                  </td>
+                  <td>The actions slot.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>footer</code>
+                  </td>
+                  <td>The footer slot.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>--example</code></td>
+                  <td>An example CSS custom property.</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+            >
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The component’s base wrapper.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

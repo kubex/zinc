@@ -4721,7 +4721,7 @@
         },
         {
           "name": "zn-panel",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **actions** - The actions slot.\n- **footer** - The footer slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.\n---\n\n\n### **Events:**\n - **zn-sidebar-toggle** - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n- **side** - Sidebar content displayed on the left or right side of the panel.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             { "name": "basis-px", "value": { "type": "number" } },
@@ -4753,11 +4753,26 @@
             }
           ],
           "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "actions", "description": "The actions slot." },
-            { "name": "footer", "description": "The footer slot." }
+            { "name": "", "description": "The panel's main content." },
+            {
+              "name": "actions",
+              "description": "Actions displayed in the panel header (buttons, chips, etc)."
+            },
+            {
+              "name": "footer",
+              "description": "Content displayed in the panel footer."
+            },
+            {
+              "name": "side",
+              "description": "Sidebar content displayed on the left or right side of the panel."
+            }
           ],
-          "events": [],
+          "events": [
+            {
+              "name": "zn-sidebar-toggle",
+              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state."
+            }
+          ],
           "js": {
             "properties": [
               { "name": "basis", "type": "number" },
@@ -4779,7 +4794,12 @@
               { "name": "sidebarOpen", "type": "boolean" },
               { "name": "enableSidebarToggle", "type": "boolean" }
             ],
-            "events": []
+            "events": [
+              {
+                "name": "zn-sidebar-toggle",
+                "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state."
+              }
+            ]
           }
         },
         {
@@ -5043,7 +5063,7 @@
         },
         {
           "name": "zn-progress-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-primary** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
           "doc-url": "",
           "attributes": [
             { "name": "caption", "value": { "type": "string | undefined" } },
@@ -5057,13 +5077,7 @@
               "value": { "type": "boolean | undefined" }
             }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "caption", "type": "string | undefined" },
@@ -5071,12 +5085,7 @@
               { "name": "value", "type": "number | undefined" },
               { "name": "showProgress", "type": "boolean | undefined" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {
@@ -6111,33 +6120,53 @@
         },
         {
           "name": "zn-skeleton",
-          "description": "Short summary of the component's intended use.\n---\n",
+          "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
           "doc-url": "",
           "attributes": [
             {
               "name": "speed",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
               "value": { "type": "string", "default": "'3s'" }
             },
             {
               "name": "width",
+              "description": "Width of the skeleton element. Default: \"100%\"",
               "value": { "type": "string", "default": "'100%'" }
             },
             {
               "name": "height",
+              "description": "Height of the skeleton element. Default: \"20px\"",
               "value": { "type": "string", "default": "'20px'" }
             },
             {
               "name": "radius",
+              "description": "Border radius of the skeleton element. Default: \"4px\"",
               "value": { "type": "string", "default": "'4px'" }
             }
           ],
           "events": [],
           "js": {
             "properties": [
-              { "name": "speed", "type": "string" },
-              { "name": "width", "type": "string" },
-              { "name": "height", "type": "string" },
-              { "name": "radius", "type": "string" }
+              {
+                "name": "speed",
+                "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+                "type": "string"
+              },
+              {
+                "name": "width",
+                "description": "Width of the skeleton element. Default: \"100%\"",
+                "type": "string"
+              },
+              {
+                "name": "height",
+                "description": "Height of the skeleton element. Default: \"20px\"",
+                "type": "string"
+              },
+              {
+                "name": "radius",
+                "description": "Border radius of the skeleton element. Default: \"4px\"",
+                "type": "string"
+              }
             ],
             "events": []
           }
@@ -6560,36 +6589,62 @@
         },
         {
           "name": "zn-stepper",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Steppers provide visual feedback about progress through a multi-step process or workflow.\n---\n\n\n### **CSS Parts:**\n - **step-container** - The container holding the progress line and steps.\n- **step-line** - The background line showing the full step track.\n- **step-progress** - The filled progress indicator showing completion.\n- **steps** - The container for individual step markers.\n- **step** - An individual step marker circle.\n- **header** - The header container with caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress count text (e.g., \"2 / 5 steps\").\n- **label** - The label text container.\n- **info** - The label text element.",
           "doc-url": "",
           "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "label", "value": { "type": "string" } },
-            { "name": "steps", "value": { "type": "number" } },
-            { "name": "value", "value": { "type": "number" } },
+            {
+              "name": "caption",
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "label",
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "steps",
+              "description": "The total number of steps in the process.",
+              "value": { "type": "number" }
+            },
+            {
+              "name": "value",
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "value": { "type": "number" }
+            },
             { "name": "show-progress", "value": { "type": "boolean" } }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "label", "type": "string" },
-              { "name": "steps", "type": "number" },
-              { "name": "value", "type": "number" },
-              { "name": "showProgress", "type": "boolean" }
-            ],
-            "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "caption",
+                "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+                "type": "string"
+              },
+              {
+                "name": "label",
+                "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+                "type": "string"
+              },
+              {
+                "name": "steps",
+                "description": "The total number of steps in the process.",
+                "type": "number"
+              },
+              {
+                "name": "value",
+                "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+                "type": "number"
+              },
+              { "name": "showProgress", "type": "boolean" },
+              {
+                "name": "show-progress",
+                "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
+                "type": "boolean"
               }
-            ]
+            ],
+            "events": []
           }
         },
         {
@@ -7267,7 +7322,7 @@
         },
         {
           "name": "zn-toggle",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).",
           "doc-url": "",
           "attributes": [
             {
@@ -7321,12 +7376,12 @@
             },
             { "name": "label", "value": { "type": "string", "default": "''" } }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
+          "slots": [{ "name": "", "description": "The toggle's label." }],
           "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
+            {
+              "name": "zn-input",
+              "description": "Emitted when the toggle receives input."
+            }
           ],
           "js": {
             "properties": [
@@ -7352,8 +7407,8 @@
             ],
             "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "zn-input",
+                "description": "Emitted when the toggle receives input."
               }
             ]
           }
@@ -7515,45 +7570,71 @@
         },
         {
           "name": "zn-vertical-stepper",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n---\n\n\n### **Slots:**\n - **icon** - Optional slot for adding an icon or indicator before the step content.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.",
           "doc-url": "",
           "attributes": [
             {
               "name": "last",
+              "description": "When true, removes the connecting line below this step (use for the final step in a sequence).",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "first",
+              "description": "When true, indicates this is the first step in the sequence (affects visual styling).",
               "value": { "type": "boolean", "default": "false" }
             },
             {
               "name": "active",
+              "description": "When true, highlights this step as the current active step in the process.",
               "value": { "type": "boolean", "default": "false" }
             },
-            { "name": "description", "value": { "type": "string" } },
-            { "name": "caption", "value": { "type": "string" } }
+            {
+              "name": "description",
+              "description": "A descriptive text explaining what happens in this step or its current status.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "caption",
+              "description": "The main label/title for this step.",
+              "value": { "type": "string" }
+            }
           ],
           "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            {
+              "name": "icon",
+              "description": "Optional slot for adding an icon or indicator before the step content."
+            }
           ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
-              { "name": "last", "type": "boolean" },
-              { "name": "first", "type": "boolean" },
-              { "name": "active", "type": "boolean" },
-              { "name": "description", "type": "string" },
-              { "name": "caption", "type": "string" }
-            ],
-            "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
+                "name": "last",
+                "description": "When true, removes the connecting line below this step (use for the final step in a sequence).",
+                "type": "boolean"
+              },
+              {
+                "name": "first",
+                "description": "When true, indicates this is the first step in the sequence (affects visual styling).",
+                "type": "boolean"
+              },
+              {
+                "name": "active",
+                "description": "When true, highlights this step as the current active step in the process.",
+                "type": "boolean"
+              },
+              {
+                "name": "description",
+                "description": "A descriptive text explaining what happens in this step or its current status.",
+                "type": "string"
+              },
+              {
+                "name": "caption",
+                "description": "The main label/title for this step.",
+                "type": "string"
               }
-            ]
+            ],
+            "events": []
           }
         },
         {

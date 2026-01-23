@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="Progress bars provide visual feedback about the completion status of a task or process."
+    />
     <title>Progress Bar</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +17,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/progress-bar" />
     <meta property="og:title" content="Progress Bar" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="Progress bars provide visual feedback about the completion status of a task or process."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -486,14 +492,24 @@
           <ul>
             <li class="top"><a href="#">Progress Bar</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#basic-progress-bar">Basic Progress Bar</a></li>
+            <li data-level="3"><a href="#with-caption">With Caption</a></li>
+            <li data-level="3"><a href="#showing-progress-percentage">Showing Progress Percentage</a></li>
+            <li data-level="3"><a href="#progress-only-no-caption">Progress Only (No Caption)</a></li>
+            <li data-level="3"><a href="#with-description">With Description</a></li>
+            <li data-level="3"><a href="#complete-progress-states">Complete Progress States</a></li>
+            <li data-level="3"><a href="#dynamic-progress-updates">Dynamic Progress Updates</a></li>
+            <li data-level="3"><a href="#file-upload-simulation">File Upload Simulation</a></li>
+            <li data-level="3"><a href="#multiple-progress-bars">Multiple Progress Bars</a></li>
+            <li data-level="3"><a href="#minimal-progress-bar">Minimal Progress Bar</a></li>
+            <li data-level="2"><a href="#customization">Customization</a></li>
+            <li data-level="3"><a href="#styling-with-css-parts">Styling with CSS Parts</a></li>
+            <li data-level="3"><a href="#custom-height">Custom Height</a></li>
+            <li data-level="3"><a href="#themed-progress-bars">Themed Progress Bars</a></li>
+            <li data-level="3"><a href="#animated-progress">Animated Progress</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
-            <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
@@ -511,21 +527,23 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">
+            Progress bars provide visual feedback about the completion status of a task or process.
+          </p>
 
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-progress-bar></zn-progress-bar>
+              <zn-progress-bar value="50"></zn-progress-bar>
 
               <div class="code-preview__resizer">
                 <zn-icon src="drag_indicator"></zn-icon>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-191">
+            <div class="code-preview__source-group" id="code-preview-source-group-708">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-354"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-354"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-884"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>50<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-884"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -534,7 +552,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-191"
+                aria-controls="code-preview-source-group-708"
               >
                 Source
                 <svg
@@ -554,14 +572,1195 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="basic-progress-bar" class="anchor-heading">
+            Basic Progress Bar<a href="#basic-progress-bar" aria-label='Direct link to "Basic Progress Bar"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <p>
+            A basic progress bar displays the completion percentage using the <code>value</code> attribute. The value
+            should be a number between 0 and 100.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar value="25"></zn-progress-bar>
+              <br />
+              <zn-progress-bar value="50"></zn-progress-bar>
+              <br />
+              <zn-progress-bar value="75"></zn-progress-bar>
+              <br />
+              <zn-progress-bar value="100"></zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-709">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-885"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>25<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>50<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>75<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-885"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-709"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-caption" class="anchor-heading">
+            With Caption<a href="#with-caption" aria-label='Direct link to "With Caption"'></a>
           </h3>
-          <p>TODO</p>
+          <p>
+            Use the <code>caption</code> attribute to add a label above the progress bar. This helps identify what the
+            progress bar represents.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar caption="Upload Progress" value="45"></zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Installation" value="70"></zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Download Complete" value="100"></zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-710">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-886"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload Progress<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>45<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Installation<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>70<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Download Complete<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-886"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-710"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="showing-progress-percentage" class="anchor-heading">
+            Showing Progress Percentage<a
+              href="#showing-progress-percentage"
+              aria-label='Direct link to "Showing Progress Percentage"'
+            ></a>
+          </h3>
+          <p>
+            Use the <code>show-progress</code> attribute to display the numerical percentage value next to the caption.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar caption="File Transfer" value="35" show-progress=""></zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Processing Data" value="62" show-progress=""></zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Backup Complete" value="100" show-progress=""></zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-711">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-887"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>File Transfer<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>35<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Processing Data<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>62<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Backup Complete<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-887"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-711"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="progress-only-no-caption" class="anchor-heading">
+            Progress Only (No Caption)<a
+              href="#progress-only-no-caption"
+              aria-label='Direct link to "Progress Only (No Caption)"'
+            ></a>
+          </h3>
+          <p>
+            You can show the progress percentage without a caption by using <code>show-progress</code> without the
+            <code>caption</code> attribute.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar value="40" show-progress=""></zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-712">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-888"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span> <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-888"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-712"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="with-description" class="anchor-heading">
+            With Description<a href="#with-description" aria-label='Direct link to "With Description"'></a>
+          </h3>
+          <p>
+            Use the <code>description</code> attribute to add helpful information or context below the progress bar.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                caption="Uploading files"
+                value="55"
+                show-progress=""
+                description="3 of 10 files uploaded"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Processing" value="30" description="Estimated time remaining: 2 minutes">
+              </zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-713">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-889"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uploading files<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3 of 10 files uploaded<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Processing<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Estimated time remaining: 2 minutes<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-889"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-713"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="complete-progress-states" class="anchor-heading">
+            Complete Progress States<a
+              href="#complete-progress-states"
+              aria-label='Direct link to "Complete Progress States"'
+            ></a>
+          </h3>
+          <p>
+            Examples showing different stages of task completion with captions, progress percentages, and descriptions.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar caption="Starting" value="0" show-progress="" description="Initializing...">
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                caption="In Progress"
+                value="45"
+                show-progress=""
+                description="Processing 45 of 100 items"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Almost Done" value="95" show-progress="" description="Finalizing...">
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                caption="Complete"
+                value="100"
+                show-progress=""
+                description="All tasks finished successfully"
+              >
+              </zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-714">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-890"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Starting<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Initializing...<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>In Progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>45<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Processing 45 of 100 items<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Almost Done<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>95<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Finalizing...<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Complete<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>All tasks finished successfully<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-890"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-714"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="dynamic-progress-updates" class="anchor-heading">
+            Dynamic Progress Updates<a
+              href="#dynamic-progress-updates"
+              aria-label='Direct link to "Dynamic Progress Updates"'
+            ></a>
+          </h3>
+          <p>Progress bars can be updated dynamically using JavaScript to reflect real-time progress.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                id="dynamic-progress"
+                caption="Dynamic Update"
+                value="0"
+                show-progress=""
+                description="Click the button to start"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-button id="start-progress">Start Progress</zn-button>
+              <zn-button id="reset-progress" color="secondary">Reset</zn-button>
+
+              <script type="module">
+                const progressBar = document.getElementById('dynamic-progress');
+                const startBtn = document.getElementById('start-progress');
+                const resetBtn = document.getElementById('reset-progress');
+                let interval;
+
+                startBtn.addEventListener('click', () => {
+                  progressBar.value = 0;
+                  progressBar.description = 'Processing...';
+                  startBtn.disabled = true;
+
+                  interval = setInterval(() => {
+                    if (progressBar.value < 100) {
+                      progressBar.value = progressBar.value + 1;
+                      progressBar.description = `Processing ${progressBar.value} of 100 items`;
+                    } else {
+                      clearInterval(interval);
+                      progressBar.description = 'Complete!';
+                      startBtn.disabled = false;
+                    }
+                  }, 50);
+                });
+
+                resetBtn.addEventListener('click', () => {
+                  clearInterval(interval);
+                  progressBar.value = 0;
+                  progressBar.description = 'Click the button to start';
+                  startBtn.disabled = false;
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-715">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-891"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dynamic-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Dynamic Update<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click the button to start<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>start-progress<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Start Progress<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reset-progress<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Reset<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> progressBar <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'dynamic-progress'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> startBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'start-progress'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> resetBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'reset-progress'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> interval<span class="token punctuation">;</span>
+
+  startBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    progressBar<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    progressBar<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token string">'Processing...'</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+    interval <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>progressBar<span class="token punctuation">.</span>value <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        progressBar<span class="token punctuation">.</span>value <span class="token operator">=</span> progressBar<span class="token punctuation">.</span>value <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        progressBar<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Processing </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>progressBar<span class="token punctuation">.</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> of 100 items</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">clearInterval</span><span class="token punctuation">(</span>interval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        progressBar<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token string">'Complete!'</span><span class="token punctuation">;</span>
+        startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  resetBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">clearInterval</span><span class="token punctuation">(</span>interval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    progressBar<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    progressBar<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token string">'Click the button to start'</span><span class="token punctuation">;</span>
+    startBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-891"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-715"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="file-upload-simulation" class="anchor-heading">
+            File Upload Simulation<a
+              href="#file-upload-simulation"
+              aria-label='Direct link to "File Upload Simulation"'
+            ></a>
+          </h3>
+          <p>A practical example simulating a file upload process with dynamic updates.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                id="upload-progress"
+                caption="Uploading document.pdf"
+                value="0"
+                show-progress=""
+                description="Preparing upload..."
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-button id="simulate-upload" icon="cloud_upload">Upload File</zn-button>
+
+              <script type="module">
+                const uploadProgress = document.getElementById('upload-progress');
+                const uploadBtn = document.getElementById('simulate-upload');
+
+                uploadBtn.addEventListener('click', () => {
+                  uploadProgress.value = 0;
+                  uploadBtn.disabled = true;
+                  uploadBtn.loading = true;
+
+                  let uploadSpeed = 2; // Percentage per interval
+                  const interval = setInterval(() => {
+                    if (uploadProgress.value < 100) {
+                      uploadProgress.value = Math.min(uploadProgress.value + uploadSpeed, 100);
+
+                      // Calculate approximate KB uploaded (simulate 5MB file)
+                      const totalKB = 5120;
+                      const uploadedKB = Math.floor((uploadProgress.value / 100) * totalKB);
+                      uploadProgress.description = `Uploaded ${uploadedKB} KB of ${totalKB} KB`;
+
+                      // Slow down near the end (realistic upload behavior)
+                      if (uploadProgress.value > 90) {
+                        uploadSpeed = 0.5;
+                      }
+                    } else {
+                      clearInterval(interval);
+                      uploadProgress.caption = 'Upload Complete';
+                      uploadProgress.description = 'File uploaded successfully';
+                      uploadBtn.loading = false;
+                      uploadBtn.disabled = false;
+                    }
+                  }, 100);
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-716">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-892"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>upload-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uploading document.pdf<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Preparing upload...<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>simulate-upload<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cloud_upload<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Upload File<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> uploadProgress <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'upload-progress'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> uploadBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'simulate-upload'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  uploadBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    uploadProgress<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    uploadBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    uploadBtn<span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> uploadSpeed <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">// Percentage per interval</span>
+    <span class="token keyword">const</span> interval <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>uploadProgress<span class="token punctuation">.</span>value <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        uploadProgress<span class="token punctuation">.</span>value <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span>uploadProgress<span class="token punctuation">.</span>value <span class="token operator">+</span> uploadSpeed<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// Calculate approximate KB uploaded (simulate 5MB file)</span>
+        <span class="token keyword">const</span> totalKB <span class="token operator">=</span> <span class="token number">5120</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> uploadedKB <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uploadProgress<span class="token punctuation">.</span>value <span class="token operator">/</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token operator">*</span> totalKB<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        uploadProgress<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Uploaded </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>uploadedKB<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB of </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>totalKB<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> KB</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+        <span class="token comment">// Slow down near the end (realistic upload behavior)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>uploadProgress<span class="token punctuation">.</span>value <span class="token operator">&gt;</span> <span class="token number">90</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          uploadSpeed <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">clearInterval</span><span class="token punctuation">(</span>interval<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        uploadProgress<span class="token punctuation">.</span>caption <span class="token operator">=</span> <span class="token string">'Upload Complete'</span><span class="token punctuation">;</span>
+        uploadProgress<span class="token punctuation">.</span>description <span class="token operator">=</span> <span class="token string">'File uploaded successfully'</span><span class="token punctuation">;</span>
+        uploadBtn<span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        uploadBtn<span class="token punctuation">.</span>disabled <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-892"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-716"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="multiple-progress-bars" class="anchor-heading">
+            Multiple Progress Bars<a
+              href="#multiple-progress-bars"
+              aria-label='Direct link to "Multiple Progress Bars"'
+            ></a>
+          </h3>
+          <p>Display multiple progress bars to track different concurrent tasks or processes.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar caption="Frontend Build" value="100" show-progress="" description="Completed">
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar caption="Backend Build" value="85" show-progress="" description="Compiling...">
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                caption="Running Tests"
+                value="60"
+                show-progress=""
+                description="156 of 260 tests passed"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                caption="Deployment"
+                value="0"
+                show-progress=""
+                description="Waiting for builds to complete"
+              >
+              </zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-717">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-893"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Frontend Build<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Completed<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Backend Build<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>85<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Compiling...<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Running Tests<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>156 of 260 tests passed<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Deployment<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Waiting for builds to complete<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-893"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-717"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="minimal-progress-bar" class="anchor-heading">
+            Minimal Progress Bar<a href="#minimal-progress-bar" aria-label='Direct link to "Minimal Progress Bar"'></a>
+          </h3>
+          <p>
+            A clean, minimal progress bar without any text, useful for compact layouts or when context is provided
+            elsewhere.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar value="33"></zn-progress-bar>
+              <br />
+              <zn-progress-bar value="66"></zn-progress-bar>
+              <br />
+              <zn-progress-bar value="99"></zn-progress-bar>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-718">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-894"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>33<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>66<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>99<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-894"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-718"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="customization" class="anchor-heading">
+            Customization<a href="#customization" aria-label='Direct link to "Customization"'></a>
+          </h2>
+          <h3 id="styling-with-css-parts" class="anchor-heading">
+            Styling with CSS Parts<a
+              href="#styling-with-css-parts"
+              aria-label='Direct link to "Styling with CSS Parts"'
+            ></a>
+          </h3>
+          <p>
+            Use <a href="#css-parts">CSS parts</a> to customize the appearance of the progress bar. The component
+            exposes several parts that can be styled.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                class="custom-progress"
+                caption="Custom Styled Progress"
+                value="75"
+                show-progress=""
+                description="Customized with CSS parts"
+              >
+              </zn-progress-bar>
+
+              <style>
+                .custom-progress::part(fill) {
+                  fill: rgb(255, 107, 53);
+                }
+
+                .custom-progress::part(track) {
+                  fill: rgba(255, 107, 53, 0.2);
+                }
+
+                .custom-progress::part(caption) {
+                  color: rgb(255, 107, 53);
+                  font-weight: 600;
+                  font-size: 14px;
+                }
+
+                .custom-progress::part(progress) {
+                  color: rgb(255, 107, 53);
+                  font-weight: 600;
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-719">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-895"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Custom Styled Progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>75<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customized with CSS parts<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.custom-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>255<span class="token punctuation">,</span> 107<span class="token punctuation">,</span> 53<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-progress::part(track)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span>255<span class="token punctuation">,</span> 107<span class="token punctuation">,</span> 53<span class="token punctuation">,</span> 0.2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-progress::part(caption)</span> <span class="token punctuation">{</span>
+    <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>255<span class="token punctuation">,</span> 107<span class="token punctuation">,</span> 53<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">font-weight</span><span class="token punctuation">:</span> 600<span class="token punctuation">;</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.custom-progress::part(progress)</span> <span class="token punctuation">{</span>
+    <span class="token property">color</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span>255<span class="token punctuation">,</span> 107<span class="token punctuation">,</span> 53<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">font-weight</span><span class="token punctuation">:</span> 600<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-895"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-719"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="custom-height" class="anchor-heading">
+            Custom Height<a href="#custom-height" aria-label='Direct link to "Custom Height"'></a>
+          </h3>
+          <p>Adjust the height of the progress bar using CSS custom properties and parts.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar class="tall-progress" caption="Tall Progress Bar" value="60" show-progress="">
+              </zn-progress-bar>
+
+              <style>
+                .tall-progress::part(bar) {
+                  height: 16px;
+                }
+
+                .tall-progress::part(track),
+                .tall-progress::part(fill) {
+                  rx: 8px;
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-720">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-896"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tall-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Tall Progress Bar<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.tall-progress::part(bar)</span> <span class="token punctuation">{</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> 16px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.tall-progress::part(track),
+  .tall-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">rx</span><span class="token punctuation">:</span> 8px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-896"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-720"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="themed-progress-bars" class="anchor-heading">
+            Themed Progress Bars<a href="#themed-progress-bars" aria-label='Direct link to "Themed Progress Bars"'></a>
+          </h3>
+          <p>Create themed progress bars for different use cases like success, warning, or error states.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                class="success-progress"
+                caption="Success"
+                value="100"
+                show-progress=""
+                description="Operation completed successfully"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                class="warning-progress"
+                caption="Warning"
+                value="65"
+                show-progress=""
+                description="Approaching storage limit"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-progress-bar
+                class="error-progress"
+                caption="Error"
+                value="30"
+                show-progress=""
+                description="Upload failed, retrying..."
+              >
+              </zn-progress-bar>
+
+              <style>
+                .success-progress::part(fill) {
+                  fill: rgb(var(--zn-success));
+                }
+                .success-progress::part(track) {
+                  fill: rgba(var(--zn-success), 0.2);
+                }
+
+                .warning-progress::part(fill) {
+                  fill: rgb(var(--zn-warning));
+                }
+                .warning-progress::part(track) {
+                  fill: rgba(var(--zn-warning), 0.2);
+                }
+
+                .error-progress::part(fill) {
+                  fill: rgb(var(--zn-error));
+                }
+                .error-progress::part(track) {
+                  fill: rgba(var(--zn-error), 0.2);
+                }
+              </style>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-721">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-897"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Success<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Operation completed successfully<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Warning<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>65<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Approaching storage limit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Error<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Upload failed, retrying...<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.success-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.success-progress::part(track)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-success<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.warning-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-warning<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.warning-progress::part(track)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-warning<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.error-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgb</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-error<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">.error-progress::part(track)</span> <span class="token punctuation">{</span>
+    <span class="token property">fill</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--zn-error<span class="token punctuation">)</span><span class="token punctuation">,</span> 0.2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-897"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-721"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h3 id="animated-progress" class="anchor-heading">
+            Animated Progress<a href="#animated-progress" aria-label='Direct link to "Animated Progress"'></a>
+          </h3>
+          <p>Add smooth animations to the progress bar fill using CSS transitions.</p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-progress-bar
+                id="animated-progress"
+                class="animated-progress"
+                caption="Animated Progress"
+                value="20"
+                show-progress=""
+                description="Watch the smooth animation"
+              >
+              </zn-progress-bar>
+              <br />
+              <zn-button id="increase-animated">Increase Progress</zn-button>
+
+              <style>
+                .animated-progress::part(fill) {
+                  transition: width 0.5s ease-in-out;
+                }
+              </style>
+
+              <script type="module">
+                const animatedProgress = document.getElementById('animated-progress');
+                const increaseBtn = document.getElementById('increase-animated');
+
+                increaseBtn.addEventListener('click', () => {
+                  const newValue = Math.min(animatedProgress.value + 20, 100);
+                  animatedProgress.value = newValue;
+                  animatedProgress.description = newValue === 100 ? 'Complete!' : 'Watch the smooth animation';
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-722">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-898"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-progress-bar</span>
+  <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>animated-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>animated-progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Animated Progress<span class="token punctuation">"</span></span>
+  <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span>
+  <span class="token attr-name">show-progress</span>
+  <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Watch the smooth animation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-progress-bar</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>increase-animated<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Increase Progress<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.animated-progress::part(fill)</span> <span class="token punctuation">{</span>
+    <span class="token property">transition</span><span class="token punctuation">:</span> width 0.5s ease-in-out<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> animatedProgress <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'animated-progress'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> increaseBtn <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'increase-animated'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  increaseBtn<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> newValue <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span>animatedProgress<span class="token punctuation">.</span>value <span class="token operator">+</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    animatedProgress<span class="token punctuation">.</span>value <span class="token operator">=</span> newValue<span class="token punctuation">;</span>
+    animatedProgress<span class="token punctuation">.</span>description <span class="token operator">=</span> newValue <span class="token operator">===</span> <span class="token number">100</span> <span class="token operator">?</span> <span class="token string">'Complete!'</span> <span class="token operator">:</span> <span class="token string">'Watch the smooth animation'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-898"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-722"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -584,7 +1783,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-355"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/progress-bar/progress-bar.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-355"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-899"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/progress-bar/progress-bar.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-899"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -599,70 +1798,13 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-356"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/progress-bar/progress-bar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-356"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-900"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.57/dist/components/progress-bar/progress-bar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-900"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-357"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/progress-bar/progress-bar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-357"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-901"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/progress-bar/progress-bar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-901"></zn-copy-button></pre>
           </zn-collapsible>
-
-          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
-          </p>
-
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
 
           <h2 id="custom-properties" class="anchor-heading">
             Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
@@ -679,8 +1821,32 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td class="nowrap"><code>--zn-border-color</code></td>
+                  <td>The color of the progress bar background track.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-primary</code></td>
+                  <td>The color of the progress bar fill.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-text-heading</code></td>
+                  <td>The color of the caption text.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-text</code></td>
+                  <td>The color of the progress percentage and description text.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-spacing-x-small</code></td>
+                  <td>The spacing between header/footer and the progress bar.</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -706,8 +1872,43 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The header container that contains the caption and progress text.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>caption</code></td>
+                  <td>The caption text element.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>progress</code></td>
+                  <td>The progress percentage text element.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>bar</code></td>
+                  <td>The SVG element containing the progress bar.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>track</code></td>
+                  <td>The background track of the progress bar.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>fill</code></td>
+                  <td>The filled portion of the progress bar indicating progress.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>footer</code></td>
+                  <td>The footer container that contains the description.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>info</code></td>
+                  <td>The description text element.</td>
                 </tr>
               </tbody>
             </table>
@@ -716,16 +1917,6 @@
           <p>
             <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
           </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

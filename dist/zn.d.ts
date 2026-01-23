@@ -1257,21 +1257,21 @@ declare module "components/toggle/toggle.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Toggles allow the user to switch an option on or off.
      * @documentation https://zinc.style/components/toggle
-     * @status experimental
+     * @status stable
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-tooltip
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-input - Emitted when the toggle receives input.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot - The toggle's label.
      *
-     * @csspart base - The component's base wrapper.
+     * @csspart base - The component's base wrapper containing the toggle switch.
+     * @csspart control - The toggle switch control (the circular button that slides).
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
      */
     export default class ZnToggle extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -2686,10 +2686,15 @@ declare module "components/skeleton/skeleton.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from "lit";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.
      * @documentation https://zinc.style/components/skeleton
      * @status experimental
      * @since 1.0
+     *
+     * @property {string} speed - Animation speed for the shimmer effect. Default: "3s"
+     * @property {string} width - Width of the skeleton element. Default: "100%"
+     * @property {string} height - Height of the skeleton element. Default: "20px"
+     * @property {string} radius - Border radius of the skeleton element. Default: "4px"
      */
     export default class ZnSkeleton extends ZincElement {
         static styles: CSSResultGroup;
@@ -3561,21 +3566,26 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.
      * @documentation https://zinc.style/components/vertical-stepper
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @property {boolean} last - When true, removes the connecting line below this step (use for the final step in a sequence).
+     * @property {boolean} first - When true, indicates this is the first step in the sequence (affects visual styling).
+     * @property {boolean} active - When true, highlights this step as the current active step in the process.
+     * @property {string} description - A descriptive text explaining what happens in this step or its current status.
+     * @property {string} caption - The main label/title for this step.
      *
-     * @event zn-event-name - Emitted as an example.
+     * @slot icon - Optional slot for adding an icon or indicator before the step content.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart vs - The main container for the vertical stepper.
+     * @csspart vs__left - The left section containing the icon and connecting line.
+     * @csspart vs__icon - The icon container.
+     * @csspart vs__line - The vertical connecting line between steps.
+     * @csspart vs__right - The right section containing caption and description text.
+     * @csspart vs__caption - The caption/title text element.
+     * @csspart vs__description - The description text element.
      */
     export default class ZnVerticalStepper extends ZincElement {
         static styles: CSSResultGroup;
@@ -3742,18 +3752,21 @@ declare module "components/panel/panel.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.
      * @documentation https://zinc.style/components/panel
      * @status experimental
      * @since 1.0
      *
-     * @slot - The default slot.
-     * @slot actions - The actions slot.
-     * @slot footer - The footer slot.
+     * @slot - The panel's main content.
+     * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
+     * @slot footer - Content displayed in the panel footer.
+     * @slot side - Sidebar content displayed on the left or right side of the panel.
+     *
+     * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
      */
     export default class ZnPanel extends ZincElement {
         static styles: CSSResultGroup;
@@ -4069,21 +4082,27 @@ declare module "components/stepper/stepper.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.
      * @documentation https://zinc.style/components/stepper
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.
+     * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.
+     * @property {number} steps - The total number of steps in the process.
+     * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.
+     * @property {boolean} show-progress - When true, displays the step count (e.g., "2 / 5 steps") next to the caption.
      *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @csspart step-container - The container holding the progress line and steps.
+     * @csspart step-line - The background line showing the full step track.
+     * @csspart step-progress - The filled progress indicator showing completion.
+     * @csspart steps - The container for individual step markers.
+     * @csspart step - An individual step marker circle.
+     * @csspart header - The header container with caption and progress text.
+     * @csspart caption - The caption text element.
+     * @csspart progress - The progress count text (e.g., "2 / 5 steps").
+     * @csspart label - The label text container.
+     * @csspart info - The label text element.
      */
     export default class ZnStepper extends ZincElement {
         static styles: CSSResultGroup;
@@ -4247,21 +4266,25 @@ declare module "components/progress-bar/progress-bar.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Progress bars provide visual feedback about the completion status of a task or process.
      * @documentation https://zinc.style/components/progress-bar
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @csspart header - The header container that contains the caption and progress text.
+     * @csspart caption - The caption text element.
+     * @csspart progress - The progress percentage text element.
+     * @csspart bar - The SVG element containing the progress bar.
+     * @csspart track - The background track of the progress bar.
+     * @csspart fill - The filled portion of the progress bar indicating progress.
+     * @csspart footer - The footer container that contains the description.
+     * @csspart info - The description text element.
      *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-border-color - The color of the progress bar background track.
+     * @cssproperty --zn-primary - The color of the progress bar fill.
+     * @cssproperty --zn-text-heading - The color of the caption text.
+     * @cssproperty --zn-text - The color of the progress percentage and description text.
+     * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.
      */
     export default class ZnProgressBar extends ZincElement {
         static styles: CSSResultGroup;

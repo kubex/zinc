@@ -483,7 +483,8 @@
       <a id="main-content" class="active-link"></a>
       <article id="content" class="content">
         <div class="content__body">
-          <h1>A Library of Web Components based off of Shoelace</h1>
+          <h1>Zinc Web Components</h1>
+          <p>A comprehensive library of 88+ web components built with Lit, designed for modern web applications.</p>
           <div class="badges">
             <p>
               <a
@@ -498,15 +499,165 @@
                 class="external-link"
                 rel="noopener noreferrer"
                 target="_blank"
-                ><img src="https://img.shields.io/badge/license-MIT-232323.svg?style=flat-square" alt="License" /></a
-              ><br />
+                ><img src="https://img.shields.io/badge/license-MIT-232323.svg?style=flat-square" alt="License"
+              /></a>
             </p>
           </div>
-          <br />
+          <h2 id="features" class="anchor-heading">
+            Features<a href="#features" aria-label='Direct link to "Features"'></a>
+          </h2>
+          <ul>
+            <li><strong>88+ Components</strong> - From form controls to data visualization</li>
+            <li><strong>TypeScript First</strong> - Full type safety with comprehensive declarations</li>
+            <li><strong>Lit-based</strong> - Built on the modern Lit framework for fast, lightweight components</li>
+            <li><strong>Accessible</strong> - ARIA compliant with keyboard navigation support</li>
+            <li><strong>Form Integration</strong> - Native form controls that work with standard HTML forms</li>
+            <li><strong>Customizable</strong> - CSS custom properties and parts for easy styling</li>
+            <li><strong>Theme Support</strong> - Light/dark mode built-in</li>
+            <li><strong>Tree-shakeable</strong> - Import only what you need</li>
+          </ul>
+          <h2 id="quick-start" class="anchor-heading">
+            Quick Start<a href="#quick-start" aria-label='Direct link to "Quick Start"'></a>
+          </h2>
+          <p>Install Zinc via npm:</p>
+          <pre><code class="language-bash" id="code-block-1"><span class="token function">npm</span> <span class="token function">install</span> @kubex/zinc
+</code><zn-copy-button class="copy-code-button" from="code-block-1"></zn-copy-button></pre>
+          <p>Import the components you need:</p>
+          <pre><code class="language-javascript" id="code-block-2"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/zn.min.js'</span><span class="token punctuation">;</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-2"></zn-copy-button></pre>
+          <p>Use them in your HTML:</p>
+          <pre><code class="language-html" id="code-block-3"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Click Me<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Name<span class="token punctuation">"</span></span> <span class="token attr-name">placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Enter your name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Country<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>us<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>United States<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>uk<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>United Kingdom<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ca<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Canada<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-3"></zn-copy-button></pre>
+          <h2 id="component-categories" class="anchor-heading">
+            Component Categories<a href="#component-categories" aria-label='Direct link to "Component Categories"'></a>
+          </h2>
+          <h3 id="form-controls" class="anchor-heading">
+            Form Controls<a href="#form-controls" aria-label='Direct link to "Form Controls"'></a>
+          </h3>
+          <p>Complete set of form elements with validation, accessibility, and native form integration:</p>
+          <ul>
+            <li>
+              <a href="/components/button">Button</a>, <a href="/components/input">Input</a>,
+              <a href="/components/textarea">Textarea</a>
+            </li>
+            <li>
+              <a href="/components/checkbox">Checkbox</a>, <a href="/components/radio">Radio</a>,
+              <a href="/components/toggle">Toggle</a>
+            </li>
+            <li>
+              <a href="/components/select">Select</a>, <a href="/components/datepicker">Datepicker</a>,
+              <a href="/components/file">File</a>
+            </li>
+            <li><a href="/components/rating">Rating</a>, <a href="/components/editor">Editor</a></li>
+          </ul>
+          <h3 id="layout-and-navigation" class="anchor-heading">
+            Layout &amp; Navigation<a
+              href="#layout-and-navigation"
+              aria-label='Direct link to "Layout &amp; Navigation"'
+            ></a>
+          </h3>
+          <p>Build complex layouts with flexible containers and navigation patterns:</p>
+          <ul>
+            <li>
+              <a href="/components/dialog">Dialog</a>, <a href="/components/slideout">Slideout</a>,
+              <a href="/components/tabs">Tabs</a>
+            </li>
+            <li>
+              <a href="/components/panel">Panel</a>, <a href="/components/pane">Pane</a>,
+              <a href="/components/split-pane">Split Pane</a>
+            </li>
+            <li>
+              <a href="/components/menu">Menu</a>, <a href="/components/dropdown">Dropdown</a>,
+              <a href="/components/navbar">Navbar</a>
+            </li>
+          </ul>
+          <h3 id="data-display" class="anchor-heading">
+            Data Display<a href="#data-display" aria-label='Direct link to "Data Display"'></a>
+          </h3>
+          <p>Present data in clear, interactive formats:</p>
+          <ul>
+            <li>
+              <a href="/components/data-table">Data Table</a>, <a href="/components/chart">Chart</a>,
+              <a href="/components/stat">Stat</a>
+            </li>
+            <li>
+              <a href="/components/pagination">Pagination</a>, <a href="/components/progress-bar">Progress Bar</a>
+            </li>
+            <li><a href="/components/tile">Tile</a>, <a href="/components/collapsible">Collapsible</a></li>
+          </ul>
+          <h3 id="feedback-and-indicators" class="anchor-heading">
+            Feedback &amp; Indicators<a
+              href="#feedback-and-indicators"
+              aria-label='Direct link to "Feedback &amp; Indicators"'
+            ></a>
+          </h3>
+          <p>Communicate state and provide feedback to users:</p>
+          <ul>
+            <li>
+              <a href="/components/alert">Alert</a>, <a href="/components/note">Note</a>,
+              <a href="/components/tooltip">Tooltip</a>
+            </li>
+            <li><a href="/components/empty-state">Empty State</a>, <a href="/components/skeleton">Skeleton</a></li>
+            <li>
+              <a href="/components/status-indicator">Status Indicator</a>, <a href="/components/stepper">Stepper</a>
+            </li>
+          </ul>
+          <h3 id="utilities" class="anchor-heading">
+            Utilities<a href="#utilities" aria-label='Direct link to "Utilities"'></a>
+          </h3>
+          <p>Helper components for common UI patterns:</p>
+          <ul>
+            <li>
+              <a href="/components/icon">Icon</a>, <a href="/components/chip">Chip</a>,
+              <a href="/components/copy-button">Copy Button</a>
+            </li>
+            <li><a href="/components/reveal">Reveal</a>, <a href="/components/inline-edit">Inline Edit</a></li>
+            <li><a href="/components/scroll-container">Scroll Container</a>, <a href="/components/well">Well</a></li>
+          </ul>
+          <h2 id="why-zinc" class="anchor-heading">
+            Why Zinc?<a href="#why-zinc" aria-label='Direct link to "Why Zinc?"'></a>
+          </h2>
+          <p>
+            <strong>Developer Experience</strong>: Comprehensive documentation with live examples, TypeScript support,
+            and intuitive APIs make development fast and enjoyable.
+          </p>
+          <p>
+            <strong>Production Ready</strong>: Battle-tested components used in real-world applications with robust
+            error handling and edge case coverage.
+          </p>
+          <p>
+            <strong>Customizable</strong>: Every component exposes CSS custom properties and parts for granular styling
+            control without fighting the framework.
+          </p>
+          <p>
+            <strong>Performance</strong>: Lightweight components with lazy loading support and optimized rendering for
+            smooth 60fps interactions.
+          </p>
+          <p>
+            <strong>Future Proof</strong>: Built on web standards with modern JavaScript features, ensuring long-term
+            compatibility and maintainability.
+          </p>
+          <h2 id="browser-support" class="anchor-heading">
+            Browser Support<a href="#browser-support" aria-label='Direct link to "Browser Support"'></a>
+          </h2>
+          <p>Zinc works in all modern browsers:</p>
+          <ul>
+            <li>Chrome/Edge 90+</li>
+            <li>Firefox 88+</li>
+            <li>Safari 14+</li>
+            <li>Opera 76+</li>
+          </ul>
+          <p>For older browsers, you may need polyfills for Web Components and ES2017+ features.</p>
           <h2 id="attribution" class="anchor-heading">
             Attribution<a href="#attribution" aria-label='Direct link to "Attribution"'></a>
           </h2>
-          <p>Special thanks to the following projects and individuals that help make zinc possible.</p>
+          <p>Special thanks to the following projects and individuals that help make Zinc possible:</p>
           <ul>
             <li>
               <a
@@ -516,16 +667,15 @@
                 target="_blank"
                 >Shoelace</a
               >
-              Where a lot of these components were taken from, and altered to fit our needs.
+              - Many components were inspired by and adapted from Shoelace
             </li>
             <li>
-              Components are built with
               <a href="https://lit.dev/" class="active-link external-link" rel="noopener noreferrer" target="_blank"
                 >Lit</a
               >
+              - Fast, lightweight web component base class
             </li>
             <li>
-              Component metadata is generated by the
               <a
                 href="https://github.com/open-wc/custom-elements-manifest"
                 class="external-link"
@@ -533,9 +683,9 @@
                 target="_blank"
                 >Custom Elements Manifest Analyzer</a
               >
+              - Component metadata generation
             </li>
             <li>
-              Documentation is powered by
               <a
                 href="https://www.11ty.dev/"
                 class="active-link external-link"
@@ -543,25 +693,25 @@
                 target="_blank"
                 >11ty</a
               >
+              - Static site generator powering this documentation
             </li>
             <li>
-              Color primitives are inspired by
               <a
                 href="https://tailwindcss.com/"
                 class="active-link external-link"
                 rel="noopener noreferrer"
                 target="_blank"
-                >Tailwind</a
+                >Tailwind CSS</a
               >
+              - Color primitive inspiration
             </li>
             <li>
-              Icons are courtesy of
               <a href="https://fonts.google.com/icons" class="external-link" rel="noopener noreferrer" target="_blank"
                 >Material Icons</a
               >
+              - Icon library
             </li>
             <li>
-              Positioning of dropdowns, tooltips, et al is handled by
               <a
                 href="https://floating-ui.com/"
                 class="active-link external-link"
@@ -569,21 +719,60 @@
                 target="_blank"
                 >Floating UI</a
               >
+              - Positioning engine for dropdowns and tooltips
             </li>
             <li>
-              Animations are courtesy of
               <a
-                href="https://animate.style/"
+                href="https://apexcharts.com/"
                 class="active-link external-link"
                 rel="noopener noreferrer"
                 target="_blank"
-                >animate.css</a
+                >ApexCharts</a
               >
+              - Charting library
             </li>
             <li>
-              Search is powered by
+              <a href="https://quilljs.com/" class="active-link external-link" rel="noopener noreferrer" target="_blank"
+                >Quill</a
+              >
+              - Rich text editor
+            </li>
+            <li>
               <a href="https://lunrjs.com/" class="active-link external-link" rel="noopener noreferrer" target="_blank"
                 >Lunr</a
+              >
+              - Client-side search
+            </li>
+          </ul>
+          <h2 id="license" class="anchor-heading">
+            License<a href="#license" aria-label='Direct link to "License"'></a>
+          </h2>
+          <p>
+            Zinc is available under the
+            <a
+              href="https://github.com/kubex/zinc/blob/master/LICENSE.md"
+              class="external-link"
+              rel="noopener noreferrer"
+              target="_blank"
+              >MIT License</a
+            >.
+          </p>
+          <h2 id="getting-help" class="anchor-heading">
+            Getting Help<a href="#getting-help" aria-label='Direct link to "Getting Help"'></a>
+          </h2>
+          <ul>
+            <li>
+              <strong>Documentation</strong>: Browse the <a href="/components/button">component documentation</a> for
+              detailed usage examples
+            </li>
+            <li>
+              <strong>GitHub Issues</strong>: Report bugs or request features on
+              <a
+                href="https://github.com/kubex/zinc/issues"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >GitHub</a
               >
             </li>
           </ul>

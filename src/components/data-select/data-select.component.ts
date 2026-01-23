@@ -55,7 +55,20 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   @property() name: string;
 
   /** The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings. */
-  @property() value: string | string[] = '';
+  @property({
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (!value) return '';
+        return value;
+      },
+      toAttribute: (value: string | string[]) => {
+        if (Array.isArray(value)) {
+          return value.join(',');
+        }
+        return value || '';
+      }
+    }
+  }) value: string | string[] = '';
 
   /** The provider of the select. */
   @property() provider: 'color' | 'currency' | 'country' | 'phone';
@@ -161,6 +174,10 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   protected async updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
+
+    if (_changedProperties.has('value') || _changedProperties.has('multiple')) {
+      this._normalizeValue();
+    }
 
     if (_changedProperties.has('value') ||
       _changedProperties.has('provider') ||
@@ -371,5 +388,21 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     if (!this.select) return;
 
     this.disabled = this.select.disabled;
+  }
+
+  private _normalizeValue() {
+    if (this.multiple) {
+      if (typeof this.value === 'string') {
+        if (this.value === '') {
+          this.value = [];
+        } else {
+          this.value = this.value.split(',').map(v => v.trim()).filter(v => v !== '');
+        }
+      }
+    } else {
+      if (Array.isArray(this.value)) {
+        this.value = this.value.length > 0 ? this.value[0] : '';
+      }
+    }
   }
 }

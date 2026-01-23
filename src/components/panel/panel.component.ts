@@ -9,18 +9,21 @@ import ZincElement from '../../internal/zinc-element';
 import styles from './panel.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.
  * @documentation https://zinc.style/components/panel
  * @status experimental
  * @since 1.0
  *
- * @slot - The default slot.
- * @slot actions - The actions slot.
- * @slot footer - The footer slot.
+ * @slot - The panel's main content.
+ * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
+ * @slot footer - Content displayed in the panel footer.
+ * @slot side - Sidebar content displayed on the left or right side of the panel.
+ *
+ * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.
  *
  * @csspart base - The component's base wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
  */
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

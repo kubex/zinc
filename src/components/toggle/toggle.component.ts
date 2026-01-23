@@ -10,21 +10,21 @@ import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import styles from './toggle.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary Toggles allow the user to switch an option on or off.
  * @documentation https://zinc.style/components/toggle
- * @status experimental
+ * @status stable
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-tooltip
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-input - Emitted when the toggle receives input.
  *
- * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot - The toggle's label.
  *
- * @csspart base - The component's base wrapper.
+ * @csspart base - The component's base wrapper containing the toggle switch.
+ * @csspart control - The toggle switch control (the circular button that slides).
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.
  */
 export default class ZnToggle extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);

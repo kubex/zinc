@@ -2321,6 +2321,8 @@ declare module "components/data-select/data-select.component" {
         required: boolean;
         iconOnly: boolean;
         multiple: boolean;
+        distinct: string;
+        conditional: string;
         protected readonly formControlController: FormControlController;
         get validationMessage(): string;
         get validity(): ValidityState;

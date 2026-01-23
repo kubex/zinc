@@ -105,6 +105,9 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   /** The selects required attribute. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Disables the select. */
+  @property({type: Boolean, reflect: true}) disabled = false;
+
   @property({attribute: "icon-only", type: Boolean, reflect: true}) iconOnly = false;
 
   @property({type: Boolean}) multiple = false;
@@ -114,6 +117,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   @property() conditional = "";
 
   protected readonly formControlController = new FormControlController(this);
+
+  private selectObserver?: MutationObserver;
 
   get validationMessage() {
     return this.select.validationMessage;
@@ -138,6 +143,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.closeOnTab);
+    this.selectObserver?.disconnect();
   }
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
@@ -148,6 +154,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
       this.select.addEventListener('zn-change', () => {
         this._updatePrefix();
       });
+      this._observeSelectDisabled();
     }
     this._updatePrefix();
   }
@@ -343,5 +350,26 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     }
 
     return `Choose a ${localProvider.getName}`
+  }
+
+  private _observeSelectDisabled() {
+    if (!this.select) return;
+
+    this._syncDisabledState();
+
+    this.selectObserver = new MutationObserver(() => {
+      this._syncDisabledState();
+    });
+
+    this.selectObserver.observe(this.select, {
+      attributes: true,
+      attributeFilter: ['disabled']
+    });
+  }
+
+  private _syncDisabledState() {
+    if (!this.select) return;
+
+    this.disabled = this.select.disabled;
   }
 }

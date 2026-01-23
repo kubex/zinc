@@ -109,6 +109,10 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) multiple = false;
 
+  @property() distinct = "";
+
+  @property() conditional = "";
+
   protected readonly formControlController = new FormControlController(this);
 
   get validationMessage() {
@@ -253,6 +257,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  required=${this.required || nothing}
                  placement=${this.placement}
                  name="${this.name}"
+                 distinct="${this.distinct}"
+                 conditional="${this.conditional}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"
                  @blur=${this.blur}

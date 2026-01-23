@@ -688,7 +688,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       this.value = this.selectedOptions.map(el => el.value);
 
-      if (this.placeholder && this.value.length === 0) {
+      if (this.value.length === 0) {
         // When no items are selected, keep the value empty so the placeholder shows
         this.displayLabel = '';
       } else {

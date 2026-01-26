@@ -70,7 +70,16 @@ module.exports = function (doc, options)
       </div>
     `;
 
-    pre.insertAdjacentHTML('afterend', codePreview);
+    if(!pre.parentNode || pre.parentNode.nodeType === 9)
+    {
+      return;
+    }
+
+    const tempDiv = doc.createElement('div');
+    tempDiv.innerHTML = codePreview;
+    const codePreviewElement = tempDiv.firstElementChild;
+
+    pre.parentNode.insertBefore(codePreviewElement, pre.nextSibling);
     pre.remove();
 
     if(adjacentPre)

@@ -5292,21 +5292,41 @@ declare module "components/datepicker/datepicker.component" {
     import ZnTooltip from "components/tooltip/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A date picker component with calendar popup and input validation.
      * @documentation https://zinc.style/components/datepicker
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon
+     * @dependency zn-tooltip
      *
-     * @event zn-event-name - Emitted as an example.
+     * @event zn-change - Emitted when the date value changes.
+     * @event zn-input - Emitted when the input value changes.
+     * @event zn-blur - Emitted when the input loses focus.
+     * @event zn-focus - Emitted when the input gains focus.
      *
-     * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
+     * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
+     * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
+     * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
+     * @slot prefix - Content to display before the input (in addition to the default calendar icon).
+     * @slot suffix - Content to display after the input.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart form-control - The form control wrapper.
+     * @csspart form-control-label - The label element.
+     * @csspart form-control-input - The input wrapper.
+     * @csspart form-control-help-text - The help text element.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
+     *   Supported formats:
+     *   - dd/MM/yyyy (31/12/2024) - Default
+     *   - MM/dd/yyyy (12/31/2024)
+     *   - yyyy-MM-dd (2024-12-31)
+     *   - dd-MM-yyyy (31-12-2024)
+     *   - yyyy/MM/dd (2024/12/31)
+     *
+     * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
      */
     export default class ZnDatepicker extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -5363,6 +5383,22 @@ declare module "components/datepicker/datepicker.component" {
         minDate?: string | Date;
         /** Maximum date that can be selected. Accepts Date object or date string. **/
         maxDate?: string | Date;
+        /**
+         * Date format for display and input. Uses AirDatepicker format tokens.
+         *
+         * Common formats:
+         * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
+         * - 'MM/dd/yyyy' (12/31/2024) - US style
+         * - 'yyyy-MM-dd' (2024-12-31) - ISO style
+         * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
+         * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
+         *
+         * Format tokens:
+         * - dd: Day with leading zero (01-31)
+         * - MM: Month with leading zero (01-12)
+         * - yyyy: Full year (2024)
+         */
+        format: string;
         private _instance;
         /** Gets the validity state object */
         get validity(): ValidityState;
@@ -5370,6 +5406,7 @@ declare module "components/datepicker/datepicker.component" {
         get validationMessage(): string;
         handleDisabledChange(): void;
         handleValueChange(): Promise<void>;
+        handleDatepickerOptionsChange(): void;
         /** Sets focus on the input. */
         focus(options?: FocusOptions): void;
         /** Removes focus from the input. */
@@ -5388,6 +5425,18 @@ declare module "components/datepicker/datepicker.component" {
         private handleInput;
         private handleChange;
         private handleInvalid;
+        private handleKeyDown;
+        private handlePaste;
+        private handleBlur;
+        private isValidDateString;
+        private parseDate;
+        private parseDateString;
+        private isDateInRange;
+        private clearInvalidDate;
+        private getFormatSeparator;
+        private escapeRegex;
+        private normalizeDate;
+        private autoFormatDate;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }

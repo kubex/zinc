@@ -16,21 +16,41 @@ import type {ZincFormControl} from '../../internal/zinc-element';
 import styles from './datepicker.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A date picker component with calendar popup and input validation.
  * @documentation https://zinc.style/components/datepicker
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-icon
+ * @dependency zn-tooltip
  *
- * @event zn-event-name - Emitted as an example.
+ * @event zn-change - Emitted when the date value changes.
+ * @event zn-input - Emitted when the input value changes.
+ * @event zn-blur - Emitted when the input loses focus.
+ * @event zn-focus - Emitted when the input gains focus.
  *
- * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot label - The datepicker's label. Alternatively, you can use the `label` attribute.
+ * @slot label-tooltip - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.
+ * @slot context-note - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.
+ * @slot help-text - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.
+ * @slot prefix - Content to display before the input (in addition to the default calendar icon).
+ * @slot suffix - Content to display after the input.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart form-control - The form control wrapper.
+ * @csspart form-control-label - The label element.
+ * @csspart form-control-input - The input wrapper.
+ * @csspart form-control-help-text - The help text element.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @property format - Date format using AirDatepicker tokens. Default: 'dd/MM/yyyy'
+ *   Supported formats:
+ *   - dd/MM/yyyy (31/12/2024) - Default
+ *   - MM/dd/yyyy (12/31/2024)
+ *   - yyyy-MM-dd (2024-12-31)
+ *   - dd-MM-yyyy (31-12-2024)
+ *   - yyyy/MM/dd (2024/12/31)
+ *
+ * @cssproperty --zn-input-* - Inherited input component CSS custom properties.
  */
 export default class ZnDatepicker extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -113,6 +133,23 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   /** Maximum date that can be selected. Accepts Date object or date string. **/
   @property({attribute: 'max-date'}) maxDate?: string | Date;
 
+  /**
+   * Date format for display and input. Uses AirDatepicker format tokens.
+   *
+   * Common formats:
+   * - 'dd/MM/yyyy' (31/12/2024) - Default, European style
+   * - 'MM/dd/yyyy' (12/31/2024) - US style
+   * - 'yyyy-MM-dd' (2024-12-31) - ISO style
+   * - 'dd-MM-yyyy' (31-12-2024) - Alternative European
+   * - 'yyyy/MM/dd' (2024/12/31) - Alternative ISO
+   *
+   * Format tokens:
+   * - dd: Day with leading zero (01-31)
+   * - MM: Month with leading zero (01-12)
+   * - yyyy: Full year (2024)
+   */
+  @property() format: string = 'MM/dd/yyyy';
+
   private _instance: AirDatepicker<HTMLInputElement>;
 
 
@@ -136,6 +173,25 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
+
+    // Sync value with AirDatepicker instance
+    if (this._instance && this.value) {
+      const date = this.parseDate(String(this.value));
+      if (date) {
+        this._instance.selectDate(date, {silent: true});
+      }
+    } else if (this._instance && !this.value) {
+      this._instance.clear({silent: true});
+    }
+  }
+
+  @watch('format', {waitUntilFirstUpdate: true})
+  @watch('range', {waitUntilFirstUpdate: true})
+  @watch('minDate', {waitUntilFirstUpdate: true})
+  @watch('maxDate', {waitUntilFirstUpdate: true})
+  @watch('disablePastDates', {waitUntilFirstUpdate: true})
+  handleDatepickerOptionsChange() {
+    this.init();
   }
 
   /** Sets focus on the input. */
@@ -185,18 +241,26 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     if (inputElement) {
       const options: AirDatepickerOptions = {
         locale: enLocale,
+        dateFormat: this.format,
         range: this.range,
-        onSelect: () => {
+        toggleSelected: false,
+        onSelect: ({date}) => {
           this.handleChange();
+          // Blur the input after selection to prevent invisible keyboard navigation
+          if (date && !this.range) {
+            // For single date selection, blur immediately
+            this.input.blur();
+          } else if (date && this.range && Array.isArray(date) && date.length === 2) {
+            // For range selection, blur only after both dates are selected
+            this.input.blur();
+          }
         }
       };
 
       if (this.minDate) {
         options.minDate = typeof this.minDate === 'string' ? new Date(this.minDate) : this.minDate;
       } else if (this.disablePastDates) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        options.minDate = today;
+        options.minDate = this.normalizeDate(new Date());
       }
 
       if (this.maxDate) {
@@ -207,7 +271,28 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     }
   }
 
-  private handleInput() {
+  private handleInput(event?: InputEvent) {
+    const originalValue = this.input.value;
+    const cursorPosition = this.input.selectionStart || 0;
+    const separator = this.getFormatSeparator();
+
+    // Remove any invalid characters (keep only digits and the separator)
+    const validCharPattern = new RegExp(`[^0-9${this.escapeRegex(separator)}]`, 'g');
+    const cleanedValue = originalValue.replace(validCharPattern, '');
+    const formattedValue = this.autoFormatDate(cleanedValue, separator);
+
+    if (originalValue !== formattedValue) {
+      this.input.value = formattedValue;
+
+      // Adjust the cursor position if a separator was auto-inserted
+      if (formattedValue.length > originalValue.length && event?.inputType === 'insertText') {
+        const newCursorPos = cursorPosition + (formattedValue.length - originalValue.length);
+        this.input.setSelectionRange(newCursorPos, newCursorPos);
+      } else {
+        this.input.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    }
+
     this.value = this.input.value;
     this.formControlController.updateValidity();
     this.emit('zn-input');
@@ -221,6 +306,216 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   private handleInvalid(event: Event) {
     this.formControlController.setValidity(false);
     this.formControlController.emitInvalidEvent(event);
+  }
+
+  private handleKeyDown(event: KeyboardEvent) {
+    if (this._instance && this._instance.visible) {
+      return;
+    }
+
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'Home', 'End'
+    ];
+
+    // Allow Ctrl/Cmd shortcuts
+    if (event.ctrlKey || event.metaKey) {
+      return;
+    }
+
+    // Allow allowed navigation keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Allow digits and the format separator
+    const separator = this.getFormatSeparator();
+    const allowedPattern = new RegExp(`^[0-9${this.escapeRegex(separator)}]$`);
+
+    if (allowedPattern.test(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+  }
+
+  private handlePaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+
+    // Only allow digits, the format separator, and whitespace
+    const separator = this.getFormatSeparator();
+    const allowedPattern = new RegExp(`^[0-9${this.escapeRegex(separator)}\\s]*$`);
+
+    if (!allowedPattern.test(pastedText)) {
+      event.preventDefault();
+    }
+  }
+
+  private handleBlur() {
+    if (this._instance && this._instance.visible) {
+      return;
+    }
+
+    if (!this.input.value || this.input.value.trim() === '') {
+      return;
+    }
+
+    if (!this.isValidDateString(this.input.value)) {
+      this.clearInvalidDate();
+      return;
+    }
+
+    const date = this.parseDate(this.input.value);
+    if (date && !this.isDateInRange(date)) {
+      this.clearInvalidDate();
+      return;
+    }
+
+    // Sync valid typed date with AirDatepicker instance
+    if (date && this._instance) {
+      this._instance.selectDate(date);
+    }
+  }
+
+  private isValidDateString(value: string): boolean {
+    const parsed = this.parseDateString(value);
+    if (!parsed) {
+      return false;
+    }
+
+    const {day, month, year} = parsed;
+    const date = new Date(year, month - 1, day);
+
+    // Verify the date is valid and wasn't silently corrected
+    return date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day;
+  }
+
+  private parseDate(value: string): Date | null {
+    const parsed = this.parseDateString(value);
+    if (!parsed) {
+      return null;
+    }
+
+    const {day, month, year} = parsed;
+    const date = new Date(year, month - 1, day);
+    return this.normalizeDate(date);
+  }
+
+  private parseDateString(value: string): { day: number; month: number; year: number } | null {
+    const separator = this.getFormatSeparator();
+
+    // Create regex pattern based on format
+    // Convert AirDatepicker format tokens to regex
+    const escapedSeparator = this.escapeRegex(separator);
+    const formatPattern = this.format
+      .replace(/dd/g, '(\\d{1,2})')
+      .replace(/MM/g, '(\\d{1,2})')
+      .replace(/yyyy/g, '(\\d{4})')
+      .replace(new RegExp(escapedSeparator, 'g'), escapedSeparator);
+
+    const regex = new RegExp(`^${formatPattern}$`);
+    const match = value.match(regex);
+
+    if (!match) {
+      return null;
+    }
+
+    // Determine which capture group corresponds to which date part
+    const formatParts = this.format.split(separator);
+    let dayIndex = -1;
+    let monthIndex = -1;
+    let yearIndex = -1;
+
+    formatParts.forEach((part, index) => {
+      if (part === 'dd') dayIndex = index + 1;
+      if (part === 'MM') monthIndex = index + 1;
+      if (part === 'yyyy') yearIndex = index + 1;
+    });
+
+    if (dayIndex === -1 || monthIndex === -1 || yearIndex === -1) {
+      return null;
+    }
+
+    return {
+      day: parseInt(match[dayIndex]),
+      month: parseInt(match[monthIndex]),
+      year: parseInt(match[yearIndex])
+    };
+  }
+
+  private isDateInRange(date: Date): boolean {
+    let minDate: Date | undefined;
+    let maxDate: Date | undefined;
+
+    // Determine minDate
+    if (this.minDate) {
+      minDate = typeof this.minDate === 'string' ? new Date(this.minDate) : new Date(this.minDate);
+      this.normalizeDate(minDate);
+    } else if (this.disablePastDates) {
+      minDate = this.normalizeDate(new Date());
+    }
+
+    // Determine maxDate
+    if (this.maxDate) {
+      maxDate = typeof this.maxDate === 'string' ? new Date(this.maxDate) : new Date(this.maxDate);
+      this.normalizeDate(maxDate);
+    }
+
+    return !((minDate && date < minDate) || (maxDate && date > maxDate));
+  }
+
+  private clearInvalidDate() {
+    this.input.value = '';
+    this.value = '';
+    if (this._instance) {
+      this._instance.clear();
+    }
+    this.formControlController.updateValidity();
+  }
+
+  private getFormatSeparator(): string {
+    const match = this.format.match(/[^dMy]/);
+    return match ? match[0] : '/';
+  }
+
+  private escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  private normalizeDate(date: Date): Date {
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  private autoFormatDate(value: string, separator: string): string {
+    const digitsOnly = value.replace(new RegExp(`\\${separator}`, 'g'), '');
+
+    // Get format structure (e.g., "dd/MM/yyyy" -> [2, 2, 4])
+    const formatParts = this.format.split(separator);
+    const lengths = formatParts.map(part => part.length);
+
+    let formatted = '';
+    let digitIndex = 0;
+
+    for (let i = 0; i < lengths.length; i++) {
+      const partLength = lengths[i];
+      const partValue = digitsOnly.substring(digitIndex, digitIndex + partLength);
+
+      if (partValue) {
+        formatted += partValue;
+        digitIndex += partLength;
+
+        if (i < lengths.length - 1 && digitIndex < digitsOnly.length) {
+          formatted += separator;
+        }
+      }
+    }
+
+    return formatted;
   }
 
   protected updated(_changedProperties: PropertyValues) {
@@ -310,7 +605,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    aria-describedby="help-text"
                    @change=${this.handleChange}
                    @input=${this.handleInput}
-                   @invalid=${this.handleInvalid}>
+                   @invalid=${this.handleInvalid}
+                   @keydown=${this.handleKeyDown}
+                   @paste=${this.handlePaste}
+                   @blur=${this.handleBlur}>
 
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>

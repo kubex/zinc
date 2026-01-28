@@ -67,12 +67,32 @@ Use the `placeholder` attribute to add a placeholder.
 <zn-datepicker label="Select date" placeholder="MM/DD/YYYY"></zn-datepicker>
 ```
 
-### Initial Value
+### Date Formats
 
-Set the `value` attribute to provide an initial date selection.
+Use the `format` attribute to customize how dates are displayed and entered. The default format is `dd/MM/yyyy` (European style).
 
 ```html:preview
-<zn-datepicker label="Event date" value="01/15/2026"></zn-datepicker>
+<zn-datepicker label="European format (default)" format="dd/MM/yyyy" placeholder="31/12/2024"></zn-datepicker>
+<br />
+<zn-datepicker label="US format" format="MM/dd/yyyy" placeholder="12/31/2024"></zn-datepicker>
+<br />
+<zn-datepicker label="ISO format" format="yyyy-MM-dd" placeholder="2024-12-31"></zn-datepicker>
+<br />
+<zn-datepicker label="European with dashes" format="dd-MM-yyyy" placeholder="31-12-2024"></zn-datepicker>
+```
+
+:::tip
+The format controls both how dates are displayed in the input and what format the datepicker expects when users type dates manually. Date separators are automatically inserted as you type, making it easy to enter dates without manual formatting. Invalid characters are blocked, and dates are validated against the specified format.
+:::
+
+### Initial Value
+
+Set the `value` attribute to provide an initial date selection. The value should match the format specified.
+
+```html:preview
+<zn-datepicker label="Event date" format="dd/MM/yyyy" value="15/01/2026"></zn-datepicker>
+<br />
+<zn-datepicker label="Event date (US)" format="MM/dd/yyyy" value="01/15/2026"></zn-datepicker>
 ```
 
 ### Disabled

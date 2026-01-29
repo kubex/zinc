@@ -3461,6 +3461,7 @@ declare module "components/inline-edit/inline-edit.component" {
      *
      * @slot - The default slot.
      * @slot example - An example slot.
+     * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -3469,6 +3470,7 @@ declare module "components/inline-edit/inline-edit.component" {
     export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
+        private readonly hasSlotController;
         value: string;
         name: string;
         placeholder: string;
@@ -3492,6 +3494,11 @@ declare module "components/inline-edit/inline-edit.component" {
         helpText: string;
         /** The text direction for the input (ltr or rtl) **/
         dir: 'ltr' | 'rtl' | 'auto';
+        /**
+         * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
+         * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
+         */
+        autocomplete: string;
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;

@@ -1,13 +1,14 @@
-import { classMap } from "lit/directives/class-map.js";
-import { type CSSResultGroup, html, type HTMLTemplateResult, unsafeCSS } from 'lit';
-import { defaultValue } from "../../internal/default-value";
-import { FormControlController } from "../../internal/form";
-import { ifDefined } from "lit/directives/if-defined.js";
-import { property, query, state } from 'lit/decorators.js';
-import { watch } from "../../internal/watch";
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type HTMLTemplateResult, unsafeCSS} from 'lit';
+import {defaultValue} from "../../internal/default-value";
+import {FormControlController} from "../../internal/form";
+import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
+import {property, query, state} from 'lit/decorators.js';
+import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
-import type { ZincFormControl } from '../../internal/zinc-element';
+import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';
@@ -24,6 +25,7 @@ import styles from './inline-edit.scss';
  *
  * @slot - The default slot.
  * @slot example - An example slot.
+ * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
  *
  * @csspart base - The component's base wrapper.
  *
@@ -35,24 +37,25 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   private readonly formControlController = new FormControlController(this, {
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
   });
+  private readonly hasSlotController = new HasSlotController(this, 'help-text');
 
-  @property({ reflect: true }) value: string;
+  @property({reflect: true}) value: string;
 
   @property() name: string;
 
-  @property({ reflect: true }) placeholder: string;
+  @property({reflect: true}) placeholder: string;
 
-  @property({ attribute: 'edit-text' }) editText: string;
+  @property({attribute: 'edit-text'}) editText: string;
 
-  @property({ type: Boolean }) disabled: boolean
+  @property({type: Boolean}) disabled: boolean
 
-  @property({ type: Boolean }) inline: boolean
+  @property({type: Boolean}) inline: boolean
 
-  @property({ type: Boolean }) padded: boolean
+  @property({type: Boolean}) padded: boolean
 
-  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
-  @property({ type: Boolean }) required: boolean
+  @property({type: Boolean}) required: boolean
 
   @property() pattern: string;
 
@@ -62,19 +65,25 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() step: number | 'any';
 
-  @property({ attribute: "input-type" }) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
+  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
 
-  @property({ type: Object }) options: { [key: string]: string } = {};
+  @property({type: Object}) options: { [key: string]: string } = {};
 
-  @property({ attribute: 'provider' }) selectProvider: string;
+  @property({attribute: 'provider'}) selectProvider: string;
 
-  @property({ attribute: 'icon-position', type: Boolean }) iconPosition: 'start' | 'end' | 'none' = 'none';
+  @property({attribute: 'icon-position', type: Boolean}) iconPosition: 'start' | 'end' | 'none' = 'none';
 
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-  @property({ attribute: 'help-text' }) helpText: string = '';
+  @property({attribute: 'help-text'}) helpText: string = '';
 
   /** The text direction for the input (ltr or rtl) **/
   @property() dir: 'ltr' | 'rtl' | 'auto' = 'auto';
+
+  /**
+   * Specifies what permission the browser has to provide assistance in filling out form field values. Refer to
+   * [this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.
+   */
+  @property() autocomplete: string;
 
   @state() private hasFocus: boolean;
 
@@ -113,8 +122,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     document.addEventListener('keydown', this.escKeyHandler);
     document.addEventListener('keydown', this.submitKeyHandler);
     document.addEventListener('click', this.mouseEventHandler);
-    this.addEventListener('mousedown', this.captureMouseDown, { capture: true });
-    this.addEventListener('keydown', this.captureKeyDown, { capture: true });
+    this.addEventListener('mousedown', this.captureMouseDown, {capture: true});
+    this.addEventListener('keydown', this.captureKeyDown, {capture: true});
   }
 
   disconnectedCallback() {
@@ -131,13 +140,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.input.addEventListener('onclick', this.handleEditClick);
   }
 
-  @watch('value', { waitUntilFirstUpdate: true })
+  @watch('value', {waitUntilFirstUpdate: true})
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
   }
 
-  @watch('isEditing', { waitUntilFirstUpdate: true })
+  @watch('isEditing', {waitUntilFirstUpdate: true})
   async handleIsEditingChange() {
     await this.updateComplete;
     if (this.input instanceof ZnSelect && !this.isEditing) {
@@ -164,7 +173,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   submitKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && this.isEditing && !e.shiftKey) {
       this.isEditing = false;
-      this.emit('zn-submit', { detail: { value: this.value, element: this } });
+      this.emit('zn-submit', {detail: {value: this.value, element: this}});
       this.formControlController.submit();
       this.input.blur();
     }
@@ -195,7 +204,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   handleSubmitClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
-    this.emit('zn-submit', { detail: { value: this.value, element: this } });
+    this.emit('zn-submit', {detail: {value: this.value, element: this}});
     this.formControlController.submit();
   };
 
@@ -219,6 +228,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   protected render() {
     const hasEditText = this.editText;
+    const hasHelpTextSlot = this.hasSlotController.test('help-text');
+    const hasHelpText = this.helpText ? true : hasHelpTextSlot;
 
     // Default input type to select if options are provided
     if (Object.keys(this.options).length > 0) {
@@ -282,7 +293,17 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
               <zn-button type="button" @click="${this.handleCancelClick}" icon="close" size="x-small" icon-size="20"
                          color="secondary"></zn-button>`}
         </div>
-      </div>`;
+      </div>
+
+      ${this.isEditing && hasHelpText ? html`
+        <div
+          part="form-control-help-text"
+          id="help-text"
+          class="form-control__help-text"
+          aria-hidden="false">
+          <slot name="help-text">${this.helpText}</slot>
+        </div>
+      ` : ''}`;
   }
 
 
@@ -296,8 +317,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         rows="1"
         .value="${this.value}"
         placeholder="${this.placeholder}"
-        help-text="${ifDefined(this.helpText)}"
         pattern=${ifDefined(this.pattern)}
+        autocomplete=${ifDefined(this.autocomplete)}
         dir="${this.dir}"
         @zn-input="${this.handleInput}"
         @zn-blur="${this.handleBlur}">
@@ -312,8 +333,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 size="${this.size}"
                 value="${this.value}"
                 placeholder="${this.placeholder}"
-                help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
+                autocomplete=${ifDefined(this.autocomplete)}
                 required=${ifDefined(this.required)}
                 dir="${this.dir}"
                 @zn-input="${this.handleInput}"
@@ -329,8 +350,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 size="${this.size}"
                 value="${this.value}"
                 placeholder="${this.placeholder}"
-                help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
+                autocomplete=${ifDefined(this.autocomplete)}
                 min=${ifDefined(this.min)}
                 max=${ifDefined(this.max)}
                 step=${ifDefined(this.step)}
@@ -346,7 +367,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       <zn-select class="ai__input"
                  name="${this.name}"
                  value="${this.value}"
-                 help-text="${ifDefined(this.helpText)}"
                  size="${this.size}"
                  placeholder="${this.placeholder}"
                  required=${ifDefined(this.required)}
@@ -366,7 +386,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                       name="${this.name}"
                       value="${this.value}"
                       icon-position="${ifDefined(this.iconPosition)}"
-                      help-text="${ifDefined(this.helpText)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"
                       required=${ifDefined(this.required)}

@@ -56,6 +56,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() pattern: string;
 
+  @property() min: string | number;
+
+  @property() max: string | number;
+
+  @property() step: number | 'any';
+
   @property({ attribute: "input-type" }) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
 
   @property({ type: Object }) options: { [key: string]: string } = {};
@@ -325,6 +331,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                 placeholder="${this.placeholder}"
                 help-text="${ifDefined(this.helpText)}"
                 pattern=${ifDefined(this.pattern)}
+                min=${ifDefined(this.min)}
+                max=${ifDefined(this.max)}
+                step=${ifDefined(this.step)}
                 required=${ifDefined(this.required)}
                 dir="${this.dir}"
                 @zn-input="${this.handleInput}"

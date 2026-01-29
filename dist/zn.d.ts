@@ -3479,6 +3479,9 @@ declare module "components/inline-edit/inline-edit.component" {
         size: 'small' | 'medium' | 'large';
         required: boolean;
         pattern: string;
+        min: string | number;
+        max: string | number;
+        step: number | 'any';
         inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea';
         options: {
             [key: string]: string;

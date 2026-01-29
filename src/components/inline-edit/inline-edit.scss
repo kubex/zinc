@@ -68,6 +68,15 @@
     }
   }
 
+  // Hide webkit spin buttons for number inputs when not editing
+  &:not(.ai--editing) {
+    .ai__input::part(input)::-webkit-inner-spin-button,
+    .ai__input::part(input)::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
   &--padded {
     padding: var(--zn-spacing-large);
   }

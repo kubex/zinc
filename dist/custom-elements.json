@@ -16063,6 +16063,43 @@
             },
             {
               "kind": "field",
+              "name": "masterId",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "master-id",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "store-key"
+            },
+            {
+              "kind": "field",
+              "name": "storeTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "store-ttl",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "localStorage",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "local-storage",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "_preItems",
               "type": {
                 "text": "NodeListOf<Element>"
@@ -16167,6 +16204,14 @@
               "default": "0"
             },
             {
+              "kind": "field",
+              "name": "_store",
+              "type": {
+                "text": "Store"
+              },
+              "privacy": "protected"
+            },
+            {
               "kind": "method",
               "name": "appendItem",
               "parameters": [
@@ -16197,12 +16242,33 @@
                   "type": {
                     "text": "Element"
                   }
+                },
+                {
+                  "name": "persist",
+                  "default": "true",
+                  "type": {
+                    "text": "boolean"
+                  }
                 }
               ]
             },
             {
               "kind": "method",
-              "name": "showMore"
+              "name": "_loadStoredTabs",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_saveTabToStorage",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "newTab",
+                  "type": {
+                    "text": "StoredTab"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -16305,6 +16371,36 @@
               },
               "default": "false",
               "fieldName": "isolated"
+            },
+            {
+              "name": "master-id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "masterId"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "storeKey"
+            },
+            {
+              "name": "store-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "storeTtl"
+            },
+            {
+              "name": "local-storage",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "localStorage"
             },
             {
               "name": "_appended",

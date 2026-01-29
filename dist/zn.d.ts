@@ -3321,6 +3321,7 @@ declare module "events/zn-menu-select" {
 }
 declare module "components/navbar/navbar.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     import ZnDropdown from "components/dropdown/index";
     /**
@@ -3357,6 +3358,10 @@ declare module "components/navbar/navbar.component" {
         noPad: false;
         manualAddItems: boolean;
         isolated: boolean;
+        masterId: string;
+        storeKey: string;
+        storeTtl: number;
+        localStorage: boolean;
         private _preItems;
         private _postItems;
         private _appended;
@@ -3369,12 +3374,14 @@ declare module "components/navbar/navbar.component" {
         private _navItemsGap;
         private _expandableMargin;
         private _totalItemWidth;
+        protected _store: Store;
         appendItem(item: Element): void;
         connectedCallback(): void;
         handleResize: () => void;
-        addItem(item: Element): void;
+        addItem(item: Element, persist?: boolean): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        showMore(): void;
+        private _loadStoredTabs;
+        private _saveTabToStorage;
         private handleClick;
         render(): import("lit").TemplateResult<1>;
     }

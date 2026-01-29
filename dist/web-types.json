@@ -4506,6 +4506,16 @@
               "name": "isolated",
               "value": { "type": "boolean", "default": "false" }
             },
+            { "name": "master-id", "value": { "type": "string" } },
+            {
+              "name": "store-key",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            },
+            { "name": "local-storage", "value": { "type": "boolean" } },
             { "name": "_appended", "value": { "type": "Element[]" } }
           ],
           "slots": [
@@ -4529,6 +4539,10 @@
               { "name": "noPad", "type": "false" },
               { "name": "manualAddItems", "type": "boolean" },
               { "name": "isolated", "type": "boolean" },
+              { "name": "masterId", "type": "string" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "localStorage", "type": "boolean" },
               { "name": "handleResize" }
             ],
             "events": [

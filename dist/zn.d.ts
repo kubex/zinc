@@ -625,6 +625,8 @@ declare module "components/menu-item/menu-item.component" {
         flushY: boolean;
         /** Removes the border from the menu item. */
         noBorder: boolean;
+        /** Marks the menu item as currently active/selected. */
+        active: boolean;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;

@@ -90,6 +90,9 @@ export default class ZnMenuItem extends ZincElement {
   /** Removes the border from the menu item. */
   @property({type: Boolean, reflect: true, attribute: 'no-border'}) noBorder = false;
 
+  /** Marks the menu item as currently active/selected. */
+  @property({type: Boolean, reflect: true}) active = false;
+
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
   private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
@@ -225,6 +228,7 @@ export default class ZnMenuItem extends ZincElement {
           'menu-item--flush-x': this.flushX && !this.flush,
           'menu-item--flush-y': this.flushY && !this.flush,
           'menu-item--no-border': this.noBorder,
+          'menu-item--active': this.active,
 
         })}
         ?aria-haspopup="${this.isSubmenu()}"

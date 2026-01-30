@@ -64,6 +64,47 @@
   border-bottom-width: 0;
 }
 
+// Active state - vertical strip indicator
+.menu-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--hover-color);
+}
+
+.menu-item--rtl.menu-item--active::before {
+  left: auto;
+  right: 0;
+}
+
+// Active state with color variants
+.menu-item--active.menu-item--primary::before {
+  background-color: rgb(var(--zn-primary));
+}
+
+.menu-item--active.menu-item--error::before {
+  background-color: rgb(var(--zn-color-error));
+}
+
+.menu-item--active.menu-item--info::before {
+  background-color: rgb(var(--zn-color-info));
+}
+
+.menu-item--active.menu-item--warning::before {
+  background-color: rgb(var(--zn-color-warning));
+}
+
+.menu-item--active.menu-item--success::before {
+  background-color: rgb(var(--zn-color-success));
+}
+
+.menu-item--active.menu-item--secondary::before {
+  background-color: rgb(var(--zn-accent));
+}
+
 .menu-item .menu-item__label {
   display: flex;
   flex: 1 1 auto;
@@ -119,7 +160,8 @@
 }
 
 :host(:hover:not([aria-disabled='true'], :focus-visible)) .menu-item,
-.menu-item--submenu-expanded {
+.menu-item--submenu-expanded,
+.menu-item--active {
   background-color: var(--hover-bg);
   color: var(--hover-color);
 }

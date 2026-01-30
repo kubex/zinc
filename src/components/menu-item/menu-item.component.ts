@@ -78,6 +78,18 @@ export default class ZnMenuItem extends ZincElement {
 
   @property({type: Boolean, reflect: true}) confirm = false;
 
+  /** Removes all padding from the menu item. */
+  @property({type: Boolean, reflect: true}) flush = false;
+
+  /** Removes horizontal (left/right) padding only. Ignored if flush is set. */
+  @property({type: Boolean, reflect: true, attribute: 'flush-x'}) flushX = false;
+
+  /** Removes vertical (top/bottom) padding only. Ignored if flush is set. */
+  @property({type: Boolean, reflect: true, attribute: 'flush-y'}) flushY = false;
+
+  /** Removes the border from the menu item. */
+  @property({type: Boolean, reflect: true, attribute: 'no-border'}) noBorder = false;
+
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
   private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
@@ -209,6 +221,10 @@ export default class ZnMenuItem extends ZincElement {
           'menu-item--success': this.color === 'success',
           'menu-item--warning': this.color === 'warning',
           'menu-item--transparent': this.color === 'transparent',
+          'menu-item--flush': this.flush,
+          'menu-item--flush-x': this.flushX && !this.flush,
+          'menu-item--flush-y': this.flushY && !this.flush,
+          'menu-item--no-border': this.noBorder,
 
         })}
         ?aria-haspopup="${this.isSubmenu()}"

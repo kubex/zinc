@@ -1716,7 +1716,9 @@ declare module "components/input/input.component" {
         private readonly hasSlotController;
         private readonly localize;
         input: HTMLInputElement;
+        colorPicker: HTMLInputElement;
         private hasFocus;
+        private isUserTyping;
         title: string;
         private __numberInput;
         private __dateInput;
@@ -1724,7 +1726,7 @@ declare module "components/input/input.component" {
          * The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults
          * to `text`
          */
-        type: 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
+        type: 'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url';
         /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
         /** The current value of the input, submitted as a name/value pair with form data. */
@@ -1768,6 +1770,8 @@ declare module "components/input/input.component" {
         passwordVisible: boolean;
         /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
         noSpinButtons: boolean;
+        /** The color format to display for color inputs. Only applies when type is 'color'. **/
+        colorFormat: 'hex' | 'rgb' | 'oklch';
         /**
          * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be
@@ -1825,6 +1829,12 @@ declare module "components/input/input.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         private validateMinMax;
+        private hexToRgb;
+        private rgbToHex;
+        private hexToOklch;
+        private oklchToHex;
+        private convertToHex;
+        private convertFromHex;
         private handleBlur;
         private handleChange;
         private handleClearClick;
@@ -1833,10 +1843,13 @@ declare module "components/input/input.component" {
         private handleInvalid;
         private handleKeyDown;
         private handlePasswordToggle;
+        private handleColorSwatchClick;
+        private handleColorPickerChange;
         private focusInput;
         handleDisabledChange(): void;
         handleStepChange(): void;
         handleValueChange(): Promise<void>;
+        handleColorFormatChange(): Promise<void>;
         /** Sets focus on the input. */
         focus(options?: FocusOptions): void;
         /** Removes focus from the input. */
@@ -3725,6 +3738,7 @@ declare module "components/tabs/tabs.component" {
         private _tabs;
         private _actions;
         private _knownUri;
+        private _shownTabs;
         private readonly hasSlotController;
         constructor();
         connectedCallback(): Promise<void>;
@@ -3745,6 +3759,7 @@ declare module "components/tabs/tabs.component" {
         getRefTab(target: HTMLElement): string | null;
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         _setTabEleActive(ele: Element, active: boolean): void;
+        _executeScripts(element: Element): void;
         selectTab(tabName: string, refresh: boolean): boolean;
         getActiveTab(): Element[];
         observerDom(): void;

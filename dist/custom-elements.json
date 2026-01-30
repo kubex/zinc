@@ -13352,7 +13352,23 @@
             },
             {
               "kind": "field",
+              "name": "colorPicker",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hasFocus",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "isUserTyping",
               "type": {
                 "text": "boolean"
               },
@@ -13382,7 +13398,7 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               "default": "'text'",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
@@ -13576,6 +13592,16 @@
             },
             {
               "kind": "field",
+              "name": "colorFormat",
+              "type": {
+                "text": "'hex' | 'rgb' | 'oklch'"
+              },
+              "default": "'hex'",
+              "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
+              "attribute": "color-format"
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "string"
@@ -13747,6 +13773,114 @@
             },
             {
               "kind": "method",
+              "name": "hexToRgb",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hex",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "rgbToHex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rgb",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "hexToOklch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hex",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "oklchToHex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "oklch",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "convertToHex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "convertFromHex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hex",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "handleBlur",
               "privacy": "private"
             },
@@ -13811,6 +13945,16 @@
             },
             {
               "kind": "method",
+              "name": "handleColorSwatchClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleColorPickerChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "focusInput",
               "privacy": "private",
               "parameters": [
@@ -13833,6 +13977,10 @@
             {
               "kind": "method",
               "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleColorFormatChange"
             },
             {
               "kind": "method",
@@ -14010,7 +14158,7 @@
             {
               "name": "type",
               "type": {
-                "text": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "text": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               "default": "'text'",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
@@ -14168,6 +14316,15 @@
               "default": "false",
               "description": "Hides the browsers built-in increment/decrement spin buttons for number inputs *",
               "fieldName": "noSpinButtons"
+            },
+            {
+              "name": "color-format",
+              "type": {
+                "text": "'hex' | 'rgb' | 'oklch'"
+              },
+              "default": "'hex'",
+              "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
+              "fieldName": "colorFormat"
             },
             {
               "name": "form",
@@ -17602,6 +17759,19 @@
             },
             {
               "kind": "field",
+              "name": "_shownTabs",
+              "type": {
+                "text": "Set<string>"
+              },
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
@@ -17823,6 +17993,22 @@
                   "name": "active",
                   "type": {
                     "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_executeScripts",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
                   }
                 }
               ],
@@ -26342,6 +26528,15 @@
             },
             {
               "kind": "field",
+              "name": "_shownTabs",
+              "type": {
+                "text": "Set<string>"
+              },
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
@@ -26556,6 +26751,18 @@
                   "name": "active",
                   "type": {
                     "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_executeScripts",
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
                   }
                 }
               ]

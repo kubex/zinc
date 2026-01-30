@@ -3618,7 +3618,7 @@
               "name": "type",
               "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
               "value": {
-                "type": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'",
+                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'",
                 "default": "'text'"
               }
             },
@@ -3709,6 +3709,11 @@
               "name": "no-spin-buttons",
               "description": "Hides the browsers built-in increment/decrement spin buttons for number inputs *",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "color-format",
+              "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
+              "value": { "type": "'hex' | 'rgb' | 'oklch'", "default": "'hex'" }
             },
             {
               "name": "form",
@@ -3859,11 +3864,12 @@
           "js": {
             "properties": [
               { "name": "input", "type": "HTMLInputElement" },
+              { "name": "colorPicker", "type": "HTMLInputElement" },
               { "name": "title", "type": "string" },
               {
                 "name": "type",
                 "description": "The type of input. Works the same as native `<input>` element. But only a subset of types is supported. Defaults\nto `text`",
-                "type": "'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
+                "type": "'color' | 'currency' | 'date' | 'datetime-local' | 'email' | 'number' | 'password' |\n    'search' | 'tel' | 'text' | 'time' | 'url'"
               },
               {
                 "name": "name",
@@ -3954,6 +3960,11 @@
                 "name": "noSpinButtons",
                 "description": "Hides the browsers built-in increment/decrement spin buttons for number inputs *",
                 "type": "boolean"
+              },
+              {
+                "name": "colorFormat",
+                "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
+                "type": "'hex' | 'rgb' | 'oklch'"
               },
               {
                 "name": "form",

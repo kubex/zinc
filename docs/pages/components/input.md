@@ -134,6 +134,33 @@ The `type` attribute controls the type of input the browser renders. As shown in
 have default prefix and suffix elements. Not all available types are shown below. See
 the [Properties table](#properties) for the full list of options.
 
+#### Color Input
+
+The color input type displays a clickable color swatch on the left that opens the browser's native color picker. The color value is shown as editable text in the input field, allowing users to either pick a color visually or enter a color value directly.
+
+Use the `color-format` attribute to specify the format: `hex` (default), `rgb`, or `oklch`.
+
+```html:preview
+<zn-input type="color" label="Hex Format (default)" value="#3b82f6">
+  <div slot="help-text">Default format. Click the swatch to pick a color, or type a hex value like #3b82f6.</div>
+</zn-input>
+<br />
+<zn-input type="color" label="RGB Format" color-format="rgb" value="rgb(139, 92, 246)">
+  <div slot="help-text">Type RGB values like rgb(139, 92, 246). The picker converts to/from hex automatically.</div>
+</zn-input>
+<br />
+<zn-input type="color" label="OKLCH Format" color-format="oklch" value="oklch(0.628 0.225 292.6)">
+  <div slot="help-text">Type OKLCH values like oklch(0.628 0.225 292.6). The picker converts to/from hex automatically.</div>
+</zn-input>
+<br />
+<zn-input type="color" label="Background Color" value="#f59e0b" clearable>
+  <div slot="help-text">Use the <code>clearable</code> attribute to allow clearing the color value.</div>
+</zn-input>
+<br />
+```
+
+#### Other Input Types
+
 ```html:preview
 <zn-input type="currency" label="Input type: Currency"><div slot="help-text">Has <code>$</code> prefix and <code>USD</code> suffix by default and native input type set to <code>number</code>. The currency input does <strong>NOT</strong> have input masking at this time.</div></zn-input>
 <br />

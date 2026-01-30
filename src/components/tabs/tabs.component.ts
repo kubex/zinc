@@ -58,6 +58,7 @@ export default class ZnTabs extends ZincElement {
   private _tabs: HTMLElement[] = [];
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
+  private _shownTabs: Set<string> = new Set<string>();
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
 
   constructor() {
@@ -333,6 +334,27 @@ export default class ZnTabs extends ZincElement {
     ele.classList.toggle('active', active);
   }
 
+  _executeScripts(element: Element) {
+    const scripts = element.querySelectorAll('script');
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement('script');
+
+      // Copy all attributes
+      Array.from(oldScript.attributes).forEach((attr) => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+
+      // Copy inline script content
+      if (oldScript.textContent) {
+        newScript.textContent = oldScript.textContent;
+      }
+
+      // Replace old script with new one to trigger execution
+      oldScript.parentNode?.insertBefore(newScript, oldScript);
+      oldScript.remove();
+    });
+  }
+
   selectTab(tabName: string, refresh: boolean): boolean {
     if (tabName && !this._panels.has(tabName)) {
       return false;
@@ -359,6 +381,13 @@ export default class ZnTabs extends ZincElement {
             inSlot = false;
           }
           element.toggleAttribute('selected', isActive);
+
+          // Execute scripts on first visibility
+          if (isActive && !this._shownTabs.has(key)) {
+            this._shownTabs.add(key);
+            this._executeScripts(element);
+          }
+
           if (isActive && refresh) {
             let uri = "";
             let gaid = "";

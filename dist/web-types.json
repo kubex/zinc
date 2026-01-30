@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.62",
+  "version": "1.0.63",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -4415,6 +4415,26 @@
             {
               "name": "confirm",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush",
+              "description": "Removes all padding from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-x",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-y",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-border",
+              "description": "Removes the border from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -4464,7 +4484,27 @@
               { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
               { "name": "rel", "type": "string" },
               { "name": "gaid", "type": "string" },
-              { "name": "confirm", "type": "boolean" }
+              { "name": "confirm", "type": "boolean" },
+              {
+                "name": "flush",
+                "description": "Removes all padding from the menu item.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushX",
+                "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushY",
+                "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "noBorder",
+                "description": "Removes the border from the menu item.",
+                "type": "boolean"
+              }
             ],
             "events": [
               {

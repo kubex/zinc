@@ -617,6 +617,14 @@ declare module "components/menu-item/menu-item.component" {
         rel: string;
         gaid: string;
         confirm: boolean;
+        /** Removes all padding from the menu item. */
+        flush: boolean;
+        /** Removes horizontal (left/right) padding only. Ignored if flush is set. */
+        flushX: boolean;
+        /** Removes vertical (top/bottom) padding only. Ignored if flush is set. */
+        flushY: boolean;
+        /** Removes the border from the menu item. */
+        noBorder: boolean;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;

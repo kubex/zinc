@@ -12651,7 +12651,7 @@
           ],
           "slots": [
             {
-              "description": "The default slot.",
+              "description": "Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.",
               "name": ""
             },
             {
@@ -12676,7 +12676,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'help-text')"
+              "default": "new HasSlotController(this, 'help-text', '[default]')"
             },
             {
               "kind": "field",
@@ -12990,6 +12990,15 @@
             },
             {
               "kind": "method",
+              "name": "moveSlottedOptionsToSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange"
+            },
+            {
+              "kind": "method",
               "name": "_getTextAreaInput",
               "privacy": "protected",
               "return": {
@@ -13204,7 +13213,7 @@
           "tagNameWithoutPrefix": "inline-edit",
           "tagName": "zn-inline-edit",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/inline-edit\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/inline-edit\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n * @slot example - An example slot.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/inline-edit",
           "status": "experimental",
           "since": "1.0",
@@ -29543,7 +29552,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.65",
+    "version": "1.0.66",
     "author": "",
     "license": "MIT"
   }

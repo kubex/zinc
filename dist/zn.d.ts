@@ -3489,7 +3489,7 @@ declare module "components/inline-edit/inline-edit.component" {
      *
      * @event zn-event-name - Emitted as an example.
      *
-     * @slot - The default slot.
+     * @slot - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.
      * @slot example - An example slot.
      * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
      *
@@ -3554,6 +3554,8 @@ declare module "components/inline-edit/inline-edit.component" {
         handleCancelClick: (e: MouseEvent) => void;
         handleBlur: () => void;
         handleInput: (e: Event) => void;
+        private moveSlottedOptionsToSelect;
+        handleSlotChange: () => Promise<void>;
         protected render(): import("lit").TemplateResult<1>;
         protected _getTextAreaInput(): HTMLTemplateResult;
         protected _getTextInput(): HTMLTemplateResult;

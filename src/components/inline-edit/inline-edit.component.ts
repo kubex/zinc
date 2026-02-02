@@ -23,7 +23,7 @@ import styles from './inline-edit.scss';
  *
  * @event zn-event-name - Emitted as an example.
  *
- * @slot - The default slot.
+ * @slot - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.
  * @slot example - An example slot.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
  *
@@ -37,7 +37,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   private readonly formControlController = new FormControlController(this, {
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
   });
-  private readonly hasSlotController = new HasSlotController(this, 'help-text');
+  private readonly hasSlotController = new HasSlotController(this, 'help-text', '[default]');
 
   @property({reflect: true}) value: string;
 
@@ -226,6 +226,22 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.emit('zn-input');
   };
 
+  private moveSlottedOptionsToSelect() {
+    if (!(this.input instanceof ZnSelect)) return;
+
+    const options = Array.from(this.querySelectorAll('zn-option'));
+    options.forEach(option => {
+      this.input.appendChild(option);
+    });
+  }
+
+  handleSlotChange = async () => {
+    await this.updateComplete;
+    if (this.input instanceof ZnSelect) {
+      this.moveSlottedOptionsToSelect();
+    }
+  };
+
   protected render() {
     const hasEditText = this.editText;
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
@@ -303,6 +319,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
           aria-hidden="false">
           <slot name="help-text">${this.helpText}</slot>
         </div>
+      ` : ''}
+
+      ${this.inputType === 'select' ? html`
+        <div style="display: none;">
+          <slot @slotchange="${this.handleSlotChange}"></slot>
+        </div>
       ` : ''}`;
   }
 
@@ -363,6 +385,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   }
 
   protected _getSelectInput(): HTMLTemplateResult {
+    const hasSlottedOptions = this.hasSlotController.test('[default]');
+
     return html`
       <zn-select class="ai__input"
                  name="${this.name}"
@@ -373,10 +397,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  dir="${this.dir}"
                  @zn-input="${this.handleInput}"
                  @zn-blur="${this.handleBlur}">
-        ${Object.keys(this.options).map(key => html`
-          <zn-option value="${key}">
-            ${this.options[key]}
-          </zn-option>`)}
+        ${!hasSlottedOptions
+          ? Object.keys(this.options).map(key => html`
+            <zn-option value="${key}">
+              ${this.options[key]}
+            </zn-option>`)
+          : ''}
       </zn-select>`
   }
 

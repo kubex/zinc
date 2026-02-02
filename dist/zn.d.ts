@@ -3738,7 +3738,6 @@ declare module "components/tabs/tabs.component" {
         private _tabs;
         private _actions;
         private _knownUri;
-        private _shownTabs;
         private readonly hasSlotController;
         constructor();
         connectedCallback(): Promise<void>;
@@ -3759,7 +3758,6 @@ declare module "components/tabs/tabs.component" {
         getRefTab(target: HTMLElement): string | null;
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         _setTabEleActive(ele: Element, active: boolean): void;
-        _executeScripts(element: Element): void;
         selectTab(tabName: string, refresh: boolean): boolean;
         getActiveTab(): Element[];
         observerDom(): void;

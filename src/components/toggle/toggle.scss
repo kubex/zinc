@@ -81,7 +81,7 @@
   width: 35px;
 }
 
-:host([checked])  .switch__wrapper--small .switch__input-wrapper {
+:host([checked]) .switch__wrapper--small .switch__input-wrapper {
   .switch__control {
     transform: translateX(calc(100% - 7px)) scale(0.8);
   }
@@ -90,4 +90,16 @@
 .switch__wrapper--small .switch__control {
   max-width: 20px;
   height: 20px;
+}
+
+// Support inline label
+.switch__wrapper--inline label {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+
+  .switch__input {
+    margin-inline: 1px;
+    margin-inline-end: 1px;
+  }
 }

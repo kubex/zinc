@@ -1,11 +1,11 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {defaultValue} from "../../internal/default-value";
-import {FormControlController} from "../../internal/form";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {live} from "lit/directives/live.js";
-import {property, query, state} from 'lit/decorators.js';
-import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { defaultValue } from "../../internal/default-value";
+import { FormControlController } from "../../internal/form";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { live } from "lit/directives/live.js";
+import { property, query, state } from 'lit/decorators.js';
+import ZincElement, { type ZincFormControl } from '../../internal/zinc-element';
 
 import styles from './toggle.scss';
 
@@ -45,29 +45,31 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   @property() value: string;
 
-  @property({attribute: 'fallback'}) fallbackValue: string = '';
+  @property({ attribute: 'fallback' }) fallbackValue: string = '';
 
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
-  @property({type: Boolean, reflect: true}) disabled: boolean = false;
+  @property({ type: Boolean, reflect: true }) disabled: boolean = false;
 
-  @property({type: Boolean, reflect: true}) checked: boolean = false;
+  @property({ type: Boolean, reflect: true }) checked: boolean = false;
 
   @defaultValue('checked') defaultChecked = false;
 
-  @property({reflect: true}) form = '';
+  @property({ reflect: true }) form = '';
 
-  @property({type: Boolean, reflect: true}) required = false;
+  @property({ type: Boolean, reflect: true }) required = false;
 
-  @property({attribute: 'help-text'}) helpText = "";
+  @property({ attribute: 'help-text' }) helpText = "";
 
-  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
+  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
 
-  @property({attribute: "on-text"}) onText: string = '';
+  @property({ attribute: "on-text" }) onText: string = '';
 
-  @property({attribute: "off-text"}) offText: string = '';
+  @property({ attribute: "off-text" }) offText: string = '';
 
   @property() label: string = '';
+
+  @property({ type: Boolean }) inline: boolean = false;
 
   get validity() {
     return this.input?.validity;
@@ -199,6 +201,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         'switch__wrapper--small': this.size === 'small',
         'switch__wrapper--medium': this.size === 'medium',
         'switch__wrapper--large': this.size === 'large',
+        'switch__wrapper--inline': this.inline
       })}">
         <label>
           ${this.label ? html`<p class="switch-label">${this.label}</p>` : ''}

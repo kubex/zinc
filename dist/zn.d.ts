@@ -1303,6 +1303,7 @@ declare module "components/toggle/toggle.component" {
         onText: string;
         offText: string;
         label: string;
+        inline: boolean;
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(_changedProperties: PropertyValues): void;

@@ -565,6 +565,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         // This prevents infinite loops because once normalized, it won't change again
         if (normalizedValue !== this.value) {
           this.value = normalizedValue;
+          this.emit('zn-change');
           return; // Will re-trigger, but next time values will match
         }
       }
@@ -587,6 +588,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         const normalizedValue = this.convertFromHex(hexValue);
         if (normalizedValue !== this.value) {
           this.value = normalizedValue;
+          this.emit('zn-change');
         }
       }
     }

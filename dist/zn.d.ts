@@ -1334,10 +1334,10 @@ declare module "components/toggle/index" {
     }
 }
 declare module "components/collapsible/collapsible.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
-    import { ZnInputEvent } from "events/zn-input";
+    import type { ZnInputEvent } from "events/zn-input";
     /**
      * @summary Toggles between showing and hiding content when clicked
      * @documentation https://zinc.style/components/collapsible
@@ -1369,6 +1369,7 @@ declare module "components/collapsible/collapsible.component" {
         private showArrow;
         connectedCallback(): Promise<void>;
         handleCaptionToggle: (e: ZnInputEvent) => void;
+        protected updated(changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
         handleCollapse: (e: MouseEvent) => void;
         recalculateNumberOfItems: () => void;

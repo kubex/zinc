@@ -308,6 +308,24 @@
   rotate: -180deg;
 }
 
+/* Fetch loading spinner */
+.select__spinner {
+  animation: spin 1s linear infinite;
+  --icon-size: var(--zn-font-size-large);
+  --icon-color: var(--zn-input-icon-color);
+}
+
+@keyframes spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+/* Fetch error icon */
+.select__fetch-error-icon {
+  --icon-size: var(--zn-font-size-large);
+  --icon-color: var(--zn-color-danger-600);
+}
+
 /* Listbox */
 .select__listbox {
   display: block;

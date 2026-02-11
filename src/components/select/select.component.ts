@@ -510,8 +510,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const isExpandIcon = path.some(el => el instanceof Element && el.classList.contains('select__expand-icon'));
     // if click is inside the prefix area (e.g. checkbox), don't toggle the select
     const inPrefix = path.some(el => el instanceof Element && el.classList.contains('select__prefix'));
-    // Ignore disabled controls and clicks on tags (remove buttons)
-    if (((this.disabled || isIcon) && !isExpandIcon) || inPrefix) {
+    // Ignore disabled controls, fetch loading/error, and clicks on tags (remove buttons)
+    if (((this.disabled || this._fetchLoading || this._fetchError || isIcon) && !isExpandIcon) || inPrefix) {
       return;
     }
 
@@ -1103,6 +1103,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const hasHelpText = this.helpText ? true : hasHelpTextSlot;
     const hasClearIcon = this.clearable && !this.disabled && this.value.length > 0;
     const isPlaceholderVisible = this.placeholder && this.value.length === 0;
+    const isFetchDisabled = this._fetchLoading || !!this._fetchError;
+    const isDisabled = this.disabled || isFetchDisabled;
 
     return html`
       <div
@@ -1146,7 +1148,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--standard': true,
               'select--pill': this.pill,
               'select--open': this.open,
-              'select--disabled': this.disabled,
+              'select--disabled': this.disabled || isFetchDisabled,
               'select--multiple': this.multiple,
               'select--focused': this.hasFocus,
               'select--placeholder-visible': isPlaceholderVisible,
@@ -1179,9 +1181,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this.placeholder}
-                .disabled=${this.disabled}
-                .value=${this.displayLabel}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : this.placeholder}
+                .disabled=${isDisabled}
+                .value=${isFetchDisabled ? '' : this.displayLabel}
                 autocomplete="off"
                 spellcheck="false"
                 autocapitalize="off"
@@ -1190,7 +1192,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 aria-expanded=${this.open ? 'true' : 'false'}
                 aria-haspopup="listbox"
                 aria-labelledby="label"
-                aria-disabled=${this.disabled ? 'true' : 'false'}
+                aria-disabled=${isDisabled ? 'true' : 'false'}
                 aria-describedby="help-text"
                 role="combobox"
                 tabindex="0"
@@ -1204,7 +1206,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               <input
                 class="select__value-input"
                 type="text"
-                disabled=${this.disabled || nothing}
+                disabled=${isDisabled || nothing}
                 required=${this.required || nothing}
                 value=${Array.isArray(this.value) ? this.value.join(', ') : this.value}
                 tabindex="-1"
@@ -1229,9 +1231,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                   </button>`
                 : ''}
 
-              <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
-                <zn-icon src="keyboard_arrow_down"></zn-icon>
-              </slot>
+              ${this._fetchLoading
+                ? html`<zn-icon src="progress_activity" class="select__expand-icon select__spinner"></zn-icon>`
+                : this._fetchError
+                  ? html`<zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
+                  : html`
+                    <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
+                      <zn-icon src="keyboard_arrow_down"></zn-icon>
+                    </slot>`
+              }
             </div>
 
             <div
@@ -1245,14 +1253,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               tabindex="-1"
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
-              ${this._fetchLoading
-                ? html`
-                  <zn-option disabled>Loading...</zn-option>`
-                : ''}
-              ${this._fetchError
-                ? html`
-                  <zn-option disabled>Failed to load options</zn-option>`
-                : ''}
               ${this._fetchedOptions.map(
                 option => html`
                   <zn-option value=${option.key}>${option.value}</zn-option>`

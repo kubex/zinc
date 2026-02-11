@@ -2058,10 +2058,10 @@ declare module "components/select/select.component" {
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
+    import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
     import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
     import type { ZincFormControl } from "internal/zinc-element";
-    import type ZnOption from "components/option/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/select
@@ -2069,6 +2069,7 @@ declare module "components/select/select.component" {
      * @since 1.0
      *
      * @dependency zn-icon
+     * @dependency zn-option
      * @dependency zn-popup
      * @dependency zn-tag
      *
@@ -2091,6 +2092,8 @@ declare module "components/select/select.component" {
      * @event zn-hide - Emitted when the select's menu closes.
      * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.
      * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.
+     * @event zn-error - Emitted when loading options from the `src` URL fails.
      *
      * @csspart form-control - The form control that wraps the label, input, and help text.
      * @csspart form-control-label - The label's wrapper.
@@ -2113,6 +2116,7 @@ declare module "components/select/select.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-icon': typeof ZnIcon;
+            'zn-option': typeof ZnOption;
             'zn-popup': typeof ZnPopup;
             'zn-tag': typeof ZnChip;
         };
@@ -2134,6 +2138,21 @@ declare module "components/select/select.component" {
         selectedOptions: ZnOption[];
         private valueHasChanged;
         private inputPrefix;
+        /**
+         * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
+         * options. The expected format is an array of objects with `key` and `value` properties:
+         * `[{"key": "us", "value": "United States"}, ...]`
+         * When not set, the component works exactly as before using slotted `<zn-option>` elements.
+         */
+        dataUri: string;
+        /** @internal */
+        private _fetchedOptions;
+        /** @internal */
+        private _fetchLoading;
+        /** @internal */
+        private _fetchError;
+        /** @internal */
+        private _fetchAbortController;
         /** The name of the select, submitted as a name/value pair with form data. */
         name: string;
         private _value;
@@ -2211,6 +2230,7 @@ declare module "components/select/select.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         private updateHasInputPrefix;
         private addOpenListeners;
         private removeOpenListeners;
@@ -2237,6 +2257,9 @@ declare module "components/select/select.component" {
         private handleInvalid;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleDisabledChange(): void;
+        handleSrcChange(): void;
+        /** Fetches options from the URL specified by the `src` property. */
+        fetchOptions(): Promise<void>;
         attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         handleValueChange(): void;
         handleOpenChange(): Promise<void>;

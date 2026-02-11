@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -22260,7 +22260,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-icon': ZnIcon, 'zn-popup': ZnPopup, 'zn-tag': ZnChip }"
+              "default": "{ 'zn-icon': ZnIcon, 'zn-option': ZnOption, 'zn-popup': ZnPopup, 'zn-tag': ZnChip }"
             },
             {
               "kind": "field",
@@ -22399,6 +22399,15 @@
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dataUri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",
+              "attribute": "data-uri"
             },
             {
               "kind": "field",
@@ -22888,6 +22897,15 @@
             },
             {
               "kind": "method",
+              "name": "handleSrcChange"
+            },
+            {
+              "kind": "method",
+              "name": "fetchOptions",
+              "description": "Fetches options from the URL specified by the `src` property."
+            },
+            {
+              "kind": "method",
               "name": "handleValueChange"
             },
             {
@@ -23034,9 +23052,25 @@
             {
               "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied.",
               "name": "zn-invalid"
+            },
+            {
+              "description": "Emitted when options have been successfully loaded from the `src` URL.",
+              "name": "zn-load"
+            },
+            {
+              "description": "Emitted when loading options from the `src` URL fails.",
+              "name": "zn-error"
             }
           ],
           "attributes": [
+            {
+              "name": "data-uri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",
+              "fieldName": "dataUri"
+            },
             {
               "name": "name",
               "type": {
@@ -23256,12 +23290,13 @@
           "tagNameWithoutPrefix": "select",
           "tagName": "zn-select",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-option\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.\n * @event zn-error - Emitted when loading options from the `src` URL fails.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
           "documentation": "https://zinc.style/components/select",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-icon",
+            "zn-option",
             "zn-popup",
             "zn-tag"
           ]

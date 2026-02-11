@@ -2972,6 +2972,32 @@
               <tbody>
                 <tr>
                   <td>
+                    <code class="nowrap">dataUri</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> data-uri </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    The URL to fetch options from. When set, the component fetches JSON from this URL and renders the
+                    results as options. The expected format is an array of objects with <code>key</code> and
+                    <code>value</code> properties:
+                    <code>[{"key": "us", "value": "United States"}, ...]</code>
+                    When not set, the component works exactly as before using slotted
+                    <code>&lt;zn-option&gt;</code> elements.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">name</code>
                   </td>
                   <td>The name of the select, submitted as a name/value pair with form data.</td>
@@ -3482,6 +3508,20 @@
                   </td>
                   <td>-</td>
                 </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-load</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when options have been successfully loaded from the <code>src</code> URL.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-error</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when loading options from the <code>src</code> URL fails.</td>
+                  <td>-</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -3504,6 +3544,12 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td class="nowrap"><code>fetchOptions()</code></td>
+                  <td>Fetches options from the URL specified by the <code>src</code> property.</td>
+                  <td>-</td>
+                </tr>
+
                 <tr>
                   <td class="nowrap"><code>show()</code></td>
                   <td>Shows the listbox.</td>
@@ -3674,6 +3720,8 @@
             <li><code>&lt;zn-example&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-option&gt;</code></li>
 
             <li><code>&lt;zn-popup&gt;</code></li>
 

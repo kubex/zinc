@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -5793,9 +5793,14 @@
         },
         {
           "name": "zn-select",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions()** - Fetches options from the URL specified by the `src` property.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
           "doc-url": "",
           "attributes": [
+            {
+              "name": "data-uri",
+              "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",
+              "value": { "type": "string" }
+            },
             {
               "name": "name",
               "description": "The name of the select, submitted as a name/value pair with form data.",
@@ -5992,6 +5997,14 @@
             {
               "name": "zn-invalid",
               "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+            },
+            {
+              "name": "zn-load",
+              "description": "Emitted when options have been successfully loaded from the `src` URL."
+            },
+            {
+              "name": "zn-error",
+              "description": "Emitted when loading options from the `src` URL fails."
             }
           ],
           "js": {
@@ -6005,6 +6018,11 @@
               { "name": "displayLabel", "type": "string" },
               { "name": "currentOption", "type": "ZnOption" },
               { "name": "selectedOptions", "type": "ZnOption[]" },
+              {
+                "name": "dataUri",
+                "description": "The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.",
+                "type": "string"
+              },
               {
                 "name": "name",
                 "description": "The name of the select, submitted as a name/value pair with form data.",
@@ -6162,6 +6180,14 @@
               {
                 "name": "zn-invalid",
                 "description": "Emitted when the form control has been checked for validity and its constraints aren't satisfied."
+              },
+              {
+                "name": "zn-load",
+                "description": "Emitted when options have been successfully loaded from the `src` URL."
+              },
+              {
+                "name": "zn-error",
+                "description": "Emitted when loading options from the `src` URL fails."
               }
             ]
           }

@@ -4,25 +4,22 @@
   display: block;
 }
 
-.translations {
+.translation-group {
   display: flex;
   flex-direction: column;
   padding: 0 var(--zn-spacing-medium);
   gap: var(--zn-spacing-3x-small);
 }
 
-.translations--grouped {
-  padding: 0;
-}
-
-.input-container {
-  padding: var(--zn-spacing-small) 0;
+.translation-group__children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
 }
 
 .form-control__label {
   margin-bottom: 0 !important;
 }
-
 
 zn-navbar {
   overflow: hidden;
@@ -38,8 +35,4 @@ zn-navbar::part(navbar-item) {
   font-size: var(--zn-font-size-small);
 
   --zn-spacing-medium: 7px;
-}
-
-zn-navbar::part(button__base) {
-  //padding: 0 5px;
 }

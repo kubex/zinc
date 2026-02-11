@@ -32,6 +32,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({ type: Boolean, reflect: true }) required = false;
   @property({ type: Boolean, reflect: true }) flush = false;
 
+  /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
+  @property({ type: Boolean, reflect: true }) grouped = false;
+
   @property({ type: Object }) languages: Record<string, string> = {
     'en': 'EN'
   };
@@ -61,6 +64,30 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   setCustomValidity() {
     // no-op
+  }
+
+  /** Sets the active language externally. Used by zn-translation-group. */
+  public setActiveLanguage(language: string) {
+    this._activeLanguage = language;
+    this.requestUpdate();
+  }
+
+  /** Returns the currently active language. */
+  public getActiveLanguage(): string {
+    return this._activeLanguage;
+  }
+
+  /** Adds a language key to this component's values if not already present. Used by zn-translation-group. */
+  public addLanguageKey(languageCode: string) {
+    if (!Object.prototype.hasOwnProperty.call(this.values, languageCode)) {
+      this.values = { ...this.values, [languageCode]: '' };
+      this.updateValue();
+    }
+  }
+
+  /** Returns all language codes that have values. */
+  public getValueLanguages(): string[] {
+    return Object.keys(this.values);
   }
 
   protected firstUpdated() {
@@ -205,6 +232,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       <div part="form-control"
            class="${classMap({
              'translations': true,
+             'translations--grouped': this.grouped,
              'form-control': true,
              'form-control--medium': true,
              'form-control--has-label': hasLabel,
@@ -215,18 +243,20 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           <slot name="label">${this.label}</slot>
         </label>
 
-        <zn-navbar
-          .navigation="${navigation}"
-          .dropdown="${availableLanguages}"
-          name="${this.name}-translations-navbar"
-          @zn-select="${this.handleNavbarClick}"
-          @zn-menu-select="${this.handleLanguageAdd}"
-          flush=${this.flush || nothing}
-          isolated
-          manual-add-items
-        >
-          <slot name="expand" slot="expand"></slot>
-        </zn-navbar>
+        ${!this.grouped ? html`
+          <zn-navbar
+            .navigation="${navigation}"
+            .dropdown="${availableLanguages}"
+            name="${this.name}-translations-navbar"
+            @zn-select="${this.handleNavbarClick}"
+            @zn-menu-select="${this.handleLanguageAdd}"
+            flush=${this.flush || nothing}
+            isolated
+            manual-add-items
+          >
+            <slot name="expand" slot="expand"></slot>
+          </zn-navbar>
+        ` : nothing}
         <div class="input-container">
           <zn-inline-edit
             .value=${currentTranslation}

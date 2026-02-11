@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.68",
+  "version": "1.0.69",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,6 +14,28 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
         },
         {
           "name": "zn-alert",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -7680,8 +7680,74 @@
           }
         },
         {
+          "name": "zn-translation-group",
+          "description": "A container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **label** - The group label. Alternatively, use the `label` attribute.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The group label displayed above the language navbar.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "languages",
+              "description": "The available languages for the group.",
+              "value": {
+                "type": "Record<string, string>",
+                "default": "{ 'en': 'EN' }"
+              }
+            },
+            {
+              "name": "flush",
+              "description": "When true, applies flush styling to the navbar.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Default slot for `<zn-translations>` elements."
+            },
+            {
+              "name": "label",
+              "description": "The group label. Alternatively, use the `label` attribute."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-language-change",
+              "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "label",
+                "description": "The group label displayed above the language navbar.",
+                "type": "string"
+              },
+              {
+                "name": "languages",
+                "description": "The available languages for the group.",
+                "type": "Record<string, string>"
+              },
+              {
+                "name": "flush",
+                "description": "When true, applies flush styling to the navbar.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-language-change",
+                "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-translations",
-          "description": "\n---\n",
+          "description": "\n---\n\n\n### **Methods:**\n - **setActiveLanguage(language: _string_)** - Sets the active language externally. Used by zn-translation-group.\n- **getActiveLanguage(): _string_** - Returns the currently active language.\n- **addLanguageKey(languageCode: _string_)** - Adds a language key to this component's values if not already present. Used by zn-translation-group.\n- **getValueLanguages(): _string[]_** - Returns all language codes that have values.",
           "doc-url": "",
           "attributes": [
             { "name": "name", "value": { "type": "string", "default": "''" } },
@@ -7700,6 +7766,11 @@
             },
             {
               "name": "flush",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "grouped",
+              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -7723,6 +7794,11 @@
               { "name": "disabled", "type": "boolean" },
               { "name": "required", "type": "boolean" },
               { "name": "flush", "type": "boolean" },
+              {
+                "name": "grouped",
+                "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+                "type": "boolean"
+              },
               { "name": "languages", "type": "Record<string, string>" },
               { "name": "values", "type": "Record<string, string>" },
               { "name": "validity", "type": "ValidityState" },

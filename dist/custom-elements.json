@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -29032,6 +29032,188 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/translation-group/translation-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTranslationGroup",
+          "slots": [
+            {
+              "description": "Default slot for `<zn-translations>` elements.",
+              "name": ""
+            },
+            {
+              "description": "The group label. Alternatively, use the `label` attribute.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-navbar': ZnNavbar }"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The group label displayed above the language navbar.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "languages",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "default": "{ 'en': 'EN' }",
+              "description": "The available languages for the group.",
+              "attribute": "languages"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, applies flush styling to the navbar.",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_activeLanguage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "'en'"
+            },
+            {
+              "kind": "field",
+              "name": "_activatedLanguages",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "['en']",
+              "description": "Tracks all language codes that have been activated across children."
+            },
+            {
+              "kind": "method",
+              "name": "getAllTranslations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnTranslations[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "syncChildren",
+              "privacy": "private",
+              "description": "Sync grouped state, languages, and active language to all children."
+            },
+            {
+              "kind": "method",
+              "name": "syncChildLanguages",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleNavbarClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleLanguageAdd",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the active language changes. Detail: `{ language: string }`.",
+              "name": "zn-language-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The group label displayed above the language navbar.",
+              "fieldName": "label"
+            },
+            {
+              "name": "languages",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "default": "{ 'en': 'EN' }",
+              "description": "The available languages for the group.",
+              "fieldName": "languages"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, applies flush styling to the navbar.",
+              "fieldName": "flush"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A container that provides a shared language toggle for multiple zn-translations children.",
+          "tagNameWithoutPrefix": "translation-group",
+          "tagName": "zn-translation-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-navbar\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot label - The group label. Alternatively, use the `label` attribute.\n */",
+          "dependencies": [
+            "zn-navbar"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTranslationGroup",
+            "module": "components/translation-group/translation-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translations/translations.js",
       "declarations": [
         {
@@ -29124,6 +29306,17 @@
             },
             {
               "kind": "field",
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+              "attribute": "grouped",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "languages",
               "type": {
                 "text": "Record<string, string>"
@@ -29177,6 +29370,56 @@
             {
               "kind": "method",
               "name": "setCustomValidity"
+            },
+            {
+              "kind": "method",
+              "name": "setActiveLanguage",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets the active language externally. Used by zn-translation-group."
+            },
+            {
+              "kind": "method",
+              "name": "getActiveLanguage",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "Returns the currently active language."
+            },
+            {
+              "kind": "method",
+              "name": "addLanguageKey",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "languageCode",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds a language key to this component's values if not already present. Used by zn-translation-group."
+            },
+            {
+              "kind": "method",
+              "name": "getValueLanguages",
+              "privacy": "public",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "Returns all language codes that have values."
             },
             {
               "kind": "field",
@@ -29275,6 +29518,15 @@
               },
               "default": "false",
               "fieldName": "flush"
+            },
+            {
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When true, hides the individual language navbar and defers language control to a parent zn-translation-group.",
+              "fieldName": "grouped"
             },
             {
               "name": "languages",
@@ -29569,7 +29821,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.68",
+    "version": "1.0.69",
     "author": "",
     "license": "MIT"
   }

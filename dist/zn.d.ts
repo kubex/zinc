@@ -7010,6 +7010,8 @@ declare module "components/translations/translations.component" {
         disabled: boolean;
         required: boolean;
         flush: boolean;
+        /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
+        grouped: boolean;
         languages: Record<string, string>;
         values: Record<string, string>;
         private _activeLanguage;
@@ -7019,6 +7021,14 @@ declare module "components/translations/translations.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(): void;
+        /** Sets the active language externally. Used by zn-translation-group. */
+        setActiveLanguage(language: string): void;
+        /** Returns the currently active language. */
+        getActiveLanguage(): string;
+        /** Adds a language key to this component's values if not already present. Used by zn-translation-group. */
+        addLanguageKey(languageCode: string): void;
+        /** Returns all language codes that have values. */
+        getValueLanguages(): string[];
         protected firstUpdated(): void;
         willUpdate(changedProperties: PropertyValues): void;
         private handleLanguageAdd;
@@ -7173,6 +7183,58 @@ declare module "components/animated-button/index" {
         }
     }
 }
+declare module "components/translation-group/translation-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnNavbar from "components/navbar/index";
+    import type { PropertyValues } from 'lit';
+    /**
+     * @summary A container that provides a shared language toggle for multiple zn-translations children.
+     *
+     * @dependency zn-navbar
+     *
+     * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
+     *
+     * @slot - Default slot for `<zn-translations>` elements.
+     * @slot label - The group label. Alternatively, use the `label` attribute.
+     */
+    export default class ZnTranslationGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-navbar': typeof ZnNavbar;
+        };
+        private readonly hasSlotController;
+        /** The group label displayed above the language navbar. */
+        label: string;
+        /** The available languages for the group. */
+        languages: Record<string, string>;
+        /** When true, applies flush styling to the navbar. */
+        flush: boolean;
+        private _activeLanguage;
+        /** Tracks all language codes that have been activated across children. */
+        private _activatedLanguages;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected updated(changedProperties: PropertyValues): void;
+        private getAllTranslations;
+        /** Sync grouped state, languages, and active language to all children. */
+        private syncChildren;
+        private syncChildLanguages;
+        private handleSlotChange;
+        private handleNavbarClick;
+        private handleLanguageAdd;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/translation-group/index" {
+    import ZnTranslationGroup from "components/translation-group/translation-group.component";
+    export * from "components/translation-group/translation-group.component";
+    export default ZnTranslationGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-translation-group': ZnTranslationGroup;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -7243,6 +7305,16 @@ declare module "events/zn-redirect" {
         }
     }
 }
+declare module "events/zn-language-change" {
+    export type ZnLanguageChangeEvent = CustomEvent<{
+        language: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-language-change': ZnLanguageChangeEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -7254,6 +7326,7 @@ declare module "events/events" {
     export type { ZnPurchaseEvent } from "events/zn-purchase";
     export type { ZnRedirectEvent } from "events/zn-redirect";
     export type { ZnSearchChangeEvent } from "events/zn-search-change";
+    export type { ZnLanguageChangeEvent } from "events/zn-language-change";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -7346,6 +7419,7 @@ declare module "zinc" {
     export { default as Key } from "components/key/index";
     export { default as KeyContainer } from "components/key-container/index";
     export { default as AnimatedButton } from "components/animated-button/index";
+    export { default as TranslationGroup } from "components/translation-group/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

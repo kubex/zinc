@@ -1,13 +1,13 @@
-import { classMap } from "lit/directives/class-map.js";
-import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { HasSlotController } from "../../internal/slot";
-import { property, state } from 'lit/decorators.js';
-import { Store } from "../../internal/storage";
+import {classMap} from "lit/directives/class-map.js";
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from "../../internal/slot";
+import {property, state} from 'lit/decorators.js';
+import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
+import type {ZnInputEvent} from "../../events/zn-input";
+import type ZnToggle from "../toggle";
 
 import styles from './collapsible.scss';
-import { ZnInputEvent } from "../../events/zn-input";
-import ZnToggle from "../toggle";
 
 /**
  * @summary Toggles between showing and hiding content when clicked
@@ -23,28 +23,28 @@ import ZnToggle from "../toggle";
 export default class ZnCollapsible extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ reflect: true }) caption = '';
+  @property({reflect: true}) caption = '';
 
-  @property({ reflect: true }) description: string;
+  @property({reflect: true}) description: string;
 
-  @property({ reflect: true }) label = '';
+  @property({reflect: true}) label = '';
 
-  @property({ type: Boolean, attribute: 'show-number', reflect: true }) showNumber: boolean = false;
+  @property({type: Boolean, attribute: 'show-number', reflect: true}) showNumber: boolean = false;
 
   // what element name to count
-  @property({ type: String, attribute: 'count-element' }) countElement: string = '*';
+  @property({type: String, attribute: 'count-element'}) countElement: string = '*';
 
-  @property({ type: Boolean, reflect: true }) expanded: boolean = false;
+  @property({type: Boolean, reflect: true}) expanded: boolean = false;
 
-  @property({ attribute: 'default' }) defaultState: 'open' | 'closed';
+  @property({attribute: 'default'}) defaultState: 'open' | 'closed';
 
-  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
+  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
 
-  @property({ attribute: 'store-key', reflect: true }) storeKey: string = "";
+  @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
 
-  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
 
-  @property({ attribute: 'flush', type: Boolean, reflect: true }) flush: boolean = false;
+  @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
 
   @state() numberOfItems: number = 0;
 
@@ -74,7 +74,7 @@ export default class ZnCollapsible extends ZincElement {
       this.observer = new MutationObserver(() => {
         this.recalculateNumberOfItems();
       });
-      this.observer.observe(slot, { childList: true, subtree: true });
+      this.observer.observe(slot, {childList: true, subtree: true});
     }
 
     await this.updateComplete;
@@ -96,6 +96,13 @@ export default class ZnCollapsible extends ZincElement {
     const toggle = e.target as ZnToggle;
     if (toggle) {
       this.expanded = toggle.checked;
+    }
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if (changedProperties.has('expanded') && this.storeKey) {
+      this._store.set(this.storeKey, this.expanded.toString());
     }
   }
 
@@ -150,7 +157,7 @@ export default class ZnCollapsible extends ZincElement {
             <slot name="label"><p class="label">${this.label}</p></slot>
             ${this.showNumber && !this.expanded ? html`
               <zn-chip size="small" type="primary">${this.numberOfItems}</zn-chip>` : ''}
-            ${this.showArrow  ? html`
+            ${this.showArrow ? html`
               <zn-icon library="material-outlined" src="expand_more" class="expand"></zn-icon>` : ''}
           </div>
         </slot>

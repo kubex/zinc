@@ -5581,6 +5581,8 @@ declare module "components/input-group/input-group.component" {
         defaultSlot: HTMLSlotElement;
         /** The input group's label. If you need to display HTML, use the `label` slot. */
         label: string;
+        /** Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`. */
+        gap: 'sm' | 'md' | 'lg';
         private handleSlotChange;
         render(): import("lit").TemplateResult<1>;
     }

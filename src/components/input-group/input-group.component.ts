@@ -30,6 +30,9 @@ export default class ZnInputGroup extends ZincElement {
   /** The input group's label. If you need to display HTML, use the `label` slot. */
   @property() label = '';
 
+  /** Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`. */
+  @property() gap: 'sm' | 'md' | 'lg';
+
   private handleSlotChange() {
     const slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
@@ -65,7 +68,16 @@ export default class ZnInputGroup extends ZincElement {
           <slot name="label">${this.label}</slot>
         </label>
 
-        <div part="base form-control-input" class="input-group" role="group" aria-labelledby="label">
+        <div part="base form-control-input"
+             class="${classMap({
+               'input-group': true,
+               'input-group--gap': !!this.gap,
+               'input-group--gap-sm': this.gap === 'sm',
+               'input-group--gap-md': this.gap === 'md',
+               'input-group--gap-lg': this.gap === 'lg',
+             })}"
+             role="group"
+             aria-labelledby="label">
           <slot @slotchange=${this.handleSlotChange}></slot>
         </div>
       </div>`;

@@ -12,6 +12,25 @@
   width: 100%;
 }
 
+/* Gap variants */
+.input-group--gap-sm { gap: var(--zn-spacing-x-small); }
+.input-group--gap-md { gap: var(--zn-spacing-small); }
+.input-group--gap-lg { gap: var(--zn-spacing-medium); }
+
+/* When gap is set, restore individual border radii */
+.input-group--gap ::slotted([data-zn-input-group__input]) {
+  margin-inline-end: 0;
+}
+
+.input-group--gap ::slotted([data-zn-input-group__input--first]),
+.input-group--gap ::slotted([data-zn-input-group__input--inner]),
+.input-group--gap ::slotted([data-zn-input-group__input--last]) {
+  --zn-input-border-radius-x-small: var(--zn-border-radius-medium);
+  --zn-input-border-radius-small: var(--zn-border-radius-medium);
+  --zn-input-border-radius-medium: var(--zn-border-radius-medium);
+  --zn-input-border-radius-large: var(--zn-border-radius-medium);
+}
+
 /* Common styles for slotted inputs */
 ::slotted([data-zn-input-group__input]) {
   /* Overlap borders */

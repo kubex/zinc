@@ -3,32 +3,44 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
-import ZnNavbar from '../navbar';
+import ZnButton from '../button';
+import ZnButtonGroup from '../button-group';
+import ZnDropdown from '../dropdown';
+import ZnMenu from '../menu';
 import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
-import type {ZnSelectEvent} from '../../events/zn-select';
 import type ZnTranslations from '../translations/translations.component';
 
 import styles from './translation-group.scss';
 
 /**
- * @summary A container that provides a shared language toggle for multiple zn-translations children.
+ * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.
  *
- * @dependency zn-navbar
+ * @dependency zn-button
+ * @dependency zn-button-group
+ * @dependency zn-dropdown
+ * @dependency zn-menu
  *
  * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
  *
  * @slot - Default slot for `<zn-translations>` elements.
  * @slot label - The group label. Alternatively, use the `label` attribute.
+ *
+ * @csspart base - The component's base wrapper.
+ * @csspart header - The header area containing label and language buttons.
+ * @csspart translations - The container for slotted translation elements.
  */
 export default class ZnTranslationGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
-    'zn-navbar': ZnNavbar
+    'zn-button': ZnButton,
+    'zn-button-group': ZnButtonGroup,
+    'zn-dropdown': ZnDropdown,
+    'zn-menu': ZnMenu
   };
 
   private readonly hasSlotController = new HasSlotController(this, 'label');
 
-  /** The group label displayed above the language navbar. */
+  /** The group label displayed in the panel header. */
   @property() label = '';
 
   /** The available languages for the group. */
@@ -36,7 +48,7 @@ export default class ZnTranslationGroup extends ZincElement {
     'en': 'EN'
   };
 
-  /** When true, applies flush styling to the navbar. */
+  /** When true, removes padding from the body area. */
   @property({type: Boolean, reflect: true}) flush = false;
 
   @state() private _activeLanguage = 'en';
@@ -88,15 +100,14 @@ export default class ZnTranslationGroup extends ZincElement {
     this.syncChildren();
   };
 
-  private handleNavbarClick = (e: ZnSelectEvent) => {
-    e.stopPropagation();
-    const li = e.detail.item as HTMLElement;
-    if (li) {
-      const tab = li.getAttribute('tab') || li.getAttribute('data-tab');
-      if (tab) {
-        this._activeLanguage = tab;
-        this.getAllTranslations().forEach(child => child.setActiveLanguage(tab));
-        this.emit('zn-language-change', {detail: {language: tab}});
+  private handleLanguageClick = (e: MouseEvent) => {
+    const button = (e.target as HTMLElement).closest('zn-button') as HTMLElement;
+    if (button) {
+      const lang = button.getAttribute('data-lang');
+      if (lang) {
+        this._activeLanguage = lang;
+        this.getAllTranslations().forEach(child => child.setActiveLanguage(lang));
+        this.emit('zn-language-change', {detail: {language: lang}});
       }
     }
   };
@@ -138,37 +149,57 @@ export default class ZnTranslationGroup extends ZincElement {
       visibleTabs.unshift('en');
     }
 
-    const navigation = visibleTabs.map(code => ({
-      title: code.toUpperCase(),
-      active: code === this._activeLanguage,
-      tab: code
-    }));
+    const hasMultipleLanguages = Object.keys(this.languages).length > 1;
 
     return html`
-      <div part="form-control"
+      <div part="base"
            class="${classMap({
              'translation-group': true,
-             'form-control': true,
-             'form-control--medium': true,
-             'form-control--has-label': hasLabel,
+             'translation-group--flush': this.flush,
            })}">
-        <label part="form-control-label" class="form-control__label"
-               aria-hidden=${hasLabel ? 'false' : 'true'}>
-          <slot name="label">${this.label}</slot>
-        </label>
 
-        <zn-navbar
-          part="navbar"
-          .navigation="${navigation}"
-          .dropdown="${availableLanguages}"
-          @zn-select="${this.handleNavbarClick}"
-          @zn-menu-select="${this.handleLanguageAdd}"
-          flush=${this.flush || nothing}
-          isolated
-          manual-add-items
-        ></zn-navbar>
+        <div part="header" class="${classMap({
+          'translation-group__header': true,
+          'translation-group__header--has-label': hasLabel,
+        })}">
+          ${hasLabel ? html`
+            <label part="form-control-label" class="translation-group__label">
+              <slot name="label">${this.label}</slot>
+            </label>
+          ` : nothing}
 
-        <div part="translations" class="translation-group__children">
+          ${hasMultipleLanguages ? html`
+            <div class="translation-group__languages" @click="${this.handleLanguageClick}">
+              <zn-button-group>
+                ${visibleTabs.map(code => html`
+                  <zn-button
+                    size="x-small"
+                    color="default"
+                    ?outline="${code !== this._activeLanguage}"
+                    data-lang="${code}"
+                  >${code.toUpperCase()}
+                  </zn-button>
+                `)}
+                ${availableLanguages.length > 0 ? html`
+                  <zn-dropdown placement="bottom-end">
+                    <zn-button
+                      slot="trigger"
+                      size="x-small"
+                      color="default"
+                      outline
+                    >+</zn-button>
+                    <zn-menu
+                      actions="${JSON.stringify(availableLanguages)}"
+                      @zn-menu-select="${this.handleLanguageAdd}"
+                    ></zn-menu>
+                  </zn-dropdown>
+                ` : nothing}
+              </zn-button-group>
+            </div>
+          ` : nothing}
+        </div>
+
+        <div part="translations" class="translation-group__body">
           <slot @slotchange="${this.handleSlotChange}"></slot>
         </div>
       </div>

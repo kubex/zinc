@@ -1,12 +1,13 @@
 ---
 meta:
   title: Translation Group
-  description: A container that provides a shared language toggle for multiple translation inputs.
+  description: A panel-styled container that provides a shared language toggle for multiple translation inputs.
 layout: component
 ---
 
-The Translation Group component wraps multiple `zn-translations` components and provides a single, shared language
-navbar. Instead of each translation input having its own language toggle, the group controls all of them simultaneously.
+The Translation Group component wraps multiple `zn-translations` components in a panel-styled container with a shared
+language toggle. A button group in the top right lets users switch between languages, controlling all child translation
+inputs simultaneously.
 
 ```html:preview
 <zn-translation-group
@@ -29,7 +30,7 @@ navbar. Instead of each translation input having its own language toggle, the gr
 
 ### Basic Usage
 
-A translation group with two translation inputs sharing one language toggle.
+A translation group with two translation inputs sharing one language button group.
 
 ```html:preview
 <zn-translation-group languages='{"en":"English","fr":"French"}'>
@@ -40,7 +41,7 @@ A translation group with two translation inputs sharing one language toggle.
 
 ### With Label
 
-Use the `label` attribute to add a descriptive label above the shared navbar.
+Use the `label` attribute to add a descriptive label in the panel header, displayed on the left side alongside the language toggle.
 
 ```html:preview
 <zn-translation-group
@@ -54,7 +55,7 @@ Use the `label` attribute to add a descriptive label above the shared navbar.
 ### Pre-filled Values
 
 Set initial translations on each child. The group automatically collects all language codes from children and displays
-them as tabs.
+them as buttons in the toggle group.
 
 ```html:preview
 <zn-translation-group
@@ -90,7 +91,7 @@ The group scales well with multiple translation inputs under a single toggle.
 
 ### Flush Layout
 
-Remove padding for a more compact appearance using the `flush` attribute.
+Remove body padding for a more compact appearance using the `flush` attribute.
 
 ```html:preview
 <zn-translation-group
@@ -181,11 +182,11 @@ A complete example showing how the translation group simplifies a product editin
 
 ## Properties
 
-| Property    | Type                     | Default      | Description                                    |
-|-------------|--------------------------|--------------|------------------------------------------------|
-| `label`     | `string`                 | `''`         | Label displayed above the language navbar      |
-| `languages` | `Record<string, string>` | `{en: "EN"}` | Object mapping language codes to display names |
-| `flush`     | `boolean`                | `false`      | Removes padding for compact layout             |
+| Property    | Type                     | Default      | Description                                            |
+|-------------|--------------------------|--------------|--------------------------------------------------------|
+| `label`     | `string`                 | `''`         | Label displayed in the panel header                    |
+| `languages` | `Record<string, string>` | `{en: "EN"}` | Object mapping language codes to display names          |
+| `flush`     | `boolean`                | `false`      | Removes body padding for compact layout                |
 
 ## Events
 
@@ -202,9 +203,8 @@ A complete example showing how the translation group simplifies a product editin
 
 ## CSS Parts
 
-| Part                 | Description                                 |
-|----------------------|---------------------------------------------|
-| `form-control`       | The outer form control wrapper              |
-| `form-control-label` | The label wrapper                           |
-| `navbar`             | The shared language navigation bar          |
-| `translations`       | The container wrapping the slotted children |
+| Part           | Description                                             |
+|----------------|---------------------------------------------------------|
+| `base`         | The outer panel wrapper                                 |
+| `header`       | The header area containing the label and language toggle |
+| `translations` | The body container wrapping the slotted children        |

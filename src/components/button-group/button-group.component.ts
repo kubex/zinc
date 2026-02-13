@@ -38,22 +38,34 @@ export default class ZnButtonGroup extends ZincElement {
       return;
     }
 
-    let slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
+    const allSlotted = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
-    slottedElements = slottedElements.filter(el => el.tagName === 'ZN-BUTTON');
-    slottedElements.forEach(el => {
-      const index = slottedElements.indexOf(el);
-      const button = el.closest('zn-button') ?? el.querySelector('zn-button');
-
-      if (button) {
-        button.toggleAttribute('data-zn-button-group__button--grow', this.grow);
-
-        if (!this.gap) {
-          button.toggleAttribute('data-zn-button-group__button', true);
-          button.toggleAttribute('data-zn-button-group__button--first', index === 0);
-          button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
-          button.toggleAttribute('data-zn-button-group__button--last', index === slottedElements.length - 1);
+    // Collect buttons from direct zn-button elements and from zn-dropdown wrappers
+    const groupItems: {button: HTMLElement; wrapper?: HTMLElement}[] = [];
+    for (const el of allSlotted) {
+      if (el.tagName === 'ZN-BUTTON') {
+        groupItems.push({button: el});
+      } else if (el.tagName === 'ZN-DROPDOWN') {
+        const innerButton = el.querySelector('zn-button');
+        if (innerButton) {
+          groupItems.push({button: innerButton, wrapper: el});
         }
+      }
+    }
+
+    groupItems.forEach(({button, wrapper}, index) => {
+      button.toggleAttribute('data-zn-button-group__button--grow', this.grow);
+
+      if (!this.gap) {
+        button.toggleAttribute('data-zn-button-group__button', true);
+        button.toggleAttribute('data-zn-button-group__button--first', index === 0);
+        button.toggleAttribute('data-zn-button-group__button--inner', index > 0 && index < groupItems.length - 1);
+        button.toggleAttribute('data-zn-button-group__button--last', index === groupItems.length - 1);
+      }
+
+      // Mark the dropdown wrapper so it can be styled to not break the group layout
+      if (wrapper) {
+        wrapper.toggleAttribute('data-zn-button-group__dropdown', true);
       }
     });
   }

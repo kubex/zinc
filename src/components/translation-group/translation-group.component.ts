@@ -1,13 +1,12 @@
-import { classMap } from 'lit/directives/class-map.js';
-import { type CSSResultGroup, html, nothing, unsafeCSS } from 'lit';
-import { HasSlotController } from '../../internal/slot';
-import { property, state } from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from '../../internal/slot';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnNavbar from '../navbar';
-import type { PropertyValues } from 'lit';
+import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
+import type {ZnSelectEvent} from '../../events/zn-select';
 import type ZnTranslations from '../translations/translations.component';
-import type { ZnMenuSelectEvent } from '../../events/zn-menu-select';
-import type { ZnSelectEvent } from '../../events/zn-select';
 
 import styles from './translation-group.scss';
 
@@ -33,12 +32,12 @@ export default class ZnTranslationGroup extends ZincElement {
   @property() label = '';
 
   /** The available languages for the group. */
-  @property({ type: Object }) languages: Record<string, string> = {
+  @property({type: Object}) languages: Record<string, string> = {
     'en': 'EN'
   };
 
   /** When true, applies flush styling to the navbar. */
-  @property({ type: Boolean, reflect: true }) flush = false;
+  @property({type: Boolean, reflect: true}) flush = false;
 
   @state() private _activeLanguage = 'en';
 
@@ -97,7 +96,7 @@ export default class ZnTranslationGroup extends ZincElement {
       if (tab) {
         this._activeLanguage = tab;
         this.getAllTranslations().forEach(child => child.setActiveLanguage(tab));
-        this.emit('zn-language-change', { detail: { language: tab } });
+        this.emit('zn-language-change', {detail: {language: tab}});
       }
     }
   };
@@ -117,7 +116,7 @@ export default class ZnTranslationGroup extends ZincElement {
         child.setActiveLanguage(languageCode);
       });
 
-      this.emit('zn-language-change', { detail: { language: languageCode } });
+      this.emit('zn-language-change', {detail: {language: languageCode}});
       this.requestUpdate();
     }
   };

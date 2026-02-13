@@ -2258,6 +2258,7 @@ declare module "components/select/select.component" {
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleDisabledChange(): void;
         handleSrcChange(): void;
+        private _handleFetchError;
         /** Fetches options from the URL specified by the `src` property. */
         fetchOptions(): Promise<void>;
         attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
@@ -7209,10 +7210,9 @@ declare module "components/animated-button/index" {
     }
 }
 declare module "components/translation-group/translation-group.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnNavbar from "components/navbar/index";
-    import type { PropertyValues } from 'lit';
     /**
      * @summary A container that provides a shared language toggle for multiple zn-translations children.
      *

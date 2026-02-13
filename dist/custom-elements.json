@@ -29103,6 +29103,20 @@
           "kind": "class",
           "description": "",
           "name": "ZnTranslationGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header area containing label and language buttons.",
+              "name": "header"
+            },
+            {
+              "description": "The container for slotted translation elements.",
+              "name": "translations"
+            }
+          ],
           "slots": [
             {
               "description": "Default slot for `<zn-translations>` elements.",
@@ -29121,7 +29135,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-navbar': ZnNavbar }"
+              "default": "{ 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu }"
             },
             {
               "kind": "field",
@@ -29137,7 +29151,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The group label displayed above the language navbar.",
+              "description": "The group label displayed in the panel header.",
               "attribute": "label"
             },
             {
@@ -29157,7 +29171,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "When true, applies flush styling to the navbar.",
+              "description": "When true, removes padding from the body area.",
               "attribute": "flush",
               "reflects": true
             },
@@ -29208,7 +29222,7 @@
             },
             {
               "kind": "field",
-              "name": "handleNavbarClick",
+              "name": "handleLanguageClick",
               "privacy": "private"
             },
             {
@@ -29230,7 +29244,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The group label displayed above the language navbar.",
+              "description": "The group label displayed in the panel header.",
               "fieldName": "label"
             },
             {
@@ -29248,7 +29262,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "When true, applies flush styling to the navbar.",
+              "description": "When true, removes padding from the body area.",
               "fieldName": "flush"
             }
           ],
@@ -29256,13 +29270,16 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "A container that provides a shared language toggle for multiple zn-translations children.",
+          "summary": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.",
           "tagNameWithoutPrefix": "translation-group",
           "tagName": "zn-translation-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-navbar\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot label - The group label. Alternatively, use the `label` attribute.\n */",
+          "jsDoc": "/**\n * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-dropdown\n * @dependency zn-menu\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot label - The group label. Alternatively, use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header area containing label and language buttons.\n * @csspart translations - The container for slotted translation elements.\n */",
           "dependencies": [
-            "zn-navbar"
+            "zn-button",
+            "zn-button-group",
+            "zn-dropdown",
+            "zn-menu"
           ]
         }
       ],

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A container that provides a shared language toggle for multiple translation inputs."
+      content="A panel-styled container that provides a shared language toggle for multiple translation inputs."
     />
     <title>Translation Group</title>
 
@@ -19,7 +19,7 @@
     <meta property="og:title" content="Translation Group" />
     <meta
       property="og:description"
-      content="A container that provides a shared language toggle for multiple translation inputs."
+      content="A panel-styled container that provides a shared language toggle for multiple translation inputs."
     />
     <meta property="og:image" content="https://zinc.style/assets" />
 
@@ -515,6 +515,7 @@
             <li data-level="2"><a href="#slots-1">Slots</a></li>
             <li data-level="2"><a href="#properties-1">Properties</a></li>
             <li data-level="2"><a href="#events-1">Events</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
@@ -534,13 +535,13 @@
           </header>
 
           <p class="component-summary">
-            A container that provides a shared language toggle for multiple zn-translations children.
+            A panel-styled container that provides a shared language toggle for multiple zn-translations children.
           </p>
 
           <p>
-            The Translation Group component wraps multiple <code>zn-translations</code> components and provides a
-            single, shared language navbar. Instead of each translation input having its own language toggle, the group
-            controls all of them simultaneously.
+            The Translation Group component wraps multiple <code>zn-translations</code> components in a panel-styled
+            container with a shared language toggle. A button group in the top right lets users switch between
+            languages, controlling all child translation inputs simultaneously.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -609,7 +610,7 @@
           <h3 id="basic-usage" class="anchor-heading">
             Basic Usage<a href="#basic-usage" aria-label='Direct link to "Basic Usage"'></a>
           </h3>
-          <p>A translation group with two translation inputs sharing one language toggle.</p>
+          <p>A translation group with two translation inputs sharing one language button group.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-translation-group languages='{"en":"English","fr":"French"}'>
@@ -656,7 +657,10 @@
           <h3 id="with-label" class="anchor-heading">
             With Label<a href="#with-label" aria-label='Direct link to "With Label"'></a>
           </h3>
-          <p>Use the <code>label</code> attribute to add a descriptive label above the shared navbar.</p>
+          <p>
+            Use the <code>label</code> attribute to add a descriptive label in the panel header, displayed on the left
+            side alongside the language toggle.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-translation-group label="Page Translations" languages='{"en":"English","fr":"French","es":"Spanish"}'>
@@ -707,7 +711,7 @@
           </h3>
           <p>
             Set initial translations on each child. The group automatically collects all language codes from children
-            and displays them as tabs.
+            and displays them as buttons in the toggle group.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -829,7 +833,7 @@
           <h3 id="flush-layout" class="anchor-heading">
             Flush Layout<a href="#flush-layout" aria-label='Direct link to "Flush Layout"'></a>
           </h3>
-          <p>Remove padding for a more compact appearance using the <code>flush</code> attribute.</p>
+          <p>Remove body padding for a more compact appearance using the <code>flush</code> attribute.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-translation-group flush="" label="Compact Translations" languages='{"en":"English","fr":"French"}'>
@@ -1098,7 +1102,7 @@
                   <td><code>label</code></td>
                   <td><code>string</code></td>
                   <td><code>''</code></td>
-                  <td>Label displayed above the language navbar</td>
+                  <td>Label displayed in the panel header</td>
                 </tr>
                 <tr>
                   <td><code>languages</code></td>
@@ -1110,7 +1114,7 @@
                   <td><code>flush</code></td>
                   <td><code>boolean</code></td>
                   <td><code>false</code></td>
-                  <td>Removes padding for compact layout</td>
+                  <td>Removes body padding for compact layout</td>
                 </tr>
               </tbody>
             </table>
@@ -1168,20 +1172,16 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><code>form-control</code></td>
-                  <td>The outer form control wrapper</td>
+                  <td><code>base</code></td>
+                  <td>The outer panel wrapper</td>
                 </tr>
                 <tr>
-                  <td><code>form-control-label</code></td>
-                  <td>The label wrapper</td>
-                </tr>
-                <tr>
-                  <td><code>navbar</code></td>
-                  <td>The shared language navigation bar</td>
+                  <td><code>header</code></td>
+                  <td>The header area containing the label and language toggle</td>
                 </tr>
                 <tr>
                   <td><code>translations</code></td>
-                  <td>The container wrapping the slotted children</td>
+                  <td>The body container wrapping the slotted children</td>
                 </tr>
               </tbody>
             </table>
@@ -1281,7 +1281,7 @@
                   <td>
                     <code class="nowrap">label</code>
                   </td>
-                  <td>The group label displayed above the language navbar.</td>
+                  <td>The group label displayed in the panel header.</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -1309,7 +1309,7 @@
                   <td>
                     <code class="nowrap">flush</code>
                   </td>
-                  <td>When true, applies flush styling to the navbar.</td>
+                  <td>When true, removes padding from the body area.</td>
                   <td style="text-align: center">
                     <zn-icon label="yes" src="check"></zn-icon>
                   </td>
@@ -1371,6 +1371,39 @@
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
           </p>
 
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The component’s base wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The header area containing label and language buttons.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>translations</code></td>
+                  <td>The container for slotted translation elements.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
           <h2 id="dependencies" class="anchor-heading">
             Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
           </h2>
@@ -1378,11 +1411,19 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
+            <li><code>&lt;zn-button-group&gt;</code></li>
+
             <li><code>&lt;zn-dropdown&gt;</code></li>
 
             <li><code>&lt;zn-example&gt;</code></li>
 
-            <li><code>&lt;zn-navbar&gt;</code></li>
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-menu&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

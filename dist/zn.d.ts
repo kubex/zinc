@@ -7212,28 +7212,41 @@ declare module "components/animated-button/index" {
 declare module "components/translation-group/translation-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    import ZnNavbar from "components/navbar/index";
+    import ZnButton from "components/button/index";
+    import ZnButtonGroup from "components/button-group/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnMenu from "components/menu/index";
     /**
-     * @summary A container that provides a shared language toggle for multiple zn-translations children.
+     * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.
      *
-     * @dependency zn-navbar
+     * @dependency zn-button
+     * @dependency zn-button-group
+     * @dependency zn-dropdown
+     * @dependency zn-menu
      *
      * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
      *
      * @slot - Default slot for `<zn-translations>` elements.
      * @slot label - The group label. Alternatively, use the `label` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The header area containing label and language buttons.
+     * @csspart translations - The container for slotted translation elements.
      */
     export default class ZnTranslationGroup extends ZincElement {
         static styles: CSSResultGroup;
         static dependencies: {
-            'zn-navbar': typeof ZnNavbar;
+            'zn-button': typeof ZnButton;
+            'zn-button-group': typeof ZnButtonGroup;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
         };
         private readonly hasSlotController;
-        /** The group label displayed above the language navbar. */
+        /** The group label displayed in the panel header. */
         label: string;
         /** The available languages for the group. */
         languages: Record<string, string>;
-        /** When true, applies flush styling to the navbar. */
+        /** When true, removes padding from the body area. */
         flush: boolean;
         private _activeLanguage;
         /** Tracks all language codes that have been activated across children. */
@@ -7245,7 +7258,7 @@ declare module "components/translation-group/translation-group.component" {
         private syncChildren;
         private syncChildLanguages;
         private handleSlotChange;
-        private handleNavbarClick;
+        private handleLanguageClick;
         private handleLanguageAdd;
         render(): import("lit").TemplateResult<1>;
     }

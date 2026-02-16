@@ -2138,13 +2138,6 @@ declare module "components/select/select.component" {
         selectedOptions: ZnOption[];
         private valueHasChanged;
         private inputPrefix;
-        /**
-         * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
-         * options. The expected format is an array of objects with `key` and `value` properties:
-         * `[{"key": "us", "value": "United States"}, ...]`
-         * When not set, the component works exactly as before using slotted `<zn-option>` elements.
-         */
-        dataUri: string;
         /** @internal */
         private _fetchedOptions;
         /** @internal */
@@ -2225,6 +2218,17 @@ declare module "components/select/select.component" {
         getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
         distinct: string;
         conditional: string;
+        /**
+         * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
+         * options. The expected format is an array of objects with `key` and `value` properties:
+         * `[{"key": "us", "value": "United States"}, ...]`
+         * When not set, the component works exactly as before using slotted `<zn-option>` elements.
+         */
+        dataUri: string;
+        /**
+         * Context data to send as a header when fetching options from the URL specified by the `src` property.
+         */
+        contextData: string;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */

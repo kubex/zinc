@@ -47,3 +47,93 @@
   color: var(--zn-input-placeholder-color);
   font-size: var(--zn-font-size-medium);
 }
+
+.icon-picker__dialog-controls {
+  display: flex;
+  gap: var(--zn-spacing-small);
+  margin-bottom: var(--zn-spacing-small);
+
+  > * {
+    flex: 1;
+  }
+}
+
+.icon-picker__search {
+  margin-bottom: var(--zn-spacing-small);
+}
+
+.icon-picker__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-large);
+  color: rgb(var(--zn-text-muted));
+}
+
+.icon-picker__spinner {
+  animation: spin 1s linear infinite;
+}
+
+.icon-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: var(--zn-spacing-x-small);
+  max-height: 320px;
+  overflow-y: auto;
+  border: solid 1px rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-medium);
+  padding: var(--zn-spacing-x-small);
+}
+
+.icon-picker__grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--zn-border-radius-medium);
+  background: transparent;
+  color: rgb(var(--zn-text-color));
+  cursor: pointer;
+  transition: var(--zn-transition-fast) background-color,
+    var(--zn-transition-fast) border-color;
+
+  &:hover {
+    background-color: rgba(var(--zn-color-primary), 0.1);
+  }
+
+  &--selected {
+    border-color: rgb(var(--zn-color-primary));
+    background-color: rgba(var(--zn-color-primary), 0.1);
+  }
+}
+
+.icon-picker__no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--zn-spacing-large);
+  color: rgb(var(--zn-text-muted));
+}
+
+.icon-picker__preview {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-medium);
+  margin-top: var(--zn-spacing-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  background-color: rgba(var(--zn-panel-secondary), 0.5);
+  border-radius: var(--zn-border-radius-medium);
+}
+
+.icon-picker__preview-name {
+  font-size: var(--zn-font-size-medium);
+  font-family: var(--zn-font-mono);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

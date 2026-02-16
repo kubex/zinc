@@ -179,6 +179,13 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     this._pendingColor = input.value;
   }
 
+  private handleClear(e: Event) {
+    e.stopPropagation();
+    this.icon = '';
+    this.color = '';
+    this.emit('zn-change');
+  }
+
   private _handleTriggerClick() {
     if (this.disabled) return;
     this.openDialog();
@@ -225,7 +232,15 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                   style=${this.color ? `color: ${this.color}` : ''}
                   size=${24}
                 ></zn-icon>
-                <span class="icon-picker__edit-text">Click to edit</span>`
+                <span class="icon-picker__edit-text">Click to edit</span>
+                <zn-button
+                  class="icon-picker__clear"
+                  size="x-small"
+                  color="transparent"
+                  icon="close"
+                  icon-size="16"
+                  @click="${this.handleClear}"
+                ></zn-button>`
               : html`
                 <span class="icon-picker__placeholder">Set an icon</span>`
             }

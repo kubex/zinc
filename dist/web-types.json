@@ -2448,7 +2448,7 @@
               "name": "size",
               "description": "The dialog's size.",
               "value": {
-                "type": "'small' | 'medium' | 'large'",
+                "type": "'small' | 'medium' | 'large' | 'custom'",
                 "default": "'medium'"
               }
             },
@@ -2531,7 +2531,7 @@
               {
                 "name": "size",
                 "description": "The dialog's size.",
-                "type": "'small' | 'medium' | 'large'"
+                "type": "'small' | 'medium' | 'large' | 'custom'"
               },
               {
                 "name": "open",
@@ -3473,6 +3473,63 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-icon-picker",
+          "description": "\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "name", "value": { "type": "string", "default": "''" } },
+            { "name": "icon", "value": { "type": "string", "default": "''" } },
+            { "name": "label", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "library",
+              "value": { "type": "string", "default": "'material'" }
+            },
+            { "name": "color", "value": { "type": "string", "default": "''" } },
+            {
+              "name": "no-color",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-library",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "help-text",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "required",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "form", "value": { "type": "string" } }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "name", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "label", "type": "string" },
+              { "name": "library", "type": "string" },
+              { "name": "color", "type": "string" },
+              { "name": "noColor", "type": "boolean" },
+              { "name": "noLibrary", "type": "boolean" },
+              { "name": "helpText", "type": "string" },
+              { "name": "disabled", "type": "boolean" },
+              { "name": "required", "type": "boolean" },
+              { "name": "form", "type": "string" },
+              { "name": "defaultValue", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "validity", "type": "ValidityState" },
+              { "name": "validationMessage", "type": "string" }
+            ],
+            "events": []
           }
         },
         {

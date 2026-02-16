@@ -518,7 +518,7 @@ declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
-    export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey";
+    export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & {});
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -547,6 +547,8 @@ declare module "components/icon/icon.component" {
         padded: boolean;
         blink: boolean;
         squared: boolean;
+        private static readonly presetColors;
+        private isPresetColor;
         gravatarOptions: string;
         defaultLibrary: IconLibrary;
         convertToLibrary(input: string): IconLibrary;
@@ -749,7 +751,7 @@ declare module "components/dialog/dialog.component" {
         /** The dialog's theme variant. */
         variant: 'default' | 'warning' | 'announcement';
         /** The dialog's size. */
-        size: 'small' | 'medium' | 'large';
+        size: 'small' | 'medium' | 'large' | 'custom';
         /**
          * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can
          * use the `show()` and `hide()` methods and this attribute will reflect the dialog's state.
@@ -3500,6 +3502,98 @@ declare module "components/header/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-header': ZnHeader;
+        }
+    }
+}
+declare module "components/icon-picker/brand-icons" {
+    export const brandIcons: string[];
+}
+declare module "components/icon-picker/line-icons" {
+    export const lineIcons: string[];
+}
+declare module "components/icon-picker/material-icons" {
+    export const materialIcons: string[];
+    export const material_outlinedIcons: string[];
+    export const material_roundIcons: string[];
+    export const material_sharpIcons: string[];
+    export const material_two_toneIcons: string[];
+    export const material_symbols_outlinedIcons: string[];
+}
+declare module "components/icon-picker/icon-picker.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnDialog from "components/dialog/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    export default class ZnIconPicker extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+            'zn-button': typeof ZnButton;
+            'zn-dialog': typeof ZnDialog;
+            'zn-input': typeof ZnInput;
+            'zn-select': typeof ZnSelect;
+            'zn-option': typeof ZnOption;
+        };
+        private readonly formControlController;
+        name: string;
+        icon: string;
+        label: string;
+        library: string;
+        color: string;
+        noColor: boolean;
+        noLibrary: boolean;
+        helpText: string;
+        disabled: boolean;
+        required: boolean;
+        form: string;
+        defaultValue: string;
+        private _dialogOpen;
+        private _searchQuery;
+        private _iconList;
+        private _filteredIcons;
+        private _pendingIcon;
+        private _pendingLibrary;
+        private _pendingColor;
+        private _dialog;
+        get value(): string;
+        set value(val: string);
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(_message: string): void;
+        private static readonly freeInputLibraries;
+        private isFreeInputLibrary;
+        private getIconsForLibrary;
+        private openDialog;
+        private closeDialog;
+        private handleConfirm;
+        private handleCancel;
+        private handleSearchInput;
+        private filterIcons;
+        private handleIconSelect;
+        private handleLibraryChange;
+        private handleColorInput;
+        private handleFreeInput;
+        private handleClear;
+        private _handleTriggerClick;
+        private _handleTriggerKeyDown;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/icon-picker/index" {
+    import ZnIconPicker from "components/icon-picker/icon-picker.component";
+    export * from "components/icon-picker/icon-picker.component";
+    export default ZnIconPicker;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-icon-picker': ZnIconPicker;
         }
     }
 }
@@ -7394,6 +7488,7 @@ declare module "zinc" {
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";
     export { default as Navbar } from "components/navbar/index";
+    export { default as IconPicker } from "components/icon-picker/index";
     export { default as InlineEdit } from "components/inline-edit/index";
     export { default as Pagination } from "components/pagination/index";
     export { default as VerticalStepper } from "components/vertical-stepper/index";

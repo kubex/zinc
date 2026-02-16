@@ -63,7 +63,7 @@ export default class ZnDialog extends ZincElement {
   @property({reflect: true}) variant: 'default' | 'warning' | 'announcement' = 'default';
 
   /** The dialog's size. */
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' | 'custom' = 'medium';
 
   /**
    * Indicated whether of not the dialog is open. You can toggle this attribute to show and hide the dialog, or you can

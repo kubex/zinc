@@ -12,31 +12,17 @@ import ZnOption from '../option';
 import ZnSelect from '../select';
 import type {ZincFormControl} from '../../internal/zinc-element';
 
+import {brandIcons} from './brand-icons';
+import {lineIcons} from './line-icons';
+import {
+  materialIcons,
+  material_outlinedIcons,
+  material_roundIcons,
+  material_sharpIcons,
+  material_two_toneIcons,
+  material_symbols_outlinedIcons,
+} from './material-icons';
 import styles from './icon-picker.scss';
-
-let _iconCache: string[] | null = null;
-let _iconFetchPromise: Promise<string[]> | null = null;
-
-async function fetchIconList(): Promise<string[]> {
-  if (_iconCache) return _iconCache;
-  if (_iconFetchPromise) return _iconFetchPromise;
-
-  _iconFetchPromise = fetch('https://fonts.google.com/metadata/icons?incomplete=true')
-    .then(res => res.text())
-    .then(text => {
-      // Google prefixes the response with )]}' - strip it
-      const json = JSON.parse(text.replace(/^\)\]\}'/, ''));
-      const icons: string[] = json.icons.map((i: {name: string}) => i.name);
-      _iconCache = icons;
-      return icons;
-    })
-    .catch(() => {
-      _iconFetchPromise = null;
-      return [];
-    });
-
-  return _iconFetchPromise;
-}
 
 export default class ZnIconPicker extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -71,7 +57,6 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   @state() private _searchQuery = '';
   @state() private _iconList: string[] = [];
   @state() private _filteredIcons: string[] = [];
-  @state() private _loading = false;
 
   // Pending selections (not committed until confirm)
   @state() private _pendingIcon = '';
@@ -114,22 +99,46 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   reportValidity(): boolean { return this.checkValidity(); }
   setCustomValidity(_message: string) { this.formControlController.updateValidity(); }
 
+  private static readonly freeInputLibraries = new Set(['gravatar', 'libravatar', 'avatar']);
+
+  private isFreeInputLibrary(library: string): boolean {
+    return ZnIconPicker.freeInputLibraries.has(library);
+  }
+
+  private getIconsForLibrary(library: string): string[] {
+    switch (library) {
+      case 'material':
+        return materialIcons;
+      case 'material-outlined':
+        return material_outlinedIcons;
+      case 'material-round':
+        return material_roundIcons;
+      case 'material-sharp':
+        return material_sharpIcons;
+      case 'material-two-tone':
+        return material_two_toneIcons;
+      case 'material-symbols-outlined':
+        return material_symbols_outlinedIcons;
+      case 'brands':
+        return brandIcons;
+      case 'line':
+        return lineIcons;
+      default:
+        return materialIcons;
+    }
+  }
+
   private async openDialog() {
     this._pendingIcon = this.icon;
     this._pendingLibrary = this.library;
     this._pendingColor = this.color;
     this._searchQuery = '';
+    this._iconList = this.getIconsForLibrary(this.library);
+    this._filteredIcons = this._iconList.slice(0, 200);
     this._dialogOpen = true;
 
     await this.updateComplete;
     this._dialog.show();
-
-    if (this._iconList.length === 0) {
-      this._loading = true;
-      this._iconList = await fetchIconList();
-      this._loading = false;
-    }
-    this._filteredIcons = this._iconList.slice(0, 200);
   }
 
   private closeDialog() {
@@ -171,12 +180,29 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
   private handleLibraryChange(e: Event) {
     const select = e.target as HTMLSelectElement;
+    const wasFreeInput = this.isFreeInputLibrary(this._pendingLibrary);
     this._pendingLibrary = select.value;
+    const isFreeInput = this.isFreeInputLibrary(this._pendingLibrary);
+
+    // Clear pending icon when switching between grid and free-input modes
+    if (wasFreeInput !== isFreeInput) {
+      this._pendingIcon = '';
+    }
+
+    if (!isFreeInput) {
+      this._iconList = this.getIconsForLibrary(this._pendingLibrary);
+      this.filterIcons();
+    }
   }
 
   private handleColorInput(e: Event) {
-    const input = e.target as HTMLInputElement;
+    const input = e.target as ZnInput;
     this._pendingColor = input.value;
+  }
+
+  private handleFreeInput(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this._pendingIcon = input.value;
   }
 
   private handleClear(e: Event) {
@@ -229,7 +255,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                 <zn-icon
                   src=${this.icon}
                   library=${this.library}
-                  style=${this.color ? `color: ${this.color}` : ''}
+                  color=${this.color || nothing}
                   size=${24}
                 ></zn-icon>
                 <span class="icon-picker__edit-text">Click to edit</span>
@@ -261,81 +287,113 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
         </div>
 
         ${this._dialogOpen ? html`
-          <zn-dialog label="Select Icon" size="large" @zn-close=${this.handleCancel}>
-            <div class="icon-picker__dialog-controls">
-              ${!this.noLibrary ? html`
-                <zn-select
-                  value=${this._pendingLibrary}
-                  size="small"
-                  @zn-change=${this.handleLibraryChange}>
-                  <zn-option value="material">Material</zn-option>
-                  <zn-option value="material-outlined">Material Outlined</zn-option>
-                  <zn-option value="material-round">Material Round</zn-option>
-                  <zn-option value="material-sharp">Material Sharp</zn-option>
-                  <zn-option value="material-two-tone">Material Two Tone</zn-option>
-                  <zn-option value="material-symbols-outlined">Material Symbols Outlined</zn-option>
-                  <zn-option value="brands">Brands</zn-option>
-                  <zn-option value="line">Line</zn-option>
-                </zn-select>
-              ` : nothing}
-              ${!this.noColor ? html`
-                <zn-input
-                  type="color"
-                  size="small"
-                  value=${this._pendingColor}
-                  @zn-input=${this.handleColorInput}
-                ></zn-input>
-              ` : nothing}
-            </div>
+          <zn-dialog size="custom" label="Select Icon" @zn-close=${this.handleCancel}>
+            <div class="icon-picker__dialog-layout">
+              <div class="icon-picker__dialog-main">
+                <div class="icon-picker__dialog-controls">
+                  ${!this.noLibrary ? html`
+                    <zn-select
+                      class="icon-picker__library-select"
+                      value=${this._pendingLibrary}
+                      size="small"
+                      @zn-change=${this.handleLibraryChange}>
+                      <zn-option value="material">Material</zn-option>
+                      <zn-option value="material-outlined">Material Outlined</zn-option>
+                      <zn-option value="material-round">Material Round</zn-option>
+                      <zn-option value="material-sharp">Material Sharp</zn-option>
+                      <zn-option value="material-two-tone">Material Two Tone</zn-option>
+                      <zn-option value="material-symbols-outlined">Material Symbols Outlined</zn-option>
+                      <zn-option value="brands">Brands</zn-option>
+                      <zn-option value="line">Line</zn-option>
+                      <zn-option value="gravatar">Gravatar</zn-option>
+                      <zn-option value="libravatar">Libravatar</zn-option>
+                      <zn-option value="avatar">Avatar</zn-option>
+                    </zn-select>
+                  ` : nothing}
+                  ${!this.noColor ? html`
+                    <zn-input
+                      class="icon-picker__color-input"
+                      type="color"
+                      size="small"
+                      value=${this._pendingColor}
+                      @zn-input=${this.handleColorInput}
+                      @zn-change=${this.handleColorInput}
+                    ></zn-input>
+                  ` : nothing}
+                </div>
 
-            <zn-input
-              class="icon-picker__search"
-              placeholder="Search icons..."
-              size="small"
-              clearable
-              @zn-input=${this.handleSearchInput}>
-              <zn-icon slot="prefix" src="search" size="18"></zn-icon>
-            </zn-input>
+                ${this.isFreeInputLibrary(this._pendingLibrary) ? html`
+                  <zn-input
+                    class="icon-picker__free-input"
+                    placeholder=${this._pendingLibrary === 'avatar' ? 'Enter a name...' : 'Enter an email address...'}
+                    size="small"
+                    value=${this._pendingIcon}
+                    @zn-input=${this.handleFreeInput}>
+                    <zn-icon slot="prefix" src=${this._pendingLibrary === 'avatar' ? 'person' : 'email'} size="18"></zn-icon>
+                  </zn-input>
+                ` : html`
+                  <zn-input
+                    class="icon-picker__icon-input"
+                    placeholder="Enter icon name..."
+                    size="small"
+                    value=${this._pendingIcon}
+                    @zn-input=${this.handleFreeInput}>
+                    <zn-icon slot="prefix" src="edit" size="18"></zn-icon>
+                  </zn-input>
 
-            ${this._loading ? html`
-              <div class="icon-picker__loading">
-                <zn-icon class="icon-picker__spinner" src="progress_activity" size="24"></zn-icon>
-                Loading icons...
+                  <zn-input
+                    class="icon-picker__search"
+                    placeholder="Search icons..."
+                    size="small"
+                    clearable
+                    @zn-input=${this.handleSearchInput}>
+                    <zn-icon slot="prefix" src="search" size="18"></zn-icon>
+                  </zn-input>
+
+                  <div class="icon-picker__grid">
+                    ${this._filteredIcons.length === 0 ? html`
+                      <div class="icon-picker__no-results">No icons found</div>
+                    ` : this._filteredIcons.map(iconName => html`
+                      <button
+                        type="button"
+                        class=${classMap({
+                          'icon-picker__grid-item': true,
+                          'icon-picker__grid-item--selected': iconName === this._pendingIcon
+                        })}
+                        title=${iconName}
+                        @click=${() => this.handleIconSelect(iconName)}>
+                        <zn-icon
+                          src=${iconName}
+                          library=${this._pendingLibrary}
+                          color=${this._pendingColor || nothing}
+                          size="36"
+                        ></zn-icon>
+                      </button>
+                    `)}
+                  </div>
+                `}
               </div>
-            ` : html`
-              <div class="icon-picker__grid">
-                ${this._filteredIcons.length === 0 ? html`
-                  <div class="icon-picker__no-results">No icons found</div>
-                ` : this._filteredIcons.map(iconName => html`
-                  <button
-                    type="button"
-                    class=${classMap({
-                      'icon-picker__grid-item': true,
-                      'icon-picker__grid-item--selected': iconName === this._pendingIcon
-                    })}
-                    title=${iconName}
-                    @click=${() => this.handleIconSelect(iconName)}>
+
+              <div class="icon-picker__dialog-sidebar">
+                ${this._pendingIcon ? html`
+                  <div class="icon-picker__preview">
                     <zn-icon
-                      src=${iconName}
+                      src=${this._pendingIcon}
                       library=${this._pendingLibrary}
-                      size="24"
+                      color=${this._pendingColor || nothing}
+                      size="64"
                     ></zn-icon>
-                  </button>
-                `)}
+                    <span class="icon-picker__preview-name">${this._pendingIcon}</span>
+                    <span class="icon-picker__preview-library">${this._pendingLibrary}</span>
+                  </div>
+                ` : html`
+                  <div class="icon-picker__preview icon-picker__preview--empty">
+                    <zn-icon src="touch_app" size="48"></zn-icon>
+                    <span class="icon-picker__preview-hint">Select an icon</span>
+                  </div>
+                `}
               </div>
-            `}
-
-            ${this._pendingIcon ? html`
-              <div class="icon-picker__preview">
-                <zn-icon
-                  src=${this._pendingIcon}
-                  library=${this._pendingLibrary}
-                  style=${this._pendingColor ? `color: ${this._pendingColor}` : ''}
-                  size="48"
-                ></zn-icon>
-                <span class="icon-picker__preview-name">${this._pendingIcon}</span>
-              </div>
-            ` : nothing}
+            </div>
 
             <div slot="footer">
               <zn-button color="default" @click=${this.handleCancel}>Cancel</zn-button>

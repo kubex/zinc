@@ -29,7 +29,8 @@ export type IconColor =
   | "indigo"
   | "violet"
   | "pink"
-  | "grey";
+  | "grey"
+  | (string & {});
 
 /**
  * @summary Short summary of the component's intended use.
@@ -67,6 +68,16 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean}) blink: boolean = false;
 
   @property({type: Boolean}) squared: boolean = false;
+
+  private static readonly presetColors = new Set([
+    'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',
+    'white', 'disabled', 'red', 'blue', 'green', 'orange', 'yellow',
+    'indigo', 'violet', 'pink', 'grey',
+  ]);
+
+  private isPresetColor(color: string): boolean {
+    return ZnIcon.presetColors.has(color);
+  }
 
   gravatarOptions = "";
   defaultLibrary: IconLibrary = "material-symbols-outlined";
@@ -197,6 +208,7 @@ export default class ZnIcon extends ZincElement {
           'icon--squared': this.squared,
         })}" style="${styleMap({
           '--icon-size': this.size + "px",
+          '--icon-color': (this.color && !this.isPresetColor(this.color)) ? this.color : null,
           '--avatar-color': this.color ? null : (this.library === 'avatar' ? this.getColorForAvatar(this.getAvatarInitials(this.src)) : null)
         })}">
           ${this.library && this.library !== "src" ? html`

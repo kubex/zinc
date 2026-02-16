@@ -835,10 +835,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
-    // Close the listbox when the control is disabled
     if (this.disabled) {
+      // Close the listbox and abort any in-progress fetch
       this.open = false;
       this.handleOpenChange().then();
+      this._fetchAbortController?.abort();
+      this._fetchAbortController = null;
+      this._fetchLoading = false;
+      this._fetchError = '';
+    } else if (this.dataUri) {
+      // Fetch options when enabled
+      this.fetchOptions().then();
     }
   }
 
@@ -863,7 +870,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Fetches options from the URL specified by the `src` property. */
   async fetchOptions() {
-    if (!this.dataUri) return;
+    if (!this.dataUri || this.disabled) return;
 
     this._fetchAbortController?.abort();
     this._fetchAbortController = new AbortController();

@@ -282,6 +282,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  placement=${this.placement}
                  name="${this.name}"
                  distinct="${this.distinct}"
+                 ?disabled="${this.disabled}"
                  conditional="${this.conditional}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"

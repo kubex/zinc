@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -29123,25 +29123,45 @@
           "cssParts": [
             {
               "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The header area containing label and language buttons.",
-              "name": "header"
-            },
-            {
-              "description": "The container for slotted translation elements.",
-              "name": "translations"
+              "name": "base",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "slots": [
             {
               "description": "Default slot for `<zn-translations>` elements.",
-              "name": ""
+              "name": "",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             },
             {
-              "description": "The group label. Alternatively, use the `label` attribute.",
-              "name": "label"
+              "description": "Actions displayed in the panel header alongside language buttons.",
+              "name": "actions",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Sidebar content displayed on the left or right side of the panel.",
+              "name": "side",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "members": [
@@ -29156,10 +29176,10 @@
             },
             {
               "kind": "field",
-              "name": "hasSlotController",
+              "name": "_slotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'label')"
+              "default": "new HasSlotController(this, 'actions', 'footer')"
             },
             {
               "kind": "field",
@@ -29180,17 +29200,6 @@
               "default": "{ 'en': 'EN' }",
               "description": "The available languages for the group.",
               "attribute": "languages"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "When true, removes padding from the body area.",
-              "attribute": "flush",
-              "reflects": true
             },
             {
               "kind": "field",
@@ -29246,12 +29255,259 @@
               "kind": "field",
               "name": "handleLanguageAdd",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer', 'side')",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "underlineHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-underline",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sidebarPosition",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "attribute": "sidebar-position",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sidebarTooltip",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "sidebar-tooltip",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sidebarIcon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "sidebar-icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "sidebarOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "sidebar-open",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "enableSidebarToggle",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "enable-sidebar-toggle",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleSidebar",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
             }
           ],
           "events": [
             {
               "description": "Emitted when the active language changes. Detail: `{ language: string }`.",
               "name": "zn-language-change"
+            },
+            {
+              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.",
+              "name": "zn-sidebar-toggle",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "attributes": [
@@ -29274,29 +29530,231 @@
               "fieldName": "languages"
             },
             {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "header-underline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "underlineHeader",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
               "name": "flush",
               "type": {
                 "text": "boolean"
               },
+              "fieldName": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "sidebar-position",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "fieldName": "sidebarPosition",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "sidebar-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "sidebarTooltip",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "sidebar-icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "sidebarIcon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "sidebar-open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "sidebarOpen",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "enable-sidebar-toggle",
+              "type": {
+                "text": "boolean"
+              },
               "default": "false",
-              "description": "When true, removes padding from the body area.",
-              "fieldName": "flush"
+              "fieldName": "enableSidebarToggle",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
+            "name": "ZnPanel",
+            "module": "/src/components/panel/panel.component"
           },
           "summary": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.",
           "tagNameWithoutPrefix": "translation-group",
           "tagName": "zn-translation-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-dropdown\n * @dependency zn-menu\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot label - The group label. Alternatively, use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header area containing label and language buttons.\n * @csspart translations - The container for slotted translation elements.\n */",
+          "jsDoc": "/**\n * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n *\n * @dependency zn-button\n * @dependency zn-button-group\n * @dependency zn-dropdown\n * @dependency zn-menu\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - Default slot for `<zn-translations>` elements.\n * @slot actions - Actions displayed in the panel header alongside language buttons.\n *\n * @csspart base - The component's base wrapper.\n */",
           "dependencies": [
             "zn-button",
             "zn-button-group",
             "zn-dropdown",
             "zn-menu"
+          ],
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
           ]
         }
       ],

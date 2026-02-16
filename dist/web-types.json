@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -7727,7 +7727,7 @@
         },
         {
           "name": "zn-translation-group",
-          "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **label** - The group label. Alternatively, use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header area containing label and language buttons.\n- **translations** - The container for slotted translation elements.",
+          "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n- **zn-sidebar-toggle** - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n- **side** - Sidebar content displayed on the left or right side of the panel.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -7743,9 +7743,31 @@
                 "default": "{ 'en': 'EN' }"
               }
             },
+            { "name": "basis-px", "value": { "type": "number" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "icon", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } },
+            { "name": "tabbed", "value": { "type": "boolean" } },
+            { "name": "header-underline", "value": { "type": "boolean" } },
+            { "name": "cosmic", "value": { "type": "boolean" } },
+            { "name": "flush", "value": { "type": "boolean" } },
+            { "name": "flush-x", "value": { "type": "boolean" } },
+            { "name": "flush-y", "value": { "type": "boolean" } },
+            { "name": "flush-footer", "value": { "type": "boolean" } },
+            { "name": "transparent", "value": { "type": "boolean" } },
+            { "name": "shadow", "value": { "type": "boolean" } },
             {
-              "name": "flush",
-              "description": "When true, removes padding from the body area.",
+              "name": "sidebar-position",
+              "value": { "type": "'left' | 'right'", "default": "'left'" }
+            },
+            { "name": "sidebar-tooltip", "value": { "type": "string" } },
+            { "name": "sidebar-icon", "value": { "type": "string" } },
+            {
+              "name": "sidebar-open",
+              "value": { "type": "boolean", "default": "true" }
+            },
+            {
+              "name": "enable-sidebar-toggle",
               "value": { "type": "boolean", "default": "false" }
             }
           ],
@@ -7755,14 +7777,26 @@
               "description": "Default slot for `<zn-translations>` elements."
             },
             {
-              "name": "label",
-              "description": "The group label. Alternatively, use the `label` attribute."
+              "name": "actions",
+              "description": "Actions displayed in the panel header alongside language buttons."
+            },
+            {
+              "name": "footer",
+              "description": "Content displayed in the panel footer."
+            },
+            {
+              "name": "side",
+              "description": "Sidebar content displayed on the left or right side of the panel."
             }
           ],
           "events": [
             {
               "name": "zn-language-change",
               "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+            },
+            {
+              "name": "zn-sidebar-toggle",
+              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state."
             }
           ],
           "js": {
@@ -7777,16 +7811,33 @@
                 "description": "The available languages for the group.",
                 "type": "Record<string, string>"
               },
-              {
-                "name": "flush",
-                "description": "When true, removes padding from the body area.",
-                "type": "boolean"
-              }
+              { "name": "basis", "type": "number" },
+              { "name": "caption", "type": "string" },
+              { "name": "icon", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "tabbed", "type": "boolean" },
+              { "name": "underlineHeader", "type": "boolean" },
+              { "name": "cosmic", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
+              { "name": "flushX", "type": "boolean" },
+              { "name": "flushY", "type": "boolean" },
+              { "name": "flushFooter", "type": "boolean" },
+              { "name": "transparent", "type": "boolean" },
+              { "name": "shadow", "type": "boolean" },
+              { "name": "sidebarPosition", "type": "'left' | 'right'" },
+              { "name": "sidebarTooltip", "type": "string" },
+              { "name": "sidebarIcon", "type": "string" },
+              { "name": "sidebarOpen", "type": "boolean" },
+              { "name": "enableSidebarToggle", "type": "boolean" }
             ],
             "events": [
               {
                 "name": "zn-language-change",
                 "description": "Emitted when the active language changes. Detail: `{ language: string }`."
+              },
+              {
+                "name": "zn-sidebar-toggle",
+                "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state."
               }
             ]
           }

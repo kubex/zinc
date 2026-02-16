@@ -7215,7 +7215,7 @@ declare module "components/animated-button/index" {
 }
 declare module "components/translation-group/translation-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
+    import ZnPanel from "components/panel/panel.component";
     import ZnButton from "components/button/index";
     import ZnButtonGroup from "components/button-group/index";
     import ZnDropdown from "components/dropdown/index";
@@ -7231,13 +7231,11 @@ declare module "components/translation-group/translation-group.component" {
      * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.
      *
      * @slot - Default slot for `<zn-translations>` elements.
-     * @slot label - The group label. Alternatively, use the `label` attribute.
+     * @slot actions - Actions displayed in the panel header alongside language buttons.
      *
      * @csspart base - The component's base wrapper.
-     * @csspart header - The header area containing label and language buttons.
-     * @csspart translations - The container for slotted translation elements.
      */
-    export default class ZnTranslationGroup extends ZincElement {
+    export default class ZnTranslationGroup extends ZnPanel {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-button': typeof ZnButton;
@@ -7245,13 +7243,11 @@ declare module "components/translation-group/translation-group.component" {
             'zn-dropdown': typeof ZnDropdown;
             'zn-menu': typeof ZnMenu;
         };
-        private readonly hasSlotController;
+        private readonly _slotController;
         /** The group label displayed in the panel header. */
         label: string;
         /** The available languages for the group. */
         languages: Record<string, string>;
-        /** When true, removes padding from the body area. */
-        flush: boolean;
         private _activeLanguage;
         /** Tracks all language codes that have been activated across children. */
         private _activatedLanguages;

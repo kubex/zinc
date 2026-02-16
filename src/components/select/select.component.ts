@@ -849,7 +849,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  @watch('src', {waitUntilFirstUpdate: true})
+  @watch(['dataUri', 'contextData'], {waitUntilFirstUpdate: true})
   handleSrcChange() {
     if (this.dataUri) {
       this.fetchOptions().then();

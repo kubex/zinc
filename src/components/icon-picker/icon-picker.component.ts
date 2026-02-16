@@ -121,9 +121,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
           </div>
         </div>
 
-        <input type="hidden" name="${this.name}[icon]" .value=${this.icon}>
-        ${!this.noLibrary ? html`<input type="hidden" name="${this.name}[library]" .value=${this.library}>` : nothing}
-        ${!this.noColor ? html`<input type="hidden" name="${this.name}[color]" .value=${this.color}>` : nothing}
+        ${this.name ? html`
+          <input type="hidden" name="${this.name}[icon]" .value=${this.icon}>
+          ${!this.noLibrary ? html`<input type="hidden" name="${this.name}[library]" .value=${this.library}>` : nothing}
+          ${!this.noColor ? html`<input type="hidden" name="${this.name}[color]" .value=${this.color}>` : nothing}
+        ` : nothing}
 
         <div
           part="form-control-help-text"

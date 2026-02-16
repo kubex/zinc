@@ -104,14 +104,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() private valueHasChanged: boolean = false;
   @state() private inputPrefix: boolean = false;
 
-  /**
-   * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
-   * options. The expected format is an array of objects with `key` and `value` properties:
-   * `[{"key": "us", "value": "United States"}, ...]`
-   * When not set, the component works exactly as before using slotted `<zn-option>` elements.
-   */
-  @property({attribute: 'data-uri'}) dataUri: string;
-
   /** @internal */
   @state() private _fetchedOptions: { key: string; value: string }[] = [];
 
@@ -272,6 +264,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @property() distinct = "";
 
   @property() conditional = "";
+
+  /**
+   * The URL to fetch options from. When set, the component fetches JSON from this URL and renders the results as
+   * options. The expected format is an array of objects with `key` and `value` properties:
+   * `[{"key": "us", "value": "United States"}, ...]`
+   * When not set, the component works exactly as before using slotted `<zn-option>` elements.
+   */
+  @property({attribute: 'data-uri'}) dataUri: string;
+
+  /**
+   * Context data to send as a header when fetching options from the URL specified by the `src` property.
+   */
+  @property({attribute: 'context-data'}) contextData: string;
 
   /** Gets the validity state object */
   get validity() {
@@ -872,6 +877,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         credentials: 'same-origin',
         headers: {
           'x-kx-fetch-style': 'zn-select-options',
+          'x-kx-context-data': this.contextData || ''
         },
       });
 

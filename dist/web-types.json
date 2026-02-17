@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -3537,7 +3537,6 @@
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
-            { "name": "value", "value": { "type": "string" } },
             { "name": "name", "value": { "type": "string" } },
             { "name": "placeholder", "value": { "type": "string" } },
             { "name": "edit-text", "value": { "type": "string" } },
@@ -3553,6 +3552,7 @@
             },
             { "name": "required", "value": { "type": "boolean" } },
             { "name": "pattern", "value": { "type": "string" } },
+            { "name": "multiple", "value": { "type": "boolean" } },
             { "name": "min", "value": { "type": "string | number" } },
             { "name": "max", "value": { "type": "string | number" } },
             { "name": "step", "value": { "type": "number | 'any'" } },
@@ -3576,6 +3576,16 @@
               }
             },
             {
+              "name": "data-uri",
+              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "context-data",
+              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+              "value": { "type": "string" }
+            },
+            {
               "name": "help-text",
               "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
               "value": { "type": "string", "default": "''" }
@@ -3589,6 +3599,10 @@
               "name": "autocomplete",
               "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
               "value": { "type": "string" }
+            },
+            {
+              "name": "value",
+              "value": { "type": "string | string[]", "default": "''" }
             }
           ],
           "slots": [
@@ -3607,7 +3621,7 @@
           ],
           "js": {
             "properties": [
-              { "name": "value", "type": "string" },
+              { "name": "value", "type": "string | string[]" },
               { "name": "name", "type": "string" },
               { "name": "placeholder", "type": "string" },
               { "name": "editText", "type": "string" },
@@ -3617,6 +3631,7 @@
               { "name": "size", "type": "'small' | 'medium' | 'large'" },
               { "name": "required", "type": "boolean" },
               { "name": "pattern", "type": "string" },
+              { "name": "multiple", "type": "boolean" },
               { "name": "min", "type": "string | number" },
               { "name": "max", "type": "string | number" },
               { "name": "step", "type": "number | 'any'" },
@@ -3627,6 +3642,16 @@
               { "name": "options", "type": "{ [key: string]: string }" },
               { "name": "selectProvider", "type": "string" },
               { "name": "iconPosition", "type": "'start' | 'end' | 'none'" },
+              {
+                "name": "dataUri",
+                "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+                "type": "string"
+              },
+              {
+                "name": "contextData",
+                "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+                "type": "string"
+              },
               {
                 "name": "helpText",
                 "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
@@ -3643,7 +3668,7 @@
                 "type": "string"
               },
               { "name": "input", "type": "ZnInput | ZnSelect" },
-              { "name": "defaultValue", "type": "string" },
+              { "name": "defaultValue", "type": "string | string[]" },
               { "name": "validity", "type": "ValidityState" },
               { "name": "validationMessage", "type": "string" },
               { "name": "mouseEventHandler" },
@@ -3656,6 +3681,7 @@
               { "name": "handleCancelClick" },
               { "name": "handleBlur" },
               { "name": "handleInput" },
+              { "name": "handleSelectLoad" },
               { "name": "handleSlotChange" }
             ],
             "events": [

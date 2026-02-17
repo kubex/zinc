@@ -2057,13 +2057,13 @@ declare module "events/zn-remove" {
 }
 declare module "components/select/select.component" {
     import { FormControlController } from "internal/form";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
-    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/select
@@ -3625,7 +3625,9 @@ declare module "components/inline-edit/inline-edit.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private readonly hasSlotController;
-        value: string;
+        private _value;
+        get value(): string | string[];
+        set value(val: string | string[]);
         name: string;
         placeholder: string;
         editText: string;
@@ -3635,6 +3637,7 @@ declare module "components/inline-edit/inline-edit.component" {
         size: 'small' | 'medium' | 'large';
         required: boolean;
         pattern: string;
+        multiple: boolean;
         min: string | number;
         max: string | number;
         step: number | 'any';
@@ -3644,6 +3647,18 @@ declare module "components/inline-edit/inline-edit.component" {
         };
         selectProvider: string;
         iconPosition: 'start' | 'end' | 'none';
+        /**
+         * The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as
+         * options. The expected format is an array of objects with `key` and `value` properties:
+         * `[{"key": "us", "value": "United States"}, ...]`
+         * When not set, the component works exactly as before using slotted `<zn-option>` elements.
+         * Only works with type select.
+         */
+        dataUri: string;
+        /**
+         * Context data to send as a header when fetching options from the URL specified by the `src` property.
+         */
+        contextData: string;
         /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
         helpText: string;
         /** The text direction for the input (ltr or rtl) **/
@@ -3656,7 +3671,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;
-        defaultValue: string;
+        defaultValue: string | string[];
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -3665,8 +3680,10 @@ declare module "components/inline-edit/inline-edit.component" {
         setCustomValidity(message: string): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         firstUpdated(): Promise<void>;
         handleValueChange(): Promise<void>;
+        handleMultipleChange(): void;
         handleIsEditingChange(): Promise<void>;
         mouseEventHandler: (e: MouseEvent) => void;
         escKeyHandler: (e: KeyboardEvent) => void;
@@ -3678,6 +3695,7 @@ declare module "components/inline-edit/inline-edit.component" {
         handleCancelClick: (e: MouseEvent) => void;
         handleBlur: () => void;
         handleInput: (e: Event) => void;
+        handleSelectLoad: () => void;
         private moveSlottedOptionsToSelect;
         handleSlotChange: () => Promise<void>;
         protected render(): import("lit").TemplateResult<1>;
@@ -7752,7 +7770,7 @@ declare module "events/zn-sort-change" {
 }
 declare module "events/zn-submit" {
     export type ZnSubmitEvent = CustomEvent<{
-        value: string;
+        value: string | string[];
         element: HTMLElement;
     }>;
     global {

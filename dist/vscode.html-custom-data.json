@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -45,17 +56,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1515,7 +1515,6 @@
       "name": "zn-inline-edit",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
-        { "name": "value", "values": [] },
         { "name": "name", "values": [] },
         { "name": "placeholder", "values": [] },
         { "name": "edit-text", "values": [] },
@@ -1532,6 +1531,7 @@
         },
         { "name": "required", "values": [] },
         { "name": "pattern", "values": [] },
+        { "name": "multiple", "values": [] },
         { "name": "min", "values": [] },
         { "name": "max", "values": [] },
         { "name": "step", "values": [{ "name": "any" }] },
@@ -1555,6 +1555,16 @@
           "values": [{ "name": "start" }, { "name": "end" }, { "name": "none" }]
         },
         {
+          "name": "data-uri",
+          "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+          "values": []
+        },
+        {
+          "name": "context-data",
+          "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+          "values": []
+        },
+        {
           "name": "help-text",
           "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
           "values": []
@@ -1568,7 +1578,8 @@
           "name": "autocomplete",
           "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
           "values": []
-        }
+        },
+        { "name": "value", "values": [{ "name": "string[]" }] }
       ],
       "references": [
         {

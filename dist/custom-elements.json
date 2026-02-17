@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13248,12 +13248,19 @@
             },
             {
               "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
-                "text": "string"
-              },
-              "attribute": "value",
-              "reflects": true
+                "text": "string | string[]"
+              }
             },
             {
               "kind": "field",
@@ -13332,6 +13339,15 @@
             },
             {
               "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "min",
               "type": {
                 "text": "string | number"
@@ -13391,6 +13407,24 @@
             },
             {
               "kind": "field",
+              "name": "dataUri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+              "attribute": "data-uri"
+            },
+            {
+              "kind": "field",
+              "name": "contextData",
+              "type": {
+                "text": "string"
+              },
+              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+              "attribute": "context-data"
+            },
+            {
+              "kind": "field",
               "name": "helpText",
               "type": {
                 "text": "string"
@@ -13445,8 +13479,10 @@
               "kind": "field",
               "name": "defaultValue",
               "type": {
-                "text": "string"
-              }
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "attribute": "value"
             },
             {
               "kind": "field",
@@ -13514,6 +13550,10 @@
             },
             {
               "kind": "method",
+              "name": "handleMultipleChange"
+            },
+            {
+              "kind": "method",
               "name": "handleIsEditingChange"
             },
             {
@@ -13555,6 +13595,10 @@
             {
               "kind": "field",
               "name": "handleInput"
+            },
+            {
+              "kind": "field",
+              "name": "handleSelectLoad"
             },
             {
               "kind": "method",
@@ -13624,13 +13668,6 @@
           ],
           "attributes": [
             {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "value"
-            },
-            {
               "name": "name",
               "type": {
                 "text": "string"
@@ -13695,6 +13732,13 @@
               "fieldName": "pattern"
             },
             {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "multiple"
+            },
+            {
               "name": "min",
               "type": {
                 "text": "string | number"
@@ -13747,6 +13791,22 @@
               "fieldName": "iconPosition"
             },
             {
+              "name": "data-uri",
+              "type": {
+                "text": "string"
+              },
+              "description": "The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as\noptions. The expected format is an array of objects with `key` and `value` properties:\n`[{\"key\": \"us\", \"value\": \"United States\"}, ...]`\nWhen not set, the component works exactly as before using slotted `<zn-option>` elements.\nOnly works with type select.",
+              "fieldName": "dataUri"
+            },
+            {
+              "name": "context-data",
+              "type": {
+                "text": "string"
+              },
+              "description": "Context data to send as a header when fetching options from the URL specified by the `src` property.",
+              "fieldName": "contextData"
+            },
+            {
               "name": "help-text",
               "type": {
                 "text": "string"
@@ -13771,6 +13831,14 @@
               },
               "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
               "fieldName": "autocomplete"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "fieldName": "defaultValue"
             }
           ],
           "superclass": {

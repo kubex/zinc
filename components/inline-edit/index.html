@@ -2781,6 +2781,54 @@
               <tbody>
                 <tr>
                   <td>
+                    <code class="nowrap">dataUri</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> data-uri </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    The URL to fetch options from. When set , the component fetches JSON from this URL and renders the
+                    results as options. The expected format is an array of objects with <code>key</code> and
+                    <code>value</code> properties:
+                    <code>[{"key": "us", "value": "United States"}, ...]</code>
+                    When not set, the component works exactly as before using slotted
+                    <code>&lt;zn-option&gt;</code> elements. Only works with type select.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">contextData</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> context-data </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Context data to send as a header when fetching options from the URL specified by the
+                    <code>src</code> property.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">helpText</code>
 
                     <br />

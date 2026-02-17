@@ -1277,11 +1277,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               tabindex="-1"
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
+              <slot></slot>
               ${this._fetchedOptions.map(
                 option => html`
                   <zn-option value=${option.key}>${option.value}</zn-option>`
               )}
-              <slot></slot>
             </div>
           </zn-popup>
         </div>

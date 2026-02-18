@@ -29808,7 +29808,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu }"
+              "default": "{ 'zn-button': ZnButton, 'zn-button-group': ZnButtonGroup, 'zn-dropdown': ZnDropdown, 'zn-header': ZnHeader, 'zn-menu': ZnMenu }"
             },
             {
               "kind": "field",
@@ -29883,9 +29883,17 @@
               "privacy": "private"
             },
             {
-              "kind": "field",
-              "name": "handleLanguageClick",
-              "privacy": "private"
+              "kind": "method",
+              "name": "switchLanguage",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "lang",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -31014,7 +31022,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.72",
+    "version": "1.0.73",
     "author": "",
     "license": "MIT"
   }

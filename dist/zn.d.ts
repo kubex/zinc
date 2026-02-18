@@ -7327,11 +7327,12 @@ declare module "components/animated-button/index" {
 }
 declare module "components/translation-group/translation-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZnPanel from "components/panel/panel.component";
     import ZnButton from "components/button/index";
     import ZnButtonGroup from "components/button-group/index";
     import ZnDropdown from "components/dropdown/index";
+    import ZnHeader from "components/header/index";
     import ZnMenu from "components/menu/index";
+    import ZnPanel from "components/panel/panel.component";
     /**
      * @summary A panel-styled container that provides a shared language toggle for multiple zn-translations children.
      *
@@ -7353,6 +7354,7 @@ declare module "components/translation-group/translation-group.component" {
             'zn-button': typeof ZnButton;
             'zn-button-group': typeof ZnButtonGroup;
             'zn-dropdown': typeof ZnDropdown;
+            'zn-header': typeof ZnHeader;
             'zn-menu': typeof ZnMenu;
         };
         private readonly _slotController;
@@ -7370,7 +7372,7 @@ declare module "components/translation-group/translation-group.component" {
         private syncChildren;
         private syncChildLanguages;
         private handleSlotChange;
-        private handleLanguageClick;
+        private switchLanguage;
         private handleLanguageAdd;
         render(): import("lit").TemplateResult<1>;
     }

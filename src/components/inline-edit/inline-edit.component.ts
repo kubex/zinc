@@ -239,7 +239,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     if (this.disabled || !this.isEditing) {
       return;
     }
-    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+
+    const val = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
+    if (Array.isArray(val)) {
+      this.value = val.join(' ');
+    } else {
+      this.value = val;
+    }
     this.emit('zn-input');
   };
 

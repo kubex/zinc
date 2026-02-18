@@ -3,11 +3,12 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, state} from 'lit/decorators.js';
-import ZnPanel from '../panel/panel.component';
 import ZnButton from '../button';
 import ZnButtonGroup from '../button-group';
 import ZnDropdown from '../dropdown';
+import ZnHeader from '../header';
 import ZnMenu from '../menu';
+import ZnPanel from '../panel/panel.component';
 import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
 import type ZnTranslations from '../translations/translations.component';
 
@@ -34,6 +35,7 @@ export default class ZnTranslationGroup extends ZnPanel {
     'zn-button': ZnButton,
     'zn-button-group': ZnButtonGroup,
     'zn-dropdown': ZnDropdown,
+    'zn-header': ZnHeader,
     'zn-menu': ZnMenu
   };
 
@@ -82,6 +84,11 @@ export default class ZnTranslationGroup extends ZnPanel {
     children.forEach(child => {
       child.grouped = true;
       child.languages = this.languages;
+      // Ensure every activated language exists in each child's values.
+      // This handles the case where one child has a language that another doesn't.
+      for (const code of this._activatedLanguages) {
+        child.addLanguageKey(code);
+      }
       child.setActiveLanguage(this._activeLanguage);
     });
   }
@@ -96,19 +103,14 @@ export default class ZnTranslationGroup extends ZnPanel {
     this.syncChildren();
   };
 
-  private handleLanguageClick = (e: MouseEvent) => {
-    const button = (e.target as HTMLElement).closest('zn-button') as HTMLElement;
-    if (button) {
-      const lang = button.getAttribute('data-lang');
-      if (lang) {
-        this._activeLanguage = lang;
-        this.getAllTranslations().forEach(child => child.setActiveLanguage(lang));
-        this.emit('zn-language-change', {detail: {language: lang}});
-      }
-    }
-  };
+  private switchLanguage(lang: string) {
+    this._activeLanguage = lang;
+    this.getAllTranslations().forEach(child => child.setActiveLanguage(lang));
+    this.emit('zn-language-change', {detail: {language: lang}});
+  }
 
   private handleLanguageAdd = (e: ZnMenuSelectEvent) => {
+    e.stopPropagation();
     const element = e.detail.element as HTMLElement;
     const languageCode = element.getAttribute('data-path');
     if (languageCode) {
@@ -116,15 +118,9 @@ export default class ZnTranslationGroup extends ZnPanel {
         this._activatedLanguages = [...this._activatedLanguages, languageCode];
       }
 
-      this._activeLanguage = languageCode;
-
-      this.getAllTranslations().forEach(child => {
-        child.addLanguageKey(languageCode);
-        child.setActiveLanguage(languageCode);
-      });
-
-      this.emit('zn-language-change', {detail: {language: languageCode}});
-      this.requestUpdate();
+      // Add language key to all children first so the key exists in values
+      this.getAllTranslations().forEach(child => child.addLanguageKey(languageCode));
+      this.switchLanguage(languageCode);
     }
   };
 
@@ -164,14 +160,14 @@ export default class ZnTranslationGroup extends ZnPanel {
                        caption="${ifDefined(headerCaption || undefined)}"
                        transparent>
               ${hasMultipleLanguages ? html`
-                <div slot="actions" class="translation-group__languages" @click="${this.handleLanguageClick}">
+                <div slot="actions" class="translation-group__languages">
                   <zn-button-group>
                     ${visibleTabs.map(code => html`
                       <zn-button
                         size="x-small"
                         color="default"
                         ?outline="${code !== this._activeLanguage}"
-                        data-lang="${code}"
+                        @click="${() => this.switchLanguage(code)}"
                       >${code.toUpperCase()}
                       </zn-button>
                     `)}
@@ -182,9 +178,10 @@ export default class ZnTranslationGroup extends ZnPanel {
                           size="x-small"
                           color="default"
                           outline
-                        >+</zn-button>
+                        >+
+                        </zn-button>
                         <zn-menu
-                          actions="${JSON.stringify(availableLanguages)}"
+                          .actions=${availableLanguages}
                           @zn-menu-select="${this.handleLanguageAdd}"
                         ></zn-menu>
                       </zn-dropdown>

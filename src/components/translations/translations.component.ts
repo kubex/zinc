@@ -1,16 +1,18 @@
-import { classMap } from 'lit/directives/class-map.js';
-import { FormControlController, validValidityState } from '../../internal/form';
-import { HasSlotController } from '../../internal/slot';
-import { html, nothing, unsafeCSS } from 'lit';
-import { property, state } from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {FormControlController, validValidityState} from '../../internal/form';
+import {HasSlotController} from '../../internal/slot';
+import {html, nothing, unsafeCSS} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
+import {live} from 'lit/directives/live.js';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
 import ZnNavbar from '../navbar';
-import type { PropertyValues } from 'lit';
-import type { ZincFormControl } from '../../internal/zinc-element';
-import type { ZnMenuSelectEvent } from '../../events/zn-menu-select';
-import type { ZnSelectEvent } from "../../events/zn-select";
+import type {PropertyValues} from 'lit';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
+import type {ZnSelectEvent} from "../../events/zn-select";
 
 import styles from './translations.scss';
 
@@ -28,17 +30,17 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property() name = '';
   @property() value = '{"en":""}';
   @property() label: string = '';
-  @property({ type: Boolean, reflect: true }) disabled = false;
-  @property({ type: Boolean, reflect: true }) required = false;
-  @property({ type: Boolean, reflect: true }) flush = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
+  @property({type: Boolean, reflect: true}) required = false;
+  @property({type: Boolean, reflect: true}) flush = false;
 
   /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
-  @property({ type: Boolean, reflect: true }) grouped = false;
+  @property({type: Boolean, reflect: true}) grouped = false;
 
-  @property({ type: Object }) languages: Record<string, string> = {
+  @property({type: Object}) languages: Record<string, string> = {
     'en': 'EN'
   };
-  @property({ type: Object }) values: Record<string, string> = {};
+  @property({type: Object}) values: Record<string, string> = {};
 
   @state() private _activeLanguage = 'en';
 
@@ -68,6 +70,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   /** Sets the active language externally. Used by zn-translation-group. */
   public setActiveLanguage(language: string) {
+    this.addLanguageKey(language);
     this._activeLanguage = language;
     this.requestUpdate();
   }
@@ -80,7 +83,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   /** Adds a language key to this component's values if not already present. Used by zn-translation-group. */
   public addLanguageKey(languageCode: string) {
     if (!Object.prototype.hasOwnProperty.call(this.values, languageCode)) {
-      this.values = { ...this.values, [languageCode]: '' };
+      this.values = {...this.values, [languageCode]: ''};
       this.updateValue();
     }
   }
@@ -127,13 +130,17 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     if (processValues) {
       this.value = JSON.stringify(this.values);
 
-      // Ensure active language is valid
-      if (!this._activeLanguage || (!Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage) && this._activeLanguage !== 'en')) {
-        const keys = Object.keys(this.values);
-        if (keys.length > 0) {
-          this._activeLanguage = keys[0];
-        } else {
-          this._activeLanguage = 'en';
+      // Ensure active language is valid, but only when NOT grouped.
+      // In grouped mode the parent zn-translation-group manages the active language,
+      // so we must not override what it set via setActiveLanguage().
+      if (!this.grouped) {
+        if (!this._activeLanguage || (!Object.prototype.hasOwnProperty.call(this.values, this._activeLanguage) && this._activeLanguage !== 'en')) {
+          const keys = Object.keys(this.values);
+          if (keys.length > 0) {
+            this._activeLanguage = keys[0];
+          } else {
+            this._activeLanguage = 'en';
+          }
         }
       }
     }
@@ -144,7 +151,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     const languageCode = element.getAttribute('data-path');
     if (languageCode) {
       // Add new language with empty string
-      this.values = { ...this.values, [languageCode]: '' };
+      this.values = {...this.values, [languageCode]: ''};
       this._activeLanguage = languageCode;
       this.updateValue();
     }
@@ -167,7 +174,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     if (this._activeLanguage) {
       const newValue: string = target.value as string;
       if (newValue !== this.values[this._activeLanguage]) {
-        this.values = { ...this.values, [this._activeLanguage]: newValue };
+        this.values = {...this.values, [this._activeLanguage]: newValue};
         this.updateValue();
       }
     }
@@ -222,7 +229,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       tab: code
     }));
 
-    const currentTranslation = this.values[this._activeLanguage];
+    const currentTranslation = this.values[this._activeLanguage] ?? '';
     const isRTL = this.isRTLLanguage(this._activeLanguage);
 
     const hasLabelSlot = this.hasSlotController.test('label');
@@ -258,15 +265,17 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           </zn-navbar>
         ` : nothing}
         <div class="input-container">
-          <zn-inline-edit
-            .value=${currentTranslation}
-            name="${this.name}"
-            placeholder="Enter translation..."
-            dir="${isRTL ? 'rtl' : 'ltr'}"
-            @zn-change="${this.handleValueUpdate}"
-            @zn-input="${this.handleValueUpdate}"
-            @zn-submit="${this.handleSubmit}"
-          ></zn-inline-edit>
+          ${keyed(this._activeLanguage, html`
+            <zn-inline-edit
+              .value=${live(currentTranslation)}
+              name="${this.name}"
+              placeholder="Enter translation..."
+              dir="${isRTL ? 'rtl' : 'ltr'}"
+              @zn-change="${this.handleValueUpdate}"
+              @zn-input="${this.handleValueUpdate}"
+              @zn-submit="${this.handleSubmit}"
+            ></zn-inline-edit>
+          `)}
         </div>
       </div>
     `;

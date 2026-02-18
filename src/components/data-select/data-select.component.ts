@@ -257,7 +257,13 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
     if (filterKeys.length) {
       const normalizedFilterKeys = filterKeys.map(key => key.toUpperCase());
-      data = localProvider.getData.filter(item => normalizedFilterKeys.includes(item.key.toUpperCase()));
+      data = localProvider.getData.filter(item => {
+        const key = item.key.toUpperCase();
+        if (key.includes(',')) {
+          return key.split(',').every(part => normalizedFilterKeys.includes(part.trim()));
+        }
+        return normalizedFilterKeys.includes(key);
+      });
     }
 
     if (this.provider !== 'color' && this.allowAll) {

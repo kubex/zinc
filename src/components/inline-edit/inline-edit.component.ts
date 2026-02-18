@@ -1,13 +1,14 @@
 import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, type HTMLTemplateResult, unsafeCSS } from 'lit';
+import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
 import { HasSlotController } from "../../internal/slot";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { property, query, state } from 'lit/decorators.js';
 import { watch } from "../../internal/watch";
+import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
-import type { ZincFormControl } from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';
@@ -38,21 +39,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   });
   private readonly hasSlotController = new HasSlotController(this, 'help-text', '[default]');
 
-  private _value: string | string[] = '';
-
-  get value(): string | string[] {
-    return this._value;
-  }
-
-  @state()
-  set value(val: string | string[]) {
-    if (this.multiple) {
-      val = Array.isArray(val) ? val : (val ? String(val).split(' ') : []);
-    } else {
-      val = Array.isArray(val) ? val.join(' ') : val;
-    }
-    this._value = val;
-  }
+  @property({ reflect: true }) value: string;
 
   @property() name: string;
 
@@ -121,19 +108,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @query('.ai__input') input: ZnInput | ZnSelect;
 
-  @property({
-    attribute: 'value',
-    converter: {
-      fromAttribute: (value: string | null) => {
-        if (!value || Array.isArray(value)) return value ?? '';
-        return value.includes(' ') ? value.split(' ') : value;
-      },
-      toAttribute: (value: string | string[]) => {
-        return Array.isArray(value) ? value.join(' ') : value;
-      }
-    }
-  }) defaultValue: string | string[] = '';
-
+  @defaultValue('value') defaultValue: string;
 
   get validity(): ValidityState {
     return this.input?.validity;
@@ -177,17 +152,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.removeEventListener('keydown', this.captureKeyDown, true);
   }
 
-  attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null) {
-    super.attributeChangedCallback(name, oldVal, newVal);
-    if (name === 'value') {
-      this.value = this.defaultValue;
-    }
-  }
-
   async firstUpdated() {
     await this.updateComplete;
-    // Re-sync value from defaultValue now that all properties (including multiple) are set
-    this.value = this.defaultValue;
     this.input.addEventListener('onclick', this.handleEditClick);
   }
 
@@ -195,12 +161,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
-  }
-
-  @watch('multiple', { waitUntilFirstUpdate: true })
-  handleMultipleChange() {
-    // Re-normalize value when multiple mode changes
-    this.value = this._value;
   }
 
   @watch('isEditing', { waitUntilFirstUpdate: true })
@@ -279,16 +239,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     if (this.disabled || !this.isEditing) {
       return;
     }
-    this.value = (e.target as HTMLInputElement | ZnSelect).value;
+    this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
     this.emit('zn-input');
-  };
-
-  handleSelectLoad = () => {
-    // Re-apply value after async options load (data-uri) since the select
-    // clears its value when handleDefaultSlotChange runs before options exist
-    if (this.input instanceof ZnSelect) {
-      this.input.value = this.value;
-    }
   };
 
   private moveSlottedOptionsToSelect() {
@@ -455,7 +407,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     return html`
       <zn-select class="ai__input"
                  name="${this.name}"
-                 .value="${this.value}"
+                 value="${this.value}"
                  size="${this.size}"
                  placeholder="${this.placeholder}"
                  required=${ifDefined(this.required)}
@@ -464,7 +416,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"
-                 @zn-load="${this.handleSelectLoad}"
                  @zn-blur="${this.handleBlur}">
         ${!hasSlottedOptions
           ? Object.keys(this.options).map(key => html`

@@ -3599,9 +3599,9 @@ declare module "components/icon-picker/index" {
 }
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
-    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -3625,9 +3625,7 @@ declare module "components/inline-edit/inline-edit.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private readonly hasSlotController;
-        private _value;
-        get value(): string | string[];
-        set value(val: string | string[]);
+        value: string;
         name: string;
         placeholder: string;
         editText: string;
@@ -3671,7 +3669,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;
-        defaultValue: string | string[];
+        defaultValue: string;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -3680,10 +3678,8 @@ declare module "components/inline-edit/inline-edit.component" {
         setCustomValidity(message: string): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         firstUpdated(): Promise<void>;
         handleValueChange(): Promise<void>;
-        handleMultipleChange(): void;
         handleIsEditingChange(): Promise<void>;
         mouseEventHandler: (e: MouseEvent) => void;
         escKeyHandler: (e: KeyboardEvent) => void;
@@ -3695,7 +3691,6 @@ declare module "components/inline-edit/inline-edit.component" {
         handleCancelClick: (e: MouseEvent) => void;
         handleBlur: () => void;
         handleInput: (e: Event) => void;
-        handleSelectLoad: () => void;
         private moveSlottedOptionsToSelect;
         handleSlotChange: () => Promise<void>;
         protected render(): import("lit").TemplateResult<1>;

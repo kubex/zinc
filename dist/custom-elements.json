@@ -13248,19 +13248,12 @@
             },
             {
               "kind": "field",
-              "name": "_value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
               "name": "value",
               "type": {
-                "text": "string | string[]"
-              }
+                "text": "string"
+              },
+              "attribute": "value",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -13479,10 +13472,8 @@
               "kind": "field",
               "name": "defaultValue",
               "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "attribute": "value"
+                "text": "string"
+              }
             },
             {
               "kind": "field",
@@ -13550,10 +13541,6 @@
             },
             {
               "kind": "method",
-              "name": "handleMultipleChange"
-            },
-            {
-              "kind": "method",
               "name": "handleIsEditingChange"
             },
             {
@@ -13595,10 +13582,6 @@
             {
               "kind": "field",
               "name": "handleInput"
-            },
-            {
-              "kind": "field",
-              "name": "handleSelectLoad"
             },
             {
               "kind": "method",
@@ -13667,6 +13650,13 @@
             }
           ],
           "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "value"
+            },
             {
               "name": "name",
               "type": {
@@ -13831,14 +13821,6 @@
               },
               "description": "Specifies what permission the browser has to provide assistance in filling out form field values. Refer to\n[this page on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for available values.",
               "fieldName": "autocomplete"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "fieldName": "defaultValue"
             }
           ],
           "superclass": {

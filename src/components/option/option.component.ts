@@ -43,8 +43,7 @@ export default class ZnOption extends ZincElement {
 
   /**
    * The option's value. When selected, the containing form control will receive this value. The value must be unique
-   * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
-   * multiple values.
+   * from other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.
    */
   @property({ reflect: true }) value = '';
 
@@ -91,20 +90,6 @@ export default class ZnOption extends ZincElement {
   @watch('selected')
   handleSelectedChange() {
     this.setAttribute('aria-selected', this.selected ? 'true' : 'false');
-  }
-
-  @watch('value')
-  handleValueChange() {
-    // Ensure the value is a string. This ensures the next line doesn't error and allows framework users to pass numbers
-    // instead of requiring them to cast the value to a string.
-    if (typeof this.value !== 'string') {
-      this.value = String(this.value);
-    }
-
-    if (this.value.includes(' ')) {
-      console.error(`Option values cannot include a space. All spaces have been replaced with underscores.`, this);
-      this.value = this.value.replace(/ /g, '_');
-    }
   }
 
   /** Returns a plain text label based on the option's content. */

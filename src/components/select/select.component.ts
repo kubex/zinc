@@ -127,15 +127,28 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /**
    * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-   * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-   * be an array. **For this reason, values must not contain spaces.**
+   * value property will be an array. Values may contain spaces when using JSON array syntax in the attribute,
+   * e.g. `value='["my value", "their value"]'`. Space-delimited strings are still supported for backward compatibility.
    */
   @state()
   set value(val: string | string[]) {
     if (this.multiple) {
-      val = Array.isArray(val) ? val : val.split(' ');
+      if (Array.isArray(val)) {
+        // Already an array, keep as-is
+      } else if (val.trimStart().startsWith('[')) {
+        try {
+          const parsed = JSON.parse(val) as unknown;
+          val = Array.isArray(parsed) ? parsed : val.split(" ");
+        } catch {
+          if (typeof val === "string") {
+            val = val.split(" ");
+          }
+        }
+      } else {
+        val = val.split(" ");
+      }
     } else {
-      val = Array.isArray(val) ? val.join(' ') : val;
+      val = Array.isArray(val) ? val.join(" ") : val;
     }
 
     if (this._value === val) {
@@ -155,14 +168,29 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     attribute: 'value',
     converter: {
       fromAttribute: (value) => {
-        if (!value || Array.isArray(value)) return value
+        if (!value || Array.isArray(value)) return value;
+
+        // Auto-detect JSON array syntax: value='["my value", "their value"]'
+        if (value.trimStart().startsWith('[')) {
+          try {
+            const parsed = JSON.parse(value) as unknown;
+            if (Array.isArray(parsed)) return parsed as string[];
+          } catch {
+            // Not valid JSON, fall through to space-delimited parsing
+          }
+        }
+
         return value.includes(' ') ? value.split(' ') : value;
       },
       toAttribute: (value) => {
+        if (Array.isArray(value) && value.some((v: string) => v.includes(' '))) {
+          return JSON.stringify(value);
+        }
         return Array.isArray(value) ? value.join(' ') : value;
       }
     }
   }) defaultValue: string | string[] = '';
+
 
   /** The select's size. */
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';

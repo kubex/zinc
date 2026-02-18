@@ -2994,9 +2994,10 @@
                   </td>
                   <td>
                     The current value of the select, submitted as a name/value pair with form data. When
-                    <code>multiple</code> is enabled, the value attribute will be a space-delimited list of values based
-                    on the options selected, and the value property will be an array.
-                    <strong>For this reason, values must not contain spaces.</strong>
+                    <code>multiple</code> is enabled, the value property will be an array. Values may contain spaces
+                    when using JSON array syntax in the attribute, e.g.
+                    <code>value='["my value", "their value"]'</code>. Space-delimited strings are still supported for
+                    backward compatibility.
                   </td>
                   <td style="text-align: center"></td>
                   <td>-</td>

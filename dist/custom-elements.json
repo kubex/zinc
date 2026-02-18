@@ -17615,7 +17615,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
               "attribute": "value",
               "reflects": true
             },
@@ -17665,10 +17665,6 @@
             },
             {
               "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
               "name": "getTextLabel",
               "description": "Returns a plain text label based on the option's content."
             }
@@ -17680,7 +17676,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing\nmultiple values.",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
               "fieldName": "value"
             },
             {
@@ -23057,7 +23053,7 @@
             {
               "kind": "field",
               "name": "value",
-              "description": "The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the\nvalue attribute will be a space-delimited list of values based on the options selected, and the value property will\nbe an array. **For this reason, values must not contain spaces.**"
+              "description": "The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the\nvalue property will be an array. Values may contain spaces when using JSON array syntax in the attribute,\ne.g. `value='[\"my value\", \"their value\"]'`. Space-delimited strings are still supported for backward compatibility."
             },
             {
               "kind": "field",

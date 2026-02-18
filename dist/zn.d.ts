@@ -1968,8 +1968,7 @@ declare module "components/option/option.component" {
         hasHover: boolean;
         /**
          * The option's value. When selected, the containing form control will receive this value. The value must be unique
-         * from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing
-         * multiple values.
+         * from other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.
          */
         value: string;
         /** Draws the option in a disabled state, preventing selection. */
@@ -1981,7 +1980,6 @@ declare module "components/option/option.component" {
         private handleMouseLeave;
         handleDisabledChange(): void;
         handleSelectedChange(): void;
-        handleValueChange(): void;
         /** Returns a plain text label based on the option's content. */
         getTextLabel(): string;
         render(): import("lit").TemplateResult<1>;
@@ -2154,8 +2152,8 @@ declare module "components/select/select.component" {
         get value(): string | string[];
         /**
          * The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the
-         * value attribute will be a space-delimited list of values based on the options selected, and the value property will
-         * be an array. **For this reason, values must not contain spaces.**
+         * value property will be an array. Values may contain spaces when using JSON array syntax in the attribute,
+         * e.g. `value='["my value", "their value"]'`. Space-delimited strings are still supported for backward compatibility.
          */
         set value(val: string | string[]);
         /** The default value of the form control. Primarily used for resetting the form control. */

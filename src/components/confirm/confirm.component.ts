@@ -178,6 +178,13 @@ export default class ZnConfirm extends ZincElement {
       form.action = this.action;
       form.method = 'POST';
 
+      // copy data-attributes from the confirm element to the form
+      Array.from(this.attributes).forEach(attr => {
+        if (attr.name.startsWith('data-')) {
+          form?.setAttribute(attr.name, attr.value);
+        }
+      });
+
       this.querySelectorAll('input').forEach((el: HTMLInputElement) => {
         form?.appendChild(el.cloneNode() as Node);
       })

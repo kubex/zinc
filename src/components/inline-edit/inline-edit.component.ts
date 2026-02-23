@@ -421,7 +421,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  required=${ifDefined(this.required)}
                  dir="${this.dir}"
                  multiple=${ifDefined(this.multiple)}
-                 clearable=${ifDefined(this.clearable)}
+                 clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"
@@ -443,7 +443,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                       icon-position="${ifDefined(this.iconPosition)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"
-                      clearable=${ifDefined(this.clearable)}
+                      clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
                       required=${ifDefined(this.required)}
                       dir="${this.dir}"
                       @zn-input="${this.handleInput}"

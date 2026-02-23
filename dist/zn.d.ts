@@ -3634,6 +3634,7 @@ declare module "components/inline-edit/inline-edit.component" {
         required: boolean;
         pattern: string;
         multiple: boolean;
+        clearable: boolean;
         min: string | number;
         max: string | number;
         step: number | 'any';

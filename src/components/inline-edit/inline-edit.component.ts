@@ -61,6 +61,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({ type: Boolean, reflect: true }) multiple: boolean;
 
+  @property({ type: Boolean }) clearable: boolean;
+
   @property() min: string | number;
 
   @property() max: string | number;
@@ -419,6 +421,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  required=${ifDefined(this.required)}
                  dir="${this.dir}"
                  multiple=${ifDefined(this.multiple)}
+                 clearable=${ifDefined(this.clearable)}
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"
@@ -440,6 +443,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                       icon-position="${ifDefined(this.iconPosition)}"
                       size="${this.size}"
                       provider="${this.selectProvider}"
+                      clearable=${ifDefined(this.clearable)}
                       required=${ifDefined(this.required)}
                       dir="${this.dir}"
                       @zn-input="${this.handleInput}"

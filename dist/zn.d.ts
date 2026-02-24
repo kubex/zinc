@@ -542,6 +542,8 @@ declare module "components/icon/icon.component" {
         alt: string;
         size: number;
         round: boolean;
+        tile: boolean;
+        depth: boolean;
         library: IconLibrary;
         color: IconColor;
         padded: boolean;

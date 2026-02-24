@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.0.77">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.0.78">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -78,7 +78,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.0.77</div>
+        <div class="sidebar-version">1.0.78</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -694,6 +694,13 @@
             Add a search component to filter table data. The search component emits debounced search events that trigger
             data reloading.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              In this preview, search sends a <code>search</code> parameter with each request but the static data file
+              always returns the same results. With a real server endpoint, results would be filtered based on the
+              search term.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -766,6 +773,13 @@
             Enable column sorting by marking headers as sortable. Click column headers to sort data ascending or
             descending.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              Server-side sorting sends <code>sortColumn</code> and <code>sortDirection</code> parameters with each
+              request. In this preview, the static data file returns results in the same order regardless. Use
+              <code>local-sort</code> (shown below) to see sorting in action without a server.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -904,6 +918,13 @@
             Data tables automatically display pagination controls when the total number of records exceeds the per-page
             limit. Users can navigate between pages and adjust rows per page.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              Pagination controls appear based on the <code>total</code> and <code>perPage</code> values in the
+              response. In this preview, changing pages re-fetches the same static data. With a real server, each page
+              request would return the corresponding slice of data.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -1725,6 +1746,12 @@
             Add advanced filtering with the <code>zn-data-table-filter</code> component. The filter opens a slideout
             with a query builder.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              In this preview, filter parameters are sent with the request but the static data file returns the same
+              results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -1807,6 +1834,13 @@
             Add complex filtering options above the table using the <code>filter-top</code> slot. Perfect for search
             forms and advanced filters.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              This example uses <code>no-initial-load</code> so the table starts empty. Submitting the filter form
+              triggers a data load, but the static data file returns the same results regardless of filter values. With
+              a real server, results would be filtered accordingly.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -1823,7 +1857,7 @@
                 <zn-filter-wrapper slot="filter-top">
                   <div class="form-spacing">
                     <zn-input type="text" name="name" label="Product Name" span="4"></zn-input>
-                    <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+                    <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
                     <zn-select name="category" span="3" label="Category" clearable="">
                       <zn-option value="beauty">Beauty</zn-option>
                       <zn-option value="electronics">Electronics</zn-option>
@@ -1858,7 +1892,7 @@
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-filter-wrapper</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>filter-top<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-spacing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Product Name<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Max Price<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>currency<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Max Price<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>category<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Category<span class="token punctuation">"</span></span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>beauty<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Beauty<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>electronics<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Electronics<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
@@ -1901,6 +1935,12 @@
             Filter Top with Tabs<a href="#filter-top-with-tabs" aria-label='Direct link to "Filter Top with Tabs"'></a>
           </h3>
           <p>Combine the <code>filter-top</code> slot with tabs for multiple filtering interfaces.</p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              In this preview, filter and search parameters are sent with each request but the static data file returns
+              the same results. With a real server endpoint, each tab’s filters would produce different results.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -1924,7 +1964,7 @@
                       <zn-filter-wrapper with-submit="">
                         <zn-form-group label="Quick Search" help-text="Search by common fields">
                           <zn-input type="text" name="search" label="Keyword" span="6"></zn-input>
-                          <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+                          <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
                           <zn-select name="category" span="3" label="Category" clearable="">
                             <zn-option value="beauty">Beauty</zn-option>
                           </zn-select>
@@ -1934,14 +1974,14 @@
 
                     <zn-sp id="advanced" flush-y="">
                       <zn-filter-wrapper with-submit="">
-                        <zn-filter-builder
+                        <zn-query-builder
                           filters='[
               {"id":"name","name":"Name","operators":["eq","contains"]},
               {"id":"category","name":"Category","options":{"beauty":"Beauty"},"operators":["eq"]}
             ]'
                           name="query"
                         >
-                        </zn-filter-builder>
+                        </zn-query-builder>
                       </zn-filter-wrapper>
                     </zn-sp>
                   </zn-tabs>
@@ -1976,7 +2016,7 @@
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-filter-wrapper</span> <span class="token attr-name">with-submit</span><span class="token punctuation">&gt;</span></span>
           <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-form-group</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Quick Search<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Search by common fields<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>search<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Keyword<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Max Price<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>currency<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>price<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Max Price<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-select</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>category<span class="token punctuation">"</span></span> <span class="token attr-name">span</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Category<span class="token punctuation">"</span></span> <span class="token attr-name">clearable</span><span class="token punctuation">&gt;</span></span>
               <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>beauty<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Beauty<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
@@ -1986,13 +2026,13 @@
 
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>advanced<span class="token punctuation">"</span></span> <span class="token attr-name">flush-y</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-filter-wrapper</span> <span class="token attr-name">with-submit</span><span class="token punctuation">&gt;</span></span>
-          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-filter-builder</span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-query-builder</span>
             <span class="token attr-name">filters</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
               {"id":"name","name":"Name","operators":["eq","contains"]},
               {"id":"category","name":"Category","options":{"beauty":"Beauty"},"operators":["eq"]}
             ]<span class="token punctuation">'</span></span>
             <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>query<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-filter-builder</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-query-builder</span><span class="token punctuation">&gt;</span></span>
         <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-filter-wrapper</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
@@ -2033,11 +2073,18 @@
           <p>
             Use the <code>inputs</code> slot to include additional form inputs that get sent with every data request.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              In this preview, the input values are sent as parameters with each request but the static data file
+              returns the same results. With a real server, these additional parameters would filter or modify the
+              response data.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
                 data-uri="/data/data-table.json"
-                method="POST"
+                method="GET"
                 headers='[
     {"key":"name","label":"Name"},
     {"key":"status","label":"Status"}
@@ -2048,7 +2095,7 @@
                   <zn-option value="all">All Records</zn-option>
                 </zn-select>
 
-                <zn-input slot="inputs" name="user_id" value="123" type="hidden"></zn-input>
+                <input slot="inputs" name="user_id" value="123" type="hidden" />
               </zn-data-table>
 
               <div class="code-preview__resizer">
@@ -2060,7 +2107,7 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-382"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-data-table</span>
   <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/data-table.json<span class="token punctuation">"</span></span>
-  <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POST<span class="token punctuation">"</span></span>
+  <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span>
   <span class="token attr-name">headers</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
     {"key":"name","label":"Name"},
     {"key":"status","label":"Status"}
@@ -2071,7 +2118,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>all<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>All Records<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-option</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-select</span><span class="token punctuation">&gt;</span></span>
 
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inputs<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user_id<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-input</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inputs<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user_id<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-data-table</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-382"></zn-copy-button></pre>
@@ -2398,6 +2445,12 @@
             Choose between GET and POST requests using the <code>method</code> property. POST is default and sends
             parameters in the request body.
           </p>
+          <div role="alert" class="callout callout--tip">
+            <p>
+              This preview uses GET against a static file. In production, POST requests send pagination, sorting, and
+              filter parameters in the request body rather than as query string parameters.
+            </p>
+          </div>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-data-table
@@ -2737,7 +2790,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-394"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.77/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-394"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-394"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.78/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-394"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2752,7 +2805,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-395"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.77/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-395"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-395"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.78/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-395"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

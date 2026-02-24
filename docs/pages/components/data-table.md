@@ -48,6 +48,10 @@ The simplest data table fetches data from a URI and displays it with defined col
 
 Add a search component to filter table data. The search component emits debounced search events that trigger data reloading.
 
+:::tip
+In this preview, search sends a `search` parameter with each request but the static data file always returns the same results. With a real server endpoint, results would be filtered based on the search term.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -71,6 +75,10 @@ Add a search component to filter table data. The search component emits debounce
 ### With Sorting
 
 Enable column sorting by marking headers as sortable. Click column headers to sort data ascending or descending.
+
+:::tip
+Server-side sorting sends `sortColumn` and `sortDirection` parameters with each request. In this preview, the static data file returns results in the same order regardless. Use `local-sort` (shown below) to see sorting in action without a server.
+:::
 
 ```html:preview
 <zn-data-table
@@ -111,6 +119,10 @@ Use `local-sort` to sort data client-side without making server requests. Best f
 ### Pagination
 
 Data tables automatically display pagination controls when the total number of records exceeds the per-page limit. Users can navigate between pages and adjust rows per page.
+
+:::tip
+Pagination controls appear based on the `total` and `perPage` values in the response. In this preview, changing pages re-fetches the same static data. With a real server, each page request would return the corresponding slice of data.
+:::
 
 ```html:preview
 <zn-data-table
@@ -354,6 +366,10 @@ Or use the built-in empty state with custom text:
 
 Add advanced filtering with the `zn-data-table-filter` component. The filter opens a slideout with a query builder.
 
+:::tip
+In this preview, filter parameters are sent with the request but the static data file returns the same results regardless. With a real server endpoint, results would be filtered based on the applied criteria.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
@@ -381,6 +397,10 @@ Add advanced filtering with the `zn-data-table-filter` component. The filter ope
 
 Add complex filtering options above the table using the `filter-top` slot. Perfect for search forms and advanced filters.
 
+:::tip
+This example uses `no-initial-load` so the table starts empty. Submitting the filter form triggers a data load, but the static data file returns the same results regardless of filter values. With a real server, results would be filtered accordingly.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/products-table.json"
@@ -396,7 +416,7 @@ Add complex filtering options above the table using the `filter-top` slot. Perfe
   <zn-filter-wrapper slot="filter-top">
     <div class="form-spacing">
       <zn-input type="text" name="name" label="Product Name" span="4"></zn-input>
-      <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+      <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
       <zn-select name="category" span="3" label="Category" clearable>
         <zn-option value="beauty">Beauty</zn-option>
         <zn-option value="electronics">Electronics</zn-option>
@@ -415,6 +435,10 @@ Add complex filtering options above the table using the `filter-top` slot. Perfe
 ### Filter Top with Tabs
 
 Combine the `filter-top` slot with tabs for multiple filtering interfaces.
+
+:::tip
+In this preview, filter and search parameters are sent with each request but the static data file returns the same results. With a real server endpoint, each tab's filters would produce different results.
+:::
 
 ```html:preview
 <zn-data-table
@@ -438,7 +462,7 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
         <zn-filter-wrapper with-submit>
           <zn-form-group label="Quick Search" help-text="Search by common fields">
             <zn-input type="text" name="search" label="Keyword" span="6"></zn-input>
-            <zn-input type="price" name="price" label="Max Price" span="3"></zn-input>
+            <zn-input type="currency" name="price" label="Max Price" span="3"></zn-input>
             <zn-select name="category" span="3" label="Category" clearable>
               <zn-option value="beauty">Beauty</zn-option>
             </zn-select>
@@ -448,13 +472,13 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
 
       <zn-sp id="advanced" flush-y>
         <zn-filter-wrapper with-submit>
-          <zn-filter-builder
+          <zn-query-builder
             filters='[
               {"id":"name","name":"Name","operators":["eq","contains"]},
               {"id":"category","name":"Category","options":{"beauty":"Beauty"},"operators":["eq"]}
             ]'
             name="query">
-          </zn-filter-builder>
+          </zn-query-builder>
         </zn-filter-wrapper>
       </zn-sp>
     </zn-tabs>
@@ -467,10 +491,14 @@ Combine the `filter-top` slot with tabs for multiple filtering interfaces.
 
 Use the `inputs` slot to include additional form inputs that get sent with every data request.
 
+:::tip
+In this preview, the input values are sent as parameters with each request but the static data file returns the same results. With a real server, these additional parameters would filter or modify the response data.
+:::
+
 ```html:preview
 <zn-data-table
   data-uri="/data/data-table.json"
-  method="POST"
+  method="GET"
   headers='[
     {"key":"name","label":"Name"},
     {"key":"status","label":"Status"}
@@ -481,7 +509,7 @@ Use the `inputs` slot to include additional form inputs that get sent with every
     <zn-option value="all">All Records</zn-option>
   </zn-select>
 
-  <zn-input slot="inputs" name="user_id" value="123" type="hidden"></zn-input>
+  <input slot="inputs" name="user_id" value="123" type="hidden">
 
 </zn-data-table>
 ```
@@ -582,6 +610,10 @@ Use `standalone` to render the table without a container wrapper, useful for emb
 ### Request Method
 
 Choose between GET and POST requests using the `method` property. POST is default and sends parameters in the request body.
+
+:::tip
+This preview uses GET against a static file. In production, POST requests send pagination, sorting, and filter parameters in the request body rather than as query string parameters.
+:::
 
 ```html:preview
 <zn-data-table

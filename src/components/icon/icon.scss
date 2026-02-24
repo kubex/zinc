@@ -119,6 +119,29 @@
     border-radius: 50%;
   }
 
+  &--tile {
+    border-radius: 20%;
+  }
+
+  &--depth {
+    position: relative;
+
+    &:before, &:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:before {
+      box-shadow: inset -2px -2px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    &:after {
+      box-shadow: inset 2px 2px 1px rgba(255, 255, 255, 0.2);
+    }
+  }
+
   &--blink {
     animation: blink-animation 1.5s steps(5, start) infinite;
   }

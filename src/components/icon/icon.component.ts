@@ -59,6 +59,8 @@ export default class ZnIcon extends ZincElement {
   @property({type: Number, reflect: true}) size: number = 24;
 
   @property({type: Boolean, reflect: true}) round = false;
+  @property({type: Boolean, reflect: true}) tile = false;
+  @property({type: Boolean, reflect: true}) depth = false;
 
   @property({reflect: true}) library: IconLibrary;
 
@@ -134,6 +136,12 @@ export default class ZnIcon extends ZincElement {
         if (attr === "round") {
           this.round = true;
         }
+        if (attr === "tile") {
+          this.tile = true;
+        }
+        if (attr === "depth") {
+          this.depth = true;
+        }
       });
     }
 
@@ -184,6 +192,8 @@ export default class ZnIcon extends ZincElement {
         <div class="${classMap({
           'icon': true,
           'icon--round': this.round,
+          'icon--tile': this.tile,
+          'icon--depth': this.depth,
           'icon--default': this.color === "default",
           'icon--primary': this.color === "primary",
           'icon--accent': this.color === "accent",

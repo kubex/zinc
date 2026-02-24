@@ -3598,10 +3598,10 @@ declare module "components/icon-picker/index" {
     }
 }
 declare module "components/inline-edit/inline-edit.component" {
-    import { type CSSResultGroup, type HTMLTemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
+    import { type CSSResultGroup, type HTMLTemplateResult, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -3625,7 +3625,7 @@ declare module "components/inline-edit/inline-edit.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private readonly hasSlotController;
-        value: string;
+        value: string | string[];
         name: string;
         placeholder: string;
         editText: string;
@@ -3670,7 +3670,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private hasFocus;
         private isEditing;
         input: ZnInput | ZnSelect;
-        defaultValue: string;
+        defaultValue: string | string[];
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -3680,6 +3680,7 @@ declare module "components/inline-edit/inline-edit.component" {
         connectedCallback(): void;
         disconnectedCallback(): void;
         firstUpdated(): Promise<void>;
+        protected willUpdate(changedProperties: PropertyValues): void;
         handleValueChange(): Promise<void>;
         handleIsEditingChange(): Promise<void>;
         mouseEventHandler: (e: MouseEvent) => void;

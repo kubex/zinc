@@ -82,8 +82,9 @@
   outline: none;
 }
 
-/* Visually hide the display input when multiple is enabled */
-.select--multiple:not(.select--placeholder-visible) .select__display-input {
+/* Visually hide the display input when multiple is enabled (but not when search is active and open) */
+.select--multiple:not(.select--placeholder-visible):not(.select--search) .select__display-input,
+.select--multiple.select--search:not(.select--open):not(.select--placeholder-visible) .select__display-input {
   position: absolute;
   z-index: -1;
   top: 0;
@@ -91,6 +92,41 @@
   width: 100%;
   height: 100%;
   opacity: 0;
+}
+
+/* When multiple + search + open, shrink the input to fit inline with the tags */
+.select--multiple.select--search.select--open .select__display-input {
+  flex: 1 1 60px;
+  min-width: 60px;
+  width: auto;
+  order: 2;
+  margin-inline-start: var(--zn-spacing-2x-small);
+}
+
+/* When multiple + search + open, place tags before the input */
+.select--multiple.select--search.select--open .select__prefix {
+  order: 0;
+}
+
+.select--multiple.select--search.select--open .select__tags {
+  order: 1;
+  flex: 0 1 auto;
+}
+
+/* Keep clear button and expand icon at the end */
+.select--multiple.select--search.select--open .select__clear {
+  order: 4;
+}
+
+.select--multiple.select--search.select--open .select__expand-icon {
+  order: 5;
+}
+
+/* Ensure the combobox wraps so the input flows after tags (only when open to avoid affecting initial size) */
+.select--multiple.select--search.select--open .select__combobox {
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-2x-small);
+  padding-inline-start: 0;
 }
 
 .select__value-input {
@@ -361,4 +397,13 @@
   padding-inline: var(--zn-spacing-2x-large);
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Search mode */
+.select--search .select__combobox {
+  cursor: text;
+}
+
+.select--search .select__display-input {
+  cursor: text;
 }

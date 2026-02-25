@@ -146,6 +146,45 @@ Use the `clearable` attribute to make the control clearable. The clear button on
 </zn-select>
 ```
 
+### Search
+
+Use the `search` attribute to allow users to type into the select to filter the list of options. When the dropdown opens, the input becomes editable and options are filtered as you type using case-insensitive substring matching against labels and values.
+
+```html:preview
+<zn-select label="Search for a country" search placeholder="Type to search...">
+  <zn-option value="au">Australia</zn-option>
+  <zn-option value="br">Brazil</zn-option>
+  <zn-option value="ca">Canada</zn-option>
+  <zn-option value="cn">China</zn-option>
+  <zn-option value="fr">France</zn-option>
+  <zn-option value="de">Germany</zn-option>
+  <zn-option value="in">India</zn-option>
+  <zn-option value="jp">Japan</zn-option>
+  <zn-option value="mx">Mexico</zn-option>
+  <zn-option value="uk">United Kingdom</zn-option>
+  <zn-option value="us">United States</zn-option>
+</zn-select>
+```
+
+### Search with Multiple Selection
+
+Combine `search` with `multiple` to allow users to search and select multiple options. The search clears automatically after each selection so you can continue searching.
+
+```html:preview
+<zn-select label="Select your skills" search multiple clearable placeholder="Search skills...">
+  <zn-option value="html">HTML</zn-option>
+  <zn-option value="css">CSS</zn-option>
+  <zn-option value="js">JavaScript</zn-option>
+  <zn-option value="ts">TypeScript</zn-option>
+  <zn-option value="react">React</zn-option>
+  <zn-option value="vue">Vue</zn-option>
+  <zn-option value="angular">Angular</zn-option>
+  <zn-option value="node">Node.js</zn-option>
+  <zn-option value="python">Python</zn-option>
+  <zn-option value="go">Go</zn-option>
+</zn-select>
+```
+
 ### Disabled
 
 Use the `disabled` attribute to disable the entire select. To disable just one option, put `disabled` on the `zn-option`.
@@ -708,6 +747,8 @@ The select component supports comprehensive keyboard navigation:
 - **Arrow Up/Down** - Navigate through options
 - **Home/End** - Jump to first/last option
 - **Type characters** - Jump to options starting with typed characters (type-to-select)
+
+When `search` is enabled, **Space** types into the input instead of toggling the dropdown, and **Arrow Up/Down** skips filtered (hidden) options.
 
 ### Customizing Label Position
 

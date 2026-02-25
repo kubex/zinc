@@ -104,6 +104,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() private valueHasChanged: boolean = false;
   @state() private inputPrefix: boolean = false;
 
+  /** @internal - current search/filter text when search is enabled (lowercased for matching) */
+  private _searchQuery = '';
+
+  /** @internal - raw display value of the search input (preserves case for the input field) */
+  private _searchDisplayValue = '';
+
   /** @internal */
   @state() private _fetchedOptions: { key: string; value: string }[] = [];
 
@@ -230,6 +236,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Draws a pill-style select with rounded edges. */
   @property({ type: Boolean, reflect: true }) pill = false;
+
+  /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
+  @property({ type: Boolean, reflect: true }) search = false;
 
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
@@ -411,8 +420,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
-    // buffer we _don't_ close it.
-    if (event.key === 'Enter' || (event.key === ' ' && this.typeToSelectString === '')) {
+    // buffer we _don't_ close it. When search is enabled, space should type into the input, not toggle.
+    if (event.key === 'Enter' || (event.key === ' ' && !this.search && this.typeToSelectString === '')) {
       event.preventDefault();
       event.stopImmediatePropagation();
 
@@ -431,6 +440,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
           this.setSelectedOptions(this.currentOption);
         }
 
+        // Clear search after keyboard selection
+        if (this.search) {
+          this.clearSearch();
+          if (this.multiple) {
+            this.displayInput.value = '';
+          }
+        }
+
         // Emit after updating
         this.updateComplete.then(() => {
           this.emit('zn-input');
@@ -440,6 +457,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         if (!this.multiple) {
           this.hide().then();
           this.displayInput.focus({ preventScroll: true });
+        } else if (this.search) {
+          // In multi-select + search, re-focus the search input after keyboard selection
+          this.updateComplete.then(() => {
+            this.displayInput.value = '';
+            this.displayInput.focus({ preventScroll: true });
+          });
         }
       }
 
@@ -448,8 +471,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Navigate options
     if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-      const allOptions = this.getAllOptions();
-      const currentIndex = allOptions.indexOf(this.currentOption);
+      const navOptions = this.search ? this.getVisibleOptions() : this.getAllOptions();
+      const currentIndex = navOptions.indexOf(this.currentOption);
       let newIndex = Math.max(0, currentIndex);
 
       // Prevent scrolling
@@ -468,17 +491,22 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       if (event.key === 'ArrowDown') {
         newIndex = currentIndex + 1;
-        if (newIndex > allOptions.length - 1) newIndex = 0;
+        if (newIndex > navOptions.length - 1) newIndex = 0;
       } else if (event.key === 'ArrowUp') {
         newIndex = currentIndex - 1;
-        if (newIndex < 0) newIndex = allOptions.length - 1;
+        if (newIndex < 0) newIndex = navOptions.length - 1;
       } else if (event.key === 'Home') {
         newIndex = 0;
       } else if (event.key === 'End') {
-        newIndex = allOptions.length - 1;
+        newIndex = navOptions.length - 1;
       }
 
-      this.setCurrentOption(allOptions[newIndex]);
+      this.setCurrentOption(navOptions[newIndex]);
+    }
+
+    // When search is enabled, let the input handle keystrokes natively (they go through handleSearchInput)
+    if (this.search) {
+      return;
     }
 
     // All other "printable" keys trigger type to select
@@ -547,6 +575,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
+    // When search is enabled, clicking the input area should open (not toggle) so the user can type
+    if (this.search && this.open && !isExpandIcon) {
+      event.preventDefault();
+      this.displayInput.focus({ preventScroll: true });
+      return;
+    }
+
     event.preventDefault();
     this.displayInput.focus({ preventScroll: true });
     this.open = !this.open;
@@ -571,6 +606,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.stopPropagation();
 
     if (this.value !== '') {
+      if (this.search) {
+        this.clearSearch();
+        this.displayInput.value = '';
+      }
+
       this.setSelectedOptions([]);
       this.displayInput.focus({ preventScroll: true });
 
@@ -587,6 +627,59 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Don't lose focus or propagate events when clicking the clear button
     event.stopPropagation();
     event.preventDefault();
+  }
+
+  /** Handles text input on the display input for search/filter mode */
+  private handleSearchInput() {
+    if (!this.search) return;
+
+    this._searchDisplayValue = this.displayInput.value;
+    this._searchQuery = this._searchDisplayValue.toLowerCase();
+    this.filterOptions();
+
+    // Open the dropdown when the user starts typing
+    if (!this.open) {
+      this.show().then();
+    }
+  }
+
+  /** Filters visible options based on the current search query */
+  private filterOptions() {
+    const allOptions = this.getAllOptions();
+    const query = this._searchQuery;
+
+    if (!query) {
+      // Show all options
+      allOptions.forEach(option => {
+        option.hidden = false;
+      });
+      return;
+    }
+
+    allOptions.forEach(option => {
+      const label = option.getTextLabel().toLowerCase();
+      const value = option.value.toLowerCase();
+      const matches = label.includes(query) || value.includes(query);
+      option.hidden = !matches;
+    });
+
+    // Reset current option if it's now hidden
+    if (this.currentOption && this.currentOption.hidden) {
+      const firstVisible = allOptions.find(o => !o.hidden && !o.disabled);
+      if (firstVisible) {
+        this.setCurrentOption(firstVisible);
+      }
+    }
+  }
+
+  /** Clears the search query and shows all options */
+  private clearSearch() {
+    this._searchQuery = '';
+    this._searchDisplayValue = '';
+    const allOptions = this.getAllOptions();
+    allOptions.forEach(option => {
+      option.hidden = false;
+    });
   }
 
   private handleOptionClick(event: MouseEvent) {
@@ -610,8 +703,25 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.setSelectedOptions(option);
       }
 
+      // Clear search after selection when in search mode
+      if (this.search) {
+        this.clearSearch();
+        if (this.multiple) {
+          // Keep the search input clear for further typing
+          this.displayInput.value = '';
+        }
+      }
+
       // Set focus after updating so the value is announced by screen readers
-      this.updateComplete.then(() => this.displayInput.focus({ preventScroll: true }));
+      this.updateComplete.then(() => {
+        // In multi-select + search mode, re-focus the search input so the user can continue typing
+        if (this.multiple && this.search && this.open) {
+          this.displayInput.value = '';
+          this.displayInput.focus({ preventScroll: true });
+        } else {
+          this.displayInput.focus({ preventScroll: true });
+        }
+      });
 
       if (this.value !== oldValue) {
         // Emit after updating
@@ -686,6 +796,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     return [...shadowOptions, ...slottedOptions];
   }
 
+  // Gets an array of visible (not hidden) <zn-option> elements, used by keyboard navigation when search is active
+  private getVisibleOptions() {
+    return this.getAllOptions().filter(option => !option.hidden);
+  }
+
   // Gets the first <zn-option> element
   public getFirstOption() {
     return this.querySelector<ZnOption>('zn-option');
@@ -708,7 +823,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.currentOption = option;
       option.current = true;
       option.tabIndex = 0;
-      option.focus();
+      // When search is active and the display input has focus, don't steal focus to the option.
+      // The user is typing in the search input and we only want to visually highlight the current option.
+      if (!(this.search && this.open && this.shadowRoot?.activeElement === this.displayInput)) {
+        option.focus();
+      }
     }
   }
 
@@ -991,6 +1110,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Reset the current option
       this.setCurrentOption(null);
 
+      // When search is enabled, clear the display input to allow typing and show all options
+      if (this.search) {
+        this.clearSearch();
+        this.displayInput.value = '';
+        this.displayInput.readOnly = false;
+      }
+
       // Show
       this.emit('zn-show');
       this.addOpenListeners();
@@ -1003,6 +1129,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       requestAnimationFrame(() => {
         this.setCurrentOption(this.currentOption);
       });
+
+      // Focus the search input so the user can start typing immediately
+      if (this.search) {
+        requestAnimationFrame(() => {
+          this.displayInput.focus({ preventScroll: true });
+        });
+      }
 
       const { keyframes, options } = getAnimation(this, 'select.show', { dir: this.localize.dir() });
       await animateTo(this.popup.popup, keyframes, options);
@@ -1017,6 +1150,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Hide
       this.emit('zn-hide');
       this.removeOpenListeners();
+
+      // When search is enabled, restore the display label and clear the search
+      if (this.search) {
+        this.clearSearch();
+        this.displayInput.readOnly = true;
+        // In multiple mode, tags show the selection so keep the input empty
+        this.displayInput.value = this.multiple ? '' : this.displayLabel;
+      }
 
       await stopAnimations(this);
       const { keyframes, options } = getAnimation(this, 'select.hide', { dir: this.localize.dir() });
@@ -1207,7 +1348,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--small': this.size === 'small',
               'select--medium': this.size === 'medium',
               'select--large': this.size === 'large',
-              'select--has-input-prefix': this.inputPrefix
+              'select--has-input-prefix': this.inputPrefix,
+              'select--search': this.search
             })}
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}
@@ -1231,23 +1373,25 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : this.placeholder}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this.search && this.open ? (this.placeholder || 'Search...') : this.placeholder)}
                 .disabled=${isDisabled}
-                .value=${isFetchDisabled ? '' : this.displayLabel}
+                .value=${isFetchDisabled ? '' : (this.search && this.open) ? this._searchDisplayValue : (this.search && this.multiple) ? '' : this.displayLabel}
                 autocomplete="off"
                 spellcheck="false"
                 autocapitalize="off"
-                readonly
+                ?readonly=${!(this.search && this.open)}
                 aria-controls="listbox"
                 aria-expanded=${this.open ? 'true' : 'false'}
                 aria-haspopup="listbox"
                 aria-labelledby="label"
                 aria-disabled=${isDisabled ? 'true' : 'false'}
                 aria-describedby="help-text"
+                aria-autocomplete=${this.search ? 'list' : 'none'}
                 role="combobox"
                 tabindex="0"
                 @focus=${this.handleFocus}
                 @blur=${this.handleBlur}
+                @input=${this.handleSearchInput}
               />
 
               ${this.multiple ? html`

@@ -91,6 +91,7 @@ export { default as Key } from './components/key';
 export { default as KeyContainer } from './components/key-container';
 export { default as AnimatedButton } from './components/animated-button';
 export { default as TranslationGroup } from './components/translation-group';
+export { default as OptGroup } from './components/opt-group';
 /* plop:component */
 
 // Base Component

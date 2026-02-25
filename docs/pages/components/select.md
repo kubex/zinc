@@ -322,24 +322,79 @@ When using `multiple`, you can control how many selected options are displayed b
 
 ### Grouping Options
 
-Use `<zn-divider>` to group listbox items visually. You can also use `<small>` to provide labels for each group, but they won't be announced by most assistive devices.
-
-:::warning
-**Note:** `ts_form_for` doesn't support grouping select options with labels and dividers.
-:::
+Use `<zn-opt-group>` to group options under labeled headers, similar to `<optgroup>` in native HTML. Each group displays a non-selectable label above its options. Groups are also accessible, using `role="group"` and `aria-label`.
 
 ```html:preview
-<zn-select label="Select an option from one of the groups">
-  <zn-option value=""></zn-option>
-  <small>Section 1</small>
-  <zn-option value="option-1">Option 1</zn-option>
-  <zn-option value="option-2">Option 2</zn-option>
-  <zn-option value="option-3">Option 3</zn-option>
-  <zn-divider></zn-divider>
-  <small>Section 2</small>
-  <zn-option value="option-4">Option 4</zn-option>
-  <zn-option value="option-5">Option 5</zn-option>
-  <zn-option value="option-6">Option 6</zn-option>
+<zn-select label="Select a fruit">
+  <zn-opt-group label="Citrus">
+    <zn-option value="orange">Orange</zn-option>
+    <zn-option value="lemon">Lemon</zn-option>
+    <zn-option value="lime">Lime</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Berries">
+    <zn-option value="strawberry">Strawberry</zn-option>
+    <zn-option value="blueberry">Blueberry</zn-option>
+    <zn-option value="raspberry">Raspberry</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Grouping with Search
+
+When `search` is enabled, group headers automatically hide when all of their child options are filtered out.
+
+```html:preview
+<zn-select label="Select a country" search placeholder="Type to search...">
+  <zn-opt-group label="North America">
+    <zn-option value="us">United States</zn-option>
+    <zn-option value="ca">Canada</zn-option>
+    <zn-option value="mx">Mexico</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Europe">
+    <zn-option value="gb">United Kingdom</zn-option>
+    <zn-option value="de">Germany</zn-option>
+    <zn-option value="fr">France</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Asia">
+    <zn-option value="jp">Japan</zn-option>
+    <zn-option value="cn">China</zn-option>
+    <zn-option value="in">India</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Disabled Groups
+
+Use the `disabled` attribute on `<zn-opt-group>` to disable all options within a group.
+
+```html:preview
+<zn-select label="Select a plan">
+  <zn-opt-group label="Available">
+    <zn-option value="basic">Basic</zn-option>
+    <zn-option value="pro">Pro</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Coming Soon" disabled>
+    <zn-option value="enterprise">Enterprise</zn-option>
+    <zn-option value="unlimited">Unlimited</zn-option>
+  </zn-opt-group>
+</zn-select>
+```
+
+### Mixed Grouped and Ungrouped Options
+
+You can mix ungrouped options alongside `<zn-opt-group>` elements.
+
+```html:preview
+<zn-select label="Select an option">
+  <zn-option value="none">None</zn-option>
+  <zn-opt-group label="Group A">
+    <zn-option value="a1">Option A1</zn-option>
+    <zn-option value="a2">Option A2</zn-option>
+  </zn-opt-group>
+  <zn-opt-group label="Group B">
+    <zn-option value="b1">Option B1</zn-option>
+    <zn-option value="b2">Option B2</zn-option>
+  </zn-opt-group>
 </zn-select>
 ```
 

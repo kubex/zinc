@@ -16,6 +16,7 @@ import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
+import ZnOptGroup from "../opt-group";
 import ZnOption from "../option";
 import ZnPopup from "../popup";
 import type { ZnRemoveEvent } from "../../events/zn-remove";
@@ -29,11 +30,12 @@ import styles from './select.scss';
  * @since 1.0
  *
  * @dependency zn-icon
+ * @dependency zn-opt-group
  * @dependency zn-option
  * @dependency zn-popup
  * @dependency zn-tag
  *
- * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
+ * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.
  * @slot label - The input's label. Alternatively, you can use the `label` attribute.
  * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
  * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
@@ -76,6 +78,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
     'zn-icon': ZnIcon,
+    'zn-opt-group': ZnOptGroup,
     'zn-option': ZnOption,
     'zn-popup': ZnPopup,
     'zn-tag': ZnChip
@@ -111,7 +114,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private _searchDisplayValue = '';
 
   /** @internal */
-  @state() private _fetchedOptions: { key: string; value: string }[] = [];
+  @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | { group: string; options: { key: string; value: string }[] })[] = [];
 
   /** @internal */
   @state() private _fetchLoading = false;
@@ -649,9 +652,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const query = this._searchQuery;
 
     if (!query) {
-      // Show all options
+      // Show all options and opt-groups
       allOptions.forEach(option => {
         option.hidden = false;
+      });
+      this.getAllOptGroups().forEach(group => {
+        group.hidden = false;
       });
       return;
     }
@@ -662,6 +668,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       const matches = label.includes(query) || value.includes(query);
       option.hidden = !matches;
     });
+
+    // Update opt-group visibility based on whether any child options are visible
+    this.getAllOptGroups().forEach(group => group.updateVisibility());
 
     // Reset current option if it's now hidden
     if (this.currentOption && this.currentOption.hidden) {
@@ -679,6 +688,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const allOptions = this.getAllOptions();
     allOptions.forEach(option => {
       option.hidden = false;
+    });
+    // Also unhide any opt-groups that were hidden during filtering
+    this.getAllOptGroups().forEach(group => {
+      group.hidden = false;
     });
   }
 
@@ -790,10 +803,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   // Gets an array of all <zn-option> elements (both fetched in shadow DOM and slotted in light DOM)
   private getAllOptions() {
     const shadowOptions = this.shadowRoot
-      ? [...this.shadowRoot.querySelectorAll<ZnOption>('.select__listbox > zn-option')]
+      ? [...this.shadowRoot.querySelectorAll<ZnOption>('.select__listbox zn-option')]
       : [];
     const slottedOptions = [...this.querySelectorAll<ZnOption>('zn-option')];
     return [...shadowOptions, ...slottedOptions];
+  }
+
+  // Gets an array of all <zn-opt-group> elements (both in shadow DOM and slotted in light DOM)
+  private getAllOptGroups() {
+    const shadowGroups = this.shadowRoot
+      ? [...this.shadowRoot.querySelectorAll<ZnOptGroup>('.select__listbox zn-opt-group')]
+      : [];
+    const slottedGroups = [...this.querySelectorAll<ZnOptGroup>('zn-opt-group')];
+    return [...shadowGroups, ...slottedGroups];
   }
 
   // Gets an array of visible (not hidden) <zn-option> elements, used by keyboard navigation when search is active
@@ -1042,10 +1064,26 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       const data: unknown = await response.json();
 
-      let options: { key: string; value: string }[];
+      type FetchedOption = { key: string; value: string; group?: undefined };
+      type FetchedGroup = { group: string; options: { key: string; value: string }[] };
+      let options: (FetchedOption | FetchedGroup)[];
 
       if (Array.isArray(data)) {
-        options = data as { key: string; value: string }[];
+        // Check if the array contains grouped items: [{ group: "Label", options: [...] }, ...]
+        const isGrouped = data.length > 0 && data.some(
+          (item: unknown) => item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)
+        );
+
+        if (isGrouped) {
+          options = (data as Record<string, unknown>[]).map(item => {
+            if ('group' in item && Array.isArray(item.options)) {
+              return { group: String(item.group), options: item.options as { key: string; value: string }[] } as FetchedGroup;
+            }
+            return item as unknown as FetchedOption;
+          });
+        } else {
+          options = data as FetchedOption[];
+        }
       } else if (data && typeof data === 'object') {
         // Convert {id: label, ...} object to [{key, value}, ...] array
         options = Object.entries(data as Record<string, unknown>).map(([key, value]) => ({
@@ -1450,9 +1488,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
               <slot></slot>
-              ${this._fetchedOptions.map(
-                option => html`
-                  <zn-option value=${option.key}>${option.value}</zn-option>`
+              ${this._fetchedOptions.map(item =>
+                item.group !== undefined
+                  ? html`
+                    <zn-opt-group label=${item.group}>
+                      ${item.options.map(
+                        option => html`<zn-option value=${option.key}>${option.value}</zn-option>`
+                      )}
+                    </zn-opt-group>`
+                  : html`<zn-option value=${item.key}>${item.value}</zn-option>`
               )}
             </div>
           </zn-popup>

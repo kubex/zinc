@@ -2140,6 +2140,10 @@ declare module "components/select/select.component" {
         selectedOptions: ZnOption[];
         private valueHasChanged;
         private inputPrefix;
+        /** @internal - current search/filter text when search is enabled (lowercased for matching) */
+        private _searchQuery;
+        /** @internal - raw display value of the search input (preserves case for the input field) */
+        private _searchDisplayValue;
         /** @internal */
         private _fetchedOptions;
         /** @internal */
@@ -2189,6 +2193,8 @@ declare module "components/select/select.component" {
         hoist: boolean;
         /** Draws a pill-style select with rounded edges. */
         pill: boolean;
+        /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
+        search: boolean;
         /** The select's label. If you need to display HTML, use the `label` slot instead. */
         label: string;
         /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
@@ -2250,10 +2256,17 @@ declare module "components/select/select.component" {
         private handleComboboxKeyDown;
         private handleClearClick;
         private handleClearMouseDown;
+        /** Handles text input on the display input for search/filter mode */
+        private handleSearchInput;
+        /** Filters visible options based on the current search query */
+        private filterOptions;
+        /** Clears the search query and shows all options */
+        private clearSearch;
         private handleOptionClick;
         private handleDefaultSlotChange;
         private handleTagRemove;
         private getAllOptions;
+        private getVisibleOptions;
         getFirstOption(): ZnOption | null;
         private setCurrentOption;
         private setSelectedOptions;

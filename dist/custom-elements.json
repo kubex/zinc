@@ -17561,6 +17561,116 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/opt-group/opt-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOptGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The group label element.",
+              "name": "label"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for `<zn-option>` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "handleLabelChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "propagateDisabled",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.",
+          "tagNameWithoutPrefix": "opt-group",
+          "tagName": "zn-opt-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n * @documentation https://zinc.style/components/opt-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for `<zn-option>` elements.\n *\n * @csspart base - The component's base wrapper.\n * @csspart label - The group label element.\n */",
+          "documentation": "https://zinc.style/components/opt-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOptGroup",
+            "module": "components/opt-group/opt-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/option/option.js",
       "declarations": [
         {
@@ -22903,7 +23013,7 @@
           ],
           "slots": [
             {
-              "description": "The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.",
+              "description": "The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.",
               "name": ""
             },
             {
@@ -22943,7 +23053,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-icon': ZnIcon, 'zn-option': ZnOption, 'zn-popup': ZnPopup, 'zn-tag': ZnChip }"
+              "default": "{ 'zn-icon': ZnIcon, 'zn-opt-group': ZnOptGroup, 'zn-option': ZnOption, 'zn-popup': ZnPopup, 'zn-tag': ZnChip }"
             },
             {
               "kind": "field",
@@ -23539,6 +23649,11 @@
             },
             {
               "kind": "method",
+              "name": "getAllOptGroups",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "getVisibleOptions",
               "privacy": "private"
             },
@@ -24046,12 +24161,13 @@
           "tagNameWithoutPrefix": "select",
           "tagName": "zn-select",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-option\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.\n * @event zn-error - Emitted when loading options from the `src` URL fails.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-opt-group\n * @dependency zn-option\n * @dependency zn-popup\n * @dependency zn-tag\n *\n * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n * @slot prefix - Used to prepend a presentational icon or similar element to the combobox.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot expand-icon - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the control's value changes.\n * @event zn-clear - Emitted when the control's value is cleared.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-show - Emitted when the select's menu opens.\n * @event zn-after-show - Emitted after the select's menu opens and all animations are complete.\n * @event zn-hide - Emitted when the select's menu closes.\n * @event zn-after-hide - Emitted after the select's menu closes and all animations are complete.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.\n * @event zn-error - Emitted when loading options from the `src` URL fails.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The select's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart combobox - The container the wraps the prefix, combobox, clear icon, and expand button.\n * @csspart prefix - The container that wraps the prefix slot.\n * @csspart display-input - The element that displays the selected option's label, an `<input>` element.\n * @csspart listbox - The listbox container where options are slotted.\n * @csspart tags - The container that houses option tags when `multiselect` is used.\n * @csspart tag - The individual tags that represent each multiselect option.\n * @csspart tag__base - The tag's base part.\n * @csspart tag__content - The tag's content part.\n * @csspart tag__remove-button - The tag's remove button.\n * @csspart tag__remove-button__base - The tag's remove button base part.\n * @csspart clear-button - The clear button.\n * @csspart expand-icon - The container that wraps the expand icon.\n */",
           "documentation": "https://zinc.style/components/select",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-icon",
+            "zn-opt-group",
             "zn-option",
             "zn-popup",
             "zn-tag"
@@ -31095,7 +31211,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.81",
+    "version": "1.0.82",
     "author": "",
     "license": "MIT"
   }

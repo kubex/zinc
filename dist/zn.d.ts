@@ -2047,6 +2047,46 @@ declare module "utilities/animation-registry" {
     /** Gets an element's animation. Falls back to the default if no animation is found. */
     export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
 }
+declare module "components/opt-group/opt-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.
+     * @documentation https://zinc.style/components/opt-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The default slot for `<zn-option>` elements.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart label - The group label element.
+     */
+    export default class ZnOptGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        /** The label for the opt-group, displayed as a non-selectable header above the grouped options. */
+        label: string;
+        /** Disables all options within the group. */
+        disabled: boolean;
+        connectedCallback(): void;
+        handleLabelChange(): void;
+        handleDisabledChange(): void;
+        /** @internal - Updates visibility of the group based on whether any child options are visible. */
+        updateVisibility(): void;
+        render(): import("lit").TemplateResult<1>;
+        private handleSlotChange;
+        private propagateDisabled;
+    }
+}
+declare module "components/opt-group/index" {
+    import ZnOptGroup from "components/opt-group/opt-group.component";
+    export * from "components/opt-group/opt-group.component";
+    export default ZnOptGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-opt-group': ZnOptGroup;
+        }
+    }
+}
 declare module "events/zn-remove" {
     export type ZnRemoveEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -2062,6 +2102,7 @@ declare module "components/select/select.component" {
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
+    import ZnOptGroup from "components/opt-group/index";
     import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
     /**
@@ -2071,11 +2112,12 @@ declare module "components/select/select.component" {
      * @since 1.0
      *
      * @dependency zn-icon
+     * @dependency zn-opt-group
      * @dependency zn-option
      * @dependency zn-popup
      * @dependency zn-tag
      *
-     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.
+     * @slot - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.
      * @slot label - The input's label. Alternatively, you can use the `label` attribute.
      * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.
      * @slot context-note - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.
@@ -2118,6 +2160,7 @@ declare module "components/select/select.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-icon': typeof ZnIcon;
+            'zn-opt-group': typeof ZnOptGroup;
             'zn-option': typeof ZnOption;
             'zn-popup': typeof ZnPopup;
             'zn-tag': typeof ZnChip;
@@ -2266,6 +2309,7 @@ declare module "components/select/select.component" {
         private handleDefaultSlotChange;
         private handleTagRemove;
         private getAllOptions;
+        private getAllOptGroups;
         private getVisibleOptions;
         getFirstOption(): ZnOption | null;
         private setCurrentOption;
@@ -7583,6 +7627,7 @@ declare module "zinc" {
     export { default as KeyContainer } from "components/key-container/index";
     export { default as AnimatedButton } from "components/animated-button/index";
     export { default as TranslationGroup } from "components/translation-group/index";
+    export { default as OptGroup } from "components/opt-group/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

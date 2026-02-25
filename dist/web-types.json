@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.81",
+  "version": "1.0.82",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -4759,6 +4759,45 @@
           }
         },
         {
+          "name": "zn-opt-group",
+          "description": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for `<zn-option>` elements.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **label** - The group label element.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "disabled",
+              "description": "Disables all options within the group.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The default slot for `<zn-option>` elements."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "label",
+                "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+                "type": "string"
+              },
+              {
+                "name": "disabled",
+                "description": "Disables all options within the group.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-option",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
           "doc-url": "",
@@ -5897,7 +5936,7 @@
         },
         {
           "name": "zn-select",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions()** - Fetches options from the URL specified by the `src` property.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions()** - Fetches options from the URL specified by the `src` property.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
           "doc-url": "",
           "attributes": [
             {
@@ -6040,7 +6079,7 @@
           "slots": [
             {
               "name": "",
-              "description": "The listbox options. Must be `<zn-option>` elements. You can use `<zn-divider>` to group items visually."
+              "description": "The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually."
             },
             {
               "name": "label",

@@ -2097,14 +2097,14 @@ declare module "events/zn-remove" {
 }
 declare module "components/select/select.component" {
     import { FormControlController } from "internal/form";
-    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnOptGroup from "components/opt-group/index";
     import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/select
@@ -2187,6 +2187,8 @@ declare module "components/select/select.component" {
         private _searchQuery;
         /** @internal - raw display value of the search input (preserves case for the input field) */
         private _searchDisplayValue;
+        /** @internal - whether the "no matching options" empty state is visible */
+        private _noResultsVisible;
         /** @internal */
         private _fetchedOptions;
         /** @internal */
@@ -3715,6 +3717,8 @@ declare module "components/inline-edit/inline-edit.component" {
          * Context data to send as a header when fetching options from the URL specified by the `src` property.
          */
         contextData: string;
+        /** Enables search/filtering on select inputs. */
+        search: boolean;
         /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
         helpText: string;
         /** The text direction for the input (ltr or rtl) **/

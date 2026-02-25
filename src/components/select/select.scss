@@ -407,6 +407,19 @@
   display: none;
 }
 
+/* Empty state (no search results) */
+.select__empty-state {
+  display: block;
+  padding: var(--zn-spacing-medium) var(--zn-spacing-2x-large);
+  text-align: center;
+  color: var(--zn-color-neutral-500);
+  font-size: var(--zn-font-size-medium);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
 /* Search mode */
 .select--search .select__combobox {
   cursor: text;

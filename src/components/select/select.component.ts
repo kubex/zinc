@@ -1,25 +1,25 @@
-import { animateTo, stopAnimations } from '../../internal/animate.js';
-import { classMap } from "lit/directives/class-map.js";
-import { deepQuerySelectorAll } from "../../utilities/query";
-import { FormControlController } from "../../internal/form";
-import { getAnimation, setDefaultAnimation } from "../../utilities/animation-registry";
-import { HasSlotController } from "../../internal/slot";
-import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-import { html, nothing, unsafeCSS } from 'lit';
-import { LocalizeController } from "../../utilities/localize";
-import { property, query, state } from 'lit/decorators.js';
-import { scrollIntoView } from "../../internal/scroll";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { waitForEvent } from "../../internal/event";
-import { watch } from '../../internal/watch';
-import type { ZincFormControl } from '../../internal/zinc-element';
+import {animateTo, stopAnimations} from '../../internal/animate.js';
+import {classMap} from "lit/directives/class-map.js";
+import {deepQuerySelectorAll} from "../../utilities/query";
+import {FormControlController} from "../../internal/form";
+import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
+import {HasSlotController} from "../../internal/slot";
+import {html, nothing, unsafeCSS} from 'lit';
+import {LocalizeController} from "../../utilities/localize";
+import {property, query, state} from 'lit/decorators.js';
+import {scrollIntoView} from "../../internal/scroll";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import {waitForEvent} from "../../internal/event";
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnOptGroup from "../opt-group";
 import ZnOption from "../option";
 import ZnPopup from "../popup";
-import type { ZnRemoveEvent } from "../../events/zn-remove";
+import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnRemoveEvent} from "../../events/zn-remove";
 
 import styles from './select.scss';
 
@@ -113,8 +113,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal - raw display value of the search input (preserves case for the input field) */
   private _searchDisplayValue = '';
 
+  /** @internal - whether the "no matching options" empty state is visible */
+  @state() private _noResultsVisible = false;
+
   /** @internal */
-  @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | { group: string; options: { key: string; value: string }[] })[] = [];
+  @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | {
+    group: string;
+    options: { key: string; value: string }[]
+  })[] = [];
 
   /** @internal */
   @state() private _fetchLoading = false;
@@ -202,78 +208,78 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 
   /** The select's size. */
-  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
 
   /** Allows more than one option to be selected. */
-  @property({ type: Boolean, reflect: true }) multiple = false;
+  @property({type: Boolean, reflect: true}) multiple = false;
 
   /** Max number of options that can be selected when `multiple` is true. Set to 0 to allow unlimited selections. */
-  @property({ attribute: 'max-options', type: Number }) maxOptions = 0;
+  @property({attribute: 'max-options', type: Number}) maxOptions = 0;
 
   /**
    * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
    * indicate the number of additional items that are selected. Set to 0 to remove the limit.
    */
-  @property({ attribute: 'max-options-visible', type: Number }) maxOptionsVisible = 3;
+  @property({attribute: 'max-options-visible', type: Number}) maxOptionsVisible = 3;
 
   /** Disables the select control. */
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   /** Adds a clear button when the select is not empty. */
-  @property({ type: Boolean }) clearable = false;
+  @property({type: Boolean}) clearable = false;
 
   /**
    * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
    * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
    */
-  @property({ type: Boolean, reflect: true }) open = false;
+  @property({type: Boolean, reflect: true}) open = false;
 
   /**
    * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
    * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
    */
-  @property({ type: Boolean }) hoist = false;
+  @property({type: Boolean}) hoist = false;
 
   /** Draws a pill-style select with rounded edges. */
-  @property({ type: Boolean, reflect: true }) pill = false;
+  @property({type: Boolean, reflect: true}) pill = false;
 
   /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
-  @property({ type: Boolean, reflect: true }) search = false;
+  @property({type: Boolean, reflect: true}) search = false;
 
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
   /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-  @property({ attribute: 'label-tooltip' }) labelTooltip = '';
+  @property({attribute: 'label-tooltip'}) labelTooltip = '';
 
   /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
-  @property({ attribute: 'context-note' }) contextNote = '';
+  @property({attribute: 'context-note'}) contextNote = '';
 
   /**
    * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
    * inside the viewport.
    */
-  @property({ reflect: true }) placement: 'top' | 'bottom' = 'bottom';
+  @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
 
   /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
-  @property({ attribute: 'help-text' }) helpText = '';
+  @property({attribute: 'help-text'}) helpText = '';
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
-  @property({ reflect: true }) form: string;
+  @property({reflect: true}) form: string;
 
   /** The select's required attribute. */
-  @property({ type: Boolean, reflect: true }) required = false;
+  @property({type: Boolean, reflect: true}) required = false;
 
-  @property({ attribute: 'cache-key' }) cacheKey: string = "";
+  @property({attribute: 'cache-key'}) cacheKey: string = "";
 
-  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
 
   /**
    * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
@@ -311,12 +317,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
    * `[{"key": "us", "value": "United States"}, ...]`
    * When not set, the component works exactly as before using slotted `<zn-option>` elements.
    */
-  @property({ attribute: 'data-uri' }) dataUri: string;
+  @property({attribute: 'data-uri'}) dataUri: string;
 
   /**
    * Context data to send as a header when fetching options from the URL specified by the `src` property.
    */
-  @property({ attribute: 'context-data' }) contextData: string;
+  @property({attribute: 'context-data'}) contextData: string;
 
   /** Gets the validity state object */
   get validity() {
@@ -351,7 +357,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   }
 
   private updateHasInputPrefix() {
-    const assigned = this.prefixSlot?.assignedElements({ flatten: true }) || [];
+    const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];
     this.inputPrefix = assigned.length > 0;
   }
 
@@ -367,7 +373,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.closeWatcher.onclose = () => {
         if (this.open) {
           this.hide().then();
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         }
       };
     }
@@ -419,7 +425,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       event.preventDefault();
       event.stopPropagation();
       this.hide().then();
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
     }
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
@@ -459,12 +465,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
         if (!this.multiple) {
           this.hide().then();
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         } else if (this.search) {
           // In multi-select + search, re-focus the search input after keyboard selection
           this.updateComplete.then(() => {
             this.displayInput.value = '';
-            this.displayInput.focus({ preventScroll: true });
+            this.displayInput.focus({preventScroll: true});
           });
         }
       }
@@ -581,12 +587,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // When search is enabled, clicking the input area should open (not toggle) so the user can type
     if (this.search && this.open && !isExpandIcon) {
       event.preventDefault();
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
       return;
     }
 
     event.preventDefault();
-    this.displayInput.focus({ preventScroll: true });
+    this.displayInput.focus({preventScroll: true});
     this.open = !this.open;
   }
 
@@ -615,7 +621,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       this.setSelectedOptions([]);
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
 
       // Emit after update
       this.updateComplete.then(() => {
@@ -659,6 +665,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.getAllOptGroups().forEach(group => {
         group.hidden = false;
       });
+      this._noResultsVisible = false;
       return;
     }
 
@@ -671,6 +678,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Update opt-group visibility based on whether any child options are visible
     this.getAllOptGroups().forEach(group => group.updateVisibility());
+
+    // Show empty state when no options match
+    this._noResultsVisible = allOptions.every(option => option.hidden);
 
     // Reset current option if it's now hidden
     if (this.currentOption && this.currentOption.hidden) {
@@ -685,6 +695,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private clearSearch() {
     this._searchQuery = '';
     this._searchDisplayValue = '';
+    this._noResultsVisible = false;
     const allOptions = this.getAllOptions();
     allOptions.forEach(option => {
       option.hidden = false;
@@ -730,9 +741,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         // In multi-select + search mode, re-focus the search input so the user can continue typing
         if (this.multiple && this.search && this.open) {
           this.displayInput.value = '';
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         } else {
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         }
       });
 
@@ -746,7 +757,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       if (!this.multiple) {
         this.hide().then();
-        this.displayInput.focus({ preventScroll: true });
+        this.displayInput.focus({preventScroll: true});
       }
 
       if (this.triggerSubmit) {
@@ -1002,7 +1013,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.updateDependencies();
   }
 
-  @watch('disabled', { waitUntilFirstUpdate: true })
+  @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
     if (this.disabled) {
       // Close the listbox and abort any in-progress fetch
@@ -1018,7 +1029,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  @watch(['dataUri', 'contextData'], { waitUntilFirstUpdate: true })
+  @watch(['dataUri', 'contextData'], {waitUntilFirstUpdate: true})
   handleSrcChange() {
     if (this.dataUri) {
       this.fetchOptions().then();
@@ -1034,7 +1045,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._fetchError = message;
     this._fetchLoading = false;
     this._fetchAbortController = null;
-    this.emit('zn-error', { detail: { status: 400 } });
+    this.emit('zn-error', {detail: {status: 400}});
   }
 
   /** Fetches options from the URL specified by the `src` property. */
@@ -1077,7 +1088,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         if (isGrouped) {
           options = (data as Record<string, unknown>[]).map(item => {
             if ('group' in item && Array.isArray(item.options)) {
-              return { group: String(item.group), options: item.options as { key: string; value: string }[] } as FetchedGroup;
+              return {
+                group: String(item.group),
+                options: item.options as { key: string; value: string }[]
+              } as FetchedGroup;
             }
             return item as unknown as FetchedOption;
           });
@@ -1125,7 +1139,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  @watch(['defaultValue', 'value'], { waitUntilFirstUpdate: true })
+  @watch(['defaultValue', 'value'], {waitUntilFirstUpdate: true})
   handleValueChange() {
     if (!this.valueHasChanged) {
       const cachedValueHasChanged = this.valueHasChanged;
@@ -1142,7 +1156,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.updateDependencies();
   }
 
-  @watch('open', { waitUntilFirstUpdate: true })
+  @watch('open', {waitUntilFirstUpdate: true})
   async handleOpenChange() {
     if (this.open && !this.disabled) {
       // Reset the current option
@@ -1171,11 +1185,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Focus the search input so the user can start typing immediately
       if (this.search) {
         requestAnimationFrame(() => {
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         });
       }
 
-      const { keyframes, options } = getAnimation(this, 'select.show', { dir: this.localize.dir() });
+      const {keyframes, options} = getAnimation(this, 'select.show', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
 
       // Make sure the current option is scrolled into view (required for Safari)
@@ -1198,7 +1212,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       await stopAnimations(this);
-      const { keyframes, options } = getAnimation(this, 'select.hide', { dir: this.localize.dir() });
+      const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
       this.listbox.hidden = true;
       this.popup.active = false;
@@ -1411,7 +1425,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this.search && this.open ? (this.placeholder || 'Search...') : this.placeholder)}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this.search && this.open ? (this.displayLabel || this.placeholder || 'Search...') : this.placeholder)}
                 .disabled=${isDisabled}
                 .value=${isFetchDisabled ? '' : (this.search && this.open) ? this._searchDisplayValue : (this.search && this.multiple) ? '' : this.displayLabel}
                 autocomplete="off"
@@ -1493,11 +1507,16 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                   ? html`
                     <zn-opt-group label=${item.group}>
                       ${item.options.map(
-                        option => html`<zn-option value=${option.key}>${option.value}</zn-option>`
+                        option => html`
+                          <zn-option value=${option.key}>${option.value}</zn-option>`
                       )}
                     </zn-opt-group>`
-                  : html`<zn-option value=${item.key}>${item.value}</zn-option>`
+                  : html`
+                    <zn-option value=${item.key}>${item.value}</zn-option>`
               )}
+              <div part="empty-state" class="select__empty-state" ?hidden=${!this._noResultsVisible}>
+                No matching options
+              </div>
             </div>
           </zn-popup>
         </div>
@@ -1517,16 +1536,16 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 setDefaultAnimation('select.show', {
   keyframes: [
-    { opacity: 0, scale: 0.9 },
-    { opacity: 1, scale: 1 }
+    {opacity: 0, scale: 0.9},
+    {opacity: 1, scale: 1}
   ],
-  options: { duration: 100, easing: 'ease' }
+  options: {duration: 100, easing: 'ease'}
 });
 
 setDefaultAnimation('select.hide', {
   keyframes: [
-    { opacity: 1, scale: 1 },
-    { opacity: 0, scale: 0.9 }
+    {opacity: 1, scale: 1},
+    {opacity: 0, scale: 0.9}
   ],
-  options: { duration: 100, easing: 'ease' }
+  options: {duration: 100, easing: 'ease'}
 });

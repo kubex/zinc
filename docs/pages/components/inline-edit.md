@@ -5,7 +5,9 @@ meta:
 layout: component
 ---
 
-Inline edit components provide a seamless way for users to edit content without leaving the current context or navigating to a separate form. They display content normally and reveal input controls when the user clicks an edit button or the content area itself.
+Inline edit components provide a seamless way for users to edit content without leaving the current context or
+navigating to a separate form. They display content normally and reveal input controls when the user clicks an edit
+button or the content area itself.
 
 ```html:preview
 <div class="form-spacing">
@@ -22,7 +24,8 @@ Inline edit components provide a seamless way for users to edit content without 
 ```
 
 :::tip
-This component works with standard `<form>` elements. Please refer to the section on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
+This component works with standard `<form>` elements. Please refer to the section
+on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
 :::
 
 ## Examples
@@ -116,6 +119,38 @@ Provide an `options` object to automatically create a select input. The object u
 </div>
 ```
 
+### Searchable Select
+
+Add the `search` attribute to enable filtering on select inputs. Users can type to narrow down the list of options.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit
+    name="country"
+    value="us"
+    input-type="select"
+    search>
+    <zn-option value="au">Australia</zn-option>
+    <zn-option value="br">Brazil</zn-option>
+    <zn-option value="ca">Canada</zn-option>
+    <zn-option value="fr">France</zn-option>
+    <zn-option value="de">Germany</zn-option>
+    <zn-option value="in">India</zn-option>
+    <zn-option value="jp">Japan</zn-option>
+    <zn-option value="mx">Mexico</zn-option>
+    <zn-option value="uk">United Kingdom</zn-option>
+    <zn-option value="us">United States</zn-option>
+  </zn-inline-edit>
+
+  <zn-inline-edit
+    name="department"
+    value="engineering"
+    search
+    options='{"engineering": "Engineering", "design": "Design", "marketing": "Marketing", "sales": "Sales", "finance": "Finance", "hr": "Human Resources", "legal": "Legal", "operations": "Operations"}'>
+  </zn-inline-edit>
+</div>
+```
+
 ### Data Select with Provider
 
 Use the `provider` attribute to integrate with data select providers like countries, currencies, or colors.
@@ -168,7 +203,8 @@ When using a data select provider, you can control the icon position with the `i
 
 ### Help Text
 
-Add descriptive help text to guide users with the `help-text` attribute. The help text appears below the input when in edit mode.
+Add descriptive help text to guide users with the `help-text` attribute. The help text appears below the input when in
+edit mode.
 
 ```html:preview
 <div class="form-spacing">

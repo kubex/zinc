@@ -97,6 +97,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
    */
   @property({attribute: 'context-data'}) contextData: string;
 
+  /** Enables search/filtering on select inputs. */
+  @property({type: Boolean}) search: boolean;
 
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
   @property({attribute: 'help-text'}) helpText: string = '';
@@ -433,6 +435,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  dir="${this.dir}"
                  multiple=${ifDefined(this.multiple)}
                  clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
+                 ?search=${this.search}
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"

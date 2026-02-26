@@ -5955,6 +5955,10 @@
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "non-removable",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "value",
               "description": "The default value of the form control. Primarily used for resetting the form control.",
               "value": { "type": "string | string[]", "default": "''" }
@@ -6186,6 +6190,7 @@
                 "description": "The name of the select, submitted as a name/value pair with form data.",
                 "type": "string"
               },
+              { "name": "nonRemovable", "type": "boolean" },
               {
                 "name": "value",
                 "description": "The current value of the select, submitted as a name/value pair with form data. When `multiple` is enabled, the\nvalue property will be an array. Values may contain spaces when using JSON array syntax in the attribute,\ne.g. `value='[\"my value\", \"their value\"]'`. Space-delimited strings are still supported for backward compatibility."

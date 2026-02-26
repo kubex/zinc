@@ -1,14 +1,14 @@
-import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type HTMLTemplateResult, type PropertyValues, unsafeCSS} from 'lit';
-import {defaultValue} from "../../internal/default-value";
-import {FormControlController} from "../../internal/form";
-import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {property, query, state} from 'lit/decorators.js';
-import {watch} from "../../internal/watch";
+import { classMap } from "lit/directives/class-map.js";
+import { type CSSResultGroup, html, type HTMLTemplateResult, nothing, type PropertyValues, unsafeCSS } from 'lit';
+import { defaultValue } from "../../internal/default-value";
+import { FormControlController } from "../../internal/form";
+import { HasSlotController } from "../../internal/slot";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { property, query, state } from 'lit/decorators.js';
+import { watch } from "../../internal/watch";
+import type { ZincFormControl } from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
 import ZnSelect from "../select";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnInput from "../input";
 
 import styles from './inline-edit.scss';
@@ -49,25 +49,25 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() name: string;
 
-  @property({reflect: true}) placeholder: string;
+  @property({ reflect: true }) placeholder: string;
 
-  @property({attribute: 'edit-text'}) editText: string;
+  @property({ attribute: 'edit-text' }) editText: string;
 
-  @property({type: Boolean}) disabled: boolean
+  @property({ type: Boolean }) disabled: boolean
 
-  @property({type: Boolean}) inline: boolean
+  @property({ type: Boolean }) inline: boolean
 
-  @property({type: Boolean}) padded: boolean
+  @property({ type: Boolean }) padded: boolean
 
-  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
-  @property({type: Boolean}) required: boolean
+  @property({ type: Boolean }) required: boolean
 
   @property() pattern: string;
 
-  @property({type: Boolean, reflect: true}) multiple: boolean;
+  @property({ type: Boolean, reflect: true }) multiple: boolean;
 
-  @property({type: Boolean}) clearable: boolean;
+  @property({ type: Boolean }) clearable: boolean;
 
   @property() min: string | number;
 
@@ -75,13 +75,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property() step: number | 'any';
 
-  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
+  @property({ attribute: "input-type" }) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
 
-  @property({type: Object}) options: { [key: string]: string } = {};
+  @property({ type: Object }) options: { [key: string]: string } = {};
 
-  @property({attribute: 'provider'}) selectProvider: string;
+  @property({ attribute: 'provider' }) selectProvider: string;
 
-  @property({attribute: 'icon-position', type: Boolean}) iconPosition: 'start' | 'end' | 'none' = 'none';
+  @property({ attribute: 'icon-position', type: Boolean }) iconPosition: 'start' | 'end' | 'none' = 'none';
 
   /**
    * The URL to fetch options from. When set , the component fetches JSON from this URL and renders the results as
@@ -90,18 +90,18 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
    * When not set, the component works exactly as before using slotted `<zn-option>` elements.
    * Only works with type select.
    */
-  @property({attribute: 'data-uri'}) dataUri: string;
+  @property({ attribute: 'data-uri' }) dataUri: string;
 
   /**
    * Context data to send as a header when fetching options from the URL specified by the `src` property.
    */
-  @property({attribute: 'context-data'}) contextData: string;
+  @property({ attribute: 'context-data' }) contextData: string;
 
   /** Enables search/filtering on select inputs. */
-  @property({type: Boolean}) search: boolean;
+  @property({ type: Boolean }) search: boolean;
 
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
-  @property({attribute: 'help-text'}) helpText: string = '';
+  @property({ attribute: 'help-text' }) helpText: string = '';
 
   /** The text direction for the input (ltr or rtl) **/
   @property() dir: 'ltr' | 'rtl' | 'auto' = 'auto';
@@ -149,8 +149,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     document.addEventListener('keydown', this.escKeyHandler);
     document.addEventListener('keydown', this.submitKeyHandler);
     document.addEventListener('click', this.mouseEventHandler);
-    this.addEventListener('mousedown', this.captureMouseDown, {capture: true});
-    this.addEventListener('keydown', this.captureKeyDown, {capture: true});
+    this.addEventListener('mousedown', this.captureMouseDown, { capture: true });
+    this.addEventListener('keydown', this.captureKeyDown, { capture: true });
   }
 
   disconnectedCallback() {
@@ -177,13 +177,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     }
   }
 
-  @watch('value', {waitUntilFirstUpdate: true})
+  @watch('value', { waitUntilFirstUpdate: true })
   async handleValueChange() {
     await this.updateComplete;
     this.formControlController.updateValidity();
   }
 
-  @watch('isEditing', {waitUntilFirstUpdate: true})
+  @watch('isEditing', { waitUntilFirstUpdate: true })
   async handleIsEditingChange() {
     await this.updateComplete;
     if (this.input instanceof ZnSelect && !this.isEditing) {
@@ -210,7 +210,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   submitKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && this.isEditing && !e.shiftKey) {
       this.isEditing = false;
-      this.emit('zn-submit', {detail: {value: this.value, element: this}});
+      this.emit('zn-submit', { detail: { value: this.value, element: this } });
       this.formControlController.submit();
       this.input.blur();
     }
@@ -241,7 +241,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   handleSubmitClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
-    this.emit('zn-submit', {detail: {value: this.value, element: this}});
+    this.emit('zn-submit', { detail: { value: this.value, element: this } });
     this.formControlController.submit();
   };
 
@@ -424,11 +424,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   protected _getSelectInput(): HTMLTemplateResult {
     const hasSlottedOptions = this.hasSlotController.test('[default]');
+    const value = this.multiple && Array.isArray(this.value) ? (this.value as string[]).join(' ') : this.value;
 
     return html`
       <zn-select class="ai__input"
                  name="${this.name}"
-                 .value="${this.value}"
+                 value="${value || nothing}"
                  size="${this.size}"
                  placeholder="${this.placeholder}"
                  required=${ifDefined(this.required)}

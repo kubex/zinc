@@ -436,6 +436,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  multiple=${ifDefined(this.multiple)}
                  clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
                  ?search=${this.search}
+                 non-removable
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"

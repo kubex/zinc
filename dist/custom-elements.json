@@ -13273,7 +13273,7 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this, { defaultValue: (control: ZnInlineEdit) => control.defaultValue, value: (control: ZnInlineEdit) => { if (control.multiple && typeof control.value === 'string') { return control.value.split(' ').filter(v => v !== ''); } return control.value; }, })"
+              "default": "new FormControlController(this, { defaultValue: (control: ZnInlineEdit) => control.defaultValue, value: (control: ZnInlineEdit) => { if (control.multiple) { const val = typeof control.value === 'string' ? control.value.split(' ').filter(v => v !== '') : control.value; return val.length > 0 ? val : ''; } return control.value; }, })"
             },
             {
               "kind": "field",

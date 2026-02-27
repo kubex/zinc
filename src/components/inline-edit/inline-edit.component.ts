@@ -1,5 +1,5 @@
 import { classMap } from "lit/directives/class-map.js";
-import { type CSSResultGroup, html, type HTMLTemplateResult, nothing, type PropertyValues, unsafeCSS } from 'lit';
+import { type CSSResultGroup, html, type HTMLTemplateResult, type PropertyValues, unsafeCSS } from 'lit';
 import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
 import { HasSlotController } from "../../internal/slot";
@@ -37,8 +37,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   private readonly formControlController = new FormControlController(this, {
     defaultValue: (control: ZnInlineEdit) => control.defaultValue,
     value: (control: ZnInlineEdit) => {
-      if (control.multiple && typeof control.value === 'string') {
-        return control.value.split(' ').filter(v => v !== '');
+      if (control.multiple) {
+        const val = typeof control.value === 'string'
+          ? control.value.split(' ').filter(v => v !== '')
+          : control.value;
+        return val.length > 0 ? val : '';
       }
       return control.value;
     },
@@ -429,7 +432,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     return html`
       <zn-select class="ai__input"
                  name="${this.name}"
-                 value="${value || nothing}"
+                 value="${ifDefined(value)}"
                  size="${this.size}"
                  placeholder="${this.placeholder}"
                  required=${ifDefined(this.required)}

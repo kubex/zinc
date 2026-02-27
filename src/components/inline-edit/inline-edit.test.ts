@@ -250,6 +250,65 @@ describe('<zn-inline-edit>', () => {
     ]);
   });
 
+  // -- Empty value form data submission --
+
+  it('should include empty select value in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="myfield" input-type="select" value="">
+          <zn-option value="a">Option A</zn-option>
+          <zn-option value="b">Option B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    await form.querySelector<ZnInlineEdit>('zn-inline-edit')!.updateComplete;
+
+    // new FormData(form) fires the formdata event, triggering FormControlController injection
+    const formData = new FormData(form);
+
+    expect(formData.has('myfield')).to.be.true;
+    expect(formData.get('myfield')).to.equal('');
+  });
+
+  it('should include empty select value in form data after clearing', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="myfield" input-type="select" value="a">
+          <zn-option value="a">Option A</zn-option>
+          <zn-option value="b">Option B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    el.value = '';
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+
+    expect(formData.has('myfield')).to.be.true;
+    expect(formData.get('myfield')).to.equal('');
+  });
+
+  it('should include empty multiple select value in form data', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-inline-edit name="tags" input-type="select" multiple value="">
+          <zn-option value="a">A</zn-option>
+          <zn-option value="b">B</zn-option>
+        </zn-inline-edit>
+      </form>
+    `);
+    const el = form.querySelector<ZnInlineEdit>('zn-inline-edit')!;
+    await el.updateComplete;
+
+    const formData = new FormData(form);
+
+    expect(formData.has('tags')).to.be.true;
+    expect(formData.get('tags')).to.equal('');
+  });
+
   it('should flatten array to string when multiple is not set', async () => {
     const el = await fixture<ZnInlineEdit>(
       html`<zn-inline-edit value="hello"></zn-inline-edit>`

@@ -84,6 +84,8 @@ interface ActionConfig {
   confirmTitle: string;
   confirmContent: string;
   icon: string;
+  iconSrc?: string;
+  color?: string;
   type: string;
 }
 
@@ -134,8 +136,6 @@ type AllowedInputElement =
  * @dependency zn-confirm
  * @dependency zn-skeleton
  * @dependency zn-data-table-search
- *
- * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
  * @slot search - Slot for search component.
@@ -418,11 +418,11 @@ export default class ZnDataTable extends ZincElement {
 
       // Get form data and search URI from event detail if available
       if (e.detail) {
-        const { formData, searchUri } = e.detail as { formData?: Record<string, unknown>; searchUri?: string };
+        const {formData, searchUri} = e.detail as { formData?: Record<string, unknown>; searchUri?: string };
 
         // Merge form data into request params
         if (formData && typeof formData === 'object') {
-          this.requestParams = { ...this.requestParams, ...formData };
+          this.requestParams = {...this.requestParams, ...formData};
         }
 
         // Temporarily override dataUri for this search if searchUri is provided
@@ -1315,14 +1315,12 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderActions(row: Row) {
-    if ((row.actions === null || row.actions === undefined) && this.rowHasActions) {
-      // return an empty cell to keep the table structure
-      return html`
-        <td></td>`;
-    }
-
     if (!row.actions || row.actions.length === 0) {
-      return html``;
+      if (this.rowHasActions) {
+        return html`
+          <td></td>`;
+      }
+      return nothing;
     }
 
     return html`
@@ -1346,9 +1344,11 @@ export default class ZnDataTable extends ZincElement {
                               content="${action.confirmContent}"
                               action="${action.uri}"
                               show-loading></zn-confirm>
-                  <zn-menu-item id="${triggerId}" confirm>
-                    ${(action.icon) ? html`
-                      <zn-icon src="${action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                  <zn-menu-item id="${triggerId}"
+                                color="${ifDefined(action.color || nothing)}"
+                                confirm>
+                    ${(action.icon || action.iconSrc) ? html`
+                      <zn-icon src="${action.iconSrc || action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                     ${action.text}
                   </zn-menu-item>`;
               } else {
@@ -1356,9 +1356,10 @@ export default class ZnDataTable extends ZincElement {
                   <zn-menu-item value="${action.text}"
                                 href="${action.uri}"
                                 gaid="${ifDefined(action.gaid || nothing)}"
-                                data-target="${ifDefined(action.target || nothing)}">
-                    ${(action.icon) ? html`
-                      <zn-icon src="${action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
+                                data-target="${ifDefined(action.target || nothing)}"
+                                color="${ifDefined(action.color || nothing)}">
+                    ${(action.icon || action.iconSrc) ? html`
+                      <zn-icon src="${action.iconSrc || action.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                     ${action.text}
                   </zn-menu-item>`;
               }

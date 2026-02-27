@@ -125,6 +125,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   @property({type: Boolean}) multiple = false;
 
+  @property({attribute: "select-first", type: Boolean}) selectFirst = false;
+
   @property() distinct = "";
 
   @property() conditional = "";
@@ -289,6 +291,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
                  name="${this.name}"
                  distinct="${this.distinct}"
                  ?disabled="${this.disabled}"
+                 ?select-first="${this.selectFirst}"
                  conditional="${this.conditional}"
                  @zn-input="${this.handleInput}"
                  @zn-clear="${this.handleClear}"

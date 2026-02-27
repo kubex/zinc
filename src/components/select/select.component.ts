@@ -309,6 +309,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     `;
   };
 
+  /** Automatically select the first option if no value is set. */
+  @property({ attribute: 'select-first', type: Boolean }) selectFirst = false;
+
   @property() distinct = "";
 
   @property() conditional = "";
@@ -795,6 +798,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
           this.setSelectedOptions(initiallySelectedOptions[0]);
         }
       }
+    }
+
+    // Auto-select the first option if selectFirst is enabled and no value is set
+    if (this.selectFirst && this.selectedOptions.length === 0 && allOptions.length > 0) {
+      this.setSelectedOptions(allOptions[0]);
+      this.valueHasChanged = true;
+      this.emit('zn-input');
+      this.emit('zn-change');
     }
   }
 

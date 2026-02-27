@@ -2934,6 +2934,8 @@ declare module "components/data-table/data-table.component" {
         confirmTitle: string;
         confirmContent: string;
         icon: string;
+        iconSrc?: string;
+        color?: string;
         type: string;
     }
     interface HeaderConfig {
@@ -2964,8 +2966,6 @@ declare module "components/data-table/data-table.component" {
      * @dependency zn-confirm
      * @dependency zn-skeleton
      * @dependency zn-data-table-search
-     *
-     * @event zn-event-name - Emitted as an example.
      *
      * @slot - The default slot.
      * @slot search - Slot for search component.

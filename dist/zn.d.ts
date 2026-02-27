@@ -2270,6 +2270,8 @@ declare module "components/select/select.component" {
          * the specified value.
          */
         getTag: (option: ZnOption, index: number) => TemplateResult | string | HTMLElement;
+        /** Automatically select the first option if no value is set. */
+        selectFirst: boolean;
         distinct: string;
         conditional: string;
         /**
@@ -2438,6 +2440,7 @@ declare module "components/data-select/data-select.component" {
         disabled: boolean;
         iconOnly: boolean;
         multiple: boolean;
+        selectFirst: boolean;
         distinct: string;
         conditional: string;
         protected readonly formControlController: FormControlController;

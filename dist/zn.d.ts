@@ -3284,6 +3284,7 @@ declare module "components/tile/tile.component" {
         flushY: boolean;
         inline: boolean;
         private _isLink;
+        private _handleActionsClick;
         render(): import("lit").TemplateResult;
     }
 }

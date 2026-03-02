@@ -54,6 +54,13 @@ export default class ZnTile extends ZincElement {
     return this.href || this.dataUri;
   }
 
+  private _handleActionsClick(e: MouseEvent) {
+    if (this._isLink()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
   render() {
     const isLink = this._isLink();
     const tag = isLink ? literal`a` : literal`div`;
@@ -102,7 +109,7 @@ export default class ZnTile extends ZincElement {
             ${hasProperties ? html`
               <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}
             ${hasActions ? html`
-              <slot name="actions" part="actions" class="tile__actions"></slot>` : ''}
+              <slot name="actions" part="actions" class="tile__actions" @click=${this._handleActionsClick}></slot>` : ''}
           </div>`}
       </${tag}>`;
   }

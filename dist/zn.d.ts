@@ -1777,7 +1777,7 @@ declare module "components/input/input.component" {
         /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
         noSpinButtons: boolean;
         /** The color format to display for color inputs. Only applies when type is 'color'. **/
-        colorFormat: 'hex' | 'rgb' | 'oklch';
+        colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch';
         /**
          * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be
@@ -1839,6 +1839,8 @@ declare module "components/input/input.component" {
         private rgbToHex;
         private hexToOklch;
         private oklchToHex;
+        private hexToHsl;
+        private hslToHex;
         private convertToHex;
         private convertFromHex;
         private handleBlur;

@@ -144,7 +144,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   @property({attribute: 'no-spin-buttons', type: Boolean}) noSpinButtons: boolean = false;
 
   /** The color format to display for color inputs. Only applies when type is 'color'. **/
-  @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'oklch' = 'hex';
+  @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch' = 'hex';
 
   /**
    * By default, form-controls are associated with the nearest containing `<form>` element. This attribute allows you
@@ -377,10 +377,69 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     return `#${rHex}${gHex}${bHex}`;
   }
 
+  private hexToHsl(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return '';
+    let r = parseInt(result[1], 16) / 255;
+    let g = parseInt(result[2], 16) / 255;
+    let b = parseInt(result[3], 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    let h = 0;
+    let s = 0;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+
+    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+  }
+
+  private hslToHex(hsl: string): string {
+    const match = hsl.match(/^hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)$/);
+    if (!match) return '';
+    const h = parseInt(match[1]) / 360;
+    const s = parseInt(match[2]) / 100;
+    const l = parseInt(match[3]) / 100;
+
+    let r: number, g: number, b: number;
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p: number, q: number, t: number) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+
+    const rHex = Math.round(r * 255).toString(16).padStart(2, '0');
+    const gHex = Math.round(g * 255).toString(16).padStart(2, '0');
+    const bHex = Math.round(b * 255).toString(16).padStart(2, '0');
+    return `#${rHex}${gHex}${bHex}`;
+  }
+
   private convertToHex(value: string): string {
     if (!value) return '#000000';
     if (value.startsWith('#')) return value;
     if (value.startsWith('rgb')) return this.rgbToHex(value);
+    if (value.startsWith('hsl')) return this.hslToHex(value);
     if (value.startsWith('oklch')) return this.oklchToHex(value);
     return value;
   }
@@ -389,6 +448,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     if (!hex) return '';
     if (this.colorFormat === 'hex') return hex;
     if (this.colorFormat === 'rgb') return this.hexToRgb(hex);
+    if (this.colorFormat === 'hsl') return this.hexToHsl(hex);
     if (this.colorFormat === 'oklch') return this.hexToOklch(hex);
     return hex;
   }
@@ -433,6 +493,11 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       } else if (this.colorFormat === 'rgb') {
         // Validate rgb format
         if (/^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/.test(colorValue)) {
+          this.value = colorValue;
+        }
+      } else if (this.colorFormat === 'hsl') {
+        // Validate hsl format
+        if (/^hsl\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*\)$/.test(colorValue)) {
           this.value = colorValue;
         }
       } else if (this.colorFormat === 'oklch') {

@@ -6,6 +6,7 @@ import {
   type DataProviderOption,
   emptyDataProvider,
   type LocalDataProvider,
+  usStateDataProvider,
 } from "./providers/provider";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
@@ -71,7 +72,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   }) value: string | string[] = '';
 
   /** The provider of the select. */
-  @property() provider: 'color' | 'currency' | 'country' | 'phone';
+  @property() provider: 'color' | 'currency' | 'country' | 'phone' | 'us-state';
 
   /** The position of the icon. */
   @property({attribute: 'icon-position'}) iconPosition: 'start' | 'end' | 'none' = 'none';
@@ -243,6 +244,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
         return countryDataProvider;
       case 'phone':
         return countryDialPrefixDataProvider;
+      case 'us-state':
+        return usStateDataProvider;
       default:
         return emptyDataProvider;
     }
@@ -269,12 +272,14 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     }
 
     if (this.provider !== 'color' && this.allowAll) {
-      const label = {
+      const label: Record<string, string> = {
         currency: 'All Currencies',
         country: 'All Countries',
-        phone: 'All Phones'
-      }[this.provider] || 'All';
-      const allOption: DataProviderOption = {key: '', value: label, prefix: ''};
+        phone: 'All Phones',
+        'us-state': 'All States'
+      };
+      const allLabel = label[this.provider] || 'All';
+      const allOption: DataProviderOption = {key: '', value: allLabel, prefix: ''};
       data = [allOption, ...data.filter(item => item.key !== allOption.key)];
     }
 

@@ -1912,6 +1912,10 @@ declare module "components/data-select/providers/country-code-data-provider" {
     import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
     export const countryDialPrefixDataProvider: LocalDataProvider<DataProviderOption>;
 }
+declare module "components/data-select/providers/us-state-data-provider" {
+    import type { DataProviderOption, LocalDataProvider } from "components/data-select/providers/provider";
+    export const usStateDataProvider: LocalDataProvider<DataProviderOption>;
+}
 declare module "components/data-select/providers/provider" {
     import type { HTMLTemplateResult } from "lit";
     /**
@@ -1936,6 +1940,7 @@ declare module "components/data-select/providers/provider" {
     export * from "components/data-select/providers/currency-data-provider";
     export * from "components/data-select/providers/color-data-provider";
     export * from "components/data-select/providers/country-code-data-provider";
+    export * from "components/data-select/providers/us-state-data-provider";
 }
 declare module "components/option/option.component" {
     import { type CSSResultGroup } from 'lit';
@@ -2410,7 +2415,7 @@ declare module "components/data-select/data-select.component" {
         /** The value of the select. Used for form submission. When `multiple` is enabled, this is an array of strings. */
         value: string | string[];
         /** The provider of the select. */
-        provider: 'color' | 'currency' | 'country' | 'phone';
+        provider: 'color' | 'currency' | 'country' | 'phone' | 'us-state';
         /** The position of the icon. */
         iconPosition: 'start' | 'end' | 'none';
         /** An array of keys to use for filtering the options in the selected provider. */

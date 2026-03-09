@@ -4308,6 +4308,7 @@ declare module "components/sp/sp.component" {
         padX: boolean;
         padY: boolean;
         noGap: boolean;
+        noPosition: boolean;
         flush: boolean;
         flushX: boolean;
         flushY: boolean;

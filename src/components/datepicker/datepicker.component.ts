@@ -121,6 +121,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
 
+  /** Adds a clear button to the calendar for removing a selected date. **/
+  @property({type: Boolean}) clearable = false;
+
   /** Makes the input a range picker. **/
   @property({type: Boolean}) range = false;
 
@@ -185,6 +188,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     }
   }
 
+  @watch('clearable', {waitUntilFirstUpdate: true})
   @watch('format', {waitUntilFirstUpdate: true})
   @watch('range', {waitUntilFirstUpdate: true})
   @watch('minDate', {waitUntilFirstUpdate: true})
@@ -265,6 +269,10 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
       if (this.maxDate) {
         options.maxDate = typeof this.maxDate === 'string' ? new Date(this.maxDate) : this.maxDate;
+      }
+
+      if (this.clearable) {
+        options.buttons = ['clear'];
       }
 
       this._instance = new AirDatepicker(inputElement, options);

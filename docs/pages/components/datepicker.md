@@ -169,6 +169,14 @@ Combine `min-date` and `max-date` to constrain the selectable date range.
 </zn-datepicker>
 ```
 
+### Clearable
+
+Use the `clearable` attribute to add a "Clear" button to the calendar popup, allowing users to easily remove a selected date.
+
+```html:preview
+<zn-datepicker label="Event date" clearable value="03/15/2026"></zn-datepicker>
+```
+
 ### Prefix & Suffix Slots
 
 Use the `prefix` and `suffix` slots to add icons or text elements.

@@ -44,6 +44,21 @@
   z-index: 1000000;
 }
 
+.air-datepicker-button {
+  border: none;
+  padding: var(--zn-spacing-2x-small) var(--zn-spacing-x-small);
+  border-radius: var(--adp-border-radius);
+  font-family: var(--adp-font-family), sans-serif;
+  font-size: var(--zn-font-size-medium);
+  font-weight: var(--zn-font-weight-normal);
+  cursor: pointer;
+  color: rgba(var(--zn-text), var(--zn-text-opacity));
+
+  &:hover {
+    background-color: var(--zn-input-background-color-hover) !important;
+  }
+}
+
 // Utility to minimize flashing of undefined web components
 .zn-cloak:has(:not(:defined)) {
   animation: 2s step-end zn-cloak;

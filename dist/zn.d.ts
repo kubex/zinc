@@ -5630,6 +5630,8 @@ declare module "components/datepicker/datepicker.component" {
         flush: boolean;
         /** Makes the input a required field. */
         required: boolean;
+        /** Adds a clear button to the calendar for removing a selected date. **/
+        clearable: boolean;
         /** Makes the input a range picker. **/
         range: boolean;
         /** Disallows selecting past dates. **/

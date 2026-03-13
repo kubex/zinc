@@ -119,6 +119,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @state() private isEditing: boolean;
 
+  private _valueBeforeEdit: string | string[];
+
   @query('.ai__input') input: ZnInput | ZnSelect;
 
   @defaultValue('value') defaultValue: string | string[];
@@ -196,16 +198,21 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   mouseEventHandler = (e: MouseEvent) => {
     if (this.isEditing && !this.contains(e.target as Node)) {
-      this.isEditing = false;
-      this.emit('zn-change');
-      this.input.blur();
+      const hasChanged = Array.isArray(this.value)
+        ? JSON.stringify(this.value) !== JSON.stringify(this._valueBeforeEdit)
+        : this.value !== this._valueBeforeEdit;
+
+      if (!hasChanged) {
+        this.isEditing = false;
+        this.input.blur();
+      }
     }
   };
 
   escKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.isEditing) {
       this.isEditing = false;
-      this.value = this.defaultValue;
+      this.value = this._valueBeforeEdit;
       this.input.blur();
     }
   };
@@ -238,6 +245,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     if (this.disabled) {
       return;
     }
+    if (!this.isEditing) {
+      this._valueBeforeEdit = this.value;
+    }
     this.isEditing = true;
   }
 
@@ -251,7 +261,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   handleCancelClick = (e: MouseEvent) => {
     e.preventDefault();
     this.isEditing = false;
-    this.value = this.defaultValue;
+    this.value = this._valueBeforeEdit;
   };
 
   handleBlur = () => {

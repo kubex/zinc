@@ -3670,9 +3670,9 @@ declare module "components/icon-picker/index" {
 }
 declare module "components/inline-edit/inline-edit.component" {
     import { type CSSResultGroup, type HTMLTemplateResult, type PropertyValues } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnSelect from "components/select/index";
+    import type { ZincFormControl } from "internal/zinc-element";
     import type ZnInput from "components/input/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -3742,6 +3742,7 @@ declare module "components/inline-edit/inline-edit.component" {
         autocomplete: string;
         private hasFocus;
         private isEditing;
+        private _valueBeforeEdit;
         input: ZnInput | ZnSelect;
         defaultValue: string | string[];
         get validity(): ValidityState;

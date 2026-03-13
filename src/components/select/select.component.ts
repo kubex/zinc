@@ -1001,12 +1001,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         conditionals.push(...elements);
       });
 
+      const initiallyDisabled = this.disabled;
       const checkConditionals = () => {
-        this.disabled = conditionals.some(select => {
+        const shouldDisable = conditionals.some(select => {
           let linkedValues = Array.isArray(select.value) ? select.value : [select.value];
           linkedValues = linkedValues.filter(v => v !== '');
           return linkedValues.length > 0;
         });
+        this.disabled = initiallyDisabled || shouldDisable;
       };
 
       conditionals.forEach(select => {

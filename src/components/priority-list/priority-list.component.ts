@@ -6,6 +6,7 @@ import {
 } from "../../internal/form";
 import {HasSlotController} from '../../internal/slot';
 import {property, query, state} from 'lit/decorators.js';
+import {repeat} from "lit/directives/repeat.js";
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon';
 import type {ZincFormControl} from '../../internal/zinc-element';
@@ -508,7 +509,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
             role="listbox"
             aria-label=${this.label || 'Reorderable list'}
             aria-orientation="vertical">
-            ${this._value.map((key, index) => html`
+            ${repeat(this._value, (key) => key, (key, index) => html`
               <div
                 part="item"
                 class=${classMap({

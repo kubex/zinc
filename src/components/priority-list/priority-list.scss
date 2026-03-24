@@ -1,0 +1,171 @@
+@use "../../wc";
+@use "../../form-control";
+
+:host {
+  display: block;
+  line-height: var(--zn-line-height-dense);
+
+  --zn-priority-list-item-gap: var(--zn-spacing-2x-small);
+  --zn-priority-list-item-padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+  --zn-priority-list-handle-color: var(--zn-color-neutral-400);
+  --zn-priority-list-priority-color: var(--zn-color-neutral-600);
+}
+
+.form-control {
+  position: relative;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.form-control__label {
+  padding: 0;
+}
+
+.priority-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-priority-list-item-gap);
+}
+
+.priority-list--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// During an active drag, animate items shifting into new positions
+.priority-list--drag-active {
+  .priority-list__item {
+    transition: transform 200ms ease, opacity 200ms ease, box-shadow 200ms ease;
+  }
+}
+
+.priority-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-priority-list-item-padding);
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-medium);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: element;
+  position: relative;
+
+  &:hover {
+    background: rgb(var(--zn-panel-hover, var(--zn-panel)));
+    border-color: rgb(var(--zn-color-primary-500));
+
+    .priority-list__handle {
+      color: rgb(var(--zn-color-primary-500));
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-color-primary-500));
+    outline-offset: -1px;
+    border-color: rgb(var(--zn-color-primary-500));
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// The item currently being dragged — shown as a faded placeholder
+.priority-list__item--dragging {
+  opacity: 0.3;
+  border-style: dashed;
+  border-color: rgb(var(--zn-color-primary-400));
+  background: rgb(var(--zn-color-primary-50, var(--zn-panel)));
+  box-shadow: none;
+}
+
+.priority-list__item--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+
+  &:hover {
+    background: rgb(var(--zn-panel));
+    border-color: rgb(var(--zn-border-color));
+  }
+}
+
+.priority-list__handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--zn-priority-list-handle-color);
+  cursor: grab;
+  transition: color 150ms ease;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.priority-list__priority {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 1.5em;
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-semibold);
+  color: var(--zn-priority-list-priority-color);
+}
+
+.priority-list__content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  // Prevent slotted content from capturing its own drag events,
+  // which would override the item-level draggable behaviour
+  pointer-events: none;
+
+  ::slotted(*) {
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+}
+
+// Size variants
+:host([size="small"]) {
+  .priority-list__item {
+    padding: var(--zn-spacing-2x-small) var(--zn-spacing-small);
+    font-size: var(--zn-font-size-small);
+  }
+
+  .priority-list__priority {
+    font-size: var(--zn-font-size-x-small);
+    min-width: 1.25em;
+  }
+}
+
+:host([size="large"]) {
+  .priority-list__item {
+    padding: var(--zn-spacing-medium) var(--zn-spacing-large);
+    font-size: var(--zn-font-size-medium);
+  }
+
+  .priority-list__priority {
+    font-size: var(--zn-font-size-medium);
+    min-width: 1.75em;
+  }
+}
+
+// The collector div that holds the default slot is hidden; items get
+// reassigned to named slots once detected.
+.priority-list__collector {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.priority-list__hidden-inputs {
+  display: none;
+}

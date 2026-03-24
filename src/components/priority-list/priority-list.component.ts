@@ -534,6 +534,9 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
                 <span class="priority-list__content" part="content">
                   <slot name="_item-${key}"></slot>
                 </span>
+                <span class="priority-list__actions" part="actions">
+                  <slot name="action-${key}"></slot>
+                </span>
               </div>
             `)}
           </div>

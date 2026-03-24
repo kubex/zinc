@@ -142,6 +142,29 @@ Slotted items can contain any HTML content, not just text.
 </zn-priority-list>
 ```
 
+### Item Actions
+
+Use the `action-{value}` slot to add interactive elements (buttons, links, etc.) to the right side of each item. Actions are fully clickable and won't interfere with drag behaviour.
+
+```html:preview
+<zn-priority-list id="action-list" label="Task Queue">
+  <div value="deploy">Deploy to Production</div>
+  <zn-button slot="action-deploy" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=deploy]').remove()">
+    <zn-icon src="delete" size="16"></zn-icon>
+  </zn-button>
+
+  <div value="review">Code Review</div>
+  <zn-button slot="action-review" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=review]').remove()">
+    <zn-icon src="delete" size="16"></zn-icon>
+  </zn-button>
+
+  <div value="test">Run Test Suite</div>
+  <zn-button slot="action-test" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=test]').remove()">
+    <zn-icon src="delete" size="16"></zn-icon>
+  </zn-button>
+</zn-priority-list>
+```
+
 ### Form Submission
 
 When a `name` is set, the component generates hidden inputs for each item as `name[itemValue]=priority`. This example

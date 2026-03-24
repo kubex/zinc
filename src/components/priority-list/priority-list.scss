@@ -131,6 +131,20 @@
   }
 }
 
+.priority-list__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-2x-small);
+  flex-shrink: 0;
+  // Re-enable pointer events so action buttons are clickable
+  pointer-events: auto;
+
+  ::slotted(*) {
+    pointer-events: auto;
+    -webkit-user-drag: none;
+  }
+}
+
 // Size variants
 :host([size="small"]) {
   .priority-list__item {

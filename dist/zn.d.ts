@@ -7461,6 +7461,162 @@ declare module "components/translation-group/index" {
         }
     }
 }
+declare module "components/priority-list/priority-list.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    export interface PriorityItem {
+        key: string;
+        priority: number;
+    }
+    /**
+     * @summary A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop
+     *   and keyboard reordering. Priority values are submitted as form data via hidden inputs.
+     *
+     * @documentation https://zinc.style/components/priority-list
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The default slot where list items are placed. Each slotted element must have a `value` attribute that
+     *   uniquely identifies the item. The component automatically assigns slot names to project each item into the
+     *   correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).
+     * @slot label - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.
+     * @slot label-tooltip - Used to add text displayed in a tooltip next to the label.
+     * @slot help-text - Text that describes how to use the component. Alternatively, use the `help-text` attribute.
+     *
+     * @event zn-change - Emitted when the order of items changes.
+     * @event zn-reorder - Emitted when items are reordered. Call `getPriorityMap()` on the component to get
+     *   the updated `{ key: string, priority: number }[]` array.
+     *
+     * @csspart form-control - The form control wrapper.
+     * @csspart form-control-label - The label wrapper.
+     * @csspart form-control-input - The input area wrapper.
+     * @csspart form-control-help-text - The help text wrapper.
+     * @csspart list - The list container.
+     * @csspart item - An individual list item row.
+     * @csspart drag-handle - The drag handle icon.
+     * @csspart priority - The priority number badge.
+     * @csspart content - The content area of an item.
+     *
+     * @cssproperty --zn-priority-list-item-gap - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`.
+     * @cssproperty --zn-priority-list-item-padding - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`.
+     * @cssproperty --zn-priority-list-handle-color - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`.
+     * @cssproperty --zn-priority-list-priority-color - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`.
+     */
+    export default class ZnPriorityList extends ZincElement implements ZincFormControl {
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        static styles: CSSResultGroup;
+        protected readonly formControlController: FormControlController;
+        private readonly hasSlotController;
+        hiddenInputsContainer: HTMLDivElement;
+        /**
+         * The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`
+         * with the priority number as its value.
+         */
+        name: string;
+        /**
+         * The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.
+         * Each entry should match a `value` attribute on a slotted child element.
+         */
+        get value(): string[];
+        set value(val: string[]);
+        private _value;
+        defaultValue: string[];
+        /** The component's label. Required for proper accessibility. */
+        label: string;
+        /** Text that appears in a tooltip next to the label. */
+        labelTooltip: string;
+        /** Help text that describes how to use the component. */
+        helpText: string;
+        /**
+         * Associates the control with a form by id. The form must be in the same document or shadow root.
+         */
+        form: string;
+        /** The size of the list items. */
+        size: 'small' | 'medium' | 'large';
+        /** Whether the priority list is disabled. */
+        disabled: boolean;
+        /** Ensures the form control has a value before allowing submission. */
+        required: boolean;
+        /** The starting priority number. Defaults to 1. */
+        priorityStart: number;
+        /**
+         * A comma-separated list of item keys defining the initial display order.
+         * Keys must match the `value` attributes on slotted children.
+         * Any slotted items not listed are appended at the end in DOM order.
+         */
+        order: string;
+        private draggedKey;
+        private isDragging;
+        private dragOverKey;
+        /** Gets the validity state object. */
+        get validity(): ValidityState;
+        /** Gets the validation message. */
+        get validationMessage(): string;
+        connectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        /**
+         * Initialize item order from slotted children if no explicit value was provided.
+         * If an `order` attribute is set, use it to define the initial order,
+         * appending any slotted items not listed in the order at the end.
+         */
+        private _initializeOrderFromSlot;
+        /**
+         * Gets all direct children with a `value` attribute (excluding those in reserved slots).
+         */
+        private _getSlottedItems;
+        /**
+         * Assigns `slot` attributes to light DOM children based on their `value` attribute,
+         * so they project into the correct named slot in the shadow DOM.
+         */
+        private _assignSlotNames;
+        /**
+         * Returns the priority map: an array of { key, priority } objects.
+         */
+        getPriorityMap(): PriorityItem[];
+        /**
+         * Syncs hidden inputs so form data includes priority values.
+         */
+        private _syncHiddenInputs;
+        /**
+         * Moves an item from one index to another.
+         */
+        private _moveItem;
+        private _handleDragStart;
+        private _handleDragEnd;
+        private _handleDragOver;
+        private _handleDragLeave;
+        private _handleDrop;
+        private _handleKeyDown;
+        private _handleSlotChange;
+        /** Checks for validity but does not show a validation message. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(_message?: string): void;
+        protected updated(changedProperties: PropertyValues): void;
+        render(): import("lit").TemplateResult<1>;
+    }
+}
+declare module "components/priority-list/index" {
+    import ZnPriorityList from "components/priority-list/priority-list.component";
+    export * from "components/priority-list/priority-list.component";
+    export default ZnPriorityList;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-priority-list': ZnPriorityList;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -7541,6 +7697,14 @@ declare module "events/zn-language-change" {
         }
     }
 }
+declare module "events/zn-reorder" {
+    export type ZnReorderEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-reorder': ZnReorderEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -7553,6 +7717,7 @@ declare module "events/events" {
     export type { ZnRedirectEvent } from "events/zn-redirect";
     export type { ZnSearchChangeEvent } from "events/zn-search-change";
     export type { ZnLanguageChangeEvent } from "events/zn-language-change";
+    export type { ZnReorderEvent } from "events/zn-reorder";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -7648,6 +7813,7 @@ declare module "zinc" {
     export { default as AnimatedButton } from "components/animated-button/index";
     export { default as TranslationGroup } from "components/translation-group/index";
     export { default as OptGroup } from "components/opt-group/index";
+    export { default as PriorityList } from "components/priority-list/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

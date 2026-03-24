@@ -20351,6 +20351,632 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/priority-list/priority-list.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPriorityList",
+          "cssProperties": [
+            {
+              "description": "The gap between list items. Defaults to `var(--zn-spacing-2x-small)`.",
+              "name": "--zn-priority-list-item-gap"
+            },
+            {
+              "description": "The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`.",
+              "name": "--zn-priority-list-item-padding"
+            },
+            {
+              "description": "The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`.",
+              "name": "--zn-priority-list-handle-color"
+            },
+            {
+              "description": "The color of the priority number. Defaults to `var(--zn-color-neutral-600)`.",
+              "name": "--zn-priority-list-priority-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The form control wrapper.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input area wrapper.",
+              "name": "form-control-input"
+            },
+            {
+              "description": "The help text wrapper.",
+              "name": "form-control-help-text"
+            },
+            {
+              "description": "The list container.",
+              "name": "list"
+            },
+            {
+              "description": "An individual list item row.",
+              "name": "item"
+            },
+            {
+              "description": "The drag handle icon.",
+              "name": "drag-handle"
+            },
+            {
+              "description": "The priority number badge.",
+              "name": "priority"
+            },
+            {
+              "description": "The content area of an item.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).",
+              "name": ""
+            },
+            {
+              "description": "The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Used to add text displayed in a tooltip next to the label.",
+              "name": "label-tooltip"
+            },
+            {
+              "description": "Text that describes how to use the component. Alternatively, use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon, }"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new FormControlController(this, { value: (control: ZnPriorityList) => { return JSON.stringify(control.getPriorityMap()); }, defaultValue: (control: ZnPriorityList) => control.defaultValue, setValue: (control: ZnPriorityList, value: string) => { if (value) { try { const parsed = JSON.parse(value); if (Array.isArray(parsed)) { control.value = parsed; } } catch { // ignore parse errors } } }, })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "hiddenInputsContainer",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "_value",
+              "type": {
+                "text": "string[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The component's label. Required for proper accessibility.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text that describes how to use the component.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The size of the list items.",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the priority list is disabled.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures the form control has a value before allowing submission.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "priorityStart",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The starting priority number. Defaults to 1.",
+              "attribute": "priority-start"
+            },
+            {
+              "kind": "field",
+              "name": "order",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
+              "attribute": "order"
+            },
+            {
+              "kind": "field",
+              "name": "draggedKey",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "isDragging",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dragOverKey",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "description": "Gets the validity state object.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "description": "Gets the validation message.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_initializeOrderFromSlot",
+              "privacy": "private",
+              "description": "Initialize item order from slotted children if no explicit value was provided.\nIf an `order` attribute is set, use it to define the initial order,\nappending any slotted items not listed in the order at the end."
+            },
+            {
+              "kind": "method",
+              "name": "_getSlottedItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "description": "Gets all direct children with a `value` attribute (excluding those in reserved slots)."
+            },
+            {
+              "kind": "method",
+              "name": "_assignSlotNames",
+              "privacy": "private",
+              "description": "Assigns `slot` attributes to light DOM children based on their `value` attribute,\nso they project into the correct named slot in the shadow DOM."
+            },
+            {
+              "kind": "method",
+              "name": "getPriorityMap",
+              "return": {
+                "type": {
+                  "text": "PriorityItem[]"
+                }
+              },
+              "description": "Returns the priority map: an array of { key, priority } objects."
+            },
+            {
+              "kind": "method",
+              "name": "_syncHiddenInputs",
+              "privacy": "private",
+              "description": "Syncs hidden inputs so form data includes priority values."
+            },
+            {
+              "kind": "method",
+              "name": "_moveItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "fromIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "toIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves an item from one index to another."
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragOver",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDragLeave",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleDrop",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "DragEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity but does not show a validation message."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "_message",
+                  "default": "''"
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the order of items changes.",
+              "name": "zn-change"
+            },
+            {
+              "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.",
+              "name": "zn-reorder"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The component's label. Required for proper accessibility.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text that describes how to use the component.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+              "fieldName": "form"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The size of the list items.",
+              "fieldName": "size"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the priority list is disabled.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures the form control has a value before allowing submission.",
+              "fieldName": "required"
+            },
+            {
+              "name": "priority-start",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The starting priority number. Defaults to 1.",
+              "fieldName": "priorityStart"
+            },
+            {
+              "name": "order",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
+              "fieldName": "order"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.",
+          "tagNameWithoutPrefix": "priority-list",
+          "tagName": "zn-priority-list",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\n *   and keyboard reordering. Priority values are submitted as form data via hidden inputs.\n *\n * @documentation https://zinc.style/components/priority-list\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The default slot where list items are placed. Each slotted element must have a `value` attribute that\n *   uniquely identifies the item. The component automatically assigns slot names to project each item into the\n *   correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n * @slot label - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n * @slot label-tooltip - Used to add text displayed in a tooltip next to the label.\n * @slot help-text - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n *\n * @event zn-change - Emitted when the order of items changes.\n * @event zn-reorder - Emitted when items are reordered. Call `getPriorityMap()` on the component to get\n *   the updated `{ key: string, priority: number }[]` array.\n *\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label wrapper.\n * @csspart form-control-input - The input area wrapper.\n * @csspart form-control-help-text - The help text wrapper.\n * @csspart list - The list container.\n * @csspart item - An individual list item row.\n * @csspart drag-handle - The drag handle icon.\n * @csspart priority - The priority number badge.\n * @csspart content - The content area of an item.\n *\n * @cssproperty --zn-priority-list-item-gap - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`.\n * @cssproperty --zn-priority-list-item-padding - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`.\n * @cssproperty --zn-priority-list-handle-color - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`.\n * @cssproperty --zn-priority-list-priority-color - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`.\n */",
+          "documentation": "https://zinc.style/components/priority-list",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPriorityList",
+            "module": "components/priority-list/priority-list.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/progress-bar/progress-bar.js",
       "declarations": [
         {

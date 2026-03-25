@@ -185,6 +185,280 @@ Combine `search` with `multiple` to allow users to search and select multiple op
 </zn-select>
 ```
 
+### Remote Search
+
+When `search` and `data-uri` are used together, typing in the select sends debounced requests to the server instead of filtering locally. The search term is appended as a query parameter (default `q`). Use `search-param` to customise the parameter name, `search-debounce` to control the delay, and `max-results` to cap displayed results.
+
+If the server returns fewer results than `max-results`, further refinements of the same query are filtered client-side automatically — no extra requests are made. When results are truncated, a message at the bottom of the dropdown shows how many results are displayed out of the total, prompting the user to refine their search.
+
+```html:preview
+<div class="remote-search-demo">
+  <zn-select
+    id="remote-search-example"
+    label="Search users"
+    search
+    search-debounce="300"
+    max-results="5"
+    placeholder="Type a name to search..."
+    help-text="Try typing 'a' then narrowing to 'al' — the second query filters locally."
+  ></zn-select>
+
+  <div id="remote-search-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius-medium); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+    <strong>Request log:</strong>
+  </div>
+</div>
+
+<script type="module">
+  // -- Mock user database --
+  const allUsers = [
+    { key: 'alice',    value: 'Alice Johnson' },
+    { key: 'alex',     value: 'Alex Thompson' },
+    { key: 'amanda',   value: 'Amanda Garcia' },
+    { key: 'bob',      value: 'Bob Williams' },
+    { key: 'beth',     value: 'Beth Davis' },
+    { key: 'charlie',  value: 'Charlie Brown' },
+    { key: 'carol',    value: 'Carol Martinez' },
+    { key: 'david',    value: 'David Lee' },
+    { key: 'diana',    value: 'Diana Wilson' },
+    { key: 'emma',     value: 'Emma Taylor' },
+    { key: 'elena',    value: 'Elena Rodriguez' },
+    { key: 'frank',    value: 'Frank Anderson' },
+    { key: 'fiona',    value: 'Fiona Clark' },
+    { key: 'george',   value: 'George Hall' },
+    { key: 'grace',    value: 'Grace Lewis' },
+  ];
+
+  // -- Intercept fetch for the demo endpoint --
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/users';
+  const log = document.getElementById('remote-search-log');
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('q') || '').toLowerCase();
+    const time = new Date().toLocaleTimeString();
+    log.innerHTML += `<br>[${time}] GET ${urlStr.replace(location.origin, '')}`;
+    log.scrollTop = log.scrollHeight;
+
+    // Simulate network latency
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = allUsers.filter(u =>
+          u.value.toLowerCase().includes(q) || u.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 200 + Math.random() * 300);
+    });
+  };
+
+  // Wire up the select
+  document.getElementById('remote-search-example').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Remote Search with Custom Parameter
+
+Use `search-param` to change the query parameter name sent to the server.
+
+```html:preview
+<zn-select
+  id="custom-param-example"
+  label="Search products"
+  search
+  search-param="filter"
+  search-debounce="500"
+  placeholder="Search with custom param..."
+  help-text='Sends requests like /api?filter=term instead of /api?q=term'
+></zn-select>
+
+<script type="module">
+  const products = [
+    { key: 'laptop',  value: 'Laptop' },
+    { key: 'phone',   value: 'Phone' },
+    { key: 'tablet',  value: 'Tablet' },
+    { key: 'monitor', value: 'Monitor' },
+    { key: 'keyboard', value: 'Keyboard' },
+    { key: 'mouse',   value: 'Mouse' },
+    { key: 'headset', value: 'Headset' },
+    { key: 'webcam',  value: 'Webcam' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/products';
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('filter') || '').toLowerCase();
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = products.filter(p =>
+          p.value.toLowerCase().includes(q) || p.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 150 + Math.random() * 200);
+    });
+  };
+
+  document.getElementById('custom-param-example').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Remote Search with Multiple Selection
+
+Combine remote search with `multiple` to search and pick several results.
+
+```html:preview
+<div class="remote-search-multi-demo">
+  <zn-select
+    id="remote-search-multi"
+    label="Assign team members"
+    search
+    multiple
+    clearable
+    search-debounce="300"
+    max-results="8"
+    max-options-visible="3"
+    placeholder="Search team members..."
+  ></zn-select>
+</div>
+
+<script type="module">
+  const allUsers = [
+    { key: 'alice',    value: 'Alice Johnson' },
+    { key: 'alex',     value: 'Alex Thompson' },
+    { key: 'amanda',   value: 'Amanda Garcia' },
+    { key: 'bob',      value: 'Bob Williams' },
+    { key: 'beth',     value: 'Beth Davis' },
+    { key: 'charlie',  value: 'Charlie Brown' },
+    { key: 'carol',    value: 'Carol Martinez' },
+    { key: 'david',    value: 'David Lee' },
+    { key: 'diana',    value: 'Diana Wilson' },
+    { key: 'emma',     value: 'Emma Taylor' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/team';
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const q = new URL(urlStr, location.origin).searchParams.get('q') || '';
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = allUsers.filter(u =>
+          u.value.toLowerCase().includes(q.toLowerCase()) || u.key.includes(q.toLowerCase())
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 150 + Math.random() * 200);
+    });
+  };
+
+  document.getElementById('remote-search-multi').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
+### Search Only (No Initial Load)
+
+Use `search-only` with `search` and `data-uri` to defer all fetching until the user types. No request is made on page load — the dropdown shows a "Type to search..." prompt until a query is entered. This is ideal for large datasets where preloading all options isn't practical.
+
+```html:preview
+<div class="search-only-demo">
+  <zn-select
+    id="search-only-example"
+    label="Find a city"
+    search
+    search-only
+    search-debounce="300"
+    max-results="10"
+    placeholder="Start typing a city name..."
+  ></zn-select>
+
+  <div id="search-only-log" style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--zn-color-neutral-100); border-radius: var(--zn-border-radius-medium); font-family: var(--zn-font-mono); font-size: var(--zn-font-size-small); max-height: 8rem; overflow-y: auto;">
+    <strong>Request log:</strong>
+  </div>
+</div>
+
+<script type="module">
+  const cities = [
+    { key: 'london',      value: 'London' },
+    { key: 'los-angeles', value: 'Los Angeles' },
+    { key: 'lisbon',      value: 'Lisbon' },
+    { key: 'lima',        value: 'Lima' },
+    { key: 'lagos',       value: 'Lagos' },
+    { key: 'lyon',        value: 'Lyon' },
+    { key: 'new-york',    value: 'New York' },
+    { key: 'nairobi',     value: 'Nairobi' },
+    { key: 'nice',        value: 'Nice' },
+    { key: 'paris',       value: 'Paris' },
+    { key: 'prague',      value: 'Prague' },
+    { key: 'porto',       value: 'Porto' },
+    { key: 'perth',       value: 'Perth' },
+    { key: 'sydney',      value: 'Sydney' },
+    { key: 'seoul',       value: 'Seoul' },
+    { key: 'shanghai',    value: 'Shanghai' },
+    { key: 'singapore',   value: 'Singapore' },
+    { key: 'stockholm',   value: 'Stockholm' },
+    { key: 'tokyo',       value: 'Tokyo' },
+    { key: 'toronto',     value: 'Toronto' },
+    { key: 'taipei',      value: 'Taipei' },
+  ];
+
+  const realFetch = window.fetch;
+  const DEMO_URL = '/_demo/api/cities';
+  const log = document.getElementById('search-only-log');
+
+  window.fetch = function(url, opts) {
+    const urlStr = typeof url === 'string' ? url : url.toString();
+    if (!urlStr.startsWith(DEMO_URL)) {
+      return realFetch.call(this, url, opts);
+    }
+
+    const params = new URL(urlStr, location.origin).searchParams;
+    const q = (params.get('q') || '').toLowerCase();
+    const time = new Date().toLocaleTimeString();
+    log.innerHTML += `<br>[${time}] GET ...?q=${q}`;
+    log.scrollTop = log.scrollHeight;
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        const filtered = cities.filter(c =>
+          c.value.toLowerCase().includes(q) || c.key.includes(q)
+        );
+        resolve(new Response(JSON.stringify(filtered), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }));
+      }, 200 + Math.random() * 300);
+    });
+  };
+
+  document.getElementById('search-only-example').setAttribute('data-uri', DEMO_URL);
+</script>
+```
+
 ### Disabled
 
 Use the `disabled` attribute to disable the entire select. To disable just one option, put `disabled` on the `zn-option`.

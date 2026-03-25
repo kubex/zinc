@@ -1,25 +1,25 @@
-import { animateTo, stopAnimations } from '../../internal/animate.js';
-import { classMap } from "lit/directives/class-map.js";
-import { deepQuerySelectorAll } from "../../utilities/query";
-import { FormControlController } from "../../internal/form";
-import { getAnimation, setDefaultAnimation } from "../../utilities/animation-registry";
-import { HasSlotController } from "../../internal/slot";
-import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-import { html, nothing, unsafeCSS } from 'lit';
-import { LocalizeController } from "../../utilities/localize";
-import { property, query, state } from 'lit/decorators.js';
-import { scrollIntoView } from "../../internal/scroll";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { waitForEvent } from "../../internal/event";
-import { watch } from '../../internal/watch';
-import type { ZincFormControl } from '../../internal/zinc-element';
+import {animateTo, stopAnimations} from '../../internal/animate.js';
+import {classMap} from "lit/directives/class-map.js";
+import {deepQuerySelectorAll} from "../../utilities/query";
+import {FormControlController} from "../../internal/form";
+import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
+import {HasSlotController} from "../../internal/slot";
+import {html, nothing, unsafeCSS} from 'lit';
+import {LocalizeController} from "../../utilities/localize";
+import {property, query, state} from 'lit/decorators.js';
+import {scrollIntoView} from "../../internal/scroll";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
+import {waitForEvent} from "../../internal/event";
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnChip from "../chip";
 import ZnIcon from "../icon";
 import ZnOptGroup from "../opt-group";
 import ZnOption from "../option";
 import ZnPopup from "../popup";
-import type { ZnRemoveEvent } from "../../events/zn-remove";
+import type {CSSResultGroup, PropertyValues, TemplateResult} from 'lit';
+import type {ZincFormControl} from '../../internal/zinc-element';
+import type {ZnRemoveEvent} from "../../events/zn-remove";
 
 import styles from './select.scss';
 
@@ -57,6 +57,8 @@ import styles from './select.scss';
  * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.
  * @event zn-error - Emitted when loading options from the `src` URL fails.
  *
+ * @csspart search-loading - The container shown while a remote search request is in flight.
+ * @csspart max-results-indicator - The message shown when results are truncated by `max-results`.
  * @csspart form-control - The form control that wraps the label, input, and help text.
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The select's wrapper.
@@ -131,15 +133,36 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal */
   private _fetchAbortController: AbortController | null = null;
 
+  /** @internal - debounce timer for remote search */
+  private _searchDebounceTimer: number | null = null;
+
+  /** @internal - whether a remote search fetch is in progress (distinct from initial load) */
+  @state() private _searchLoading = false;
+
+  /** @internal - the query string of the last successful remote search */
+  private _lastRemoteQuery: string | null = null;
+
+  /** @internal - whether the last remote result set was exhaustive (fewer than maxResults returned) */
+  private _lastRemoteExhaustive = false;
+
+  /** @internal - total number of results before maxResults truncation (0 = not truncated) */
+  @state() private _totalResultCount = 0;
+
+  /**
+   * @internal - tracks selected items by key/value during remote search so they survive
+   * when search results replace the fetched options list.
+   */
+  private _selectedRemoteItems: { key: string; value: string }[] = [];
+
   /** The name of the select, submitted as a name/value pair with form data. */
   @property() name = '';
 
-  @property({ type: Boolean, attribute: "non-removable" }) nonRemovable = false;
+  @property({type: Boolean, attribute: "non-removable"}) nonRemovable = false;
 
   private _value: string | string[] = '';
 
   get value() {
-    return this._value
+    return this._value;
   }
 
   /**
@@ -210,78 +233,78 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 
   /** The select's size. */
-  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
+  @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
 
   /** Allows more than one option to be selected. */
-  @property({ type: Boolean, reflect: true }) multiple = false;
+  @property({type: Boolean, reflect: true}) multiple = false;
 
   /** Max number of options that can be selected when `multiple` is true. Set to 0 to allow unlimited selections. */
-  @property({ attribute: 'max-options', type: Number }) maxOptions = 0;
+  @property({attribute: 'max-options', type: Number}) maxOptions = 0;
 
   /**
    * The maximum number of selected options to show when `multiple` is true. After the maximum, "+n" will be shown to
    * indicate the number of additional items that are selected. Set to 0 to remove the limit.
    */
-  @property({ attribute: 'max-options-visible', type: Number }) maxOptionsVisible = 3;
+  @property({attribute: 'max-options-visible', type: Number}) maxOptionsVisible = 3;
 
   /** Disables the select control. */
-  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   /** Adds a clear button when the select is not empty. */
-  @property({ type: Boolean }) clearable = false;
+  @property({type: Boolean}) clearable = false;
 
   /**
    * Indicates whether or not the select is open. You can toggle this attribute to show and hide the menu, or you can
    * use the `show()` and `hide()` methods and this attribute will reflect the select's open state.
    */
-  @property({ type: Boolean, reflect: true }) open = false;
+  @property({type: Boolean, reflect: true}) open = false;
 
   /**
    * Enable this option to prevent the listbox from being clipped when the component is placed inside a container with
    * `overflow: auto|scroll`. Hoisting uses a fixed positioning strategy that works in many, but not all, scenarios.
    */
-  @property({ type: Boolean }) hoist = false;
+  @property({type: Boolean}) hoist = false;
 
   /** Draws a pill-style select with rounded edges. */
-  @property({ type: Boolean, reflect: true }) pill = false;
+  @property({type: Boolean, reflect: true}) pill = false;
 
   /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
-  @property({ type: Boolean, reflect: true }) search = false;
+  @property({type: Boolean, reflect: true}) search = false;
 
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
   /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-  @property({ attribute: 'label-tooltip' }) labelTooltip = '';
+  @property({attribute: 'label-tooltip'}) labelTooltip = '';
 
   /** Text that appears above the input, on the right, to add additional context. If you need to display HTML in this text, use the `context-note` slot instead. */
-  @property({ attribute: 'context-note' }) contextNote = '';
+  @property({attribute: 'context-note'}) contextNote = '';
 
   /**
    * The preferred placement of the selects menu. Note that the actual placement may vary as needed to keep the listbox
    * inside the viewport.
    */
-  @property({ reflect: true }) placement: 'top' | 'bottom' = 'bottom';
+  @property({reflect: true}) placement: 'top' | 'bottom' = 'bottom';
 
   /** The select's help text. If you need to display HTML, use the `help-text` slot instead. */
-  @property({ attribute: 'help-text' }) helpText = '';
+  @property({attribute: 'help-text'}) helpText = '';
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
-  @property({ reflect: true }) form: string;
+  @property({reflect: true}) form: string;
 
   /** The select's required attribute. */
-  @property({ type: Boolean, reflect: true }) required = false;
+  @property({type: Boolean, reflect: true}) required = false;
 
-  @property({ attribute: 'cache-key' }) cacheKey: string = "";
+  @property({attribute: 'cache-key'}) cacheKey: string = "";
 
-  @property({ type: Boolean, attribute: 'trigger-submit' }) triggerSubmit = false;
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
 
   /**
    * A function that customizes the tags to be rendered when multiple=true. The first argument is the option, the second
@@ -310,7 +333,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   };
 
   /** Automatically select the first option if no value is set. */
-  @property({ attribute: 'select-first', type: Boolean }) selectFirst = false;
+  @property({attribute: 'select-first', type: Boolean}) selectFirst = false;
 
   @property() distinct = "";
 
@@ -322,12 +345,36 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
    * `[{"key": "us", "value": "United States"}, ...]`
    * When not set, the component works exactly as before using slotted `<zn-option>` elements.
    */
-  @property({ attribute: 'data-uri' }) dataUri: string;
+  @property({attribute: 'data-uri'}) dataUri: string;
 
   /**
    * Context data to send as a header when fetching options from the URL specified by the `src` property.
    */
-  @property({ attribute: 'context-data' }) contextData: string;
+  @property({attribute: 'context-data'}) contextData: string;
+
+  /**
+   * The maximum number of options to display from a remote fetch response. Set to 0 for unlimited.
+   * Only applies when fetching from `data-uri`.
+   */
+  @property({attribute: 'max-results', type: Number}) maxResults = 0;
+
+  /**
+   * Debounce delay in milliseconds for remote search requests. The component waits this long after the user
+   * stops typing before sending a request.
+   */
+  @property({attribute: 'search-debounce', type: Number}) searchDebounce = 300;
+
+  /**
+   * The query parameter name appended to the `data-uri` URL for remote search requests.
+   * Defaults to `"q"`, e.g. `/api/items?q=search+term`. Set to a custom value like `"search"` or `"filter"` to match your API.
+   */
+  @property({attribute: 'search-param'}) searchParam = 'q';
+
+  /**
+   * When set alongside `search` and `data-uri`, the component will not fetch options on initial load.
+   * Options are only fetched when the user starts typing a search query.
+   */
+  @property({attribute: 'search-only', type: Boolean}) searchOnly = false;
 
   /** Gets the validity state object */
   get validity() {
@@ -359,10 +406,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     super.disconnectedCallback();
     this._fetchAbortController?.abort();
     this._fetchAbortController = null;
+    if (this._searchDebounceTimer !== null) {
+      clearTimeout(this._searchDebounceTimer);
+      this._searchDebounceTimer = null;
+    }
   }
 
   private updateHasInputPrefix() {
-    const assigned = this.prefixSlot?.assignedElements({ flatten: true }) || [];
+    const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];
     this.inputPrefix = assigned.length > 0;
   }
 
@@ -378,7 +429,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.closeWatcher.onclose = () => {
         if (this.open) {
           this.hide().then();
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         }
       };
     }
@@ -404,7 +455,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.emit('zn-blur');
   }
 
-  private handleDocumentFocusIn = (event: KeyboardEvent) => {
+  private handleDocumentFocusIn = (event: FocusEvent) => {
     // Close when focusing out of the select
     const path = event.composedPath();
     if (this && !path.includes(this)) {
@@ -430,7 +481,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       event.preventDefault();
       event.stopPropagation();
       this.hide().then();
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
     }
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
@@ -470,12 +521,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
         if (!this.multiple) {
           this.hide().then();
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         } else if (this.search) {
           // In multi-select + search, re-focus the search input after keyboard selection
           this.updateComplete.then(() => {
             this.displayInput.value = '';
-            this.displayInput.focus({ preventScroll: true });
+            this.displayInput.focus({preventScroll: true});
           });
         }
       }
@@ -592,12 +643,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // When search is enabled, clicking the input area should open (not toggle) so the user can type
     if (this.search && this.open && !isExpandIcon) {
       event.preventDefault();
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
       return;
     }
 
     event.preventDefault();
-    this.displayInput.focus({ preventScroll: true });
+    this.displayInput.focus({preventScroll: true});
     this.open = !this.open;
   }
 
@@ -626,7 +677,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       this.setSelectedOptions([]);
-      this.displayInput.focus({ preventScroll: true });
+      this.displayInput.focus({preventScroll: true});
 
       // Emit after update
       this.updateComplete.then(() => {
@@ -643,17 +694,57 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.preventDefault();
   }
 
+  /** Whether the component is in remote-search mode (search + dataUri both set) */
+  private get _isRemoteSearch() {
+    return this.search && !!this.dataUri;
+  }
+
   /** Handles text input on the display input for search/filter mode */
   private handleSearchInput() {
     if (!this.search) return;
 
     this._searchDisplayValue = this.displayInput.value;
     this._searchQuery = this._searchDisplayValue.toLowerCase();
-    this.filterOptions();
 
     // Open the dropdown when the user starts typing
     if (!this.open) {
       this.show().then();
+    }
+
+    if (this._isRemoteSearch) {
+      // Cancel any pending request when the query changes
+      if (this._searchDebounceTimer !== null) {
+        clearTimeout(this._searchDebounceTimer);
+        this._searchDebounceTimer = null;
+      }
+
+      // Empty query — just show all current options, no fetch needed
+      if (!this._searchQuery) {
+        this.filterOptions();
+        return;
+      }
+
+      // If the new query is a refinement of the last one and we know the server had no more
+      // results to give (i.e. it returned fewer than maxResults), we can filter locally instead
+      // of making another round-trip.
+      const canFilterLocally = this._lastRemoteExhaustive
+        && this._lastRemoteQuery !== null
+        && this._searchQuery.startsWith(this._lastRemoteQuery);
+
+      if (canFilterLocally) {
+        this.filterOptions();
+        return;
+      }
+
+      // Remote search: debounce and fetch from server
+      this._noResultsVisible = false;
+      this._searchDebounceTimer = window.setTimeout(() => {
+        this._searchDebounceTimer = null;
+        this.fetchOptions(this._searchQuery).then();
+      }, this.searchDebounce);
+    } else {
+      // Local search: filter existing options
+      this.filterOptions();
     }
   }
 
@@ -675,6 +766,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     allOptions.forEach(option => {
+      // Don't un-hide selected options that are only in the DOM for value preservation
+      if (option.selected && option.hidden) return;
+
       const label = option.getTextLabel().toLowerCase();
       const value = option.value.toLowerCase();
       const matches = label.includes(searchQuery) || value.includes(searchQuery);
@@ -684,8 +778,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Update opt-group visibility based on whether any child options are visible
     this.getAllOptGroups().forEach(group => group.updateVisibility());
 
-    // Show empty state when no options match
-    this._noResultsVisible = allOptions.every(option => option.hidden);
+    // Show empty state when no non-selected options match (selected-but-hidden items are value anchors, not results)
+    this._noResultsVisible = allOptions.filter(o => !o.selected).every(option => option.hidden);
 
     // Reset current option if it's now hidden
     if (this.currentOption && this.currentOption.hidden) {
@@ -701,6 +795,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._searchQuery = '';
     this._searchDisplayValue = '';
     this._noResultsVisible = false;
+
+    // Cancel any pending remote search
+    if (this._searchDebounceTimer !== null) {
+      clearTimeout(this._searchDebounceTimer);
+      this._searchDebounceTimer = null;
+    }
+    this._searchLoading = false;
+
     const allOptions = this.getAllOptions();
     allOptions.forEach(option => {
       option.hidden = false;
@@ -717,17 +819,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     const oldValue = this.value;
 
     if (option && !option.disabled) {
-      this.valueHasChanged = true
+      this.valueHasChanged = true;
       if (this.multiple) {
-        if (this.maxOptions > 0) {
-          if (this.selectedOptions.length >= this.maxOptions && !option.selected) {
-            return;
-          }
-
-          this.toggleOptionSelection(option);
-        } else {
-          this.toggleOptionSelection(option)
+        if (this.maxOptions > 0 && this.selectedOptions.length >= this.maxOptions && !option.selected) {
+          return;
         }
+        this.toggleOptionSelection(option);
       } else {
         this.setSelectedOptions(option);
       }
@@ -743,13 +840,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       // Set focus after updating so the value is announced by screen readers
       this.updateComplete.then(() => {
-        // In multi-select + search mode, re-focus the search input so the user can continue typing
         if (this.multiple && this.search && this.open) {
           this.displayInput.value = '';
-          this.displayInput.focus({ preventScroll: true });
-        } else {
-          this.displayInput.focus({ preventScroll: true });
         }
+        this.displayInput.focus({preventScroll: true});
       });
 
       if (this.value !== oldValue) {
@@ -762,7 +856,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       if (!this.multiple) {
         this.hide().then();
-        this.displayInput.focus({ preventScroll: true });
+        this.displayInput.focus({preventScroll: true});
       }
 
       if (this.triggerSubmit) {
@@ -863,7 +957,6 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       el.tabIndex = -1;
     });
 
-
     // Select the target option
     if (option) {
       this.currentOption = option;
@@ -910,6 +1003,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private selectionChanged() {
     // Update selected options cache
     this.selectedOptions = this.getAllOptions().filter(el => el.selected);
+
+    // In remote-search + multiple mode, track selected items so they persist across search result changes
+    if (this._isRemoteSearch && this.multiple) {
+      this._selectedRemoteItems = this.selectedOptions.map(el => ({
+        key: el.value,
+        value: el.getTextLabel()
+      }));
+    }
 
     // Keep a reference to the previous `valueHasChanged`. Changes made here don't count has changing the value.
     const cachedValueHasChanged: boolean = this.valueHasChanged;
@@ -960,6 +1061,33 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
       return html``;
     });
+  }
+
+  /**
+   * Renders hidden <zn-option> elements for items that are currently selected but not present in
+   * the latest `_fetchedOptions` (e.g. because a remote search narrowed the results). This keeps
+   * them in the DOM so `handleDefaultSlotChange` can find and re-select them.
+   */
+  private _renderSelectedRemoteItems() {
+    if (!this._isRemoteSearch || !this.multiple || this._selectedRemoteItems.length === 0) {
+      return nothing;
+    }
+
+    // Build a set of keys present in the current fetched options
+    const fetchedKeys = new Set<string>();
+    for (const item of this._fetchedOptions) {
+      if (item.group !== undefined) {
+        for (const opt of item.options) fetchedKeys.add(opt.key);
+      } else {
+        fetchedKeys.add(item.key);
+      }
+    }
+
+    // Render hidden options for selected items not in the fetched results
+    return this._selectedRemoteItems
+      .filter(item => !fetchedKeys.has(item.key))
+      .map(item => html`
+        <zn-option value=${item.key} hidden>${item.value}</zn-option>`);
   }
 
   private handleInvalid(event: Event) {
@@ -1020,7 +1148,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       checkConditionals();
     }
 
-    if (this.dataUri) {
+    if (this.dataUri && !this.searchOnly) {
       this.fetchOptions().then();
     }
 
@@ -1028,7 +1156,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.updateDependencies();
   }
 
-  @watch('disabled', { waitUntilFirstUpdate: true })
+  @watch('disabled', {waitUntilFirstUpdate: true})
   handleDisabledChange() {
     if (this.disabled) {
       // Close the listbox and abort any in-progress fetch
@@ -1038,15 +1166,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this._fetchAbortController = null;
       this._fetchLoading = false;
       this._fetchError = '';
-    } else if (this.dataUri) {
+    } else if (this.dataUri && !this.searchOnly) {
       // Fetch options when enabled
       this.fetchOptions().then();
     }
   }
 
-  @watch(['dataUri', 'contextData'], { waitUntilFirstUpdate: true })
+  @watch(['dataUri', 'contextData'], {waitUntilFirstUpdate: true})
   handleSrcChange() {
-    if (this.dataUri) {
+    if (this.dataUri && !this.searchOnly) {
       this.fetchOptions().then();
     } else {
       this._fetchedOptions = [];
@@ -1060,21 +1188,137 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._fetchError = message;
     this._fetchLoading = false;
     this._fetchAbortController = null;
-    this.emit('zn-error', { detail: { status: 400 } });
+    this.emit('zn-error', {detail: {status: 400}});
   }
 
-  /** Fetches options from the URL specified by the `src` property. */
-  async fetchOptions() {
+  /** Builds the localStorage cache key for a given search query */
+  private _buildCacheKey(searchQuery?: string): string {
+    const base = this.cacheKey || this.dataUri;
+    return searchQuery ? `zn-select-search:${base}:${searchQuery}` : `zn-select-search:${base}`;
+  }
+
+  /** Reads cached results from localStorage */
+  private _readCache(searchQuery?: string): typeof this._fetchedOptions | null {
+    if (!this.cacheKey) return null;
+    try {
+      const raw = localStorage.getItem(this._buildCacheKey(searchQuery));
+      if (raw) return JSON.parse(raw) as typeof this._fetchedOptions;
+    } catch {
+      // Ignore corrupt cache
+    }
+    return null;
+  }
+
+  /** Writes results to localStorage cache */
+  private _writeCache(searchQuery: string | undefined, data: typeof this._fetchedOptions) {
+    if (!this.cacheKey) return;
+    try {
+      localStorage.setItem(this._buildCacheKey(searchQuery), JSON.stringify(data));
+    } catch {
+      // Storage full or unavailable — silently ignore
+    }
+  }
+
+  /**
+   * Parses raw JSON data into the internal fetched-options format.
+   * Applies `maxResults` limiting to flat option arrays.
+   */
+  private _parseOptions(data: unknown): typeof this._fetchedOptions | null {
+    type FetchedOption = { key: string; value: string; group?: undefined };
+    type FetchedGroup = { group: string; options: { key: string; value: string }[] };
+    let options: (FetchedOption | FetchedGroup)[];
+
+    if (Array.isArray(data)) {
+      const isGrouped = data.length > 0 && data.some(
+        (item: unknown) => item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)
+      );
+
+      if (isGrouped) {
+        options = (data as Record<string, unknown>[]).map(item => {
+          if ('group' in item && Array.isArray(item.options)) {
+            return {
+              group: String(item.group),
+              options: item.options as { key: string; value: string }[]
+            } as FetchedGroup;
+          }
+          return item as unknown as FetchedOption;
+        });
+      } else {
+        options = data as FetchedOption[];
+      }
+    } else if (data && typeof data === 'object') {
+      options = Object.entries(data as Record<string, unknown>).map(([key, value]) => ({
+        key,
+        value: String(value)
+      }));
+    } else {
+      return null;
+    }
+
+    // Apply max-results limit to flat (non-grouped) options
+    if (this.maxResults > 0) {
+      let count = 0;
+      const limited: (FetchedOption | FetchedGroup)[] = [];
+      for (const item of options) {
+        if (count >= this.maxResults) break;
+        if (item.group !== undefined) {
+          const remaining = this.maxResults - count;
+          const slicedOpts = item.options.slice(0, remaining);
+          if (slicedOpts.length > 0) {
+            limited.push({group: item.group, options: slicedOpts});
+            count += slicedOpts.length;
+          }
+        } else {
+          limited.push(item);
+          count++;
+        }
+      }
+      options = limited;
+    }
+
+    return options;
+  }
+
+  /** Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query. */
+  async fetchOptions(searchQuery?: string) {
     if (!this.dataUri || this.disabled) return;
+
+    const isRemoteSearch = !!searchQuery;
+
+    // Check cache first
+    if (this.cacheKey) {
+      const cached = this._readCache(searchQuery);
+      if (cached) {
+        this._fetchedOptions = cached;
+        this._searchLoading = false;
+        this._fetchLoading = false;
+        this._totalResultCount = 0;
+        this._noResultsVisible = cached.length === 0 && isRemoteSearch;
+        this.emit('zn-load');
+        this.updateComplete.then(() => this.handleDefaultSlotChange());
+        return;
+      }
+    }
 
     this._fetchAbortController?.abort();
     this._fetchAbortController = new AbortController();
 
-    this._fetchLoading = true;
+    if (isRemoteSearch) {
+      this._searchLoading = true;
+    } else {
+      this._fetchLoading = true;
+    }
     this._fetchError = '';
 
     try {
-      const response = await fetch(this.dataUri, {
+      // Build the URL — append search query as a parameter for remote search
+      let url = this.dataUri;
+      if (searchQuery) {
+        const separator = url.includes('?') ? '&' : '?';
+        url = `${url}${separator}${encodeURIComponent(this.searchParam)}=${encodeURIComponent(searchQuery)}`;
+      }
+
+      const response = await fetch(url, {
         signal: this._fetchAbortController.signal,
         credentials: 'same-origin',
         headers: {
@@ -1084,49 +1328,49 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       });
 
       if (!response.ok) {
+        this._searchLoading = false;
         this._handleFetchError(response.statusText || `HTTP ${response.status}`);
         return;
       }
 
       const data: unknown = await response.json();
 
-      type FetchedOption = { key: string; value: string; group?: undefined };
-      type FetchedGroup = { group: string; options: { key: string; value: string }[] };
-      let options: (FetchedOption | FetchedGroup)[];
+      // Count raw results before maxResults limiting to determine exhaustiveness
+      const rawCount = Array.isArray(data)
+        ? data.reduce((n: number, item: unknown) => {
+          if (item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)) {
+            const group = item as Record<string, unknown>;
+            return n + (Array.isArray(group.options) ? group.options.length : 0);
+          }
+          return n + 1;
+        }, 0)
+        : (data && typeof data === 'object') ? Object.keys(data as object).length : 0;
 
-      if (Array.isArray(data)) {
-        // Check if the array contains grouped items: [{ group: "Label", options: [...] }, ...]
-        const isGrouped = data.length > 0 && data.some(
-          (item: unknown) => item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)
-        );
+      const options = this._parseOptions(data);
 
-        if (isGrouped) {
-          options = (data as Record<string, unknown>[]).map(item => {
-            if ('group' in item && Array.isArray(item.options)) {
-              return {
-                group: String(item.group),
-                options: item.options as { key: string; value: string }[]
-              } as FetchedGroup;
-            }
-            return item as unknown as FetchedOption;
-          });
-        } else {
-          options = data as FetchedOption[];
-        }
-      } else if (data && typeof data === 'object') {
-        // Convert {id: label, ...} object to [{key, value}, ...] array
-        options = Object.entries(data as Record<string, unknown>).map(([key, value]) => ({
-          key,
-          value: String(value)
-        }));
-      } else {
+      if (!options) {
+        this._searchLoading = false;
         this._handleFetchError('Expected JSON array or object of options');
         return;
       }
 
       this._fetchedOptions = options;
       this._fetchLoading = false;
+      this._searchLoading = false;
       this._fetchAbortController = null;
+      this._noResultsVisible = options.length === 0 && isRemoteSearch;
+
+      // Track total vs displayed count for truncation indicator
+      this._totalResultCount = this.maxResults > 0 && rawCount > this.maxResults ? rawCount : 0;
+
+      // Track whether the server's result set was exhaustive (returned fewer than the limit).
+      // If so, further refinements of this query can be filtered client-side.
+      // For the initial load (no search query), this tells us if we already have all results.
+      this._lastRemoteQuery = searchQuery ?? '';
+      this._lastRemoteExhaustive = this.maxResults > 0 ? rawCount < this.maxResults : true;
+
+      // Cache the results
+      this._writeCache(searchQuery, options);
 
       this.emit('zn-load');
 
@@ -1138,6 +1382,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         return;
       }
 
+      this._searchLoading = false;
       this._handleFetchError(error instanceof Error ? error.message : 'Failed to load options');
     }
   }
@@ -1154,7 +1399,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  @watch(['defaultValue', 'value'], { waitUntilFirstUpdate: true })
+  @watch(['defaultValue', 'value'], {waitUntilFirstUpdate: true})
   handleValueChange() {
     if (!this.valueHasChanged) {
       const cachedValueHasChanged = this.valueHasChanged;
@@ -1171,7 +1416,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this.updateDependencies();
   }
 
-  @watch('open', { waitUntilFirstUpdate: true })
+  @watch('open', {waitUntilFirstUpdate: true})
   async handleOpenChange() {
     if (this.open && !this.disabled) {
       // Reset the current option
@@ -1200,11 +1445,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Focus the search input so the user can start typing immediately
       if (this.search) {
         requestAnimationFrame(() => {
-          this.displayInput.focus({ preventScroll: true });
+          this.displayInput.focus({preventScroll: true});
         });
       }
 
-      const { keyframes, options } = getAnimation(this, 'select.show', { dir: this.localize.dir() });
+      const {keyframes, options} = getAnimation(this, 'select.show', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
 
       // Make sure the current option is scrolled into view (required for Safari)
@@ -1227,7 +1472,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       }
 
       await stopAnimations(this);
-      const { keyframes, options } = getAnimation(this, 'select.hide', { dir: this.localize.dir() });
+      const {keyframes, options} = getAnimation(this, 'select.hide', {dir: this.localize.dir()});
       await animateTo(this.popup.popup, keyframes, options);
       this.listbox.hidden = true;
       this.popup.active = false;
@@ -1406,7 +1651,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--standard': true,
               'select--pill': this.pill,
               'select--open': this.open,
-              'select--disabled': this.disabled || isFetchDisabled,
+              'select--disabled': isDisabled,
               'select--multiple': this.multiple,
               'select--focused': this.hasFocus,
               'select--placeholder-visible': isPlaceholderVisible,
@@ -1517,6 +1762,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
               <slot></slot>
+              ${this._renderSelectedRemoteItems()}
               ${this._fetchedOptions.map(item =>
                 item.group !== undefined
                   ? html`
@@ -1529,9 +1775,29 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                   : html`
                     <zn-option value=${item.key}>${item.value}</zn-option>`
               )}
-              <div part="empty-state" class="select__empty-state" ?hidden=${!this._noResultsVisible}>
-                No matching options
-              </div>
+              ${this._totalResultCount > 0
+                ? html`
+                  <div part="max-results-indicator" class="select__max-results-indicator">
+                    Showing ${this.maxResults} of ${this._totalResultCount} results — refine your search for more
+                  </div>`
+                : nothing
+              }
+              ${this._searchLoading
+                ? html`
+                  <div part="search-loading" class="select__search-loading">
+                    <zn-icon src="progress_activity" class="select__spinner"></zn-icon>
+                    Searching...
+                  </div>`
+                : this.searchOnly && this._fetchedOptions.length === 0 && !this._searchQuery
+                  ? html`
+                    <div part="empty-state" class="select__empty-state">
+                      Type to search...
+                    </div>`
+                  : html`
+                    <div part="empty-state" class="select__empty-state" ?hidden=${!this._noResultsVisible}>
+                      No matching options
+                    </div>`
+              }
             </div>
           </zn-popup>
         </div>
@@ -1551,16 +1817,16 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
 setDefaultAnimation('select.show', {
   keyframes: [
-    { opacity: 0, scale: 0.9 },
-    { opacity: 1, scale: 1 }
+    {opacity: 0, scale: 0.9},
+    {opacity: 1, scale: 1}
   ],
-  options: { duration: 100, easing: 'ease' }
+  options: {duration: 100, easing: 'ease'}
 });
 
 setDefaultAnimation('select.hide', {
   keyframes: [
-    { opacity: 1, scale: 1 },
-    { opacity: 0, scale: 0.9 }
+    {opacity: 1, scale: 1},
+    {opacity: 0, scale: 0.9}
   ],
-  options: { duration: 100, easing: 'ease' }
+  options: {duration: 100, easing: 'ease'}
 });

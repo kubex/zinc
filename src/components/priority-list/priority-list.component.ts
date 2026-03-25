@@ -137,6 +137,12 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
   @property({type: Number, attribute: 'priority-start'}) priorityStart = 1;
 
   /**
+   * When set, the associated form will be submitted with the given action URL whenever items are reordered.
+   * If set to an empty string, the form will be submitted using its existing action.
+   */
+  @property({attribute: 'formaction'}) formAction: string;
+
+  /**
    * A comma-separated list of item keys defining the initial display order.
    * Keys must match the `value` attributes on slotted children.
    * Any slotted items not listed are appended at the end in DOM order.
@@ -273,6 +279,24 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
 
     this.emit('zn-change');
     this.emit('zn-reorder');
+    this._submitForm();
+  }
+
+  /**
+   * Submits the associated form if a `formaction` attribute is set.
+   */
+  private _submitForm() {
+    if (this.formAction === undefined || this.formAction === null) return;
+
+    const form = this.getForm();
+    if (!form) return;
+
+    const originalAction = form.action;
+    if (this.formAction) {
+      form.action = this.formAction;
+    }
+    form.requestSubmit();
+    form.action = originalAction;
   }
 
   // --- Drag and Drop Handlers ---
@@ -298,6 +322,7 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
       this._syncHiddenInputs();
       this.emit('zn-change');
       this.emit('zn-reorder');
+      this._submitForm();
     }
 
     this.draggedKey = null;

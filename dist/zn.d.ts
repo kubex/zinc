@@ -2104,14 +2104,14 @@ declare module "events/zn-remove" {
 }
 declare module "components/select/select.component" {
     import { FormControlController } from "internal/form";
-    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
     import ZnChip from "components/chip/index";
     import ZnIcon from "components/icon/index";
     import ZnOptGroup from "components/opt-group/index";
     import ZnOption from "components/option/index";
     import ZnPopup from "components/popup/index";
+    import type { CSSResultGroup, PropertyValues, TemplateResult } from 'lit';
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/select
@@ -2146,6 +2146,8 @@ declare module "components/select/select.component" {
      * @event zn-load - Emitted when options have been successfully loaded from the `src` URL.
      * @event zn-error - Emitted when loading options from the `src` URL fails.
      *
+     * @csspart search-loading - The container shown while a remote search request is in flight.
+     * @csspart max-results-indicator - The message shown when results are truncated by `max-results`.
      * @csspart form-control - The form control that wraps the label, input, and help text.
      * @csspart form-control-label - The label's wrapper.
      * @csspart form-control-input - The select's wrapper.
@@ -2204,6 +2206,21 @@ declare module "components/select/select.component" {
         private _fetchError;
         /** @internal */
         private _fetchAbortController;
+        /** @internal - debounce timer for remote search */
+        private _searchDebounceTimer;
+        /** @internal - whether a remote search fetch is in progress (distinct from initial load) */
+        private _searchLoading;
+        /** @internal - the query string of the last successful remote search */
+        private _lastRemoteQuery;
+        /** @internal - whether the last remote result set was exhaustive (fewer than maxResults returned) */
+        private _lastRemoteExhaustive;
+        /** @internal - total number of results before maxResults truncation (0 = not truncated) */
+        private _totalResultCount;
+        /**
+         * @internal - tracks selected items by key/value during remote search so they survive
+         * when search results replace the fetched options list.
+         */
+        private _selectedRemoteItems;
         /** The name of the select, submitted as a name/value pair with form data. */
         name: string;
         nonRemovable: boolean;
@@ -2292,6 +2309,26 @@ declare module "components/select/select.component" {
          * Context data to send as a header when fetching options from the URL specified by the `src` property.
          */
         contextData: string;
+        /**
+         * The maximum number of options to display from a remote fetch response. Set to 0 for unlimited.
+         * Only applies when fetching from `data-uri`.
+         */
+        maxResults: number;
+        /**
+         * Debounce delay in milliseconds for remote search requests. The component waits this long after the user
+         * stops typing before sending a request.
+         */
+        searchDebounce: number;
+        /**
+         * The query parameter name appended to the `data-uri` URL for remote search requests.
+         * Defaults to `"q"`, e.g. `/api/items?q=search+term`. Set to a custom value like `"search"` or `"filter"` to match your API.
+         */
+        searchParam: string;
+        /**
+         * When set alongside `search` and `data-uri`, the component will not fetch options on initial load.
+         * Options are only fetched when the user starts typing a search query.
+         */
+        searchOnly: boolean;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */
@@ -2311,6 +2348,8 @@ declare module "components/select/select.component" {
         private handleComboboxKeyDown;
         private handleClearClick;
         private handleClearMouseDown;
+        /** Whether the component is in remote-search mode (search + dataUri both set) */
+        private get _isRemoteSearch();
         /** Handles text input on the display input for search/filter mode */
         private handleSearchInput;
         /** Filters visible options based on the current search query */
@@ -2329,13 +2368,30 @@ declare module "components/select/select.component" {
         private toggleOptionSelection;
         private selectionChanged;
         protected get tags(): TemplateResult<1>[];
+        /**
+         * Renders hidden <zn-option> elements for items that are currently selected but not present in
+         * the latest `_fetchedOptions` (e.g. because a remote search narrowed the results). This keeps
+         * them in the DOM so `handleDefaultSlotChange` can find and re-select them.
+         */
+        private _renderSelectedRemoteItems;
         private handleInvalid;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         handleDisabledChange(): void;
         handleSrcChange(): void;
         private _handleFetchError;
-        /** Fetches options from the URL specified by the `src` property. */
-        fetchOptions(): Promise<void>;
+        /** Builds the localStorage cache key for a given search query */
+        private _buildCacheKey;
+        /** Reads cached results from localStorage */
+        private _readCache;
+        /** Writes results to localStorage cache */
+        private _writeCache;
+        /**
+         * Parses raw JSON data into the internal fetched-options format.
+         * Applies `maxResults` limiting to flat option arrays.
+         */
+        private _parseOptions;
+        /** Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query. */
+        fetchOptions(searchQuery?: string): Promise<void>;
         attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null): void;
         handleValueChange(): void;
         handleOpenChange(): Promise<void>;

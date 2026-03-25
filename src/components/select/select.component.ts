@@ -660,9 +660,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Filters visible options based on the current search query */
   private filterOptions() {
     const allOptions = this.getAllOptions();
-    const query = this._searchQuery;
+    const searchQuery = this._searchQuery;
 
-    if (!query) {
+    if (!searchQuery) {
       // Show all options and opt-groups
       allOptions.forEach(option => {
         option.hidden = false;
@@ -677,7 +677,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     allOptions.forEach(option => {
       const label = option.getTextLabel().toLowerCase();
       const value = option.value.toLowerCase();
-      const matches = label.includes(query) || value.includes(query);
+      const matches = label.includes(searchQuery) || value.includes(searchQuery);
       option.hidden = !matches;
     });
 

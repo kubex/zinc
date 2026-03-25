@@ -7547,6 +7547,11 @@ declare module "components/priority-list/priority-list.component" {
         /** The starting priority number. Defaults to 1. */
         priorityStart: number;
         /**
+         * When set, the associated form will be submitted with the given action URL whenever items are reordered.
+         * If set to an empty string, the form will be submitted using its existing action.
+         */
+        formAction: string;
+        /**
          * A comma-separated list of item keys defining the initial display order.
          * Keys must match the `value` attributes on slotted children.
          * Any slotted items not listed are appended at the end in DOM order.
@@ -7588,6 +7593,10 @@ declare module "components/priority-list/priority-list.component" {
          * Moves an item from one index to another.
          */
         private _moveItem;
+        /**
+         * Submits the associated form if a `formaction` attribute is set.
+         */
+        private _submitForm;
         private _handleDragStart;
         private _handleDragEnd;
         private _handleDragOver;

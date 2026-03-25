@@ -13,9 +13,17 @@
 }
 
 /* Gap variants */
-.input-group--gap-sm { gap: var(--zn-spacing-x-small); }
-.input-group--gap-md { gap: var(--zn-spacing-small); }
-.input-group--gap-lg { gap: var(--zn-spacing-medium); }
+.input-group--gap-sm {
+  gap: var(--zn-spacing-x-small);
+}
+
+.input-group--gap-md {
+  gap: var(--zn-spacing-small);
+}
+
+.input-group--gap-lg {
+  gap: var(--zn-spacing-medium);
+}
 
 /* When gap is set, restore individual border radii */
 .input-group--gap ::slotted([data-zn-input-group__input]) {
@@ -78,17 +86,19 @@
   margin-inline-end: 0;
 }
 
-/* Button overrides */
-::slotted(zn-button[data-zn-input-group__input])::part(base) {
-  border-radius: 0;
+/* Button overrides - don't join to other inputs */
+::slotted(zn-button[data-zn-input-group__input]) {
+  flex: 0 0 auto;
+  margin-inline-start: var(--zn-spacing-x-small);
+  margin-inline-end: 0;
 }
 
-::slotted(zn-button[data-zn-input-group__input--first])::part(base) {
-  border-start-start-radius: var(--zn-border-radius-medium);
-  border-end-start-radius: var(--zn-border-radius-medium);
+::slotted(zn-button[data-zn-input-group__input--first]),
+::slotted(zn-button[data-zn-input-group__input--inner]),
+::slotted(zn-button[data-zn-input-group__input--last]) {
+  --zn-input-border-radius-x-small: var(--zn-border-radius-medium);
+  --zn-input-border-radius-small: var(--zn-border-radius-medium);
+  --zn-input-border-radius-medium: var(--zn-border-radius-medium);
+  --zn-input-border-radius-large: var(--zn-border-radius-medium);
 }
 
-::slotted(zn-button[data-zn-input-group__input--last])::part(base) {
-  border-start-end-radius: var(--zn-border-radius-medium);
-  border-end-end-radius: var(--zn-border-radius-medium);
-}

@@ -36,17 +36,26 @@ export default class ZnInputGroup extends ZincElement {
   private handleSlotChange() {
     const slottedElements = [...this.defaultSlot.assignedElements({flatten: true})] as HTMLElement[];
 
-    // Filter for inputs and selects
+    // Filter for inputs, selects, and buttons
     const supportedTags = ['ZN-INPUT', 'ZN-SELECT', 'ZN-BUTTON'];
     const controls = slottedElements.filter(el => supportedTags.includes(el.tagName));
 
-    controls.forEach(el => {
-      const index = controls.indexOf(el);
+    // Buttons are styled independently — only inputs/selects participate in joined positioning
+    const joinedControls = controls.filter(el => el.tagName !== 'ZN-BUTTON');
 
+    controls.forEach(el => {
       el.toggleAttribute('data-zn-input-group__input', true);
-      el.toggleAttribute('data-zn-input-group__input--first', index === 0);
-      el.toggleAttribute('data-zn-input-group__input--inner', index > 0 && index < controls.length - 1);
-      el.toggleAttribute('data-zn-input-group__input--last', index === controls.length - 1);
+
+      if (el.tagName === 'ZN-BUTTON') {
+        el.toggleAttribute('data-zn-input-group__input--first', false);
+        el.toggleAttribute('data-zn-input-group__input--inner', false);
+        el.toggleAttribute('data-zn-input-group__input--last', false);
+      } else {
+        const index = joinedControls.indexOf(el);
+        el.toggleAttribute('data-zn-input-group__input--first', index === 0);
+        el.toggleAttribute('data-zn-input-group__input--inner', index > 0 && index < joinedControls.length - 1);
+        el.toggleAttribute('data-zn-input-group__input--last', index === joinedControls.length - 1);
+      }
     });
   }
 

@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -19476,10 +19476,6 @@
             {
               "description": "Content displayed in the panel footer.",
               "name": "footer"
-            },
-            {
-              "description": "Sidebar content displayed on the left or right side of the panel.",
-              "name": "side"
             }
           ],
           "members": [
@@ -19488,7 +19484,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer', 'side')"
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
             },
             {
               "kind": "field",
@@ -19593,60 +19589,6 @@
                 "text": "boolean"
               },
               "attribute": "shadow"
-            },
-            {
-              "kind": "field",
-              "name": "sidebarPosition",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "attribute": "sidebar-position"
-            },
-            {
-              "kind": "field",
-              "name": "sidebarTooltip",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "sidebar-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "sidebarIcon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "sidebar-icon"
-            },
-            {
-              "kind": "field",
-              "name": "sidebarOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "sidebar-open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "enableSidebarToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "enable-sidebar-toggle"
-            },
-            {
-              "kind": "method",
-              "name": "toggleSidebar"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.",
-              "name": "zn-sidebar-toggle"
             }
           ],
           "attributes": [
@@ -19740,55 +19682,17 @@
                 "text": "boolean"
               },
               "fieldName": "shadow"
-            },
-            {
-              "name": "sidebar-position",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "fieldName": "sidebarPosition"
-            },
-            {
-              "name": "sidebar-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "sidebarTooltip"
-            },
-            {
-              "name": "sidebar-icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "sidebarIcon"
-            },
-            {
-              "name": "sidebar-open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "sidebarOpen"
-            },
-            {
-              "name": "enable-sidebar-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "enableSidebarToggle"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.",
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
           "tagNameWithoutPrefix": "panel",
           "tagName": "zn-panel",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n * @slot side - Sidebar content displayed on the left or right side of the panel.\n *\n * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n */",
           "documentation": "https://zinc.style/components/panel",
           "status": "experimental",
           "since": "1.0"
@@ -30786,14 +30690,6 @@
                 "name": "ZnPanel",
                 "module": "src/components/panel/panel.component.ts"
               }
-            },
-            {
-              "description": "Sidebar content displayed on the left or right side of the panel.",
-              "name": "side",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
             }
           ],
           "members": [
@@ -30901,7 +30797,7 @@
               "name": "hasSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer', 'side')",
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "components/panel/panel.js"
@@ -31062,92 +30958,12 @@
                 "name": "ZnPanel",
                 "module": "components/panel/panel.js"
               }
-            },
-            {
-              "kind": "field",
-              "name": "sidebarPosition",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "attribute": "sidebar-position",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "sidebarTooltip",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "sidebar-tooltip",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "sidebarIcon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "sidebar-icon",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "sidebarOpen",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "sidebar-open",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "enableSidebarToggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "enable-sidebar-toggle",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleSidebar",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
             }
           ],
           "events": [
             {
               "description": "Emitted when the active language changes. Detail: `{ language: string }`.",
               "name": "zn-language-change"
-            },
-            {
-              "description": "Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.",
-              "name": "zn-sidebar-toggle",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
             }
           ],
           "attributes": [
@@ -31307,64 +31123,6 @@
                 "text": "boolean"
               },
               "fieldName": "shadow",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "sidebar-position",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "fieldName": "sidebarPosition",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "sidebar-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "sidebarTooltip",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "sidebar-icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "sidebarIcon",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "sidebar-open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "sidebarOpen",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "enable-sidebar-toggle",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "enableSidebarToggle",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "src/components/panel/panel.component.ts"
@@ -32018,7 +31776,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.93",
+    "version": "1.0.94",
     "author": "",
     "license": "MIT"
   }

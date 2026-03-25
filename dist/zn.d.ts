@@ -3991,23 +3991,11 @@ declare module "components/tabs/index" {
         }
     }
 }
-declare module "events/zn-sidebar-toggle" {
-    export type ZnSidebarToggleEvent = CustomEvent<{
-        element: Element;
-        open: boolean;
-    }>;
-    global {
-        interface GlobalEventHandlersEventMap {
-            'zn-sidebar-toggle': ZnSidebarToggleEvent;
-        }
-    }
-}
 declare module "components/panel/panel.component" {
-    import "events/zn-sidebar-toggle";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.
+     * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
      * @documentation https://zinc.style/components/panel
      * @status experimental
      * @since 1.0
@@ -4015,9 +4003,6 @@ declare module "components/panel/panel.component" {
      * @slot - The panel's main content.
      * @slot actions - Actions displayed in the panel header (buttons, chips, etc).
      * @slot footer - Content displayed in the panel footer.
-     * @slot side - Sidebar content displayed on the left or right side of the panel.
-     *
-     * @event zn-sidebar-toggle - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.
      *
      * @csspart base - The component's base wrapper.
      *
@@ -4039,14 +4024,8 @@ declare module "components/panel/panel.component" {
         flushFooter: boolean;
         transparent: boolean;
         shadow: boolean;
-        sidebarPosition: 'left' | 'right';
-        sidebarTooltip: string;
-        sidebarIcon: string;
-        sidebarOpen: boolean;
-        enableSidebarToggle: boolean;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
-        toggleSidebar(): void;
         protected render(): unknown;
     }
 }

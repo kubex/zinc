@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -56,6 +45,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -2203,7 +2203,7 @@
     },
     {
       "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers, footers, and sidebars.\n---\n\n\n### **Events:**\n - **zn-sidebar-toggle** - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n- **side** - Sidebar content displayed on the left or right side of the panel.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "basis-px", "values": [] },
         { "name": "caption", "values": [] },
@@ -2217,15 +2217,7 @@
         { "name": "flush-y", "values": [] },
         { "name": "flush-footer", "values": [] },
         { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] },
-        {
-          "name": "sidebar-position",
-          "values": [{ "name": "left" }, { "name": "right" }]
-        },
-        { "name": "sidebar-tooltip", "values": [] },
-        { "name": "sidebar-icon", "values": [] },
-        { "name": "sidebar-open", "values": [] },
-        { "name": "enable-sidebar-toggle", "values": [] }
+        { "name": "shadow", "values": [] }
       ],
       "references": [
         {
@@ -3467,7 +3459,7 @@
     },
     {
       "name": "zn-translation-group",
-      "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n- **zn-sidebar-toggle** - Emitted when the sidebar is toggled. The event detail contains the panel element and the open state.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n- **side** - Sidebar content displayed on the left or right side of the panel.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         {
           "name": "label",
@@ -3491,15 +3483,7 @@
         { "name": "flush-y", "values": [] },
         { "name": "flush-footer", "values": [] },
         { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] },
-        {
-          "name": "sidebar-position",
-          "values": [{ "name": "left" }, { "name": "right" }]
-        },
-        { "name": "sidebar-tooltip", "values": [] },
-        { "name": "sidebar-icon", "values": [] },
-        { "name": "sidebar-open", "values": [] },
-        { "name": "enable-sidebar-toggle", "values": [] }
+        { "name": "shadow", "values": [] }
       ],
       "references": [
         {

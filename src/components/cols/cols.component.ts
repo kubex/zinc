@@ -53,12 +53,24 @@ export default class ZnCols extends ZincElement {
     this.maxColumns = layout.reduce((a, b) => a + b, 0);
 
     const prefix = 'zn-col-';
-    this.querySelectorAll(':scope > *').forEach((element: HTMLElement, index) => {
+    // Only count children slotted into the default slot (no slot attribute)
+    const children = Array.from(this.querySelectorAll(':scope > *:not([slot])')) as HTMLElement[];
+    const colsPerRow = layout.length;
+    const lastRowStart = children.length - (children.length % colsPerRow || colsPerRow);
+
+    children.forEach((element, index) => {
       const classes = element.className.split(' ').filter((c) => !c.startsWith(prefix));
       element.className = classes.join(' ');
 
-      const col = index % layout.length;
+      const col = index % colsPerRow;
       element.classList.add(prefix + layout[col]);
+
+      // Clip overflow on last-row elements to hide the ::before border pseudo
+      if(this.border && index >= lastRowStart) {
+        element.style.overflow = 'hidden';
+      } else {
+        element.style.overflow = '';
+      }
     });
 
     return html`

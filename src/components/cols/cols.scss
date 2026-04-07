@@ -76,7 +76,8 @@
   }
 
   // Adds full-width lines between bordered cols
-  &--border ::slotted(*:not(:last-child)):before {
+  // Last row elements get overflow:hidden via JS to clip this pseudo
+  &--border ::slotted(*):before {
     content: "";
     position: absolute;
     bottom: -1px;
@@ -84,17 +85,6 @@
     right: -5px;
     z-index: 1111;
     border-bottom: 1px solid rgb(var(--zn-border-color)) !important;
-  }
-
-  // Stops the last child/row having a border
-  &--border ::slotted(*:last-child):before {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: -100vw;
-    right: -5px;
-    z-index: 1111;
-    border-bottom: 1px solid var(--zn-panel-background-color) !important;
   }
 
   &--pad {

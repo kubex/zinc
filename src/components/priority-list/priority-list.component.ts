@@ -69,9 +69,9 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     setValue: (control: ZnPriorityList, value: string) => {
       if (value) {
         try {
-          const parsed = JSON.parse(value);
-          if (Array.isArray(parsed)) {
-            control.value = parsed;
+          const parsed: unknown = JSON.parse(value);
+          if (Array.isArray(parsed) && parsed.every((item: unknown): item is string => typeof item === 'string')) {
+            control.value = parsed as string[];
           }
         } catch {
           // ignore parse errors
@@ -289,14 +289,37 @@ export default class ZnPriorityList extends ZincElement implements ZincFormContr
     if (this.formAction === undefined || this.formAction === null) return;
 
     const form = this.getForm();
-    if (!form) return;
+    if (form) {
+      const submitter = document.createElement('button');
+      submitter.type = 'submit';
+      submitter.hidden = true;
+      if (this.formAction) {
+        submitter.setAttribute('formaction', this.formAction);
+      }
+      form.appendChild(submitter);
+      form.requestSubmit(submitter);
+      submitter.remove();
+    } else if (this.formAction) {
+      // No parent form — create a temporary one to submit the priority data
+      const tempForm = document.createElement('form');
+      tempForm.method = 'post';
+      tempForm.action = this.formAction;
+      tempForm.hidden = true;
 
-    const originalAction = form.action;
-    if (this.formAction) {
-      form.action = this.formAction;
+      this._value.forEach((key, index) => {
+        if (this.name) {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = `${this.name}[${key}]`;
+          input.value = String(this.priorityStart + index);
+          tempForm.appendChild(input);
+        }
+      });
+
+      document.body.appendChild(tempForm);
+      tempForm.submit();
+      tempForm.remove();
     }
-    form.requestSubmit();
-    form.action = originalAction;
   }
 
   // --- Drag and Drop Handlers ---

@@ -54,6 +54,17 @@ Use the `icon` attribute to add an icon to the chip. Icons appear on the left si
 <zn-chip icon="error" type="error">Error</zn-chip>
 ```
 
+### Caption
+
+Use the `caption` attribute to prepend a label, giving the chip a "Key: Value" style.
+
+```html:preview
+<zn-chip caption="Router">Sandbanx-Connector</zn-chip>
+<zn-chip caption="Status" type="success">Active</zn-chip>
+<zn-chip caption="Region" type="info">EU-West</zn-chip>
+<zn-chip caption="Priority" type="warning" icon="flag">High</zn-chip>
+```
+
 ### Icon Size
 
 Use the `icon-size` attribute to control the size of the icon within the chip.

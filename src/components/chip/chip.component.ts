@@ -27,6 +27,7 @@ export default class ZnChip extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() icon: string = '';
+  @property() caption: string = '';
 
   @property({attribute: 'icon-size', type: Number}) iconSize: number = 18;
 
@@ -66,8 +67,10 @@ export default class ZnChip extends ZincElement {
       })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="${this.iconSize}"></zn-icon>` : ''}
+        ${this.caption ? html`
+          <span class="chip__caption">${this.caption}</span>` : ''}
         ${hasContent ? html`
-          <slot></slot>` : ''}
+          <span class="chip__value"><slot></slot></span>` : ''}
         ${this.hasSlotController.test('action') ? html`
           <slot name="action" class="chip__action"></slot>` : ''}
       </div>

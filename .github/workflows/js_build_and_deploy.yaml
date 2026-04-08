@@ -4,10 +4,6 @@ on:
     branches:
       - master
 
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write  # Required for OIDC
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -63,7 +60,5 @@ jobs:
           name: app-build
           path: dist
 
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public --provenance
 

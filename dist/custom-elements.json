@@ -20350,7 +20350,7 @@
               "name": "formControlController",
               "privacy": "protected",
               "readonly": true,
-              "default": "new FormControlController(this, { value: (control: ZnPriorityList) => { return JSON.stringify(control.getPriorityMap()); }, defaultValue: (control: ZnPriorityList) => control.defaultValue, setValue: (control: ZnPriorityList, value: string) => { if (value) { try { const parsed = JSON.parse(value); if (Array.isArray(parsed)) { control.value = parsed; } } catch { // ignore parse errors } } }, })"
+              "default": "new FormControlController(this, { value: (control: ZnPriorityList) => { return JSON.stringify(control.getPriorityMap()); }, defaultValue: (control: ZnPriorityList) => control.defaultValue, setValue: (control: ZnPriorityList, value: string) => { if (value) { try { const parsed: unknown = JSON.parse(value); if (Array.isArray(parsed) && parsed.every((item: unknown): item is string => typeof item === 'string')) { control.value = parsed as string[]; } } catch { // ignore parse errors } } }, })"
             },
             {
               "kind": "field",
@@ -31961,7 +31961,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.96",
+    "version": "1.0.97",
     "author": "",
     "license": "MIT"
   }

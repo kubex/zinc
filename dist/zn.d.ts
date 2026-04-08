@@ -6486,6 +6486,7 @@ declare module "components/item/item.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Used for listing items in a description list. Caption on the right, content on the left.
      * @documentation https://zinc.style/components/item
@@ -6493,6 +6494,7 @@ declare module "components/item/item.component" {
      * @since 1.0
      *
      * @dependency zn-icon
+     * @dependency zn-tooltip
      *
      * @slot - The default slot. Can either be slotted or use the value attribute
      * @slot actions - Used for adding actions to a zn-item.
@@ -6504,6 +6506,7 @@ declare module "components/item/item.component" {
     export default class ZnItem extends ZincElement {
         static dependencies: {
             'zn-icon': typeof ZnIcon;
+            'zn-tooltip': typeof ZnTooltip;
         };
         static styles: CSSResultGroup;
         caption: string;
@@ -6511,6 +6514,7 @@ declare module "components/item/item.component" {
         stacked: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
+        helpTooltip: string;
         icon: string;
         value: string;
         inline: boolean;

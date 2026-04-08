@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "directory": "git@github.com:kubex/zinc"
+    "url": "https://github.com/kubex/zinc"
   },
   "license": "MIT",
   "author": "",
@@ -34,10 +34,9 @@
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --max-warnings 0 --fix",
     "lint:component": "eslint -- ",
-    "prepare": "npx playwright install",
-    "test": "web-test-runner --group default",
-    "test:component": "web-test-runner -- --watch --group",
-    "test:watch": "web-test-runner --watch --group default",
+    "test": "npx playwright install --with-deps && web-test-runner --group default",
+    "test:component": "npx playwright install --with-deps && web-test-runner -- --watch --group",
+    "test:watch": "npx playwright install --with-deps && web-test-runner --watch --group default",
     "watch": "node scripts/build.js --serve"
   },
   "dependencies": {

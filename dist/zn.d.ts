@@ -1496,6 +1496,7 @@ declare module "components/chip/chip.component" {
     export default class ZnChip extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
+        caption: string;
         iconSize: number;
         type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'custom' | 'neutral';
         size: 'small' | 'medium' | 'large';
@@ -4319,7 +4320,7 @@ declare module "components/sp/sp.component" {
         xl: string;
     };
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.
      * @documentation https://zinc.style/components/sp
      * @status experimental
      * @since 1.0
@@ -7301,7 +7302,7 @@ declare module "components/key/key.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary A key item used within a key container to filter content.
+     * @summary A legend key item, typically used alongside charts to label and toggle visibility of data series by category.
      * @documentation https://zinc.style/components/key
      * @status experimental
      * @since 1.0
@@ -7334,7 +7335,7 @@ declare module "components/key-container/key-container.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary A container that manages key items and filters content based on active keys.
+     * @summary A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.
      * @documentation https://zinc.style/components/key-container
      * @status experimental
      * @since 1.0

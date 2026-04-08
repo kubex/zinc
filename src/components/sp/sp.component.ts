@@ -17,7 +17,7 @@ export const defaultSizes = {
 }
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.
  * @documentation https://zinc.style/components/sp
  * @status experimental
  * @since 1.0

@@ -1,7 +1,7 @@
 ---
 meta:
   title: Sp
-  description:
+  description: A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.
 layout: component
 fullWidth: true
 ---
@@ -17,71 +17,129 @@ fullWidth: true
 
 ## Examples
 
-### Restricted Width
-
-```html:preview
-
-<zn-sp width-container>
-  <p>Hello Wsorld</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-</zn-sp>
-  ```
-
-### Divided
-
-```html:preview
-<zn-sp divide>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-</zn-sp>
- ```
-
 ### Row
+
+Use the `row` attribute to lay out children horizontally instead of vertically.
 
 ```html:preview
 <zn-sp row>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
+  <zn-chip>One</zn-chip>
+  <zn-chip>Two</zn-chip>
+  <zn-chip>Three</zn-chip>
 </zn-sp>
 ```
 
-### Padding
+### Gap Sizes
+
+Use the `gap` attribute to control the spacing between children. Available sizes are `px`, `xxs`, `xs`, `sm`, `md`, `lg`, and `xl`.
 
 ```html:preview
-<zn-sp pad>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
+<zn-sp row gap="px">
+  <zn-chip>px</zn-chip><zn-chip>gap</zn-chip>
+</zn-sp>
+<zn-sp row gap="xs">
+  <zn-chip>xs</zn-chip><zn-chip>gap</zn-chip>
+</zn-sp>
+<zn-sp row gap="sm">
+  <zn-chip>sm</zn-chip><zn-chip>gap</zn-chip>
+</zn-sp>
+<zn-sp row gap="md">
+  <zn-chip>md</zn-chip><zn-chip>gap</zn-chip>
+</zn-sp>
+<zn-sp row gap="lg">
+  <zn-chip>lg</zn-chip><zn-chip>gap</zn-chip>
+</zn-sp>
+<zn-sp row gap="xl">
+  <zn-chip>xl</zn-chip><zn-chip>gap</zn-chip>
 </zn-sp>
 ```
 
-#### Pad X
+### No Gap
+
+Use the `no-gap` attribute to remove all spacing between children.
 
 ```html:preview
-<zn-sp pad-x>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
+<zn-sp row no-gap>
+  <zn-chip>No</zn-chip>
+  <zn-chip>Gap</zn-chip>
+  <zn-chip>Between</zn-chip>
 </zn-sp>
 ```
 
-#### Pad Y
+### Flush
+
+By default, `zn-sp` applies padding. Use the `flush` attribute to remove all padding, or `flush-x` / `flush-y` to remove padding in a single direction.
 
 ```html:preview
-<zn-sp pad-y>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
-  <p>Hello World</p>
+<div style="background: #f5f5f5; border: 1px dashed #ccc;">
+  <zn-sp>
+    <p>Default padding</p>
+  </zn-sp>
+</div>
+<br />
+<div style="background: #f5f5f5; border: 1px dashed #ccc;">
+  <zn-sp flush>
+    <p>Flush (no padding)</p>
+  </zn-sp>
+</div>
+<br />
+<div style="background: #f5f5f5; border: 1px dashed #ccc;">
+  <zn-sp flush-x>
+    <p>Flush X (no horizontal padding)</p>
+  </zn-sp>
+</div>
+<br />
+<div style="background: #f5f5f5; border: 1px dashed #ccc;">
+  <zn-sp flush-y>
+    <p>Flush Y (no vertical padding)</p>
+  </zn-sp>
+</div>
+```
+
+Individual sides can also be flushed with `flush-t`, `flush-b`, `flush-l`, and `flush-r`.
+
+### Divided
+
+Use the `divide` attribute to add divider lines between children.
+
+```html:preview
+<zn-sp divide>
+  <p>Section One</p>
+  <p>Section Two</p>
+  <p>Section Three</p>
 </zn-sp>
 ```
 
+### Grow
 
+Use the `grow` attribute to make the container expand to fill available space.
+
+```html:preview
+<div style="display: flex; height: 120px; border: 1px dashed #ccc;">
+  <zn-sp grow>
+    <p>This container grows to fill the parent</p>
+  </zn-sp>
+</div>
+```
+
+### Restricted Width
+
+Use the `width-container` attribute to constrain the content to a maximum width.
+
+```html:preview
+<zn-sp width-container>
+  <p>This content is width-constrained</p>
+  <p>Useful for readable line lengths</p>
+</zn-sp>
+```
+
+### Form Container
+
+Use `form-container` or `wide-form-container` to constrain the width for form layouts.
+
+```html:preview
+<zn-sp form-container>
+  <zn-input label="Name"></zn-input>
+  <zn-input label="Email"></zn-input>
+</zn-sp>
+```

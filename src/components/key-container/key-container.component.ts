@@ -8,7 +8,7 @@ import type ZnKey from "../key/key.component";
 import styles from './key-container.scss';
 
 /**
- * @summary A container that manages key items and filters content based on active keys.
+ * @summary A legend container that manages key items, typically used alongside charts to toggle visibility of data series by category.
  * @documentation https://zinc.style/components/key-container
  * @status experimental
  * @since 1.0

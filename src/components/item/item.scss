@@ -97,11 +97,22 @@
     width: 100%;
     flex-shrink: 0;
 
+    &--has-help {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--zn-spacing-2x-small);
+    }
+
     &--required::after {
       content: var(--zn-input-required-content);
       margin-inline-start: var(--zn-input-required-content-offset);
       color: var(--zn-input-required-content-color);
     }
+  }
+
+  &__help-tooltip {
+    color: var(--zn-color-neutral-700);
+    font-size: var(--zn-font-size-small);
   }
 
   &__description {

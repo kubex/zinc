@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
+import ZnTooltip from "../tooltip";
 
 import styles from './item.scss';
 
@@ -13,6 +14,7 @@ import styles from './item.scss';
  * @since 1.0
  *
  * @dependency zn-icon
+ * @dependency zn-tooltip
  *
  * @slot - The default slot. Can either be slotted or use the value attribute
  * @slot actions - Used for adding actions to a zn-item.
@@ -23,7 +25,8 @@ import styles from './item.scss';
  */
 export default class ZnItem extends ZincElement {
   static dependencies = {
-    'zn-icon': ZnIcon
+    'zn-icon': ZnIcon,
+    'zn-tooltip': ZnTooltip
   };
 
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -37,6 +40,8 @@ export default class ZnItem extends ZincElement {
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
+
+  @property({attribute: 'help-tooltip'}) helpTooltip: string;
 
   @property() icon: string;
 
@@ -82,12 +87,19 @@ export default class ZnItem extends ZincElement {
   render() {
     const hasIcon = this.icon && this.icon.length > 0;
 
+    const hasHelpTooltip = this.helpTooltip?.length > 0;
+
     const headings = html`
       <div class="item__headings">
         <div class=${classMap({
           'item__caption': true,
-          'item__caption--required': this._hasRequiredSlot()
+          'item__caption--required': this._hasRequiredSlot(),
+          'item__caption--has-help': hasHelpTooltip
         })} part="caption">${this.caption}
+          ${hasHelpTooltip ? html`
+            <zn-tooltip class="item__help-tooltip" content="${this.helpTooltip}">
+              <zn-icon src="info"></zn-icon>
+            </zn-tooltip>` : ''}
         </div>
         ${this.description ? html`
           <div class="item__description">${this.description}</div>` : ''}

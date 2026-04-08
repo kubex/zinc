@@ -54,6 +54,24 @@ layout: component
 </zn-cols>
 ```
 
+### Help Tooltip
+
+Use the `help-tooltip` attribute to display an info icon with a tooltip next to the caption.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-item caption="Account ID" help-tooltip="The unique identifier for this account">
+    ACC-12345
+  </zn-item>
+  <zn-item caption="MRR" help-tooltip="Monthly Recurring Revenue, calculated from active subscriptions">
+    $1,250.00
+  </zn-item>
+  <zn-item caption="Status">
+    Active
+  </zn-item>
+</zn-sp>
+```
+
 ### Multiple Actions
 
 Example of multiple actions in a description item.

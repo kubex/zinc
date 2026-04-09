@@ -678,7 +678,7 @@ export default class ZnDataTable extends ZincElement {
   getPagination() {
     if (this.hidePagination || (this.totalPages !== null && this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
-    const optionsRowsPerPage = [1, 2, 3, 40, 50];
+    const optionsRowsPerPage = [10, 20, 30, 40, 50];
     optionsRowsPerPage.filter((option) => option <= this._rows.length);
 
     return html`

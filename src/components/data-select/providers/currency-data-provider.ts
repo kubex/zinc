@@ -254,7 +254,7 @@ const currencyCodeToSymbol: { [key: string]: string } = {
   'RSD': 'Дин.',
   'RUB': '₽',
   'RWF': 'R₣',
-  'SAR': '﷼',
+  'SAR': 'SAR',
   'SBD': '$',
   'SCR': '₨',
   'SDG': 'ج.س.',

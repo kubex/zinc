@@ -226,7 +226,7 @@ export default class ZnDataTable extends ZincElement {
 
   private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
-  private totalPages: number;
+  private totalPages: number | null;
 
   private _rows: any[] = [];
 
@@ -461,7 +461,7 @@ export default class ZnDataTable extends ZincElement {
   renderTable(data: Response) {
     this.itemsPerPage = Math.max(1, data.perPage ?? DEFAULT_PER_PAGE);
     this.page = Math.max(1, data.page ?? DEFAULT_PAGE);
-    this.totalPages = Math.ceil(Math.max(1, data.total) / this.itemsPerPage);
+    this.totalPages = data.total ? Math.ceil(Math.max(1, data.total) / this.itemsPerPage) : null;
 
     if (!data?.rows || data.rows.length === 0) {
       return this.emptyState();
@@ -676,9 +676,9 @@ export default class ZnDataTable extends ZincElement {
   }
 
   getPagination() {
-    if (this.hidePagination || (this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
+    if (this.hidePagination || (this.totalPages !== null && this.totalPages <= 1 && this._rows.length <= this.itemsPerPage)) return null;
 
-    const optionsRowsPerPage = [10, 20, 30, 40, 50];
+    const optionsRowsPerPage = [1, 2, 3, 40, 50];
     optionsRowsPerPage.filter((option) => option <= this._rows.length);
 
     return html`
@@ -696,12 +696,13 @@ export default class ZnDataTable extends ZincElement {
         </zn-select>
       </div>
 
-      ${this.totalPages <= 1
+      ${this.totalPages !== null && this.totalPages <= 1
         ? html``
         : html`
-          <div class="table__footer__pagination-count">
-            <p>Page ${this.page} of ${this.totalPages}</p>
-          </div>
+          ${this.totalPages !== null ? html`
+            <div class="table__footer__pagination-count">
+              <p>Page ${this.page} of ${this.totalPages}</p>
+            </div>` : html``}
 
           <div class="table__footer__pagination-buttons">
             <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
@@ -718,20 +719,21 @@ export default class ZnDataTable extends ZincElement {
                        icon="chevron_left"
                        outline>
             </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
-                       ?disabled="${this.page === this.totalPages}"
+            <zn-button @click="${this._isLastPage() ? undefined : this.goToNextPage}"
+                       ?disabled="${this._isLastPage()}"
                        icon-size="16"
                        size="small"
                        icon="chevron_right"
                        outline>
             </zn-button>
-            <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
-                       ?disabled="${this.page === this.totalPages}"
-                       icon-size="16"
-                       size="small"
-                       icon="keyboard_double_arrow_right"
-                       outline>
-            </zn-button>
+            ${this.totalPages !== null ? html`
+              <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
+                         ?disabled="${this.page === this.totalPages}"
+                         icon-size="16"
+                         size="small"
+                         icon="keyboard_double_arrow_right"
+                         outline>
+              </zn-button>` : html``}
           </div>`}`;
   }
 
@@ -810,11 +812,20 @@ export default class ZnDataTable extends ZincElement {
   }
 
   goToNextPage() {
-    this.goToPage(Math.min(this.page + 1, this.totalPages));
+    this.goToPage(this.page + 1);
   }
 
   goToLastPage() {
-    this.goToPage(this.totalPages);
+    if (this.totalPages !== null) {
+      this.goToPage(this.totalPages);
+    }
+  }
+
+  private _isLastPage(): boolean {
+    if (this.totalPages !== null) {
+      return this.page >= this.totalPages;
+    }
+    return this._rows.length < this.itemsPerPage;
   }
 
   updateRowsPerPage(event: Event) {

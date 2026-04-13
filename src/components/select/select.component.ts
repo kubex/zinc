@@ -294,7 +294,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-   * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+   * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
    */
   @property({reflect: true}) form: string;
@@ -684,6 +684,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.emit('zn-clear');
         this.emit('zn-input');
         this.emit('zn-change');
+
+        if (this.triggerSubmit) {
+          this.formControlController.submit();
+        }
       });
     }
   }
@@ -1336,11 +1340,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       const data: unknown = await response.json();
 
       // Count raw results before maxResults limiting to determine exhaustiveness
-      const rawCount = Array.isArray(data)
-        ? data.reduce((n: number, item: unknown) => {
+      const rawCount: number = Array.isArray(data)
+        ? (data as unknown[]).reduce<number>((n, item) => {
           if (item && typeof item === 'object' && 'group' in (item as Record<string, unknown>)) {
             const group = item as Record<string, unknown>;
-            return n + (Array.isArray(group.options) ? group.options.length : 0);
+            return n + (Array.isArray(group.options) ? (group.options as unknown[]).length : 0);
           }
           return n + 1;
         }, 0)

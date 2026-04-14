@@ -2,6 +2,7 @@ import type {DataProviderOption, LocalDataProvider} from "./provider";
 
 const currencyCodeToName: { [key: string]: string } = {
   'ALL': 'Albania Lek',
+  'AED': 'United Arab Emirates Dirham',
   'AFN': 'Afghanistan Afghani',
   'ARS': 'Argentina Peso',
   'AWG': 'Aruba Guilder',

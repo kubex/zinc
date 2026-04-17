@@ -7246,17 +7246,23 @@ declare module "components/audio-select/index" {
 }
 declare module "components/translations/translations.component" {
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnButtonGroup from "components/button-group/index";
+    import ZnDropdown from "components/dropdown/index";
     import ZnInlineEdit from "components/inline-edit/index";
     import ZnInput from "components/input/index";
-    import ZnNavbar from "components/navbar/index";
+    import ZnMenu from "components/menu/index";
     import type { PropertyValues } from 'lit';
     import type { ZincFormControl } from "internal/zinc-element";
     export default class ZnTranslations extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult;
         static dependencies: {
-            'zn-navbar': typeof ZnNavbar;
-            'zn-input': typeof ZnInput;
+            'zn-button': typeof ZnButton;
+            'zn-button-group': typeof ZnButtonGroup;
+            'zn-dropdown': typeof ZnDropdown;
             'zn-inline-edit': typeof ZnInlineEdit;
+            'zn-input': typeof ZnInput;
+            'zn-menu': typeof ZnMenu;
         };
         private readonly formControlController;
         private readonly hasSlotController;
@@ -7288,7 +7294,7 @@ declare module "components/translations/translations.component" {
         protected firstUpdated(): void;
         willUpdate(changedProperties: PropertyValues): void;
         private handleLanguageAdd;
-        private handleNavbarClick;
+        private switchLanguage;
         private handleValueUpdate;
         private updateValue;
         private handleKeyDown;

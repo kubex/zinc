@@ -38,6 +38,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Boolean, reflect: true}) disabled = false;
   @property({type: Boolean, reflect: true}) required = false;
   @property({type: Boolean, reflect: true}) flush = false;
+  @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'number' | 'textarea' = 'text';
 
   /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
   @property({type: Boolean, reflect: true}) grouped = false;
@@ -285,6 +286,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
         <div part="form-control-input" class="translations__body">
           ${keyed(this._activeLanguage, html`
             <zn-inline-edit
+              input-type=${this.inputType}
               .value=${live(currentTranslation)}
               name="${this.name}"
               placeholder="Enter translation..."

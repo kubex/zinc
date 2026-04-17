@@ -7272,6 +7272,7 @@ declare module "components/translations/translations.component" {
         disabled: boolean;
         required: boolean;
         flush: boolean;
+        inputType: 'select' | 'text' | 'number' | 'textarea';
         /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
         grouped: boolean;
         languages: Record<string, string>;

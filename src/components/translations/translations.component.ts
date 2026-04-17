@@ -6,26 +6,31 @@ import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnButton from '../button';
+import ZnButtonGroup from '../button-group';
+import ZnDropdown from '../dropdown';
 import ZnInlineEdit from '../inline-edit';
 import ZnInput from '../input';
-import ZnNavbar from '../navbar';
+import ZnMenu from '../menu';
 import type {PropertyValues} from 'lit';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type {ZnMenuSelectEvent} from '../../events/zn-menu-select';
-import type {ZnSelectEvent} from "../../events/zn-select";
 
 import styles from './translations.scss';
 
 export default class ZnTranslations extends ZincElement implements ZincFormControl {
   static styles = unsafeCSS(styles);
   static dependencies = {
-    'zn-navbar': ZnNavbar,
+    'zn-button': ZnButton,
+    'zn-button-group': ZnButtonGroup,
+    'zn-dropdown': ZnDropdown,
+    'zn-inline-edit': ZnInlineEdit,
     'zn-input': ZnInput,
-    'zn-inline-edit': ZnInlineEdit
+    'zn-menu': ZnMenu
   };
 
   private readonly formControlController: FormControlController = new FormControlController(this);
-  private readonly hasSlotController = new HasSlotController(this, 'label');
+  private readonly hasSlotController = new HasSlotController(this, 'label', 'expand');
 
   @property() name = '';
   @property() value = '{"en":""}';
@@ -147,6 +152,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   }
 
   private handleLanguageAdd = (e: ZnMenuSelectEvent) => {
+    e.stopPropagation();
     const element = e.detail.element as HTMLElement;
     const languageCode = element.getAttribute('data-path');
     if (languageCode) {
@@ -157,16 +163,9 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
   };
 
-  private handleNavbarClick = (e: ZnSelectEvent) => {
-    e.stopPropagation();
-    const li = e.detail.item as HTMLElement;
-    if (li) {
-      const tab = li.getAttribute('tab') || li.getAttribute('data-tab');
-      if (tab) {
-        this._activeLanguage = tab;
-        this.requestUpdate();
-      }
-    }
+  private switchLanguage = (lang: string) => {
+    this._activeLanguage = lang;
+    this.requestUpdate();
   };
 
   private handleValueUpdate = (e: CustomEvent) => {
@@ -223,48 +222,67 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       visibleTabs.unshift('en');
     }
 
-    const navigation = visibleTabs.map(code => ({
-      title: code.toUpperCase(),
-      active: code === this._activeLanguage,
-      tab: code
-    }));
-
     const currentTranslation = this.values[this._activeLanguage] ?? '';
     const isRTL = this.isRTLLanguage(this._activeLanguage);
 
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasLabel = this.label ? true : hasLabelSlot;
+    const hasExpandSlot = this.hasSlotController.test('expand');
+    const hasMultipleLanguages = Object.keys(this.languages).length > 1;
+    const showActions = !this.grouped && (hasMultipleLanguages || hasExpandSlot);
 
     return html`
       <div part="form-control"
            class="${classMap({
              'translations': true,
              'translations--grouped': this.grouped,
+             'translations--flush': this.flush,
              'form-control': true,
              'form-control--medium': true,
              'form-control--has-label': hasLabel,
            })}"
            @keydown="${this.handleKeyDown}">
-        <label part="form-control-label" class="form-control__label" for="input"
-               aria-hidden=${hasLabel ? 'false' : 'true'}>
-          <slot name="label">${this.label}</slot>
-        </label>
+        <div class="translations__header">
+          <label part="form-control-label" class="form-control__label" for="input"
+                 aria-hidden=${hasLabel ? 'false' : 'true'}>
+            <slot name="label">${this.label}</slot>
+          </label>
+          ${showActions ? html`
+            <div class="translations__actions">
+              ${hasExpandSlot ? html`<slot name="expand"></slot>` : nothing}
+              ${hasMultipleLanguages ? html`
+                <zn-button-group>
+                  ${visibleTabs.map(code => html`
+                    <zn-button
+                      size="x-small"
+                      color="default"
+                      ?outline="${code !== this._activeLanguage}"
+                      @click="${() => this.switchLanguage(code)}"
+                    >${code.toUpperCase()}
+                    </zn-button>
+                  `)}
+                  ${availableLanguages.length > 0 ? html`
+                    <zn-dropdown placement="bottom-end">
+                      <zn-button
+                        slot="trigger"
+                        size="x-small"
+                        color="default"
+                        outline
+                      >+
+                      </zn-button>
+                      <zn-menu
+                        .actions=${availableLanguages}
+                        @zn-menu-select="${this.handleLanguageAdd}"
+                      ></zn-menu>
+                    </zn-dropdown>
+                  ` : nothing}
+                </zn-button-group>
+              ` : nothing}
+            </div>
+          ` : nothing}
+        </div>
 
-        ${!this.grouped ? html`
-          <zn-navbar
-            .navigation="${navigation}"
-            .dropdown="${availableLanguages}"
-            name="${this.name}-translations-navbar"
-            @zn-select="${this.handleNavbarClick}"
-            @zn-menu-select="${this.handleLanguageAdd}"
-            flush=${this.flush || nothing}
-            isolated
-            manual-add-items
-          >
-            <slot name="expand" slot="expand"></slot>
-          </zn-navbar>
-        ` : nothing}
-        <div class="input-container">
+        <div part="form-control-input" class="translations__body">
           ${keyed(this._activeLanguage, html`
             <zn-inline-edit
               .value=${live(currentTranslation)}

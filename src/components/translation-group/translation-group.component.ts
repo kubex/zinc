@@ -149,6 +149,7 @@ export default class ZnTranslationGroup extends ZnPanel {
       <div class="${classMap({
         panel: true,
         'panel--flush': this.flush,
+        'panel--transparent': this.transparent,
         'panel--has-header': hasHeader,
         'panel--has-actions': hasMultipleLanguages || hasActionSlot,
         'panel--has-footer': hasFooterSlot,

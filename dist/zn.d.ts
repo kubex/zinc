@@ -3769,6 +3769,7 @@ declare module "components/inline-edit/inline-edit.component" {
         max: string | number;
         step: number | 'any';
         inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea';
+        textareaRows: 1;
         options: {
             [key: string]: string;
         };
@@ -7275,6 +7276,7 @@ declare module "components/translations/translations.component" {
         required: boolean;
         flush: boolean;
         inputType: 'select' | 'text' | 'number' | 'textarea';
+        textareaRows: number | undefined;
         /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
         grouped: boolean;
         languages: Record<string, string>;

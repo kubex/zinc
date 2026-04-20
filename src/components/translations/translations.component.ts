@@ -2,6 +2,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {FormControlController, validValidityState} from '../../internal/form';
 import {HasSlotController} from '../../internal/slot';
 import {html, nothing, unsafeCSS} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
 import {property, state} from 'lit/decorators.js';
@@ -39,6 +40,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Boolean, reflect: true}) required = false;
   @property({type: Boolean, reflect: true}) flush = false;
   @property({attribute: "input-type"}) inputType: 'select' | 'text' | 'number' | 'textarea' = 'text';
+  @property({attribute: "textarea-rows", type: Number}) textareaRows: number | undefined;
 
   /** When true, hides the individual language navbar and defers language control to a parent zn-translation-group. */
   @property({type: Boolean, reflect: true}) grouped = false;
@@ -287,6 +289,7 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
           ${keyed(this._activeLanguage, html`
             <zn-inline-edit
               input-type=${this.inputType}
+              textarea-rows=${ifDefined(this.textareaRows)}
               .value=${live(currentTranslation)}
               name="${this.name}"
               placeholder="Enter translation..."

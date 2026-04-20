@@ -79,6 +79,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @property() step: number | 'any';
 
   @property({ attribute: "input-type" }) inputType: 'select' | 'text' | 'data-select' | 'number' | 'textarea' = 'text';
+  @property({ attribute: "textarea-rows", type: Number }) textareaRows: 1;
 
   @property({ type: Object }) options: { [key: string]: string } = {};
 
@@ -387,7 +388,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         name="${this.name}"
         size="${this.size}"
         resize="auto"
-        rows="1"
+        rows="${this.textareaRows}"
         .value="${this.value}"
         placeholder="${this.placeholder}"
         pattern=${ifDefined(this.pattern)}

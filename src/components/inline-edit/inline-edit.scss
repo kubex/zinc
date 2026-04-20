@@ -14,7 +14,7 @@
   gap: 10px;
 
   &:not(.ai--editing) {
-    .ai__input::part(base), .ai__input::part(combobox) {
+    .ai__input::part(base), .ai__input::part(combobox), .ai__input::part(textarea) {
       background-color: transparent;
       border-color: transparent;
       box-shadow: none;
@@ -30,13 +30,19 @@
       color: rgb(var(--zn-text));
     }
 
-    .ai__input::part(input), .ai__input::part(combobox) {
+    .ai__input::part(input), .ai__input::part(combobox), .ai__input::part(textarea) {
       padding: 0;
       color: rgb(var(--zn-text));
       text-decoration: underline;
       text-decoration-style: dashed;
       text-decoration-color: rgb(var(--zn-primary), 0.5);
       text-underline-offset: 3px;
+    }
+
+    .ai__input::part(textarea) {
+      padding-top: 8px;
+      box-shadow: none;
+      text-decoration:none;
     }
 
     .ai__input::part(expand-icon) {
@@ -150,7 +156,7 @@
   }
 
   &--disabled:not(.ai--editing) {
-    .ai__input::part(input), .ai__input::part(combobox) {
+    .ai__input::part(input), .ai__input::part(combobox), .ai__input::part(textarea) {
       text-decoration: none;
       caret-color: transparent;
       border-radius: 0;
@@ -170,12 +176,4 @@ zn-textarea::part(textarea) {
   resize: none;
 }
 
-.ai:not(.ai--editing) {
-  zn-textarea::part(textarea) {
-    box-shadow: none;
-    padding-left: 0;
-    padding-right: 0;
-    min-height: 35px;
-  }
-}
 

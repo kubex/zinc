@@ -78,7 +78,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   @property() placeholder = '';
 
   /** The number of rows to display by default. */
-  @property({type: Number}) rows = 4;
+  @property({attribute: 'rows',type: Number}) rows = 4;
 
   /** Controls how the textarea can be resized. */
   @property() resize: 'none' | 'vertical' | 'auto' = 'vertical';

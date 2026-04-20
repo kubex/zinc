@@ -16331,6 +16331,525 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/markdown-editor/markdown-editor.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnMarkdownEditor",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The toolbar containing the view-mode and fullscreen controls.",
+              "name": "toolbar"
+            },
+            {
+              "description": "The textarea wrapper.",
+              "name": "editor"
+            },
+            {
+              "description": "The rendered markdown preview.",
+              "name": "preview"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The editor label. Alternatively, use the `label` attribute.",
+              "name": "label"
+            },
+            {
+              "description": "Help text shown below the editor. Alternatively, use the `help-text` attribute.",
+              "name": "help-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { assumeInteractionOn: ['zn-input', 'zn-change'], })"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'label', 'help-text')"
+            },
+            {
+              "kind": "field",
+              "name": "debounceTimer",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "textarea",
+              "type": {
+                "text": "ZnTextarea"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "previewEl",
+              "type": {
+                "text": "HTMLDivElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the control, submitted as part of form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current markdown content.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The default value — used when resetting the form."
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The control's label. If you need HTML, use the `label` slot.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text displayed below the editor. If you need HTML, use the `help-text` slot.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter markdown content...'",
+              "description": "Placeholder text shown when the editor is empty.",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "20",
+              "description": "Number of rows for the textarea.",
+              "attribute": "rows"
+            },
+            {
+              "kind": "field",
+              "name": "viewMode",
+              "type": {
+                "text": "ViewMode"
+              },
+              "default": "'editor'",
+              "description": "Which view to show.",
+              "attribute": "view-mode",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-markdown-editor-view-mode'",
+              "description": "Key used to persist the selected view mode to `localStorage`. Set to an empty string to disable persistence.",
+              "attribute": "storage-key"
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the editor required for form submission.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the editor read-only.",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the editor.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the editor is currently expanded to cover its containing positioned ancestor."
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Sets focus on the editor."
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "description": "Removes focus from the editor."
+            },
+            {
+              "kind": "method",
+              "name": "readStoredViewMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ViewMode | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "writeStoredViewMode",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "ViewMode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderPreview",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleViewToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleExpandToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleViewModeChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleMarkedReady"
+            },
+            {
+              "kind": "method",
+              "name": "renderViewButton",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "ViewMode"
+                  }
+                },
+                {
+                  "name": "icon",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-view-mode-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Emitted when the user switches between editor / split / preview."
+            },
+            {
+              "description": "Emitted when the markdown content changes.",
+              "name": "zn-change"
+            },
+            {
+              "description": "Emitted on each keystroke in the editor.",
+              "name": "zn-input"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the control, submitted as part of form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current markdown content.",
+              "fieldName": "value"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The control's label. If you need HTML, use the `label` slot.",
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Help text displayed below the editor. If you need HTML, use the `help-text` slot.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Enter markdown content...'",
+              "description": "Placeholder text shown when the editor is empty.",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "20",
+              "description": "Number of rows for the textarea.",
+              "fieldName": "rows"
+            },
+            {
+              "name": "view-mode",
+              "type": {
+                "text": "ViewMode"
+              },
+              "default": "'editor'",
+              "description": "Which view to show.",
+              "fieldName": "viewMode"
+            },
+            {
+              "name": "storage-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-markdown-editor-view-mode'",
+              "description": "Key used to persist the selected view mode to `localStorage`. Set to an empty string to disable persistence.",
+              "fieldName": "storageKey"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the editor required for form submission.",
+              "fieldName": "required"
+            },
+            {
+              "name": "readonly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Makes the editor read-only.",
+              "fieldName": "readonly"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the editor.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A markdown editor with live preview, split view, and a fullscreen mode.",
+          "tagNameWithoutPrefix": "markdown-editor",
+          "tagName": "zn-markdown-editor",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A markdown editor with live preview, split view, and a fullscreen mode.\n * @documentation https://zinc.style/components/markdown-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-textarea\n * @dependency zn-button-group\n * @dependency zn-icon\n *\n * @event zn-change - Emitted when the markdown content changes.\n * @event zn-input - Emitted on each keystroke in the editor.\n * @event zn-view-mode-change - Emitted when the user switches between editor / split / preview.\n *\n * @slot label - The editor label. Alternatively, use the `label` attribute.\n * @slot help-text - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The toolbar containing the view-mode and fullscreen controls.\n * @csspart editor - The textarea wrapper.\n * @csspart preview - The rendered markdown preview.\n */",
+          "documentation": "https://zinc.style/components/markdown-editor",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-textarea",
+            "zn-button-group",
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnMarkdownEditor",
+            "module": "components/markdown-editor/markdown-editor.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/menu/menu.js",
       "declarations": [
         {
@@ -32043,7 +32562,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "1.0.103",
+    "version": "1.0.104",
     "author": "",
     "license": "MIT"
   }

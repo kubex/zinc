@@ -7675,6 +7675,106 @@ declare module "components/priority-list/index" {
         }
     }
 }
+declare module "components/markdown-editor/markdown-editor.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnTextarea from "components/textarea/index";
+    type ViewMode = 'editor' | 'split' | 'preview';
+    /**
+     * @summary A markdown editor with live preview, split view, and a fullscreen mode.
+     * @documentation https://zinc.style/components/markdown-editor
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-textarea
+     * @dependency zn-button-group
+     * @dependency zn-icon
+     *
+     * @event zn-change - Emitted when the markdown content changes.
+     * @event zn-input - Emitted on each keystroke in the editor.
+     * @event zn-view-mode-change - Emitted when the user switches between editor / split / preview.
+     *
+     * @slot label - The editor label. Alternatively, use the `label` attribute.
+     * @slot help-text - Help text shown below the editor. Alternatively, use the `help-text` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart toolbar - The toolbar containing the view-mode and fullscreen controls.
+     * @csspart editor - The textarea wrapper.
+     * @csspart preview - The rendered markdown preview.
+     */
+    export default class ZnMarkdownEditor extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private readonly formControlController;
+        private readonly hasSlotController;
+        private debounceTimer;
+        textarea: ZnTextarea;
+        previewEl: HTMLDivElement;
+        /** The name of the control, submitted as part of form data. */
+        name: string;
+        /** The current markdown content. */
+        value: string;
+        /** The default value — used when resetting the form. */
+        defaultValue: string;
+        /** The control's label. If you need HTML, use the `label` slot. */
+        label: string;
+        /** Help text displayed below the editor. If you need HTML, use the `help-text` slot. */
+        helpText: string;
+        /** Placeholder text shown when the editor is empty. */
+        placeholder: string;
+        /** Number of rows for the textarea. */
+        rows: number;
+        /** Which view to show. */
+        viewMode: ViewMode;
+        /**
+         * Key used to persist the selected view mode to `localStorage`. Set to an empty string to disable persistence.
+         */
+        storageKey: string;
+        /** Makes the editor required for form submission. */
+        required: boolean;
+        /** Makes the editor read-only. */
+        readonly: boolean;
+        /** Disables the editor. */
+        disabled: boolean;
+        /** Whether the editor is currently expanded to cover its containing positioned ancestor. */
+        expanded: boolean;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(message: string): void;
+        /** Sets focus on the editor. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the editor. */
+        blur(): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private readStoredViewMode;
+        private writeStoredViewMode;
+        private renderPreview;
+        private handleInput;
+        private handleChange;
+        private handleViewToggle;
+        private handleExpandToggle;
+        handleViewModeChange(): Promise<void>;
+        handleValueChange(): Promise<void>;
+        handleMarkedReady(): void;
+        render(): import("lit").TemplateResult<1>;
+        private renderViewButton;
+    }
+}
+declare module "components/markdown-editor/index" {
+    import ZnMarkdownEditor from "components/markdown-editor/markdown-editor.component";
+    export * from "components/markdown-editor/markdown-editor.component";
+    export default ZnMarkdownEditor;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-markdown-editor': ZnMarkdownEditor;
+        }
+    }
+}
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -7872,6 +7972,7 @@ declare module "zinc" {
     export { default as TranslationGroup } from "components/translation-group/index";
     export { default as OptGroup } from "components/opt-group/index";
     export { default as PriorityList } from "components/priority-list/index";
+    export { default as MarkdownEditor } from "components/markdown-editor/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

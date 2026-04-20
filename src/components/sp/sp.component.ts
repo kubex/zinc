@@ -39,6 +39,8 @@ export default class ZnSp extends ZincElement {
   @property({attribute: 'divide', type: Boolean, reflect: true}) divide: boolean = false;
   @property({attribute: 'gap', reflect: true}) gap: keyof typeof defaultSizes;
   @property({attribute: 'row', type: Boolean, reflect: true}) row: boolean = false;
+  @property({reflect: true}) align: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+  @property({reflect: true}) justify: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
   @property({attribute: 'grow', type: Boolean, reflect: true}) grow: boolean = false;
   @property({attribute: 'pad-x', type: Boolean, reflect: true}) padX: boolean = false;
   @property({attribute: 'pad-y', type: Boolean, reflect: true}) padY: boolean = false;

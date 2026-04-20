@@ -66,6 +66,42 @@ Use the `no-gap` attribute to remove all spacing between children.
 </zn-sp>
 ```
 
+### Align
+
+Use the `align` attribute to align children along the cross axis. Accepts `start`, `center`, `end`, `stretch`, or `baseline`. In a row layout the cross axis is vertical; in a column layout it is horizontal.
+
+```html:preview
+<zn-sp row align="start" style="height: 100px; border: 1px dashed #ccc;">
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+  <div style="background: #d0e4ff; padding: 8px; height: 60px;">Tall</div>
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+</zn-sp>
+<br />
+<zn-sp row align="center" style="height: 100px; border: 1px dashed #ccc;">
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+  <div style="background: #d0e4ff; padding: 8px; height: 60px;">Tall</div>
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+</zn-sp>
+<br />
+<zn-sp row align="end" style="height: 100px; border: 1px dashed #ccc;">
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+  <div style="background: #d0e4ff; padding: 8px; height: 60px;">Tall</div>
+  <div style="background: #d0e4ff; padding: 8px;">Short</div>
+</zn-sp>
+```
+
+### Justify
+
+Use the `justify` attribute to distribute children along the main axis. Accepts `start`, `center`, `end`, `between`, `around`, or `evenly`. In a row layout the main axis is horizontal; in a column layout it is vertical.
+
+```html:preview
+<zn-sp row justify="between" style="border: 1px dashed #ccc;">
+  <zn-chip>Left</zn-chip>
+  <zn-chip>Middle</zn-chip>
+  <zn-chip>Right</zn-chip>
+</zn-sp>
+```
+
 ### Flush
 
 By default, `zn-sp` applies padding. Use the `flush` attribute to remove all padding, or `flush-x` / `flush-y` to remove padding in a single direction.

@@ -4341,6 +4341,8 @@ declare module "components/sp/sp.component" {
         divide: boolean;
         gap: keyof typeof defaultSizes;
         row: boolean;
+        align: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
+        justify: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
         grow: boolean;
         padX: boolean;
         padY: boolean;

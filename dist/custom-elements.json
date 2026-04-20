@@ -16533,7 +16533,9 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Whether the editor is currently expanded to cover its containing positioned ancestor."
+              "description": "Whether the editor is currently expanded to cover its containing positioned ancestor.",
+              "attribute": "expanded",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -16613,6 +16615,11 @@
               "kind": "method",
               "name": "blur",
               "description": "Removes focus from the editor."
+            },
+            {
+              "kind": "field",
+              "name": "handlePopoverToggle",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -16816,6 +16823,15 @@
               "default": "false",
               "description": "Disables the editor.",
               "fieldName": "disabled"
+            },
+            {
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether the editor is currently expanded to cover its containing positioned ancestor.",
+              "fieldName": "expanded"
             }
           ],
           "superclass": {

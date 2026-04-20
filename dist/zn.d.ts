@@ -7750,6 +7750,7 @@ declare module "components/markdown-editor/markdown-editor.component" {
         blur(): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private handlePopoverToggle;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private readStoredViewMode;
         private writeStoredViewMode;

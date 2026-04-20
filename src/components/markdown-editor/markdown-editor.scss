@@ -1,25 +1,9 @@
 @use "../../wc";
 
-:host {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 0;
-}
-
-:host(:popover-open) {
-  position: fixed;
-  inset: 10px;
-  width: auto;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  padding: var(--zn-spacing-medium);
-  background: var(--zn-panel-background-color, var(--zn-color-neutral-0, #fff));
-  border: 1px solid var(--zn-color-neutral-300);
-  border-radius: var(--zn-border-radius-medium);
-  box-shadow: var(--zn-shadow-large);
-  overflow: auto;
+.panel {
+  border: 1px solid rgb(var(--zn-border-color));
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border-radius: var(--zn-border-radius-large);
 }
 
 .markdown-editor {
@@ -29,6 +13,27 @@
   width: 100%;
   height: 100%;
   min-height: 0;
+}
+
+:host([expanded]) {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: var(--zn-sp-padding);
+  right: var(--zn-sp-padding);
+  z-index: var(--zn-z-index-editor-action, 1000000);
+}
+
+:host([expanded]) .panel,
+:host([expanded]) .panel__inner,
+:host([expanded]) .panel__content,
+:host([expanded]) .panel__body {
+  height: 100%;
+  max-height: 100%;
+}
+
+:host([expanded]) .markdown-editor {
+  height: 100%;
 }
 
 .markdown-editor__label {
@@ -203,14 +208,4 @@
 .markdown-editor__help-text {
   font-size: var(--zn-input-help-text-font-size-medium);
   color: var(--zn-input-help-text-color);
-}
-
-:host(:popover-open) .markdown-editor__body {
-  min-height: 0;
-  flex: 1;
-}
-
-:host(:popover-open) .markdown-editor__editor zn-textarea,
-:host(:popover-open) .markdown-editor__preview {
-  min-height: calc(100vh - 200px);
 }

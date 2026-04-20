@@ -3,18 +3,19 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {marked} from "marked";
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
-import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
 import type ZnTextarea from "../textarea";
 
 import styles from './markdown-editor.scss';
+import ZnPanel from "../panel/panel.component";
 
 type ViewMode = 'editor' | 'split' | 'preview';
 
-const VIEW_MODES: {mode: ViewMode; icon: string; label: string}[] = [
+const VIEW_MODES: { mode: ViewMode; icon: string; label: string }[] = [
   {mode: 'editor', icon: 'edit_note', label: 'Editor'},
   {mode: 'split', icon: 'vertical_split', label: 'Split'},
   {mode: 'preview', icon: 'visibility', label: 'Preview'},
@@ -42,13 +43,13 @@ const VIEW_MODES: {mode: ViewMode; icon: string; label: string}[] = [
  * @csspart editor - The textarea wrapper.
  * @csspart preview - The rendered markdown preview.
  */
-export default class ZnMarkdownEditor extends ZincElement implements ZincFormControl {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl {
+  static styles: CSSResultGroup = [ZnPanel.styles as CSSResultGroup, unsafeCSS(styles)];
 
   private readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-input', 'zn-change'],
   });
-  private readonly hasSlotController = new HasSlotController(this, 'label', 'help-text');
+  private readonly markdownSlotController = new HasSlotController(this, 'label', 'help-text', 'actions', 'footer');
 
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -152,21 +153,17 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
     const stored = this.readStoredViewMode();
     if (stored) this.viewMode = stored;
 
-    this.addEventListener('toggle', this.handlePopoverToggle as EventListener);
+    this.addEventListener('toggle', this.handleExpandToggle as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
-    this.removeEventListener('toggle', this.handlePopoverToggle as EventListener);
+    this.removeEventListener('toggle', this.handleExpandToggle as EventListener);
   }
 
-  private handlePopoverToggle = (e: ToggleEvent) => {
-    this.expanded = e.newState === 'open';
-  };
-
   protected firstUpdated(_changedProperties: PropertyValues) {
-    void _changedProperties;
+    super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
     if (this.viewMode !== 'editor') this.renderPreview();
   }
@@ -219,15 +216,7 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
   };
 
   private handleExpandToggle = () => {
-    if (this.expanded) {
-      this.hidePopover?.();
-      this.removeAttribute('popover');
-      this.expanded = false;
-    } else {
-      this.setAttribute('popover', 'manual');
-      this.showPopover?.();
-      this.expanded = true;
-    }
+    this.expanded = !this.expanded;
   };
 
   @watch('viewMode', {waitUntilFirstUpdate: true})
@@ -255,69 +244,109 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
   }
 
   render() {
-    const hasLabelSlot = this.hasSlotController.test('label');
-    const hasHelpSlot = this.hasSlotController.test('help-text');
+    const hasLabelSlot = this.markdownSlotController.test('label');
+    const hasHelpSlot = this.markdownSlotController.test('help-text');
+    const hasActionSlot = this.markdownSlotController.test('actions');
+    const hasFooterSlot = this.markdownSlotController.test('footer');
     const hasLabel = !!this.label || hasLabelSlot;
     const hasHelpText = !!this.helpText || hasHelpSlot;
+    const hasHeader = !!this.caption || hasActionSlot;
     const showEditor = this.viewMode === 'editor' || this.viewMode === 'split';
     const showPreview = this.viewMode === 'preview' || this.viewMode === 'split';
 
     return html`
-      <div part="base"
-           class=${classMap({
-             'markdown-editor': true,
-             'markdown-editor--split': this.viewMode === 'split',
-             'markdown-editor--preview-only': this.viewMode === 'preview',
-           })}>
-        ${hasLabel ? html`
-          <label class="markdown-editor__label">
-            <slot name="label">${this.label}</slot>
-          </label>` : ''}
+      <div part="base" class=${classMap({
+        panel: true,
+        'panel--flush': this.flush || this.tabbed,
+        'panel--flush-x': this.flushX,
+        'panel--flush-y': this.flushY,
+        'panel--flush-footer': this.flushFooter,
+        'panel--tabbed': this.tabbed,
+        'panel--transparent': this.transparent,
+        'panel--has-actions': hasActionSlot,
+        'panel--has-footer': hasFooterSlot,
+        'panel--has-header': hasHeader,
+        'panel--cosmic': this.cosmic,
+        'panel--shadow': this.shadow,
+      })}>
+        <div class="panel__inner">
+          ${hasHeader ? html`
+            <zn-header class=${classMap({
+              panel__header: true,
+              'panel__header--underline': this.underlineHeader,
+            })}
+                       icon=${this.icon}
+                       caption=${this.caption}
+                       description=${ifDefined(this.description)}
+                       transparent>
+              ${hasActionSlot ? html`
+                <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}
+            </zn-header>` : null}
 
-        <div part="toolbar" class="markdown-editor__toolbar">
-          <zn-button-group class="markdown-editor__view-toggle" @click=${this.handleViewToggle}>
-            ${VIEW_MODES.map(v => this.renderViewButton(v.mode, v.icon, v.label))}
-          </zn-button-group>
-          <zn-button
-            class="markdown-editor__expand-btn"
-            type="button"
-            size="medium"
-            color="secondary"
-            icon=${this.expanded ? 'close_fullscreen' : 'open_in_full'}
-            icon-size="18"
-            tooltip=${this.expanded ? 'Collapse' : 'Expand'}
-            @click=${this.handleExpandToggle}
-          ></zn-button>
-        </div>
+          <div class="panel__content">
+            <div class="panel__body">
+              <div class=${classMap({
+                'markdown-editor': true,
+                'markdown-editor--split': this.viewMode === 'split',
+                'markdown-editor--preview-only': this.viewMode === 'preview',
+                'markdown-editor--expanded': this.expanded,
+              })}>
+                ${hasLabel ? html`
+                  <label class="markdown-editor__label">
+                    <slot name="label">${this.label}</slot>
+                  </label>` : ''}
 
-        <div class="markdown-editor__body">
-          <div part="editor"
-               class="markdown-editor__editor"
-               ?hidden=${!showEditor}>
-            <zn-textarea
-              .value=${this.value}
-              name=${this.name || ''}
-              placeholder=${this.placeholder}
-              rows=${this.rows}
-              resize="auto"
-              ?required=${this.required}
-              ?readonly=${this.readonly}
-              ?disabled=${this.disabled}
-              @zn-input=${this.handleInput}
-              @zn-change=${this.handleChange}
-            ></zn-textarea>
+                <div part="toolbar" class="markdown-editor__toolbar">
+                  <zn-button-group class="markdown-editor__view-toggle" @click=${this.handleViewToggle}>
+                    ${VIEW_MODES.map(v => this.renderViewButton(v.mode, v.icon, v.label))}
+                  </zn-button-group>
+                  <zn-button
+                    class="markdown-editor__expand-btn"
+                    type="button"
+                    size="medium"
+                    color="secondary"
+                    icon=${this.expanded ? 'close_fullscreen' : 'open_in_full'}
+                    icon-size="18"
+                    tooltip=${this.expanded ? 'Collapse' : 'Expand'}
+                    @click=${this.handleExpandToggle}
+                  ></zn-button>
+                </div>
+
+                <div class="markdown-editor__body">
+                  <div part="editor"
+                       class="markdown-editor__editor"
+                       ?hidden=${!showEditor}>
+                    <zn-textarea
+                      .value=${this.value}
+                      name=${this.name || ''}
+                      placeholder=${this.placeholder}
+                      rows=${this.rows}
+                      resize="auto"
+                      ?required=${this.required}
+                      ?readonly=${this.readonly}
+                      ?disabled=${this.disabled}
+                      @zn-input=${this.handleInput}
+                      @zn-change=${this.handleChange}
+                    ></zn-textarea>
+                  </div>
+                  <div part="preview"
+                       class="markdown-editor__preview-wrapper"
+                       ?hidden=${!showPreview}>
+                    <div class="markdown-editor__preview"></div>
+                  </div>
+                </div>
+
+                ${hasHelpText ? html`
+                  <div class="markdown-editor__help-text">
+                    <slot name="help-text">${this.helpText}</slot>
+                  </div>` : ''}
+              </div>
+            </div>
           </div>
-          <div part="preview"
-               class="markdown-editor__preview-wrapper"
-               ?hidden=${!showPreview}>
-            <div class="markdown-editor__preview"></div>
-          </div>
-        </div>
 
-        ${hasHelpText ? html`
-          <div class="markdown-editor__help-text">
-            <slot name="help-text">${this.helpText}</slot>
-          </div>` : ''}
+          ${hasFooterSlot ? html`
+            <slot name="footer" class="panel__footer"></slot>` : null}
+        </div>
       </div>
     `;
   }

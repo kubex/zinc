@@ -4,7 +4,7 @@ import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
 import {marked} from "marked";
-import {property, query, state} from 'lit/decorators.js';
+import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type {ZincFormControl} from '../../internal/zinc-element';
@@ -95,7 +95,7 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
   @property({type: Boolean, reflect: true}) disabled = false;
 
   /** Whether the editor is currently expanded to cover its containing positioned ancestor. */
-  @state() expanded = false;
+  @property({type: Boolean, reflect: true}) expanded = false;
 
   get validity(): ValidityState {
     return this.textarea?.validity;
@@ -151,12 +151,19 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
 
     const stored = this.readStoredViewMode();
     if (stored) this.viewMode = stored;
+
+    this.addEventListener('toggle', this.handlePopoverToggle as EventListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
+    this.removeEventListener('toggle', this.handlePopoverToggle as EventListener);
   }
+
+  private handlePopoverToggle = (e: ToggleEvent) => {
+    this.expanded = e.newState === 'open';
+  };
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     void _changedProperties;
@@ -212,7 +219,15 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
   };
 
   private handleExpandToggle = () => {
-    this.expanded = !this.expanded;
+    if (this.expanded) {
+      this.hidePopover?.();
+      this.removeAttribute('popover');
+      this.expanded = false;
+    } else {
+      this.setAttribute('popover', 'manual');
+      this.showPopover?.();
+      this.expanded = true;
+    }
   };
 
   @watch('viewMode', {waitUntilFirstUpdate: true})
@@ -251,7 +266,6 @@ export default class ZnMarkdownEditor extends ZincElement implements ZincFormCon
       <div part="base"
            class=${classMap({
              'markdown-editor': true,
-             'markdown-editor--expanded': this.expanded,
              'markdown-editor--split': this.viewMode === 'split',
              'markdown-editor--preview-only': this.viewMode === 'preview',
            })}>

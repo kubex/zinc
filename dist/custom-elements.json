@@ -16340,7 +16340,11 @@
           "cssParts": [
             {
               "description": "The component's base wrapper.",
-              "name": "base"
+              "name": "base",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             },
             {
               "description": "The toolbar containing the view-mode and fullscreen controls.",
@@ -16363,6 +16367,30 @@
             {
               "description": "Help text shown below the editor. Alternatively, use the `help-text` attribute.",
               "name": "help-text"
+            },
+            {
+              "description": "The panel's main content.",
+              "name": "",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
+              "name": "actions",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "members": [
@@ -16375,10 +16403,10 @@
             },
             {
               "kind": "field",
-              "name": "hasSlotController",
+              "name": "markdownSlotController",
               "privacy": "private",
               "readonly": true,
-              "default": "new HasSlotController(this, 'label', 'help-text')"
+              "default": "new HasSlotController(this, 'label', 'help-text', 'actions', 'footer')"
             },
             {
               "kind": "field",
@@ -16617,11 +16645,6 @@
               "description": "Removes focus from the editor."
             },
             {
-              "kind": "field",
-              "name": "handlePopoverToggle",
-              "privacy": "private"
-            },
-            {
               "kind": "method",
               "name": "readStoredViewMode",
               "privacy": "private",
@@ -16705,6 +16728,173 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "underlineHeader",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-underline",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
             }
           ],
           "events": [
@@ -16832,11 +17022,154 @@
               "default": "false",
               "description": "Whether the editor is currently expanded to cover its containing positioned ancestor.",
               "fieldName": "expanded"
+            },
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "header-underline",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "underlineHeader",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
             }
           ],
           "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
+            "name": "ZnPanel",
+            "module": "/src/components/panel/panel.component"
           },
           "summary": "A markdown editor with live preview, split view, and a fullscreen mode.",
           "tagNameWithoutPrefix": "markdown-editor",
@@ -16850,6 +17183,16 @@
             "zn-textarea",
             "zn-button-group",
             "zn-icon"
+          ],
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
           ]
         }
       ],

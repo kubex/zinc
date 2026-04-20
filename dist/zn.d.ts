@@ -7677,9 +7677,9 @@ declare module "components/priority-list/index" {
 }
 declare module "components/markdown-editor/markdown-editor.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
     import type { ZincFormControl } from "internal/zinc-element";
     import type ZnTextarea from "components/textarea/index";
+    import ZnPanel from "components/panel/panel.component";
     type ViewMode = 'editor' | 'split' | 'preview';
     /**
      * @summary A markdown editor with live preview, split view, and a fullscreen mode.
@@ -7703,10 +7703,10 @@ declare module "components/markdown-editor/markdown-editor.component" {
      * @csspart editor - The textarea wrapper.
      * @csspart preview - The rendered markdown preview.
      */
-    export default class ZnMarkdownEditor extends ZincElement implements ZincFormControl {
+    export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl {
         static styles: CSSResultGroup;
         private readonly formControlController;
-        private readonly hasSlotController;
+        private readonly markdownSlotController;
         private debounceTimer;
         textarea: ZnTextarea;
         previewEl: HTMLDivElement;
@@ -7750,7 +7750,6 @@ declare module "components/markdown-editor/markdown-editor.component" {
         blur(): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        private handlePopoverToggle;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private readStoredViewMode;
         private writeStoredViewMode;

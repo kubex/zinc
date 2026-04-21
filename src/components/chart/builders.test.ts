@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { buildBarOption, type BuilderProps } from './builders';
+import { buildBarOption, buildLineOption, type BuilderProps } from './builders';
 
 const baseProps: BuilderProps = {
   type: 'bar',
@@ -73,5 +73,37 @@ describe('buildBarOption', () => {
   it('enables animation when enableAnimations=true', () => {
     const opt = buildBarOption({ ...baseProps, enableAnimations: true });
     expect(opt.animation).to.equal(true);
+  });
+});
+
+describe('buildLineOption', () => {
+  const baseLineProps: BuilderProps = {
+    type: 'line',
+    data: [{ name: 'Revenue', data: [10, 20, 30] }],
+    categories: ['Jan', 'Feb', 'Mar'],
+    stacked: false,
+    enableAnimations: false,
+    datapointSize: 3,
+    theme: 'light',
+  };
+
+  it('maps a series to line type', () => {
+    const opt = buildLineOption(baseLineProps);
+    expect((opt.series as any[])[0].type).to.equal('line');
+  });
+
+  it('applies symbolSize from datapointSize', () => {
+    const opt = buildLineOption(baseLineProps);
+    expect((opt.series as any[])[0].symbolSize).to.equal(3);
+  });
+
+  it('uses datetime x-axis when xAxisType=datetime', () => {
+    const opt = buildLineOption({ ...baseLineProps, xAxisType: 'datetime' });
+    expect((opt.xAxis as any).type).to.equal('time');
+  });
+
+  it('does not apply areaStyle for plain line', () => {
+    const opt = buildLineOption(baseLineProps);
+    expect((opt.series as any[])[0].areaStyle).to.be.undefined;
   });
 });

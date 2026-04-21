@@ -89,3 +89,14 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
     series: seriesFromProps(props, 'bar'),
   };
 }
+
+export function buildLineOption(props: BuilderProps): EChartsOption {
+  return {
+    ...commonOption(props),
+    xAxis: buildXAxis(props),
+    yAxis: buildYAxis(props),
+    series: seriesFromProps(props, 'line', () => ({
+      symbolSize: props.datapointSize,
+    })),
+  };
+}

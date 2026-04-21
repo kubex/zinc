@@ -100,3 +100,15 @@ export function buildLineOption(props: BuilderProps): EChartsOption {
     })),
   };
 }
+
+export function buildAreaOption(props: BuilderProps): EChartsOption {
+  return {
+    ...commonOption(props),
+    xAxis: buildXAxis(props),
+    yAxis: buildYAxis(props),
+    series: seriesFromProps(props, 'line', () => ({
+      symbolSize: props.datapointSize,
+      areaStyle: {},
+    })),
+  };
+}

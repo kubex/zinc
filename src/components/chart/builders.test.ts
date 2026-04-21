@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { buildBarOption, buildLineOption, type BuilderProps } from './builders';
+import { buildAreaOption, buildBarOption, buildLineOption, type BuilderProps } from './builders';
 
 const baseProps: BuilderProps = {
   type: 'bar',
@@ -105,5 +105,35 @@ describe('buildLineOption', () => {
   it('does not apply areaStyle for plain line', () => {
     const opt = buildLineOption(baseLineProps);
     expect((opt.series as any[])[0].areaStyle).to.be.undefined;
+  });
+});
+
+describe('buildAreaOption', () => {
+  const baseAreaProps: BuilderProps = {
+    type: 'area',
+    data: [{ name: 'Traffic', data: [100, 200, 300] }],
+    categories: ['Mon', 'Tue', 'Wed'],
+    stacked: false,
+    enableAnimations: false,
+    datapointSize: 1,
+    theme: 'light',
+  };
+
+  it('maps a series to line type with areaStyle set', () => {
+    const opt = buildAreaOption(baseAreaProps);
+    expect((opt.series as any[])[0].type).to.equal('line');
+    expect((opt.series as any[])[0].areaStyle).to.be.an('object');
+  });
+
+  it('applies stacking when stacked=true', () => {
+    const opt = buildAreaOption({
+      ...baseAreaProps,
+      stacked: true,
+      data: [
+        { name: 'A', data: [1, 2] },
+        { name: 'B', data: [3, 4] },
+      ],
+    });
+    expect((opt.series as any[])[0].stack).to.equal('total');
   });
 });

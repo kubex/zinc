@@ -64,6 +64,17 @@ export default class ZnChart extends ZincElement {
 
   @property({ type: Array }) colors?: string[];
   @property({ attribute: 'sync-group' }) syncGroup?: string;
+  @property({ type: Boolean }) smooth = false;
+  @property({
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return false;
+        if (value === '' || value === 'true') return true;
+        const num = parseFloat(value);
+        return Number.isNaN(num) ? true : num;
+      },
+    },
+  }) scale: boolean | number = false;
 
   private chart?: ECharts;
   private resizeObserver?: ResizeObserver;
@@ -78,6 +89,14 @@ export default class ZnChart extends ZincElement {
     return this.getAttribute('t') === 'dark' ? 'dark' : 'light';
   }
 
+  private getTextColor(): string | undefined {
+    const cs = getComputedStyle(this);
+    const rgb = cs.getPropertyValue('--zn-text').trim();
+    if (!rgb) return undefined;
+    const opacity = cs.getPropertyValue('--zn-text-opacity').trim() || '1';
+    return `rgba(${rgb}, ${opacity})`;
+  }
+
   private buildOption() {
     const props: BuilderProps = {
       type: this.type,
@@ -90,6 +109,9 @@ export default class ZnChart extends ZincElement {
       datapointSize: this.datapointSize,
       colors: this.colors,
       theme: this.getTheme(),
+      smooth: this.smooth,
+      scale: this.scale,
+      textColor: this.getTextColor(),
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);

@@ -26,12 +26,18 @@ export interface BuilderProps {
   datapointSize: number;
   colors?: string[];
   theme: 'light' | 'dark';
+  smooth?: boolean;
+  scale?: boolean | number;
+  textColor?: string;
 }
 
 function commonOption(props: BuilderProps): EChartsOption {
+  const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
+  const textColor = props.textColor ?? fallback;
   return {
     animation: props.enableAnimations,
     ...(props.colors ? { color: props.colors } : {}),
+    textStyle: { color: textColor },
     tooltip: {
       trigger: 'axis',
       valueFormatter: props.yAxisAppend
@@ -41,6 +47,7 @@ function commonOption(props: BuilderProps): EChartsOption {
     legend: {
       top: 0,
       right: 0,
+      textStyle: { color: textColor },
     },
     grid: {
       left: 40,
@@ -52,19 +59,43 @@ function commonOption(props: BuilderProps): EChartsOption {
 }
 
 function buildYAxis(props: BuilderProps) {
+  const scaleOpts = props.scale
+    ? {
+        scale: true,
+        ...(typeof props.scale === 'number'
+          ? { boundaryGap: [`${props.scale}%`, `${props.scale}%`] as [string, string] }
+          : {}),
+      }
+    : {};
   return {
     type: 'value' as const,
+    ...scaleOpts,
     axisLabel: props.yAxisAppend
       ? { formatter: (v: number) => `${v}${props.yAxisAppend}` }
       : {},
   };
 }
 
-function buildXAxis(props: BuilderProps) {
+function buildXAxis(props: BuilderProps, edgeToEdge = false) {
   if (props.xAxisType === 'datetime') return { type: 'time' as const };
   if (props.xAxisType === 'numeric') return { type: 'value' as const };
-  return { type: 'category' as const, data: props.categories };
+  return {
+    type: 'category' as const,
+    data: props.categories,
+    ...(edgeToEdge ? { boundaryGap: false } : {}),
+  };
 }
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
+function normalizeData(data: any[]): any[] {
+  return data.map((d: any) => {
+    if (d && typeof d === 'object' && !Array.isArray(d) && 'x' in d && 'y' in d) {
+      return [d.x, d.y];
+    }
+    return d;
+  });
+}
+/* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 
 function seriesFromProps(
   props: BuilderProps,
@@ -74,7 +105,7 @@ function seriesFromProps(
   return props.data.map((s) => ({
     type: seriesType,
     name: s.name,
-    data: s.data,
+    data: normalizeData(s.data),
     ...(s.color ? { itemStyle: { color: s.color } } : {}),
     ...(props.stacked ? { stack: 'total' } : {}),
     ...extra(s),
@@ -93,10 +124,11 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
 export function buildLineOption(props: BuilderProps): EChartsOption {
   return {
     ...commonOption(props),
-    xAxis: buildXAxis(props),
+    xAxis: buildXAxis(props, true),
     yAxis: buildYAxis(props),
     series: seriesFromProps(props, 'line', () => ({
       symbolSize: props.datapointSize,
+      smooth: props.smooth,
     })),
   };
 }
@@ -104,11 +136,12 @@ export function buildLineOption(props: BuilderProps): EChartsOption {
 export function buildAreaOption(props: BuilderProps): EChartsOption {
   return {
     ...commonOption(props),
-    xAxis: buildXAxis(props),
+    xAxis: buildXAxis(props, true),
     yAxis: buildYAxis(props),
     series: seriesFromProps(props, 'line', () => ({
       symbolSize: props.datapointSize,
-      areaStyle: {},
+      smooth: props.smooth,
+      areaStyle: { opacity: 0.1 },
     })),
   };
 }

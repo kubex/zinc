@@ -195,6 +195,48 @@ By default, animations are disabled for better performance. Use the `enable-anim
 </zn-chart>
 ```
 
+### Smooth Lines
+
+Add the `smooth` attribute to render line and area charts with curved segments instead of straight ones. Ignored for bar and sankey charts.
+
+```html:preview
+<zn-chart
+  type="line"
+  smooth
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
+  data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[30,40,35,50,49,60]}]"
+  height="300">
+</zn-chart>
+```
+
+### Scaled Y-Axis
+
+By default the y-axis starts at `0`. Add the `scale` attribute to adapt the y-axis to the data range — useful when values are clustered far from zero and you want to emphasise variation.
+
+```html:preview
+<zn-chart
+  type="line"
+  scale
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Temperature&quot;,&quot;data&quot;:[18,19,17,20,22]}]"
+  y-axis-append="°C"
+  height="300">
+</zn-chart>
+```
+
+Pass a number to `scale` to add that percentage of padding on top and bottom of the data range (e.g. `scale="10"` adds 10% padding). Larger values make the axis "breathe" more around the data.
+
+```html:preview
+<zn-chart
+  type="line"
+  scale="10"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Temperature&quot;,&quot;data&quot;:[18,19,17,20,22]}]"
+  y-axis-append="°C"
+  height="300">
+</zn-chart>
+```
+
 ### Single Series Chart
 
 For simple visualizations, use a single data series without multiple comparisons.

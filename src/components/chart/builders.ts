@@ -22,7 +22,7 @@ export interface BuilderProps {
   xAxisType?: 'datetime' | 'category' | 'numeric';
   yAxisAppend?: string;
   stacked: boolean;
-  enableAnimations: boolean;
+  enableAnimations: boolean | number;
   datapointSize: number;
   colors?: string[];
   theme: 'light' | 'dark';
@@ -34,8 +34,12 @@ export interface BuilderProps {
 function commonOption(props: BuilderProps): EChartsOption {
   const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
   const textColor = props.textColor ?? fallback;
+  const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
+  const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 1500;
   return {
-    animation: props.enableAnimations,
+    animation: animEnabled,
+    animationDuration: animDuration,
+    animationEasing: 'cubicOut',
     ...(props.colors ? { color: props.colors } : {}),
     textStyle: { color: textColor },
     tooltip: {
@@ -47,6 +51,7 @@ function commonOption(props: BuilderProps): EChartsOption {
     legend: {
       top: 0,
       right: 0,
+      icon: 'circle',
       textStyle: { color: textColor },
     },
     grid: {
@@ -58,7 +63,12 @@ function commonOption(props: BuilderProps): EChartsOption {
   };
 }
 
+function hasNoData(data: SeriesItem[]): boolean {
+  return data.length === 0 || data.every((s) => !s.data || s.data.length === 0);
+}
+
 function buildYAxis(props: BuilderProps) {
+  const emptyOpts = hasNoData(props.data) ? { min: 0, max: 6 } : {};
   const scaleOpts = props.scale
     ? {
         scale: true,
@@ -69,6 +79,7 @@ function buildYAxis(props: BuilderProps) {
     : {};
   return {
     type: 'value' as const,
+    ...emptyOpts,
     ...scaleOpts,
     axisLabel: props.yAxisAppend
       ? { formatter: (v: number) => `${v}${props.yAxisAppend}` }
@@ -108,6 +119,9 @@ function seriesFromProps(
     data: normalizeData(s.data),
     ...(s.color ? { itemStyle: { color: s.color } } : {}),
     ...(props.stacked ? { stack: 'total' } : {}),
+    ...(props.enableAnimations !== false && props.enableAnimations !== 0 && seriesType === 'bar'
+      ? { animationDelay: (idx: number) => idx * 50 }
+      : {}),
     ...extra(s),
   }));
 }
@@ -167,16 +181,31 @@ export function buildSankeyOption(props: BuilderProps): EChartsOption {
   const edges = (first.data ?? []) as SankeyEdge[];
   const explicitNodes = (first as { nodes?: { name: string }[] }).nodes;
   const nodes = explicitNodes ?? deriveNodes(edges);
+  const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
+  const textColor = props.textColor ?? fallback;
 
+  const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
+  const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 1500;
   return {
-    animation: props.enableAnimations,
+    animation: animEnabled,
+    animationDuration: animDuration,
+    animationEasing: 'cubicOut',
     ...(props.colors ? { color: props.colors } : {}),
+    textStyle: { color: textColor },
     tooltip: { trigger: 'item' },
     series: [{
       type: 'sankey',
       name: first.name,
       data: nodes,
       links: edges,
+      label: {
+        color: textColor,
+        textBorderWidth: 0,
+      },
+      lineStyle: {
+        color: 'source',
+        opacity: props.theme === 'dark' ? 0.4 : 0.3,
+      },
       emphasis: { focus: 'adjacency' },
     }],
   };

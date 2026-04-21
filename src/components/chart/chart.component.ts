@@ -59,7 +59,17 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'live-interval', type: Number }) liveInterval = 1000;
   @property({ type: Number, reflect: true }) height = 300;
 
-  @property({ attribute: 'enable-animations', type: Boolean }) enableAnimations = false;
+  @property({
+    attribute: 'enable-animations',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return false;
+        if (value === '' || value === 'true') return true;
+        const num = parseFloat(value);
+        return Number.isNaN(num) ? true : num;
+      },
+    },
+  }) enableAnimations: boolean | number = false;
   @property({ attribute: 'y-axis-append' }) yAxisAppend: string;
 
   @property({ type: Array }) colors?: string[];
@@ -134,7 +144,11 @@ export default class ZnChart extends ZincElement {
       echarts.connect(this.syncGroup);
     }
 
-    this.resizeObserver = new ResizeObserver(() => this.chart?.resize());
+    let firstResize = true;
+    this.resizeObserver = new ResizeObserver(() => {
+      if (firstResize) { firstResize = false; return; }
+      this.chart?.resize();
+    });
     this.resizeObserver.observe(host);
 
     if (this.live && this.dataUrl) this.startLive();

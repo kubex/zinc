@@ -27,6 +27,17 @@ export default class ZnSimpleChart extends ZincElement {
 
   @property({ attribute: 'datasets', type: Array }) datasets?: { data: number[] }[];
   @property({ attribute: 'labels', type: Array }) labels?: string[];
+  @property({
+    attribute: 'enable-animations',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return false;
+        if (value === '' || value === 'true') return true;
+        const num = parseFloat(value);
+        return Number.isNaN(num) ? true : num;
+      },
+    },
+  }) enableAnimations: boolean | number = false;
 
   private chart?: ECharts;
   private resizeObserver?: ResizeObserver;
@@ -37,7 +48,12 @@ export default class ZnSimpleChart extends ZincElement {
     this.chart = echarts.init(host);
     const data = this.datasets?.[0]?.data ?? DEFAULT_DATA;
     const labels = this.labels ?? DEFAULT_LABELS;
+    const animEnabled = this.enableAnimations !== false && this.enableAnimations !== 0;
+    const animDuration = typeof this.enableAnimations === 'number' ? this.enableAnimations : 1500;
     this.chart.setOption({
+      animation: animEnabled,
+      animationDuration: animDuration,
+      animationEasing: 'cubicOut',
       tooltip: {
         trigger: 'axis',
         backgroundColor: 'rgba(0,0,0,0.7)',
@@ -60,7 +76,11 @@ export default class ZnSimpleChart extends ZincElement {
         },
       }],
     });
-    this.resizeObserver = new ResizeObserver(() => this.chart?.resize());
+    let firstResize = true;
+    this.resizeObserver = new ResizeObserver(() => {
+      if (firstResize) { firstResize = false; return; }
+      this.chart?.resize();
+    });
     this.resizeObserver.observe(host);
   }
 

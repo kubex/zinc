@@ -94,6 +94,7 @@ Stacked area charts work similarly to stacked bar charts but with area fills.
 <zn-chart
   type="area"
   stacked
+  smooth
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
   data="[{&quot;name&quot;:&quot;Desktop&quot;,&quot;data&quot;:[300,400,350,500,490,600]},{&quot;name&quot;:&quot;Mobile&quot;,&quot;data&quot;:[200,290,250,350,390,450]},{&quot;name&quot;:&quot;Tablet&quot;,&quot;data&quot;:[100,150,120,180,170,200]}]"
   height="300">
@@ -114,6 +115,7 @@ Use the `height` attribute to control the chart's height in pixels. The default 
 <br />
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
   data="[{&quot;name&quot;:&quot;Sales&quot;,&quot;data&quot;:[40,55,45,60]}]"
   height="400">
@@ -127,6 +129,7 @@ Use the `d-size` attribute to control the size of data point markers on line and
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
   data="[{&quot;name&quot;:&quot;Small Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
   d-size="1"
@@ -135,6 +138,7 @@ Use the `d-size` attribute to control the size of data point markers on line and
 <br />
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
   data="[{&quot;name&quot;:&quot;Large Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
   d-size="6"
@@ -183,14 +187,14 @@ When using `x-axis="datetime"`, provide data in the format `[{x: timestamp, y: v
 
 ### Enable Animations
 
-By default, animations are disabled for better performance. Use the `enable-animations` attribute to enable chart animations.
+By default, animations are disabled for better performance. Add the `enable-animations` attribute to animate on first render — bars grow from the baseline and lines draw in. Pass a number (milliseconds) to control the duration; bare `enable-animations` defaults to `1500`.
 
 ```html:preview
 <zn-chart
   type="bar"
   categories="[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;]"
   data="[{&quot;name&quot;:&quot;Values&quot;,&quot;data&quot;:[44,55,41,37,52]}]"
-  enable-animations
+  enable-animations="2500"
   height="300">
 </zn-chart>
 ```
@@ -330,6 +334,8 @@ The chart component automatically adapts to dark mode using the `t` attribute. T
 <zn-chart
   t="dark"
   type="area"
+  scale
+  smooth
   categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
   data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,35,50,49]},{&quot;name&quot;:&quot;Series 2&quot;,&quot;data&quot;:[25,35,30,45,42]}]"
   height="300">
@@ -358,6 +364,7 @@ You can combine various attributes to create rich, informative charts.
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;]"
   data="[{&quot;name&quot;:&quot;Target&quot;,&quot;data&quot;:[80,85,82,90,88,95,92,98]},{&quot;name&quot;:&quot;Actual&quot;,&quot;data&quot;:[75,82,78,88,91,97,94,102]}]"
   d-size="4"

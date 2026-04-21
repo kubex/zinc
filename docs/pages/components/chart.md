@@ -1,7 +1,7 @@
 ---
 meta:
   title: Data Chart
-  description: Charts visualize data using various chart types powered by ApexCharts. Display line charts, bar charts, area charts, and more with full customization options.
+  description: Charts visualize data using various chart types powered by Apache ECharts. Display line charts, bar charts, area charts, sankey diagrams, and more with full customization options.
 layout: component
 ---
 
@@ -15,7 +15,7 @@ layout: component
 ```
 
 :::tip
-The chart component is built on ApexCharts, providing a powerful and flexible charting library with extensive customization options. Visit the [ApexCharts documentation](https://apexcharts.com/docs/) for advanced configuration options.
+The chart component is built on Apache ECharts, providing a powerful and flexible charting library with extensive customisation options. Visit the [Apache ECharts documentation](https://echarts.apache.org/en/option.html) for advanced configuration reference.
 :::
 
 ## Examples
@@ -221,6 +221,65 @@ When no data is available, the chart will display an empty state. Consider addin
 </zn-chart>
 ```
 
+### Sankey Diagram
+
+Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `data` array is an edge with `source`, `target`, and `value`. Nodes are auto-derived from unique source/target values.
+
+```html:preview
+<zn-chart
+  type="sankey"
+  height="400"
+  data="[{&quot;name&quot;:&quot;Payment Flow&quot;,&quot;data&quot;:[{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;USD&quot;,&quot;value&quot;:1200},{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;EUR&quot;,&quot;value&quot;:430},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:900},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:300},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:380},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:50}]}]">
+</zn-chart>
+```
+
+### Cross-Chart Tooltip Sync
+
+Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoom, and legend selection across them.
+
+```html:preview
+<zn-chart
+  sync-group="demo-group"
+  type="line"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Visits&quot;,&quot;data&quot;:[120,180,150,220,190]}]"
+  height="250">
+</zn-chart>
+<br />
+<zn-chart
+  sync-group="demo-group"
+  type="bar"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Signups&quot;,&quot;data&quot;:[12,18,15,22,19]}]"
+  height="250">
+</zn-chart>
+```
+
+### Custom Colors
+
+Use the `colors` attribute to set the palette that cycles across series.
+
+```html:preview
+<zn-chart
+  type="bar"
+  colors="[&quot;#ff6c9c&quot;,&quot;#6483F2&quot;,&quot;#29bab5&quot;]"
+  categories="[&quot;Q1&quot;,&quot;Q2&quot;,&quot;Q3&quot;]"
+  data="[{&quot;name&quot;:&quot;A&quot;,&quot;data&quot;:[10,20,30]},{&quot;name&quot;:&quot;B&quot;,&quot;data&quot;:[15,25,35]},{&quot;name&quot;:&quot;C&quot;,&quot;data&quot;:[20,30,40]}]"
+  height="300">
+</zn-chart>
+```
+
+For a specific series colour, add a `color` property to the series object in the `data` array:
+
+```html:preview
+<zn-chart
+  type="line"
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;]"
+  data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;color&quot;:&quot;hsl(210,70%,50%)&quot;,&quot;data&quot;:[10,20,30]}]"
+  height="300">
+</zn-chart>
+```
+
 ### Dark Mode Support
 
 The chart component automatically adapts to dark mode using the `t` attribute. The theme adjusts colors, gridlines, and text to match the current theme.
@@ -312,6 +371,22 @@ When using `x-axis="datetime"`, use the coordinate format:
   }
 ]
 ```
+
+### Sankey Edge Format
+
+When `type="sankey"`, each item in the series `data` array is an edge:
+
+```json
+[{
+  "name": "Flow",
+  "data": [
+    {"source": "A", "target": "B", "value": 100},
+    {"source": "A", "target": "C", "value": 50}
+  ]
+}]
+```
+
+Nodes are auto-derived from unique source/target values. To customise node appearance or ordering, include an explicit `nodes` key on the series object.
 
 ### HTML Encoding
 

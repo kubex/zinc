@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call */
+import {
+  buildAreaOption,
+  buildBarOption,
+  type BuilderProps,
+  buildLineOption,
+  buildSankeyOption,
+} from './builders';
 import { expect } from '@open-wc/testing';
-import { buildAreaOption, buildBarOption, buildLineOption, buildSankeyOption, type BuilderProps } from './builders';
 
 const baseProps: BuilderProps = {
   type: 'bar',

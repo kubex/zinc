@@ -112,3 +112,39 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
     })),
   };
 }
+
+function deriveNodes(edges: SankeyEdge[]): { name: string }[] {
+  const seen = new Set<string>();
+  const nodes: { name: string }[] = [];
+  for (const edge of edges) {
+    if (!seen.has(edge.source)) {
+      seen.add(edge.source);
+      nodes.push({ name: edge.source });
+    }
+    if (!seen.has(edge.target)) {
+      seen.add(edge.target);
+      nodes.push({ name: edge.target });
+    }
+  }
+  return nodes;
+}
+
+export function buildSankeyOption(props: BuilderProps): EChartsOption {
+  const first = props.data[0] ?? { name: '', data: [] };
+  const edges = (first.data ?? []) as SankeyEdge[];
+  const explicitNodes = (first as any).nodes as { name: string }[] | undefined;
+  const nodes = explicitNodes ?? deriveNodes(edges);
+
+  return {
+    animation: props.enableAnimations,
+    ...(props.colors ? { color: props.colors } : {}),
+    tooltip: { trigger: 'item' },
+    series: [{
+      type: 'sankey',
+      name: first.name,
+      data: nodes,
+      links: edges,
+      emphasis: { focus: 'adjacency' },
+    }],
+  };
+}

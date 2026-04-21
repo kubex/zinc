@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { buildAreaOption, buildBarOption, buildLineOption, type BuilderProps } from './builders';
+import { buildAreaOption, buildBarOption, buildLineOption, buildSankeyOption, type BuilderProps } from './builders';
 
 const baseProps: BuilderProps = {
   type: 'bar',
@@ -135,5 +135,70 @@ describe('buildAreaOption', () => {
       ],
     });
     expect((opt.series as any[])[0].stack).to.equal('total');
+  });
+});
+
+describe('buildSankeyOption', () => {
+  const sankeyProps: BuilderProps = {
+    type: 'sankey',
+    data: [{
+      name: 'Flow',
+      data: [
+        { source: 'A', target: 'B', value: 10 },
+        { source: 'A', target: 'C', value: 5 },
+        { source: 'B', target: 'D', value: 7 },
+      ],
+    }],
+    categories: [],
+    stacked: false,
+    enableAnimations: false,
+    datapointSize: 1,
+    theme: 'light',
+  };
+
+  it('builds one sankey series with links mapped from edges', () => {
+    const opt = buildSankeyOption(sankeyProps);
+    const series = (opt.series as any[])[0];
+    expect(series.type).to.equal('sankey');
+    expect(series.links).to.deep.equal([
+      { source: 'A', target: 'B', value: 10 },
+      { source: 'A', target: 'C', value: 5 },
+      { source: 'B', target: 'D', value: 7 },
+    ]);
+  });
+
+  it('derives unique nodes from edge source/target values', () => {
+    const opt = buildSankeyOption(sankeyProps);
+    const series = (opt.series as any[])[0];
+    const names = series.data.map((n: any) => n.name).sort();
+    expect(names).to.deep.equal(['A', 'B', 'C', 'D']);
+  });
+
+  it('omits xAxis and yAxis (sankey has no cartesian axes)', () => {
+    const opt = buildSankeyOption(sankeyProps);
+    expect(opt.xAxis).to.be.undefined;
+    expect(opt.yAxis).to.be.undefined;
+  });
+
+  it('passes through explicit nodes when provided on the series object', () => {
+    const withNodes = {
+      ...sankeyProps,
+      data: [{
+        name: 'Flow',
+        nodes: [
+          { name: 'A', itemStyle: { color: '#f00' } },
+          { name: 'B' }, { name: 'C' }, { name: 'D' },
+        ],
+        data: sankeyProps.data[0].data,
+      }] as any,
+    };
+    const opt = buildSankeyOption(withNodes);
+    const series = (opt.series as any[])[0];
+    expect(series.data[0]).to.deep.equal({ name: 'A', itemStyle: { color: '#f00' } });
+  });
+
+  it('uses tooltip trigger=item (not axis) for sankey', () => {
+    const opt = buildSankeyOption(sankeyProps);
+    expect((opt.tooltip as any).trigger).to.equal('item');
   });
 });

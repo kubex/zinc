@@ -107,6 +107,11 @@ export default class ZnChart extends ZincElement {
     return `rgba(${rgb}, ${opacity})`;
   }
 
+  private getBorderColor(): string | undefined {
+    const rgb = getComputedStyle(this).getPropertyValue('--zn-border-color').trim();
+    return rgb ? `rgb(${rgb})` : undefined;
+  }
+
   private buildOption() {
     const props: BuilderProps = {
       type: this.type,
@@ -122,6 +127,7 @@ export default class ZnChart extends ZincElement {
       smooth: this.smooth,
       scale: this.scale,
       textColor: this.getTextColor(),
+      borderColor: this.getBorderColor(),
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);

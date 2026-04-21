@@ -8,6 +8,7 @@ layout: component
 ```html:preview
 <zn-chart
   type="area"
+  smooth
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;]"
   data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,45,50,49,60,70,91,125]}]"
   height="300">
@@ -27,6 +28,7 @@ Use `type="line"` to create a line chart. The `data` attribute accepts an array 
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
   data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[30,40,35,50,49,60]},{&quot;name&quot;:&quot;Expenses&quot;,&quot;data&quot;:[20,29,25,35,39,45]}]"
   height="300">

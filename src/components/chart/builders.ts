@@ -29,6 +29,7 @@ export interface BuilderProps {
   smooth?: boolean;
   scale?: boolean | number;
   textColor?: string;
+  borderColor?: string;
 }
 
 function commonOption(props: BuilderProps): EChartsOption {
@@ -77,8 +78,12 @@ function buildYAxis(props: BuilderProps) {
           : {}),
       }
     : {};
+  const splitLineOpts = props.borderColor
+    ? { splitLine: { lineStyle: { color: props.borderColor } } }
+    : {};
   return {
     type: 'value' as const,
+    ...splitLineOpts,
     ...emptyOpts,
     ...scaleOpts,
     axisLabel: props.yAxisAppend
@@ -88,12 +93,16 @@ function buildYAxis(props: BuilderProps) {
 }
 
 function buildXAxis(props: BuilderProps, edgeToEdge = false) {
-  if (props.xAxisType === 'datetime') return { type: 'time' as const };
-  if (props.xAxisType === 'numeric') return { type: 'value' as const };
+  const axisLineOpts = props.borderColor
+    ? { axisLine: { lineStyle: { color: props.borderColor } } }
+    : {};
+  if (props.xAxisType === 'datetime') return { type: 'time' as const, ...axisLineOpts };
+  if (props.xAxisType === 'numeric') return { type: 'value' as const, ...axisLineOpts };
   return {
     type: 'category' as const,
     data: props.categories,
     ...(edgeToEdge ? { boundaryGap: false } : {}),
+    ...axisLineOpts,
   };
 }
 

@@ -132,7 +132,7 @@ function deriveNodes(edges: SankeyEdge[]): { name: string }[] {
 export function buildSankeyOption(props: BuilderProps): EChartsOption {
   const first = props.data[0] ?? { name: '', data: [] };
   const edges = (first.data ?? []) as SankeyEdge[];
-  const explicitNodes = (first as any).nodes as { name: string }[] | undefined;
+  const explicitNodes = (first as { nodes?: { name: string }[] }).nodes;
   const nodes = explicitNodes ?? deriveNodes(edges);
 
   return {

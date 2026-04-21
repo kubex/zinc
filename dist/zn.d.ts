@@ -7282,6 +7282,10 @@ declare module "components/translations/translations.component" {
         languages: Record<string, string>;
         values: Record<string, string>;
         private _activeLanguage;
+        private _overflowIndex;
+        private _resizeObserver?;
+        private _lastObservedWidth;
+        private _measureRafId;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -7296,9 +7300,15 @@ declare module "components/translations/translations.component" {
         addLanguageKey(languageCode: string): void;
         /** Returns all language codes that have values. */
         getValueLanguages(): string[];
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(): void;
+        protected updated(changedProperties: PropertyValues): void;
+        private _scheduleLangOverflow;
+        private _computeLangOverflow;
         willUpdate(changedProperties: PropertyValues): void;
         private handleLanguageAdd;
+        private handleOverflowSelect;
         private switchLanguage;
         private handleValueUpdate;
         private updateValue;
@@ -7490,8 +7500,16 @@ declare module "components/translation-group/translation-group.component" {
         private _activeLanguage;
         /** Tracks all language codes that have been activated across children. */
         private _activatedLanguages;
+        private _overflowIndex;
+        private _resizeObserver?;
+        private _lastObservedWidth;
+        private _measureRafId;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
+        private _scheduleLangOverflow;
+        private _computeLangOverflow;
         private getAllTranslations;
         /** Sync grouped state, languages, and active language to all children. */
         private syncChildren;
@@ -7499,6 +7517,7 @@ declare module "components/translation-group/translation-group.component" {
         private handleSlotChange;
         private switchLanguage;
         private handleLanguageAdd;
+        private handleOverflowSelect;
         render(): import("lit").TemplateResult<1>;
     }
 }

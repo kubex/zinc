@@ -141,7 +141,8 @@ Use the `expand` slot to add custom buttons or actions.
 
 ### Many Languages
 
-The component handles many languages gracefully with scrollable tabs.
+When the language buttons don't all fit on one line, the overflow collapses into a chevron dropdown so the row stays a
+single line. Resizing the container re-measures and expands the buttons back out when space allows.
 
 ```html:preview
 <zn-translations
@@ -149,6 +150,21 @@ The component handles many languages gracefully with scrollable tabs.
   languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ru":"Russian","zh":"Chinese","ja":"Japanese","ar":"Arabic","hi":"Hindi","ko":"Korean"}'
   values='{"en":"Hello","fr":"Bonjour","de":"Hallo","es":"Hola","it":"Ciao","pt":"Olá","ru":"Привет","zh":"你好","ja":"こんにちは","ar":"مرحبا","hi":"नमस्ते","ko":"안녕하세요"}'
 ></zn-translations>
+```
+
+### Constrained Width
+
+Placing the component in a narrow container forces the chevron overflow to kick in. Selecting a language from the
+dropdown switches the active language just like clicking a visible button.
+
+```html:preview
+<div style="max-width: 320px;">
+  <zn-translations
+    label="Narrow Container"
+    languages='{"en":"English","fr":"French","de":"German","es":"Spanish","it":"Italian","pt":"Portuguese","ja":"Japanese","ko":"Korean","zh-hans":"Simplified Chinese"}'
+    values='{"en":"Hello","fr":"Bonjour","de":"Hallo","es":"Hola","it":"Ciao","pt":"Olá","ja":"こんにちは","ko":"안녕하세요","zh-hans":"你好"}'
+  ></zn-translations>
+</div>
 ```
 
 ### RTL Language Support

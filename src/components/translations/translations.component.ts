@@ -51,6 +51,11 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @property({type: Object}) values: Record<string, string> = {};
 
   @state() private _activeLanguage = 'en';
+  @state() private _overflowIndex = -1;
+
+  private _resizeObserver?: ResizeObserver;
+  private _lastObservedWidth = 0;
+  private _measureRafId = 0;
 
   get validity(): ValidityState {
     return validValidityState;
@@ -101,8 +106,82 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     return Object.keys(this.values);
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this._resizeObserver = new ResizeObserver(entries => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      if (Math.abs(width - this._lastObservedWidth) < 1) return;
+      this._lastObservedWidth = width;
+      if (this._overflowIndex !== -1) {
+        this._overflowIndex = -1;
+      } else {
+        this._scheduleLangOverflow();
+      }
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._resizeObserver?.disconnect();
+    if (this._measureRafId) {
+      cancelAnimationFrame(this._measureRafId);
+      this._measureRafId = 0;
+    }
+  }
+
   protected firstUpdated() {
     this.formControlController.updateValidity();
+    this._resizeObserver?.observe(this);
+  }
+
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    this._scheduleLangOverflow();
+  }
+
+  private _scheduleLangOverflow() {
+    if (this._measureRafId) return;
+    this._measureRafId = requestAnimationFrame(() => {
+      this._measureRafId = 0;
+      this._computeLangOverflow();
+    });
+  }
+
+  private _computeLangOverflow() {
+    const group = this.shadowRoot?.querySelector<HTMLElement>('.translations__language-group');
+    if (!group) return;
+
+    const buttons = Array.from(group.querySelectorAll<HTMLElement>('zn-button[data-lang-btn]'));
+    if (buttons.length < 2) {
+      if (this._overflowIndex !== -1) this._overflowIndex = -1;
+      return;
+    }
+
+    const firstTop = buttons[0].getBoundingClientRect().top;
+    let wrapAt = -1;
+    for (let i = 1; i < buttons.length; i++) {
+      if (buttons[i].getBoundingClientRect().top > firstTop + 1) {
+        wrapAt = i;
+        break;
+      }
+    }
+
+    if (wrapAt === -1) {
+      const trailing = group.querySelector<HTMLElement>('[data-lang-overflow], [data-lang-add]');
+      if (trailing && trailing.getBoundingClientRect().top > firstTop + 1) {
+        wrapAt = buttons.length;
+      }
+    }
+
+    if (wrapAt === -1) return;
+
+    const newIndex = this._overflowIndex === -1
+      ? wrapAt
+      : Math.max(1, Math.min(wrapAt, this._overflowIndex - 1));
+
+    if (newIndex !== this._overflowIndex) {
+      this._overflowIndex = newIndex;
+    }
   }
 
   willUpdate(changedProperties: PropertyValues) {
@@ -166,6 +245,15 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     }
   };
 
+  private handleOverflowSelect = (e: ZnMenuSelectEvent) => {
+    e.stopPropagation();
+    const element = e.detail.element as HTMLElement;
+    const languageCode = element.getAttribute('data-path');
+    if (languageCode) {
+      this.switchLanguage(languageCode);
+    }
+  };
+
   private switchLanguage = (lang: string) => {
     this._activeLanguage = lang;
     this.requestUpdate();
@@ -225,6 +313,16 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
       visibleTabs.unshift('en');
     }
 
+    const overflowCutoff = this._overflowIndex === -1 ? visibleTabs.length : this._overflowIndex;
+    const visibleLangTabs = visibleTabs.slice(0, overflowCutoff);
+    const overflowLangTabs = visibleTabs.slice(overflowCutoff);
+    const overflowActions = overflowLangTabs.map(code => ({
+      title: code.toUpperCase(),
+      type: 'dropdown',
+      path: code,
+      icon: code === this._activeLanguage ? 'check' : ''
+    }));
+
     const currentTranslation = this.values[this._activeLanguage] ?? '';
     const isRTL = this.isRTLLanguage(this._activeLanguage);
 
@@ -254,9 +352,10 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
             <div class="translations__actions">
               ${hasExpandSlot ? html`<slot name="expand"></slot>` : nothing}
               ${hasMultipleLanguages ? html`
-                <zn-button-group>
-                  ${visibleTabs.map(code => html`
+                <zn-button-group class="translations__language-group">
+                  ${visibleLangTabs.map(code => html`
                     <zn-button
+                      data-lang-btn
                       size="x-small"
                       color="default"
                       ?outline="${code !== this._activeLanguage}"
@@ -264,8 +363,23 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
                     >${code.toUpperCase()}
                     </zn-button>
                   `)}
+                  ${overflowActions.length > 0 ? html`
+                    <zn-dropdown placement="bottom-end" data-lang-overflow>
+                      <zn-button
+                        slot="trigger"
+                        size="x-small"
+                        color="default"
+                        icon="keyboard_arrow_down"
+                        ?outline="${!overflowLangTabs.includes(this._activeLanguage)}"
+                      ></zn-button>
+                      <zn-menu
+                        .actions=${overflowActions}
+                        @zn-menu-select="${this.handleOverflowSelect}"
+                      ></zn-menu>
+                    </zn-dropdown>
+                  ` : nothing}
                   ${availableLanguages.length > 0 ? html`
-                    <zn-dropdown placement="bottom-end">
+                    <zn-dropdown placement="bottom-end" data-lang-add>
                       <zn-button
                         slot="trigger"
                         size="x-small"

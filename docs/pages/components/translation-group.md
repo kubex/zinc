@@ -89,6 +89,31 @@ The group scales well with multiple translation inputs under a single toggle.
 </zn-translation-group>
 ```
 
+### Language Overflow
+
+When there are more languages than will fit across the header, the extras collapse into a chevron dropdown beside the
+visible buttons. The dropdown sits before the `+` add-language dropdown and selects the same way — picking a language
+switches every child translation input in the group.
+
+```html:preview
+<div style="max-width: 480px;">
+  <zn-translation-group
+    label="Release Notes"
+    languages='{"en":"English","ar":"Arabic","de":"German","es":"Spanish","fr":"French","it":"Italian","ja":"Japanese","ko":"Korean","pt":"Portuguese","ru":"Russian","tr":"Turkish","zh-hans":"Simplified Chinese"}'>
+    <zn-translations
+      label="Headline"
+      name="headline"
+      values='{"en":"Now shipping","ar":"متاح الآن","de":"Jetzt verfügbar","es":"Ya disponible","fr":"Disponible dès maintenant","it":"Disponibile ora","ja":"発売開始","ko":"출시됨","pt":"Disponível agora","ru":"Уже в продаже","tr":"Şimdi mevcut","zh-hans":"现已发布"}'
+    ></zn-translations>
+    <zn-translations
+      label="Summary"
+      name="summary"
+      values='{"en":"Tap through the release highlights.","ar":"تصفح أبرز ميزات الإصدار.","de":"Highlights der Version ansehen.","es":"Consulta lo más destacado.","fr":"Découvrez les nouveautés.","it":"Scopri le novità.","ja":"リリースのハイライトをご覧ください。","ko":"업데이트 주요 내용 보기.","pt":"Veja os destaques.","ru":"Ознакомьтесь с обновлениями.","tr":"Sürüm önemli noktaları.","zh-hans":"浏览版本亮点。"}'
+    ></zn-translations>
+  </zn-translation-group>
+</div>
+```
+
 ### Flush Layout
 
 Remove body padding for a more compact appearance using the `flush` attribute.

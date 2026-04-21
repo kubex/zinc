@@ -50,7 +50,7 @@ export default class ZnSimpleChart extends ZincElement {
       series: [{
         type: 'bar',
         data,
-        barWidth: 2,
+        barWidth: 7,
         itemStyle: {
           color: '#29C1BC',
           borderRadius: 10,
@@ -71,6 +71,6 @@ export default class ZnSimpleChart extends ZincElement {
   }
 
   render() {
-    return html`<div id="chart" style="width:100%;height:100%;"></div>`;
+    return html`<div id="chart"></div>`;
   }
 }

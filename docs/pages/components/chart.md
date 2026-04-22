@@ -1,13 +1,14 @@
 ---
 meta:
   title: Data Chart
-  description: Charts visualize data using various chart types powered by ApexCharts. Display line charts, bar charts, area charts, and more with full customization options.
+  description: Charts visualize data using various chart types powered by Apache ECharts. Display line charts, bar charts, area charts, sankey diagrams, and more with full customization options.
 layout: component
 ---
 
 ```html:preview
 <zn-chart
   type="area"
+  smooth
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;]"
   data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,45,50,49,60,70,91,125]}]"
   height="300">
@@ -15,7 +16,7 @@ layout: component
 ```
 
 :::tip
-The chart component is built on ApexCharts, providing a powerful and flexible charting library with extensive customization options. Visit the [ApexCharts documentation](https://apexcharts.com/docs/) for advanced configuration options.
+The chart component is built on Apache ECharts, providing a powerful and flexible charting library with extensive customisation options. Visit the [Apache ECharts documentation](https://echarts.apache.org/en/option.html) for advanced configuration reference.
 :::
 
 ## Examples
@@ -27,6 +28,7 @@ Use `type="line"` to create a line chart. The `data` attribute accepts an array 
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
   data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[30,40,35,50,49,60]},{&quot;name&quot;:&quot;Expenses&quot;,&quot;data&quot;:[20,29,25,35,39,45]}]"
   height="300">
@@ -94,6 +96,7 @@ Stacked area charts work similarly to stacked bar charts but with area fills.
 <zn-chart
   type="area"
   stacked
+  smooth
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
   data="[{&quot;name&quot;:&quot;Desktop&quot;,&quot;data&quot;:[300,400,350,500,490,600]},{&quot;name&quot;:&quot;Mobile&quot;,&quot;data&quot;:[200,290,250,350,390,450]},{&quot;name&quot;:&quot;Tablet&quot;,&quot;data&quot;:[100,150,120,180,170,200]}]"
   height="300">
@@ -114,6 +117,7 @@ Use the `height` attribute to control the chart's height in pixels. The default 
 <br />
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
   data="[{&quot;name&quot;:&quot;Sales&quot;,&quot;data&quot;:[40,55,45,60]}]"
   height="400">
@@ -127,6 +131,7 @@ Use the `d-size` attribute to control the size of data point markers on line and
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
   data="[{&quot;name&quot;:&quot;Small Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
   d-size="1"
@@ -135,6 +140,7 @@ Use the `d-size` attribute to control the size of data point markers on line and
 <br />
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
   data="[{&quot;name&quot;:&quot;Large Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
   d-size="6"
@@ -183,14 +189,56 @@ When using `x-axis="datetime"`, provide data in the format `[{x: timestamp, y: v
 
 ### Enable Animations
 
-By default, animations are disabled for better performance. Use the `enable-animations` attribute to enable chart animations.
+By default, animations are disabled for better performance. Add the `enable-animations` attribute to animate on first render — bars grow from the baseline and lines draw in. Pass a number (milliseconds) to control the duration; bare `enable-animations` defaults to `1500`.
 
 ```html:preview
 <zn-chart
   type="bar"
   categories="[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;]"
   data="[{&quot;name&quot;:&quot;Values&quot;,&quot;data&quot;:[44,55,41,37,52]}]"
-  enable-animations
+  enable-animations="2500"
+  height="300">
+</zn-chart>
+```
+
+### Smooth Lines
+
+Add the `smooth` attribute to render line and area charts with curved segments instead of straight ones. Ignored for bar and sankey charts.
+
+```html:preview
+<zn-chart
+  type="line"
+  smooth
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;]"
+  data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[30,40,35,50,49,60]}]"
+  height="300">
+</zn-chart>
+```
+
+### Scaled Y-Axis
+
+By default the y-axis starts at `0`. Add the `scale` attribute to adapt the y-axis to the data range — useful when values are clustered far from zero and you want to emphasise variation.
+
+```html:preview
+<zn-chart
+  type="line"
+  scale
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Temperature&quot;,&quot;data&quot;:[18,19,17,20,22]}]"
+  y-axis-append="°C"
+  height="300">
+</zn-chart>
+```
+
+Pass a number to `scale` to add that percentage of padding on top and bottom of the data range (e.g. `scale="10"` adds 10% padding). Larger values make the axis "breathe" more around the data.
+
+```html:preview
+<zn-chart
+  type="line"
+  scale="10"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Temperature&quot;,&quot;data&quot;:[18,19,17,20,22]}]"
+  y-axis-append="°C"
   height="300">
 </zn-chart>
 ```
@@ -221,6 +269,65 @@ When no data is available, the chart will display an empty state. Consider addin
 </zn-chart>
 ```
 
+### Sankey Diagram
+
+Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `data` array is an edge with `source`, `target`, and `value`. Nodes are auto-derived from unique source/target values.
+
+```html:preview
+<zn-chart
+  type="sankey"
+  height="400"
+  data="[{&quot;name&quot;:&quot;Payment Flow&quot;,&quot;data&quot;:[{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;USD&quot;,&quot;value&quot;:1200},{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;EUR&quot;,&quot;value&quot;:430},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:900},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:300},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:380},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:50}]}]">
+</zn-chart>
+```
+
+### Cross-Chart Tooltip Sync
+
+Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoom, and legend selection across them.
+
+```html:preview
+<zn-chart
+  sync-group="demo-group"
+  type="line"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Visits&quot;,&quot;data&quot;:[120,180,150,220,190]}]"
+  height="250">
+</zn-chart>
+<br />
+<zn-chart
+  sync-group="demo-group"
+  type="bar"
+  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+  data="[{&quot;name&quot;:&quot;Signups&quot;,&quot;data&quot;:[12,18,15,22,19]}]"
+  height="250">
+</zn-chart>
+```
+
+### Custom Colors
+
+Use the `colors` attribute to set the palette that cycles across series.
+
+```html:preview
+<zn-chart
+  type="bar"
+  colors="[&quot;#ff6c9c&quot;,&quot;#6483F2&quot;,&quot;#29bab5&quot;]"
+  categories="[&quot;Q1&quot;,&quot;Q2&quot;,&quot;Q3&quot;]"
+  data="[{&quot;name&quot;:&quot;A&quot;,&quot;data&quot;:[10,20,30]},{&quot;name&quot;:&quot;B&quot;,&quot;data&quot;:[15,25,35]},{&quot;name&quot;:&quot;C&quot;,&quot;data&quot;:[20,30,40]}]"
+  height="300">
+</zn-chart>
+```
+
+For a specific series colour, add a `color` property to the series object in the `data` array:
+
+```html:preview
+<zn-chart
+  type="line"
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;]"
+  data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;color&quot;:&quot;hsl(210,70%,50%)&quot;,&quot;data&quot;:[10,20,30]}]"
+  height="300">
+</zn-chart>
+```
+
 ### Dark Mode Support
 
 The chart component automatically adapts to dark mode using the `t` attribute. The theme adjusts colors, gridlines, and text to match the current theme.
@@ -229,6 +336,8 @@ The chart component automatically adapts to dark mode using the `t` attribute. T
 <zn-chart
   t="dark"
   type="area"
+  scale
+  smooth
   categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
   data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,35,50,49]},{&quot;name&quot;:&quot;Series 2&quot;,&quot;data&quot;:[25,35,30,45,42]}]"
   height="300">
@@ -257,6 +366,7 @@ You can combine various attributes to create rich, informative charts.
 ```html:preview
 <zn-chart
   type="line"
+  scale
   categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;]"
   data="[{&quot;name&quot;:&quot;Target&quot;,&quot;data&quot;:[80,85,82,90,88,95,92,98]},{&quot;name&quot;:&quot;Actual&quot;,&quot;data&quot;:[75,82,78,88,91,97,94,102]}]"
   d-size="4"
@@ -312,6 +422,22 @@ When using `x-axis="datetime"`, use the coordinate format:
   }
 ]
 ```
+
+### Sankey Edge Format
+
+When `type="sankey"`, each item in the series `data` array is an edge:
+
+```json
+[{
+  "name": "Flow",
+  "data": [
+    {"source": "A", "target": "B", "value": 100},
+    {"source": "A", "target": "C", "value": 50}
+  ]
+}]
+```
+
+Nodes are auto-derived from unique source/target values. To customise node appearance or ordering, include an explicit `nodes` key on the series object.
 
 ### HTML Encoding
 

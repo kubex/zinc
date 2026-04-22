@@ -1,204 +1,96 @@
-import { property } from 'lit/decorators.js';
+import * as echarts from 'echarts/core';
+import { BarChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
-import { Chart, ChartConfiguration, registerables } from "chart.js";
-import ZincElement from '../../internal/zinc-element';
-
+import { GridComponent, TooltipComponent } from 'echarts/components';
+import { property } from 'lit/decorators.js';
 import styles from './simple-chart.scss';
+import ZincElement from '../../internal/zinc-element';
+import type { ECharts } from 'echarts/core';
+
+echarts.use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
+
+const DEFAULT_LABELS = [
+  'Jun 2016', 'Jul 2016', 'Aug 2016', 'Sep 2016', 'Oct 2016', 'Nov 2016',
+  'Dec 2016', 'Jan 2017', 'Feb 2017', 'Mar 2017', 'Apr 2017', 'May 2017',
+];
+const DEFAULT_DATA = [56.4, 39.8, 66.8, 66.4, 40.6, 55.2, 77.4, 69.8, 57.8, 76, 110.8, 142.6];
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A simple, pre-styled bar chart.
  * @documentation https://zinc.style/components/simple-chart
  * @status experimental
  * @since 1.0
- *
- * @dependency zn-example
- *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
  */
 export default class ZnSimpleChart extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
-  @property({ attribute: 'datasets', type: Array }) datasets: any[];
-  @property({ attribute: 'labels', type: Array }) labels: any[];
+  @property({ attribute: 'datasets', type: Array }) datasets?: { data: number[] }[];
+  @property({ attribute: 'labels', type: Array }) labels?: string[];
+  @property({
+    attribute: 'enable-animations',
+    converter: {
+      fromAttribute: (value: string | null) => {
+        if (value === null) return false;
+        if (value === '' || value === 'true') return true;
+        const num = parseFloat(value);
+        return Number.isNaN(num) ? true : num;
+      },
+    },
+  }) enableAnimations: boolean | number = false;
 
-  myChart: Chart;
-
-  constructor() {
-    super();
-    Chart.register(...registerables);
-  }
+  private chart?: ECharts;
+  private resizeObserver?: ResizeObserver;
 
   firstUpdated() {
-    const ctx = (this.renderRoot.querySelector('#myChart') as HTMLCanvasElement).getContext('2d');
-
-    const config = {
-      type: 'bar',
-      data: {
-        labels: [
-          "Jun 2016",
-          "Jul 2016",
-          "Aug 2016",
-          "Sep 2016",
-          "Oct 2016",
-          "Nov 2016",
-          "Dec 2016",
-          "Jan 2017",
-          "Feb 2017",
-          "Mar 2017",
-          "Apr 2017",
-          "May 2017"
-        ],
-        datasets: [
-          {
-            data: [
-              56.4,
-              39.8,
-              66.8,
-              66.4,
-              40.6,
-              55.2,
-              77.4,
-              69.8,
-              57.8,
-              76,
-              110.8,
-              142.6
-            ],
-          }
-        ]
+    const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
+    if (!host) return;
+    this.chart = echarts.init(host);
+    const data = this.datasets?.[0]?.data ?? DEFAULT_DATA;
+    const labels = this.labels ?? DEFAULT_LABELS;
+    const animEnabled = this.enableAnimations !== false && this.enableAnimations !== 0;
+    const animDuration = typeof this.enableAnimations === 'number' ? this.enableAnimations : 1500;
+    this.chart.setOption({
+      animation: animEnabled,
+      animationDuration: animDuration,
+      animationEasing: 'cubicOut',
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        borderWidth: 0,
+        textStyle: { color: '#fff' },
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            enabled: false,
-            external: function (context: any) {
-              // Tooltip Element
-              let tooltipEl = document.getElementById("chartjs-tooltip");
-
-              // Create element on first render
-              if (!tooltipEl) {
-                tooltipEl = document.createElement("div");
-                tooltipEl.id = "chartjs-tooltip";
-                tooltipEl.innerHTML = "<table></table>";
-                document.body.appendChild(tooltipEl);
-              }
-
-              // Hide if no tooltip
-              const tooltipModel = context.tooltip;
-              if (tooltipModel.opacity === 0) {
-                tooltipEl.style.opacity = "0";
-                return;
-              }
-
-              // Set caret Position
-              tooltipEl.classList.remove("above", "below", "no-transform");
-              if (tooltipModel.yAlign) {
-                tooltipEl.classList.add(tooltipModel.yAlign);
-              } else {
-                tooltipEl.classList.add("no-transform");
-              }
-
-              function getBody(bodyItem: any) {
-                return bodyItem.lines;
-              }
-
-              // Set Text
-              if (tooltipModel.body) {
-                const titleLines = tooltipModel.title || [];
-                const bodyLines = tooltipModel.body.map(getBody);
-
-                let innerHtml = "<thead>";
-
-                titleLines.forEach(function (title: any) {
-                  innerHtml += "<tr><th>" + title + "</th></tr>";
-                });
-                innerHtml += "</thead><tbody>";
-
-                bodyLines.forEach(function (body: any, i: any) {
-                  const colors = tooltipModel.labelColors[i];
-                  let style = "background:" + colors.backgroundColor;
-                  style += "; border-color:" + colors.borderColor;
-                  style += "; border-width: 2px";
-                  const span = '<span style="' + style + '"></span>';
-                  innerHtml += "<tr><td>" + span + body + "</td></tr>";
-                });
-                innerHtml += "</tbody>";
-
-                const tableRoot = tooltipEl.querySelector("table");
-                if (tableRoot) {
-                  tableRoot.innerHTML = innerHtml;
-                }
-              }
-
-              const position = context.chart.canvas.getBoundingClientRect();
-              const bodyFont = Chart.defaults.font;
-
-              tooltipModel.padding = 3;
-
-              // Display, position, and set styles for font
-              tooltipEl.style.opacity = "1";
-              tooltipEl.style.position = "absolute";
-              tooltipEl.style.left =
-                position.left +
-                window.pageXOffset +
-                tooltipModel.caretX +
-                5 +
-                "px";
-              tooltipEl.style.top =
-                position.top +
-                window.pageYOffset +
-                tooltipModel.caretY +
-                10 +
-                "px";
-              tooltipEl.style.font = bodyFont.family ?? "Helvetica Neue";
-              tooltipEl.style.color = "white";
-              tooltipEl.style.padding = tooltipModel.padding + "px " + tooltipModel.padding + "px";
-              tooltipEl.style.pointerEvents = "none";
-              tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-              tooltipEl.style.borderRadius = "10px";
-            }
-          }
+      xAxis: { type: 'category', data: labels, show: false },
+      yAxis: { type: 'value', show: false },
+      grid: { left: 0, right: 0, top: 0, bottom: 0 },
+      series: [{
+        type: 'bar',
+        data,
+        barWidth: 7,
+        itemStyle: {
+          color: '#29C1BC',
+          borderRadius: 10,
         },
-        elements: {
-          bar: {
-            borderRadius: 10,
-            barThickness: 2,
-            maxBarThickness: 2,
-            backgroundColor: "#29C1BC",
-            hoverBackgroundColor: "#19837f",
-          }
+        emphasis: {
+          itemStyle: { color: '#19837f' },
         },
-        scales: {
-          x: {
-            display: false
-          },
-          y: {
-            display: false
-          }
-        }
-      }
-    };
+      }],
+    });
+    let firstResize = true;
+    this.resizeObserver = new ResizeObserver(() => {
+      if (firstResize) { firstResize = false; return; }
+      this.chart?.resize();
+    });
+    this.resizeObserver.observe(host);
+  }
 
-    this.myChart = new Chart(ctx as CanvasRenderingContext2D, config as ChartConfiguration);
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.resizeObserver?.disconnect();
+    this.chart?.dispose();
   }
 
   render() {
-    return html`
-      <div>
-        <canvas id="myChart"></canvas>
-      </div>
-    `;
+    return html`<div id="chart"></div>`;
   }
 }

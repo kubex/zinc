@@ -37,6 +37,7 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
+  @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
   @property({attribute: 'store-key'}) storeKey: string;
@@ -72,7 +73,7 @@ export default class ZnTabs extends ZincElement {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
     }
 
-    this.preload = !this.noPrefetch;
+    this.preload = !this.noPrefetch && !this.noCache;
 
     await this.updateComplete;
     this._panel = this.shadowRoot?.querySelector('#content');
@@ -272,11 +273,14 @@ export default class ZnTabs extends ZincElement {
   }
 
   clickTab(target: HTMLElement, refresh: boolean) {
+    const tabUri = target.getAttribute('tab-uri');
+    const wasCached = !!tabUri && this._panels.has(this._uriToId(tabUri));
     this.fetchUriTab(target);
 
     if (target.hasAttribute('tab')) {
+      const forceRefresh = refresh || (this.noCache && wasCached);
       setTimeout(() => {
-        this.setActiveTab(target.getAttribute('tab') || '', true, refresh, this.getRefTab(target));
+        this.setActiveTab(target.getAttribute('tab') || '', true, forceRefresh, this.getRefTab(target));
       }, 10);
     }
   }

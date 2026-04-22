@@ -1191,14 +1191,14 @@
             ></a>
           </h3>
           <p>
-            Use the <code>x-axis</code> attribute to specify the x-axis type. Common values include
+            Use the <code>xaxis</code> attribute to specify the x-axis type. Common values include
             <code>datetime</code>, <code>category</code>, and <code>numeric</code>.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-chart
                 type="line"
-                x-axis="datetime"
+                xaxis="datetime"
                 data='[{"name":"Traffic","data":[{"x":1609459200000,"y":30},{"x":1612137600000,"y":40},{"x":1614556800000,"y":35},{"x":1617235200000,"y":50},{"x":1619827200000,"y":49},{"x":1622505600000,"y":60}]}]'
                 height="300"
               >
@@ -1213,7 +1213,7 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-152"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
   <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">x-axis</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>datetime<span class="token punctuation">"</span></span>
+  <span class="token attr-name">xaxis</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>datetime<span class="token punctuation">"</span></span>
   <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Traffic<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1609459200000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:30},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1612137600000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:40},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1614556800000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:35},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1617235200000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:50},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1619827200000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:49},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>x<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1622505600000,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>y<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:60}]}]<span class="token punctuation">"</span></span>
   <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
@@ -1244,7 +1244,7 @@
           </div>
           <div role="alert" class="callout callout--tip">
             <p>
-              When using <code>x-axis="datetime"</code>, provide data in the format
+              When using <code>xaxis="datetime"</code>, provide data in the format
               <code>[{x: timestamp, y: value}]</code> where <code>x</code> is a Unix timestamp in milliseconds. The
               chart will automatically format the dates on the x-axis.
             </p>
@@ -2037,7 +2037,7 @@
           <h3 id="time-series-format" class="anchor-heading">
             Time Series Format<a href="#time-series-format" aria-label='Direct link to "Time Series Format"'></a>
           </h3>
-          <p>When using <code>x-axis="datetime"</code>, use the coordinate format:</p>
+          <p>When using <code>xaxis="datetime"</code>, use the coordinate format:</p>
           <pre><code class="language-json" id="code-block-168"><span class="token punctuation">[</span>
   <span class="token punctuation">{</span>
     <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Time Series"</span><span class="token punctuation">,</span>

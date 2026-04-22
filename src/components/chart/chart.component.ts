@@ -9,10 +9,9 @@ import {
   type ChartType,
   type SeriesItem,
 } from './builders';
-import { SVGRenderer } from 'echarts/renderers';
+import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
-  AxisPointerComponent,
   DataZoomComponent,
   GridComponent,
   LegendComponent,
@@ -30,11 +29,10 @@ echarts.use([
   SankeyChart,
   GridComponent,
   TooltipComponent,
-  AxisPointerComponent,
   LegendComponent,
   TitleComponent,
   DataZoomComponent,
-  SVGRenderer,
+  CanvasRenderer,
 ]);
 
 /**
@@ -144,7 +142,7 @@ export default class ZnChart extends ZincElement {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
     host.style.height = `${this.height}px`;
-    this.chart = echarts.init(host, undefined, { renderer: 'svg' });
+    this.chart = echarts.init(host);
     this.chart.setOption(this.buildOption());
 
     if (this.syncGroup) {

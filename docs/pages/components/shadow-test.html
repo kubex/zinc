@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>zn-chart shadow DOM test</title>
+  <script type="module" src="/dist/zn.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; max-width: 1100px; }
+    h2 { margin-top: 2.5rem; font-size: 1.2rem; }
+    .case { border: 1px solid #ccc; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+    .label { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
+  </style>
+  <template id="chart-tpl">
+    <style>:host { display: block; }</style>
+    <zn-chart
+      type="line"
+      smooth
+      scale
+      categories='["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]'
+      data='[{"name":"Series 1","data":[30,40,45,50,49,60,70,91,125]}]'
+      height="280">
+    </zn-chart>
+  </template>
+  <template id="inner-card-tpl">
+    <style>:host { display: block; }</style>
+    <inner-card></inner-card>
+  </template>
+  <script type="module">
+    const chartTpl = document.getElementById('chart-tpl');
+    const innerCardTpl = document.getElementById('inner-card-tpl');
+
+    class SingleShadow extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' }).appendChild(chartTpl.content.cloneNode(true));
+      }
+    }
+    customElements.define('single-shadow', SingleShadow);
+
+    class InnerCard extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' }).appendChild(chartTpl.content.cloneNode(true));
+      }
+    }
+    customElements.define('inner-card', InnerCard);
+
+    class OuterWrapper extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' }).appendChild(innerCardTpl.content.cloneNode(true));
+      }
+    }
+    customElements.define('outer-wrapper', OuterWrapper);
+  </script>
+</head>
+<body>
+  <h1>zn-chart tooltip shadow DOM test</h1>
+  <p>Hover each chart. The tooltip should appear near the cursor for all three. Currently it likely only appears for Cases 1 and 2.</p>
+
+  <h2>Case 1 &mdash; bare in light DOM (baseline)</h2>
+  <div class="case">
+    <div class="label">&lt;zn-chart&gt; directly in body</div>
+    <zn-chart
+      type="line"
+      smooth
+      scale
+      categories='["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]'
+      data='[{"name":"Series 1","data":[30,40,45,50,49,60,70,91,125]}]'
+      height="280">
+    </zn-chart>
+  </div>
+
+  <h2>Case 2 &mdash; single-level shadow DOM (what docs render through)</h2>
+  <div class="case">
+    <div class="label">&lt;single-shadow&gt; &rarr; shadow root &rarr; &lt;zn-chart&gt;</div>
+    <single-shadow></single-shadow>
+  </div>
+
+  <h2>Case 3 &mdash; double-nested shadow DOM (reproduces the reported bug)</h2>
+  <div class="case">
+    <div class="label">&lt;outer-wrapper&gt; &rarr; shadow &rarr; &lt;inner-card&gt; &rarr; shadow &rarr; &lt;zn-chart&gt;</div>
+    <outer-wrapper></outer-wrapper>
+  </div>
+</body>
+</html>

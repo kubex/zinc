@@ -5,8 +5,9 @@ import {FormControlController, validValidityState} from "../../internal/form";
 import {property, query, state} from 'lit/decorators.js';
 import {styleMap} from 'lit/directives/style-map.js';
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import type {ZincFormControl} from '../../internal/zinc-element';
 import ZincElement from '../../internal/zinc-element';
+
+import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './rating.scss';
 

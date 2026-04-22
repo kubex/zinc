@@ -1,0 +1,98 @@
+
+@keyframes shimmer-text-sweep {
+  0% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shimmer-text {
+    --shimmer-base: rgb(var(--zn-text));
+    --shimmer-highlight: rgb(var(--zn-text-heading));
+    --shimmer-core: 0.5ch;
+    --shimmer-spread: 1.5ch;
+    --shimmer-duration: 1.5s;
+
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent calc(50% - var(--shimmer-spread)),
+        var(--shimmer-highlight) calc(50% - var(--shimmer-core)),
+        var(--shimmer-highlight) calc(50% + var(--shimmer-core)),
+        transparent calc(50% + var(--shimmer-spread))
+      ),
+      linear-gradient(var(--shimmer-base), var(--shimmer-base));
+    background-size: 250% 100%, auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: var(--shimmer-duration) linear infinite shimmer-text-sweep;
+
+    &.zn-error {
+      --shimmer-base: rgb(var(--zn-color-error));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-color-error)) 55%, white);
+    }
+
+    &.zn-success {
+      --shimmer-base: rgb(var(--zn-color-success));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-color-success)) 55%, white);
+    }
+
+    &.zn-info {
+      --shimmer-base: rgb(var(--zn-color-info));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-color-info)) 55%, white);
+    }
+
+    &.zn-warning {
+      --shimmer-base: rgb(var(--zn-color-warning));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-color-warning)) 55%, white);
+    }
+
+    &.zn-primary {
+      --shimmer-base: rgb(var(--zn-primary));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-primary)) 55%, white);
+    }
+
+    &.zn-accent {
+      --shimmer-base: rgb(var(--zn-accent));
+      --shimmer-highlight: color-mix(in srgb, rgb(var(--zn-accent)) 55%, white);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text {
+    color: rgb(var(--zn-text));
+
+    &.zn-error {
+      color: rgb(var(--zn-color-error)) !important;
+    }
+
+    &.zn-success {
+      color: rgb(var(--zn-color-success)) !important;
+    }
+
+    &.zn-info {
+      color: rgb(var(--zn-color-info)) !important;
+    }
+
+    &.zn-warning {
+      color: rgb(var(--zn-color-warning)) !important;
+    }
+
+    &.zn-primary {
+      color: rgb(var(--zn-primary)) !important;
+    }
+
+    &.zn-accent {
+      color: rgb(var(--zn-accent)) !important;
+    }
+  }
+}

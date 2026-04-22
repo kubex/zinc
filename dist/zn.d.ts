@@ -4024,6 +4024,7 @@ declare module "components/tabs/tabs.component" {
         primaryCaption: string;
         secondaryCaption: string;
         noPrefetch: boolean;
+        noCache: boolean;
         localStorage: boolean;
         storeKey: string;
         storeTtl: number;

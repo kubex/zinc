@@ -6040,8 +6040,8 @@ declare module "components/radio/index" {
 }
 declare module "components/rating/rating.component" {
     import { type CSSResultGroup } from 'lit';
-    import type { ZincFormControl } from "internal/zinc-element";
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/rating

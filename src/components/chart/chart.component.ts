@@ -9,9 +9,10 @@ import {
   type ChartType,
   type SeriesItem,
 } from './builders';
-import { CanvasRenderer } from 'echarts/renderers';
+import { SVGRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import {
+  AxisPointerComponent,
   DataZoomComponent,
   GridComponent,
   LegendComponent,
@@ -29,10 +30,11 @@ echarts.use([
   SankeyChart,
   GridComponent,
   TooltipComponent,
+  AxisPointerComponent,
   LegendComponent,
   TitleComponent,
   DataZoomComponent,
-  CanvasRenderer,
+  SVGRenderer,
 ]);
 
 /**
@@ -50,7 +52,7 @@ export default class ZnChart extends ZincElement {
   @property({ type: Array }) data: SeriesItem[] = [];
   @property({ type: Array }) categories: string[] = [];
 
-  @property({ attribute: 'x-axis' }) xAxis: 'datetime' | 'category' | 'numeric';
+  @property({ attribute: 'xaxis' }) xAxis: 'datetime' | 'category' | 'numeric';
   @property({ type: Number, attribute: 'd-size' }) datapointSize: number = 1;
   @property({ type: Boolean }) stacked = false;
 
@@ -142,7 +144,7 @@ export default class ZnChart extends ZincElement {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
     host.style.height = `${this.height}px`;
-    this.chart = echarts.init(host);
+    this.chart = echarts.init(host, undefined, { renderer: 'svg' });
     this.chart.setOption(this.buildOption());
 
     if (this.syncGroup) {

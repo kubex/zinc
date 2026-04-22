@@ -172,19 +172,19 @@ Use `y-axis-append` to add a suffix to y-axis labels and tooltip values. Common 
 
 ### Time Series with X-Axis Type
 
-Use the `x-axis` attribute to specify the x-axis type. Common values include `datetime`, `category`, and `numeric`.
+Use the `xaxis` attribute to specify the x-axis type. Common values include `datetime`, `category`, and `numeric`.
 
 ```html:preview
 <zn-chart
   type="line"
-  x-axis="datetime"
+  xaxis="datetime"
   data="[{&quot;name&quot;:&quot;Traffic&quot;,&quot;data&quot;:[{&quot;x&quot;:1609459200000,&quot;y&quot;:30},{&quot;x&quot;:1612137600000,&quot;y&quot;:40},{&quot;x&quot;:1614556800000,&quot;y&quot;:35},{&quot;x&quot;:1617235200000,&quot;y&quot;:50},{&quot;x&quot;:1619827200000,&quot;y&quot;:49},{&quot;x&quot;:1622505600000,&quot;y&quot;:60}]}]"
   height="300">
 </zn-chart>
 ```
 
 :::tip
-When using `x-axis="datetime"`, provide data in the format `[{x: timestamp, y: value}]` where `x` is a Unix timestamp in milliseconds. The chart will automatically format the dates on the x-axis.
+When using `xaxis="datetime"`, provide data in the format `[{x: timestamp, y: value}]` where `x` is a Unix timestamp in milliseconds. The chart will automatically format the dates on the x-axis.
 :::
 
 ### Enable Animations
@@ -408,7 +408,7 @@ The chart component accepts data in JSON format through the `data` attribute. Th
 
 ### Time Series Format
 
-When using `x-axis="datetime"`, use the coordinate format:
+When using `xaxis="datetime"`, use the coordinate format:
 
 ```json
 [

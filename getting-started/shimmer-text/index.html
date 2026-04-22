@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="default" data-zinc-version="1.0.107">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content='A global utility class that applies an animated shimmer sweep to text, suitable for loading, processing, or "thinking" states.'
+    />
+    <title>Shimmer Text</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/getting-started/shimmer-text" />
+    <meta property="og:title" content="Shimmer Text" />
+    <meta
+      property="og:description"
+      content='A global utility class that applies an animated shimmer sweep to text, suitable for loading, processing, or "thinking" states.'
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" size="content" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">1.0.107</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          size="small"
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          size="small"
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        size="small"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+              <li><a href="/getting-started/shimmer-text" class="active-link">Shimmer Text</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/markdown-editor"> Markdown Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/opt-group"> Opt Group </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/priority-list"> Priority List </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-group"> Translation Group </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Shimmer Text</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#default">Default</a></li>
+            <li data-level="3"><a href="#colour-variants">Colour Variants</a></li>
+            <li data-level="3"><a href="#headings-and-larger-text">Headings and Larger Text</a></li>
+            <li data-level="3"><a href="#inside-zinc-components">Inside Zinc Components</a></li>
+            <li data-level="3"><a href="#tuning-the-sweep">Tuning the Sweep</a></li>
+            <li data-level="3"><a href="#reduced-motion">Reduced Motion</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <h1>Shimmer Text</h1>
+          <p>
+            <code>shimmer-text</code> is a global utility class that animates a horizontal highlight sweep across text
+            colour. Use it to convey an in-progress state — AI generation, background processing, or any “working on it”
+            indicator.
+          </p>
+          <p>
+            The class works on any element with text content, including inside Zinc components. Colour variants mirror
+            the standard Zinc palette: <code>zn-primary</code>, <code>zn-accent</code>, <code>zn-info</code>,
+            <code>zn-success</code>, <code>zn-warning</code>, <code>zn-error</code>.
+          </p>
+          <p>
+            When <code>prefers-reduced-motion: reduce</code> is set, the animation is suppressed and the text falls back
+            to a solid colour matching the chosen variant.
+          </p>
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="default" class="anchor-heading">
+            Default<a href="#default" aria-label='Direct link to "Default"'></a>
+          </h3>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <span class="shimmer-text">Thinking…</span>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-15">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-21"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Thinking…<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-21"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-15"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="colour-variants" class="anchor-heading">
+            Colour Variants<a href="#colour-variants" aria-label='Direct link to "Colour Variants"'></a>
+          </h3>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <span class="shimmer-text">Default</span>
+                <span class="shimmer-text zn-primary">Primary</span>
+                <span class="shimmer-text zn-accent">Accent</span>
+                <span class="shimmer-text zn-info">Info</span>
+                <span class="shimmer-text zn-success">Success</span>
+                <span class="shimmer-text zn-warning">Warning</span>
+                <span class="shimmer-text zn-error">Error</span>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-16">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-22"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 8px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Default<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Primary<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-accent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Accent<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Info<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Success<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Warning<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-error<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Error<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-22"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-16"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="headings-and-larger-text" class="anchor-heading">
+            Headings and Larger Text<a
+              href="#headings-and-larger-text"
+              aria-label='Direct link to "Headings and Larger Text"'
+            ></a>
+          </h3>
+          <p>
+            The shimmer scales with whatever <code>font-size</code> is on the element, so it can be applied to headings
+            or inline within prose.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <h2 class="shimmer-text zn-primary" style="margin: 0">Generating summary…</h2>
+              <p style="margin: 8px 0 0">
+                Please wait while we <span class="shimmer-text zn-info">analyse your data</span>.
+              </p>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-17">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-23"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Generating summary…<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">margin</span><span class="token punctuation">:</span> 8px 0 0<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  Please wait while we <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>analyse your data<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>.
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-23"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-17"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="inside-zinc-components" class="anchor-heading">
+            Inside Zinc Components<a
+              href="#inside-zinc-components"
+              aria-label='Direct link to "Inside Zinc Components"'
+            ></a>
+          </h3>
+          <p>
+            Because <code>shimmer-text</code> is a plain class, it composes with any Zinc component that renders slotted
+            text.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chip class="shimmer-text zn-accent">Processing</zn-chip>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-18">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-24"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text zn-accent<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Processing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-24"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-18"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="tuning-the-sweep" class="anchor-heading">
+            Tuning the Sweep<a href="#tuning-the-sweep" aria-label='Direct link to "Tuning the Sweep"'></a>
+          </h3>
+          <p>
+            The effect mirrors the Claude CLI’s character-level shimmer: a narrow, sharper highlight slides across text
+            rather than a soft gradient wash. The class exposes these CSS custom properties — all sized in
+            <code>ch</code> so they scale with the current font size.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Default</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>--shimmer-base</code></td>
+                  <td><code>rgb(var(--zn-text))</code></td>
+                  <td>Resting text colour.</td>
+                </tr>
+                <tr>
+                  <td><code>--shimmer-highlight</code></td>
+                  <td><code>rgb(var(--zn-text-heading))</code></td>
+                  <td>Colour of the spotlight.</td>
+                </tr>
+                <tr>
+                  <td><code>--shimmer-core</code></td>
+                  <td><code>0.5ch</code></td>
+                  <td>Half-width of the solid-colour core of the spotlight.</td>
+                </tr>
+                <tr>
+                  <td><code>--shimmer-spread</code></td>
+                  <td><code>1.5ch</code></td>
+                  <td>Half-width of the full highlight including its fade-out edges.</td>
+                </tr>
+                <tr>
+                  <td><code>--shimmer-duration</code></td>
+                  <td><code>2s</code></td>
+                  <td>Time for one full sweep cycle.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span class="shimmer-text">Default sweep</span>
+                <span class="shimmer-text" style="--shimmer-duration: 1s">Faster sweep</span>
+                <span class="shimmer-text" style="--shimmer-duration: 4s">Slower, gentler sweep</span>
+                <span class="shimmer-text" style="--shimmer-core: 1ch; --shimmer-spread: 3ch">Wider spotlight</span>
+              </div>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-19">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-25"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span> <span class="token property">gap</span><span class="token punctuation">:</span> 6px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Default sweep<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--shimmer-duration</span><span class="token punctuation">:</span> 1s<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Faster sweep<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--shimmer-duration</span><span class="token punctuation">:</span> 4s<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Slower, gentler sweep<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>shimmer-text<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--shimmer-core</span><span class="token punctuation">:</span> 1ch<span class="token punctuation">;</span> <span class="token property">--shimmer-spread</span><span class="token punctuation">:</span> 3ch<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>Wider spotlight<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-25"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-19"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            The Claude CLI scales its sweep with message length (50ms per character plus 10 characters of offscreen
+            pause on each side). To match that feel in CSS, set <code>--shimmer-duration</code> to roughly
+            <code>(messageCharacters + 20) × 50ms</code>.
+          </p>
+          <h3 id="reduced-motion" class="anchor-heading">
+            Reduced Motion<a href="#reduced-motion" aria-label='Direct link to "Reduced Motion"'></a>
+          </h3>
+          <p>
+            The animation is wrapped in <code>@media (prefers-reduced-motion: no-preference)</code>. Users who have
+            requested reduced motion see the static colour variant instead — no configuration required.
+          </p>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

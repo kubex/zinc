@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -606,19 +606,25 @@
         },
         {
           "name": "zn-chart",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
               "name": "type",
-              "value": { "type": "'area' | 'bar' | 'line'", "default": "'bar'" }
+              "value": { "type": "ChartType", "default": "'bar'" }
             },
-            { "name": "data", "value": { "type": "any[]", "default": "[]" } },
+            {
+              "name": "data",
+              "value": { "type": "SeriesItem[]", "default": "[]" }
+            },
             {
               "name": "categories",
-              "value": { "type": "string | string[]", "default": "''" }
+              "value": { "type": "string[]", "default": "[]" }
             },
-            { "name": "xAxis", "value": { "type": "string" } },
+            {
+              "name": "x-axis",
+              "value": { "type": "'datetime' | 'category' | 'numeric'" }
+            },
             { "name": "d-size", "value": { "type": "number", "default": "1" } },
             {
               "name": "stacked",
@@ -642,38 +648,44 @@
             },
             {
               "name": "enable-animations",
+              "value": { "type": "boolean | number", "default": "false" }
+            },
+            { "name": "y-axis-append", "value": { "type": "string" } },
+            { "name": "colors", "value": { "type": "string[] | undefined" } },
+            { "name": "sync-group", "value": { "type": "string | undefined" } },
+            {
+              "name": "smooth",
               "value": { "type": "boolean", "default": "false" }
             },
-            { "name": "y-axis-append", "value": { "type": "string" } }
+            {
+              "name": "scale",
+              "value": { "type": "boolean | number", "default": "false" }
+            }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
-              { "name": "type", "type": "'area' | 'bar' | 'line'" },
-              { "name": "data", "type": "any[]" },
-              { "name": "categories", "type": "string | string[]" },
-              { "name": "xAxis", "type": "string" },
+              { "name": "type", "type": "ChartType" },
+              { "name": "data", "type": "SeriesItem[]" },
+              { "name": "categories", "type": "string[]" },
+              {
+                "name": "xAxis",
+                "type": "'datetime' | 'category' | 'numeric'"
+              },
               { "name": "datapointSize", "type": "number" },
               { "name": "stacked", "type": "boolean" },
               { "name": "live", "type": "boolean" },
               { "name": "dataUrl", "type": "string" },
               { "name": "liveInterval", "type": "number" },
               { "name": "height", "type": "number" },
-              { "name": "enableAnimations", "type": "boolean" },
-              { "name": "yAxisAppend", "type": "string" }
+              { "name": "enableAnimations", "type": "boolean | number" },
+              { "name": "yAxisAppend", "type": "string" },
+              { "name": "colors", "type": "string[] | undefined" },
+              { "name": "syncGroup", "type": "string | undefined" },
+              { "name": "smooth", "type": "boolean" },
+              { "name": "scale", "type": "boolean | number" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {
@@ -6897,31 +6909,30 @@
         },
         {
           "name": "zn-simple-chart",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "A simple, pre-styled bar chart.\n---\n",
           "doc-url": "",
           "attributes": [
-            { "name": "datasets", "value": { "type": "any[]" } },
-            { "name": "labels", "value": { "type": "any[]" } }
+            {
+              "name": "datasets",
+              "value": { "type": "{ data: number[] }[] | undefined" }
+            },
+            { "name": "labels", "value": { "type": "string[] | undefined" } },
+            {
+              "name": "enable-animations",
+              "value": { "type": "boolean | number", "default": "false" }
+            }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "events": [],
           "js": {
             "properties": [
-              { "name": "datasets", "type": "any[]" },
-              { "name": "labels", "type": "any[]" },
-              { "name": "myChart", "type": "Chart" }
-            ],
-            "events": [
               {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+                "name": "datasets",
+                "type": "{ data: number[] }[] | undefined"
+              },
+              { "name": "labels", "type": "string[] | undefined" },
+              { "name": "enableAnimations", "type": "boolean | number" }
+            ],
+            "events": []
           }
         },
         {

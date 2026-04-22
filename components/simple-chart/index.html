@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
+    <meta name="description" content="A pre-styled compact bar chart for inline sparklines and dashboard tiles." />
     <title>Simple Chart</title>
 
     <meta name="turbo-cache-control" />
@@ -14,7 +14,10 @@
 
     <meta property="og:url" content="https://zinc.style/components/simple-chart" />
     <meta property="og:title" content="Simple Chart" />
-    <meta property="og:description" content="" />
+    <meta
+      property="og:description"
+      content="A pre-styled compact bar chart for inline sparklines and dashboard tiles."
+    />
     <meta property="og:image" content="https://zinc.style/assets" />
 
     <link rel="stylesheet" href="/assets/styles/docs.css" />
@@ -506,14 +509,9 @@
           <ul>
             <li class="top"><a href="#">Simple Chart</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
-            <li data-level="3"><a href="#first-example">First Example</a></li>
-            <li data-level="3"><a href="#second-example">Second Example</a></li>
+            <li data-level="3"><a href="#with-your-own-data">With Your Own Data</a></li>
+            <li data-level="3"><a href="#enable-animations">Enable Animations</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
-            <li data-level="2"><a href="#slots">Slots</a></li>
-            <li data-level="2"><a href="#events">Events</a></li>
-            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
-            <li data-level="2"><a href="#parts">Parts</a></li>
-            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
         </div>
 
@@ -531,8 +529,14 @@
             </div>
           </header>
 
-          <p class="component-summary">Short summary of the component’s intended use.</p>
+          <p class="component-summary">A simple, pre-styled bar chart.</p>
 
+          <p>
+            <code>zn-simple-chart</code> renders a small, opinionated bar chart with no axes or legend — handy for
+            inline sparklines and dashboard summary tiles. It accepts a single series of values via
+            <code>datasets</code> and optional x-axis labels via <code>labels</code>. If neither is provided, a
+            placeholder dataset is shown.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-simple-chart> </zn-simple-chart>
@@ -542,11 +546,11 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-923">
+            <div class="code-preview__source-group" id="code-preview-source-group-930">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1157"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-simple-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1165"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-simple-chart</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-simple-chart</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1157"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1165"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -555,7 +559,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-923"
+                aria-controls="code-preview-source-group-930"
               >
                 Source
                 <svg
@@ -574,14 +578,111 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
-          <h3 id="first-example" class="anchor-heading">
-            First Example<a href="#first-example" aria-label='Direct link to "First Example"'></a>
+          <h3 id="with-your-own-data" class="anchor-heading">
+            With Your Own Data<a href="#with-your-own-data" aria-label='Direct link to "With Your Own Data"'></a>
           </h3>
-          <p>TODO</p>
-          <h3 id="second-example" class="anchor-heading">
-            Second Example<a href="#second-example" aria-label='Direct link to "Second Example"'></a>
+          <p>
+            Pass a <code>datasets</code> array with one entry and its <code>data</code> values, plus a matching
+            <code>labels</code> array for tooltip context.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-simple-chart
+                datasets='[{"data":[12,18,9,24,30,22,35,42]}]'
+                labels='["Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon"]'
+              >
+              </zn-simple-chart>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-931">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1166"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-simple-chart</span>
+  <span class="token attr-name">datasets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,18,9,24,30,22,35,42]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">labels</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sat<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sun<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-simple-chart</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1166"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-931"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="enable-animations" class="anchor-heading">
+            Enable Animations<a href="#enable-animations" aria-label='Direct link to "Enable Animations"'></a>
           </h3>
-          <p>TODO</p>
+          <p>
+            By default, bars render immediately with no animation. Add the <code>enable-animations</code> attribute to
+            make bars grow from the baseline on first render. Pass a number (milliseconds) to control the duration; bare
+            <code>enable-animations</code> defaults to <code>1500</code>.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-simple-chart
+                enable-animations="3000"
+                datasets='[{"data":[12,18,9,24,30,22,35,42]}]'
+                labels='["Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon"]'
+              >
+              </zn-simple-chart>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-932">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1167"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-simple-chart</span>
+  <span class="token attr-name">enable-animations</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3000<span class="token punctuation">"</span></span>
+  <span class="token attr-name">datasets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,18,9,24,30,22,35,42]}]<span class="token punctuation">"</span></span>
+  <span class="token attr-name">labels</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sat<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sun<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-simple-chart</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1167"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-932"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -604,7 +705,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1158"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.106/dist/components/simple-chart/simple-chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1158"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1168"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.106/dist/components/simple-chart/simple-chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1168"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -619,133 +720,13 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1159"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.106/dist/components/simple-chart/simple-chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1159"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1169"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.0.106/dist/components/simple-chart/simple-chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1169"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1160"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/simple-chart/simple-chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1160"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1170"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/simple-chart/simple-chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1170"></zn-copy-button></pre>
           </zn-collapsible>
-
-          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap">(default)</td>
-                  <td>The default slot.</td>
-                </tr>
-
-                <tr>
-                  <td class="nowrap">
-                    <code>example</code>
-                  </td>
-                  <td>An example slot.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
-          </p>
-
-          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name" data-flavor="html">Name</th>
-                  <th class="table-name" data-flavor="react">React Event</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-event-detail">Event Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td data-flavor="html"><code class="nowrap">zn-event-name</code></td>
-                  <td data-flavor="react"><code class="nowrap"></code></td>
-                  <td>Emitted as an example.</td>
-                  <td>-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
-          </p>
-
-          <h2 id="custom-properties" class="anchor-heading">
-            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
-          </h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                  <th class="table-default">Default</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em
-              >Learn more about
-              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
-            >
-          </p>
-
-          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
-
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th class="table-name">Name</th>
-                  <th class="table-description">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="nowrap"><code>base</code></td>
-                  <td>The component’s base wrapper.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p>
-            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
-          </p>
-
-          <h2 id="dependencies" class="anchor-heading">
-            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
-          </h2>
-
-          <p>This component automatically imports the following dependencies.</p>
-
-          <ul>
-            <li><code>&lt;zn-example&gt;</code></li>
-          </ul>
         </div>
       </article>
     </main>

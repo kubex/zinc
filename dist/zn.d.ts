@@ -3400,43 +3400,83 @@ declare module "components/tile-property/index" {
         }
     }
 }
+declare module "components/chart/builders" {
+    import type { EChartsOption } from 'echarts';
+    export type ChartType = 'area' | 'bar' | 'line' | 'sankey';
+    export interface SeriesItem {
+        name: string;
+        data: any[];
+        color?: string;
+    }
+    export interface SankeyEdge {
+        source: string;
+        target: string;
+        value: number;
+    }
+    export interface BuilderProps {
+        type: ChartType;
+        data: SeriesItem[];
+        categories: string[];
+        xAxisType?: 'datetime' | 'category' | 'numeric';
+        yAxisAppend?: string;
+        stacked: boolean;
+        enableAnimations: boolean | number;
+        datapointSize: number;
+        colors?: string[];
+        theme: 'light' | 'dark';
+        smooth?: boolean;
+        scale?: boolean | number;
+        textColor?: string;
+        borderColor?: string;
+    }
+    export function buildBarOption(props: BuilderProps): EChartsOption;
+    export function buildLineOption(props: BuilderProps): EChartsOption;
+    export function buildAreaOption(props: BuilderProps): EChartsOption;
+    export function buildSankeyOption(props: BuilderProps): EChartsOption;
+}
 declare module "components/chart/chart.component" {
+    import { type ChartType, type SeriesItem } from "components/chart/builders";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary Chart component powered by Apache ECharts.
      * @documentation https://zinc.style/components/data-chart
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
      * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnChart extends ZincElement {
         static styles: CSSResultGroup;
-        type: 'area' | 'bar' | 'line';
-        data: any[];
-        categories: string | string[];
-        xAxis: string;
+        type: ChartType;
+        data: SeriesItem[];
+        categories: string[];
+        xAxis: 'datetime' | 'category' | 'numeric';
         datapointSize: number;
         stacked: boolean;
         live: boolean;
         dataUrl: string;
         liveInterval: number;
         height: number;
-        enableAnimations: boolean;
+        enableAnimations: boolean | number;
         yAxisAppend: string;
-        private chart;
+        colors?: string[];
+        syncGroup?: string;
+        smooth: boolean;
+        scale: boolean | number;
+        private chart?;
+        private resizeObserver?;
+        private liveTimer?;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        private getTheme;
+        private getTextColor;
+        private getBorderColor;
+        private buildOption;
+        private initChart;
+        private startLive;
+        private reinit;
         attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
+        disconnectedCallback(): void;
         protected render(): unknown;
     }
 }
@@ -3452,32 +3492,24 @@ declare module "components/chart/index" {
 }
 declare module "components/simple-chart/simple-chart.component" {
     import { type CSSResultGroup } from 'lit';
-    import { Chart } from "chart.js";
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A simple, pre-styled bar chart.
      * @documentation https://zinc.style/components/simple-chart
      * @status experimental
      * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
      */
     export default class ZnSimpleChart extends ZincElement {
         static styles: CSSResultGroup;
-        datasets: any[];
-        labels: any[];
-        myChart: Chart;
-        constructor();
+        datasets?: {
+            data: number[];
+        }[];
+        labels?: string[];
+        enableAnimations: boolean | number;
+        private chart?;
+        private resizeObserver?;
         firstUpdated(): void;
+        disconnectedCallback(): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

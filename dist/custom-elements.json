@@ -61,79 +61,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -286,6 +213,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -2447,26 +2447,10 @@
           "kind": "class",
           "description": "",
           "name": "ZnChart",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
           "cssParts": [
             {
               "description": "The component's base wrapper.",
               "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
             }
           ],
           "members": [
@@ -2474,7 +2458,7 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'area' | 'bar' | 'line'"
+                "text": "ChartType"
               },
               "default": "'bar'",
               "attribute": "type"
@@ -2483,7 +2467,7 @@
               "kind": "field",
               "name": "data",
               "type": {
-                "text": "any[]"
+                "text": "SeriesItem[]"
               },
               "default": "[]",
               "attribute": "data"
@@ -2492,18 +2476,18 @@
               "kind": "field",
               "name": "categories",
               "type": {
-                "text": "string | string[]"
+                "text": "string[]"
               },
-              "default": "''",
+              "default": "[]",
               "attribute": "categories"
             },
             {
               "kind": "field",
               "name": "xAxis",
               "type": {
-                "text": "string"
+                "text": "'datetime' | 'category' | 'numeric'"
               },
-              "attribute": "xAxis"
+              "attribute": "x-axis"
             },
             {
               "kind": "field",
@@ -2564,7 +2548,7 @@
               "kind": "field",
               "name": "enableAnimations",
               "type": {
-                "text": "boolean"
+                "text": "boolean | number"
               },
               "default": "false",
               "attribute": "enable-animations"
@@ -2579,24 +2563,118 @@
             },
             {
               "kind": "field",
+              "name": "colors",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "attribute": "colors"
+            },
+            {
+              "kind": "field",
+              "name": "syncGroup",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "sync-group"
+            },
+            {
+              "kind": "field",
+              "name": "smooth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "smooth"
+            },
+            {
+              "kind": "field",
+              "name": "scale",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "attribute": "scale"
+            },
+            {
+              "kind": "field",
               "name": "chart",
               "type": {
-                "text": "ApexCharts"
+                "text": "ECharts | undefined"
               },
               "privacy": "private"
-            }
-          ],
-          "events": [
+            },
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "liveTimer",
+              "type": {
+                "text": "number | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getTheme",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'light' | 'dark'"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTextColor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getBorderColor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "buildOption",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "initChart",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "startLive",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "reinit",
+              "privacy": "private"
             }
           ],
           "attributes": [
             {
               "name": "type",
               "type": {
-                "text": "'area' | 'bar' | 'line'"
+                "text": "ChartType"
               },
               "default": "'bar'",
               "fieldName": "type"
@@ -2604,7 +2682,7 @@
             {
               "name": "data",
               "type": {
-                "text": "any[]"
+                "text": "SeriesItem[]"
               },
               "default": "[]",
               "fieldName": "data"
@@ -2612,15 +2690,15 @@
             {
               "name": "categories",
               "type": {
-                "text": "string | string[]"
+                "text": "string[]"
               },
-              "default": "''",
+              "default": "[]",
               "fieldName": "categories"
             },
             {
-              "name": "xAxis",
+              "name": "x-axis",
               "type": {
-                "text": "string"
+                "text": "'datetime' | 'category' | 'numeric'"
               },
               "fieldName": "xAxis"
             },
@@ -2675,7 +2753,7 @@
             {
               "name": "enable-animations",
               "type": {
-                "text": "boolean"
+                "text": "boolean | number"
               },
               "default": "false",
               "fieldName": "enableAnimations"
@@ -2686,23 +2764,50 @@
                 "text": "string"
               },
               "fieldName": "yAxisAppend"
+            },
+            {
+              "name": "colors",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "fieldName": "colors"
+            },
+            {
+              "name": "sync-group",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "syncGroup"
+            },
+            {
+              "name": "smooth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "smooth"
+            },
+            {
+              "name": "scale",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "fieldName": "scale"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "Chart component powered by Apache ECharts.",
           "tagNameWithoutPrefix": "chart",
           "tagName": "zn-chart",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-chart\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Chart component powered by Apache ECharts.\n * @documentation https://zinc.style/components/data-chart\n * @status experimental\n * @since 1.0\n *\n * @csspart base - The component's base wrapper.\n */",
           "documentation": "https://zinc.style/components/data-chart",
           "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
+          "since": "1.0"
         }
       ],
       "exports": [
@@ -26363,34 +26468,12 @@
           "kind": "class",
           "description": "",
           "name": "ZnSimpleChart",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
           "members": [
             {
               "kind": "field",
               "name": "datasets",
               "type": {
-                "text": "any[]"
+                "text": "{ data: number[] }[] | undefined"
               },
               "attribute": "datasets"
             },
@@ -26398,55 +26481,72 @@
               "kind": "field",
               "name": "labels",
               "type": {
-                "text": "any[]"
+                "text": "string[] | undefined"
               },
               "attribute": "labels"
             },
             {
               "kind": "field",
-              "name": "myChart",
+              "name": "enableAnimations",
               "type": {
-                "text": "Chart"
-              }
-            }
-          ],
-          "events": [
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "attribute": "enable-animations"
+            },
             {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
+              "kind": "field",
+              "name": "chart",
+              "type": {
+                "text": "ECharts | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | undefined"
+              },
+              "privacy": "private"
             }
           ],
           "attributes": [
             {
               "name": "datasets",
               "type": {
-                "text": "any[]"
+                "text": "{ data: number[] }[] | undefined"
               },
               "fieldName": "datasets"
             },
             {
               "name": "labels",
               "type": {
-                "text": "any[]"
+                "text": "string[] | undefined"
               },
               "fieldName": "labels"
+            },
+            {
+              "name": "enable-animations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "fieldName": "enableAnimations"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "A simple, pre-styled bar chart.",
           "tagNameWithoutPrefix": "simple-chart",
           "tagName": "zn-simple-chart",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
           "documentation": "https://zinc.style/components/simple-chart",
           "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
+          "since": "1.0"
         }
       ],
       "exports": [

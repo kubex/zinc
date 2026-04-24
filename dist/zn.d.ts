@@ -7816,6 +7816,7 @@ declare module "components/markdown-editor/markdown-editor.component" {
         handleValueChange(): Promise<void>;
         handleMarkedReady(): void;
         render(): import("lit").TemplateResult<1>;
+        markdownHelperBtn(): import("lit").TemplateResult<1>;
         private renderViewButton;
     }
 }

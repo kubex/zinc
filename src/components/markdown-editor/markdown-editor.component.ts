@@ -358,7 +358,7 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
     return html`
       <a
         class="markdown-editor__markdown-link"
-        href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+        href="https://www.markdownguide.org/cheat-sheet"
         target="_blank"
         rel="noopener noreferrer"
         title="Markdown is supported"

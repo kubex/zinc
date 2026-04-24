@@ -44,14 +44,15 @@
 
 .markdown-editor__toolbar {
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: var(--zn-spacing-small);
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .markdown-editor__markdown-link {
   display: inline-flex;
-  align-items: end;
+  align-items: center;
   gap: var(--zn-spacing-x-small);
   margin-right: auto;
   font-size: var(--zn-input-label-font-size-small);
@@ -60,6 +61,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: color 0.15s ease;
+  padding-left: var(--zn-spacing-x-small);
 
   &:hover {
     color: var(--zn-color-primary-600, #0969da);

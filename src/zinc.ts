@@ -94,6 +94,7 @@ export { default as TranslationGroup } from './components/translation-group';
 export { default as OptGroup } from './components/opt-group';
 export { default as PriorityList } from './components/priority-list';
 export { default as MarkdownEditor } from './components/markdown-editor';
+export { default as RevealEdit } from './components/reveal-edit';
 /* plop:component */
 
 // Base Component

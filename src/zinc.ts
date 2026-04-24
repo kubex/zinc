@@ -109,6 +109,7 @@ export { default as FlowBranchConditions } from './components/flow-builder/modul
 export { default as PageBuilder } from './components/page-builder';
 export { default as PagePaletteItem } from './components/page-builder/modules/page-palette-item';
 export { default as PageSectionCard } from './components/page-builder/modules/page-section-card';
+export { default as RevealEdit } from './components/reveal-edit';
 /* plop:component */
 
 // Base Component

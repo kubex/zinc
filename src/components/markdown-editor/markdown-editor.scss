@@ -49,6 +49,27 @@
   justify-content: flex-end;
 }
 
+.markdown-editor__markdown-link {
+  display: inline-flex;
+  align-items: end;
+  gap: var(--zn-spacing-x-small);
+  margin-right: auto;
+  font-size: var(--zn-input-label-font-size-small);
+  line-height: 1;
+  color: var(--zn-color-neutral-500, #656d76);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--zn-color-primary-600, #0969da);
+  }
+
+  span {
+    white-space: nowrap;
+  }
+}
+
 .markdown-editor__view-toggle {
   display: inline-flex;
 }

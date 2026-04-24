@@ -1,17 +1,16 @@
 ---
 meta:
   title: Reveal Edit
-  description: Reveal Edit combines inline reveal and editing in one component — it masks sensitive data by default, reveals it on hover or click, and lets users edit it in place.
+  description: Reveal Edit combines inline reveal and editing in one component — it masks sensitive data by default, reveals it on hover, and lets users edit it in place by clicking the field or the edit button.
 layout: component
 ---
 
-Reveal Edit is designed for display-and-edit workflows where sensitive data should be masked at rest but editable without navigating away. Hovering or clicking reveals the real value temporarily; clicking the edit button switches to an inline input with save and cancel actions.
+Reveal Edit is designed for display-and-edit workflows where sensitive data should be masked at rest but editable without navigating away. Hovering reveals the real value; clicking the field or the edit button switches to an inline input with save and cancel actions.
 
 ```html:preview
 <zn-reveal-edit name="email"
                 value="john.doe@example.com"
-                display-value="j***@example.com"
-                duration="3000">
+                display-value="j***@example.com">
 </zn-reveal-edit>
 ```
 
@@ -19,7 +18,7 @@ Reveal Edit is designed for display-and-edit workflows where sensitive data shou
 
 ### Basic Usage
 
-Show a masked value in display mode. Hover to peek at the real value, click the edit icon to edit it in place.
+Show a masked value in display mode. Hover to peek at the real value, click the field or the edit icon to edit it in place.
 
 ```html:preview
 <zn-reveal-edit name="phone"
@@ -47,39 +46,8 @@ Protect API keys by default and let authorised users edit them in place.
 <zn-reveal-edit name="api-key"
                 value="sk_live_1234567890abcdef"
                 display-value="sk_live_••••••••••••••••"
-                duration="5000"
                 style="font-family: monospace;">
 </zn-reveal-edit>
-```
-
-### With Duration (Temporary Reveal)
-
-Use the `duration` attribute to auto-hide the real value after a set number of milliseconds when clicked.
-
-```html:preview
-<zn-reveal-edit name="token"
-                value="super-secret-token-abc123"
-                display-value="••••••••••••••••••••••••"
-                duration="3000">
-</zn-reveal-edit>
-<p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem;">
-  Click to reveal for 3 seconds
-</p>
-```
-
-### Permanent Toggle
-
-Set `duration="0"` to toggle the reveal state on each click — it stays revealed until clicked again.
-
-```html:preview
-<zn-reveal-edit name="password"
-                value="MyP@ssw0rd!"
-                display-value="Password: ••••••••"
-                duration="0">
-</zn-reveal-edit>
-<p style="font-size: 0.875rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem;">
-  Click to toggle on/off
-</p>
 ```
 
 ### Disabled State
@@ -103,7 +71,7 @@ A practical example showing editable credentials in a settings interface.
   <div style="padding: 1.5rem; background: var(--zn-color-neutral-50); border-bottom: 1px solid var(--zn-color-neutral-200);">
     <h3 style="margin: 0;">Account Settings</h3>
     <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--zn-color-neutral-600);">
-      Hover to reveal, click the edit icon to update
+      Hover to reveal, click the field or edit icon to update
     </p>
   </div>
 
@@ -112,8 +80,7 @@ A practical example showing editable credentials in a settings interface.
       <strong>Email</strong>
       <zn-reveal-edit name="email"
                       value="john.doe@example.com"
-                      display-value="j***@example.com"
-                      duration="3000">
+                      display-value="j***@example.com">
       </zn-reveal-edit>
     </div>
 
@@ -130,7 +97,6 @@ A practical example showing editable credentials in a settings interface.
       <zn-reveal-edit name="webhook-secret"
                       value="whsec_1234567890abcdefghij"
                       display-value="whsec_••••••••••••••••••••"
-                      duration="5000"
                       style="font-family: monospace;">
       </zn-reveal-edit>
     </div>
@@ -157,7 +123,6 @@ A practical example showing editable credentials in a settings interface.
     <zn-reveal-edit name="api-key"
                     value="sk_live_abc123"
                     display-value="sk_live_••••••"
-                    duration="0"
                     style="font-family: monospace;">
     </zn-reveal-edit>
   </div>
@@ -300,10 +265,9 @@ Embed reveal-edit fields inside table cells for editable, masked tabular data.
 
 1. **Always provide both `value` and `display-value`** — `value` is the real data submitted to the server; `display-value` is what the user sees at rest.
 2. **Use meaningful masking** — show enough context (e.g., the email domain or last 4 digits) so users know what they're looking at before revealing.
-3. **Choose duration thoughtfully** — 3–5 seconds for data that needs to be copied; `0` (permanent toggle) for fields users actively reference.
-4. **Use `disabled` for read-only rows** — it hides the edit button entirely while still allowing hover reveal.
-5. **Listen to `zn-submit`** — this is your signal to persist the new value. Don't rely solely on form submission if you need to update the `display-value` after a successful save.
-6. **Update `display-value` after save** — the component doesn't re-mask automatically; re-set `display-value` in your `zn-submit` handler once the server confirms the change.
+3. **Use `disabled` for read-only rows** — it hides the edit button and prevents click-to-edit while still allowing hover reveal.
+4. **Listen to `zn-submit`** — this is your signal to persist the new value. Don't rely solely on form submission if you need to update the `display-value` after a successful save.
+5. **Update `display-value` after save** — the component doesn't re-mask automatically; re-set `display-value` in your `zn-submit` handler once the server confirms the change.
 
 ```html:preview
 <div style="max-width: 600px; display: flex; flex-direction: column; gap: 1.5rem;">
@@ -315,8 +279,7 @@ Embed reveal-edit fields inside table cells for editable, masked tabular data.
     <zn-reveal-edit id="good-example"
                     name="email"
                     value="john.doe@example.com"
-                    display-value="j***@example.com"
-                    duration="3000">
+                    display-value="j***@example.com">
     </zn-reveal-edit>
     <div style="font-size: 0.75rem; color: var(--zn-color-neutral-600); margin-top: 0.5rem;">
       Domain shown for context. zn-submit handler will update display-value after the server confirms.

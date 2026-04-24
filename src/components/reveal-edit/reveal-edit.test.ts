@@ -62,7 +62,7 @@ describe('<zn-reveal-edit>', () => {
     expect(display.textContent?.trim()).to.equal('real@example.com');
   });
 
-  it('should hide the real value on mouseleave when not toggled', async () => {
+  it('should hide the real value on mouseleave', async () => {
     const el = await fixture<ZnRevealEdit>(html`
       <zn-reveal-edit value="real@example.com" display-value="*****@example.com"></zn-reveal-edit>
     `);
@@ -75,22 +75,33 @@ describe('<zn-reveal-edit>', () => {
     expect(display.textContent?.trim()).to.equal('*****@example.com');
   });
 
-  // -- Click reveal --
+  // -- Click to edit --
 
-  it('should reveal the real value on click', async () => {
+  it('should enter edit mode when the display area is clicked', async () => {
     const el = await fixture<ZnRevealEdit>(html`
-      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" duration="5000"></zn-reveal-edit>
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com"></zn-reveal-edit>
     `);
     await el.updateComplete;
     const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
     display.dispatchEvent(new MouseEvent('click', {bubbles: true}));
     await el.updateComplete;
-    expect(display.textContent?.trim()).to.equal('real@example.com');
+    expect(el.shadowRoot!.querySelector('.re--editing')).to.exist;
   });
 
-  it('should stay revealed after click despite mouseleave (toggled)', async () => {
+  it('should not enter edit mode when the display area is clicked while disabled', async () => {
     const el = await fixture<ZnRevealEdit>(html`
-      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" duration="5000"></zn-reveal-edit>
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" disabled></zn-reveal-edit>
+    `);
+    await el.updateComplete;
+    const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
+    display.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.re--editing')).to.not.exist;
+  });
+
+  it('should remain in edit mode on mouseleave when editing', async () => {
+    const el = await fixture<ZnRevealEdit>(html`
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com"></zn-reveal-edit>
     `);
     await el.updateComplete;
     const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
@@ -98,21 +109,63 @@ describe('<zn-reveal-edit>', () => {
     await el.updateComplete;
     display.dispatchEvent(new MouseEvent('mouseleave'));
     await el.updateComplete;
-    expect(display.textContent?.trim()).to.equal('real@example.com');
+    expect(el.shadowRoot!.querySelector('.re--editing')).to.exist;
   });
 
-  it('should auto-hide after the duration expires', async () => {
+  // -- clear-on-edit --
+
+  it('should start with an empty input when clear-on-edit is set', async () => {
     const el = await fixture<ZnRevealEdit>(html`
-      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" duration="100"></zn-reveal-edit>
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" clear-on-edit></zn-reveal-edit>
     `);
     await el.updateComplete;
     const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
     display.dispatchEvent(new MouseEvent('click', {bubbles: true}));
     await el.updateComplete;
-    expect(display.textContent?.trim()).to.equal('real@example.com');
-    await new Promise(r => setTimeout(r, 150));
+    const input = el.shadowRoot!.querySelector('.re__input') as HTMLInputElement;
+    expect(input.value).to.equal('');
+  });
+
+  it('should restore the display value on cancel when clear-on-edit is set', async () => {
+    const el = await fixture<ZnRevealEdit>(html`
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" clear-on-edit></zn-reveal-edit>
+    `);
     await el.updateComplete;
+    const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
+    display.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+    const cancelBtn = el.shadowRoot!.querySelector('zn-button[icon="close"]') as HTMLElement;
+    cancelBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.re--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
     expect(display.textContent?.trim()).to.equal('*****@example.com');
+  });
+
+  it('should auto-cancel on outside click when clear-on-edit is set and nothing was typed', async () => {
+    const el = await fixture<ZnRevealEdit>(html`
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" clear-on-edit></zn-reveal-edit>
+    `);
+    await el.updateComplete;
+    const display = el.shadowRoot!.querySelector('.re__display') as HTMLElement;
+    display.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+    document.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.re--editing')).to.not.exist;
+    expect(el.value).to.equal('real@example.com');
+  });
+
+  it('should not pre-fill with clear-on-edit even without display-value set', async () => {
+    const el = await fixture<ZnRevealEdit>(html`
+      <zn-reveal-edit value="real@example.com" display-value="*****@example.com" clear-on-edit></zn-reveal-edit>
+    `);
+    await el.updateComplete;
+    const editBtn = el.shadowRoot!.querySelector('.button--edit') as HTMLElement;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    const input = el.shadowRoot!.querySelector('.re__input') as HTMLInputElement;
+    expect(input.value).to.equal('');
   });
 
   // -- Edit mode --

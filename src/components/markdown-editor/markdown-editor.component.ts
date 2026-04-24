@@ -269,6 +269,8 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
         'panel--cosmic': this.cosmic,
         'panel--shadow': this.shadow,
       })}>
+
+
         <div class="panel__inner">
           ${hasHeader ? html`
             <zn-header class=${classMap({
@@ -297,6 +299,7 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
                   </label>` : ''}
 
                 <div part="toolbar" class="markdown-editor__toolbar">
+                  ${this.markdownHelperBtn()}
                   <zn-button-group class="markdown-editor__view-toggle" @click=${this.handleViewToggle}>
                     ${VIEW_MODES.map(v => this.renderViewButton(v.mode, v.icon, v.label))}
                   </zn-button-group>
@@ -351,6 +354,21 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
     `;
   }
 
+  markdownHelperBtn() {
+    return html`
+      <a
+        class="markdown-editor__markdown-link"
+        href="https://www.markdownguide.org/cheat-sheet"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Markdown is supported"
+      >
+        <zn-icon src="markdown"></zn-icon>
+        <span>Markdown is supported</span>
+      </a>
+    `;
+  }
+
   private renderViewButton(mode: ViewMode, icon: string, label: string) {
     const isActive = this.viewMode === mode;
     return html`
@@ -372,4 +390,7 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
       ></zn-button>
     `;
   }
+
+
+
 }

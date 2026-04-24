@@ -11,8 +11,8 @@ import type ZnInput from "../input";
 import styles from './reveal-edit.scss';
 
 /**
- * @summary An inline-editable field that displays a masked value by default, reveals the real value on hover/click,
- * and switches to an editable input when the edit button is clicked.
+ * @summary An inline-editable field that displays a masked value by default, reveals the real value on hover,
+ * and switches to an editable input when the field or edit button is clicked.
  * @documentation https://zinc.style/components/reveal-edit
  * @status experimental
  * @since 1.0
@@ -26,8 +26,7 @@ import styles from './reveal-edit.scss';
  * ```html
  * <zn-reveal-edit name="email"
  *                 value="john@example.com"
- *                 display-value="john@example.com"
- *                 duration="3000"
+ *                 display-value="j***@example.com">
  * </zn-reveal-edit>
  * ```
  */
@@ -51,15 +50,18 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
   /** Disables editing. */
   @property({type: Boolean}) disabled: boolean;
 
-  /** How long (ms) the real value stays revealed after a click before reverting to the masked display. */
-  @property({type: Number}) duration: number = 3000;
+  /**
+   * When set, the edit input starts empty instead of pre-filled with the current value.
+   * Cancelling restores the original value. Use this when the displayed value is masked and
+   * pre-filling would leak the mask into the form submission.
+   */
+  @property({type: Boolean, attribute: 'clear-on-edit'}) clearOnEdit: boolean = false;
 
   @state() private isEditing: boolean = false;
   @state() private _isRevealed: boolean = false;
-  @state() private _isToggled: boolean = false;
 
   private _valueBeforeEdit: string;
-  private _revealTimer: ReturnType<typeof setTimeout> | null = null;
+  private _editStartValue: string;
 
   @query('.re__input') input: ZnInput;
 
@@ -101,10 +103,6 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
     document.removeEventListener('keydown', this._escKeyHandler);
     document.removeEventListener('keydown', this._submitKeyHandler);
     document.removeEventListener('click', this._mouseEventHandler);
-    if(this._revealTimer)
-    {
-      clearTimeout(this._revealTimer);
-    }
   }
 
   @watch('value', {waitUntilFirstUpdate: true})
@@ -116,9 +114,10 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
   private _mouseEventHandler = (e: MouseEvent) => {
     if(this.isEditing && !this.contains(e.target as Node))
     {
-      if(this.value === this._valueBeforeEdit)
+      if(this.value === this._editStartValue)
       {
         this.isEditing = false;
+        this.value = this._valueBeforeEdit;
         this.input?.blur();
       }
     }
@@ -144,45 +143,16 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
   };
 
   private _handleMouseEnter = () => {
-    if(!this.isEditing && !this._isToggled)
+    if(!this.isEditing)
     {
       this._isRevealed = true;
     }
   };
 
   private _handleMouseLeave = () => {
-    if(!this._isToggled)
+    if(!this.isEditing)
     {
       this._isRevealed = false;
-    }
-  };
-
-  private _handleRevealClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    if(this.isEditing) return;
-
-    if(this._revealTimer)
-    {
-      clearTimeout(this._revealTimer);
-      this._revealTimer = null;
-    }
-
-    if(this.duration)
-    {
-      this._isRevealed = true;
-      this._isToggled = true;
-      this._revealTimer = setTimeout(() =>
-      {
-        this._isRevealed = false;
-        this._isToggled = false;
-        this._revealTimer = null;
-        this.requestUpdate();
-      }, this.duration);
-    }
-    else
-    {
-      this._isRevealed = !this._isRevealed;
-      this._isToggled = this._isRevealed;
     }
   };
 
@@ -191,15 +161,13 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
     e.stopPropagation();
     if(this.disabled) return;
 
-    if(this._revealTimer)
-    {
-      clearTimeout(this._revealTimer);
-      this._revealTimer = null;
-    }
-
     this._isRevealed = false;
-    this._isToggled = false;
     this._valueBeforeEdit = this.value;
+    if(this.clearOnEdit)
+    {
+      this.value = '';
+    }
+    this._editStartValue = this.value;
     this.isEditing = true;
   };
 
@@ -237,7 +205,7 @@ export default class ZnRevealEdit extends ZincElement implements ZincFormControl
           <div class="re__display"
                @mouseenter="${this._handleMouseEnter}"
                @mouseleave="${this._handleMouseLeave}"
-               @click="${this._handleRevealClick}">
+               @click="${this.disabled ? undefined : this._handleEditClick}">
             ${displayText}
           </div>
           <zn-input type="text"

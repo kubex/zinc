@@ -152,4 +152,28 @@ describe('<zn-select>', () => {
       expect(visibleOptions[0].value).to.equal('apple');
     });
   });
+
+  describe('Escape key', () => {
+    it('blurs the display input when dropdown is closed and Escape is pressed', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select></zn-select>`);
+      await el.updateComplete;
+
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      el.focus();
+      await el.updateComplete;
+      expect(el.shadowRoot!.activeElement).to.equal(displayInput);
+      expect(el.open).to.be.false;
+
+      displayInput.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.activeElement, 'display input should be blurred').to.not.equal(displayInput);
+    });
+
+  });
 });

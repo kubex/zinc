@@ -547,6 +547,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.input.blur();
+      event.stopPropagation();
+      return;
+    }
+
     const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
     // Pressing enter when focused on the input should submit the form like a native input, be we wait a tick before

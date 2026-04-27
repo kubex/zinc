@@ -321,6 +321,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
       return;
     }
 
+    if (event.key === 'Escape') {
+      this.input.blur();
+      event.stopPropagation();
+      return;
+    }
+
     // Allow navigation and control keys
     const allowedKeys = [
       'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',

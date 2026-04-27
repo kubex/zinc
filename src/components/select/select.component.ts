@@ -484,6 +484,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.displayInput.focus({preventScroll: true});
     }
 
+    // Blur the display input when Escape is pressed and the dropdown is closed,
+    // so a second Escape press can bubble (e.g. close a containing dialog).
+    if (event.key === 'Escape' && !this.open) {
+      event.stopPropagation();
+      this.displayInput.blur();
+    }
+
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
     // buffer we _don't_ close it. When search is enabled, space should type into the input, not toggle.
     if (event.key === 'Enter' || (event.key === ' ' && !this.search && this.typeToSelectString === '')) {

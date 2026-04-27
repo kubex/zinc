@@ -233,6 +233,13 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     this.formControlController.emitInvalidEvent(event);
   }
 
+  private handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.input.blur();
+      event.stopPropagation();
+    }
+  }
+
   private setTextareaHeight() {
     if (this.resize === 'auto') {
       this.input.style.height = 'auto';
@@ -436,6 +443,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
               @change=${this.handleChange}
               @input=${this.handleInput}
               @invalid=${this.handleInvalid}
+              @keydown=${this.handleKeyDown}
               @focus=${this.handleFocus}
               @blur=${this.handleBlur}
             ></textarea>

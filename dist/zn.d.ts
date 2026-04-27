@@ -511,14 +511,14 @@ declare module "components/menu-item/submenu-controller" {
         renderSubmenu(): import("lit").TemplateResult<1>;
     }
 }
-declare module "utilities/md5" {
-    export function md5(string: string): string;
+declare module "utilities/sha256" {
+    export function sha256(input: string): string;
 }
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
-    export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & {});
+    export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & Record<never, never>);
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/icon
@@ -555,7 +555,8 @@ declare module "components/icon/icon.component" {
         defaultLibrary: IconLibrary;
         convertToLibrary(input: string): IconLibrary;
         connectedCallback(): void;
-        ravatarOptions(): void;
+        private applyHashFragment;
+        private normalizeRavatarEmail;
         render(): import("lit").TemplateResult<1>;
         private getAvatarInitials;
         protected getColorForAvatar(avatarInitials: string): string;
@@ -3991,6 +3992,9 @@ declare module "components/timer/index" {
             'zn-timer': ZnTimer;
         }
     }
+}
+declare module "utilities/md5" {
+    export function md5(string: string): string;
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';

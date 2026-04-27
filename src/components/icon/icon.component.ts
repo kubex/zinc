@@ -1,8 +1,8 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
-import {md5} from '../../utilities/md5';
 import {property} from 'lit/decorators.js';
+import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
 
@@ -30,7 +30,7 @@ export type IconColor =
   | "violet"
   | "pink"
   | "grey"
-  | (string & {});
+  | (string & Record<never, never>);
 
 /**
  * @summary Short summary of the component's intended use.
@@ -127,40 +127,37 @@ export default class ZnIcon extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
 
+    let hashFragment = '';
 
     if (this.src && this.src.includes('#')) {
-      const split = this.src.split('#');
+      const split = this.src.split('#', 2);
       this.src = split[0];
-      const attributes = split[1].split(',');
-      attributes.forEach(attr => {
-        if (attr === "round") {
-          this.round = true;
-        }
-        if (attr === "tile") {
-          this.tile = true;
-        }
-        if (attr === "depth") {
-          this.depth = true;
-        }
-      });
+      hashFragment = split[1] ?? '';
     }
 
     if (this.src && this.src.includes('@')) {
-      const split = this.src.split('@');
-      if (split[1].includes('.')) {
-        this.library = "gravatar";
-      } else if ((this.library === undefined) && split[1] !== "") {
+      const atIndex = this.src.lastIndexOf('@');
+      const libraryOrDomain = this.src.slice(atIndex + 1);
+
+      if (libraryOrDomain.includes('.')) {
+        this.library = this.library ?? "gravatar";
+      } else if ((this.library === undefined) && libraryOrDomain !== "") {
         // if split[1] is a valid library name, set it
-        this.library = this.convertToLibrary(split[1]);
-        this.src = split[0];
+        this.library = this.convertToLibrary(libraryOrDomain);
+        this.src = this.src.slice(0, atIndex);
       }
 
       if (this.library === "gravatar" || this.library === "libravatar") {
-        this.ravatarOptions();
-        this.src = md5(this.src);
+        this.applyHashFragment(hashFragment);
+        this.src = sha256(this.normalizeRavatarEmail(this.src));
+      } else {
+        this.applyHashFragment(hashFragment);
       }
     } else if (!this.library && this.src && !this.src.includes('/')) {
+      this.applyHashFragment(hashFragment);
       this.library = this.defaultLibrary;
+    } else {
+      this.applyHashFragment(hashFragment);
     }
 
     // load the material icons font if the library is set to material
@@ -174,16 +171,40 @@ export default class ZnIcon extends ZincElement {
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined|Material+Icons|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone|Material+Icons+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet">`, document.head);
-
-    this.ravatarOptions();
   }
 
-  ravatarOptions() {
-    if ((this.library === "gravatar" || this.library === "libravatar") && this.src.includes('#')) {
-      const split = this.src.split('#');
-      this.gravatarOptions = "&d=" + split[1];
-      this.src = split[0];
+  private applyHashFragment(hashFragment: string) {
+    if (!hashFragment) {
+      return;
     }
+
+    const attributes = hashFragment.split(',');
+
+    attributes.forEach(attr => {
+      if (attr === 'round') {
+        this.round = true;
+      }
+
+      if (attr === 'tile') {
+        this.tile = true;
+      }
+
+      if (attr === 'depth') {
+        this.depth = true;
+      }
+    });
+
+    if ((this.library === 'gravatar' || this.library === 'libravatar')) {
+      const defaultOption = attributes.find(attr => !['round', 'tile', 'depth'].includes(attr));
+
+      if (defaultOption) {
+        this.gravatarOptions = `&d=${defaultOption}`;
+      }
+    }
+  }
+
+  private normalizeRavatarEmail(email: string) {
+    return email.trim().toLowerCase();
   }
 
   render() {

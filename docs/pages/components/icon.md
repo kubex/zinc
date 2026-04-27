@@ -333,6 +333,8 @@ Explicit library specification:
 <zn-icon src="test1@example.com" library="gravatar" size="48"></zn-icon>
 ```
 
+Email addresses are trimmed, lowercased, and hashed with SHA-256 before the Gravatar request is made.
+
 Using shorthand notation:
 
 ```html:preview
@@ -347,6 +349,8 @@ Libravatar is an open-source alternative to Gravatar. Use it for federated avata
 <zn-icon src="test1@example.com" library="libravatar" size="48" round></zn-icon>
 <zn-icon src="user@example.com" library="libravatar" size="48" round></zn-icon>
 ```
+
+Email addresses are trimmed, lowercased, and hashed with SHA-256 before the Libravatar request is made.
 
 Similar to Gravatar, you can specify fallback options:
 

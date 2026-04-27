@@ -5298,6 +5298,7 @@ declare module "components/textarea/textarea.component" {
         private handleFocus;
         private handleInput;
         private handleInvalid;
+        private handleKeyDown;
         private setTextareaHeight;
         handleDisabledChange(): void;
         handleRowsChange(): void;

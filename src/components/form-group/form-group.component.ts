@@ -74,14 +74,14 @@ export default class ZnFormGroup extends ZincElement {
                     </zn-tooltip>`
                   : ''}
               </label>
+            </div>` : html``}
 
-              ${hasHelpText ? html`
-                <div
-                  part="form-control-help-text"
-                  id="help-text"
-                  class="form-control__help-text">
-                  <slot name="help-text">${this.helpText}</slot>
-                </div>` : html``}
+          ${hasHelpText ? html`
+            <div
+              part="form-control-help-text"
+              id="help-text"
+              class="form-control__help-text">
+              <slot name="help-text">${this.helpText}</slot>
             </div>` : html``}
 
           <div part="form-control-input" class="form-control-input">

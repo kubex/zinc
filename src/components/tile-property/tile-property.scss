@@ -1,24 +1,28 @@
 @use "../../wc";
 
+:host {
+  display: flex;
+  min-width: 0;
+  max-width: 240px;
+}
 
 .tile__property {
   display: flex;
   align-items: center;
   flex-direction: row;
-  width: 150px;
-  flex-basis: 150px;
-  max-width: 200px;
+  min-width: 0;
+  width: 100%;
 
   .tile__property_container {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    min-width: 0;
   }
 
   .tile__icon {
     margin-right: 15px;
+    flex-shrink: 0;
   }
 
   .tile__caption {
@@ -29,6 +33,7 @@
     color: rgb(var(--zn-text-heading));
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
   }
 
   .tile__description {
@@ -39,5 +44,6 @@
     color: rgb(var(--zn-text-color));
     text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
   }
 }

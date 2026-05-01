@@ -1,4 +1,5 @@
 import { classMap } from "lit/directives/class-map.js";
+import { ConditionalController } from "../../internal/conditional";
 import { type CSSResultGroup, html, type HTMLTemplateResult, type PropertyValues, unsafeCSS } from 'lit';
 import { defaultValue } from "../../internal/default-value";
 import { FormControlController } from "../../internal/form";
@@ -47,6 +48,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     },
   });
   private readonly hasSlotController = new HasSlotController(this, 'help-text', '[default]');
+  private readonly conditionalController = new ConditionalController(this);
 
   @property() value: string | string[] = '';
 
@@ -55,6 +57,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   @property({ reflect: true }) placeholder: string;
 
   @property({ attribute: 'edit-text' }) editText: string;
+
+  @property() conditional = '';
 
   @property({ type: Boolean }) disabled: boolean
 
@@ -171,6 +175,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   async firstUpdated() {
     await this.updateComplete;
     this.input.addEventListener('onclick', this.handleEditClick);
+    this.conditionalController.setup();
   }
 
   protected willUpdate(changedProperties: PropertyValues) {
@@ -195,6 +200,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     if (this.input instanceof ZnSelect && !this.isEditing) {
       await this.input.hide();
     }
+    this.conditionalController.check();
   }
 
   mouseEventHandler = (e: MouseEvent) => {
@@ -468,16 +474,18 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   protected _getDataSelectInput(): HTMLTemplateResult {
     return html`
       <zn-data-select class="ai__input"
-                      name="${this.name}"
-                      value="${this.value}"
-                      icon-position="${ifDefined(this.iconPosition)}"
-                      size="${this.size}"
-                      provider="${this.selectProvider}"
                       clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
-                      required=${ifDefined(this.required)}
                       dir="${this.dir}"
+                      icon-position="${ifDefined(this.iconPosition)}"
+                      multiple=${ifDefined(this.multiple)}
+                      name="${this.name}"
+                      provider="${this.selectProvider}"
+                      required=${ifDefined(this.required)}
+                      size="${this.size}"
+                      value="${this.value}"
+                      @zn-blur="${this.handleBlur}"
                       @zn-input="${this.handleInput}"
-                      @zn-blur="${this.handleBlur}">
+      >
       </zn-data-select>`;
   }
 }

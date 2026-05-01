@@ -1,6 +1,6 @@
 import {animateTo, stopAnimations} from '../../internal/animate.js';
 import {classMap} from "lit/directives/class-map.js";
-import {deepQuerySelectorAll} from "../../utilities/query";
+import {ConditionalController} from "../../internal/conditional";
 import {FormControlController} from "../../internal/form";
 import {getAnimation, setDefaultAnimation} from "../../utilities/animation-registry";
 import {HasSlotController} from "../../internal/slot";
@@ -89,6 +89,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   protected readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-blur', 'zn-input']
   });
+  private readonly conditionalController = new ConditionalController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
   private typeToSelectString = '';
@@ -1131,33 +1132,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     }
 
-    if (this.conditional !== "") {
-      const ids = this.conditional.split(',').map(id => id.trim());
-      const conditionals: ZnSelect[] = [];
-
-      ids.forEach(id => {
-        const elements = deepQuerySelectorAll(`#${id}`, document.documentElement, '') as ZnSelect[];
-        conditionals.push(...elements);
-      });
-
-      const initiallyDisabled = this.disabled;
-      const checkConditionals = () => {
-        const shouldDisable = conditionals.some(select => {
-          let linkedValues = Array.isArray(select.value) ? select.value : [select.value];
-          linkedValues = linkedValues.filter(v => v !== '');
-          return linkedValues.length > 0;
-        });
-        this.disabled = initiallyDisabled || shouldDisable;
-      };
-
-      conditionals.forEach(select => {
-        select.addEventListener('zn-change', checkConditionals);
-        select.addEventListener('zn-input', checkConditionals);
-      });
-
-      // trigger the check once to initialize
-      checkConditionals();
-    }
+    this.conditionalController.setup();
 
     if (this.dataUri && !this.searchOnly) {
       this.fetchOptions().then();

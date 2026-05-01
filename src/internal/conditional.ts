@@ -1,5 +1,5 @@
-import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import {deepQuerySelectorAll} from '../utilities/query';
+import type {ReactiveController, ReactiveControllerHost} from 'lit';
 
 export interface ConditionalHost {
   conditional: string;
@@ -27,10 +27,10 @@ export class ConditionalController implements ReactiveController {
 
     ids.forEach(id => {
       const byId = deepQuerySelectorAll(`#${id}`, document.documentElement, '') as (Element & {
-        value: string | string[]
+        value: string | string[];
       })[];
       const byName = deepQuerySelectorAll(`[name="${id}"]`, document.documentElement, '') as (Element & {
-        value: string | string[]
+        value: string | string[];
       })[];
 
       // de-duplicate in case the same element matches both id and name
@@ -45,7 +45,7 @@ export class ConditionalController implements ReactiveController {
 
     this.initiallyDisabled = this.host.disabled;
 
-    if(ids.length === 0 ){
+    if (ids.length === 0) {
       return;
     }
 

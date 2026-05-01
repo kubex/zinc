@@ -2030,6 +2030,28 @@ declare module "internal/animate" {
         offset?: number | null;
     }[];
 }
+declare module "internal/conditional" {
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    export interface ConditionalHost {
+        conditional: string;
+        disabled: boolean;
+    }
+    /** A reactive controller that disables the host when linked selects have a value. */
+    export class ConditionalController implements ReactiveController {
+        host: ReactiveControllerHost & Element & ConditionalHost;
+        private conditionals;
+        private initiallyDisabled;
+        private readonly handleChange;
+        constructor(host: ReactiveControllerHost & Element & ConditionalHost);
+        /** Call from the host's `firstUpdated()` to parse IDs, find elements, attach listeners, and run the initial check. */
+        setup(): void;
+        hostConnected(): void;
+        hostDisconnected(): void;
+        /** Re-evaluate the conditional state. Call from the host when needed. */
+        check(): void;
+        private checkConditionals;
+    }
+}
 declare module "utilities/animation-registry" {
     export interface ElementAnimation {
         keyframes: Keyframe[];
@@ -2177,6 +2199,7 @@ declare module "components/select/select.component" {
             'zn-tag': typeof ZnChip;
         };
         protected readonly formControlController: FormControlController;
+        private readonly conditionalController;
         private readonly hasSlotController;
         private readonly localize;
         private typeToSelectString;
@@ -3786,10 +3809,12 @@ declare module "components/inline-edit/inline-edit.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private readonly hasSlotController;
+        private readonly conditionalController;
         value: string | string[];
         name: string;
         placeholder: string;
         editText: string;
+        conditional: string;
         disabled: boolean;
         inline: boolean;
         padded: boolean;

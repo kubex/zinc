@@ -13458,6 +13458,13 @@
             },
             {
               "kind": "field",
+              "name": "conditionalController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ConditionalController(this)"
+            },
+            {
+              "kind": "field",
               "name": "value",
               "type": {
                 "text": "string | string[]"
@@ -13489,6 +13496,15 @@
                 "text": "string"
               },
               "attribute": "edit-text"
+            },
+            {
+              "kind": "field",
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "conditional"
             },
             {
               "kind": "field",
@@ -13921,6 +13937,14 @@
                 "text": "string"
               },
               "fieldName": "editText"
+            },
+            {
+              "name": "conditional",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "conditional"
             },
             {
               "name": "disabled",
@@ -24796,6 +24820,13 @@
               "privacy": "protected",
               "readonly": true,
               "default": "new FormControlController(this, { assumeInteractionOn: ['zn-blur', 'zn-input'] })"
+            },
+            {
+              "kind": "field",
+              "name": "conditionalController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ConditionalController(this)"
             },
             {
               "kind": "field",

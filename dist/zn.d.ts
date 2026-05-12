@@ -3613,15 +3613,19 @@ declare module "components/navbar/navbar.component" {
         private _navItemsGap;
         private _expandableMargin;
         private _totalItemWidth;
+        private _itemsObserver;
         protected _store: Store;
         appendItem(item: Element): void;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _updateVisibility;
         handleResize: () => void;
         addItem(item: Element, persist?: boolean): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _loadStoredTabs;
         private _saveTabToStorage;
         private handleClick;
+        protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit").TemplateResult<1>;
     }
 }

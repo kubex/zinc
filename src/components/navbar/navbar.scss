@@ -192,7 +192,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   ul.navbar {
     display: flex;
     flex-basis: fit-content;
-    gap: 30px;
+    gap: 0;
     list-style: none;
 
     li.more {
@@ -218,8 +218,15 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       user-select: none;
       font-weight: 500;
-      padding: 0 0 var(--zn-spacing-small);
+      padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+      background: rgba(0, 0, 0, 0.05);
       position: relative;
+      border-right-width: 1px;
+      border-top-width: 1px;
+
+      &:first-of-type {
+        border-left-width: 1px;
+      }
 
       display: flex;
       align-items: center;
@@ -250,11 +257,11 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         content: '';
         left: 50%;
         right: 50%;
-        bottom: 0;
+        bottom: -2px;
         position: absolute;
-        background-color: rgb(var(--zn-primary));
+        background-color: rgb(var(--zn-body));
         transition: all 300ms ease-in-out;
-        height: 2px;
+        height: 1px;
       }
 
       &:hover:before:not(#dropdown-item) {
@@ -264,13 +271,13 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: rgb(var(--zn-primary));
-        font-weight: var(--zn-font-weight-semibold);
+        background: rgb(var(--zn-body));
+        border-bottom: 1px solid rgb(var(--zn-body));
       }
 
       &.active::before, &.zn-tb-active::before {
-        left: calc(var(--zn-spacing-medium) * -1);
-        right: calc(var(--zn-spacing-medium) * -1);
+        left: 0;
+        right: 0;
       }
     }
 

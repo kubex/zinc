@@ -51,6 +51,8 @@ export default class ZnHeader extends ZincElement {
 
   @property({attribute: 'previous-target'}) previousTarget: string;
 
+  @property({attribute: 'hide-breadcrumb', type: Boolean}) hideBreadcrumb: boolean = false;
+
   private navbar: ZnNavbar;
 
   // Attach any event listeners you may need
@@ -116,7 +118,7 @@ export default class ZnHeader extends ZincElement {
     const hasPreviousPath = this.previousPath;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
-    const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
+    const hasBreadcrumb = !this.hideBreadcrumb && this.hasSlotController.test('breadcrumb');
 
     // Do not add formatting within breadcrumb or navigation - css:empty in use
     const header = html`
@@ -147,9 +149,6 @@ export default class ZnHeader extends ZincElement {
 
 
         <div class="content" part="content">
-          ${hasBreadcrumb ? html`
-            <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
-
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"
                data-target="${this.previousTarget ? this.previousTarget : ''}">
@@ -166,6 +165,8 @@ export default class ZnHeader extends ZincElement {
               <span class="header__caption" part="header-caption">
                 ${this.icon ? html`
                   <zn-icon class="header__icon" src="${this.icon}"></zn-icon>` : null}
+                ${hasBreadcrumb ? html`
+                  <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
               ${this.description ? html`

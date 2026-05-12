@@ -4,7 +4,7 @@ import {HasSlotController} from "../../internal/slot";
 import {property} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
-import type ZnNavbar from "../navbar";
+import ZnNavbar from "../navbar";
 
 import styles from './header.scss';
 
@@ -101,7 +101,17 @@ export default class ZnHeader extends ZincElement {
   render() {
     const hasDefaultSlot = this.hasSlotController.test('[default]');
     const hasNavigationSlot = this.hasSlotController.test('nav');
-    const hasNavigation = this.navigation && this.navigation.length > 0 || hasNavigationSlot;
+    let navigationSlotUsed = false;
+    if (hasNavigationSlot) {
+      for (const el of this.hasSlotController.getSlots('nav')) {
+        if (el instanceof ZnNavbar) {
+          navigationSlotUsed = navigationSlotUsed || el.itemCount() > 0;
+        } else {
+          navigationSlotUsed = true;
+        }
+      }
+    }
+    const hasNavigation = this.navigation && this.navigation.length > 0 || (hasNavigationSlot && navigationSlotUsed);
 
     const hasPreviousPath = this.previousPath;
     const hasEntityId = this.entityId;

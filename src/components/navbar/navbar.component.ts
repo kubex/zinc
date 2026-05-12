@@ -110,14 +110,19 @@ export default class ZnNavbar extends ZincElement {
       this.style.display = '';
       return;
     }
-    const items = this._navItems?.querySelectorAll(':scope > li:not(.more):not(#dropdown-item)') || [];
-    const itemCount = items.length;
+
+    const itemCount = this.itemCount()
     if (itemCount === 0 || (itemCount < 2 && this.hideOne)) {
       this.style.display = 'none';
     } else {
       this.style.display = '';
     }
   };
+
+  itemCount(): number {
+    const items = this._navItems?.querySelectorAll(':scope > li:not(.more):not(#dropdown-item)') || [];
+    return items.length;
+  }
 
   handleResize = () => {
     if (this._totalItemWidth === 0 || this._extendedMenu === null || this.iconBar || this.stacked) {
@@ -360,10 +365,11 @@ export default class ZnNavbar extends ZincElement {
             }
             if (item.path != undefined) {
               return html`
-                <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}</li>`;
+                <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}
+                </li>`;
             }
             return html`
-              <li class="${classMap({ 'active': item.active })}"
+              <li class="${classMap({'active': item.active})}"
                   part="navbar-item"
                   tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
                   data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">

@@ -69,12 +69,12 @@ export default class ZnNavbar extends ZincElement {
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
+  private _itemsObserver: MutationObserver | null = null;
 
   protected _store: Store;
 
   appendItem(item: Element) {
-    this._appended = this._appended || [];
-    this._appended.push(item);
+    this._appended = [...(this._appended || []), item];
   }
 
   connectedCallback() {
@@ -97,6 +97,27 @@ export default class ZnNavbar extends ZincElement {
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znnav:", this.storeTtl);
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._itemsObserver?.disconnect();
+    this._itemsObserver = null;
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
+
+  private _updateVisibility = () => {
+    if (this._expanding.length > 0) {
+      this.style.display = '';
+      return;
+    }
+    const items = this._navItems?.querySelectorAll(':scope > li:not(.more):not(#dropdown-item)') || [];
+    const itemCount = items.length;
+    if (itemCount === 0 || (itemCount < 2 && this.hideOne)) {
+      this.style.display = 'none';
+    } else {
+      this.style.display = '';
+    }
+  };
 
   handleResize = () => {
     if (this._totalItemWidth === 0 || this._extendedMenu === null || this.iconBar || this.stacked) {
@@ -204,6 +225,12 @@ export default class ZnNavbar extends ZincElement {
     // Load persisted tabs before calculating widths
     this._loadStoredTabs();
 
+    if (this._navItems) {
+      this._itemsObserver = new MutationObserver(this._updateVisibility);
+      this._itemsObserver.observe(this._navItems, {childList: true});
+    }
+    this._updateVisibility();
+
     setTimeout(() => {
       const items = this._navItems?.querySelectorAll('li') || [];
       for (const item of items) {
@@ -297,15 +324,16 @@ export default class ZnNavbar extends ZincElement {
     }
   };
 
+  protected updated(_changedProperties: PropertyValues) {
+    super.updated(_changedProperties);
+    if (_changedProperties.has('hideOne') || _changedProperties.has('navigation') || _changedProperties.has('_appended')) {
+      this._updateVisibility();
+    }
+  }
+
   render() {
     if (!this.navigation) {
       this.navigation = [];
-    }
-    const itemCount = this.navigation?.length + this._preItems?.length + this._postItems?.length;
-    if (this._expanding.length === 0) {
-      if (itemCount === 0 || (itemCount < 2 && this.hideOne)) {
-        this.style.display = 'none';
-      }
     }
 
     return html`

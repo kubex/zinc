@@ -342,7 +342,7 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <div class="${classMap({
+      <div part="container" class="${classMap({
         'navbar__container': true,
         'navbar__container--stacked': this.stacked,
         'navbar__container--icon-bar': this.iconBar

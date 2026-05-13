@@ -35,6 +35,8 @@ export default class ZnPage extends ZincElement {
   private readonly hasSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption');
 
   @property() caption: string;
+  @property({type: Boolean, reflect: true}) modal = false;
+  @property({type: Boolean, reflect: true}) nested = false;
   @property() summary: string;
 
   @state() private scrolled = false;

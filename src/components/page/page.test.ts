@@ -112,4 +112,16 @@ describe('<zn-page>', () => {
 
     expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
   });
+
+  it('reflects nested and modal modes', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" nested modal>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    expect(el.hasAttribute('nested')).to.equal(true);
+    expect(el.hasAttribute('modal')).to.equal(true);
+  });
 });

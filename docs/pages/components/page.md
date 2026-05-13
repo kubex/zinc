@@ -71,7 +71,7 @@ Breadcrumb links can be passed with `slot="breadcrumb"` and will be forwarded to
 
 ### Overview Content
 
-Use a normal `zn-tab` for overview content. An Overview tab without an explicit `id` uses the default empty tab id. Keeping tab content in `zn-tab` elements lets `zn-page` build the header and navigation without classifying arbitrary child content.
+Use a normal `zn-tab` for overview content. An Overview tab without an explicit `id` uses the default empty tab id. `zn-page` leaves tab elements in the page light DOM and projects them into internal tab panels, so scoped styles from the original DOM context continue to apply.
 
 ```html:preview
 <zn-page caption="Project" summary="Current project status">

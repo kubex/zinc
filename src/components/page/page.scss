@@ -1,13 +1,46 @@
 @use "../../wc";
 
 :host {
-  display: contents;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  --zn-page-background: rgb(var(--zn-body));
+  --zn-page-header-background: rgba(var(--zn-body), 91%);
+  --zn-page-padding: 32px;
+}
+
+.page__header {
+  flex: 0 0 auto;
+  position: sticky;
+  top: calc(var(--zn-page-padding) * -1);
+  z-index: 2;
+  margin: calc(var(--zn-page-padding) * -1) calc(var(--zn-page-padding) * -1) 0;
+  padding: var(--zn-page-padding) var(--zn-page-padding) 0;
+  background: var(--zn-page-header-background);
+  backdrop-filter: blur(3px);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: var(--zn-page-padding);
+    bottom: 0;
+    left: var(--zn-page-padding);
+    height: 1px;
+    background: rgb(var(--zn-border-color));
+    opacity: 0;
+    transition: opacity 180ms ease-in-out;
+    pointer-events: none;
+  }
+
+  &--scrolled-no-navigation::after {
+    opacity: 1;
+  }
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   margin: 0;
 
   .content {
@@ -19,9 +52,12 @@
     height: fit-content;
     gap: 10px;
     margin: 0 auto;
-    min-height: 72px;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  &--has-navigation .content {
+    min-height: 48px;
   }
 
   .caption {
@@ -126,18 +162,45 @@
 .page {
   display: flex;
   flex-direction: column;
+  position: relative;
   height: 100%;
-  min-height: 100%;
+  min-height: 0;
+  max-height: 100%;
   width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
 
-  padding: 32px 32px 0 32px;
+  padding: var(--zn-page-padding);
 }
 
-zn-tabs {
-  flex: 1;
+.page__tabs {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.page__tabs zn-tabs {
+  flex: 0 0 auto;
+  min-height: 0;
+  width: 100%;
+
+  &::part(mid) {
+    overflow: visible;
+  }
+
+  &::part(content) {
+    padding: 24px 0;
+    overflow: visible;
+  }
 }
 
 zn-navbar {
+  margin-top: 24px;
+
   &::part(navbar) {
     height: 45px;
     padding-left: var(--zn-spacing-large);

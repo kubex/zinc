@@ -526,7 +526,7 @@ export default class ZnTabs extends ZincElement {
         <slot name="top"></slot>
         <div id="mid" part="mid">
           <slot name="left"></slot>
-          <div id="content">
+          <div id="content" part="content">
             <slot></slot>
           </div>
           <slot name="right"></slot>

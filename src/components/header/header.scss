@@ -14,13 +14,14 @@
     justify-content: space-between;
     gap: var(--zn-spacing-2x-small);
     max-width: 100%;
+    min-height: 58px;
   }
 
   &__caption {
     font-weight: var(--zn-font-weight-medium);
     font-size: var(--zn-font-size-large);
     color: rgba(var(--zn-text-panel-title), 100%);
-    line-height: 43px;
+    line-height: 28px;
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -101,11 +102,24 @@
   }
 }
 
+:host([transparent]) {
+  .header {
+    margin: 0;
+
+    &__caption {
+
+    }
+
+    .caption {
+      min-height: initial;
+    }
+  }
+}
 
 .header {
   display: flex;
   flex-direction: column;
-  margin: 5px 10px 0 10px;
+  margin: 10px 10px 0 10px;
   //border-bottom-width: 1px;
   // border-top-width: 1px;
   overflow: hidden;

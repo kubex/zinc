@@ -126,7 +126,7 @@ export default class ZnPage extends ZincElement {
           </div>
         </div>
 
-        <zn-tabs>
+        <zn-tabs flush>
           <zn-navbar slot="top" hide-one>
             ${this.tabDefinitions.map(tab => tab.uri ? html`
               <li tab-uri="${tab.uri}">${tab.caption}</li>

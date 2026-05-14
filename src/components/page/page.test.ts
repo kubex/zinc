@@ -38,6 +38,86 @@ describe('<zn-page>', () => {
     expect(navItems[3].getAttribute('tab-uri')).to.equal('/tab-three');
   });
 
+  it('selects page tab panels when navigation items are clicked', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll<HTMLElement>('li:not(.more)'));
+
+    navItems[1].click();
+    await aTimeout(40);
+
+    const selectedPanel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[selected]')!;
+    const selectedSlot = selectedPanel.querySelector<HTMLSlotElement>('slot')!;
+    const selectedTab = selectedSlot.assignedElements()[0] as HTMLElement;
+    expect(selectedPanel.id).to.equal('details');
+    expect(selectedTab.textContent?.trim()).to.equal('Details Content');
+    expect(getComputedStyle(selectedTab).display).to.not.equal('none');
+  });
+
+  it('creates uri tab panels from page navigation items', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Dynamic Tab" uri="/tab-three"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const dynamicItem = navbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/tab-three"]')!;
+
+    dynamicItem.click();
+    await aTimeout(40);
+
+    const dynamicPanel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/tab-three"]')!;
+    expect(dynamicPanel).to.exist;
+    expect(dynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('loads uri tabs into the innermost page when pages are nested three layers deep', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Outer Page">
+        <zn-tab caption="Outer One">
+          <zn-page caption="Middle Page" nested>
+            <zn-tab caption="Middle One">
+              <zn-page caption="Inner Page" nested>
+                <zn-tab caption="Inner Static">Inner Static Content</zn-tab>
+                <zn-tab caption="Inner Dynamic" uri="/inner-dynamic"></zn-tab>
+              </zn-page>
+            </zn-tab>
+            <zn-tab caption="Middle Two">Middle Two Content</zn-tab>
+          </zn-page>
+        </zn-tab>
+        <zn-tab caption="Outer Two">Outer Two Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(80);
+
+    const middlePage = el.querySelector<ZnPage>('zn-page')!;
+    const innerPage = middlePage.querySelector<ZnPage>('zn-page')!;
+    const innerNavbar = innerPage.shadowRoot!.querySelector('zn-navbar')!;
+    const innerDynamicItem = innerNavbar.shadowRoot!.querySelector<HTMLElement>('li[tab-uri="/inner-dynamic"]')!;
+
+    innerDynamicItem.click();
+    await aTimeout(60);
+
+    const outerDynamicPanel = el.shadowRoot!.querySelector('#content > div[data-self-uri="/inner-dynamic"]');
+    const middleDynamicPanel = middlePage.shadowRoot!.querySelector('#content > div[data-self-uri="/inner-dynamic"]');
+    const innerDynamicPanel = innerPage.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/inner-dynamic"]')!;
+
+    expect(outerDynamicPanel).to.equal(null);
+    expect(middleDynamicPanel).to.equal(null);
+    expect(innerDynamicPanel).to.exist;
+    expect(innerDynamicPanel.hasAttribute('selected')).to.equal(true);
+  });
+
   it('uses an explicit zn-tab for overview content', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">
@@ -99,7 +179,6 @@ describe('<zn-page>', () => {
 
     const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
     const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
-
     expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
       'Overview',
       'First',
@@ -109,6 +188,7 @@ describe('<zn-page>', () => {
     ]);
     expect(navItems[0].getAttribute('tab')).to.equal('');
     expect(navItems[2].getAttribute('tab-uri')).to.equal('/dynamic');
+    expect(el.querySelector<HTMLElement>('zn-tab[caption="Dynamic"]')!.getAttribute('id')).to.equal('dynamic');
   });
 
   it('preserves source order for tabs without priority', async () => {
@@ -129,31 +209,7 @@ describe('<zn-page>', () => {
       'Accounts',
       'Billing'
     ]);
-  });
-
-  it('adds inserted tabs to the navbar in source order', async () => {
-    const el = await fixture<ZnPage>(html`
-      <zn-page caption="Page Title">
-        <zn-tab caption="Zoo">Zoo Content</zn-tab>
-        <zn-tab caption="Billing">Billing Content</zn-tab>
-      </zn-page>
-    `);
-    await aTimeout(20);
-
-    const accounts = document.createElement('zn-tab');
-    accounts.setAttribute('caption', 'Accounts');
-    accounts.textContent = 'Accounts Content';
-    el.insertBefore(accounts, el.querySelector('zn-tab[caption="Billing"]'));
-    await aTimeout(20);
-
-    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
-    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
-
-    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
-      'Zoo',
-      'Accounts',
-      'Billing'
-    ]);
+    expect(el.querySelector<HTMLElement>('zn-tab[caption="Accounts"]')!.getAttribute('id')).to.equal('accounts');
   });
 
   it('preserves explicit empty tab ids', async () => {

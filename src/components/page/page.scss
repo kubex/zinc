@@ -239,20 +239,20 @@
   padding: 0 var(--zn-page-padding) var(--zn-page-padding);
 }
 
-.page__tabs zn-tabs {
+.page__tabs #content {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 auto;
   min-height: 0;
+  max-width: 100%;
   width: 100%;
+  padding: 24px 0;
+  overflow: visible;
+  box-sizing: border-box;
+}
 
-  &::part(mid) {
-    overflow: visible;
-  }
-
-  &::part(content) {
-    max-width: 100%;
-    padding: 24px 0;
-    overflow: visible;
-  }
+.page__tabs #content ::slotted(zn-tab) {
+  display: block !important;
 }
 
 zn-navbar {
@@ -302,9 +302,7 @@ zn-navbar {
   padding-left: 0;
 }
 
-:host([modal]) .page__tabs zn-tabs {
-  &::part(content) {
-    padding-right: var(--zn-page-padding);
-    padding-left: var(--zn-page-padding);
-  }
+:host([modal]) .page__tabs #content {
+  padding-right: var(--zn-page-padding);
+  padding-left: var(--zn-page-padding);
 }

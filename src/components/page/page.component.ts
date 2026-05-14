@@ -1,8 +1,7 @@
 import {classMap} from 'lit/directives/class-map.js';
-import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
-import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 import ZnCopyButton from '../copy-button';
 import ZnIcon from '../icon';
@@ -30,18 +29,17 @@ interface TabDefinition {
  *
  * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
  */
-export default class ZnPage extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+export default class ZnPage extends ZnTabs {
+  static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
   static dependencies = {
     'zn-button': ZnButton,
     'zn-copy-button': ZnCopyButton,
     'zn-icon': ZnIcon,
     'zn-navbar': ZnNavbar,
-    'zn-tab': ZnTab,
-    'zn-tabs': ZnTabs
+    'zn-tab': ZnTab
   };
 
-  private readonly hasSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption');
+  private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption');
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;
@@ -57,8 +55,8 @@ export default class ZnPage extends ZincElement {
   @state() private tabDefinitions: TabDefinition[] = [];
   private tabObserver: MutationObserver | null = null;
 
-  connectedCallback() {
-    super.connectedCallback();
+  async connectedCallback() {
+    const connected = super.connectedCallback();
     window.addEventListener('alt-press', this.handleAltPress);
     window.addEventListener('alt-up', this.handleAltUp);
     this.prepareTabs();
@@ -68,6 +66,7 @@ export default class ZnPage extends ZincElement {
       }
     });
     this.tabObserver.observe(this, {childList: true});
+    await connected;
   }
 
   disconnectedCallback() {
@@ -86,8 +85,14 @@ export default class ZnPage extends ZincElement {
     this.classList.toggle('alt-pressed', false);
   };
 
-  protected firstUpdated() {
-    setTimeout(() => this.activateInitialTab(), 20);
+  _registerTabs = () => {
+    this.registerPageNavigationTabs();
+  };
+
+  firstUpdated(changedProperties: PropertyValues) {
+    super.firstUpdated(changedProperties);
+    this.registerPagePanels();
+    setTimeout(() => this.activateInitialPageTab(), 20);
   }
 
   private prepareTabs() {
@@ -103,8 +108,9 @@ export default class ZnPage extends ZincElement {
       const uri = tab.getAttribute('uri');
       const slotName = uri ? null : `page-tab-${index}`;
 
+      tab.id = id;
+
       if (!uri) {
-        tab.id = id;
         tab.slot = slotName!;
       }
 
@@ -180,10 +186,11 @@ export default class ZnPage extends ZincElement {
     }
   }
 
-  private activateInitialTab() {
-    const firstTab = this.tabDefinitions[0];
-    if (firstTab) {
-      this.activateTab(firstTab.id, false);
+  updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('tabDefinitions')) {
+      this.registerPagePanels();
     }
   }
 
@@ -191,14 +198,9 @@ export default class ZnPage extends ZincElement {
     const item = event.detail.item as HTMLElement;
     const tabUri = item.getAttribute('tab-uri');
     const tabId = item.getAttribute('tab');
-    const tabs = this.shadowRoot?.querySelector('zn-tabs') as ZnTabs | null;
-
-    if (!tabs) {
-      return;
-    }
 
     if (tabUri) {
-      tabs.clickTab(item, false);
+      this.clickTab(item, false);
       this.syncNavigationActive(item);
       return;
     }
@@ -209,16 +211,42 @@ export default class ZnPage extends ZincElement {
   }
 
   private activateTab(tabId: string, store: boolean) {
-    const tabs = this.shadowRoot?.querySelector('zn-tabs') as ZnTabs | null;
-    if (!tabs) {
-      return;
-    }
-
-    tabs.setActiveTab(tabId, store, false);
+    this.setActiveTab(tabId, store, false);
     const navItem = this.shadowRoot?.querySelector<HTMLElement>(`zn-navbar li[tab="${CSS.escape(tabId)}"]`);
     if (navItem) {
       this.syncNavigationActive(navItem);
     }
+  }
+
+  private activateInitialPageTab() {
+    const selectedPanel = this.shadowRoot?.querySelector('#content > div[selected]');
+    const firstTab = this.tabDefinitions[0];
+
+    if (!selectedPanel && firstTab) {
+      this.activateTab(firstTab.id, false);
+    }
+  }
+
+  private registerPagePanels() {
+    this.shadowRoot?.querySelectorAll<HTMLElement>('#content > div[id]').forEach(panel => {
+      this._addPanel(panel);
+    });
+    this.registerPageNavigationTabs();
+    setTimeout(() => this.registerPageNavigationTabs());
+  }
+
+  private registerPageNavigationTabs() {
+    this.shadowRoot
+      ?.querySelectorAll<HTMLElement>('zn-navbar li[tab], zn-navbar li[tab-uri]')
+      .forEach(tab => this._addTab(tab));
+
+    this.shadowRoot
+      ?.querySelectorAll<ZnNavbar>('zn-navbar')
+      .forEach(navbar => {
+        navbar.shadowRoot
+          ?.querySelectorAll<HTMLElement>('li[tab], li[tab-uri]')
+          .forEach(tab => this._addTab(tab));
+      });
   }
 
   private syncNavigationActive(activeItem: HTMLElement) {
@@ -231,7 +259,7 @@ export default class ZnPage extends ZincElement {
   }
 
   render() {
-    const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
+    const hasBreadcrumb = this.pageSlotController.test('breadcrumb');
     const hasNavigation = this.tabDefinitions.length > 1;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
@@ -306,7 +334,7 @@ export default class ZnPage extends ZincElement {
         </div>
 
         <div class="page__tabs">
-          <zn-tabs flush>
+          <div id="content" part="content">
             ${this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`
@@ -314,7 +342,7 @@ export default class ZnPage extends ZincElement {
                   <slot name="${tab.slotName!}"></slot>
                 </div>
               `)}
-          </zn-tabs>
+          </div>
         </div>
       </div>
     `;

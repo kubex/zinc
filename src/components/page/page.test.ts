@@ -58,7 +58,7 @@ describe('<zn-page>', () => {
     expect(overview.textContent?.trim()).to.equal('Overview Content');
   });
 
-  it('shows a header border when scrolled without visible navigation', async () => {
+  it('shows a header shadow when scrolled without visible navigation', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" style="height: 120px;">
         <zn-tab caption="Overview">
@@ -71,28 +71,28 @@ describe('<zn-page>', () => {
     const page = el.shadowRoot!.querySelector<HTMLElement>('.page')!;
     const header = el.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
 
-    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+    expect(header.classList.contains('page__header--scrolled')).to.equal(false);
 
     page.scrollTop = 10;
     page.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
-    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+    expect(header.classList.contains('page__header--scrolled')).to.equal(false);
 
     page.scrollTop = 25;
     page.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
-    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(true);
+    expect(header.classList.contains('page__header--scrolled')).to.equal(true);
 
     page.scrollTop = 0;
     page.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
-    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+    expect(header.classList.contains('page__header--scrolled')).to.equal(false);
   });
 
-  it('does not show a header border when navigation is visible', async () => {
+  it('shows a header shadow when scrolled with visible navigation', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" style="height: 120px;">
         <zn-tab caption="Overview">
@@ -110,7 +110,7 @@ describe('<zn-page>', () => {
     page.dispatchEvent(new Event('scroll'));
     await el.updateComplete;
 
-    expect(header.classList.contains('page__header--scrolled-no-navigation')).to.equal(false);
+    expect(header.classList.contains('page__header--scrolled')).to.equal(true);
   });
 
   it('reflects nested and modal modes', async () => {

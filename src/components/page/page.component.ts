@@ -166,7 +166,7 @@ export default class ZnPage extends ZincElement {
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
         <div class="${classMap({
           'page__header': true,
-          'page__header--scrolled-no-navigation': this.scrolled && !hasNavigation
+          'page__header--scrolled': this.scrolled
         })}" part="header">
           <div class="${classMap({
             'header': true,

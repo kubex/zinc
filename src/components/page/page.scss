@@ -23,27 +23,30 @@
   flex: 0 0 auto;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 10;
   padding: var(--zn-page-padding) var(--zn-page-padding) 0;
   box-sizing: border-box;
   background: rgba(var(--zn-page-header-background), 97%);
   backdrop-filter: blur(5px);
+  overflow: visible;
 
   &::after {
     content: '';
     position: absolute;
     right: var(--zn-page-padding);
-    bottom: 0;
+    bottom: -18px;
     left: var(--zn-page-padding);
-    height: 1px;
-    background: rgb(var(--zn-border-color));
+    height: 18px;
+    background: linear-gradient(to bottom, rgba(var(--zn-shadow),0.1), rgba(var(--zn-shadow), 0));
     opacity: 0;
     transition: opacity 180ms ease-in-out;
     pointer-events: none;
   }
 
-  &--scrolled-no-navigation::after {
-    opacity: 1;
+  &--scrolled {
+    &::after {
+      opacity: 1;
+    }
   }
 }
 

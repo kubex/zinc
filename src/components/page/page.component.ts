@@ -13,6 +13,8 @@ import styles from './page.scss';
 interface TabDefinition {
   id: string;
   caption: string;
+  priority: number | null;
+  sourceIndex: number;
   uri: string | null;
   slotName: string | null;
 }
@@ -42,10 +44,23 @@ export default class ZnPage extends ZincElement {
 
   @state() private scrolled = false;
   @state() private tabDefinitions: TabDefinition[] = [];
+  private tabObserver: MutationObserver | null = null;
 
   connectedCallback() {
     super.connectedCallback();
     this.prepareTabs();
+    this.tabObserver = new MutationObserver((mutations) => {
+      if (mutations.some(mutation => mutation.type === 'childList')) {
+        this.prepareTabs();
+      }
+    });
+    this.tabObserver.observe(this, {childList: true});
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.tabObserver?.disconnect();
+    this.tabObserver = null;
   }
 
   protected firstUpdated() {
@@ -60,7 +75,8 @@ export default class ZnPage extends ZincElement {
     tabElements.forEach((tab, index) => {
       const caption = tab.getAttribute('caption') || 'Tab';
       const explicitId = tab.getAttribute('id');
-      const id = this.uniqueId(explicitId || this.captionToId(caption), usedIds);
+      const id = this.uniqueId(explicitId !== null ? explicitId : this.captionToId(caption), usedIds);
+      const priority = this.parsePriority(tab.getAttribute('priority'));
       const uri = tab.getAttribute('uri');
       const slotName = uri ? null : `page-tab-${index}`;
 
@@ -69,10 +85,43 @@ export default class ZnPage extends ZincElement {
         tab.slot = slotName!;
       }
 
-      tabs.push({id, caption, uri, slotName});
+      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName});
     });
 
-    this.tabDefinitions = tabs;
+    this.tabDefinitions = tabs.sort((a, b) => this.compareTabs(a, b));
+  }
+
+  private parsePriority(value: string | null): number | null {
+    if (value === null || value.trim() === '') {
+      return null;
+    }
+
+    const priority = Number(value);
+    return Number.isFinite(priority) ? priority : null;
+  }
+
+  private compareTabs(a: TabDefinition, b: TabDefinition): number {
+    if (a.id === '' && b.id !== '') {
+      return -1;
+    }
+
+    if (a.id !== '' && b.id === '') {
+      return 1;
+    }
+
+    if (a.priority !== null && b.priority !== null && a.priority !== b.priority) {
+      return a.priority - b.priority;
+    }
+
+    if (a.priority !== null && b.priority === null) {
+      return -1;
+    }
+
+    if (a.priority === null && b.priority !== null) {
+      return 1;
+    }
+
+    return a.sourceIndex - b.sourceIndex;
   }
 
   private captionToId(caption: string): string {
@@ -93,7 +142,7 @@ export default class ZnPage extends ZincElement {
     let count = 2;
 
     while (usedIds.has(nextId)) {
-      nextId = `${id}-${count}`;
+      nextId = id === '' ? `tab-${count}` : `${id}-${count}`;
       count += 1;
     }
 

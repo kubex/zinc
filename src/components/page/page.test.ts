@@ -58,6 +58,93 @@ describe('<zn-page>', () => {
     expect(overview.textContent?.trim()).to.equal('Overview Content');
   });
 
+  it('orders the empty tab id first and then by priority', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Later">Later Content</zn-tab>
+        <zn-tab caption="Second" priority="20">Second Content</zn-tab>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="First" priority="10">First Content</zn-tab>
+        <zn-tab caption="Dynamic" priority="15" uri="/dynamic"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
+
+    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
+      'Overview',
+      'First',
+      'Dynamic',
+      'Second',
+      'Later'
+    ]);
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+    expect(navItems[2].getAttribute('tab-uri')).to.equal('/dynamic');
+  });
+
+  it('preserves source order for tabs without priority', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Zoo">Zoo Content</zn-tab>
+        <zn-tab caption="Accounts">Accounts Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
+
+    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
+      'Zoo',
+      'Accounts',
+      'Billing'
+    ]);
+  });
+
+  it('adds inserted tabs to the navbar in source order', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Zoo">Zoo Content</zn-tab>
+        <zn-tab caption="Billing">Billing Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const accounts = document.createElement('zn-tab');
+    accounts.setAttribute('caption', 'Accounts');
+    accounts.textContent = 'Accounts Content';
+    el.insertBefore(accounts, el.querySelector('zn-tab[caption="Billing"]'));
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = Array.from(navbar.shadowRoot!.querySelectorAll('li:not(.more)'));
+
+    expect(navItems.map(item => item.textContent?.trim())).to.deep.equal([
+      'Zoo',
+      'Accounts',
+      'Billing'
+    ]);
+  });
+
+  it('preserves explicit empty tab ids', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Custom Overview" id="">Overview Content</zn-tab>
+        <zn-tab caption="Details">Details Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
+
+    expect(navItems[0].textContent?.trim()).to.equal('Custom Overview');
+    expect(navItems[0].getAttribute('tab')).to.equal('');
+  });
+
   it('shows a header border when scrolled without visible navigation', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" style="height: 120px;">

@@ -16,10 +16,10 @@ export default class ZnTab extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() caption: string;
+  @property({type: Number}) priority: number;
   @property() uri: string;
 
   render() {
     return html`<slot></slot>`;
   }
 }
-

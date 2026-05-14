@@ -1,6 +1,6 @@
-import {LitElement} from "lit";
+import {LitElement, type PropertyValues} from "lit";
 import {property} from "lit/decorators.js";
-import {ThemeController} from "./theme";
+import {SignalWatcher, themeSignal} from "./theme";
 import type {
   EventTypeDoesNotRequireDetail,
   EventTypeRequiresDetail,
@@ -11,10 +11,18 @@ import type {
   ZincEventInit
 } from "./event";
 
-export default class ZincElement extends LitElement {
+export default class ZincElement extends SignalWatcher(LitElement) {
   @property() dir: string; // LTR or RTL direction
   @property() lang: string; // Language
   @property({reflect: true}) t: string; // Theme (light or dark)
+
+  protected override willUpdate(changed: PropertyValues): void {
+    // Reading themeSignal here subscribes this component to theme changes
+    // via the SignalWatcher mixin. The reflected `t` attribute keeps existing
+    // CSS selectors like `[t="dark"]` working.
+    this.t = themeSignal.get();
+    super.willUpdate(changed);
+  }
 
   static define(name: string, elementConstructor = this, options: ElementDefinitionOptions = {}) {
     const currentRegisteredConstructor = customElements.get(name) as
@@ -53,10 +61,6 @@ export default class ZincElement extends LitElement {
 
   constructor() {
     super();
-
-    // All Zinc components should have a theme controller  /
-    /* eslint-disable no-new */
-    new ThemeController(this);
 
     // Make sure we have access to all dependencies and they are defined
     Object.entries((this.constructor as typeof ZincElement).dependencies).forEach(([name, component]) => {

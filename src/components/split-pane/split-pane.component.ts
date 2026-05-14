@@ -51,6 +51,7 @@ export default class ZnSplitPane extends ZincElement {
 
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
+  @property({type: Boolean, reflect: true}) gap = false;
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;

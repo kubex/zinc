@@ -294,4 +294,19 @@ describe('<zn-page>', () => {
     expect(el.hasAttribute('nested')).to.equal(true);
     expect(el.hasAttribute('modal')).to.equal(true);
   });
+
+  it('disables breadcrumbs in modal mode', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title" modal>
+        <a slot="breadcrumb" href="/parent">Parent</a>
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const header = el.shadowRoot!.querySelector<HTMLElement>('.header')!;
+
+    expect(header.classList.contains('header--has-breadcrumb')).to.equal(false);
+    expect(el.shadowRoot!.querySelector('slot[name="breadcrumb"]')).to.equal(null);
+  });
 });

@@ -259,7 +259,7 @@ export default class ZnPage extends ZnTabs {
   }
 
   render() {
-    const hasBreadcrumb = this.pageSlotController.test('breadcrumb');
+    const hasBreadcrumb = !this.modal && !this.nested && this.pageSlotController.test('breadcrumb');
     const hasNavigation = this.tabDefinitions.length > 1;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;

@@ -2,10 +2,6 @@
 @use "../../wc";
 @use "../../../scss/mixins";
 
-:host([bordered]) #resizer:before {
-  background-color: rgb(var(--zn-border-color));
-}
-
 :host([gap]) {
   gap: 0 var(--zn-spacing-medium);
 }
@@ -54,8 +50,6 @@
     }
 
     cursor: col-resize;
-
-    //padding: var(--zn-padding);
 
     &:hover:before {
       background-color: rgb(var(--zn-blue));

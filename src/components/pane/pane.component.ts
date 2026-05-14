@@ -27,11 +27,11 @@ export default class ZnPane extends ZincElement {
 
   @property({type: Boolean}) flush: boolean;
 
-  protected _header: HTMLElement;
+  protected _header: HTMLElement | null = null;
 
   connectedCallback() {
     super.connectedCallback();
-    this._header = Array.from(this.children).find((child): child is HTMLElement => child.tagName === 'ZN-HEADER');
+    this._header = Array.from(this.children).find((child): child is HTMLElement => child.tagName === 'ZN-HEADER') ?? null;
   }
 
   render() {

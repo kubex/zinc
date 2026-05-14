@@ -6,6 +6,7 @@ import {ifDefined} from 'lit/directives/if-defined.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {live} from 'lit/directives/live.js';
 import {property, state} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 import ZnButtonGroup from '../button-group';
@@ -53,9 +54,25 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
   @state() private _activeLanguage = 'en';
   @state() private _overflowIndex = -1;
 
-  private _resizeObserver?: ResizeObserver;
   private _lastObservedWidth = 0;
   private _measureRafId = 0;
+
+  constructor() {
+    super();
+    // eslint-disable-next-line no-new
+    new ResizeController(this, {
+      callback: entries => {
+        const width = entries[0]?.contentRect.width ?? 0;
+        if (Math.abs(width - this._lastObservedWidth) < 1) return;
+        this._lastObservedWidth = width;
+        if (this._overflowIndex !== -1) {
+          this._overflowIndex = -1;
+        } else {
+          this._scheduleLangOverflow();
+        }
+      },
+    });
+  }
 
   get validity(): ValidityState {
     return validValidityState;
@@ -106,23 +123,8 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
     return Object.keys(this.values);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this._resizeObserver = new ResizeObserver(entries => {
-      const width = entries[0]?.contentRect.width ?? 0;
-      if (Math.abs(width - this._lastObservedWidth) < 1) return;
-      this._lastObservedWidth = width;
-      if (this._overflowIndex !== -1) {
-        this._overflowIndex = -1;
-      } else {
-        this._scheduleLangOverflow();
-      }
-    });
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._resizeObserver?.disconnect();
     if (this._measureRafId) {
       cancelAnimationFrame(this._measureRafId);
       this._measureRafId = 0;
@@ -131,7 +133,6 @@ export default class ZnTranslations extends ZincElement implements ZincFormContr
 
   protected firstUpdated() {
     this.formControlController.updateValidity();
-    this._resizeObserver?.observe(this);
   }
 
   protected updated(changedProperties: PropertyValues) {

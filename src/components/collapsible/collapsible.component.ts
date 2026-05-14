@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, state} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
@@ -52,7 +53,11 @@ export default class ZnCollapsible extends ZincElement {
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'header', 'caption', 'label');
 
-  private observer: MutationObserver;
+  private readonly observer = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: () => this.recalculateNumberOfItems(),
+  });
 
   private showArrow: boolean = true;
 
@@ -69,12 +74,7 @@ export default class ZnCollapsible extends ZincElement {
     }
 
     if (this.showNumber) {
-      // add a mutation observer to the default slot to recalculate the number of items when it changes
-      const slot = this as HTMLElement;
-      this.observer = new MutationObserver(() => {
-        this.recalculateNumberOfItems();
-      });
-      this.observer.observe(slot, {childList: true, subtree: true});
+      this.observer.observe(this);
     }
 
     await this.updateComplete;
@@ -103,13 +103,6 @@ export default class ZnCollapsible extends ZincElement {
     super.updated(changedProperties);
     if (changedProperties.has('expanded') && this.storeKey) {
       this._store.set(this.storeKey, this.expanded.toString());
-    }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.observer) {
-      this.observer.disconnect();
     }
   }
 

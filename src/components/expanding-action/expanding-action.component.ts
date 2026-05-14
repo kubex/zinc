@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {md5} from "../../utilities/md5";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
@@ -54,8 +55,36 @@ export default class ZnExpandingAction extends ZincElement {
   private _knownUri: Map<string, string> = new Map<string, string>();
   private _actions: HTMLElement[] = [];
   private _preload = true;
-  private _countObserver?: MutationObserver;
-  private _colorObserver?: MutationObserver;
+  private _metaObserved = false;
+
+  private readonly _countObserver = new MutationController(this, {
+    target: null,
+    config: {subtree: true, attributes: true, attributeFilter: ['content'], childList: true},
+    callback: () => {
+      const appContent = deepQuerySelectorAll('app-content', this, '')[0];
+      const metaCount = appContent?.shadowRoot?.querySelector('meta[name="count"]');
+      if (!metaCount) return;
+      const count = metaCount.getAttribute('content');
+      const notification = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button');
+      if (count && notification) {
+        notification.setAttribute('notification', count);
+      }
+    },
+  });
+
+  private readonly _colorObserver = new MutationController(this, {
+    target: null,
+    config: {subtree: true, attributes: true, attributeFilter: ['content'], childList: true},
+    callback: () => {
+      const appContent = deepQuerySelectorAll('app-content', this, '')[0];
+      const metaColor = appContent?.shadowRoot?.querySelector('meta[name="color"]');
+      if (!metaColor) return;
+      const color = metaColor.getAttribute('content');
+      if (color) {
+        this.color = color;
+      }
+    },
+  });
 
   constructor() {
     super();
@@ -75,12 +104,6 @@ export default class ZnExpandingAction extends ZincElement {
     this._panel = this.shadowRoot?.querySelector('#content');
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._countObserver?.disconnect();
-    this._colorObserver?.disconnect();
-  }
-
   firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
@@ -97,43 +120,14 @@ export default class ZnExpandingAction extends ZincElement {
   }
 
   _observeMetaData() {
+    if (this._metaObserved) return;
     const appContent = deepQuerySelectorAll('app-content', this, '')[0];
+    const root = appContent?.shadowRoot;
+    if (!root) return;
 
-    this._countObserver = new MutationObserver(() => {
-      const metaCount = appContent?.shadowRoot?.querySelector('meta[name="count"]');
-      if (!metaCount) {
-        return;
-      }
-      const count = metaCount.getAttribute('content');
-      const notification = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button');
-      if (count && notification) {
-        notification.setAttribute('notification', count);
-      }
-    });
-
-    this._colorObserver = new MutationObserver(() => {
-      const metaColor = appContent?.shadowRoot?.querySelector('meta[name="color"]');
-      if (!metaColor) {
-        return;
-      }
-      const color = metaColor.getAttribute('content');
-      if (color) {
-        this.color = color;
-      }
-    });
-
-    const root = appContent.shadowRoot;
-    if (root) {
-      const options: MutationObserverInit = {
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['content'],
-        childList: true,
-      };
-
-      this._countObserver.observe(root, options);
-      this._colorObserver.observe(root, options);
-    }
+    this._countObserver.observe(root as unknown as Element);
+    this._colorObserver.observe(root as unknown as Element);
+    this._metaObserved = true;
   }
 
   _registerActions() {

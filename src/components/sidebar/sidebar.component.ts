@@ -1,3 +1,4 @@
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import ZincElement from '../../internal/zinc-element';
@@ -30,28 +31,27 @@ export default class ZnSidebar extends ZincElement {
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
   @property({type: Boolean}) wide: boolean = false;
 
+  private domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: () => {
+      setTimeout(() => this.scrollBottom(), 10);
+    },
+  });
+
   constructor() {
     super();
     this.addEventListener('scroll-to-bottom', () => {
-      setTimeout(this.scrollBottom.bind(this), 200);
+      setTimeout(() => this.scrollBottom(), 200);
     });
   }
 
   connectedCallback() {
     super.connectedCallback();
     if (this.startScrolled) {
-      this.observerDom();
+      this.domObserver.observe(this);
       this.scrollBottom();
     }
-  }
-
-  observerDom() {
-    // observe the DOM for changes
-    const observer = new MutationObserver((_) => {
-      setTimeout(this.scrollBottom.bind(this), 10);
-    });
-
-    observer.observe(this, {childList: true, subtree: true});
   }
 
   scrollBottom() {

@@ -3,6 +3,7 @@ import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {ref} from "lit/directives/ref.js";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
@@ -222,7 +223,14 @@ export default class ZnDataTable extends ZincElement {
   private _initialLoad = true;
   private _lastTableContent: TemplateResult = html``;
 
-  private resizeObserver: ResizeObserver;
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => {
+      if (this.tableContainer) {
+        this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
+    },
+  });
 
   private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
@@ -384,22 +392,12 @@ export default class ZnDataTable extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-
-    this.resizeObserver = new ResizeObserver(() => {
-      if (this.tableContainer) {
-        this.tableContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-      }
-    });
-
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
     this.removeEventListener('zn-filter-change', this.filterChangeListener);
     this.removeEventListener('zn-search-change', this.searchChangeListener);
   }
@@ -796,9 +794,7 @@ export default class ZnDataTable extends ZincElement {
     this.numberOfRowsSelected = 0;
     this._dataTask.run().then(r => r);
 
-    if (this.resizeObserver) {
-      this.resizeObserver.observe(this);
-    }
+    this.resizeObserver.observe(this);
   }
 
   goToFirstPage() {

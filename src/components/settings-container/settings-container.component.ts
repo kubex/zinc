@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, state} from "lit/decorators.js";
 import {Store} from "../../internal/storage";
 import {type ZnChangeEvent} from "../../events/zn-change";
@@ -43,7 +44,19 @@ export default class ZnSettingsContainer extends ZincElement {
   @property({attribute: 'store-key'}) storeKey: string;
   @property({attribute: 'no-scroll'}) noScroll: boolean;
 
-  private _mutationObserver: MutationObserver | null = null;
+  private readonly _mutationObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true, attributes: true},
+    callback: mutations => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
+          continue;
+        }
+        this.scheduleUpdateFilters();
+        break;
+      }
+    },
+  });
 
   private _updateFiltersScheduled = false;
 
@@ -72,24 +85,7 @@ export default class ZnSettingsContainer extends ZincElement {
 
     this.updateFilters();
 
-    this._mutationObserver = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') {
-          continue;
-        }
-        this.scheduleUpdateFilters();
-        break;
-      }
-    });
-    this._mutationObserver.observe(this, {childList: true, subtree: true, attributes: true});
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this._mutationObserver) {
-      this._mutationObserver.disconnect();
-      this._mutationObserver = null;
-    }
+    this._mutationObserver.observe(this);
   }
 
   // Debounced scheduling to avoid excessive updates on rapid DOM mutations

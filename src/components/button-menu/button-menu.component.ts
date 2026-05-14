@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
@@ -51,7 +52,12 @@ export default class ZnButtonMenu extends ZincElement {
 
   private _originalButtons: CustomButtonWidths[] = [];
 
-  private resizeObserver: ResizeObserver | null = null;
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => {
+      this.containerWidth = this.offsetWidth;
+    },
+  });
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -93,21 +99,9 @@ export default class ZnButtonMenu extends ZincElement {
     super.connectedCallback();
     this.containerWidth = this.offsetWidth;
 
-    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+    if (this.parentNode) {
+      this.resizeObserver.observe(this.parentNode as HTMLElement);
     }
-  }
-
-  handleResize = () => {
-    this.containerWidth = this.offsetWidth;
   }
 
   calculateVisibleButtons() {

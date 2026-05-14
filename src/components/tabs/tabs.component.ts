@@ -3,6 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
@@ -61,6 +62,45 @@ export default class ZnTabs extends ZincElement {
   private _knownUri: Map<string, string> = new Map<string, string>();
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
 
+  private readonly _domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        if (mutation.addedNodes.length > 0) {
+          this._registerTabs();
+        }
+        if (mutation.removedNodes.length > 0) {
+          mutation.removedNodes.forEach(node => {
+            const id = node instanceof HTMLElement ? node.id : '';
+            if (id) this.removeTabAndPanel(id);
+          });
+        }
+      });
+    },
+  });
+
+  private readonly _monitorObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        mutation.addedNodes.forEach(node => {
+          if (node instanceof HTMLElement && node.id === this.monitor) {
+            this.reRegisterTabs();
+            const storedValue = this._store.get(this.storeKey);
+            if (storedValue !== null) {
+              this._prepareTab(storedValue);
+              this.setActiveTab(storedValue, false, false);
+            }
+          }
+        });
+      });
+    },
+  });
+
   constructor() {
     super();
     this._panels = new Map<string, Element[]>();
@@ -100,25 +140,7 @@ export default class ZnTabs extends ZincElement {
 
   monitorDom() {
     if (this.monitor) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach((node) => {
-              if (node instanceof HTMLElement && node.id === this.monitor) {
-                this.reRegisterTabs();
-
-                const storedValue = this._store.get(this.storeKey);
-                if (storedValue !== null) {
-                  this._prepareTab(storedValue);
-                  this.setActiveTab(storedValue, false, false);
-                }
-              }
-            });
-          }
-        });
-      });
-
-      observer.observe(this, {childList: true, subtree: true});
+      this._monitorObserver.observe(this);
     }
   }
 
@@ -393,29 +415,7 @@ export default class ZnTabs extends ZincElement {
   }
 
   observerDom() {
-    // observe the DOM for changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          if (mutation.addedNodes.length > 0) {
-            this._registerTabs();
-          }
-          if (mutation.removedNodes.length > 0) {
-            for (let i = 0; i < mutation.removedNodes.length; i++) {
-              const node = mutation.removedNodes[i] as HTMLElement;
-              if (node.id) {
-                this.removeTabAndPanel(node.id);
-              }
-            }
-          }
-        }
-      });
-    });
-
-    observer.observe(this, {
-      childList: true,
-      subtree: true
-    });
+    this._domObserver.observe(this);
   }
 
   removeTabAndPanel(tabId: string) {

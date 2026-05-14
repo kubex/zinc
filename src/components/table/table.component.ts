@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import ZincElement from '../../internal/zinc-element';
 
@@ -40,14 +41,18 @@ export default class ZnTable extends ZincElement {
   private wideColumn: any = [];
   private rows: any = [];
 
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => this.resizing(),
+  });
 
   resizing() {
     // TODO Resizing event
   }
 
   connectedCallback() {
-    if (this.fixedFirst) {
-      new ResizeObserver((_) => this.resizing).observe(this.parentElement as Element);
+    if (this.fixedFirst && this.parentElement) {
+      this.resizeObserver.observe(this.parentElement);
     }
 
     if (this.data === null || this.data === undefined) {

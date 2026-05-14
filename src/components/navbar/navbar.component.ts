@@ -1,7 +1,9 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
@@ -61,7 +63,12 @@ export default class ZnNavbar extends ZincElement {
   private _appended: Element[];
   private _expanding: NodeListOf<Element>;
   private _openedTabs: string[] = [];
-  private resizeObserver: ResizeObserver | null = null;
+
+  private readonly _itemsObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true},
+    callback: () => this._updateVisibility(),
+  });
 
   private _navItems: HTMLElement | null = null;
   private _expandable: HTMLElement | null = null;
@@ -69,7 +76,6 @@ export default class ZnNavbar extends ZincElement {
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
-  private _itemsObserver: MutationObserver | null = null;
 
   protected _store: Store;
 
@@ -77,14 +83,19 @@ export default class ZnNavbar extends ZincElement {
     this._appended = [...(this._appended || []), item];
   }
 
+  constructor() {
+    super();
+    // eslint-disable-next-line no-new
+    new ResizeController(this, {
+      callback: () => this.handleResize(),
+    });
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._preItems = this.querySelectorAll('li:not([suffix])');
     this._postItems = this.querySelectorAll('li[suffix]');
     this._expanding = this.querySelectorAll('zn-expanding-action');
-
-    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this as HTMLElement); // Observe the parent node
 
     if (!this.masterId) {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
@@ -95,14 +106,6 @@ export default class ZnNavbar extends ZincElement {
     }
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znnav:", this.storeTtl);
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._itemsObserver?.disconnect();
-    this._itemsObserver = null;
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = null;
   }
 
   private _updateVisibility = () => {
@@ -231,8 +234,7 @@ export default class ZnNavbar extends ZincElement {
     this._loadStoredTabs();
 
     if (this._navItems) {
-      this._itemsObserver = new MutationObserver(this._updateVisibility);
-      this._itemsObserver.observe(this._navItems, {childList: true});
+      this._itemsObserver.observe(this._navItems);
     }
     this._updateVisibility();
 

@@ -6,6 +6,7 @@ import ZincElement from '../../internal/zinc-element';
 import ZnNavbar from '../navbar';
 import ZnTab from '../tab';
 import ZnTabs from '../tabs';
+import type {ZnSelectEvent} from '../../events/zn-select';
 
 import styles from './page.scss';
 
@@ -45,6 +46,10 @@ export default class ZnPage extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.prepareTabs();
+  }
+
+  protected firstUpdated() {
+    setTimeout(() => this.activateInitialTab(), 20);
   }
 
   private prepareTabs() {
@@ -103,6 +108,56 @@ export default class ZnPage extends ZincElement {
     }
   }
 
+  private activateInitialTab() {
+    const firstTab = this.tabDefinitions[0];
+    if (firstTab) {
+      this.activateTab(firstTab.id, false);
+    }
+  }
+
+  private handleNavigationSelect(event: ZnSelectEvent) {
+    const item = event.detail.item as HTMLElement;
+    const tabUri = item.getAttribute('tab-uri');
+    const tabId = item.getAttribute('tab');
+    const tabs = this.shadowRoot?.querySelector('zn-tabs') as ZnTabs | null;
+
+    if (!tabs) {
+      return;
+    }
+
+    if (tabUri) {
+      tabs.clickTab(item, false);
+      this.syncNavigationActive(item);
+      return;
+    }
+
+    if (tabId !== null) {
+      this.activateTab(tabId, true);
+    }
+  }
+
+  private activateTab(tabId: string, store: boolean) {
+    const tabs = this.shadowRoot?.querySelector('zn-tabs') as ZnTabs | null;
+    if (!tabs) {
+      return;
+    }
+
+    tabs.setActiveTab(tabId, store, false);
+    const navItem = this.shadowRoot?.querySelector<HTMLElement>(`zn-navbar li[tab="${CSS.escape(tabId)}"]`);
+    if (navItem) {
+      this.syncNavigationActive(navItem);
+    }
+  }
+
+  private syncNavigationActive(activeItem: HTMLElement) {
+    const navItems = this.shadowRoot?.querySelectorAll('zn-navbar li[tab], zn-navbar li[tab-uri]') || [];
+    navItems.forEach(item => {
+      const active = item === activeItem;
+      item.classList.toggle('active', active);
+      item.classList.toggle('zn-tb-active', active);
+    });
+  }
+
   render() {
     const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
     const hasNavigation = this.tabDefinitions.length > 1;
@@ -137,18 +192,20 @@ export default class ZnPage extends ZincElement {
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="page__tabs">
-          <zn-tabs flush>
-            <zn-navbar slot="top" hide-one>
+          ${hasNavigation ? html`
+            <zn-navbar hide-one @zn-select="${this.handleNavigationSelect}">
               ${this.tabDefinitions.map(tab => tab.uri ? html`
                 <li tab-uri="${tab.uri}">${tab.caption}</li>
               ` : html`
                 <li tab="${tab.id}">${tab.caption}</li>
               `)}
             </zn-navbar>
+          ` : null}
+        </div>
 
+        <div class="page__tabs">
+          <zn-tabs flush>
             ${this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`

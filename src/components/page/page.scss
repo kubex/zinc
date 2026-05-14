@@ -5,8 +5,8 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  --zn-page-background: rgb(var(--zn-body));
-  --zn-page-header-background: rgba(var(--zn-body), 91%);
+  --zn-page-background: var(--zn-body);
+  --zn-page-header-background: var(--zn-body);
   --zn-page-padding: 32px;
 }
 
@@ -15,8 +15,8 @@
 }
 
 :host([modal]) {
-  --zn-page-background: rgb(var(--zn-body));
-  --zn-page-header-background: rgb(var(--zn-panel));
+  --zn-page-background: var(--zn-body);
+  --zn-page-header-background: var(--zn-panel);
 }
 
 .page__header {
@@ -26,8 +26,8 @@
   z-index: 2;
   padding: var(--zn-page-padding) var(--zn-page-padding) 0;
   box-sizing: border-box;
-  background: var(--zn-page-header-background);
-  backdrop-filter: blur(3px);
+  background: rgba(var(--zn-page-header-background), 97%);
+  backdrop-filter: blur(5px);
 
   &::after {
     content: '';
@@ -225,6 +225,16 @@ zn-navbar {
     font-size: var(--zn-font-size-medium);
     line-height: 24px;
   }
+}
+
+:host([modal]) .page__header {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+:host([modal]) .header {
+  padding-right: var(--zn-page-padding);
+  padding-left: var(--zn-page-padding);
 }
 
 :host([modal]) zn-navbar {

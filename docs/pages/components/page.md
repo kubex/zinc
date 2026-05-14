@@ -50,6 +50,23 @@ Use `slot="actions"` to place controls in the page header action area.
 </zn-page>
 ```
 
+### Header Metadata
+
+`zn-page` supports the same header metadata attributes as `zn-header`: `full-location`, `entity-id`, `entity-id-show`, `previous-path`, and `previous-target`.
+
+```html:preview
+<zn-page
+  caption="Customer Comms"
+  summary="This is a description about the purpose of this page."
+  full-location="/customers/comms"
+  entity-id="customer-comms"
+  previous-path="/customers">
+  <zn-tab caption="Overview">
+    Overview content
+  </zn-tab>
+</zn-page>
+```
+
 ### Breadcrumbs
 
 Breadcrumb links can be passed with `slot="breadcrumb"` and will be forwarded to the underlying header.

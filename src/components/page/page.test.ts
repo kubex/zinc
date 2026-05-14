@@ -58,6 +58,33 @@ describe('<zn-page>', () => {
     expect(overview.textContent?.trim()).to.equal('Overview Content');
   });
 
+  it('supports zn-header location, entity, and previous path attributes', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page
+        caption="Page Title"
+        full-location="/full/path"
+        entity-id="entity-123"
+        entity-id-show
+        previous-path="/previous"
+        previous-target="main">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(20);
+
+    const overlay = el.shadowRoot!.querySelector<HTMLElement>('.alt-overlay')!;
+    const fullLocationLink = overlay.querySelector<HTMLAnchorElement>('a')!;
+    const copyButtons = overlay.querySelectorAll('zn-copy-button');
+    const previousLink = el.shadowRoot!.querySelector<HTMLAnchorElement>('.caption__back')!;
+
+    expect(overlay.classList.contains('alt-overlay--visible')).to.equal(true);
+    expect(fullLocationLink.getAttribute('href')).to.equal('/full/path');
+    expect(copyButtons[0].getAttribute('value')).to.equal('entity-123');
+    expect(copyButtons[1].getAttribute('value')).to.equal('/full/path');
+    expect(previousLink.getAttribute('href')).to.equal('/previous');
+    expect(previousLink.getAttribute('data-target')).to.equal('main');
+  });
+
   it('orders the empty tab id first and then by priority', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">

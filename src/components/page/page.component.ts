@@ -3,6 +3,9 @@ import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnButton from '../button';
+import ZnCopyButton from '../copy-button';
+import ZnIcon from '../icon';
 import ZnNavbar from '../navbar';
 import ZnTab from '../tab';
 import ZnTabs from '../tabs';
@@ -30,6 +33,9 @@ interface TabDefinition {
 export default class ZnPage extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
+    'zn-button': ZnButton,
+    'zn-copy-button': ZnCopyButton,
+    'zn-icon': ZnIcon,
     'zn-navbar': ZnNavbar,
     'zn-tab': ZnTab,
     'zn-tabs': ZnTabs
@@ -38,8 +44,13 @@ export default class ZnPage extends ZincElement {
   private readonly hasSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'caption');
 
   @property() caption: string;
+  @property({attribute: 'entity-id'}) entityId: string;
+  @property({attribute: 'entity-id-show', type: Boolean}) entityIdShow: boolean;
+  @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
+  @property({attribute: 'previous-path'}) previousPath: string;
+  @property({attribute: 'previous-target'}) previousTarget: string;
   @property() summary: string;
 
   @state() private scrolled = false;
@@ -48,6 +59,8 @@ export default class ZnPage extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    window.addEventListener('alt-press', this.handleAltPress);
+    window.addEventListener('alt-up', this.handleAltUp);
     this.prepareTabs();
     this.tabObserver = new MutationObserver((mutations) => {
       if (mutations.some(mutation => mutation.type === 'childList')) {
@@ -59,9 +72,19 @@ export default class ZnPage extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    window.removeEventListener('alt-press', this.handleAltPress);
+    window.removeEventListener('alt-up', this.handleAltUp);
     this.tabObserver?.disconnect();
     this.tabObserver = null;
   }
+
+  private handleAltPress = () => {
+    this.classList.toggle('alt-pressed', true);
+  };
+
+  private handleAltUp = () => {
+    this.classList.toggle('alt-pressed', false);
+  };
 
   protected firstUpdated() {
     setTimeout(() => this.activateInitialTab(), 20);
@@ -210,6 +233,9 @@ export default class ZnPage extends ZincElement {
   render() {
     const hasBreadcrumb = this.hasSlotController.test('breadcrumb');
     const hasNavigation = this.tabDefinitions.length > 1;
+    const hasEntityId = this.entityId;
+    const hasFullLocation = this.fullLocation;
+    const hasPreviousPath = this.previousPath;
 
     return html`
       <div class="page" part="base" @scroll="${this.handlePageScroll}">
@@ -220,9 +246,35 @@ export default class ZnPage extends ZincElement {
           <div class="${classMap({
             'header': true,
             'header--has-breadcrumb': hasBreadcrumb,
-            'header--has-navigation': hasNavigation
+            'header--has-entity-id': hasEntityId,
+            'header--has-full-location': hasFullLocation,
+            'header--has-navigation': hasNavigation,
+            'header--has-previous': hasPreviousPath
           })}">
+            ${hasFullLocation || hasEntityId ? html`
+              <div class="${classMap({
+                'alt-overlay': true,
+                'alt-overlay--visible': this.entityIdShow
+              })}">
+                ${hasFullLocation ? html`
+                  <a href="${this.fullLocation}" target="_blank">
+                    <zn-icon src="open_in_new"></zn-icon>
+                  </a>` : null}
+                ${hasEntityId ? html`
+                  <zn-copy-button copy-label="Copy Entity ID" value="${this.entityId}" src="fingerprint"></zn-copy-button>`
+                  : null}
+                ${hasFullLocation ? html`
+                  <zn-copy-button copy-label="Copy Full Location" value="${this.fullLocation}" src="link"></zn-copy-button>`
+                  : null}
+              </div>` : null}
+
             <div class="content" part="content">
+              ${hasPreviousPath ? html`
+                <a href="${this.previousPath}" class="caption__back"
+                   data-target="${this.previousTarget ? this.previousTarget : ''}">
+                  <zn-button size="content" icon="arrow_back" icon-size="24" color="transparent"></zn-button>
+                </a>` : null}
+
               <div class="caption">
                 <div part="header-left" class="header__left">
                   <span class="header__caption" part="header-caption">

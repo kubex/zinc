@@ -31,7 +31,7 @@ export default class ZnPane extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this._header = this.querySelector("zn-header") as HTMLElement;
+    this._header = Array.from(this.children).find((child): child is HTMLElement => child.tagName === 'ZN-HEADER');
   }
 
   render() {

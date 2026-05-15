@@ -33,7 +33,7 @@ describe('<zn-pane>', () => {
       </zn-pane>
     `);
 
-    const directHeader = el.querySelector('zn-header')!;
+    const directHeader = (el.querySelector('zn-header') ?? el.shadowRoot!.querySelector('zn-header'))!;
 
     expect(el.classList.contains('with-header')).to.equal(true);
     expect(directHeader.getAttribute('slot')).to.equal('top');

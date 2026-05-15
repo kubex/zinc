@@ -61,8 +61,8 @@ describe('<zn-input-group>', () => {
     const button = el.querySelector('zn-button');
 
     expect(input).to.have.attribute('data-zn-input-group__input--first');
-    expect(button).to.have.attribute('data-zn-input-group__input--last');
     expect(button).to.have.attribute('data-zn-input-group__input');
+    expect(button).to.not.have.attribute('data-zn-input-group__input--last');
   });
 
   it('should render a label when the label attribute is set', async () => {

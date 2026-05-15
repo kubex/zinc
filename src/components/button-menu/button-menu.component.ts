@@ -52,10 +52,16 @@ export default class ZnButtonMenu extends ZincElement {
 
   private _originalButtons: CustomButtonWidths[] = [];
 
+  private _resizeRafId = 0;
+
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
     callback: () => {
-      this.containerWidth = this.offsetWidth;
+      if (this._resizeRafId) return;
+      this._resizeRafId = requestAnimationFrame(() => {
+        this._resizeRafId = 0;
+        this.containerWidth = this.offsetWidth;
+      });
     },
   });
 

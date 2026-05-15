@@ -89,6 +89,28 @@ export default class ZnNavbar extends ZincElement {
     new ResizeController(this, {
       callback: () => this.handleResize(),
     });
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {childList: true},
+      callback: mutations => this._adoptNewLightItems(mutations),
+    });
+  }
+
+  private _adoptNewLightItems(mutations: MutationRecord[]) {
+    const ul = this.shadowRoot?.querySelector('ul');
+    if (!ul) return;
+    const moreItem = ul.querySelector('li.more');
+    for (const m of mutations) {
+      for (const node of Array.from(m.addedNodes)) {
+        if (!(node instanceof HTMLLIElement)) continue;
+        if (node.hasAttribute('suffix')) continue;
+        if (moreItem) {
+          ul.insertBefore(node, moreItem);
+        } else {
+          ul.appendChild(node);
+        }
+      }
+    }
   }
 
   connectedCallback() {
@@ -203,6 +225,8 @@ export default class ZnNavbar extends ZincElement {
     } else {
       ul?.appendChild(item);
     }
+
+    this._updateVisibility();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {

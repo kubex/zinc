@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnNavbar from './navbar.component';
 
 describe('<zn-navbar>', () => {
@@ -34,9 +34,7 @@ describe('<zn-navbar>', () => {
       li.setAttribute('tab-uri', '/two');
       li.textContent = 'Second';
       el.addItem(li, false);
-      await aTimeout(0);
-
-      expect(getComputedStyle(el).display).to.not.equal('none');
+      await waitUntil(() => getComputedStyle(el).display !== 'none', 'navbar should become visible after second item added');
     });
 
     it('hides again when items drop back to one', async () => {
@@ -49,13 +47,10 @@ describe('<zn-navbar>', () => {
       second.setAttribute('tab-uri', '/two');
       second.textContent = 'Second';
       el.addItem(second, false);
-      await aTimeout(0);
-      expect(getComputedStyle(el).display).to.not.equal('none');
+      await waitUntil(() => getComputedStyle(el).display !== 'none', 'navbar should become visible after second item added');
 
       second.remove();
-      await aTimeout(0);
-
-      expect(getComputedStyle(el).display).to.equal('none');
+      await waitUntil(() => getComputedStyle(el).display === 'none', 'navbar should hide after dropping back to one item');
     });
   });
 });

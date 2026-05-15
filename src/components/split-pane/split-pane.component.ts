@@ -52,6 +52,7 @@ export default class ZnSplitPane extends ZincElement {
   @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
   @property({type: Boolean, reflect: true}) gap = false;
+  @property({reflect: true}) hide: 'primary' | 'secondary' | '' = '';
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
@@ -97,6 +98,10 @@ export default class ZnSplitPane extends ZincElement {
 
   @eventOptions({passive: true})
   resize(e: any) {
+    if (this.hide === 'primary' || this.hide === 'secondary') {
+      return;
+    }
+
     if (this.mouseUpHandler != null) {
       this.mouseUpHandler(e);
     }

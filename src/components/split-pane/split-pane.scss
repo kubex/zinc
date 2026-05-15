@@ -159,6 +159,60 @@
   }
 }
 
+:host([hide="primary"]),
+:host([hide="secondary"]) {
+  padding-top: 0;
+
+  #split-nav,
+  #resizer {
+    display: none;
+  }
+}
+
+:host([hide="primary"]) {
+  #primary-pane {
+    flex: 0 0 0;
+    height: 0;
+    max-height: 0 !important;
+    max-width: 0 !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    width: 0;
+  }
+
+  #secondary-pane {
+    height: 100%;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+}
+
+:host([hide="secondary"]) {
+  #primary-pane {
+    height: 100%;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  #secondary-pane {
+    flex: 0 0 0;
+    height: 0;
+    max-height: 0 !important;
+    max-width: 0 !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    width: 0;
+  }
+}
+
 :host([focus-pane="0"]) {
   #primary-pane {
     display: block;

@@ -19,6 +19,7 @@ describe('<zn-page>', () => {
     const header = el.shadowRoot!.querySelector('[part="header"]')!;
     const caption = el.shadowRoot!.querySelector('[part="header-caption"]')!;
     const description = el.shadowRoot!.querySelector('[part="header-description"]')!;
+    const headerRight = el.shadowRoot!.querySelector('[part="header-right"]')!;
     const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
     const navItems = navbar.shadowRoot!.querySelectorAll('li:not(.more)');
     const actionsSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="actions"]')!;
@@ -26,6 +27,7 @@ describe('<zn-page>', () => {
     const overviewSlot = el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="page-tab-0"]')!;
 
     expect(header).to.exist;
+    expect(headerRight).to.exist;
     expect(caption.textContent?.trim()).to.equal('Page Title');
     expect(description.textContent?.trim()).to.equal('Page Summary');
     expect(actionsSlot.assignedElements()[0].tagName).to.equal('ZN-BUTTON');

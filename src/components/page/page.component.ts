@@ -315,7 +315,7 @@ export default class ZnPage extends ZnTabs {
                     : null}
                 </div>
 
-                <div class="header__right">
+                <div class="header__right" part="header-right">
                   <slot name="actions"></slot>
                 </div>
               </div>

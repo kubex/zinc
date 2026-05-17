@@ -95,6 +95,7 @@ export interface ZincFormControl extends ZincElement {
   defaultValue?: unknown;
   defaultChecked?: boolean;
   form?: string;
+  storeKey?: string;
 
   // Constraint validation attributes
   pattern?: string;

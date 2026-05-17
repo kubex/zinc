@@ -1,4 +1,5 @@
 import {getFormNavigationController} from "./form-navigation";
+import {Store} from "./storage";
 import type {ReactiveController, ReactiveControllerHost} from "lit";
 import type {ZincFormControl} from "./zinc-element";
 import type Button from "../components/button";
@@ -16,6 +17,10 @@ export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>> = n
 //
 const reportValidityOverloads: WeakMap<HTMLFormElement, () => boolean> = new WeakMap();
 const checkValidityOverloads: WeakMap<HTMLFormElement, () => boolean> = new WeakMap();
+const formPersistenceListeners: WeakMap<HTMLFormElement, {
+  handleInput: (event: Event) => void;
+  handleChange: (event: Event) => void;
+}> = new WeakMap();
 
 //
 // We store a Set of controls that users have interacted with. This allows us to determine the interaction state
@@ -27,6 +32,184 @@ const userInteractedControls: WeakSet<ZincFormControl> = new WeakSet();
 // We store a WeakMap of interactions for each form control so we can track when all conditions are met for validation.
 //
 const interactions = new WeakMap<ZincFormControl, string[]>();
+
+const formStorePrefix = 'znform:';
+
+type StoredFormControlValue = {
+  checked?: boolean;
+  indeterminate?: boolean;
+  value?: unknown;
+};
+
+type PersistableNativeControl = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+
+function getStorage(localStorage = false): Storage | null {
+  try {
+    return localStorage ? window.localStorage : window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+function getStore(localStorage = false, ttl = 0): Store | null {
+  const storage = getStorage(localStorage);
+  return storage ? new Store(storage, formStorePrefix, ttl) : null;
+}
+
+function getStoreTtl(el?: Element | null) {
+  const ttl = el?.getAttribute('store-ttl');
+  return ttl ? Number(ttl) || 0 : 0;
+}
+
+function usesLocalStorage(el?: Element | null) {
+  return Boolean(el?.hasAttribute('local-storage'));
+}
+
+function getFormStoreKey(form?: HTMLFormElement | null) {
+  return form?.getAttribute('store-key') || '';
+}
+
+function getElementStoreKey(el: Element) {
+  return el.getAttribute('store-key') || '';
+}
+
+function getControlName(el: Element) {
+  return el.getAttribute('name') || ('name' in el && typeof el.name === 'string' ? el.name : '');
+}
+
+function getPersistedControlKey(el: Element, form?: HTMLFormElement | null) {
+  const elementStoreKey = getElementStoreKey(el);
+  const formStoreKey = getFormStoreKey(form);
+
+  if (elementStoreKey) {
+    return formStoreKey ? `${formStoreKey}:${elementStoreKey}` : elementStoreKey;
+  }
+
+  const name = getControlName(el);
+  return formStoreKey && name ? `${formStoreKey}:${name}` : '';
+}
+
+function getPersistedStore(el: Element, form?: HTMLFormElement | null) {
+  const localStorage = usesLocalStorage(el) || usesLocalStorage(form);
+  const ttl = getStoreTtl(el) || getStoreTtl(form);
+  return getStore(localStorage, ttl);
+}
+
+function getStoredControlValue(el: Element, form?: HTMLFormElement | null): StoredFormControlValue | null {
+  const key = getPersistedControlKey(el, form);
+  const store = key ? getPersistedStore(el, form) : null;
+  const storedValue = store?.get(key);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue) as StoredFormControlValue;
+  } catch {
+    return {value: storedValue};
+  }
+}
+
+function setStoredControlValue(el: Element, form: HTMLFormElement | null | undefined, value: StoredFormControlValue) {
+  const key = getPersistedControlKey(el, form);
+  const store = key ? getPersistedStore(el, form) : null;
+
+  if (!store) {
+    return;
+  }
+
+  store.set(key, JSON.stringify(value));
+}
+
+function isPersistableNativeControl(el: unknown): el is PersistableNativeControl {
+  return el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement;
+}
+
+function getNativeControlStoredValue(control: PersistableNativeControl): StoredFormControlValue {
+  if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
+    return {checked: control.checked, value: control.value};
+  }
+
+  return {value: control.value};
+}
+
+function restoreNativeFormControls(form: HTMLFormElement) {
+  const controls = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('input, textarea, select');
+
+  controls.forEach(control => {
+    const storedValue = getStoredControlValue(control, form);
+    if (!storedValue) {
+      return;
+    }
+
+    if (control instanceof HTMLInputElement && (control.type === 'checkbox' || control.type === 'radio')) {
+      if (typeof storedValue.checked === 'boolean') {
+        control.checked = storedValue.checked;
+      }
+      return;
+    }
+
+    if ('value' in storedValue) {
+      control.value = String(storedValue.value ?? '');
+    }
+  });
+}
+
+function persistNativeFormControl(target: EventTarget | null, form: HTMLFormElement) {
+  if (!isPersistableNativeControl(target) || target.form !== form) {
+    return;
+  }
+
+  setStoredControlValue(target, form, getNativeControlStoredValue(target));
+}
+
+function getZincControlStoredValue(control: ZincFormControl, value: unknown): StoredFormControlValue {
+  const storedValue: StoredFormControlValue = {value};
+
+  if ('checked' in control && typeof control.checked === 'boolean') {
+    storedValue.checked = control.checked;
+  }
+
+  if ('indeterminate' in control && typeof control.indeterminate === 'boolean') {
+    storedValue.indeterminate = control.indeterminate;
+  }
+
+  return storedValue;
+}
+
+function removeStoredValuesByPrefix(storage: Storage, keyPrefix: string) {
+  const keys: string[] = [];
+  const storageKey = formStorePrefix + keyPrefix;
+
+  for (let i = 0; i < storage.length; i++) {
+    const key = storage.key(i);
+    if (key === storageKey || key?.startsWith(storageKey + ':')) {
+      keys.push(key);
+    }
+  }
+
+  keys.forEach(key => storage.removeItem(key));
+}
+
+export function clearFormStoreValues(formOrStoreKey: HTMLFormElement | string) {
+  const keyPrefix = typeof formOrStoreKey === 'string' ? formOrStoreKey : getFormStoreKey(formOrStoreKey);
+
+  if (!keyPrefix) {
+    return;
+  }
+
+  const local = getStorage(true);
+  const session = getStorage(false);
+
+  if (local) {
+    removeStoredValuesByPrefix(local, keyPrefix);
+  }
+
+  if (session && session !== local) {
+    removeStoredValuesByPrefix(session, keyPrefix);
+  }
+}
 
 export interface FormControlControllerOptions {
   /** A function that returns the form containing the form control. */
@@ -108,6 +291,7 @@ export class FormControlController implements ReactiveController {
     });
 
     await this.host.updateComplete;
+    this.restorePersistedValue();
     if (form) {
       this.checkFormValidity();
     }
@@ -171,6 +355,8 @@ export class FormControlController implements ReactiveController {
     this.form.addEventListener('cancelled', this.enableSubmit);
     this.form.addEventListener('error', this.enableSubmit);
 
+    this.attachFormPersistence(this.form);
+
     // Overload the form's reportValidity() method so it looks at Zinc form controls
     if (!reportValidityOverloads.has(this.form)) {
       reportValidityOverloads.set(this.form, this.form.reportValidity);
@@ -207,6 +393,7 @@ export class FormControlController implements ReactiveController {
       this.form.removeEventListener('complete', this.enableSubmit);
       this.form.removeEventListener('cancelled', this.enableSubmit);
       this.form.removeEventListener('error', this.enableSubmit);
+      this.detachFormPersistence(this.form);
 
       if (reportValidityOverloads.has(this.form)) {
         this.form.reportValidity = reportValidityOverloads.get(this.form)!;
@@ -368,8 +555,55 @@ export class FormControlController implements ReactiveController {
     if (emittedEvents.length === this.options.assumeInteractionOn.length) {
       this.setUserInteracted(this.host, true);
     }
+    this.persistHostValue();
     this.checkFormValidity();
   };
+
+  private attachFormPersistence(form: HTMLFormElement) {
+    if (formPersistenceListeners.has(form)) {
+      return;
+    }
+
+    const handleInput = (event: Event) => persistNativeFormControl(event.target, form);
+    const handleChange = (event: Event) => persistNativeFormControl(event.target, form);
+    form.addEventListener('input', handleInput);
+    form.addEventListener('change', handleChange);
+    formPersistenceListeners.set(form, {handleInput, handleChange});
+
+    restoreNativeFormControls(form);
+  }
+
+  private detachFormPersistence(form: HTMLFormElement) {
+    const listeners = formPersistenceListeners.get(form);
+    if (!listeners) {
+      return;
+    }
+
+    form.removeEventListener('input', listeners.handleInput);
+    form.removeEventListener('change', listeners.handleChange);
+    formPersistenceListeners.delete(form);
+  }
+
+  private restorePersistedValue() {
+    const storedValue = getStoredControlValue(this.host, this.form);
+    if (!storedValue) {
+      return;
+    }
+
+    if ('checked' in this.host && typeof storedValue.checked === 'boolean') {
+      this.options.setValue(this.host, storedValue.checked);
+    } else if ('value' in storedValue) {
+      this.options.setValue(this.host, storedValue.value);
+    }
+
+    if ('indeterminate' in this.host && typeof storedValue.indeterminate === 'boolean') {
+      this.host.indeterminate = storedValue.indeterminate;
+    }
+  }
+
+  private persistHostValue() {
+    setStoredControlValue(this.host, this.form, getZincControlStoredValue(this.host, this.options.value(this.host)));
+  }
 
   private checkFormValidity = () => {
     //

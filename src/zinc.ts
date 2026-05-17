@@ -105,6 +105,7 @@ export { default as ZincElement } from './internal/zinc-element';
 export * from './utilities/on';
 export * from './utilities/query';
 export * from './utilities/lit-to-html';
+export * from './utilities/form';
 
 // Events
 export * from './events/events';

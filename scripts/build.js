@@ -21,7 +21,10 @@ const postCss = postCSS([
   minify()
 ]);
 
-const {serve} = commandLineArgs([{name: 'serve', type: Boolean}]);
+const {serve, 'with-docs': withDocs} = commandLineArgs([
+  {name: 'serve', type: Boolean},
+  {name: 'with-docs', type: Boolean}
+]);
 const outDir = 'dist';
 const siteDir = '_site';
 const spinner = ora({hideCursor: false}).start();
@@ -359,7 +362,7 @@ if(serve)
 }
 
 // Build for production
-if(!serve)
+if(!serve && withDocs)
 {
   let result;
 

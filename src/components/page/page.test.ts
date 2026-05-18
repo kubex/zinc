@@ -297,6 +297,67 @@ describe('<zn-page>', () => {
     expect(el.hasAttribute('modal')).to.equal(true);
   });
 
+  it('uses the page background for the sticky header surface', async () => {
+    const el = await fixture<ZnPage>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-page caption="Page Title" modal>
+          <zn-tab caption="Overview">Overview Content</zn-tab>
+        </zn-page>
+      </div>
+    `);
+    await aTimeout(20);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const scroller = page.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    expect(getComputedStyle(scroller).backgroundColor).to.equal('rgb(12, 34, 56)');
+    expect(getComputedStyle(header).backgroundColor).to.equal('rgba(12, 34, 56, 0.95)');
+  });
+
+  it('uses the panel background when placed inside a panel', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-panel flush>
+          <zn-page caption="Page Title" modal>
+            <zn-tab caption="Overview">Overview Content</zn-tab>
+          </zn-page>
+        </zn-panel>
+      </div>
+    `);
+    await aTimeout(20);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const scroller = page.shadowRoot!.querySelector<HTMLElement>('.page')!;
+    const header = page.shadowRoot!.querySelector<HTMLElement>('.page__header')!;
+
+    expect(getComputedStyle(scroller).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(header).backgroundColor).to.equal('rgba(1, 2, 3, 0.95)');
+  });
+
+  it('uses the page surface background for active navigation items', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div style="--zn-body: 12, 34, 56; --zn-panel: 1, 2, 3;">
+        <zn-panel flush>
+          <zn-page caption="Page Title">
+            <zn-tab caption="Overview">Overview Content</zn-tab>
+            <zn-tab caption="Details">Details Content</zn-tab>
+          </zn-page>
+        </zn-panel>
+      </div>
+    `);
+    await aTimeout(40);
+
+    const page = el.querySelector<ZnPage>('zn-page')!;
+    const navbar = page.shadowRoot!.querySelector('zn-navbar')!;
+    const activeNavItem = navbar.shadowRoot!.querySelector<HTMLElement>('li.zn-tb-active')!;
+
+    await aTimeout(120);
+
+    expect(getComputedStyle(activeNavItem).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s');
+  });
+
   it('disables breadcrumbs in modal mode', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" modal>

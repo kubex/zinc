@@ -203,13 +203,12 @@ export default class ZnButtonMenu extends ZincElement {
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
-            menuItem.innerText = button.button.innerText;
+            menuItem.innerText = this.getButtonLabel(button.button);
             menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
             menuItem.setAttribute('role', 'menuitem');
             const attr = button.button.attributes;
             // Copy all attributes from the button to the menu item
-            for (let i = 0; i < attr.length; i++) {
-              const attribute = attr[i];
+            for (const attribute of Array.from(attr)) {
               if (attribute.name !== 'icon' && attribute.name !== 'category') {
                 menuItem.setAttribute(attribute.name, attribute.value);
               }
@@ -270,16 +269,32 @@ export default class ZnButtonMenu extends ZincElement {
     })
   }
 
+  private getButtonLabel(button: ZnButton) {
+    const labelSlot = button.shadowRoot?.querySelector<HTMLSlotElement>('slot[part="label"]');
+    const slottedLabel = labelSlot ? [...labelSlot.assignedNodes({flatten: true})]
+      .map(node => node.textContent ?? '')
+      .join('')
+      .trim() : '';
+
+    return slottedLabel ||
+      button.content ||
+      button.getAttribute('content') ||
+      (button as ZnButton & { caption?: string }).caption ||
+      button.getAttribute('caption') ||
+      button.button.innerText;
+  }
+
   render() {
     return html`
-      <div class=${classMap({
+      <div class="${classMap({
         'button-menu': true,
         'button-menu--no-padding': this.noPadding,
         'button-menu--no-gap': this.noGap,
-      })}>
+      })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent" size="${this.size}"></zn-button>
+          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"
+                     size="${this.size}"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

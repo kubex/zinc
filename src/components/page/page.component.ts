@@ -47,6 +47,7 @@ export default class ZnPage extends ZnTabs {
   @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
+  @property({type: Boolean, reflect: true}) primary = false; // margin
   @property({attribute: 'previous-path'}) previousPath: string;
   @property({attribute: 'previous-target'}) previousTarget: string;
   @property() summary: string;
@@ -289,10 +290,12 @@ export default class ZnPage extends ZnTabs {
                     <zn-icon src="open_in_new"></zn-icon>
                   </a>` : null}
                 ${hasEntityId ? html`
-                  <zn-copy-button copy-label="Copy Entity ID" value="${this.entityId}" src="fingerprint"></zn-copy-button>`
+                    <zn-copy-button copy-label="Copy Entity ID" value="${this.entityId}"
+                                    src="fingerprint"></zn-copy-button>`
                   : null}
                 ${hasFullLocation ? html`
-                  <zn-copy-button copy-label="Copy Full Location" value="${this.fullLocation}" src="link"></zn-copy-button>`
+                    <zn-copy-button copy-label="Copy Full Location" value="${this.fullLocation}"
+                                    src="link"></zn-copy-button>`
                   : null}
               </div>` : null}
 

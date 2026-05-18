@@ -7,7 +7,7 @@
   min-height: 0;
   --zn-page-background: var(--zn-page-surface-background, var(--zn-body));
   --zn-page-header-background: var(--zn-page-background);
-  --zn-page-padding-base: 32px;
+  --zn-page-padding-base: calc(var(--zn-base-gap) * 1.5);
   --zn-page-padding: var(--zn-page-padding-base);
   --zn-page-padding-x: var(--zn-page-padding-base);
   --zn-page-padding-y: var(--zn-page-padding-base);
@@ -64,7 +64,7 @@
     width: 100%;
     max-width: 100%;
     height: fit-content;
-    gap: 10px;
+    gap: var(--zn-base-gap);
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
@@ -260,12 +260,12 @@
 }
 
 zn-navbar {
-  margin-top: 24px;
+  margin-top: var(--zn-page-padding-base);
 
   &::part(navbar) {
     height: 45px;
     margin: 0;
-    padding-left: 24px;
+    padding-left: var(--zn-page-padding-base);
   }
 
   &::part(navbar-item) {
@@ -300,5 +300,9 @@ zn-navbar {
 }
 
 :host .page__tabs #content {
-  padding: 8px;
+  padding: var(--zn-base-gap);
+}
+
+:host([nested]) .page__tabs #content {
+  padding: 0;
 }

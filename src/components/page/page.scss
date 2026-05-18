@@ -7,11 +7,16 @@
   min-height: 0;
   --zn-page-background: var(--zn-body);
   --zn-page-header-background: var(--zn-body);
-  --zn-page-padding: 32px;
+  --zn-page-padding-base: 32px;
+  --zn-page-padding: var(--zn-page-padding-base);
+  --zn-page-padding-x: var(--zn-page-padding-base);
+  --zn-page-padding-y: var(--zn-page-padding-base);
 }
 
 :host([nested]) {
-  --zn-page-padding: 0px;
+  --zn-page-padding: calc(var(--zn-page-padding-base) * 0.5);
+  --zn-page-padding-x: 0px;
+  --zn-page-padding-y: var(--zn-page-padding-base);
 }
 
 :host([modal]) {
@@ -24,7 +29,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: var(--zn-page-padding) var(--zn-page-padding) 0;
+  padding: var(--zn-page-padding-y) var(--zn-page-padding-x) 0;
   box-sizing: border-box;
   background: rgba(var(--zn-page-header-background), 95%);
   backdrop-filter: blur(5px);
@@ -32,9 +37,9 @@
   &::after {
     content: '';
     position: absolute;
-    right: var(--zn-page-padding);
+    right: var(--zn-page-padding-x);
     bottom: 0;
-    left: var(--zn-page-padding);
+    left: var(--zn-page-padding-x);
     height: 1px;
     background: rgb(var(--zn-border-color));
     opacity: 0;
@@ -174,6 +179,7 @@
   justify-content: center;
   align-items: center;
   color: inherit;
+  margin-left: var(--zn-page-padding);
 }
 
 .alt-overlay {
@@ -236,7 +242,7 @@
   width: 100%;
   overflow: visible;
   box-sizing: border-box;
-  padding: 0 var(--zn-page-padding) var(--zn-page-padding);
+  padding: 0 var(--zn-page-padding-x) var(--zn-page-padding-y);
 }
 
 .page__tabs #content {
@@ -279,8 +285,8 @@ zn-navbar {
 }
 
 :host([modal]) .header {
-  padding-right: var(--zn-page-padding);
-  padding-left: var(--zn-page-padding);
+  padding-right: var(--zn-page-padding-x);
+  padding-left: var(--zn-page-padding-x);
 }
 
 :host([modal]) zn-navbar {
@@ -295,6 +301,6 @@ zn-navbar {
 }
 
 :host([modal]) .page__tabs #content {
-  padding-right: var(--zn-page-padding);
-  padding-left: var(--zn-page-padding);
+  padding-right: var(--zn-page-padding-x);
+  padding-left: var(--zn-page-padding-x);
 }

@@ -56,6 +56,7 @@ export default class ZnSimpleChart extends ZincElement {
       animationEasing: 'cubicOut',
       tooltip: {
         trigger: 'axis',
+        appendTo: 'body',
         backgroundColor: 'rgba(0,0,0,0.7)',
         borderWidth: 0,
         textStyle: { color: '#fff' },

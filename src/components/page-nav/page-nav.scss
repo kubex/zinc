@@ -9,6 +9,8 @@
   --page-nav-crumb-height: 50px;
   --page-nav-width: 240px;
   --page-nav-animation-duration: 0.3s;
+
+  --page-nav-bg: var(--zn-page-surface-background, var(--zn-body));
 }
 
 .breadcrumb {
@@ -44,7 +46,7 @@
   border-right: 1px solid rgb(var(--zn-border-color));
   max-width: var(--page-nav-width);
   width: var(--page-nav-width);
-  background-color: rgb(var(--zn-body));
+  background-color: rgb(var(--page-nav-bg));
   overflow-y: auto;
   padding: var(--zn-spacing-medium);
   @include wc.scrollbars;
@@ -89,7 +91,7 @@
     border-bottom: 1px solid rgb(var(--zn-border-color));
     width: 100%;
     height: var(--page-nav-crumb-height);
-    background-color: rgb(var(--zn-body));
+    background-color: rgb(var(--page-nav-bg));
     gap: 10px;
   }
 
@@ -103,7 +105,7 @@
 
 
     height: 100%;
-    background: linear-gradient(180deg, rgb(var(--zn-body)) 70%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(180deg, rgb(var(--page-nav-bg)) 70%, rgba(0, 0, 0, 0) 100%);
     width: calc(var(--page-nav-width) - 20px);
 
     z-index: calc(var(--zn-z-index-page-nav) + 1);

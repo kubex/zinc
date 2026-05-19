@@ -12,6 +12,7 @@
   --zn-page-padding-x: var(--zn-page-padding-base);
   --zn-page-padding-y: var(--zn-page-padding-base);
 }
+
 /*
 :host([nested]) {
   --zn-page-padding: calc(var(--zn-page-padding-base));
@@ -30,7 +31,7 @@
   z-index: 2;
   padding: var(--zn-page-padding-y) var(--zn-page-padding-x) 0;
   box-sizing: border-box;
-  background: rgba(var(--zn-panel, var(--zn-page-header-background)), 95%);
+  background: rgba(var(--zn-page-header-background), 95%);
   backdrop-filter: blur(5px);
 
   &::after {
@@ -230,7 +231,7 @@
   overflow: auto;
   box-sizing: border-box;
   padding: 0;
-  background: rgb(var(--zn-page-background));
+  background: rgb(var(--zn-body));
 }
 
 .page__tabs {

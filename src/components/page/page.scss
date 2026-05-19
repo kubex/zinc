@@ -7,17 +7,17 @@
   min-height: 0;
   --zn-page-background: var(--zn-page-surface-background, var(--zn-body));
   --zn-page-header-background: var(--zn-page-background);
-  --zn-page-padding-base: calc(var(--zn-base-gap) * 1.5);
+  --zn-page-padding-base: calc(var(--zn-base-gap));
   --zn-page-padding: var(--zn-page-padding-base);
   --zn-page-padding-x: var(--zn-page-padding-base);
   --zn-page-padding-y: var(--zn-page-padding-base);
 }
-
+/*
 :host([nested]) {
-  --zn-page-padding: calc(var(--zn-page-padding-base) * 0.5);
+  --zn-page-padding: calc(var(--zn-page-padding-base));
   --zn-page-padding-x: var(--zn-page-padding);
   --zn-page-padding-y: var(--zn-page-padding);
-}
+}*/
 
 :host([primary]) {
   --zn-page-padding: var(--zn-page-padding-base);
@@ -30,7 +30,7 @@
   z-index: 2;
   padding: var(--zn-page-padding-y) var(--zn-page-padding-x) 0;
   box-sizing: border-box;
-  background: rgba(var(--zn-page-header-background), 95%);
+  background: rgba(var(--zn-panel, var(--zn-page-header-background)), 95%);
   backdrop-filter: blur(5px);
 
   &::after {

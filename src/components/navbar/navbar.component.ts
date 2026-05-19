@@ -61,7 +61,7 @@ export default class ZnNavbar extends ZincElement {
   private _postItems: NodeListOf<Element>;
   @property()
   private _appended: Element[];
-  private _expanding: NodeListOf<Element>;
+  private _expanding: Element[] = [];
   private _openedTabs: string[] = [];
 
   private readonly _itemsObserver = new MutationController(this, {
@@ -83,6 +83,19 @@ export default class ZnNavbar extends ZincElement {
     this._appended = [...(this._appended || []), item];
   }
 
+  addExpandingAction(action: Element) {
+    if (!this._expanding.includes(action)) {
+      this._expanding = [...this._expanding, action];
+    }
+
+    if (action.parentElement !== this) {
+      this.appendChild(action);
+    }
+
+    this.requestUpdate();
+    this._updateVisibility();
+  }
+
   constructor() {
     super();
     // eslint-disable-next-line no-new
@@ -102,6 +115,11 @@ export default class ZnNavbar extends ZincElement {
     const moreItem = ul.querySelector('li.more');
     for (const m of mutations) {
       for (const node of Array.from(m.addedNodes)) {
+        if (node instanceof Element && node.tagName === 'ZN-EXPANDING-ACTION') {
+          this.addExpandingAction(node);
+          continue;
+        }
+
         if (!(node instanceof HTMLLIElement)) continue;
         if (node.hasAttribute('suffix')) continue;
         if (moreItem) {
@@ -117,7 +135,7 @@ export default class ZnNavbar extends ZincElement {
     super.connectedCallback();
     this._preItems = this.querySelectorAll('li:not([suffix])');
     this._postItems = this.querySelectorAll('li[suffix]');
-    this._expanding = this.querySelectorAll('zn-expanding-action');
+    this._expanding = Array.from(this.querySelectorAll('zn-expanding-action'));
 
     if (!this.masterId) {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();

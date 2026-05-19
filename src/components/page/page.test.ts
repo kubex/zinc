@@ -40,6 +40,28 @@ describe('<zn-page>', () => {
     expect(navItems[3].getAttribute('tab-uri')).to.equal('/tab-three');
   });
 
+  it('pushes nested expanding actions into the generated navbar', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">
+          <div>
+            <zn-expanding-action icon="notifications" method="drop">
+              <p>Notification content</p>
+            </zn-expanding-action>
+          </div>
+        </zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(40);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const expandingAction = navbar.shadowRoot!.querySelector('zn-expanding-action')!;
+
+    expect(navbar).to.exist;
+    expect(expandingAction).to.exist;
+    expect(getComputedStyle(navbar).display).to.not.equal('none');
+  });
+
   it('selects page tab panels when navigation items are clicked', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title">

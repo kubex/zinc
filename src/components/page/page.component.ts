@@ -4,6 +4,7 @@ import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
 import ZnButton from '../button';
 import ZnCopyButton from '../copy-button';
+import ZnExpandingAction from '../expanding-action';
 import ZnIcon from '../icon';
 import ZnNavbar from '../navbar';
 import ZnTab from '../tab';
@@ -34,6 +35,7 @@ export default class ZnPage extends ZnTabs {
   static dependencies = {
     'zn-button': ZnButton,
     'zn-copy-button': ZnCopyButton,
+    'zn-expanding-action': ZnExpandingAction,
     'zn-icon': ZnIcon,
     'zn-navbar': ZnNavbar,
     'zn-tab': ZnTab
@@ -54,6 +56,8 @@ export default class ZnPage extends ZnTabs {
 
   @state() private scrolled = false;
   @state() private tabDefinitions: TabDefinition[] = [];
+  @state() private hasExpandingActions = false;
+  private actionObserver: MutationObserver | null = null;
   private tabObserver: MutationObserver | null = null;
 
   async connectedCallback() {
@@ -61,12 +65,20 @@ export default class ZnPage extends ZnTabs {
     window.addEventListener('alt-press', this.handleAltPress);
     window.addEventListener('alt-up', this.handleAltUp);
     this.prepareTabs();
+    this.refreshExpandingActionsState();
     this.tabObserver = new MutationObserver((mutations) => {
       if (mutations.some(mutation => mutation.type === 'childList')) {
         this.prepareTabs();
       }
     });
     this.tabObserver.observe(this, {childList: true});
+    this.actionObserver = new MutationObserver((mutations) => {
+      if (mutations.some(mutation => mutation.type === 'childList')) {
+        this.refreshExpandingActionsState();
+        this.syncExpandingActionsToNavbar();
+      }
+    });
+    this.actionObserver.observe(this, {childList: true, subtree: true});
     await connected;
   }
 
@@ -76,6 +88,8 @@ export default class ZnPage extends ZnTabs {
     window.removeEventListener('alt-up', this.handleAltUp);
     this.tabObserver?.disconnect();
     this.tabObserver = null;
+    this.actionObserver?.disconnect();
+    this.actionObserver = null;
   }
 
   private handleAltPress = () => {
@@ -93,7 +107,40 @@ export default class ZnPage extends ZnTabs {
   firstUpdated(changedProperties: PropertyValues) {
     super.firstUpdated(changedProperties);
     this.registerPagePanels();
+    this.syncExpandingActionsToNavbar();
     setTimeout(() => this.activateInitialPageTab(), 20);
+  }
+
+  private getOwnExpandingActions() {
+    return Array.from(this.querySelectorAll<ZnExpandingAction>('zn-expanding-action'))
+      .filter(action => action.closest('zn-page') === this);
+  }
+
+  private getNavbar() {
+    return this.shadowRoot?.querySelector<ZnNavbar>('zn-navbar') || null;
+  }
+
+  private refreshExpandingActionsState() {
+    const navbar = this.getNavbar();
+    const hasNavbarActions = Boolean(
+      navbar?.querySelector('zn-expanding-action') ||
+      navbar?.shadowRoot?.querySelector('zn-expanding-action')
+    );
+    const hasExpandingActions = this.getOwnExpandingActions().length > 0 || hasNavbarActions;
+
+    if (this.hasExpandingActions !== hasExpandingActions) {
+      this.hasExpandingActions = hasExpandingActions;
+    }
+  }
+
+  private syncExpandingActionsToNavbar() {
+    const navbar = this.getNavbar();
+    if (!navbar) {
+      return;
+    }
+
+    this.getOwnExpandingActions().forEach(action => navbar.addExpandingAction(action));
+    this.refreshExpandingActionsState();
   }
 
   private prepareTabs() {
@@ -193,6 +240,10 @@ export default class ZnPage extends ZnTabs {
     if (changedProperties.has('tabDefinitions')) {
       this.registerPagePanels();
     }
+
+    if (changedProperties.has('tabDefinitions') || changedProperties.has('hasExpandingActions')) {
+      this.syncExpandingActionsToNavbar();
+    }
   }
 
   private handleNavigationSelect(event: ZnSelectEvent) {
@@ -261,7 +312,7 @@ export default class ZnPage extends ZnTabs {
 
   render() {
     const hasBreadcrumb = !this.modal && !this.nested && this.pageSlotController.test('breadcrumb');
-    const hasNavigation = this.tabDefinitions.length > 1;
+    const hasNavigation = this.tabDefinitions.length > 1 || this.hasExpandingActions;
     const hasEntityId = this.entityId;
     const hasFullLocation = this.fullLocation;
     const hasPreviousPath = this.previousPath;

@@ -60,7 +60,7 @@ describe('<zn-split-pane>', () => {
 
   it('merges immediate nested split pane navigation into the parent navigation', async () => {
     const el = await fixture<ZnSplitPane>(html`
-      <zn-split-pane primary-caption="List" secondary-caption="Workspace">
+      <zn-split-pane primary-caption="List" secondary-caption="Workspace" style="width: 500px; height: 400px;">
         <div slot="primary">List content</div>
         <div slot="secondary">
           <zn-split-pane primary-caption="Preview" secondary-caption="Details">
@@ -70,7 +70,9 @@ describe('<zn-split-pane>', () => {
         </div>
       </zn-split-pane>
     `);
+    await el.updateComplete;
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
+    await nested.updateComplete;
     const navItems = Array.from(el.shadowRoot!.querySelectorAll('#split-nav li'));
 
     expect(nested.hasAttribute('merged-navigation')).to.equal(true);
@@ -82,6 +84,25 @@ describe('<zn-split-pane>', () => {
 
     expect(el.getAttribute('focus-pane')).to.equal('1');
     expect(nested.getAttribute('focus-pane')).to.equal('1');
+  });
+
+  it('does not merge nested navigation when the parent is wide enough to hide its own nav', async () => {
+    const el = await fixture<ZnSplitPane>(html`
+      <zn-split-pane primary-caption="List" secondary-caption="Workspace" style="width: 1000px; height: 400px;">
+        <div slot="primary">List content</div>
+        <div slot="secondary">
+          <zn-split-pane primary-caption="Preview" secondary-caption="Details">
+            <div slot="primary">Preview content</div>
+            <div slot="secondary">Details content</div>
+          </zn-split-pane>
+        </div>
+      </zn-split-pane>
+    `);
+    await el.updateComplete;
+    const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
+    await nested.updateComplete;
+
+    expect(nested.hasAttribute('merged-navigation')).to.equal(false);
   });
 
   it('keeps nested split pane navigation visible when the parent does not merge navigation', async () => {
@@ -103,7 +124,7 @@ describe('<zn-split-pane>', () => {
 
   it('recursively merges nested split pane navigation', async () => {
     const el = await fixture<ZnSplitPane>(html`
-      <zn-split-pane primary-caption="List" secondary-caption="Workspace">
+      <zn-split-pane primary-caption="List" secondary-caption="Workspace" style="width: 500px; height: 400px;">
         <div slot="primary">List content</div>
         <div slot="secondary">
           <zn-split-pane primary-caption="Preview" secondary-caption="Details">
@@ -118,8 +139,11 @@ describe('<zn-split-pane>', () => {
         </div>
       </zn-split-pane>
     `);
+    await el.updateComplete;
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     const deepNested = nested.querySelector<ZnSplitPane>('zn-split-pane')!;
+    await nested.updateComplete;
+    await deepNested.updateComplete;
     const navItems = Array.from(el.shadowRoot!.querySelectorAll('#split-nav li'));
 
     expect(deepNested.hasAttribute('merged-navigation')).to.equal(true);

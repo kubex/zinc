@@ -12,6 +12,8 @@ type NavigationItem = {
   select: () => void;
 };
 
+const MERGED_NAVIGATION_BREAKPOINT_PX = 768;
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/split-pane
@@ -41,6 +43,8 @@ export default class ZnSplitPane extends ZincElement {
   private currentContainerSize: number = 0;
   private focusChangeHandler = () => this.requestUpdate();
   private primaryFull: string;
+  private resizeObserver: ResizeObserver | null = null;
+  private parentIsNarrow = false;
 
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
@@ -78,15 +82,29 @@ export default class ZnSplitPane extends ZincElement {
       this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')!));
     });
     this.addEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+    this.resizeObserver = new ResizeObserver(() => this.refreshNarrowState());
+    this.resizeObserver.observe(this);
   }
 
   disconnectedCallback() {
     this.removeEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
     super.disconnectedCallback();
+  }
+
+  private refreshNarrowState() {
+    const nowNarrow = this.getBoundingClientRect().width < MERGED_NAVIGATION_BREAKPOINT_PX;
+    if (nowNarrow !== this.parentIsNarrow) {
+      this.parentIsNarrow = nowNarrow;
+      this.updateNestedNavigationMerging();
+      this.requestUpdate();
+    }
   }
 
   firstUpdated(changedProperties: any) {
     setTimeout(this.applyStoredSize.bind(this), 100);
+    this.refreshNarrowState();
     super.firstUpdated(changedProperties);
   }
 
@@ -211,8 +229,9 @@ export default class ZnSplitPane extends ZincElement {
   }
 
   private updateNestedNavigationMerging() {
+    const shouldMerge = !this.vertical && this.parentIsNarrow;
     this.getDirectNestedSplitPanes().forEach(child => {
-      child.mergedNavigation = !this.vertical;
+      child.mergedNavigation = shouldMerge;
     });
   }
 

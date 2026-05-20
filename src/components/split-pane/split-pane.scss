@@ -88,7 +88,8 @@
 
       li {
         line-height: 39px;
-        flex-basis: 50%;
+        flex: 1 1 0;
+        min-width: 0;
         text-align: center;
         position: relative;
         cursor: pointer;
@@ -123,7 +124,6 @@
     #primary-pane, #secondary-pane {
       max-width: 100% !important;
       width: 100%;
-      padding-top: 40px;
     }
   }
 
@@ -161,6 +161,20 @@
       top: 0;
       left: 50%;
       transform: translateX(-50%);
+    }
+  }
+}
+
+:host([merged-navigation]:not([vertical])) {
+  @include wc.container-query(zero, md) {
+    padding-top: 0;
+
+    #split-nav {
+      display: none;
+    }
+
+    #primary-pane, #secondary-pane {
+      padding-top: 0;
     }
   }
 }

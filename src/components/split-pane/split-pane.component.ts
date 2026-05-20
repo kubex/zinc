@@ -6,6 +6,12 @@ import ZincElement from '../../internal/zinc-element';
 
 import styles from './split-pane.scss';
 
+type NavigationItem = {
+  caption: string;
+  active: boolean;
+  select: () => void;
+};
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/split-pane
@@ -33,6 +39,7 @@ export default class ZnSplitPane extends ZincElement {
   private currentPixelSize: number = 0;
   private currentPercentSize: number = 0;
   private currentContainerSize: number = 0;
+  private focusChangeHandler = () => this.requestUpdate();
   private primaryFull: string;
 
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
@@ -54,6 +61,7 @@ export default class ZnSplitPane extends ZincElement {
   @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
   @property({type: Boolean, reflect: true}) gap = false;
   @property({reflect: true}) hide: 'primary' | 'secondary' | '' = '';
+  @property({attribute: 'merged-navigation', type: Boolean, reflect: true}) mergedNavigation = false;
 
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
@@ -69,6 +77,12 @@ export default class ZnSplitPane extends ZincElement {
       e.stopPropagation();
       this._setFocusPane(parseInt((e.selectedTarget as HTMLElement).getAttribute('split-pane-focus')!));
     });
+    this.addEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('zn-split-pane-focus-change', this.focusChangeHandler);
+    super.disconnectedCallback();
   }
 
   firstUpdated(changedProperties: any) {
@@ -185,15 +199,74 @@ export default class ZnSplitPane extends ZincElement {
     this.primaryFull = this.calculatePixels ? (this.currentPixelSize + 'px') : (this.currentPercentSize + '%');
   }
 
-  _togglePane(e: any) {
-    this._setFocusPane(e.target.getAttribute('idx'));
-  }
-
   _setFocusPane(idx: number) {
     this._focusPane = idx;
-    this.querySelectorAll('ul#split-nav li').forEach((el) => {
-      el.classList.toggle('active', parseInt(el.getAttribute('idx')!) == idx);
+    this.dispatchEvent(new CustomEvent('zn-split-pane-focus-change', {bubbles: true, composed: true}));
+  }
+
+  private getDirectNestedSplitPanes() {
+    return Array.from(this.querySelectorAll<ZnSplitPane>('zn-split-pane')).filter(child => {
+      return child.parentElement?.closest('zn-split-pane') === this && !child.vertical;
     });
+  }
+
+  private updateNestedNavigationMerging() {
+    this.getDirectNestedSplitPanes().forEach(child => {
+      child.mergedNavigation = !this.vertical;
+    });
+  }
+
+  private getPaneIndexForNestedSplitPane(child: ZnSplitPane) {
+    let node: Element | null = child;
+    while (node && node.parentElement !== this) {
+      node = node.parentElement;
+    }
+
+    return node?.getAttribute('slot') === 'secondary' ? 1 : 0;
+  }
+
+  private getNestedNavigationItems(parentIdx: number): NavigationItem[] {
+    return this.getDirectNestedSplitPanesForPane(parentIdx)
+      .flatMap(child => child.getNavigationItems().map(item => {
+        return {
+          caption: item.caption,
+          active: this._focusPane === parentIdx && item.active,
+          select: () => {
+            this._setFocusPane(parentIdx);
+            item.select();
+          }
+        };
+      }));
+  }
+
+  private getDirectNestedSplitPanesForPane(parentIdx: number) {
+    return this.getDirectNestedSplitPanes().filter(child => this.getPaneIndexForNestedSplitPane(child) === parentIdx);
+  }
+
+  private getNavigationItems(): NavigationItem[] {
+    this.updateNestedNavigationMerging();
+
+    const primaryNestedItems = this.getNestedNavigationItems(0);
+    const secondaryNestedItems = this.getNestedNavigationItems(1);
+    const primaryItems = primaryNestedItems.length > 0
+      ? primaryNestedItems
+      : [{
+        caption: this.primaryCaption,
+        active: this._focusPane === 0,
+        select: () => this._setFocusPane(0)
+      }];
+    const secondaryItems = secondaryNestedItems.length > 0
+      ? secondaryNestedItems
+      : [{
+        caption: this.secondaryCaption,
+        active: this._focusPane === 1,
+        select: () => this._setFocusPane(1)
+      }];
+
+    return [
+      ...primaryItems,
+      ...secondaryItems
+    ];
   }
 
   protected render(): unknown {
@@ -212,19 +285,18 @@ export default class ZnSplitPane extends ZincElement {
         --resize-margin: ${resizeMargin};
       }</style>
       <ul id="split-nav">
-        <li idx="0" class="${this._focusPane == 0 ? 'active' : ''}" @click="${this._togglePane}">
-          ${this.primaryCaption}
-        </li>
-        <li idx="1" class="${this._focusPane == 1 ? 'active' : ''}" @click="${this._togglePane}">
-          ${this.secondaryCaption}
-        </li>
+        ${this.getNavigationItems().map(item => html`
+          <li class="${item.active ? 'active' : ''}" @click="${item.select}">
+            ${item.caption}
+          </li>
+        `)}
       </ul>
       <div id="primary-pane">
-        <slot name="primary"></slot>
+        <slot name="primary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
       <div @mousedown="${this.resize}" @touchstart="${this.resize}" id="resizer"></div>
       <div id="secondary-pane">
-        <slot name="secondary"></slot>
+        <slot name="secondary" @slotchange="${() => this.requestUpdate()}"></slot>
       </div>
     `;
   }

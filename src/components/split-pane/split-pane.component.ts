@@ -38,6 +38,7 @@ export default class ZnSplitPane extends ZincElement {
   @property({attribute: 'pixels', type: Boolean, reflect: true}) calculatePixels = false;
   @property({attribute: 'secondary', type: Boolean, reflect: true}) preferSecondarySize = false;
   @property({attribute: 'min-size', type: Number, reflect: true}) minimumPaneSize = 10;
+  @property({attribute: 'min-secondary-size', type: Number, reflect: true}) minimumSecondaryPaneSize: number;
   @property({attribute: 'max-size', type: Number, reflect: true}) maximumPaneSize: number;
   @property({attribute: 'initial-size', type: Number, reflect: true}) initialSize = 50;
   @property({attribute: 'store-key', reflect: true}) storeKey: string = "";
@@ -137,22 +138,46 @@ export default class ZnSplitPane extends ZincElement {
   }
 
   setSize(primaryPanelPixels: number) {
-    let pixelSize = primaryPanelPixels;
-    let percentSize = (primaryPanelPixels / this.currentContainerSize) * 100;
+    const hasMinimumSecondaryPaneSize = Number.isFinite(this.minimumSecondaryPaneSize);
+    const maximumPrimaryPanelPixels = hasMinimumSecondaryPaneSize
+      ? this.currentContainerSize - (this.calculatePixels
+        ? this.minimumSecondaryPaneSize
+        : (this.currentContainerSize / 100) * this.minimumSecondaryPaneSize)
+      : undefined;
+
+    let pixelSize = maximumPrimaryPanelPixels === undefined
+      ? primaryPanelPixels
+      : Math.min(primaryPanelPixels, maximumPrimaryPanelPixels);
+    let percentSize = (pixelSize / this.currentContainerSize) * 100;
 
     if (this.calculatePixels) {
-      if (this.maximumPaneSize) {
-        pixelSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, pixelSize));
+      const minimumPrimaryPanelPixels = maximumPrimaryPanelPixels === undefined
+        ? this.minimumPaneSize
+        : Math.min(this.minimumPaneSize, maximumPrimaryPanelPixels);
+      if (this.maximumPaneSize || maximumPrimaryPanelPixels !== undefined) {
+        pixelSize = Math.max(
+          minimumPrimaryPanelPixels,
+          Math.min(this.maximumPaneSize ?? Infinity, maximumPrimaryPanelPixels ?? Infinity, pixelSize)
+        );
       } else {
-        pixelSize = Math.max(this.minimumPaneSize, pixelSize);
+        pixelSize = Math.max(minimumPrimaryPanelPixels, pixelSize);
       }
+      percentSize = (pixelSize / this.currentContainerSize) * 100;
       this.initialSize = pixelSize;
     } else {
-      if (this.maximumPaneSize) {
-        percentSize = Math.max(this.minimumPaneSize, Math.min(this.maximumPaneSize, percentSize));
+      const maximumPrimaryPanelPercent = hasMinimumSecondaryPaneSize ? 100 - this.minimumSecondaryPaneSize : undefined;
+      const minimumPrimaryPanelPercent = maximumPrimaryPanelPercent === undefined
+        ? this.minimumPaneSize
+        : Math.min(this.minimumPaneSize, maximumPrimaryPanelPercent);
+      if (this.maximumPaneSize || maximumPrimaryPanelPercent !== undefined) {
+        percentSize = Math.max(
+          minimumPrimaryPanelPercent,
+          Math.min(this.maximumPaneSize ?? Infinity, maximumPrimaryPanelPercent ?? Infinity, percentSize)
+        );
       } else {
-        percentSize = Math.max(this.minimumPaneSize, percentSize);
+        percentSize = Math.max(minimumPrimaryPanelPercent, percentSize);
       }
+      pixelSize = (this.currentContainerSize / 100) * percentSize;
       this.initialSize = percentSize;
     }
     this.currentPixelSize = pixelSize;
@@ -174,9 +199,13 @@ export default class ZnSplitPane extends ZincElement {
   protected render(): unknown {
     const resizeWidth = '2px';
     const resizeMargin = '5px';
+    const minimumSecondaryPaneSize = Number.isFinite(this.minimumSecondaryPaneSize)
+      ? this.minimumSecondaryPaneSize + (this.calculatePixels ? 'px' : '%')
+      : 'var(--min-panel-size)';
     return html`
       <style>:host {
         --min-panel-size: ${this.minimumPaneSize}${this.calculatePixels ? 'px' : '%'};
+        --min-secondary-panel-size: ${minimumSecondaryPaneSize};
         --max-panel-size: ${this.maximumPaneSize ? this.maximumPaneSize + (this.calculatePixels ? 'px' : '%') : 'none'};
         --initial-size: ${this.primaryFull};
         --resize-size: ${resizeWidth};

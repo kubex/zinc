@@ -268,10 +268,10 @@ Use the `full-width` attribute to make tab content expand to fill the available 
 
 ### Split Pane Layout
 
-Use the `split` attribute with a pixel value to create a split pane layout with resizable sections. Control minimum and maximum sizes with `split-min` and `split-max`.
+Use the `split` attribute with a pixel value to create a split pane layout with resizable sections. Control minimum and maximum primary sizes with `split-min` and `split-max`, and keep the secondary pane above a minimum width with `split-min-secondary`.
 
 ```html:preview
-<zn-tabs split="300" split-min="200" split-max="600">
+<zn-tabs split="300" split-min="200" split-max="600" split-min-secondary="320">
   <zn-navbar slot="left">
     <li tab="">Navigation</li>
     <li tab="menu2">Menu 2</li>

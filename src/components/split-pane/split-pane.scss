@@ -127,8 +127,12 @@
     }
   }
 
-  #primary-pane, #secondary-pane {
+  #primary-pane {
     min-width: var(--min-panel-size, 15%);
+  }
+
+  #secondary-pane {
+    min-width: var(--min-secondary-panel-size, var(--min-panel-size, 15%));
   }
 
   #primary-pane {
@@ -235,8 +239,12 @@
     display: none;
   }
 
-  #primary-pane, #secondary-pane {
+  #primary-pane {
     min-height: var(--min-panel-size, 15%);
+  }
+
+  #secondary-pane {
+    min-height: var(--min-secondary-panel-size, var(--min-panel-size, 15%));
   }
 
   #primary-pane {

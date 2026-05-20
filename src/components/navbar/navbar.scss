@@ -5,6 +5,25 @@
   --navbar-active-colour: var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body)));
 }
 
+:host([hover]) {
+  position: absolute;
+  transform: translateY(-100%);
+
+  ul {
+    background-color: rgb(var(--zn-body));
+  }
+}
+
+:host([icon-only]) {
+  ul.navbar {
+    li {
+      padding: var(--zn-spacing-small);
+      width: fit-content;
+      justify-content: center;
+    }
+  }
+}
+
 .navbar__container {
   display: flex;
   flex-direction: row;

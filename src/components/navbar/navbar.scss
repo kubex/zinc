@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  --navbar-active-colour: var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body)));
 }
 
 .navbar__container {
@@ -264,7 +265,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         right: 50%;
         bottom: -2px;
         position: absolute;
-        background-color: rgb(var(--zn-page-surface-background, var(--zn-body)));
+        background-color: rgb(var(--navbar-active-colour));
         transition: all 300ms ease-in-out;
         height: 1px;
       }
@@ -276,8 +277,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        background: rgb(var(--zn-page-surface-background, var(--zn-body)));
-        border-bottom: 1px solid rgb(var(--zn-page-surface-background, var(--zn-body)));
+        background: rgb(var(--navbar-active-colour));
+        border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
 
       &.active::before, &.zn-tb-active::before {
@@ -368,14 +369,14 @@ button[popovertarget] {
           right: 0;
           bottom: -1px;
           height: 1px;
-          background-color: rgb(var(--zn-page-surface-background, var(--zn-panel)));
+          background-color: rgb(var(--navbar-active-colour));
         }
       }
     }
   }
 
   .active {
-    background-color: rgb(var(--zn-page-surface-background, var(--zn-panel)));
+    background-color: rgb(var(--navbar-active-colour));
   }
 }
 

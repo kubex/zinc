@@ -5,9 +5,12 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  --zn-page-background: var(--zn-page-surface-background, var(--zn-body));
-  --zn-page-surface-background: var(--zn-page-background);
-  --zn-page-header-background: var(--zn-page-background);
+  --zn-page-content-background: var(--zn-body);
+  --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background));
+}
+
+:host([panel]) {
+  --zn-page-content-background: var(--zn-panel);
 }
 
 .page__header {
@@ -216,7 +219,7 @@
   overflow: auto;
   box-sizing: border-box;
   padding: 0;
-  background: rgb(var(--zn-body));
+  background: rgb(var(--zn-page-content-background, var(--zn-body)));
 }
 
 .page__tabs {

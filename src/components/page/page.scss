@@ -272,22 +272,22 @@ zn-navbar {
 }
 
 :host .header {
-  padding-right: calc(var(--zn-gutter) + var(--zn-base-gap));
-  padding-left: calc(var(--zn-gutter) + var(--zn-base-gap));
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+  padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-left: calc(var(--zn-gutter) + var(--zn-base-gap));
-    padding-right: calc(var(--zn-gutter) + var(--zn-base-gap));
+    padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   }
 }
 
 :host .page__tabs {
-  padding-right: var(--zn-gutter);
-  padding-left: var(--zn-gutter);
+  padding: 0;
 }
 
 :host .page__tabs #content.page__content {
-  padding: 0;
+  padding-right: var(--zn-gutter, 0);
+  padding-left: var(--zn-gutter, 0);
 }

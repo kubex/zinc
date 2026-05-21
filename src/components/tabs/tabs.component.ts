@@ -260,6 +260,8 @@ export default class ZnTabs extends ZincElement {
     tabNode.setAttribute("id", tabId);
     if (this.fetchStyle !== "") {
       tabNode.setAttribute("data-fetch-style", this.fetchStyle);
+    } else if (tabEle.hasAttribute('data-fetch-style')) {
+      tabNode.setAttribute("data-fetch-style", tabEle.getAttribute('data-fetch-style'));
     }
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
@@ -268,6 +270,7 @@ export default class ZnTabs extends ZincElement {
       this._panel.appendChild(tabNode);
       this._panels.set(tabId, [tabNode]);
     }
+
     document.dispatchEvent(new CustomEvent('zn-new-element', {
       detail: {element: tabNode, source: tabEle}
     }));

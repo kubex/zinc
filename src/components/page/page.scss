@@ -272,13 +272,14 @@ zn-navbar {
 }
 
 :host .header {
-  padding-right: var(--zn-base-gap);
-  padding-left: var(--zn-base-gap);
+  padding-right: calc(var(--zn-gutter) + var(--zn-base-gap));
+  padding-left: calc(var(--zn-gutter) + var(--zn-base-gap));
 }
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-left: var(--zn-base-gap);
+    padding-left: calc(var(--zn-gutter) + var(--zn-base-gap));
+    padding-right: calc(var(--zn-gutter) + var(--zn-base-gap));
   }
 }
 
@@ -288,5 +289,5 @@ zn-navbar {
 }
 
 :host .page__tabs #content.page__content {
-  padding: 0;
+  padding: 0 var(--zn-gutter);
 }

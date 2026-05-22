@@ -1,11 +1,11 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
-import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {md5} from "../../utilities/md5";
-import {MutationController} from '@lit-labs/observers/mutation-controller.js';
-import {property} from 'lit/decorators.js';
-import {Store} from "../../internal/storage";
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { deepQuerySelectorAll } from "../../utilities/query";
+import { HasSlotController } from "../../internal/slot";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { md5 } from "../../utilities/md5";
+import { MutationController } from '@lit-labs/observers/mutation-controller.js';
+import { property } from 'lit/decorators.js';
+import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
@@ -29,25 +29,25 @@ import styles from './tabs.scss';
  */
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-  @property({attribute: 'master-id', reflect: true}) masterId: string;
-  @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
-  @property({attribute: 'active', reflect: true}) _current = '';
-  @property({attribute: 'split', type: Number, reflect: true}) _split: number;
-  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
-  @property({attribute: 'split-min-secondary', type: Number, reflect: true}) _splitMinSecondary: number;
-  @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax: number;
-  @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
-  @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
-  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
-  @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
+  @property({ attribute: 'master-id', reflect: true }) masterId: string;
+  @property({ attribute: 'default-uri', reflect: true }) defaultUri = '';
+  @property({ attribute: 'active', reflect: true }) _current = '';
+  @property({ attribute: 'split', type: Number, reflect: true }) _split: number;
+  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
+  @property({ attribute: 'split-min-secondary', type: Number, reflect: true }) _splitMinSecondary: number;
+  @property({ attribute: 'split-max', type: Number, reflect: true }) _splitMax: number;
+  @property({ attribute: 'primary-caption', reflect: true }) primaryCaption = 'Navigation';
+  @property({ attribute: 'secondary-caption', reflect: true }) secondaryCaption = 'Content';
+  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
+  @property({ attribute: 'no-cache', type: Boolean, reflect: true }) noCache = false;
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key'}) storeKey: string;
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
-  @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
-  @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
-  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
-  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
+  @property({ attribute: 'store-key' }) storeKey: string;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({ attribute: 'padded', type: Boolean, reflect: true }) padded = false;
+  @property({ attribute: 'fetch-style', type: String, reflect: true }) fetchStyle = "";
+  @property({ attribute: 'full-width', type: Boolean, reflect: true }) fullWidth = false;
+  @property({ attribute: 'padded-right', type: Boolean, reflect: true }) paddedRight = false;
   @property() monitor: string;
   // Creating a header
   @property() caption: string;
@@ -65,7 +65,7 @@ export default class ZnTabs extends ZincElement {
 
   private readonly _domObserver = new MutationController(this, {
     target: null,
-    config: {childList: true, subtree: true},
+    config: { childList: true, subtree: true },
     callback: mutations => {
       mutations.forEach(mutation => {
         if (mutation.type !== 'childList') return;
@@ -84,7 +84,7 @@ export default class ZnTabs extends ZincElement {
 
   private readonly _monitorObserver = new MutationController(this, {
     target: null,
-    config: {childList: true, subtree: true},
+    config: { childList: true, subtree: true },
     callback: mutations => {
       mutations.forEach(mutation => {
         if (mutation.type !== 'childList') return;
@@ -193,7 +193,7 @@ export default class ZnTabs extends ZincElement {
 
     this.addEventListener('zn-menu-select', () => {
       setTimeout(this.reRegisterTabs, 200);
-    }, {passive: true});
+    }, { passive: true });
   }
 
   switchTab(inc: number) {
@@ -261,7 +261,7 @@ export default class ZnTabs extends ZincElement {
     if (this.fetchStyle !== "") {
       tabNode.setAttribute("data-fetch-style", this.fetchStyle);
     } else if (tabEle.hasAttribute('data-fetch-style')) {
-      tabNode.setAttribute("data-fetch-style", tabEle.getAttribute('data-fetch-style'));
+      tabNode.setAttribute("data-fetch-style", tabEle.getAttribute('data-fetch-style') ?? "");
     }
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
@@ -272,7 +272,7 @@ export default class ZnTabs extends ZincElement {
     }
 
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode, source: tabEle}
+      detail: { element: tabNode, source: tabEle }
     }));
     return tabNode;
   }
@@ -397,7 +397,7 @@ export default class ZnTabs extends ZincElement {
               gaid = this._activeTab.getAttribute('gaid')!;
             }
             document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-              detail: {element: element, uri: uri, gaid: gaid}
+              detail: { element: element, uri: uri, gaid: gaid }
             }));
           }
         });

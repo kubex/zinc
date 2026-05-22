@@ -29,6 +29,7 @@ interface TabDefinition {
  * @since 1.0
  *
  * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
  */
 export default class ZnPage extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
@@ -383,6 +384,7 @@ export default class ZnPage extends ZnTabs {
               ` : html`
                 <li tab="${tab.id}">${tab.caption}</li>
               `)}
+              <slot name="bottom" slot="bottom"></slot>
             </zn-navbar>
           ` : null}
         </div>

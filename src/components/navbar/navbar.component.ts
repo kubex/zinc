@@ -29,7 +29,8 @@ const NAVBAR_MIN_WIDTH = 200;
  * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot expand - Expanding action panels rendered alongside the navbar items.
+ * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
  *
  * @csspart base - The component's base wrapper.
  *
@@ -554,6 +555,7 @@ export default class ZnNavbar extends ZincElement {
             <slot name="expand"></slot>
           </div>
         ` : ''}
-      </div>`;
+      </div>
+      <slot name="bottom" part="bottom"></slot>`;
   }
 }

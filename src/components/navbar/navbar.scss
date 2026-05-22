@@ -218,10 +218,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
     height: 40px;
-    min-width: 180px;
     align-self: end;
   }
 }
+
+:host(:not([stacked]):not([icon-bar]):not([icon-only])) {
+  ul.navbar {
+    min-width: 180px;
+  }
+}
+
 
 :host([pad]) {
   ul.navbar {

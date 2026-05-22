@@ -51,7 +51,10 @@ export default class ZnItem extends ZincElement {
 
   @property({type: Boolean}) grid: boolean;
 
+  //@deprecated
   @property({type: Boolean, attribute: 'no-padding'}) noPadding: boolean;
+
+  @property({type: Boolean, attribute: 'flush'}) flush: boolean;
 
   // align items to the right
   @property({type: Boolean, attribute: 'align-end'}) alignEnd: boolean;
@@ -62,6 +65,9 @@ export default class ZnItem extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'listitem');
+    if (this.flush) {
+      this.noPadding = true;
+    }
   }
 
   protected updated(_changedProperties: PropertyValues) {
@@ -91,15 +97,15 @@ export default class ZnItem extends ZincElement {
 
     const headings = html`
       <div class="item__headings">
-        <div class=${classMap({
+        <div class="${classMap({
           'item__caption': true,
           'item__caption--required': this._hasRequiredSlot(),
           'item__caption--has-help': hasHelpTooltip
-        })} part="caption">${this.caption}
-          ${hasHelpTooltip ? html`
-            <zn-tooltip class="item__help-tooltip" content="${this.helpTooltip}">
-              <zn-icon src="info"></zn-icon>
-            </zn-tooltip>` : ''}
+        })}" part="caption">${this.caption}
+                            ${hasHelpTooltip ? html`
+                              <zn-tooltip class="item__help-tooltip" content="${this.helpTooltip}">
+                                <zn-icon src="info"></zn-icon>
+                              </zn-tooltip>` : ''}
         </div>
         ${this.description ? html`
           <div class="item__description">${this.description}</div>` : ''}

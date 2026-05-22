@@ -218,6 +218,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
     height: 40px;
+    min-width: 180px;
     align-self: end;
   }
 }
@@ -451,13 +452,14 @@ button[popovertarget] {
 
 .expandables {
   flex-grow: 0;
-  flex-shrink: 1;
-  margin: 0 var(--zn-spacing-medium);
+  flex-shrink: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   width: fit-content;
   height: 100%;
   gap: var(--zn-spacing-2x-small);
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 .expandables:empty {

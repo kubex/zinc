@@ -103,17 +103,7 @@ export default class ZnHeader extends ZincElement {
   render() {
     const hasDefaultSlot = this.hasSlotController.test('[default]');
     const hasNavigationSlot = this.hasSlotController.test('nav');
-    let navigationSlotUsed = false;
-    if (hasNavigationSlot) {
-      for (const el of this.hasSlotController.getSlots('nav')) {
-        if (el instanceof ZnNavbar) {
-          navigationSlotUsed = navigationSlotUsed || el.itemCount() > 0;
-        } else {
-          navigationSlotUsed = true;
-        }
-      }
-    }
-    const hasNavigation = this.navigation && this.navigation.length > 0 || (hasNavigationSlot && navigationSlotUsed);
+    const hasNavigation = this.navigation && this.navigation.length > 0 || hasNavigationSlot;
 
     const hasPreviousPath = this.previousPath;
     const hasEntityId = this.entityId;

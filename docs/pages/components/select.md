@@ -185,6 +185,31 @@ Combine `search` with `multiple` to allow users to search and select multiple op
 </zn-select>
 ```
 
+### Free Text Entry
+
+Use the `free-text` attribute to let users enter values that aren't in the options list. `free-text` implies the editable, filtering input behavior of `search`, so users can both filter existing options and add their own. When the typed text doesn't match an existing option, an **Add "…"** row appears at the top of the listbox; committing it (by pressing <kbd>Enter</kbd>, clicking the Add row, or blurring the field) adds the value as a selection. A committed value becomes both the option's value and its label.
+
+If the typed text exactly matches an existing option (by label or value, case-insensitive), the Add row is suppressed and the existing option is selected instead — so no duplicates are created.
+
+```html:preview
+<zn-select label="Add tags" free-text placeholder="Type a tag and press Enter">
+  <zn-option value="bug">Bug</zn-option>
+  <zn-option value="feature">Feature</zn-option>
+  <zn-option value="chore">Chore</zn-option>
+</zn-select>
+```
+
+### Free Text with Multiple Selection
+
+Combine `free-text` with `multiple` to build a tag-style input. Each committed value is added as a tag and the input stays open so users can keep entering values. Removing a tag whose value was entered as free text deletes it entirely.
+
+```html:preview
+<zn-select label="Recipients" free-text multiple clearable placeholder="Add email addresses...">
+  <zn-option value="support@example.com">support@example.com</zn-option>
+  <zn-option value="sales@example.com">sales@example.com</zn-option>
+</zn-select>
+```
+
 ### Remote Search
 
 When `search` and `data-uri` are used together, typing in the select sends debounced requests to the server instead of filtering locally. The search term is appended as a query parameter (default `q`). Use `search-param` to customise the parameter name, `search-debounce` to control the delay, and `max-results` to cap displayed results.

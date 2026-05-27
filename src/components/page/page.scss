@@ -32,6 +32,14 @@
   --zn-page-content-background: var(--zn-panel);
 }
 
+:host([panel-head]) {
+  --zn-page-header-background: var(--zn-panel);
+}
+
+:host([panel-nav]) {
+  --zn-active-nav-background: var(--zn-panel);
+}
+
 .page__header {
   flex: 0 0 auto;
   position: sticky;
@@ -238,7 +246,6 @@
   overflow: auto;
   box-sizing: border-box;
   padding: 0;
-  background: rgb(var(--zn-page-content-background, var(--zn-body)));
 }
 
 .page__tabs {
@@ -250,6 +257,7 @@
   overflow: visible;
   box-sizing: border-box;
   padding: 0 var(--zn-base-gap) var(--zn-base-gap);
+  background: rgb(var(--zn-page-content-background, var(--zn-body)));
 }
 
 .page__tabs .page__content {

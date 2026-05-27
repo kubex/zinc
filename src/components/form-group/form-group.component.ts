@@ -34,6 +34,7 @@ export default class ZnFormGroup extends ZincElement {
 
   /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
+  @property({attribute: 'cols', type: Boolean}) forceCols = false;
 
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
@@ -46,45 +47,47 @@ export default class ZnFormGroup extends ZincElement {
     return html`
       <fieldset
         part="form-control"
-        class=${classMap({
+        class="${classMap({
           'form-control': true,
           'form-control--has-label': hasLabel,
           'form-control--has-label-tooltip': hasLabelTooltip,
           'form-control--has-help-text': hasHelpText
-        })}
+        })}"
         aria-labelledby="label"
         aria-describedby="help-text">
 
         <zn-cols layout="1,2" mc="2" part="form-control-container" class="form-control__container">
-          <div>
-            ${hasLabel ? html`
+          ${hasLabel || hasHelpText || this.forceCols ? html`
+            <div>` : html``}
+          ${hasLabel ? html`
             <div>
               <label
                 part="form-control-label"
                 id="label"
                 class="form-control__label"
-                aria-hidden=${hasLabel ? 'false' : 'true'}>
+                aria-hidden="${hasLabel ? 'false' : 'true'}">
                 <slot name="label">${this.label}</slot>
                 ${hasLabelTooltip
-              ? html`
+                  ? html`
                     <zn-tooltip class="form-control--label-tooltip">
                       <div slot="content">
                         <slot name="label-tooltip">${this.labelTooltip}</slot>
                       </div>
                       <zn-icon src="info"></zn-icon>
                     </zn-tooltip>`
-              : ''}
+                  : ''}
               </label>
             </div>` : html``}
 
-            ${hasHelpText ? html`
+          ${hasHelpText ? html`
             <div
               part="form-control-help-text"
               id="help-text"
               class="form-control__help-text">
               <slot name="help-text">${this.helpText}</slot>
             </div>` : html``}
-          </div>
+
+          ${hasLabel || hasHelpText || this.forceCols ? html`</div>` : html``}
 
           <div part="form-control-input" class="form-control-input">
             <slot></slot>

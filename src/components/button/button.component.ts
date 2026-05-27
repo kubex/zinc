@@ -66,6 +66,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
+  @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
 
@@ -329,6 +330,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button': true,
           'button--default': this.color === 'default',
           'button--secondary': this.color === 'secondary',
+          'button--panel-bg': this.panelBackground,
           'button--error': this.color === 'error',
           'button--info': this.color === 'info',
           'button--success': this.color === 'success',
@@ -360,7 +362,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         rel="${ifDefined(isLink ? this.rel : undefined)}"
         gaid="${ifDefined(this.gaid)}"
         data-notification="${ifDefined(this.notification)}"
-        disabled=${this.disabled || nothing}
+        disabled="${this.disabled || nothing}"
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label"

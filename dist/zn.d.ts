@@ -36,33 +36,10 @@ declare module "internal/tabbable" {
     export function getTabbableElements(root: HTMLElement | ShadowRoot): HTMLElement[];
 }
 declare module "internal/theme" {
-    import type { ReactiveController, ReactiveControllerHost } from "lit";
-    /**
-     * ThemeController is a reactive controller that listens for theme changes
-     * and updates the theme property on the host element.
-     *
-     * if you want to reflect the theme attribute to the host element, you can use
-     * the following code:
-     *
-     * ```ts
-     * import { ThemeController } from "@zinc/internal/theme";
-     *
-     * export default class MyElement extends HTMLElement {
-     *    @property({ reflect: true }) t = '';
-     *    ...
-     *  ```
-     */
-    export class ThemeController implements ReactiveController {
-        host: ReactiveControllerHost & HTMLElement;
-        t: string;
-        constructor(host: ReactiveControllerHost & HTMLElement);
-        hostConnected(): void;
-        hostDisconnected(): void;
-        handleThemeEventUpdate: (e: CustomEvent & {
-            theme: string;
-        }) => void;
-        getDefaultTheme: () => void;
-    }
+    import { SignalWatcher } from '@lit-labs/signals';
+    export const themeSignal: import("@lit-labs/signals").Signal.State<string>;
+    export function installThemeListener(): void;
+    export { SignalWatcher };
 }
 declare module "internal/event" {
     export type EventTypeRequiresDetail<T> = T extends keyof GlobalEventHandlersEventMap ? GlobalEventHandlersEventMap[T] extends CustomEvent<Record<PropertyKey, unknown>> ? GlobalEventHandlersEventMap[T] extends CustomEvent<Record<PropertyKey, never>> ? never : Partial<GlobalEventHandlersEventMap[T]['detail']> extends GlobalEventHandlersEventMap[T]['detail'] ? never : T : never : never;
@@ -82,12 +59,14 @@ declare module "internal/event" {
     export function waitForEvent(el: HTMLElement, eventName: string): Promise<void>;
 }
 declare module "internal/zinc-element" {
-    import { LitElement } from "lit";
+    import { LitElement, type PropertyValues } from "lit";
     import type { EventTypeDoesNotRequireDetail, EventTypeRequiresDetail, EventTypesWithoutRequiredDetail, EventTypesWithRequiredDetail, GetCustomEventType, ZincEventInit } from "internal/event";
-    export default class ZincElement extends LitElement {
+    const ZincElement_base: typeof LitElement & (new (...args: any[]) => import("@lit-labs/signals").SignalWatcherApi);
+    export default class ZincElement extends ZincElement_base {
         dir: string;
         lang: string;
         t: string;
+        protected willUpdate(changed: PropertyValues): void;
         static define(name: string, elementConstructor?: typeof ZincElement, options?: ElementDefinitionOptions): void;
         static dependencies: Record<string, typeof ZincElement>;
         constructor();
@@ -101,6 +80,7 @@ declare module "internal/zinc-element" {
         defaultValue?: unknown;
         defaultChecked?: boolean;
         form?: string;
+        storeKey?: string;
         pattern?: string;
         min?: number | string | Date;
         max?: number | string | Date;
@@ -142,11 +122,26 @@ declare module "internal/form-navigation" {
      */
     export function getFormNavigationController(form: HTMLFormElement): FormNavigationController;
 }
+declare module "internal/storage" {
+    export class Store {
+        storage: Storage;
+        prefix: string;
+        ttl: number;
+        constructor(storage: Storage, prefix: string, ttl?: number);
+        get(key: string): null | string;
+        stripTtl(value: string | null): null | string;
+        setWithTTL(key: string, value: string, ttl: number): void;
+        set(key: string, value: string): void;
+        remove(key: string): void;
+        cleanup(): void;
+    }
+}
 declare module "internal/form" {
     import type { ReactiveController, ReactiveControllerHost } from "lit";
     import type { ZincFormControl } from "internal/zinc-element";
     import type Button from "components/button/index";
     export const formCollections: WeakMap<HTMLFormElement, Set<ZincFormControl>>;
+    export function clearFormStoreValues(formOrStoreKey: HTMLFormElement | string): void;
     export interface FormControlControllerOptions {
         /** A function that returns the form containing the form control. */
         form: (input: ZincFormControl) => HTMLFormElement | null;
@@ -190,6 +185,10 @@ declare module "internal/form" {
         private enableSubmit;
         private handleFormReset;
         private handleInteraction;
+        private attachFormPersistence;
+        private detachFormPersistence;
+        private restorePersistedValue;
+        private persistHostValue;
         private checkFormValidity;
         private reportFormValidity;
         private setUserInteracted;
@@ -460,7 +459,7 @@ declare module "components/popup/popup.component" {
         /** Forces the popup to recalculate and reposition itself. */
         reposition(): void;
         private updateHoverBridge;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/popup/index" {
@@ -508,7 +507,7 @@ declare module "components/menu-item/submenu-controller" {
         private disableSubmenu;
         private updateSkidding;
         isExpanded(): boolean;
-        renderSubmenu(): import("lit").TemplateResult<1>;
+        renderSubmenu(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "utilities/sha256" {
@@ -557,7 +556,7 @@ declare module "components/icon/icon.component" {
         connectedCallback(): void;
         private applyHashFragment;
         private normalizeRavatarEmail;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private getAvatarInitials;
         protected getColorForAvatar(avatarInitials: string): string;
     }
@@ -647,7 +646,7 @@ declare module "components/menu-item/menu-item.component" {
         getTextLabel(): string;
         isSubmenu(): boolean;
         private _isLink;
-        render(): import("lit").TemplateResult;
+        render(): import("lit-html").TemplateResult;
     }
 }
 declare module "components/menu-item/index" {
@@ -787,7 +786,7 @@ declare module "components/dialog/dialog.component" {
         /** Hides the dialog. */
         hide(): void;
         private closeClickHandler;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/dialog/index" {
@@ -865,7 +864,7 @@ declare module "components/confirm/confirm.component" {
         updateTriggers(): void;
         show: (event?: Event | undefined) => void;
         hide(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         submitDialog(): void;
     }
 }
@@ -929,7 +928,7 @@ declare module "components/tooltip/tooltip.component" {
         handleDisabledChange(): void;
         show(): Promise<void>;
         hide(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/tooltip/index" {
@@ -991,7 +990,7 @@ declare module "components/menu/menu.component" {
          * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
          */
         setCurrentItem(item: ZnMenuItem): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private handleClick;
         private handleKeyDown;
         private handleMouseDown;
@@ -1084,7 +1083,7 @@ declare module "components/dropdown/dropdown.component" {
         /** Aria related method */
         private updateAccessibleTrigger;
         handleOpenChange(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/dropdown/index" {
@@ -1148,6 +1147,7 @@ declare module "components/button/button.component" {
         disabled: boolean;
         grow: boolean;
         square: boolean;
+        panelBackground: boolean;
         dropdownCloser: boolean;
         notification: number;
         mutedNotifications: boolean;
@@ -1223,12 +1223,9 @@ declare module "components/absolute-container/absolute-container.component" {
      *
      */
     export default class ZnAbsoluteContainer extends ZincElement {
-        private domObserver;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
+        constructor();
         protected firstUpdated(_changedProperties: PropertyValues): void;
         resize(): void;
-        observerDom(): void;
         createRenderRoot(): this;
     }
 }
@@ -1240,20 +1237,6 @@ declare module "components/absolute-container/index" {
         interface HTMLElementTagNameMap {
             'zn-absolute-container': ZnAbsoluteContainer;
         }
-    }
-}
-declare module "internal/storage" {
-    export class Store {
-        storage: Storage;
-        prefix: string;
-        ttl: number;
-        constructor(storage: Storage, prefix: string, ttl?: number);
-        get(key: string): null | string;
-        stripTtl(value: string | null): null | string;
-        setWithTTL(key: string, value: string, ttl: number): void;
-        set(key: string, value: string): void;
-        remove(key: string): void;
-        cleanup(): void;
     }
 }
 declare module "events/zn-input" {
@@ -1325,7 +1308,7 @@ declare module "components/toggle/toggle.component" {
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/toggle/index" {
@@ -1370,15 +1353,14 @@ declare module "components/collapsible/collapsible.component" {
         numberOfItems: number;
         protected _store: Store;
         private readonly hasSlotController;
-        private observer;
+        private readonly observer;
         private showArrow;
         connectedCallback(): Promise<void>;
         handleCaptionToggle: (e: ZnInputEvent) => void;
         protected updated(changedProperties: PropertyValues): void;
-        disconnectedCallback(): void;
         handleCollapse: (e: MouseEvent) => void;
         recalculateNumberOfItems: () => void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/collapsible/index" {
@@ -1418,7 +1400,7 @@ declare module "components/alert/alert.component" {
         collapse: boolean;
         level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic';
         size: 'small' | 'medium' | 'large';
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         hideAlert(): void;
     }
 }
@@ -1461,7 +1443,7 @@ declare module "components/button-group/button-group.component" {
         gap: boolean;
         defaultSlot: HTMLSlotElement;
         private handleSlotChange;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/button-group/index" {
@@ -1505,7 +1487,7 @@ declare module "components/chip/chip.component" {
         flushX: boolean;
         flushY: boolean;
         private readonly hasSlotController;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/chip/index" {
@@ -1534,7 +1516,7 @@ declare module "components/well/well.component" {
         icon: string;
         inline: boolean;
         private readonly hasSlotController;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/well/index" {
@@ -1587,7 +1569,7 @@ declare module "components/copy-button/copy-button.component" {
          * append a dot and the property name, e.g. `from="el.value"`.
          */
         from: string;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private showStatus;
         private handleCopy;
     }
@@ -1659,7 +1641,7 @@ declare module "components/data-table-filter/data-table-filter.component" {
         handleQBReset: () => void;
         handleQBUpdate: () => void;
         closeSlideout(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/data-table-filter/index" {
@@ -1884,7 +1866,7 @@ declare module "components/input/input.component" {
         reportValidity(): boolean;
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/input/index" {
@@ -1993,7 +1975,7 @@ declare module "components/option/option.component" {
         handleSelectedChange(): void;
         /** Returns a plain text label based on the option's content. */
         getTextLabel(): string;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/option/index" {
@@ -2103,7 +2085,7 @@ declare module "components/opt-group/opt-group.component" {
         handleDisabledChange(): void;
         /** @internal - Updates visibility of the group based on whether any child options are visible. */
         updateVisibility(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private handleSlotChange;
         private propagateDisabled;
     }
@@ -2570,7 +2552,7 @@ declare module "components/data-select/data-select.component" {
         distinct: string;
         conditional: string;
         protected readonly formControlController: FormControlController;
-        private selectObserver?;
+        private readonly selectObserver;
         get validationMessage(): string;
         get validity(): ValidityState;
         constructor();
@@ -2588,7 +2570,7 @@ declare module "components/data-select/data-select.component" {
         handleClear: () => void;
         getLocalProvider(name: string): LocalDataProvider<DataProviderOption>;
         blur: () => void;
-        protected render(): import("lit").TemplateResult<1>;
+        protected render(): import("lit-html").TemplateResult<1>;
         private _updatePrefix;
         private _updateIconEmptyState;
         private getPlaceholder;
@@ -2718,7 +2700,7 @@ declare module "components/query-builder/query-builder.component" {
         get validationMessage(): string;
         get validity(): ValidityState;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private _handleChange;
         private _addRule;
         private _createInput;
@@ -2809,7 +2791,7 @@ declare module "components/data-table-search/data-table-search.component" {
          * Emit the search change event with form data
          */
         private emitSearchChange;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/data-table-search/index" {
@@ -2850,7 +2832,7 @@ declare module "components/empty-state/empty-state.component" {
         type: 'error' | 'info' | 'primary' | '';
         padded: boolean;
         private readonly hasSlotController;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/empty-state/index" {
@@ -2913,7 +2895,7 @@ declare module "components/hover-container/hover-container.component" {
         handleDisabledChange(): void;
         show(): Promise<void>;
         hide(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/hover-container/index" {
@@ -2980,6 +2962,7 @@ declare module "components/style/style.component" {
         height: string;
         pad: string;
         margin: string;
+        gutter: boolean;
         autoMargin: string;
         connectedCallback(): void;
         createRenderRoot(): this;
@@ -3152,7 +3135,7 @@ declare module "components/data-table/data-table.component" {
         selectAllButton: ZnButton;
         private _initialLoad;
         private _lastTableContent;
-        private resizeObserver;
+        private readonly resizeObserver;
         private itemsPerPage;
         private page;
         private totalPages;
@@ -3255,7 +3238,7 @@ declare module "components/cols/cols.component" {
         divide: boolean;
         padX: boolean;
         padY: boolean;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/cols/index" {
@@ -3411,7 +3394,7 @@ declare module "components/tile/tile.component" {
         inline: boolean;
         private _isLink;
         private _handleActionsClick;
-        render(): import("lit").TemplateResult;
+        render(): import("lit-html").TemplateResult;
     }
 }
 declare module "components/tile/index" {
@@ -3449,7 +3432,7 @@ declare module "components/tile-property/tile-property.component" {
         caption: string;
         description: string;
         icon: string;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/tile-property/index" {
@@ -3527,8 +3510,8 @@ declare module "components/chart/chart.component" {
         smooth: boolean;
         scale: boolean | number;
         private chart?;
-        private resizeObserver?;
         private liveTimer?;
+        private readonly resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private getTheme;
         private getTextColor;
@@ -3569,10 +3552,10 @@ declare module "components/simple-chart/simple-chart.component" {
         labels?: string[];
         enableAnimations: boolean | number;
         private chart?;
-        private resizeObserver?;
+        private readonly resizeObserver;
         firstUpdated(): void;
         disconnectedCallback(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/simple-chart/index" {
@@ -3612,7 +3595,8 @@ declare module "components/navbar/navbar.component" {
      * @event zn-event-name - Emitted as an example.
      *
      * @slot - The default slot.
-     * @slot example - An example slot.
+     * @slot expand - Expanding action panels rendered alongside the navbar items.
+     * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
      *
      * @csspart base - The component's base wrapper.
      *
@@ -3644,27 +3628,42 @@ declare module "components/navbar/navbar.component" {
         private _appended;
         private _expanding;
         private _openedTabs;
-        private resizeObserver;
+        private readonly _itemsObserver;
         private _navItems;
         private _expandable;
         private _extendedMenu;
+        private readonly _cloneSources;
         private _navItemsGap;
         private _expandableMargin;
         private _totalItemWidth;
-        private _itemsObserver;
+        private _resizeFrame;
+        private _resizeController;
         protected _store: Store;
         appendItem(item: Element): void;
+        addExpandingAction(action: Element): void;
+        constructor();
+        private readonly _expandingActionObserver;
+        private _scheduleResize;
+        private _observeExpandingAction;
+        private _adoptNewLightItems;
         connectedCallback(): void;
-        disconnectedCallback(): void;
         private _updateVisibility;
+        itemCount(): number;
+        private _resolveAvailableWidth;
+        private _measureTotalItemWidth;
+        private _getItemWidth;
+        private _getHorizontalSpacing;
+        private _getMoreItemWidth;
+        private _getExpandableWidth;
         handleResize: () => void;
+        private _syncExtendedActive;
         addItem(item: Element, persist?: boolean): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _loadStoredTabs;
         private _saveTabToStorage;
         private handleClick;
         protected updated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/navbar/index" {
@@ -3711,6 +3710,7 @@ declare module "components/header/header.component" {
         fullWidth: boolean;
         previousPath: string;
         previousTarget: string;
+        hideBreadcrumb: boolean;
         private navbar;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -3718,7 +3718,7 @@ declare module "components/header/header.component" {
         handleAltPress: () => void;
         handleAltUp: () => void;
         updateNav(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/header/index" {
@@ -3728,6 +3728,282 @@ declare module "components/header/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-header': ZnHeader;
+        }
+    }
+}
+declare module "utilities/md5" {
+    export function md5(string: string): string;
+}
+declare module "components/expanding-action/expanding-action.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/expanding-action
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnExpandingAction extends ZincElement {
+        static styles: CSSResultGroup;
+        icon: string;
+        method: 'drop' | 'fill';
+        contextUri: string;
+        count: string;
+        color: string;
+        prefetch: boolean;
+        basis: string;
+        maxHeight: string;
+        open: boolean;
+        masterId: string;
+        fetchStyle: string;
+        noPrefetch: boolean;
+        private _panel;
+        private _panels;
+        private _knownUri;
+        private _actions;
+        private _preload;
+        private _metaObserved;
+        private readonly _countObserver;
+        private readonly _colorObserver;
+        constructor();
+        connectedCallback(): Promise<void>;
+        firstUpdated(_changedProperties: PropertyValues): void;
+        _observeMetaData(): void;
+        _registerActions(): void;
+        _addAction(action: HTMLElement): void;
+        _uriToId(actionUri: string): string;
+        _handleClick(event: PointerEvent): void;
+        _createUriPanel(actionEle: Element, actionUri: string, actionId: string): HTMLDivElement;
+        fetchUri(target: HTMLElement): void;
+        fetchContextHeaders(): Promise<void>;
+        clickAction(target: HTMLElement): void;
+        handleIconClicked: () => void;
+        handleIconCloseClicked: () => void;
+        render(): import("lit-html").TemplateResult<1>;
+        protected renderDropdown(): import("lit-html").TemplateResult<1>;
+        protected renderFill(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/expanding-action/index" {
+    import ZnExpandingAction from "components/expanding-action/expanding-action.component";
+    export * from "components/expanding-action/expanding-action.component";
+    export default ZnExpandingAction;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-expanding-action': ZnExpandingAction;
+        }
+    }
+}
+declare module "components/tab/tab.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Defines a tab panel for use inside zn-page.
+     * @documentation https://zinc.style/components/tab
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The tab panel content.
+     */
+    export default class ZnTab extends ZincElement {
+        static styles: CSSResultGroup;
+        caption: string;
+        priority: number;
+        uri: string;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/tab/index" {
+    import ZnTab from "components/tab/tab.component";
+    export * from "components/tab/tab.component";
+    export default ZnTab;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-tab': ZnTab;
+        }
+    }
+}
+declare module "components/tabs/tabs.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { Store } from "internal/storage";
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/tabs
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnTabs extends ZincElement {
+        static styles: CSSResultGroup;
+        masterId: string;
+        defaultUri: string;
+        _current: string;
+        _split: number;
+        _splitMin: number;
+        _splitMinSecondary: number;
+        _splitMax: number;
+        primaryCaption: string;
+        secondaryCaption: string;
+        noPrefetch: boolean;
+        noCache: boolean;
+        localStorage: boolean;
+        storeKey: string;
+        storeTtl: number;
+        padded: boolean;
+        fetchStyle: string;
+        fullWidth: boolean;
+        paddedRight: boolean;
+        monitor: string;
+        caption: string;
+        description: string;
+        protected preload: boolean;
+        protected _store: Store;
+        protected _activeClicks: number;
+        private _panel;
+        private _panels;
+        private _activeTab;
+        private _tabs;
+        private _actions;
+        private _knownUri;
+        private readonly hasSlotController;
+        private readonly _domObserver;
+        private readonly _monitorObserver;
+        constructor();
+        connectedCallback(): Promise<void>;
+        monitorDom(): void;
+        _addPanel(panel: HTMLElement): void;
+        _addTab(tab: HTMLElement): void;
+        reRegisterTabs: () => void;
+        firstUpdated(_changedProperties: PropertyValues): void;
+        switchTab(inc: number): void;
+        nextTab(): void;
+        previousTab(): void;
+        _prepareTab(tabId: string): void;
+        _uriToId(tabUri: string): string;
+        _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;
+        _handleClick(event: PointerEvent): void;
+        fetchUriTab(target: HTMLElement): void;
+        clickTab(target: HTMLElement, refresh: boolean): void;
+        getRefTab(target: HTMLElement): string | null;
+        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
+        _setTabEleActive(ele: Element, active: boolean): void;
+        selectTab(tabName: string, refresh: boolean): boolean;
+        getActiveTab(): Element[];
+        observerDom(): void;
+        removeTabAndPanel(tabId: string): void;
+        _registerTabs: () => void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/tabs/index" {
+    import ZnTabs from "components/tabs/tabs.component";
+    export * from "components/tabs/tabs.component";
+    export default ZnTabs;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-tabs': ZnTabs;
+        }
+    }
+}
+declare module "components/page/page.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZnButton from "components/button/index";
+    import ZnCopyButton from "components/copy-button/index";
+    import ZnExpandingAction from "components/expanding-action/index";
+    import ZnIcon from "components/icon/index";
+    import ZnNavbar from "components/navbar/index";
+    import ZnTab from "components/tab/index";
+    import ZnTabs from "components/tabs/index";
+    /**
+     * @summary Combines a page header with tab navigation and tab panels.
+     * @documentation https://zinc.style/components/page
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+     * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
+     */
+    export default class ZnPage extends ZnTabs {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-copy-button': typeof ZnCopyButton;
+            'zn-expanding-action': typeof ZnExpandingAction;
+            'zn-icon': typeof ZnIcon;
+            'zn-navbar': typeof ZnNavbar;
+            'zn-tab': typeof ZnTab;
+        };
+        private readonly pageSlotController;
+        caption: string;
+        entityId: string;
+        entityIdShow: boolean;
+        fullLocation: string;
+        modal: boolean;
+        nested: boolean;
+        primary: boolean;
+        previousPath: string;
+        previousTarget: string;
+        summary: string;
+        private scrolled;
+        private tabDefinitions;
+        private hasExpandingActions;
+        private actionObserver;
+        private tabObserver;
+        connectedCallback(): Promise<void>;
+        disconnectedCallback(): void;
+        private handleAltPress;
+        private handleAltUp;
+        _registerTabs: () => void;
+        firstUpdated(changedProperties: PropertyValues): void;
+        private getOwnExpandingActions;
+        private getNavbar;
+        private refreshExpandingActionsState;
+        private syncExpandingActionsToNavbar;
+        private prepareTabs;
+        private parsePriority;
+        private compareTabs;
+        private captionToId;
+        private uniqueId;
+        private handlePageScroll;
+        updated(changedProperties: PropertyValues): void;
+        private handleNavigationSelect;
+        private activateTab;
+        private activateInitialPageTab;
+        private registerPagePanels;
+        private registerPageNavigationTabs;
+        private syncNavigationActive;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/page/index" {
+    import ZnPage from "components/page/page.component";
+    export * from "components/page/page.component";
+    export default ZnPage;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-page': ZnPage;
         }
     }
 }
@@ -3810,7 +4086,7 @@ declare module "components/icon-picker/icon-picker.component" {
         private handleClear;
         private _handleTriggerClick;
         private _handleTriggerKeyDown;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/icon-picker/index" {
@@ -3932,7 +4208,7 @@ declare module "components/inline-edit/inline-edit.component" {
         handleInput: (e: Event) => void;
         private moveSlottedOptionsToSelect;
         handleSlotChange: () => Promise<void>;
-        protected render(): import("lit").TemplateResult<1>;
+        protected render(): import("lit-html").TemplateResult<1>;
         protected _getTextAreaInput(): HTMLTemplateResult;
         protected _getTextInput(): HTMLTemplateResult;
         protected _getNumberInput(): HTMLTemplateResult;
@@ -3967,7 +4243,7 @@ declare module "components/pagination/pagination.component" {
         uri: string;
         protected _createLink(page: number): string;
         protected _calculatePages(): number;
-        protected render(): import("lit").TemplateResult<1>;
+        protected render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/pagination/index" {
@@ -4012,7 +4288,7 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
         active: boolean;
         description: string;
         caption: string;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/vertical-stepper/index" {
@@ -4051,7 +4327,7 @@ declare module "components/timer/timer.component" {
         private _timerId;
         disconnectedCallback(): void;
         private _getLastMessage;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private _getTimes;
     }
 }
@@ -4062,99 +4338,6 @@ declare module "components/timer/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-timer': ZnTimer;
-        }
-    }
-}
-declare module "utilities/md5" {
-    export function md5(string: string): string;
-}
-declare module "components/tabs/tabs.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import { Store } from "internal/storage";
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/tabs
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnTabs extends ZincElement {
-        static styles: CSSResultGroup;
-        masterId: string;
-        defaultUri: string;
-        _current: string;
-        _split: number;
-        _splitMin: number;
-        _splitMax: number;
-        primaryCaption: string;
-        secondaryCaption: string;
-        noPrefetch: boolean;
-        noCache: boolean;
-        localStorage: boolean;
-        storeKey: string;
-        storeTtl: number;
-        padded: boolean;
-        fetchStyle: string;
-        fullWidth: boolean;
-        paddedRight: boolean;
-        monitor: string;
-        caption: string;
-        description: string;
-        protected preload: boolean;
-        protected _store: Store;
-        protected _activeClicks: number;
-        private _panel;
-        private _panels;
-        private _activeTab;
-        private _tabs;
-        private _actions;
-        private _knownUri;
-        private readonly hasSlotController;
-        constructor();
-        connectedCallback(): Promise<void>;
-        monitorDom(): void;
-        _addPanel(panel: HTMLElement): void;
-        _addTab(tab: HTMLElement): void;
-        reRegisterTabs: () => void;
-        firstUpdated(_changedProperties: PropertyValues): void;
-        switchTab(inc: number): void;
-        nextTab(): void;
-        previousTab(): void;
-        _prepareTab(tabId: string): void;
-        _uriToId(tabUri: string): string;
-        _createUriPanel(tabEle: Element, tabUri: string, tabId: string): HTMLDivElement;
-        _handleClick(event: PointerEvent): void;
-        fetchUriTab(target: HTMLElement): void;
-        clickTab(target: HTMLElement, refresh: boolean): void;
-        getRefTab(target: HTMLElement): string | null;
-        setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
-        _setTabEleActive(ele: Element, active: boolean): void;
-        selectTab(tabName: string, refresh: boolean): boolean;
-        getActiveTab(): Element[];
-        observerDom(): void;
-        removeTabAndPanel(tabId: string): void;
-        _registerTabs: () => void;
-        render(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/tabs/index" {
-    import ZnTabs from "components/tabs/tabs.component";
-    export * from "components/tabs/tabs.component";
-    export default ZnTabs;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-tabs': ZnTabs;
         }
     }
 }
@@ -4238,14 +4421,15 @@ declare module "components/table/table.component" {
         private columnDisplay;
         private wideColumn;
         private rows;
+        private readonly resizeObserver;
         resizing(): void;
         connectedCallback(): void;
         _handleMenu(e: any): void;
         menuClick(e: any): void;
-        tableHead(): import("lit").TemplateResult<1> | undefined;
-        tableBody(): import("lit").TemplateResult<1>;
+        tableHead(): import("lit-html").TemplateResult<1> | undefined;
+        tableBody(): import("lit-html").TemplateResult<1>;
         columnContent(col: any): any;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/table/index" {
@@ -4281,9 +4465,9 @@ declare module "components/pane/pane.component" {
     export default class ZnPane extends ZincElement {
         static styles: CSSResultGroup;
         flush: boolean;
-        protected _header: HTMLElement;
+        protected _header: HTMLElement | null;
         connectedCallback(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/pane/index" {
@@ -4310,6 +4494,7 @@ declare module "components/split-pane/split-pane.component" {
     import { type CSSResultGroup } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
+    import { PropertyValues } from "@lit/reactive-element";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/split-pane
@@ -4335,10 +4520,14 @@ declare module "components/split-pane/split-pane.component" {
         private currentPixelSize;
         private currentPercentSize;
         private currentContainerSize;
+        private focusChangeHandler;
         private primaryFull;
+        private resizeObserver;
+        private parentIsNarrow;
         calculatePixels: boolean;
         preferSecondarySize: boolean;
         minimumPaneSize: number;
+        minimumSecondaryPaneSize: number;
         maximumPaneSize: number;
         initialSize: number;
         storeKey: string;
@@ -4349,16 +4538,26 @@ declare module "components/split-pane/split-pane.component" {
         _focusPane: number;
         padded: boolean;
         paddedRight: boolean;
+        gap: boolean;
+        hide: 'primary' | 'secondary' | '';
+        mergedNavigation: boolean;
         localStorage: boolean;
         storeTtl: number;
         protected _store: Store;
         connectedCallback(): void;
-        firstUpdated(changedProperties: any): void;
+        disconnectedCallback(): void;
+        private refreshNarrowState;
+        firstUpdated(changedProperties: PropertyValues): void;
         applyStoredSize(): void;
         resize(e: any): void;
         setSize(primaryPanelPixels: number): void;
-        _togglePane(e: any): void;
         _setFocusPane(idx: number): void;
+        private getDirectNestedSplitPanes;
+        private updateNestedNavigationMerging;
+        private getPaneIndexForNestedSplitPane;
+        private getNestedNavigationItems;
+        private getDirectNestedSplitPanesForPane;
+        private getNavigationItems;
         protected render(): unknown;
     }
 }
@@ -4398,12 +4597,12 @@ declare module "components/sidebar/sidebar.component" {
         open: boolean;
         startScrolled: boolean;
         wide: boolean;
+        private domObserver;
         constructor();
         connectedCallback(): void;
-        observerDom(): void;
         scrollBottom(): void;
-        render(): import("lit").TemplateResult<1>;
-        _expander(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
+        _expander(): import("lit-html").TemplateResult<1>;
         handleClick(e: any): void;
     }
 }
@@ -4515,7 +4714,7 @@ declare module "components/stepper/stepper.component" {
         steps: number;
         value: number;
         showProgress: boolean;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/stepper/index" {
@@ -4561,8 +4760,8 @@ declare module "components/stat/stat.component" {
         calcPercentageDifference(): number;
         getCurrentAmount(): string;
         private getDisplayAmount;
-        diffText(): import("lit").TemplateResult<1> | null;
-        render(): import("lit").TemplateResult<1>;
+        diffText(): import("lit-html").TemplateResult<1> | null;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/stat/index" {
@@ -4602,10 +4801,10 @@ declare module "components/scroll-container/scroll-container.component" {
         private footer;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         scrollEnd(): void;
-        private _footerResizeObserver?;
+        private readonly _footerResizeObserver;
+        private readonly _domObserver;
         connectedCallback(): void;
-        disconnectedCallback(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/scroll-container/index" {
@@ -4669,6 +4868,7 @@ declare module "components/progress-tile/index" {
 declare module "components/progress-bar/progress-bar.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    export type ProgressBarColor = 'current' | 'info' | 'error' | 'success' | 'warning';
     /**
      * @summary Progress bars provide visual feedback about the completion status of a task or process.
      * @documentation https://zinc.style/components/progress-bar
@@ -4685,7 +4885,7 @@ declare module "components/progress-bar/progress-bar.component" {
      * @csspart info - The description text element.
      *
      * @cssproperty --zn-border-color - The color of the progress bar background track.
-     * @cssproperty --zn-primary - The color of the progress bar fill.
+     * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.
      * @cssproperty --zn-text-heading - The color of the caption text.
      * @cssproperty --zn-text - The color of the progress percentage and description text.
      * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.
@@ -4693,10 +4893,11 @@ declare module "components/progress-bar/progress-bar.component" {
     export default class ZnProgressBar extends ZincElement {
         static styles: CSSResultGroup;
         caption: string | undefined;
+        color: ProgressBarColor;
         description: string | undefined;
         value: number | undefined;
         showProgress: boolean | undefined;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/progress-bar/index" {
@@ -4755,15 +4956,15 @@ declare module "components/order-table/order-table.component" {
         connectedCallback(): void;
         disconnectedCallback(): void;
         resizeEventHandler: () => void;
-        render(): import("lit").TemplateResult<1>;
-        getHeaders(): import("lit").TemplateResult<1>;
-        getRows(): import("lit").TemplateResult<1>;
-        getCaption(item: any): import("lit").TemplateResult<1>;
-        getSubItems(item: any): import("lit").TemplateResult<1>;
-        getSummary(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
+        getHeaders(): import("lit-html").TemplateResult<1>;
+        getRows(): import("lit-html").TemplateResult<1>;
+        getCaption(item: any): import("lit-html").TemplateResult<1>;
+        getSubItems(item: any): import("lit-html").TemplateResult<1>;
+        getSummary(): import("lit-html").TemplateResult<1>;
         private getMobileRows;
-        getMobileSubItems(item: any): import("lit").TemplateResult<1>;
-        getMobileCaption(item: any, extra: any): import("lit").TemplateResult<1>;
+        getMobileSubItems(item: any): import("lit-html").TemplateResult<1>;
+        getMobileCaption(item: any, extra: any): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/order-table/index" {
@@ -4836,7 +5037,7 @@ declare module "components/bulk-actions/bulk-actions.component" {
         get validationMessage(): string;
         get validity(): ValidityState;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private _handleChange;
         private _addRule;
         private _createInput;
@@ -4870,7 +5071,7 @@ declare module "components/editor/modules/toolbar/tool/tool.component" {
         key: string;
         icon: string;
         handler: string;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/toolbar/tool/index" {
@@ -4895,8 +5096,8 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _overflowMenu;
         private _overflowGroup;
         private _featureConfig;
-        private _resizeObserver;
         private _resizeId;
+        private readonly _resizeObserver;
         private _movedContent;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -4913,7 +5114,7 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private calculateOverflow;
         private _dispatchOverflowEvent;
         private populateOverflowMenu;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private _textOptions;
         private _formatOptions;
         private _commonFormatOptions;
@@ -4945,7 +5146,7 @@ declare module "components/editor/modules/dialog/dialog.component" {
         private removeOpenListeners;
         private requestClose;
         private _getLoadingState;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/emoji/emoji" {
@@ -5061,7 +5262,7 @@ declare module "components/editor/modules/context-menu/context-menu-component" {
         getActiveIndex(): number;
         private _onClickItem;
         protected willUpdate(changed: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/context-menu/quick-action/quick-action.component" {
@@ -5073,7 +5274,7 @@ declare module "components/editor/modules/context-menu/quick-action/quick-action
         key: string;
         icon: string;
         order?: number | null;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/context-menu/quick-action/index" {
@@ -5187,7 +5388,7 @@ declare module "components/editor/modules/emoji/headless/headless-emoji.componen
         private onMouseEnterItem;
         private onClickItem;
         protected willUpdate(changed: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/emoji/headless/headless-emoji" {
@@ -5250,7 +5451,7 @@ declare module "components/editor/modules/ai/panel/ai-panel.component" {
         show(): void;
         hide(): void;
         private handleTriggerKeyDown;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/modules/ai/tooltip/ai-tooltip.component" {
@@ -5261,7 +5462,7 @@ declare module "components/editor/modules/ai/tooltip/ai-tooltip.component" {
         open: boolean;
         show(): void;
         hide(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/textarea/textarea.component" {
@@ -5295,7 +5496,7 @@ declare module "components/textarea/textarea.component" {
         static styles: CSSResultGroup;
         private readonly formControlController;
         private readonly hasSlotController;
-        private resizeObserver;
+        private readonly resizeObserver;
         /** Ensures we only attempt to derive the initial value from light DOM content once */
         private _didInitFromContent;
         formControl: HTMLElement;
@@ -5368,7 +5569,6 @@ declare module "components/textarea/textarea.component" {
         get validationMessage(): string;
         connectedCallback(): void;
         firstUpdated(): void;
-        disconnectedCallback(): void;
         private handleBlur;
         private handleChange;
         private handleFocus;
@@ -5405,7 +5605,7 @@ declare module "components/textarea/textarea.component" {
         reportValidity(): boolean;
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/textarea/index" {
@@ -5539,7 +5739,7 @@ declare module "components/editor/editor.component" {
         private _closePopups;
         private _closeAiPanel;
         private _closeDialog;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/editor/index" {
@@ -5677,7 +5877,7 @@ declare module "components/checkbox/checkbox.component" {
          * the custom validation message, call this method with an empty string.
          */
         setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/checkbox/index" {
@@ -5845,7 +6045,7 @@ declare module "components/datepicker/datepicker.component" {
         private normalizeDate;
         private autoFormatDate;
         protected updated(_changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/datepicker/index" {
@@ -5885,7 +6085,8 @@ declare module "components/form-group/form-group.component" {
         labelTooltip: string;
         /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
         helpText: string;
-        render(): import("lit").TemplateResult<1>;
+        forceCols: boolean;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/form-group/index" {
@@ -5924,7 +6125,7 @@ declare module "components/input-group/input-group.component" {
         /** Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`. */
         gap: 'sm' | 'md' | 'lg';
         private handleSlotChange;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/input-group/index" {
@@ -5991,7 +6192,7 @@ declare module "components/linked-select/linked-select.component" {
         handleLinkedSelectChange: () => void;
         handleChange(e: Event): void;
         handleSelectChange: (e: ZnSelectEvent) => void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/linked-select/index" {
@@ -6103,7 +6304,7 @@ declare module "components/radio/radio.component" {
          * the custom validation message, call this method with an empty string.
          */
         setCustomValidity(message: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/radio/index" {
@@ -6176,7 +6377,7 @@ declare module "components/rating/rating.component" {
         private _handleTouchStart;
         private _handleTouchMove;
         private _handleTouchEnd;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/rating/index" {
@@ -6272,7 +6473,7 @@ declare module "components/radio-group/radio-group.component" {
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message?: string): void;
         focus(options?: FocusOptions): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/radio-group/index" {
@@ -6484,7 +6685,7 @@ declare module "components/file/file.component" {
         private renderFileValueWithDelete;
         private renderDroparea;
         private renderButton;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/file/index" {
@@ -6582,7 +6783,7 @@ declare module "components/checkbox-group/checkbox-group.component" {
         reportValidity(): boolean;
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(message?: string): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/checkbox-group/index" {
@@ -6633,13 +6834,14 @@ declare module "components/item/item.component" {
         inline: boolean;
         grid: boolean;
         noPadding: boolean;
+        flush: boolean;
         alignEnd: boolean;
         alignCenter: boolean;
         connectedCallback(): void;
         protected updated(_changedProperties: PropertyValues): void;
         protected _hasContent(): boolean;
         protected _hasRequiredSlot(): boolean;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/item/index" {
@@ -6681,15 +6883,15 @@ declare module "components/button-menu/button-menu.component" {
         noPadding: boolean;
         private _buttons;
         private _originalButtons;
-        private resizeObserver;
+        private _resizeRafId;
+        private readonly resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
         watchContainerMaxWidth(): void;
         connectedCallback(): void;
-        disconnectedCallback(): void;
-        handleResize: () => void;
         calculateVisibleButtons(): void;
         calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]): void;
-        render(): import("lit").TemplateResult<1>;
+        private getButtonLabel;
+        render(): import("lit-html").TemplateResult<1>;
         addButton(button: ZnButton): void;
         setDynamicButtons(btns: NodeListOf<ZnButton>): void;
         removeButton(id: string): void;
@@ -6774,7 +6976,7 @@ declare module "components/slideout/slideout.component" {
         /** Hides the slideout. */
         hide(): Promise<void>;
         private closeClickHandler;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/slideout/index" {
@@ -6809,7 +7011,7 @@ declare module "components/data-table-sort/data-table-sort.component" {
      */
     export default class ZnDataTableSort extends ZincElement {
         static styles: CSSResultGroup;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/data-table-sort/index" {
@@ -6845,7 +7047,7 @@ declare module "components/action-bar/action-bar.component" {
     export default class ZnActionBar extends ZincElement {
         static styles: CSSResultGroup;
         private readonly localize;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/action-bar/index" {
@@ -6855,77 +7057,6 @@ declare module "components/action-bar/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-action-bar': ZnActionBar;
-        }
-    }
-}
-declare module "components/expanding-action/expanding-action.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/expanding-action
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnExpandingAction extends ZincElement {
-        static styles: CSSResultGroup;
-        icon: string;
-        method: 'drop' | 'fill';
-        contextUri: string;
-        count: string;
-        color: string;
-        prefetch: boolean;
-        basis: string;
-        maxHeight: string;
-        open: boolean;
-        masterId: string;
-        fetchStyle: string;
-        noPrefetch: boolean;
-        private _panel;
-        private _panels;
-        private _knownUri;
-        private _actions;
-        private _preload;
-        private _countObserver?;
-        private _colorObserver?;
-        constructor();
-        connectedCallback(): Promise<void>;
-        disconnectedCallback(): void;
-        firstUpdated(_changedProperties: PropertyValues): void;
-        _observeMetaData(): void;
-        _registerActions(): void;
-        _addAction(action: HTMLElement): void;
-        _uriToId(actionUri: string): string;
-        _handleClick(event: PointerEvent): void;
-        _createUriPanel(actionEle: Element, actionUri: string, actionId: string): HTMLDivElement;
-        fetchUri(target: HTMLElement): void;
-        fetchContextHeaders(): Promise<void>;
-        clickAction(target: HTMLElement): void;
-        handleIconClicked: () => void;
-        handleIconCloseClicked: () => void;
-        render(): import("lit").TemplateResult<1>;
-        protected renderDropdown(): import("lit").TemplateResult<1>;
-        protected renderFill(): import("lit").TemplateResult<1>;
-    }
-}
-declare module "components/expanding-action/index" {
-    import ZnExpandingAction from "components/expanding-action/expanding-action.component";
-    export * from "components/expanding-action/expanding-action.component";
-    export default ZnExpandingAction;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-expanding-action': ZnExpandingAction;
         }
     }
 }
@@ -6968,7 +7099,7 @@ declare module "components/page-nav/page-nav.component" {
         toggleNavigation(): void;
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         clickTab(target: HTMLElement, refresh: boolean, close?: boolean): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/page-nav/index" {
@@ -6993,7 +7124,7 @@ declare module "components/status-indicator/status-indicator.component" {
     export default class ZnStatusIndicator extends ZincElement {
         static styles: CSSResultGroup;
         type: 'success' | 'error' | 'warning' | 'info';
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/status-indicator/index" {
@@ -7045,7 +7176,7 @@ declare module "components/split-button/split-button.component" {
         disconnectedCallback(): void;
         handleMenuItemClick(e: ZnMenuSelectEvent): void;
         handleTriggerClick(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private renderTriggerSlot;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
@@ -7092,7 +7223,7 @@ declare module "components/content-block/content-block.component" {
         iframe: Promise<HTMLIFrameElement>;
         private readonly hasSlotController;
         private _textRows;
-        private _footerObserver?;
+        private readonly _footerObserver;
         private _replaceDebounce;
         connectedCallback(): void;
         disconnectedCallback(): void;
@@ -7101,7 +7232,7 @@ declare module "components/content-block/content-block.component" {
         private _toggleHtml;
         private _resizeIframe;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected render(): import("lit").TemplateResult<1>;
+        protected render(): import("lit-html").TemplateResult<1>;
         protected truncateText(): string;
         private _handleSlotChange;
         private _debouncedReplace;
@@ -7147,7 +7278,7 @@ declare module "components/filter-wrapper/filter-wrapper.component" {
         handleSubmit: (event: Event) => void;
         connectedCallback(): void;
         private renderDefaultButton;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/filter-wrapper/index" {
@@ -7193,12 +7324,11 @@ declare module "components/settings-container/settings-container.component" {
         position: 'top-end' | 'top-start' | 'bottom-end' | 'bottom-start';
         storeKey: string;
         noScroll: boolean;
-        private _mutationObserver;
+        private readonly _mutationObserver;
         private _updateFiltersScheduled;
         private _store;
         private _hiddenElements;
         connectedCallback(): void;
-        disconnectedCallback(): void;
         private scheduleUpdateFilters;
         private handleContentSlotChange;
         private handleFiltersSlotChange;
@@ -7206,7 +7336,7 @@ declare module "components/settings-container/settings-container.component" {
         private updateSingleFilter;
         updateFilters(): void;
         updateFilter(e: ZnChangeEvent): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
         private getDropdownContent;
     }
 }
@@ -7244,7 +7374,7 @@ declare module "components/filter-container/filter-container.component" {
         static styles: CSSResultGroup;
         attr: string;
         handleSearchChange(event: Event): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/filter-container/index" {
@@ -7295,7 +7425,7 @@ declare module "components/reveal/reveal.component" {
         protected handleToggleReveal(): void;
         protected handleMouseEnter(): void;
         protected handleMouseLeave(): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/reveal/index" {
@@ -7344,7 +7474,7 @@ declare module "components/audio-select/audio-select.component" {
         stopAudio(): void;
         handleSelectChange(e: ZnChangeEvent): void;
         togglePreview(e: CustomEvent): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/audio-select/index" {
@@ -7393,9 +7523,9 @@ declare module "components/translations/translations.component" {
         values: Record<string, string>;
         private _activeLanguage;
         private _overflowIndex;
-        private _resizeObserver?;
         private _lastObservedWidth;
         private _measureRafId;
+        constructor();
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -7410,7 +7540,6 @@ declare module "components/translations/translations.component" {
         addLanguageKey(languageCode: string): void;
         /** Returns all language codes that have values. */
         getValueLanguages(): string[];
-        connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(): void;
         protected updated(changedProperties: PropertyValues): void;
@@ -7425,7 +7554,7 @@ declare module "components/translations/translations.component" {
         private handleKeyDown;
         private handleSubmit;
         private isRTLLanguage;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/translations/index" {
@@ -7453,7 +7582,7 @@ declare module "components/key/key.component" {
         active: boolean;
         iconSize: number;
         private _handleClick;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/key/index" {
@@ -7497,7 +7626,7 @@ declare module "components/key-container/key-container.component" {
         private getKeys;
         private updateFilters;
         private itemMatchesKey;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/key-container/index" {
@@ -7557,7 +7686,7 @@ declare module "components/animated-button/animated-button.component" {
         private scheduleRedirect;
         private scheduleReset;
         private handleClick;
-        protected render(): import("lit").TemplateResult<1>;
+        protected render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/animated-button/index" {
@@ -7611,10 +7740,9 @@ declare module "components/translation-group/translation-group.component" {
         /** Tracks all language codes that have been activated across children. */
         private _activatedLanguages;
         private _overflowIndex;
-        private _resizeObserver?;
         private _lastObservedWidth;
         private _measureRafId;
-        connectedCallback(): void;
+        constructor();
         disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
@@ -7628,7 +7756,7 @@ declare module "components/translation-group/translation-group.component" {
         private switchLanguage;
         private handleLanguageAdd;
         private handleOverflowSelect;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/translation-group/index" {
@@ -7793,7 +7921,7 @@ declare module "components/priority-list/priority-list.component" {
         /** Sets a custom validation message. Pass an empty string to restore validity. */
         setCustomValidity(_message?: string): void;
         protected updated(changedProperties: PropertyValues): void;
-        render(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
     }
 }
 declare module "components/priority-list/index" {
@@ -7892,8 +8020,8 @@ declare module "components/markdown-editor/markdown-editor.component" {
         handleViewModeChange(): Promise<void>;
         handleValueChange(): Promise<void>;
         handleMarkedReady(): void;
-        render(): import("lit").TemplateResult<1>;
-        markdownHelperBtn(): import("lit").TemplateResult<1>;
+        render(): import("lit-html").TemplateResult<1>;
+        markdownHelperBtn(): import("lit-html").TemplateResult<1>;
         private renderViewButton;
     }
 }
@@ -7906,6 +8034,9 @@ declare module "components/markdown-editor/index" {
             'zn-markdown-editor': ZnMarkdownEditor;
         }
     }
+}
+declare module "utilities/form" {
+    export { clearFormStoreValues } from "internal/form";
 }
 declare module "events/zn-after-hide" {
     export type ZnAfterHideEvent = CustomEvent<Record<PropertyKey, never>>;
@@ -8037,6 +8168,8 @@ declare module "zinc" {
     export { default as SimpleChart } from "components/simple-chart/index";
     export { default as Header } from "components/header/index";
     export { default as Navbar } from "components/navbar/index";
+    export { default as Page } from "components/page/index";
+    export { default as Tab } from "components/tab/index";
     export { default as IconPicker } from "components/icon-picker/index";
     export { default as InlineEdit } from "components/inline-edit/index";
     export { default as Pagination } from "components/pagination/index";
@@ -8109,6 +8242,7 @@ declare module "zinc" {
     export * from "utilities/on";
     export * from "utilities/query";
     export * from "utilities/lit-to-html";
+    export * from "utilities/form";
     export * from "events/events";
 }
 declare module "components/editor/modules/events/zn-command-select" {

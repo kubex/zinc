@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -56,6 +45,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -180,6 +180,7 @@
         { "name": "disabled", "values": [] },
         { "name": "grow", "values": [] },
         { "name": "square", "values": [] },
+        { "name": "panel-bg", "values": [] },
         { "name": "dropdown-closer", "values": [] },
         { "name": "notification", "values": [] },
         { "name": "muted-notifications", "values": [] },
@@ -1417,7 +1418,8 @@
           "name": "help-text",
           "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
           "values": []
-        }
+        },
+        { "name": "cols", "values": [] }
       ],
       "references": [
         {
@@ -1440,7 +1442,8 @@
         { "name": "navigation", "values": [{ "name": "array" }] },
         { "name": "full-width", "values": [] },
         { "name": "previous-path", "values": [] },
-        { "name": "previous-target", "values": [] }
+        { "name": "previous-target", "values": [] },
+        { "name": "hide-breadcrumb", "values": [] }
       ],
       "references": [
         {
@@ -1893,6 +1896,7 @@
         { "name": "inline", "values": [] },
         { "name": "grid", "values": [] },
         { "name": "no-padding", "values": [] },
+        { "name": "flush", "values": [] },
         { "name": "align-end", "values": [] },
         { "name": "align-center", "values": [] }
       ],
@@ -2149,7 +2153,7 @@
     },
     {
       "name": "zn-navbar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "navigation", "values": [{ "name": "array" }] },
         { "name": "full-width", "values": [] },
@@ -2248,6 +2252,45 @@
       ]
     },
     {
+      "name": "zn-page",
+      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "entity-id", "values": [] },
+        { "name": "entity-id-show", "values": [] },
+        { "name": "full-location", "values": [] },
+        { "name": "modal", "values": [] },
+        { "name": "nested", "values": [] },
+        { "name": "primary", "values": [] },
+        { "name": "previous-path", "values": [] },
+        { "name": "previous-target", "values": [] },
+        { "name": "summary", "values": [] },
+        { "name": "master-id", "values": [] },
+        { "name": "default-uri", "values": [] },
+        { "name": "active", "values": [] },
+        { "name": "split", "values": [] },
+        { "name": "split-min", "values": [] },
+        { "name": "split-min-secondary", "values": [] },
+        { "name": "split-max", "values": [] },
+        { "name": "primary-caption", "values": [] },
+        { "name": "secondary-caption", "values": [] },
+        { "name": "no-prefetch", "values": [] },
+        { "name": "no-cache", "values": [] },
+        { "name": "local-storage", "values": [] },
+        { "name": "store-key", "values": [] },
+        { "name": "store-ttl", "values": [] },
+        { "name": "padded", "values": [] },
+        { "name": "fetch-style", "values": [] },
+        { "name": "full-width", "values": [] },
+        { "name": "padded-right", "values": [] },
+        { "name": "monitor", "values": [] },
+        { "name": "description", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/page" }
+      ]
+    },
+    {
       "name": "zn-page-nav",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2257,6 +2300,7 @@
         { "name": "active", "values": [] },
         { "name": "split", "values": [] },
         { "name": "split-min", "values": [] },
+        { "name": "split-min-secondary", "values": [] },
         { "name": "split-max", "values": [] },
         { "name": "primary-caption", "values": [] },
         { "name": "secondary-caption", "values": [] },
@@ -2556,9 +2600,10 @@
     },
     {
       "name": "zn-progress-bar",
-      "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-primary** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
+      "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
       "attributes": [
         { "name": "caption", "values": [] },
+        { "name": "color", "values": [{ "name": "ProgressBarColor" }] },
         { "name": "description", "values": [] },
         { "name": "value", "values": [] },
         { "name": "show-progress", "values": [] }
@@ -3149,11 +3194,12 @@
     },
     {
       "name": "zn-split-pane",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-split-pane-focus-change**\n- **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "pixels", "values": [] },
         { "name": "secondary", "values": [] },
         { "name": "min-size", "values": [] },
+        { "name": "min-secondary-size", "values": [] },
         { "name": "max-size", "values": [] },
         { "name": "initial-size", "values": [] },
         { "name": "store-key", "values": [] },
@@ -3164,6 +3210,16 @@
         { "name": "focus-pane", "values": [] },
         { "name": "padded", "values": [] },
         { "name": "padded-right", "values": [] },
+        { "name": "gap", "values": [] },
+        {
+          "name": "hide",
+          "values": [
+            { "name": "primary" },
+            { "name": "secondary" },
+            { "name": "''" }
+          ]
+        },
+        { "name": "merged-navigation", "values": [] },
         { "name": "local-storage", "values": [] },
         { "name": "store-ttl", "values": [] }
       ],
@@ -3274,6 +3330,7 @@
         { "name": "height", "values": [] },
         { "name": "pad", "values": [] },
         { "name": "margin", "values": [] },
+        { "name": "gutter", "values": [] },
         { "name": "a-margin", "values": [] }
       ],
       "references": [
@@ -3284,21 +3341,15 @@
       ]
     },
     {
-      "name": "zn-table",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "name": "zn-tab",
+      "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
       "attributes": [
-        { "name": "fixed-first", "values": [] },
-        { "name": "has-actions", "values": [] },
-        { "name": "headless", "values": [] },
-        { "name": "left-align", "values": [] },
-        { "name": "data", "values": [] },
-        { "name": "bool-icons", "values": [] }
+        { "name": "caption", "values": [] },
+        { "name": "priority", "values": [] },
+        { "name": "uri", "values": [] }
       ],
       "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/table"
-        }
+        { "name": "Documentation", "url": "https://zinc.style/components/tab" }
       ]
     },
     {
@@ -3310,6 +3361,7 @@
         { "name": "active", "values": [] },
         { "name": "split", "values": [] },
         { "name": "split-min", "values": [] },
+        { "name": "split-min-secondary", "values": [] },
         { "name": "split-max", "values": [] },
         { "name": "primary-caption", "values": [] },
         { "name": "secondary-caption", "values": [] },
@@ -3328,6 +3380,24 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
+      ]
+    },
+    {
+      "name": "zn-table",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "fixed-first", "values": [] },
+        { "name": "has-actions", "values": [] },
+        { "name": "headless", "values": [] },
+        { "name": "left-align", "values": [] },
+        { "name": "data", "values": [] },
+        { "name": "bool-icons", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/table"
+        }
       ]
     },
     {

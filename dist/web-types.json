@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "1.0.113",
+  "version": "1.0.114",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -315,6 +315,10 @@
               "value": { "type": "boolean", "default": "false" }
             },
             {
+              "name": "panel-bg",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "dropdown-closer",
               "value": { "type": "boolean", "default": "false" }
             },
@@ -447,6 +451,7 @@
               { "name": "disabled", "type": "boolean" },
               { "name": "grow", "type": "boolean" },
               { "name": "square", "type": "boolean" },
+              { "name": "panelBackground", "type": "boolean" },
               { "name": "dropdownCloser", "type": "boolean" },
               { "name": "notification", "type": "number" },
               { "name": "mutedNotifications", "type": "boolean" },
@@ -598,8 +603,7 @@
               },
               { "name": "iconSize", "type": "number" },
               { "name": "noGap", "type": "boolean" },
-              { "name": "noPadding", "type": "boolean" },
-              { "name": "handleResize" }
+              { "name": "noPadding", "type": "boolean" }
             ],
             "events": []
           }
@@ -3264,6 +3268,10 @@
               "name": "help-text",
               "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
               "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "cols",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [{ "name": "", "description": "The default slot." }],
@@ -3284,7 +3292,8 @@
                 "name": "helpText",
                 "description": "The form groups help text. If you need to display HTML, use the `help-text` slot instead.",
                 "type": "string"
-              }
+              },
+              { "name": "forceCols", "type": "boolean" }
             ],
             "events": []
           }
@@ -3310,7 +3319,11 @@
             },
             { "name": "full-width", "value": { "type": "boolean" } },
             { "name": "previous-path", "value": { "type": "string" } },
-            { "name": "previous-target", "value": { "type": "string" } }
+            { "name": "previous-target", "value": { "type": "string" } },
+            {
+              "name": "hide-breadcrumb",
+              "value": { "type": "boolean", "default": "false" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -3332,6 +3345,7 @@
               { "name": "fullWidth", "type": "boolean" },
               { "name": "previousPath", "type": "string" },
               { "name": "previousTarget", "type": "string" },
+              { "name": "hideBreadcrumb", "type": "boolean" },
               { "name": "handleAltPress" },
               { "name": "handleAltUp" }
             ],
@@ -4307,6 +4321,7 @@
             { "name": "inline", "value": { "type": "boolean" } },
             { "name": "grid", "value": { "type": "boolean" } },
             { "name": "no-padding", "value": { "type": "boolean" } },
+            { "name": "flush", "value": { "type": "boolean" } },
             { "name": "align-end", "value": { "type": "boolean" } },
             { "name": "align-center", "value": { "type": "boolean" } }
           ],
@@ -4334,6 +4349,7 @@
               { "name": "inline", "type": "boolean" },
               { "name": "grid", "type": "boolean" },
               { "name": "noPadding", "type": "boolean" },
+              { "name": "flush", "type": "boolean" },
               { "name": "alignEnd", "type": "boolean" },
               { "name": "alignCenter", "type": "boolean" }
             ],
@@ -4925,7 +4941,7 @@
         },
         {
           "name": "zn-navbar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -4969,7 +4985,14 @@
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
+            {
+              "name": "expand",
+              "description": "Expanding action panels rendered alongside the navbar items."
+            },
+            {
+              "name": "bottom",
+              "description": "Content rendered below the navbar row (e.g. chips, filters)."
+            }
           ],
           "events": [
             { "name": "zn-event-name", "description": "Emitted as an example." }
@@ -5158,6 +5181,144 @@
           }
         },
         {
+          "name": "zn-page",
+          "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "entity-id", "value": { "type": "string" } },
+            { "name": "entity-id-show", "value": { "type": "boolean" } },
+            { "name": "full-location", "value": { "type": "string" } },
+            {
+              "name": "modal",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "nested",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "primary",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "previous-path", "value": { "type": "string" } },
+            { "name": "previous-target", "value": { "type": "string" } },
+            { "name": "summary", "value": { "type": "string" } },
+            { "name": "master-id", "value": { "type": "string" } },
+            {
+              "name": "default-uri",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "active",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "split", "value": { "type": "number" } },
+            {
+              "name": "split-min",
+              "value": { "type": "number", "default": "60" }
+            },
+            { "name": "split-min-secondary", "value": { "type": "number" } },
+            { "name": "split-max", "value": { "type": "number" } },
+            {
+              "name": "primary-caption",
+              "value": { "type": "string", "default": "'Navigation'" }
+            },
+            {
+              "name": "secondary-caption",
+              "value": { "type": "string", "default": "'Content'" }
+            },
+            {
+              "name": "no-prefetch",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-cache",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "local-storage", "value": { "type": "boolean" } },
+            { "name": "store-key", "value": { "type": "string" } },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "padded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "fetch-style",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "full-width",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "padded-right",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "monitor", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Page content. Use zn-tab for named tabs and header-action/header-actions for header actions."
+            },
+            {
+              "name": "bottom",
+              "description": "Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot."
+            },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "entityId", "type": "string" },
+              { "name": "entityIdShow", "type": "boolean" },
+              { "name": "fullLocation", "type": "string" },
+              { "name": "modal", "type": "boolean" },
+              { "name": "nested", "type": "boolean" },
+              { "name": "primary", "type": "boolean" },
+              { "name": "previousPath", "type": "string" },
+              { "name": "previousTarget", "type": "string" },
+              { "name": "summary", "type": "string" },
+              { "name": "_registerTabs" },
+              { "name": "masterId", "type": "string" },
+              { "name": "defaultUri", "type": "string" },
+              { "name": "_current", "type": "string" },
+              { "name": "_split", "type": "number" },
+              { "name": "_splitMin", "type": "number" },
+              { "name": "_splitMinSecondary", "type": "number" },
+              { "name": "_splitMax", "type": "number" },
+              { "name": "primaryCaption", "type": "string" },
+              { "name": "secondaryCaption", "type": "string" },
+              { "name": "noPrefetch", "type": "boolean" },
+              { "name": "noCache", "type": "boolean" },
+              { "name": "localStorage", "type": "boolean" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "padded", "type": "boolean" },
+              { "name": "fetchStyle", "type": "string" },
+              { "name": "fullWidth", "type": "boolean" },
+              { "name": "paddedRight", "type": "boolean" },
+              { "name": "monitor", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "reRegisterTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-page-nav",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -5177,6 +5338,7 @@
               "name": "split-min",
               "value": { "type": "number", "default": "60" }
             },
+            { "name": "split-min-secondary", "value": { "type": "number" } },
             { "name": "split-max", "value": { "type": "number" } },
             {
               "name": "primary-caption",
@@ -5236,6 +5398,7 @@
               { "name": "_current", "type": "string" },
               { "name": "_split", "type": "number" },
               { "name": "_splitMin", "type": "number" },
+              { "name": "_splitMinSecondary", "type": "number" },
               { "name": "_splitMax", "type": "number" },
               { "name": "primaryCaption", "type": "string" },
               { "name": "secondaryCaption", "type": "string" },
@@ -5800,10 +5963,14 @@
         },
         {
           "name": "zn-progress-bar",
-          "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-primary** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
+          "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
           "doc-url": "",
           "attributes": [
             { "name": "caption", "value": { "type": "string | undefined" } },
+            {
+              "name": "color",
+              "value": { "type": "ProgressBarColor", "default": "'current'" }
+            },
             {
               "name": "description",
               "value": { "type": "string | undefined" }
@@ -5818,6 +5985,7 @@
           "js": {
             "properties": [
               { "name": "caption", "type": "string | undefined" },
+              { "name": "color", "type": "ProgressBarColor" },
               { "name": "description", "type": "string | undefined" },
               { "name": "value", "type": "number | undefined" },
               { "name": "showProgress", "type": "boolean | undefined" }
@@ -7271,7 +7439,7 @@
         },
         {
           "name": "zn-split-pane",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-split-pane-focus-change**\n- **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -7286,6 +7454,7 @@
               "name": "min-size",
               "value": { "type": "number", "default": "10" }
             },
+            { "name": "min-secondary-size", "value": { "type": "number" } },
             { "name": "max-size", "value": { "type": "number" } },
             {
               "name": "initial-size",
@@ -7323,6 +7492,21 @@
               "name": "padded-right",
               "value": { "type": "boolean", "default": "false" }
             },
+            {
+              "name": "gap",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "hide",
+              "value": {
+                "type": "'primary' | 'secondary' | ''",
+                "default": "''"
+              }
+            },
+            {
+              "name": "merged-navigation",
+              "value": { "type": "boolean", "default": "false" }
+            },
             { "name": "local-storage", "value": { "type": "boolean" } },
             {
               "name": "store-ttl",
@@ -7334,6 +7518,7 @@
             { "name": "example", "description": "An example slot." }
           ],
           "events": [
+            { "name": "zn-split-pane-focus-change", "type": "CustomEvent" },
             { "name": "zn-event-name", "description": "Emitted as an example." }
           ],
           "js": {
@@ -7344,6 +7529,7 @@
               { "name": "calculatePixels", "type": "boolean" },
               { "name": "preferSecondarySize", "type": "boolean" },
               { "name": "minimumPaneSize", "type": "number" },
+              { "name": "minimumSecondaryPaneSize", "type": "number" },
               { "name": "maximumPaneSize", "type": "number" },
               { "name": "initialSize", "type": "number" },
               { "name": "storeKey", "type": "string" },
@@ -7354,10 +7540,14 @@
               { "name": "_focusPane", "type": "number" },
               { "name": "padded", "type": "boolean" },
               { "name": "paddedRight", "type": "boolean" },
+              { "name": "gap", "type": "boolean" },
+              { "name": "hide", "type": "'primary' | 'secondary' | ''" },
+              { "name": "mergedNavigation", "type": "boolean" },
               { "name": "localStorage", "type": "boolean" },
               { "name": "storeTtl", "type": "number" }
             ],
             "events": [
+              { "name": "zn-split-pane-focus-change", "type": "CustomEvent" },
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."
@@ -7573,6 +7763,10 @@
               "value": { "type": "string", "default": "''" }
             },
             {
+              "name": "gutter",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
               "name": "a-margin",
               "value": { "type": "string", "default": "''" }
             }
@@ -7595,60 +7789,30 @@
               { "name": "height", "type": "string" },
               { "name": "pad", "type": "string" },
               { "name": "margin", "type": "string" },
+              { "name": "gutter", "type": "boolean" },
               { "name": "autoMargin", "type": "string" }
             ],
             "events": []
           }
         },
         {
-          "name": "zn-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "name": "zn-tab",
+          "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
           "doc-url": "",
           "attributes": [
-            {
-              "name": "fixed-first",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "has-actions",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "headless",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "left-align",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "data", "value": { "type": "any" } },
-            {
-              "name": "bool-icons",
-              "value": { "type": "boolean", "default": "false" }
-            }
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "priority", "value": { "type": "number" } },
+            { "name": "uri", "value": { "type": "string" } }
           ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
+          "slots": [{ "name": "", "description": "The tab panel content." }],
+          "events": [],
           "js": {
             "properties": [
-              { "name": "fixedFirst", "type": "boolean" },
-              { "name": "hasActions", "type": "boolean" },
-              { "name": "headless", "type": "boolean" },
-              { "name": "allLeft", "type": "boolean" },
-              { "name": "data", "type": "any" },
-              { "name": "boolIcons", "type": "boolean" }
+              { "name": "caption", "type": "string" },
+              { "name": "priority", "type": "number" },
+              { "name": "uri", "type": "string" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
+            "events": []
           }
         },
         {
@@ -7670,6 +7834,7 @@
               "name": "split-min",
               "value": { "type": "number", "default": "60" }
             },
+            { "name": "split-min-secondary", "value": { "type": "number" } },
             { "name": "split-max", "value": { "type": "number" } },
             {
               "name": "primary-caption",
@@ -7727,6 +7892,7 @@
               { "name": "_current", "type": "string" },
               { "name": "_split", "type": "number" },
               { "name": "_splitMin", "type": "number" },
+              { "name": "_splitMinSecondary", "type": "number" },
               { "name": "_splitMax", "type": "number" },
               { "name": "primaryCaption", "type": "string" },
               { "name": "secondaryCaption", "type": "string" },
@@ -7744,6 +7910,57 @@
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" },
               { "name": "_registerTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-table",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "fixed-first",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "has-actions",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "headless",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "left-align",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "data", "value": { "type": "any" } },
+            {
+              "name": "bool-icons",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "fixedFirst", "type": "boolean" },
+              { "name": "hasActions", "type": "boolean" },
+              { "name": "headless", "type": "boolean" },
+              { "name": "allLeft", "type": "boolean" },
+              { "name": "data", "type": "any" },
+              { "name": "boolIcons", "type": "boolean" }
             ],
             "events": [
               {

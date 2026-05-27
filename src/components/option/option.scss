@@ -30,11 +30,13 @@
 }
 
 
-.option--hover:not(.option--current):not(.option--disabled) {
-  background-color: var(--zn-color-primary-100);
-  color: var(--zn-input-color);
+/* Selected is the base highlight; hover/current below take priority over it. */
+.option--selected {
+  background-color: var(--zn-color-primary-200);
 }
 
+/* Mouse-hover and keyboard-current take priority over the selected background. */
+.option--hover:not(.option--disabled),
 .option--current,
 .option--current.option--disabled {
   background-color: var(--zn-color-primary-100);
@@ -67,10 +69,6 @@
 
 .option--selected .option__check {
   visibility: visible;
-}
-
-.option--selected {
-  background-color: var(--zn-color-primary-200);
 }
 
 .option__prefix,

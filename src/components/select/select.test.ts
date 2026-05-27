@@ -176,4 +176,414 @@ describe('<zn-select>', () => {
     });
 
   });
+
+  describe('free-text', () => {
+    const type = (el: ZnSelect, text: string) => {
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      displayInput.value = text;
+      displayInput.dispatchEvent(new Event('input'));
+    };
+
+    const pressEnter = (el: ZnSelect) => {
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      displayInput.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Enter',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+    };
+
+    it('commits typed text not in the list as the value on Enter', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('kiwi');
+    });
+
+    it('adds typed values as tags in multiple mode, keeping the dropdown open', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text multiple></zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      type(el, 'mango');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal(['kiwi', 'mango']);
+      expect(el.open).to.be.true;
+    });
+
+    it('selects the existing option instead of creating a duplicate on exact match', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'Apple'); // case-insensitive match of the existing label
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('apple');
+      expect(el.querySelectorAll('zn-option').length).to.equal(1);
+      expect(el.querySelector('[data-free-text]')).to.be.null;
+    });
+
+    it('shows an Add row for non-matching text and commits it on click', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+
+      const addRow = el.shadowRoot!.querySelector<HTMLElement>('.select__add-option');
+      expect(addRow, 'Add row should be visible for non-matching text').to.exist;
+
+      addRow!.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true, cancelable: true}));
+      addRow!.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('kiwi');
+    });
+
+    it('commits the Add row on click without also selecting an option', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text multiple>
+          <zn-option value="apple">Apple</zn-option>
+          <zn-option value="banana">Banana</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      // "ap" filters to Apple (still visible) and offers Add "ap" at the top of the listbox
+      type(el, 'ap');
+      await el.updateComplete;
+
+      const addRow = el.shadowRoot!.querySelector<HTMLElement>('.select__add-option')!;
+      addRow.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+
+      // The mouseup hits whatever now sits under the cursor. If committing on mousedown removed the Add
+      // row (the bug), the first option shifts up into that spot and would be wrongly selected on mouseup.
+      const underCursor = el.shadowRoot!.querySelector<HTMLElement>('.select__add-option')
+        ?? el.querySelector<HTMLElement>('zn-option');
+      underCursor!.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      // Only the typed value is committed — the first option ("apple") must not be selected too
+      expect(el.value).to.deep.equal(['ap']);
+    });
+
+    it('keeps the Add row text in sync as the user keeps typing', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'te');
+      await el.updateComplete;
+      expect(el.shadowRoot!.querySelector('.select__add-option')!.textContent!.trim())
+        .to.equal('Add "te"');
+
+      // Continue typing without crossing the match/no-match boundary
+      type(el, 'testssdfs');
+      await el.updateComplete;
+      expect(el.shadowRoot!.querySelector('.select__add-option')!.textContent!.trim())
+        .to.equal('Add "testssdfs"');
+    });
+
+    it('does not show the Add row when the text exactly matches an option', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'Apple');
+      await el.updateComplete;
+
+      expect(el.shadowRoot!.querySelector('.select__add-option')).to.be.null;
+    });
+
+    it('commits pending typed text when the dropdown closes', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+
+      await el.hide();
+      await el.updateComplete;
+
+      expect(el.value).to.equal('kiwi');
+    });
+
+    it('removes the backing option from the DOM when a custom tag is removed', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text multiple></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(1);
+
+      const chip = el.shadowRoot!.querySelector('.select__tags zn-chip')!;
+      chip.dispatchEvent(new CustomEvent('zn-remove', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(0);
+      expect(el.value).to.deep.equal([]);
+    });
+
+    it('materialises an unmatched initial value as a custom option', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text value="custom-thing">
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('custom-thing');
+      const created = el.querySelector('[data-free-text]');
+      expect(created, 'a backing option should be created').to.exist;
+      expect(created!.getAttribute('value')).to.equal('custom-thing');
+      expect(el.displayLabel).to.equal('custom-thing');
+    });
+
+    it('does not add a duplicate when the same custom value is committed twice', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text multiple></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal(['kiwi']);
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(1);
+    });
+
+    it('enables an editable, filtering input on its own (without search)', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+          <zn-option value="banana">Banana</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      expect(displayInput.readOnly).to.be.false;
+
+      type(el, 'app');
+      await el.updateComplete;
+
+      const visible = [...el.querySelectorAll<ZnOption>('zn-option')].filter(o => !o.hidden);
+      expect(visible.map(o => o.value)).to.deep.equal(['apple']);
+    });
+
+    it('submits committed free-text values as form data', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <zn-select name="fruits" free-text multiple></zn-select>
+        </form>
+      `);
+      const el = form.querySelector<ZnSelect>('zn-select')!;
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      type(el, 'mango');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      const formData = new FormData(form);
+      expect(formData.getAll('fruits')).to.deep.equal(['kiwi', 'mango']);
+    });
+
+    it('cancels uncommitted free-text on Escape instead of committing it', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+
+      const displayInput = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      displayInput.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('');
+    });
+
+    it('removes a previous custom entry when a different option is selected (single)', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+      expect(el.value).to.equal('kiwi');
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(1);
+
+      // Reopen and pick a real option
+      await el.show();
+      await el.updateComplete;
+      const apple = el.querySelector<ZnOption>('zn-option[value="apple"]')!;
+      apple.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('apple');
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(0);
+    });
+
+    it('shows a committed custom option as a selected row in the listbox', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+
+      // Reopen the dropdown
+      await el.show();
+      await el.updateComplete;
+
+      const custom = el.querySelector<ZnOption>('[data-free-text]')!;
+      expect(custom, 'custom option should exist').to.exist;
+      expect(custom.hidden, 'custom option should be visible so it can be deselected').to.be.false;
+      expect(custom.selected, 'custom option should be selected').to.be.true;
+    });
+
+    it('removes a committed custom option when it is deselected from the dropdown', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text multiple></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+      expect(el.value).to.deep.equal(['kiwi']);
+
+      // Click the custom option's row in the listbox to deselect it
+      const custom = el.querySelector<ZnOption>('[data-free-text]')!;
+      custom.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal([]);
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(0);
+    });
+
+    it('can re-add a free-text value after it was removed', async () => {
+      const el = await fixture<ZnSelect>(html`<zn-select free-text multiple></zn-select>`);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      // Add "foo"
+      type(el, 'foo');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+      expect(el.value).to.deep.equal(['foo']);
+
+      // Remove it via the tag's remove button
+      const chip = el.shadowRoot!.querySelector('.select__tags zn-chip')!;
+      chip.dispatchEvent(new CustomEvent('zn-remove', {bubbles: true, composed: true}));
+      await el.updateComplete;
+      expect(el.value).to.deep.equal([]);
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(0);
+
+      // Add the same value again
+      type(el, 'foo');
+      await el.updateComplete;
+      pressEnter(el);
+      await el.updateComplete;
+      expect(el.value).to.deep.equal(['foo']);
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(1);
+    });
+  });
 });

@@ -108,6 +108,12 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   /** Enables search/filtering on select inputs. */
   @property({ type: Boolean }) search: boolean;
 
+  /**
+   * Allows entering values that aren't in the options list on select inputs ("free text"). Setting this implies
+   * `input-type="select"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.
+   */
+  @property({ type: Boolean, attribute: 'free-text' }) freeText: boolean;
+
   /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
   @property({ attribute: 'help-text' }) helpText: string = '';
 
@@ -315,6 +321,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       this.inputType = 'data-select';
     }
 
+    // Free text is a select capability — imply a select input when it's set (unless a data provider is used)
+    if (this.freeText && !this.selectProvider) {
+      this.inputType = 'select';
+    }
+
     let input: HTMLTemplateResult;
     switch (this.inputType) {
       case 'select':
@@ -457,7 +468,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
                  multiple=${ifDefined(this.multiple)}
                  clearable=${ifDefined(this.isEditing ? this.clearable : undefined)}
                  ?search=${this.search}
-                 non-removable
+                 ?free-text=${this.freeText}
+                 ?non-removable=${!this.isEditing}
                  data-uri=${ifDefined(this.dataUri)}
                  context-data=${ifDefined(this.contextData)}
                  @zn-input="${this.handleInput}"

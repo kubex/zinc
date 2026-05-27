@@ -113,8 +113,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal - current search/filter text when search is enabled (lowercased for matching) */
   private _searchQuery = '';
 
-  /** @internal - raw display value of the search input (preserves case for the input field) */
-  private _searchDisplayValue = '';
+  /** @internal - raw display value of the search input (preserves case for the input field). Reactive so the
+   * free-text "Add" row re-renders on every keystroke, not just when the match/no-match state changes. */
+  @state() private _searchDisplayValue = '';
 
   /** @internal - whether the "no matching options" empty state is visible */
   @state() private _noResultsVisible = false;
@@ -274,6 +275,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
   @property({type: Boolean, reflect: true}) search = false;
+
+  /**
+   * Allows the user to enter values that are not in the options list ("free text"). Implies the editable,
+   * filtering input behavior of `search`. A typed value that doesn't match an existing option is committed
+   * by pressing Enter, clicking the "Add" row, or blurring the field, and becomes a selected option — a tag
+   * when `multiple` is enabled. The committed value is both the option's value and its label.
+   */
+  @property({type: Boolean, reflect: true, attribute: 'free-text'}) freeText = false;
 
   /** The select's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
@@ -477,6 +486,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
+    // Escape cancels uncommitted free-text rather than letting the close path commit it. Done here (before
+    // either the CloseWatcher or the branch below closes the dropdown) so it applies on every browser.
+    if (event.key === 'Escape' && this.open && this.freeText && this._searchDisplayValue.trim()) {
+      this.clearSearch();
+      this.displayInput.value = '';
+    }
+
     // Close when pressing escape
     if ((event.key === 'Escape' || event.key === 'Tab') && this.open && !this.closeWatcher) {
       event.preventDefault();
@@ -494,7 +510,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Handle enter and space. When pressing space, we allow for type to select behaviors so if there's anything in the
     // buffer we _don't_ close it. When search is enabled, space should type into the input, not toggle.
-    if (event.key === 'Enter' || (event.key === ' ' && !this.search && this.typeToSelectString === '')) {
+    if (event.key === 'Enter' || (event.key === ' ' && !this._isTypeable && this.typeToSelectString === '')) {
       event.preventDefault();
       event.stopImmediatePropagation();
 
@@ -502,6 +518,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       if (!this.open) {
         this.show().then();
         return;
+      }
+
+      // Free-text: a highlighted real option wins; otherwise commit the typed value
+      if (this.freeText) {
+        const usableCurrent = this.currentOption && !this.currentOption.disabled && !this.currentOption.hidden;
+        if (!usableCurrent && this.commitFreeText()) {
+          return;
+        }
       }
 
       // If it is open, update the value based on the current selection and close it
@@ -514,7 +538,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         }
 
         // Clear search after keyboard selection
-        if (this.search) {
+        if (this._isTypeable) {
           this.clearSearch();
           if (this.multiple) {
             this.displayInput.value = '';
@@ -530,8 +554,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         if (!this.multiple) {
           this.hide().then();
           this.displayInput.focus({preventScroll: true});
-        } else if (this.search) {
-          // In multi-select + search, re-focus the search input after keyboard selection
+        } else if (this._isTypeable) {
+          // In multi-select + typeable, re-focus the search input after keyboard selection
           this.updateComplete.then(() => {
             this.displayInput.value = '';
             this.displayInput.focus({preventScroll: true});
@@ -544,7 +568,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
     // Navigate options
     if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-      const navOptions = this.search ? this.getVisibleOptions() : this.getAllOptions();
+      const navOptions = this._isTypeable ? this.getVisibleOptions() : this.getAllOptions();
       const currentIndex = navOptions.indexOf(this.currentOption);
       let newIndex = Math.max(0, currentIndex);
 
@@ -577,8 +601,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.setCurrentOption(navOptions[newIndex]);
     }
 
-    // When search is enabled, let the input handle keystrokes natively (they go through handleSearchInput)
-    if (this.search) {
+    // When typeable, let the input handle keystrokes natively (they go through handleSearchInput)
+    if (this._isTypeable) {
       return;
     }
 
@@ -648,8 +672,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
-    // When search is enabled, clicking the input area should open (not toggle) so the user can type
-    if (this.search && this.open && !isExpandIcon) {
+    // When typeable, clicking the input area should open (not toggle) so the user can type
+    if (this._isTypeable && this.open && !isExpandIcon) {
       event.preventDefault();
       this.displayInput.focus({preventScroll: true});
       return;
@@ -679,7 +703,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.stopPropagation();
 
     if (this.value !== '') {
-      if (this.search) {
+      if (this._isTypeable) {
         this.clearSearch();
         this.displayInput.value = '';
       }
@@ -711,9 +735,14 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     return this.search && !!this.dataUri;
   }
 
+  /** Whether the display input is editable and filters options (search or free-text). */
+  private get _isTypeable() {
+    return this.search || this.freeText;
+  }
+
   /** Handles text input on the display input for search/filter mode */
   private handleSearchInput() {
-    if (!this.search) return;
+    if (!this._isTypeable) return;
 
     this._searchDisplayValue = this.displayInput.value;
     this._searchQuery = this._searchDisplayValue.toLowerCase();
@@ -825,8 +854,126 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     });
   }
 
+  /**
+   * Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`
+   * (value = label = trimmed text) is created in the light DOM so the value flows through the existing
+   * tag/value/selection machinery and appears as a deselectable row in the listbox. Returns `true` when
+   * something was committed, `false` when there was nothing to commit.
+   */
+  private commitFreeText(refocus = true): boolean {
+    if (!this.freeText) return false;
+
+    const text = (this.displayInput?.value ?? '').trim();
+    if (!text) return false;
+
+    this.valueHasChanged = true;
+
+    // If the text matches an existing option (label or value, case-insensitive), select it instead of
+    // creating a duplicate free-text option.
+    const lower = text.toLowerCase();
+    const existing = this.getAllOptions().find(
+      o => o.value.toLowerCase() === lower || o.getTextLabel().toLowerCase() === lower
+    );
+
+    const option = existing ?? this._createFreeTextOption(text);
+
+    if (this.multiple) {
+      // Add to the existing selection and keep the dropdown open for more entry
+      this.toggleOptionSelection(option, true);
+    } else {
+      this.setSelectedOptions(option);
+    }
+
+    this.clearSearch();
+
+    this.updateComplete.then(() => {
+      this.emit('zn-input');
+      this.emit('zn-change');
+    });
+
+    // When committed via blur/close, the dropdown is already closing and focus has left — don't fight it.
+    if (!refocus) {
+      return true;
+    }
+
+    if (this.multiple) {
+      // Clear the input so the user can type the next value
+      this.displayInput.value = '';
+      this.displayInput.focus({preventScroll: true});
+    } else {
+      this.hide().then();
+      this.displayInput.focus({preventScroll: true});
+    }
+
+    return true;
+  }
+
+  /**
+   * The trimmed pending text to offer as a free-text "Add" row, or `null` when no Add row should be shown
+   * (free-text disabled, dropdown closed, input empty, or the text exactly matches an existing option).
+   */
+  private get _freeTextAddValue(): string | null {
+    if (!this.freeText || !this.open) return null;
+
+    const text = this._searchDisplayValue.trim();
+    if (!text) return null;
+
+    const lower = text.toLowerCase();
+    const exact = this.getAllOptions().some(
+      o => o.value.toLowerCase() === lower || o.getTextLabel().toLowerCase() === lower
+    );
+
+    return exact ? null : text;
+  }
+
+  /** Commits the typed value when the "Add" row is pressed, keeping focus on the input. */
+  private handleAddOptionMouseDown(event: MouseEvent) {
+    // Keep focus on the input but DON'T commit here. Committing on mousedown would clear the search and
+    // collapse the listbox, so the following mouseup would land on (and select) whichever option shifted
+    // under the cursor. Instead the commit happens on mouseup in handleOptionClick.
+    event.preventDefault();
+  }
+
+  /**
+   * In free-text mode, creates a hidden `<zn-option>` for any value that has no matching option, so values
+   * set via the `value`/`defaultValue` attribute (e.g. previously-saved custom entries) render as tags or
+   * the display value on load. No-op when free-text is disabled.
+   */
+  private _materialiseFreeTextValues(values: string[]) {
+    if (!this.freeText) return;
+
+    const existingValues = new Set(this.getAllOptions().map(o => o.value));
+    values.forEach(value => {
+      if (value === '' || existingValues.has(value)) return;
+      this._createFreeTextOption(value);
+      existingValues.add(value);
+    });
+  }
+
+  /**
+   * Creates a free-text-marked `<zn-option>` in the light DOM (value = label) and returns it. The option is
+   * a normal, visible, selectable row so the user can deselect a custom value from the dropdown like any
+   * other option; the `data-free-text` marker lets us drop it from the DOM once it's no longer selected.
+   */
+  private _createFreeTextOption(value: string): ZnOption {
+    const option = document.createElement('zn-option') as ZnOption;
+    option.value = value;
+    option.textContent = value;
+    option.setAttribute('data-free-text', '');
+    this.appendChild(option);
+    return option;
+  }
+
   private handleOptionClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
+
+    // The free-text "Add" row lives in the listbox and commits on this same mouseup, so it can never
+    // also trigger an option selection.
+    if (target.closest('.select__add-option')) {
+      this.commitFreeText();
+      return;
+    }
+
     const option = target.closest('zn-option');
     const oldValue = this.value;
 
@@ -841,8 +988,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         this.setSelectedOptions(option);
       }
 
-      // Clear search after selection when in search mode
-      if (this.search) {
+      // Clear search after selection when in search/free-text mode
+      if (this._isTypeable) {
         this.clearSearch();
         if (this.multiple) {
           // Keep the search input clear for further typing
@@ -852,7 +999,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
       // Set focus after updating so the value is announced by screen readers
       this.updateComplete.then(() => {
-        if (this.multiple && this.search && this.open) {
+        if (this.multiple && this._isTypeable && this.open) {
           this.displayInput.value = '';
         }
         this.displayInput.focus({preventScroll: true});
@@ -891,8 +1038,11 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     // Check for duplicate values in menu items
     allOptions.forEach(option => values.push(option.value));
 
-    // Select only the options that match the new value
-    this.setSelectedOptions(allOptions.filter(el => value.includes(el.value)));
+    // In free-text mode, materialise any value with no matching option so it renders as a tag/value
+    this._materialiseFreeTextValues(value);
+
+    // Select only the options that match the new value (re-query in case options were materialised)
+    this.setSelectedOptions(this.getAllOptions().filter(el => value.includes(el.value)));
 
     // of check if an option has selected attribute set initially
     if (!this.valueHasChanged) {
@@ -920,6 +1070,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     event.stopImmediatePropagation();
 
     if (!this.disabled) {
+      // Deselecting drops the backing element for free-text values via selectionChanged's cleanup.
       this.toggleOptionSelection(option, false);
 
       // Emit after updating
@@ -976,7 +1127,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       option.tabIndex = 0;
       // When search is active and the display input has focus, don't steal focus to the option.
       // The user is typing in the search input and we only want to visually highlight the current option.
-      if (!(this.search && this.open && this.shadowRoot?.activeElement === this.displayInput)) {
+      if (!(this._isTypeable && this.open && this.shadowRoot?.activeElement === this.displayInput)) {
         option.focus();
       }
     }
@@ -1015,6 +1166,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private selectionChanged() {
     // Update selected options cache
     this.selectedOptions = this.getAllOptions().filter(el => el.selected);
+
+    // Free-text options exist only to anchor a selected value. Drop any that are no longer selected — e.g.
+    // when a single-select value is replaced or the selection is cleared, the previous custom entry should
+    // disappear entirely rather than linger as an orphaned option.
+    this.querySelectorAll<ZnOption>('[data-free-text]').forEach(option => {
+      if (!option.selected) option.remove();
+    });
 
     // In remote-search + multiple mode, track selected items so they persist across search result changes
     if (this._isRemoteSearch && this.multiple) {
@@ -1408,8 +1566,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Reset the current option
       this.setCurrentOption(null);
 
-      // When search is enabled, clear the display input to allow typing and show all options
-      if (this.search) {
+      // When typeable, clear the display input to allow typing and show all options
+      if (this._isTypeable) {
         this.clearSearch();
         this.displayInput.value = '';
         this.displayInput.readOnly = false;
@@ -1429,7 +1587,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       });
 
       // Focus the search input so the user can start typing immediately
-      if (this.search) {
+      if (this._isTypeable) {
         requestAnimationFrame(() => {
           this.displayInput.focus({preventScroll: true});
         });
@@ -1449,8 +1607,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.emit('zn-hide');
       this.removeOpenListeners();
 
-      // When search is enabled, restore the display label and clear the search
-      if (this.search) {
+      // When typeable, restore the display label and clear the search
+      if (this._isTypeable) {
+        // Commit any pending free-text before clearing it (blur/close-to-commit). Don't refocus —
+        // the dropdown is closing because focus left the control.
+        if (this.freeText && this._searchDisplayValue.trim()) {
+          this.commitFreeText(false);
+        }
         this.clearSearch();
         this.displayInput.readOnly = true;
         // In multiple mode, tags show the selection so keep the input empty
@@ -1647,7 +1810,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--medium': this.size === 'medium',
               'select--large': this.size === 'large',
               'select--has-input-prefix': this.inputPrefix,
-              'select--search': this.search
+              'select--search': this._isTypeable
             })}
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}
@@ -1671,20 +1834,20 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this.search && this.open ? (this.displayLabel || this.placeholder || 'Search...') : this.placeholder)}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this._isTypeable && this.open ? (this.displayLabel || this.placeholder || 'Search...') : this.placeholder)}
                 .disabled=${isDisabled}
-                .value=${isFetchDisabled ? '' : (this.search && this.open) ? this._searchDisplayValue : (this.search && this.multiple) ? '' : this.displayLabel}
+                .value=${isFetchDisabled ? '' : (this._isTypeable && this.open) ? this._searchDisplayValue : (this._isTypeable && this.multiple) ? '' : this.displayLabel}
                 autocomplete="off"
                 spellcheck="false"
                 autocapitalize="off"
-                ?readonly=${!(this.search && this.open)}
+                ?readonly=${!(this._isTypeable && this.open)}
                 aria-controls="listbox"
                 aria-expanded=${this.open ? 'true' : 'false'}
                 aria-haspopup="listbox"
                 aria-labelledby="label"
                 aria-disabled=${isDisabled ? 'true' : 'false'}
                 aria-describedby="help-text"
-                aria-autocomplete=${this.search ? 'list' : 'none'}
+                aria-autocomplete=${this._isTypeable ? 'list' : 'none'}
                 role="combobox"
                 tabindex="0"
                 @focus=${this.handleFocus}
@@ -1747,6 +1910,17 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               tabindex="-1"
               @mouseup=${this.handleOptionClick}
               @slotchange=${this.handleDefaultSlotChange}>
+              ${this._freeTextAddValue !== null
+                ? html`
+                  <div
+                    part="add-option"
+                    class="select__add-option"
+                    role="option"
+                    aria-selected="false"
+                    @mousedown=${this.handleAddOptionMouseDown}>
+                    Add "${this._freeTextAddValue}"
+                  </div>`
+                : nothing}
               <slot></slot>
               ${this._renderSelectedRemoteItems()}
               ${this._fetchedOptions.map(item =>
@@ -1780,7 +1954,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                       Type to search...
                     </div>`
                   : html`
-                    <div part="empty-state" class="select__empty-state" ?hidden=${!this._noResultsVisible}>
+                    <div part="empty-state" class="select__empty-state"
+                         ?hidden=${!this._noResultsVisible || this._freeTextAddValue !== null}>
                       No matching options
                     </div>`
               }

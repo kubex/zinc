@@ -309,6 +309,56 @@ describe('<zn-inline-edit>', () => {
     expect(formData.get('tags')).to.equal('');
   });
 
+  // -- Free text --
+
+  it('should pass free-text to the inner select', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit input-type="select" free-text>
+        <zn-option value="a">A</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+    expect(select.freeText).to.be.true;
+  });
+
+  it('should render a free-text select when free-text is set without an input-type', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit free-text></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select, 'free-text should imply a select input').to.exist;
+    expect(select.freeText).to.be.true;
+  });
+
+  it('should make inner select tags removable only while editing', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit free-text multiple value="a">
+        <zn-option value="a">A</zn-option>
+      </zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    const select = el.shadowRoot?.querySelector('zn-select') as ZnSelect;
+    expect(select).to.exist;
+
+    // Display mode: tags are not removable (no X)
+    expect(select.nonRemovable).to.be.true;
+
+    // Enter edit mode
+    const editBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--edit')!;
+    editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    await el.updateComplete;
+    await select.updateComplete;
+
+    // Editing: tags become removable (X shows)
+    expect(select.nonRemovable).to.be.false;
+  });
+
   it('should flatten array to string when multiple is not set', async () => {
     const el = await fixture<ZnInlineEdit>(
       html`<zn-inline-edit value="hello"></zn-inline-edit>`

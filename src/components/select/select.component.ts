@@ -120,6 +120,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal - whether the "no matching options" empty state is visible */
   @state() private _noResultsVisible = false;
 
+  /** @internal - whether the free-text "Add" row is the active keyboard-navigation target */
+  @state() private _addOptionActive = false;
+
   /** @internal */
   @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | {
     group: string;
@@ -520,9 +523,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         return;
       }
 
-      // Free-text: a highlighted real option wins; otherwise commit the typed value
+      // Free-text: commit when the Add row is the active target, or when no real option is highlighted
       if (this.freeText) {
-        const usableCurrent = this.currentOption && !this.currentOption.disabled && !this.currentOption.hidden;
+        const addActive = this._addOptionActive && this._freeTextAddValue !== null;
+        const usableCurrent = !addActive && this.currentOption && !this.currentOption.disabled && !this.currentOption.hidden;
         if (!usableCurrent && this.commitFreeText()) {
           return;
         }
@@ -566,12 +570,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       return;
     }
 
-    // Navigate options
+    // Navigate options (and the free-text "Add" row, when shown)
     if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-      const navOptions = this._isTypeable ? this.getVisibleOptions() : this.getAllOptions();
-      const currentIndex = navOptions.indexOf(this.currentOption);
-      let newIndex = Math.max(0, currentIndex);
-
       // Prevent scrolling
       event.preventDefault();
 
@@ -586,19 +586,39 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         }
       }
 
+      const navOptions = this._isTypeable ? this.getVisibleOptions() : this.getAllOptions();
+      const hasAdd = this.freeText && this._freeTextAddValue !== null;
+
+      // The Add row, when shown, sits at the top of the listbox and is the first navigable target.
+      const ADD = 'add';
+      const targets: (ZnOption | typeof ADD)[] = hasAdd ? [ADD, ...navOptions] : [...navOptions];
+      if (targets.length === 0) return;
+
+      const currentTarget: ZnOption | typeof ADD | null =
+        this._addOptionActive && hasAdd ? ADD : (this.currentOption ?? null);
+      const currentIndex = currentTarget === null ? -1 : targets.indexOf(currentTarget);
+      let newIndex = Math.max(0, currentIndex);
+
       if (event.key === 'ArrowDown') {
         newIndex = currentIndex + 1;
-        if (newIndex > navOptions.length - 1) newIndex = 0;
+        if (newIndex > targets.length - 1) newIndex = 0;
       } else if (event.key === 'ArrowUp') {
         newIndex = currentIndex - 1;
-        if (newIndex < 0) newIndex = navOptions.length - 1;
+        if (newIndex < 0) newIndex = targets.length - 1;
       } else if (event.key === 'Home') {
         newIndex = 0;
       } else if (event.key === 'End') {
-        newIndex = navOptions.length - 1;
+        newIndex = targets.length - 1;
       }
 
-      this.setCurrentOption(navOptions[newIndex]);
+      const next = targets[newIndex];
+      if (next === ADD) {
+        this._addOptionActive = true;
+        this.setCurrentOption(null);
+      } else {
+        this._addOptionActive = false;
+        this.setCurrentOption(next);
+      }
     }
 
     // When typeable, let the input handle keystrokes natively (they go through handleSearchInput)
@@ -744,6 +764,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleSearchInput() {
     if (!this._isTypeable) return;
 
+    // A new keystroke resets the Add-row keyboard highlight
+    this._addOptionActive = false;
+
     this._searchDisplayValue = this.displayInput.value;
     this._searchQuery = this._searchDisplayValue.toLowerCase();
 
@@ -836,6 +859,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._searchQuery = '';
     this._searchDisplayValue = '';
     this._noResultsVisible = false;
+    this._addOptionActive = false;
 
     // Cancel any pending remote search
     if (this._searchDebounceTimer !== null) {
@@ -1834,7 +1858,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 part="display-input"
                 class="select__display-input"
                 type="text"
-                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this._isTypeable && this.open ? (this.displayLabel || this.placeholder || 'Search...') : this.placeholder)}
+                placeholder=${this._fetchLoading ? 'Loading...' : this._fetchError ? this._fetchError : (this._isTypeable && this.open ? (this.multiple ? (this.selectedOptions.length ? '' : (this.placeholder || 'Search...')) : (this.displayLabel || this.placeholder || 'Search...')) : this.placeholder)}
                 .disabled=${isDisabled}
                 .value=${isFetchDisabled ? '' : (this._isTypeable && this.open) ? this._searchDisplayValue : (this._isTypeable && this.multiple) ? '' : this.displayLabel}
                 autocomplete="off"
@@ -1914,9 +1938,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 ? html`
                   <div
                     part="add-option"
-                    class="select__add-option"
+                    class=${classMap({
+                      'select__add-option': true,
+                      'select__add-option--current': this._addOptionActive
+                    })}
                     role="option"
-                    aria-selected="false"
+                    aria-selected=${this._addOptionActive ? 'true' : 'false'}
                     @mousedown=${this.handleAddOptionMouseDown}>
                     Add "${this._freeTextAddValue}"
                   </div>`

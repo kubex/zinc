@@ -585,5 +585,55 @@ describe('<zn-select>', () => {
       expect(el.value).to.deep.equal(['foo']);
       expect(el.querySelectorAll('[data-free-text]').length).to.equal(1);
     });
+
+    it('does not put the "N selected" summary in the input placeholder in multiple mode', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text multiple>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      // Select an option — in multiple+search the dropdown stays open
+      const apple = el.querySelector<ZnOption>('zn-option[value="apple"]')!;
+      apple.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+      await el.updateComplete;
+
+      const input = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      // The tags convey the selection; the input placeholder must not also show "1 option selected"
+      expect(input.placeholder).to.equal('');
+    });
+
+    it('lets keyboard navigation reach the Add row over a closer-matching option', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text>
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'app'); // matches Apple AND offers Add "app"
+      await el.updateComplete;
+
+      // ArrowDown highlights the Add row (it sits at the top of the list)
+      const input = el.shadowRoot!.querySelector<HTMLInputElement>('.select__display-input')!;
+      input.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'ArrowDown',
+        bubbles: true,
+        composed: true,
+        cancelable: true
+      }));
+      await el.updateComplete;
+
+      // Enter commits the typed value, not the matching option
+      pressEnter(el);
+      await el.updateComplete;
+
+      expect(el.value).to.equal('app');
+    });
   });
 });

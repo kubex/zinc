@@ -247,7 +247,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 :host(:not([stacked])) {
   ul.navbar {
-    li {
+    > li {
       border-right-width: 1px;
       border-top-width: 1px;
 
@@ -496,6 +496,14 @@ button[popovertarget] {
 :host {
   ul.navbar {
     li.more {
+      zn-button[slot="trigger"] zn-icon {
+        transition: transform 200ms ease-in-out;
+      }
+
+      zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
+        transform: rotate(90deg);
+      }
+
       zn-button::part(base) {
         padding-left: 0;
         padding-right: 0;
@@ -507,7 +515,7 @@ button[popovertarget] {
 
       ul#extended-menu {
         box-shadow: var(--zn-shadow-medium);
-        background: rgb(var(--zn-border-color));
+        //background: rgb(var(--zn-border-color));
         display: flex;
         flex-direction: column;
         gap: 1px;
@@ -521,6 +529,14 @@ button[popovertarget] {
           background: rgb(var(--zn-panel));
           color: rgb(var(--zn-text));
           padding: var(--zn-spacing-small);
+
+          &:hover {
+            background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
+          }
+
+          &.active, &.zn-tb-active {
+            font-weight: 700;
+          }
 
           &.active::before, &.zn-tb-active::before {
             left: 0;

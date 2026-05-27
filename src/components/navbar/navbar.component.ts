@@ -76,6 +76,7 @@ export default class ZnNavbar extends ZincElement {
   private _navItems: HTMLElement | null = null;
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
+  private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
@@ -315,6 +316,7 @@ export default class ZnNavbar extends ZincElement {
       if (hideRemaining || ((itemWidth + takenWidth) > availableWithMore)) {
         const extMenu = item.cloneNode(true) as HTMLElement;
         extMenu.classList.remove('hidden');
+        this._cloneSources.set(extMenu, item);
         extMenu.addEventListener('click', () => {
           item.click();
           (this.shadowRoot?.querySelector('#extended-dropdown') as ZnDropdown || null)?.hide()
@@ -330,6 +332,35 @@ export default class ZnNavbar extends ZincElement {
     }
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
+
+  // The trigger only wraps the arrow icon, so clicks on the surrounding cell
+  // (padding / the space above and below the icon) would otherwise be dead.
+  // Forward those to the dropdown; clicks landing inside the dropdown itself
+  // (the trigger or the open panel) are left to be handled natively.
+  private _handleMoreClick = (e: MouseEvent) => {
+    const dropdown = this.shadowRoot?.querySelector<ZnDropdown>('#extended-dropdown');
+    if (!dropdown || e.composedPath().includes(dropdown)) {
+      return;
+    }
+
+    if (dropdown.open) {
+      dropdown.hide();
+    } else {
+      dropdown.show();
+    }
+  };
+
+  // Clones in the extended menu are static snapshots, so mirror the active
+  // state of their source items each time the dropdown opens.
+  private _syncExtendedActive = () => {
+    const clones = this._extendedMenu?.querySelectorAll<HTMLElement>(':scope > li') || [];
+    for (const clone of clones) {
+      const source = this._cloneSources.get(clone);
+      if (!source) continue;
+      clone.classList.toggle('active', source.classList.contains('active'));
+      clone.classList.toggle('zn-tb-active', source.classList.contains('zn-tb-active'));
+    }
+  };
 
   public addItem(item: Element, persist: boolean = true): void {
     const tabUri = item.getAttribute('tab-uri');
@@ -361,6 +392,7 @@ export default class ZnNavbar extends ZincElement {
     super.firstUpdated(_changedProperties);
 
     this._extendedMenu = this.shadowRoot?.querySelector('#extended-menu') as HTMLElement || null;
+    this.shadowRoot?.querySelector('#extended-dropdown')?.addEventListener('zn-show', this._syncExtendedActive);
     this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
     if (this._expandable) {
       const computed = getComputedStyle(this._expandable);
@@ -528,10 +560,10 @@ export default class ZnNavbar extends ZincElement {
                 ${content}
               </li>`;
           })}
-          <li class="more">
+          <li class="more" @click="${this._handleMoreClick}">
             <zn-dropdown placement="bottom-end" id="extended-dropdown">
               <zn-button slot="trigger" text color="transparent">
-                <zn-icon src="double_arrow" size="16"></zn-icon>
+                <zn-icon src="arrow_right_alt" size="16"></zn-icon>
               </zn-button>
               <ul id="extended-menu">
               </ul>

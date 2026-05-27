@@ -28,7 +28,9 @@ layout: component
 
 ### Basic Tabs
 
-The tabs component works by connecting tab navigation elements (typically in a `zn-navbar` in the `top` slot) with content panels. Each panel is identified by an `id` attribute, and navigation items use a `tab` attribute to reference those IDs.
+The tabs component works by connecting tab navigation elements (typically in a `zn-navbar` in the `top` slot) with
+content panels. Each panel is identified by an `id` attribute, and navigation items use a `tab` attribute to reference
+those IDs.
 
 ```html:preview
 <zn-tabs flush>
@@ -48,6 +50,46 @@ The tabs component works by connecting tab navigation elements (typically in a `
 
   <zn-sp id="settings">
     <p>Settings panel content.</p>
+  </zn-sp>
+</zn-tabs>
+```
+
+### Overflow
+
+When there are more tabs than can fit in the available space, the component will automatically show an overflow menu.
+This allows users to access all tabs even on smaller screens.
+
+```html:preview
+<zn-tabs flush>
+  <zn-navbar slot="top">
+    <li tab="">Tab 1</li>
+    <li tab="tab2">Lorem IPsum dolor sit amet. Lorem Ipsum Dolor sit Amet</li>
+    <li tab="tab3">Tab 3</li>
+    <li tab="tab4">Tab 4</li>
+    <li tab="tab5">This is Tab 5</li>
+    <li tab="tab6">This is Tab 6</li>
+    <li tab="tab7">This is Tab 7</li>
+  </zn-navbar>
+  <zn-sp id="">
+    <p>Content for Tab 1.</p>
+  </zn-sp>
+  <zn-sp id="tab2">
+    <p>Content for Tab 2.</p>
+  </zn-sp>
+  <zn-sp id="tab3">
+    <p>Content for Tab 3.</p>
+  </zn-sp>
+  <zn-sp id="tab4">
+    <p>Content for Tab 4.</p>
+  </zn-sp>
+  <zn-sp id="tab5">
+    <p>Content for Tab 5.</p>
+  </zn-sp>
+  <zn-sp id="tab6">
+    <p>Content for Tab 6.</p>
+  </zn-sp>
+  <zn-sp id="tab7">
+    <p>Content for Tab 7.</p>
   </zn-sp>
 </zn-tabs>
 ```
@@ -103,7 +145,8 @@ Remove the `caption` attribute for a cleaner layout when a header is not needed.
 
 ### Dynamic Tabs with URI Loading
 
-Use the `tab-uri` attribute to load content dynamically from a URL when a tab is clicked. The component will automatically fetch and display the content.
+Use the `tab-uri` attribute to load content dynamically from a URL when a tab is clicked. The component will
+automatically fetch and display the content.
 
 ```html:preview
 <zn-tabs flush no-prefetch>
@@ -117,7 +160,8 @@ Use the `tab-uri` attribute to load content dynamically from a URL when a tab is
 
 ### Prefetching
 
-By default, tabs with `tab-uri` will prefetch content on hover. Use the `no-prefetch` attribute to disable this behavior and only load content when clicked.
+By default, tabs with `tab-uri` will prefetch content on hover. Use the `no-prefetch` attribute to disable this behavior
+and only load content when clicked.
 
 ```html:preview
 <zn-tabs flush no-prefetch>
@@ -156,7 +200,8 @@ Use the `active` attribute to specify which tab should be active by default.
 
 ### Storage Persistence
 
-Use `store-key` to persist the active tab selection across page reloads. By default, uses session storage with a 5-minute TTL. Use `local-storage` for persistent storage beyond the session.
+Use `store-key` to persist the active tab selection across page reloads. By default, uses session storage with a
+5-minute TTL. Use `local-storage` for persistent storage beyond the session.
 
 ```html:preview
 <zn-tabs flush store-key="my-tabs">
@@ -182,7 +227,8 @@ Use `store-key` to persist the active tab selection across page reloads. By defa
 
 ### Local Storage
 
-Use `local-storage` with `store-key` to persist tabs across browser sessions. Control expiration with `store-ttl` (in seconds).
+Use `local-storage` with `store-key` to persist tabs across browser sessions. Control expiration with `store-ttl` (in
+seconds).
 
 ```html:preview
 <zn-tabs flush store-key="persistent-tabs" local-storage store-ttl="86400">
@@ -268,7 +314,9 @@ Use the `full-width` attribute to make tab content expand to fill the available 
 
 ### Split Pane Layout
 
-Use the `split` attribute with a pixel value to create a split pane layout with resizable sections. Control minimum and maximum primary sizes with `split-min` and `split-max`, and keep the secondary pane above a minimum width with `split-min-secondary`.
+Use the `split` attribute with a pixel value to create a split pane layout with resizable sections. Control minimum and
+maximum primary sizes with `split-min` and `split-max`, and keep the secondary pane above a minimum width with
+`split-min-secondary`.
 
 ```html:preview
 <zn-tabs split="300" split-min="200" split-max="600" split-min-secondary="320">
@@ -344,7 +392,8 @@ The tabs component provides multiple slots for flexible layouts.
 
 ### Actions Slot
 
-Use the `actions` slot to add action buttons that appear in the header. Elements can be conditionally shown based on the active tab using `ref-tab`.
+Use the `actions` slot to add action buttons that appear in the header. Elements can be conditionally shown based on the
+active tab using `ref-tab`.
 
 ```html:preview
 <zn-tabs caption="Document Editor">
@@ -418,7 +467,8 @@ Access tab methods programmatically to switch tabs, navigate, or refresh content
 
 ### Tab Refresh
 
-Triple-clicking an active tab or using the refresh parameter will reload dynamic content. Hold Alt while clicking to force a refresh.
+Triple-clicking an active tab or using the refresh parameter will reload dynamic content. Hold Alt while clicking to
+force a refresh.
 
 ```html:preview
 <zn-tabs flush>

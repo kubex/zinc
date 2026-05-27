@@ -333,23 +333,6 @@ export default class ZnNavbar extends ZincElement {
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
 
-  // The trigger only wraps the arrow icon, so clicks on the surrounding cell
-  // (padding / the space above and below the icon) would otherwise be dead.
-  // Forward those to the dropdown; clicks landing inside the dropdown itself
-  // (the trigger or the open panel) are left to be handled natively.
-  private _handleMoreClick = (e: MouseEvent) => {
-    const dropdown = this.shadowRoot?.querySelector<ZnDropdown>('#extended-dropdown');
-    if (!dropdown || e.composedPath().includes(dropdown)) {
-      return;
-    }
-
-    if (dropdown.open) {
-      dropdown.hide();
-    } else {
-      dropdown.show();
-    }
-  };
-
   // Clones in the extended menu are static snapshots, so mirror the active
   // state of their source items each time the dropdown opens.
   private _syncExtendedActive = () => {
@@ -560,7 +543,7 @@ export default class ZnNavbar extends ZincElement {
                 ${content}
               </li>`;
           })}
-          <li class="more" @click="${this._handleMoreClick}">
+          <li class="more">
             <zn-dropdown placement="bottom-end" id="extended-dropdown">
               <zn-button slot="trigger" text color="transparent">
                 <zn-icon src="arrow_right_alt" size="16"></zn-icon>

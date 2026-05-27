@@ -6086,6 +6086,7 @@ declare module "components/form-group/form-group.component" {
         /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
         helpText: string;
         forceCols: boolean;
+        layout: string;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

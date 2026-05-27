@@ -35,6 +35,7 @@ export default class ZnFormGroup extends ZincElement {
   /** The form groups help text. If you need to display HTML, use the `help-text` slot instead. */
   @property({attribute: 'help-text'}) helpText = '';
   @property({attribute: 'cols', type: Boolean}) forceCols = false;
+  @property({attribute: 'layout', type: String}) layout = "1,2";
 
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
@@ -56,37 +57,37 @@ export default class ZnFormGroup extends ZincElement {
         aria-labelledby="label"
         aria-describedby="help-text">
 
-        <zn-cols layout="1,2" mc="2" part="form-control-container" class="form-control__container">
+        <zn-cols layout="${this.layout}" part="form-control-container" class="form-control__container">
           ${hasLabel || hasHelpText || this.forceCols ? html`
             <div>
 
-          ${hasLabel ? html`
-            <div>
-              <label
-                part="form-control-label"
-                id="label"
-                class="form-control__label"
-                aria-hidden="${hasLabel ? 'false' : 'true'}">
-                <slot name="label">${this.label}</slot>
-                ${hasLabelTooltip
-                  ? html`
-                    <zn-tooltip class="form-control--label-tooltip">
-                      <div slot="content">
-                        <slot name="label-tooltip">${this.labelTooltip}</slot>
-                      </div>
-                      <zn-icon src="info"></zn-icon>
-                    </zn-tooltip>`
-                  : ''}
-              </label>
-            </div>` : html``}
+              ${hasLabel ? html`
+                <div>
+                  <label
+                    part="form-control-label"
+                    id="label"
+                    class="form-control__label"
+                    aria-hidden="${hasLabel ? 'false' : 'true'}">
+                    <slot name="label">${this.label}</slot>
+                    ${hasLabelTooltip
+                      ? html`
+                        <zn-tooltip class="form-control--label-tooltip">
+                          <div slot="content">
+                            <slot name="label-tooltip">${this.labelTooltip}</slot>
+                          </div>
+                          <zn-icon src="info"></zn-icon>
+                        </zn-tooltip>`
+                      : ''}
+                  </label>
+                </div>` : html``}
 
-          ${hasHelpText ? html`
-            <div
-              part="form-control-help-text"
-              id="help-text"
-              class="form-control__help-text">
-              <slot name="help-text">${this.helpText}</slot>
-            </div>` : html``}
+              ${hasHelpText ? html`
+                <div
+                  part="form-control-help-text"
+                  id="help-text"
+                  class="form-control__help-text">
+                  <slot name="help-text">${this.helpText}</slot>
+                </div>` : html``}
 
             </div>` : html``}
 

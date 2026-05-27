@@ -3,6 +3,16 @@ import {expect, fixture, html} from '@open-wc/testing';
 import type ZnOption from '../option/option.component';
 import type ZnSelect from './select.component';
 
+// The popup's ResizeObserver can emit a benign "loop completed with undelivered notifications"
+// warning when the dropdown opens during layout-measuring tests. It's not a real error — ignore it
+// so the test runner doesn't treat it as an uncaught exception (capture phase runs before the runner's).
+window.addEventListener('error', (e: ErrorEvent) => {
+  if (typeof e.message === 'string' && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+}, true);
+
 describe('<zn-select>', () => {
   it('should render a component', async () => {
     const el = await fixture(html`
@@ -175,6 +185,52 @@ describe('<zn-select>', () => {
       expect(el.shadowRoot!.activeElement, 'display input should be blurred').to.not.equal(displayInput);
     });
 
+  });
+
+  describe('multiple + search layout', () => {
+    const openWithTags = async (width: number) => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select search multiple max-options-visible="0" style="width: ${width}px;">
+          <zn-option value="a" selected>Urgent</zn-option>
+          <zn-option value="b" selected>Backend</zn-option>
+          <zn-option value="c" selected>Frontend</zn-option>
+          <zn-option value="d" selected>stetset</zn-option>
+          <zn-option value="e" selected>another</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+      return el.shadowRoot!.querySelector<HTMLElement>('.select__combobox')!;
+    };
+
+    it('grows to show all tags instead of clipping them when they wrap', async () => {
+      const cb = await openWithTags(360);
+      // scrollHeight > clientHeight would mean wrapped rows are clipped by the box.
+      expect(cb.scrollHeight).to.equal(cb.clientHeight);
+    });
+
+    it('does not clip tags at very narrow widths', async () => {
+      const cb = await openWithTags(180);
+      expect(cb.scrollHeight).to.equal(cb.clientHeight);
+    });
+
+    it('shows a pointer cursor on a tag remove icon (even in search mode)', async () => {
+      // In search/free-text mode the combobox uses cursor:text, which the chips would otherwise inherit.
+      const el = await fixture<ZnSelect>(html`
+        <zn-select multiple search>
+          <zn-option value="a" selected>Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      const removeIcon = el.shadowRoot!.querySelector<HTMLElement>('.select__tags zn-icon[slot="action"]');
+      expect(removeIcon, 'remove icon should exist').to.exist;
+      // Only the remove X is clickable, so only it gets a pointer cursor...
+      expect(getComputedStyle(removeIcon!).cursor).to.equal('pointer');
+      // ...the chip body is not clickable, so it should not show a pointer.
+      const chip = el.shadowRoot!.querySelector<HTMLElement>('.select__tags zn-chip')!;
+      expect(getComputedStyle(chip).cursor).to.equal('default');
+    });
   });
 
   describe('free-text', () => {

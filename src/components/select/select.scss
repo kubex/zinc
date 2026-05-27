@@ -127,6 +127,15 @@
   flex-wrap: wrap;
   gap: var(--zn-spacing-2x-small);
   padding-inline-start: 0;
+  /* Allow the control to grow with the wrapped tag rows instead of clipping them, and pack the rows
+     from the top with a little vertical padding. align-self stops the popup from stretching the
+     combobox to a fixed height, so it sizes to its (wrapped) content. */
+  overflow: visible;
+  align-content: flex-start;
+  align-items: center;
+  align-self: flex-start;
+  height: auto;
+  padding-block: var(--zn-spacing-2x-small);
 }
 
 .select__value-input {
@@ -149,13 +158,21 @@
   margin-inline-start: var(--zn-spacing-2x-small);
 }
 
-.select__tags::slotted(zn-chip) {
-  cursor: pointer !important;
+/* The tags are rendered into the shadow (not slotted), so target them as descendants. Only the remove
+   "X" is clickable (pointer); the chip body isn't, so give it a default cursor rather than letting it
+   inherit the combobox's text cursor in search/free-text mode. */
+.select__tags zn-chip {
+  cursor: default;
+}
+
+.select__tags zn-icon[slot="action"] {
+  cursor: pointer;
 }
 
 .select--disabled .select__tags,
-.select--disabled .select__tags::slotted(zn-chip) {
-  cursor: not-allowed !important;
+.select--disabled .select__tags zn-chip,
+.select--disabled .select__tags zn-icon[slot="action"] {
+  cursor: not-allowed;
 }
 
 /* Standard selects */

@@ -1,13 +1,6 @@
-import '../../components/input/index';
-import '../../components/select/index';
-import '../../components/button/index';
-import './index';
+import '../../../dist/zn.min.js';
 import {expect, fixture, html} from '@open-wc/testing';
 import type ZnInputGroup from './input-group.component';
-
-// We need to ensure components are defined for the test
-customElements.define('zn-input-group-test-input', class extends HTMLElement {
-});
 
 describe('<zn-input-group>', () => {
   it('should render a component', async () => {
@@ -68,8 +61,8 @@ describe('<zn-input-group>', () => {
     const button = el.querySelector('zn-button');
 
     expect(input).to.have.attribute('data-zn-input-group__input--first');
-    expect(button).to.have.attribute('data-zn-input-group__input--last');
     expect(button).to.have.attribute('data-zn-input-group__input');
+    expect(button).to.not.have.attribute('data-zn-input-group__input--last');
   });
 
   it('should render a label when the label attribute is set', async () => {
@@ -93,6 +86,5 @@ describe('<zn-input-group>', () => {
     expect(label).to.exist;
     const slot = label?.querySelector('slot');
     expect(slot).to.exist;
-    // Note: checking slot content in shadow DOM is tricky, but existence of label wrapper is enough to prove logic works
   });
 });

@@ -26,12 +26,20 @@ export default class ZnStyle extends ZincElement {
   @property() height = '';
   @property() pad = '';
   @property() margin = '';
+  @property({type: Boolean}) gutter = false;
   @property({attribute: 'a-margin'}) autoMargin = '';
 
   connectedCallback() {
     super.connectedCallback();
 
     let display = this.display || 'contents';
+
+    if (this.gutter) {
+      this.classList.add('zn-gutter');
+      if (display === 'contents') {
+        display = 'block'
+      }
+    }
 
     if (this.color === '') {
       if (this.error) {

@@ -3,6 +3,7 @@ import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
 import type {PropertyValues} from 'lit';
 import {html, nothing, unsafeCSS} from 'lit';
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
@@ -44,7 +45,11 @@ export default class ContentBlock extends ZincElement {
 
   private _textRows: TextRow[] = [];
 
-  private _footerObserver?: MutationObserver;
+  private readonly _footerObserver = new MutationController(this, {
+    target: null,
+    config: {subtree: true, childList: true, attributes: true, attributeFilter: ['href', 'download', 'caption']},
+    callback: () => this._debouncedReplace(),
+  });
   private _replaceDebounce: number = 0;
 
   connectedCallback() {
@@ -71,20 +76,11 @@ export default class ContentBlock extends ZincElement {
   }
 
   disconnectedCallback() {
-    try {
-      if (this._footerObserver) {
-        this._footerObserver.disconnect();
-        this._footerObserver = undefined;
-      }
-      if (this._replaceDebounce) {
-        clearTimeout(this._replaceDebounce);
-        this._replaceDebounce = 0;
-      }
-    } finally {
-      // Ensure base class cleanup
-      // @ts-ignore - base may or may not implement disconnectedCallback
-      super.disconnectedCallback?.();
+    if (this._replaceDebounce) {
+      clearTimeout(this._replaceDebounce);
+      this._replaceDebounce = 0;
     }
+    super.disconnectedCallback();
   }
 
   private _collapseContent(e: Event) {
@@ -267,25 +263,7 @@ export default class ContentBlock extends ZincElement {
     const assignedEls: Element[] = slot.assignedElements({flatten: true});
     if (!assignedEls || assignedEls.length === 0) return;
 
-    // Reset and attach a new observer to watch for dynamic content inside the footer subtree
-    if (this._footerObserver) {
-      this._footerObserver.disconnect();
-      this._footerObserver = undefined;
-    }
-
-    const obs = new MutationObserver(() => {
-      this._debouncedReplace();
-    });
-    this._footerObserver = obs;
-
-    assignedEls.forEach(el => {
-      obs.observe(el, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        attributeFilter: ['href', 'download', 'caption']
-      });
-    });
+    assignedEls.forEach(el => this._footerObserver.observe(el));
 
     // Run now and again shortly after to catch async rendering
     this._replaceImagePlaceholders();

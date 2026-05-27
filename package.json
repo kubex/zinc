@@ -28,6 +28,7 @@
   "unpkg": "dist/zinc.min.js",
   "scripts": {
     "build": "node scripts/build.js",
+    "build:docs": "node scripts/build.js --with-docs",
     "build:vite": "vite build",
     "check-updates": "npx npm-check-updates --interactive --format group",
     "create": "plop --plopfile scripts/plop/plopfile.js",
@@ -37,19 +38,21 @@
     "test": "npx playwright install --with-deps && web-test-runner --group default",
     "test:component": "npx playwright install --with-deps && web-test-runner -- --watch --group",
     "test:watch": "npx playwright install --with-deps && web-test-runner --watch --group default",
-    "watch": "node scripts/build.js --serve"
+    "watch": "node scripts/build.js --serve",
+    "watch:docs": "node scripts/build.js --serve --with-docs"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
     "@floating-ui/dom": "^1.6.13",
     "@lit-labs/observers": "^2.0.4",
+    "@lit-labs/signals": "^0.3.0",
     "@lit/task": "^1.0.1",
     "@shoelace-style/localize": "^3.2.1",
     "air-datepicker": "^3.5.3",
     "composed-offset-position": "^0.0.6",
     "echarts": "^6.0.0",
     "emoji-mart": "^5.6.0",
-    "lit": "^2.7.6",
+    "lit": "^3.3.3",
     "marked": "^18.0.2",
     "quill": "^2.0.3"
   },

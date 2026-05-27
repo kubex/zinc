@@ -21,7 +21,10 @@ const postCss = postCSS([
   minify()
 ]);
 
-const {serve} = commandLineArgs([{name: 'serve', type: Boolean}]);
+const {serve, 'with-docs': withDocs} = commandLineArgs([
+  {name: 'serve', type: Boolean},
+  {name: 'with-docs', type: Boolean}
+]);
 const outDir = 'dist';
 const siteDir = '_site';
 const spinner = ora({hideCursor: false}).start();
@@ -256,13 +259,16 @@ if(serve)
 {
   let result;
 
-  // Spin up Eleventy and Wait for the search index to appear before proceeding. The search index is generated during
-  // eleventy.after, so it appears after the docs are fully published. This is kinda hacky, but here we are.
-  // Kick off the Eleventy dev server with --watch and --incremental
-  await nextTask('Building the docs', async () =>
+  if(withDocs)
   {
-    result = await buildTheDocs(true);
-  });
+    // Spin up Eleventy and Wait for the search index to appear before proceeding. The search index is generated during
+    // eleventy.after, so it appears after the docs are fully published. This is kinda hacky, but here we are.
+    // Kick off the Eleventy dev server with --watch and --incremental
+    await nextTask('Building the docs', async () =>
+    {
+      result = await buildTheDocs(true);
+    });
+  }
 
   const bs = browserSync.create();
   const port = await getPort({port: portNumbers(4000, 4999)});
@@ -275,31 +281,43 @@ if(serve)
     notify:         false,
     single:         false,
     ghostMode:      false,
-    server:         {
+    open:           withDocs,
+    ui:             withDocs ? undefined : false,
+    server:         withDocs ? {
       baseDir: siteDir,
       routes:  {
         '/dist': outDir
       }
-    }
+    } : false
   };
 
   // Launch BrowserSync
   bs.init(bsConfig, () =>
   {
-    const url = `http://localhost:${port}`;
-    console.log(chalk.cyan(`\n🚀 Server running at ${url}`));
+    if(withDocs)
+    {
+      const url = `http://localhost:${port}`;
+      console.log(chalk.cyan(`\n🚀 Server running at ${url}`));
+    }
+    else
+    {
+      console.log(chalk.cyan('\n👀 Watching source files (run with --with-docs for the docs server)'));
+    }
 
     // log deferred output
-    if(result.output.length > 0)
+    if(result && result.output.length > 0)
     {
       console.log('\n' + result.output.join('\n'));
     }
 
     // Log output that comes later on
-    result.child.stdout.on('data', data =>
+    if(result)
     {
-      console.log(data.toString());
-    });
+      result.child.stdout.on('data', data =>
+      {
+        console.log(data.toString());
+      });
+    }
   });
 
   // Rebuild and reload then source files change
@@ -351,15 +369,18 @@ if(serve)
   });
 
   // Reload without rebuilding when docs change
-  bs.watch([`${siteDir}/**/*.*`]).on('change', () =>
+  if(withDocs)
   {
-    bs.reload();
-  });
+    bs.watch([`${siteDir}/**/*.*`]).on('change', () =>
+    {
+      bs.reload();
+    });
+  }
 
 }
 
 // Build for production
-if(!serve)
+if(!serve && withDocs)
 {
   let result;
 

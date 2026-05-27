@@ -1,6 +1,7 @@
 import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from "lit";
 import {property, query, queryAll} from "lit/decorators.js";
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from "../../../../internal/zinc-element";
 import ZnButton from "../../../button";
 import ZnEditorTool from "./tool";
@@ -24,8 +25,11 @@ export default class ToolbarComponent extends ZincElement {
   @query('.toolbar__group--overflow') private _overflowGroup!: HTMLElement;
 
   private _featureConfig: EditorFeatureConfig = {};
-  private _resizeObserver: ResizeObserver | null = null;
   private _resizeId: number | null = null;
+
+  private readonly _resizeObserver = new ResizeController(this, {
+    callback: () => this.handleResize(),
+  });
 
   // Tracks DOM nodes (e.g. emoji/date pickers) temporarily moved into the overflow submenu so we can restore them
   private _movedContent: Map<HTMLElement, { placeholder: Comment; originalParent: HTMLElement }> = new Map();
@@ -33,21 +37,13 @@ export default class ToolbarComponent extends ZincElement {
   connectedCallback() {
     super.connectedCallback();
     this.containerWidth = this.offsetWidth;
-
-    this._resizeObserver = new ResizeObserver(this.handleResize.bind(this));
     if (this.parentElement) {
       this._resizeObserver.observe(this.parentElement);
     }
-    this._resizeObserver.observe(this as HTMLElement);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-
-    if (this._resizeObserver) {
-      this._resizeObserver.disconnect();
-      this._resizeObserver = null;
-    }
     if (this._resizeId !== null) {
       cancelAnimationFrame(this._resizeId);
       this._resizeId = null;

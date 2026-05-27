@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html } from '@open-wc/testing';
+import type ZnInlineEdit from '../inline-edit/inline-edit.component';
 import type ZnTranslations from './translations.component';
 
 describe('<zn-translations>', () => {
@@ -24,9 +25,9 @@ describe('<zn-translations>', () => {
     el.values = { 'en': 'Hello' };
     await el.updateComplete;
 
-    const input = el.shadowRoot!.querySelector('zn-inline-edit');
+    const input = el.shadowRoot!.querySelector('zn-inline-edit') as ZnInlineEdit | null;
     expect(input).to.exist;
-    await expect(input!.getAttribute('value')).to.equal('Hello');
+    expect(input!.value).to.equal('Hello');
 
     // Simulate change
     input!.value = 'Hello World';

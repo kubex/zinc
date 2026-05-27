@@ -11,6 +11,7 @@ import {
 } from './builders';
 import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { ResizeController } from '@lit-labs/observers/resize-controller.js';
 import {
   DataZoomComponent,
   GridComponent,
@@ -87,8 +88,13 @@ export default class ZnChart extends ZincElement {
   }) scale: boolean | number = false;
 
   private chart?: ECharts;
-  private resizeObserver?: ResizeObserver;
   private liveTimer?: number;
+
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    skipInitial: true,
+    callback: () => this.chart?.resize(),
+  });
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     this.initChart();
@@ -150,11 +156,6 @@ export default class ZnChart extends ZincElement {
       echarts.connect(this.syncGroup);
     }
 
-    let firstResize = true;
-    this.resizeObserver = new ResizeObserver(() => {
-      if (firstResize) { firstResize = false; return; }
-      this.chart?.resize();
-    });
     this.resizeObserver.observe(host);
 
     if (this.live && this.dataUrl) this.startLive();
@@ -206,7 +207,6 @@ export default class ZnChart extends ZincElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.liveTimer) clearInterval(this.liveTimer);
-    this.resizeObserver?.disconnect();
     this.chart?.dispose();
     this.chart = undefined;
   }

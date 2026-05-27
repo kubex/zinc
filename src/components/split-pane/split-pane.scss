@@ -2,8 +2,8 @@
 @use "../../wc";
 @use "../../../scss/mixins";
 
-:host([bordered]) #resizer:before {
-  background-color: rgb(var(--zn-border-color));
+:host([gap]) {
+  gap: 0 calc(var(--zn-base-gap) / 2);
 }
 
 ::slotted(*) {
@@ -22,6 +22,7 @@
   flex: 1;
   min-width: 350px;
   container-type: inline-size;
+  position: relative;
 
   #primary-pane, #secondary-pane {
     flex-grow: 1;
@@ -51,8 +52,6 @@
 
     cursor: col-resize;
 
-    //padding: var(--zn-padding);
-
     &:hover:before {
       background-color: rgb(var(--zn-blue));
     }
@@ -60,14 +59,8 @@
 }
 
 :host(:not([vertical])), zn-split-pane:not([vertical]) {
-  padding-top: 40px;
-
   #split-nav {
     display: none;
-  }
-
-  @include wc.container-query(md) {
-    padding-top: 0;
   }
 
   @include wc.container-query(zero, md) {
@@ -89,7 +82,8 @@
 
       li {
         line-height: 39px;
-        flex-basis: 50%;
+        flex: 1 1 0;
+        min-width: 0;
         text-align: center;
         position: relative;
         cursor: pointer;
@@ -124,11 +118,16 @@
     #primary-pane, #secondary-pane {
       max-width: 100% !important;
       width: 100%;
+      padding-top: 40px;
     }
   }
 
-  #primary-pane, #secondary-pane {
+  #primary-pane {
     min-width: var(--min-panel-size, 15%);
+  }
+
+  #secondary-pane {
+    min-width: var(--min-secondary-panel-size, var(--min-panel-size, 15%));
   }
 
   #primary-pane {
@@ -161,6 +160,74 @@
   }
 }
 
+:host([merged-navigation]:not([vertical])) {
+  @include wc.container-query(zero, md) {
+    padding-top: 0;
+
+    #split-nav {
+      display: none;
+    }
+
+    #primary-pane, #secondary-pane {
+      padding-top: 0;
+    }
+  }
+}
+
+:host([hide="primary"]),
+:host([hide="secondary"]) {
+  padding-top: 0;
+
+  #split-nav,
+  #resizer {
+    display: none;
+  }
+}
+
+:host([hide="primary"]) {
+  #primary-pane {
+    flex: 0 0 0;
+    height: 0;
+    max-height: 0 !important;
+    max-width: 0 !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    width: 0;
+  }
+
+  #secondary-pane {
+    height: 100%;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+}
+
+:host([hide="secondary"]) {
+  #primary-pane {
+    height: 100%;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  #secondary-pane {
+    flex: 0 0 0;
+    height: 0;
+    max-height: 0 !important;
+    max-width: 0 !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    width: 0;
+  }
+}
+
 :host([focus-pane="0"]) {
   #primary-pane {
     display: block;
@@ -181,8 +248,13 @@
     display: none;
   }
 
-  #primary-pane, #secondary-pane {
+  #primary-pane {
     min-height: var(--min-panel-size, 15%);
+  }
+
+  #secondary-pane {
+    min-height: var(--min-secondary-panel-size, var(--min-panel-size, 15%));
+    z-index: 1;
   }
 
   #primary-pane {
@@ -300,4 +372,8 @@ $padding: 8px;
   #resizer:hover::before {
     background-color: rgb(var(--zn-blue)) !important;
   }
+}
+
+:host([bordered]) #resizer:before {
+  background-color: rgb(var(--zn-border-color));
 }

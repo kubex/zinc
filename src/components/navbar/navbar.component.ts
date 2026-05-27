@@ -1,7 +1,9 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
@@ -14,6 +16,8 @@ interface StoredTab {
   title: string;
 }
 
+const NAVBAR_MIN_WIDTH = 200;
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/navbar
@@ -25,7 +29,8 @@ interface StoredTab {
  * @event zn-event-name - Emitted as an example.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot expand - Expanding action panels rendered alongside the navbar items.
+ * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
  *
  * @csspart base - The component's base wrapper.
  *
@@ -59,17 +64,24 @@ export default class ZnNavbar extends ZincElement {
   private _postItems: NodeListOf<Element>;
   @property()
   private _appended: Element[];
-  private _expanding: NodeListOf<Element>;
+  private _expanding: Element[] = [];
   private _openedTabs: string[] = [];
-  private resizeObserver: ResizeObserver | null = null;
+
+  private readonly _itemsObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true},
+    callback: () => this._updateVisibility(),
+  });
 
   private _navItems: HTMLElement | null = null;
   private _expandable: HTMLElement | null = null;
   private _extendedMenu: HTMLElement | null = null;
+  private readonly _cloneSources = new WeakMap<HTMLElement, HTMLElement>();
   private _navItemsGap: number = 0;
   private _expandableMargin: number = 0;
   private _totalItemWidth: number = 0;
-  private _itemsObserver: MutationObserver | null = null;
+  private _resizeFrame: number | null = null;
+  private _resizeController: ResizeController;
 
   protected _store: Store;
 
@@ -77,14 +89,82 @@ export default class ZnNavbar extends ZincElement {
     this._appended = [...(this._appended || []), item];
   }
 
+  addExpandingAction(action: Element) {
+    if (!this._expanding.includes(action)) {
+      this._expanding = [...this._expanding, action];
+    }
+
+    if (action.parentElement !== this) {
+      this.appendChild(action);
+    }
+
+    this.requestUpdate();
+    this._updateVisibility();
+    this._observeExpandingAction(action);
+    this._scheduleResize();
+  }
+
+  constructor() {
+    super();
+    this._resizeController = new ResizeController(this, {
+      callback: () => this._scheduleResize(),
+    });
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {childList: true},
+      callback: mutations => this._adoptNewLightItems(mutations),
+    });
+  }
+
+  private readonly _expandingActionObserver = new MutationController(this, {
+    target: null,
+    config: {attributes: true, attributeFilter: ['open', 'method', 'basis']},
+    callback: () => this._scheduleResize(),
+  });
+
+  private _scheduleResize = () => {
+    if (this._resizeFrame !== null) {
+      cancelAnimationFrame(this._resizeFrame);
+    }
+
+    this._resizeFrame = requestAnimationFrame(() => {
+      this._resizeFrame = null;
+      this.handleResize();
+    });
+  };
+
+  private _observeExpandingAction(action: Element) {
+    this._expandingActionObserver.observe(action);
+    this._resizeController.observe(action);
+  }
+
+  private _adoptNewLightItems(mutations: MutationRecord[]) {
+    const ul = this.shadowRoot?.querySelector('ul');
+    if (!ul) return;
+    const moreItem = ul.querySelector('li.more');
+    for (const m of mutations) {
+      for (const node of Array.from(m.addedNodes)) {
+        if (node instanceof Element && node.tagName === 'ZN-EXPANDING-ACTION') {
+          this.addExpandingAction(node);
+          continue;
+        }
+
+        if (!(node instanceof HTMLLIElement)) continue;
+        if (node.hasAttribute('suffix')) continue;
+        if (moreItem) {
+          ul.insertBefore(node, moreItem);
+        } else {
+          ul.appendChild(node);
+        }
+      }
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._preItems = this.querySelectorAll('li:not([suffix])');
     this._postItems = this.querySelectorAll('li[suffix]');
-    this._expanding = this.querySelectorAll('zn-expanding-action');
-
-    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this as HTMLElement); // Observe the parent node
+    this._expanding = Array.from(this.querySelectorAll('zn-expanding-action'));
 
     if (!this.masterId) {
       this.masterId = this.storeKey || Math.floor(Math.random() * 1000000).toString();
@@ -97,21 +177,13 @@ export default class ZnNavbar extends ZincElement {
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znnav:", this.storeTtl);
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._itemsObserver?.disconnect();
-    this._itemsObserver = null;
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = null;
-  }
-
   private _updateVisibility = () => {
     if (this._expanding.length > 0) {
       this.style.display = '';
       return;
     }
-    const items = this._navItems?.querySelectorAll(':scope > li:not(.more):not(#dropdown-item)') || [];
-    const itemCount = items.length;
+
+    const itemCount = this.itemCount()
     if (itemCount === 0 || (itemCount < 2 && this.hideOne)) {
       this.style.display = 'none';
     } else {
@@ -119,20 +191,12 @@ export default class ZnNavbar extends ZincElement {
     }
   };
 
-  handleResize = () => {
-    if (this._totalItemWidth === 0 || this._extendedMenu === null || this.iconBar || this.stacked) {
-      // If we can't do anything with the nav items, we just return
-      return;
-    }
+  itemCount(): number {
+    const items = this._navItems?.querySelectorAll(':scope > li:not(.more):not(#dropdown-item)') || [];
+    return items.length;
+  }
 
-    const expandWidth = this._expandableMargin + (this._expandable?.offsetWidth || 0);
-    let hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
-
-    if (!hasHidden && expandWidth + this._totalItemWidth <= this.offsetWidth) {
-      this._navItems?.classList.toggle('has-hidden', false)
-      return
-    }
-
+  private _resolveAvailableWidth(): number {
     let parent = this.parentElement;
     let availableWidth = this.offsetWidth || parent?.offsetWidth || 0;
 
@@ -143,7 +207,102 @@ export default class ZnNavbar extends ZincElement {
       availableWidth = parent.offsetWidth || 0;
     }
 
-    availableWidth -= expandWidth;
+    return availableWidth;
+  }
+
+  private _measureTotalItemWidth(): number {
+    const items = this._navItems?.querySelectorAll(':scope > li') || [];
+    let totalWidth = 0;
+
+    for (const item of items) {
+      if (item.classList.contains('more') || !(item instanceof HTMLElement)) {
+        continue;
+      }
+
+      totalWidth += this._getItemWidth(item);
+    }
+
+    return totalWidth;
+  }
+
+  private _getItemWidth(item: HTMLElement): number {
+    return (item.getBoundingClientRect().width || item.offsetWidth || 0) + this._navItemsGap + 5;
+  }
+
+  private _getHorizontalSpacing(element: HTMLElement): number {
+    const computed = getComputedStyle(element);
+    return (parseFloat(computed.paddingLeft) || 0) + (parseFloat(computed.paddingRight) || 0);
+  }
+
+  private _getMoreItemWidth(): number {
+    const moreItem = this._navItems?.querySelector<HTMLElement>(':scope > li.more');
+    if (!moreItem || !this._navItems) {
+      return 0;
+    }
+
+    let moreWidth = this._getItemWidth(moreItem);
+    if (moreWidth > 0) {
+      return moreWidth;
+    }
+
+    const hadHidden = this._navItems.classList.contains('has-hidden');
+    this._navItems.classList.add('has-hidden');
+    moreWidth = this._getItemWidth(moreItem);
+    this._navItems.classList.toggle('has-hidden', hadHidden);
+
+    return moreWidth;
+  }
+
+  private _getExpandableWidth(containerWidth: number): number {
+    const expandableWidth = this._expandableMargin + (this._expandable?.getBoundingClientRect().width || this._expandable?.offsetWidth || 0);
+    let fillWidth = 0;
+
+    for (const action of this._expanding) {
+      if (!(action instanceof HTMLElement)) {
+        continue;
+      }
+
+      const method = (action as HTMLElement & {method?: string}).method || action.getAttribute('method') || 'drop';
+      const open = Boolean((action as HTMLElement & {open?: boolean}).open || action.hasAttribute('open'));
+
+      if (method !== 'fill' || !open) {
+        continue;
+      }
+
+      const panel = action.shadowRoot?.querySelector<HTMLElement>('.expanding-action--fill');
+      const panelWidth = panel?.getBoundingClientRect().width || 0;
+      fillWidth = Math.max(fillWidth, panelWidth, Math.min(containerWidth, 800));
+    }
+
+    return Math.max(expandableWidth, fillWidth);
+  }
+
+  handleResize = () => {
+    if (this._extendedMenu === null || this.iconBar || this.stacked) {
+      // If we can't do anything with the nav items, we just return
+      return;
+    }
+
+    const availableContainerWidth = this._resolveAvailableWidth();
+    const expandWidth = this._getExpandableWidth(availableContainerWidth);
+    this._totalItemWidth = this._measureTotalItemWidth();
+    if (this._totalItemWidth === 0) {
+      return;
+    }
+
+    let hasHidden = (this._navItems?.querySelectorAll('li.hidden').length || 0) > 0
+
+    const navSpacing = this._navItems ? this._getHorizontalSpacing(this._navItems) : 0;
+    const availableWidth = Math.max(availableContainerWidth - expandWidth, NAVBAR_MIN_WIDTH);
+    const availableWithoutMore = availableWidth - navSpacing;
+
+    if (!hasHidden && this._totalItemWidth <= availableWithoutMore) {
+      this._navItems?.classList.toggle('has-hidden', false)
+      return
+    }
+
+    const moreWidth = this._getMoreItemWidth();
+    const availableWithMore = availableWithoutMore - moreWidth;
     // reduce the items
     let takenWidth = 0;
     let hideRemaining = false;
@@ -153,10 +312,11 @@ export default class ZnNavbar extends ZincElement {
       if (item.classList.contains('more') || !(item instanceof HTMLElement)) {
         continue;
       }
-      const itemWidth = item.offsetWidth + this._navItemsGap + 5
-      if (hideRemaining || ((itemWidth + takenWidth) > availableWidth)) {
+      const itemWidth = this._getItemWidth(item);
+      if (hideRemaining || ((itemWidth + takenWidth) > availableWithMore)) {
         const extMenu = item.cloneNode(true) as HTMLElement;
         extMenu.classList.remove('hidden');
+        this._cloneSources.set(extMenu, item);
         extMenu.addEventListener('click', () => {
           item.click();
           (this.shadowRoot?.querySelector('#extended-dropdown') as ZnDropdown || null)?.hide()
@@ -172,6 +332,18 @@ export default class ZnNavbar extends ZincElement {
     }
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
   }
+
+  // Clones in the extended menu are static snapshots, so mirror the active
+  // state of their source items each time the dropdown opens.
+  private _syncExtendedActive = () => {
+    const clones = this._extendedMenu?.querySelectorAll<HTMLElement>(':scope > li') || [];
+    for (const clone of clones) {
+      const source = this._cloneSources.get(clone);
+      if (!source) continue;
+      clone.classList.toggle('active', source.classList.contains('active'));
+      clone.classList.toggle('zn-tb-active', source.classList.contains('zn-tb-active'));
+    }
+  };
 
   public addItem(item: Element, persist: boolean = true): void {
     const tabUri = item.getAttribute('tab-uri');
@@ -195,21 +367,26 @@ export default class ZnNavbar extends ZincElement {
     } else {
       ul?.appendChild(item);
     }
+
+    this._updateVisibility();
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
     this._extendedMenu = this.shadowRoot?.querySelector('#extended-menu') as HTMLElement || null;
+    this.shadowRoot?.querySelector('#extended-dropdown')?.addEventListener('zn-show', this._syncExtendedActive);
     this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
     if (this._expandable) {
       const computed = getComputedStyle(this._expandable);
-      this._expandableMargin = parseInt(computed.marginLeft) + parseInt(computed.marginRight);
+      this._expandableMargin = (parseFloat(computed.marginLeft) || 0) + (parseFloat(computed.marginRight) || 0);
+      this._resizeController.observe(this._expandable);
     }
     this._navItems = this.shadowRoot?.querySelector('.navbar__container > ul') as HTMLElement || null;
     if (this._navItems) {
       const computed = getComputedStyle(this._navItems);
-      this._navItemsGap = parseInt(computed.columnGap);
+      this._navItemsGap = parseFloat(computed.columnGap) || 0;
+      this._resizeController.observe(this._navItems);
 
       this._navItems.addEventListener('click', (e) => {
         const target = (e.target as HTMLElement).closest('li[tab-uri]');
@@ -226,17 +403,12 @@ export default class ZnNavbar extends ZincElement {
     this._loadStoredTabs();
 
     if (this._navItems) {
-      this._itemsObserver = new MutationObserver(this._updateVisibility);
-      this._itemsObserver.observe(this._navItems, {childList: true});
+      this._itemsObserver.observe(this._navItems);
     }
+    this._expanding.forEach(action => this._observeExpandingAction(action));
     this._updateVisibility();
 
     setTimeout(() => {
-      const items = this._navItems?.querySelectorAll('li') || [];
-      for (const item of items) {
-        this._totalItemWidth += item.offsetWidth + this._navItemsGap
-      }
-
       this.handleResize();
     }, 100)
 
@@ -337,7 +509,7 @@ export default class ZnNavbar extends ZincElement {
     }
 
     return html`
-      <div class="${classMap({
+      <div part="container" class="${classMap({
         'navbar__container': true,
         'navbar__container--stacked': this.stacked,
         'navbar__container--icon-bar': this.iconBar
@@ -360,10 +532,11 @@ export default class ZnNavbar extends ZincElement {
             }
             if (item.path != undefined) {
               return html`
-                <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}</li>`;
+                <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}
+                </li>`;
             }
             return html`
-              <li class="${classMap({ 'active': item.active })}"
+              <li class="${classMap({'active': item.active})}"
                   part="navbar-item"
                   tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
                   data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">
@@ -373,7 +546,7 @@ export default class ZnNavbar extends ZincElement {
           <li class="more">
             <zn-dropdown placement="bottom-end" id="extended-dropdown">
               <zn-button slot="trigger" text color="transparent">
-                <zn-icon src="double_arrow" size="16"></zn-icon>
+                <zn-icon src="arrow_right_alt" size="16"></zn-icon>
               </zn-button>
               <ul id="extended-menu">
               </ul>
@@ -397,6 +570,7 @@ export default class ZnNavbar extends ZincElement {
             <slot name="expand"></slot>
           </div>
         ` : ''}
-      </div>`;
+      </div>
+      <slot name="bottom" part="bottom"></slot>`;
   }
 }

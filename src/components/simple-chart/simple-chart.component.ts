@@ -4,6 +4,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import { type CSSResultGroup, html, unsafeCSS } from 'lit';
 import { GridComponent, TooltipComponent } from 'echarts/components';
 import { property } from 'lit/decorators.js';
+import { ResizeController } from '@lit-labs/observers/resize-controller.js';
 import styles from './simple-chart.scss';
 import ZincElement from '../../internal/zinc-element';
 import type { ECharts } from 'echarts/core';
@@ -40,7 +41,11 @@ export default class ZnSimpleChart extends ZincElement {
   }) enableAnimations: boolean | number = false;
 
   private chart?: ECharts;
-  private resizeObserver?: ResizeObserver;
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    skipInitial: true,
+    callback: () => this.chart?.resize(),
+  });
 
   firstUpdated() {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
@@ -77,17 +82,11 @@ export default class ZnSimpleChart extends ZincElement {
         },
       }],
     });
-    let firstResize = true;
-    this.resizeObserver = new ResizeObserver(() => {
-      if (firstResize) { firstResize = false; return; }
-      this.chart?.resize();
-    });
     this.resizeObserver.observe(host);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.resizeObserver?.disconnect();
     this.chart?.dispose();
   }
 

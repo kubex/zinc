@@ -205,7 +205,15 @@
 }
 
 .zn-panel-bg {
+  --zn-page-surface-background: var(--zn-panel);
   background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+}
+
+.zn-panel {
+  background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-large);
+  --zn-page-surface-background: var(--zn-panel);
 }
 
 .zn-container {
@@ -279,12 +287,17 @@
 .zn-panel-bar {
   border-bottom: 1px solid rgb(var(--zn-border-color));
   background-color: rgba(var(--zn-panel), 0.9);
-  padding: 3px;
-  gap: 3px;
+  padding: 4px;
+  gap: 4px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   z-index: 1;
+}
+
+.zn-panel-bar--pill {
+  border-radius: var(--zn-border-radius-large);
+  border: 1px solid rgb(var(--zn-border-color));
 }
 
 .zn-panel-bar--large {

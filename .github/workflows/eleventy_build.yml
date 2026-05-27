@@ -28,7 +28,7 @@ jobs:
 
       - run: npm ci # Install dependencies
 
-      - run: npm run build # Build the site
+      - run: npm run build -- --with-docs # Build the site (including docs)
 
       # Copy the dist/ folder into _site/dist
       - run: cp -r dist/ _site/dist

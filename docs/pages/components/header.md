@@ -20,7 +20,20 @@ layout: component
 </div>
 ```
 
+The breadcrumb slot renders inline with the page title — each slotted link is followed by a `>` separator and the `caption` becomes the final, unlinked item in the trail. Set `hide-breadcrumb` to suppress the trail and show only the title.
+
 ## Examples
+
+### Hide breadcrumb
+
+```html:preview
+<div style="background-color: #f5f5f5; padding: 20px;">
+  <zn-header caption="John Jones" hide-breadcrumb>
+    <a href="#" slot="breadcrumb">Dashboard</a>
+    <a href="#" slot="breadcrumb">Another</a>
+  </zn-header>
+</div>
+```
 
 ### Simple Header
 

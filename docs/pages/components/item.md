@@ -37,6 +37,18 @@ layout: component
 </zn-item>
 ```
 
+### Right Aligned Content
+
+Use `align-end` to right align the content value.
+
+```html:preview
+<zn-sp divide no-gap>
+  <zn-item caption="Subtotal" align-end>$120.00</zn-item>
+  <zn-item caption="Tax" align-end>$24.00</zn-item>
+  <zn-item caption="Total" align-end>$144.00</zn-item>
+</zn-sp>
+```
+
 ### Icons
 
 ```html:preview
@@ -93,4 +105,3 @@ Example of multiple actions in a description item.
   
 </zn-item>
 ```
-

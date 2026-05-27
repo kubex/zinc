@@ -1,6 +1,8 @@
 import {type CSSResultGroup, html, unsafeCSS, PropertyValues} from 'lit';
-import ZincElement from '../../internal/zinc-element';
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from "lit/decorators.js";
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import ZincElement from '../../internal/zinc-element';
 
 import styles from './scroll-container.scss';
 
@@ -43,31 +45,30 @@ export default class ZnScrollContainer extends ZincElement {
     this.container.scrollTop = this.container.scrollHeight;
   }
 
-  private _footerResizeObserver?: ResizeObserver;
+  private readonly _footerResizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => {
+      this.style.setProperty('--zn-scroll-footer-height', `${this.footer?.clientHeight ?? 0}px`);
+    },
+  });
+
+  private readonly _domObserver = new MutationController(this, {
+    target: null,
+    config: {childList: true, subtree: true},
+    callback: () => {
+      setTimeout(() => this.scrollEnd(), 100);
+      if (this.footer) {
+        this.style.setProperty('--zn-scroll-footer-height', `${this.footer.clientHeight}px`);
+        this._footerResizeObserver.observe(this.footer);
+      }
+    },
+  });
 
   connectedCallback() {
     super.connectedCallback();
     if (this.startScrolled) {
-      const observer = new MutationObserver(() => {
-        setTimeout(this.scrollEnd.bind(this), 100);
-        if (this.footer) {
-          // Initialize height immediately
-          this.style.setProperty('--zn-scroll-footer-height', `${this.footer.clientHeight}px`);
-          // Attach ResizeObserver to watch for size changes
-          this._footerResizeObserver = new ResizeObserver(() => {
-            this.style.setProperty('--zn-scroll-footer-height', `${this.footer?.clientHeight ?? 0}px`);
-          });
-          this._footerResizeObserver.observe(this.footer);
-        }
-      });
-      observer.observe(this, {childList: true, subtree: true});
+      this._domObserver.observe(this);
     }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._footerResizeObserver?.disconnect();
-    this._footerResizeObserver = undefined;
   }
 
   render() {

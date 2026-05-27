@@ -2,6 +2,58 @@
 
 :host {
   display: block;
+  --navbar-active-colour: var(--zn-active-nav-background, var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body))));
+
+  ul.navbar {
+    padding: 0;
+    margin: 0 calc(var(--zn-base-gap) + var(--zn-gutter));
+  }
+}
+
+:host([hover]) {
+  position: absolute;
+  transform: translateY(-100%);
+
+  ul.navbar {
+    background-color: rgb(var(--zn-body));
+
+    li {
+      z-index: 2;
+    }
+
+    position: relative;
+
+    &::after {
+      z-index: 1;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: rgb(var(--zn-body));
+    }
+
+    &::before {
+      z-index: 1;
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      left: -2px;
+      bottom: 0;
+      border-radius: 3px;
+      backdrop-filter: blur(2px) opacity(0.8);
+    }
+  }
+}
+
+:host([icon-only]) {
+  ul.navbar {
+    li {
+      padding: var(--zn-spacing-small);
+      width: fit-content;
+      max-width: 50px;
+      justify-content: center;
+    }
+  }
 }
 
 .navbar__container {
@@ -13,7 +65,11 @@
 
 .navbar {
   margin: 0;
-  padding-left: var(--zn-spacing-medium);
+}
+
+:host:not([stacked]) .navbar {
+  margin: 0 0 0 var(--zn-spacing-medium);
+  padding-left: 0;
 
   &--flush {
     padding: 0;
@@ -55,6 +111,7 @@ ul.navbar {
 
   ul.navbar {
     padding: 0;
+    margin: 0;
     flex-direction: column;
     gap: 0;
 
@@ -67,7 +124,7 @@ ul.navbar {
       }
 
       &.zn-tb-active {
-        background-color: rgb(var(--zn-panel));
+        background-color: rgb(var(--zn-body));
       }
 
       &:hover:before {
@@ -170,14 +227,38 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 :host(:not([stacked]):not([icon-bar])) {
   ul.navbar {
-    height: 35px;
+    height: 40px;
     align-self: end;
   }
 }
 
+:host(:not([stacked]):not([icon-bar]):not([icon-only])) {
+  ul.navbar {
+    min-width: 180px;
+  }
+}
+
+
 :host([pad]) {
   ul.navbar {
     padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
+  }
+}
+
+:host(:not([stacked])) {
+  ul.navbar {
+    > li {
+      border-right-width: 1px;
+      border-top-width: 1px;
+
+      &:first-of-type {
+        border-left-width: 1px;
+      }
+
+      &.active, &.zn-tb-active {
+        border-bottom: 1px solid rgb(var(--navbar-active-colour));
+      }
+    }
   }
 }
 
@@ -192,7 +273,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   ul.navbar {
     display: flex;
     flex-basis: fit-content;
-    gap: 30px;
+    gap: 0;
     list-style: none;
 
     li.more {
@@ -218,8 +299,14 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       user-select: none;
       font-weight: 500;
-      padding: 0 0 var(--zn-spacing-small);
+      padding: 0 calc(var(--zn-base-gap, 8px));
+      background: rgba(0, 0, 0, 0.05);
+      transition: background-color 100ms ease-in-out;
       position: relative;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
 
       display: flex;
       align-items: center;
@@ -250,11 +337,11 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         content: '';
         left: 50%;
         right: 50%;
-        bottom: 0;
+        bottom: -2px;
         position: absolute;
-        background-color: rgb(var(--zn-primary));
+        background-color: rgb(var(--navbar-active-colour));
         transition: all 300ms ease-in-out;
-        height: 2px;
+        height: 1px;
       }
 
       &:hover:before:not(#dropdown-item) {
@@ -264,13 +351,12 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: rgb(var(--zn-primary));
-        font-weight: var(--zn-font-weight-semibold);
+        background: rgb(var(--navbar-active-colour));
       }
 
       &.active::before, &.zn-tb-active::before {
-        left: calc(var(--zn-spacing-medium) * -1);
-        right: calc(var(--zn-spacing-medium) * -1);
+        left: 0;
+        right: 0;
       }
     }
 
@@ -324,7 +410,7 @@ button[popovertarget] {
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(var(--zn-border-color));
-    height: 35px;
+    height: 40px;
   }
 
   &:host([dropdown]) li {
@@ -356,14 +442,14 @@ button[popovertarget] {
           right: 0;
           bottom: -1px;
           height: 1px;
-          background-color: rgb(var(--zn-panel));
+          background-color: rgb(var(--navbar-active-colour));
         }
       }
     }
   }
 
   .active {
-    background-color: rgb(var(--zn-panel));
+    background-color: rgb(var(--navbar-active-colour));
   }
 }
 
@@ -392,13 +478,14 @@ button[popovertarget] {
 
 .expandables {
   flex-grow: 0;
-  flex-shrink: 1;
-  margin: 0 var(--zn-spacing-medium);
+  flex-shrink: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   width: fit-content;
   height: 100%;
   gap: var(--zn-spacing-2x-small);
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 .expandables:empty {
@@ -409,9 +496,27 @@ button[popovertarget] {
 :host {
   ul.navbar {
     li.more {
+      // Let the trigger fill the whole cell so clicking anywhere in the
+      // "more" item opens the dropdown, not just the icon itself.
+      padding: 0;
+
+      zn-dropdown,
+      zn-button[slot="trigger"] {
+        height: 100%;
+      }
+
+      zn-button[slot="trigger"] zn-icon {
+        transition: transform 200ms ease-in-out;
+      }
+
+      zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
+        transform: rotate(90deg);
+      }
+
       zn-button::part(base) {
-        padding-left: 0;
-        padding-right: 0;
+        height: 100%;
+        padding-left: calc(var(--zn-base-gap, 8px));
+        padding-right: calc(var(--zn-base-gap, 8px));
 
         &:hover {
           background-color: transparent;
@@ -420,12 +525,12 @@ button[popovertarget] {
 
       ul#extended-menu {
         box-shadow: var(--zn-shadow-medium);
-        background: rgb(var(--zn-border-color));
+        background: rgb(var(--zn-panel));
         display: flex;
         flex-direction: column;
-        gap: 1px;
         height: auto;
         width: fit-content;
+        min-width: var(--zn-size-spanel);
         margin: 0;
         padding: 1px;
 
@@ -434,6 +539,14 @@ button[popovertarget] {
           background: rgb(var(--zn-panel));
           color: rgb(var(--zn-text));
           padding: var(--zn-spacing-small);
+
+          &:hover {
+            background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
+          }
+
+          &.active, &.zn-tb-active {
+            font-weight: 700;
+          }
 
           &.active::before, &.zn-tb-active::before {
             left: 0;

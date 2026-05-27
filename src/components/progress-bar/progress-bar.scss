@@ -6,6 +6,23 @@
   display: flex;
   flex-direction: column;
   padding: 10px 0;
+  --zn-progress-bar-color: rgb(var(--zn-primary));
+}
+
+:host([color="info"]) {
+  --zn-progress-bar-color: rgb(var(--zn-color-info));
+}
+
+:host([color="error"]) {
+  --zn-progress-bar-color: rgb(var(--zn-color-error));
+}
+
+:host([color="success"]) {
+  --zn-progress-bar-color: rgb(var(--zn-color-success));
+}
+
+:host([color="warning"]) {
+  --zn-progress-bar-color: rgb(var(--zn-color-warning));
 }
 
 .header {
@@ -43,4 +60,3 @@
 .footer {
   margin-top: var(--zn-spacing-x-small);
 }
-

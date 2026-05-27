@@ -1,10 +1,11 @@
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
-import {deepQuerySelectorAll} from "../../utilities/query";
-import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
-import {md5} from "../../utilities/md5";
-import {property} from 'lit/decorators.js';
-import {Store} from "../../internal/storage";
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
+import { deepQuerySelectorAll } from "../../utilities/query";
+import { HasSlotController } from "../../internal/slot";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { md5 } from "../../utilities/md5";
+import { MutationController } from '@lit-labs/observers/mutation-controller.js';
+import { property } from 'lit/decorators.js';
+import { Store } from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './tabs.scss';
@@ -28,24 +29,25 @@ import styles from './tabs.scss';
  */
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
-  @property({attribute: 'master-id', reflect: true}) masterId: string;
-  @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
-  @property({attribute: 'active', reflect: true}) _current = '';
-  @property({attribute: 'split', type: Number, reflect: true}) _split: number;
-  @property({attribute: 'split-min', type: Number, reflect: true}) _splitMin = 60;
-  @property({attribute: 'split-max', type: Number, reflect: true}) _splitMax: number;
-  @property({attribute: 'primary-caption', reflect: true}) primaryCaption = 'Navigation';
-  @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
-  @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
-  @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
+  @property({ attribute: 'master-id', reflect: true }) masterId: string;
+  @property({ attribute: 'default-uri', reflect: true }) defaultUri = '';
+  @property({ attribute: 'active', reflect: true }) _current = '';
+  @property({ attribute: 'split', type: Number, reflect: true }) _split: number;
+  @property({ attribute: 'split-min', type: Number, reflect: true }) _splitMin = 60;
+  @property({ attribute: 'split-min-secondary', type: Number, reflect: true }) _splitMinSecondary: number;
+  @property({ attribute: 'split-max', type: Number, reflect: true }) _splitMax: number;
+  @property({ attribute: 'primary-caption', reflect: true }) primaryCaption = 'Navigation';
+  @property({ attribute: 'secondary-caption', reflect: true }) secondaryCaption = 'Content';
+  @property({ attribute: 'no-prefetch', type: Boolean, reflect: true }) noPrefetch = false;
+  @property({ attribute: 'no-cache', type: Boolean, reflect: true }) noCache = false;
   // session storage if not local
-  @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
-  @property({attribute: 'store-key'}) storeKey: string;
-  @property({attribute: 'store-ttl', type: Number, reflect: true}) storeTtl = 0;
-  @property({attribute: 'padded', type: Boolean, reflect: true}) padded = false;
-  @property({attribute: 'fetch-style', type: String, reflect: true}) fetchStyle = "";
-  @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth = false;
-  @property({attribute: 'padded-right', type: Boolean, reflect: true}) paddedRight = false;
+  @property({ attribute: 'local-storage', type: Boolean, reflect: true }) localStorage: boolean;
+  @property({ attribute: 'store-key' }) storeKey: string;
+  @property({ attribute: 'store-ttl', type: Number, reflect: true }) storeTtl = 0;
+  @property({ attribute: 'padded', type: Boolean, reflect: true }) padded = false;
+  @property({ attribute: 'fetch-style', type: String, reflect: true }) fetchStyle = "";
+  @property({ attribute: 'full-width', type: Boolean, reflect: true }) fullWidth = false;
+  @property({ attribute: 'padded-right', type: Boolean, reflect: true }) paddedRight = false;
   @property() monitor: string;
   // Creating a header
   @property() caption: string;
@@ -60,6 +62,45 @@ export default class ZnTabs extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
+
+  private readonly _domObserver = new MutationController(this, {
+    target: null,
+    config: { childList: true, subtree: true },
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        if (mutation.addedNodes.length > 0) {
+          this._registerTabs();
+        }
+        if (mutation.removedNodes.length > 0) {
+          mutation.removedNodes.forEach(node => {
+            const id = node instanceof HTMLElement ? node.id : '';
+            if (id) this.removeTabAndPanel(id);
+          });
+        }
+      });
+    },
+  });
+
+  private readonly _monitorObserver = new MutationController(this, {
+    target: null,
+    config: { childList: true, subtree: true },
+    callback: mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type !== 'childList') return;
+        mutation.addedNodes.forEach(node => {
+          if (node instanceof HTMLElement && node.id === this.monitor) {
+            this.reRegisterTabs();
+            const storedValue = this._store.get(this.storeKey);
+            if (storedValue !== null) {
+              this._prepareTab(storedValue);
+              this.setActiveTab(storedValue, false, false);
+            }
+          }
+        });
+      });
+    },
+  });
 
   constructor() {
     super();
@@ -100,25 +141,7 @@ export default class ZnTabs extends ZincElement {
 
   monitorDom() {
     if (this.monitor) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach((node) => {
-              if (node instanceof HTMLElement && node.id === this.monitor) {
-                this.reRegisterTabs();
-
-                const storedValue = this._store.get(this.storeKey);
-                if (storedValue !== null) {
-                  this._prepareTab(storedValue);
-                  this.setActiveTab(storedValue, false, false);
-                }
-              }
-            });
-          }
-        });
-      });
-
-      observer.observe(this, {childList: true, subtree: true});
+      this._monitorObserver.observe(this);
     }
   }
 
@@ -170,7 +193,7 @@ export default class ZnTabs extends ZincElement {
 
     this.addEventListener('zn-menu-select', () => {
       setTimeout(this.reRegisterTabs, 200);
-    }, {passive: true});
+    }, { passive: true });
   }
 
   switchTab(inc: number) {
@@ -237,6 +260,8 @@ export default class ZnTabs extends ZincElement {
     tabNode.setAttribute("id", tabId);
     if (this.fetchStyle !== "") {
       tabNode.setAttribute("data-fetch-style", this.fetchStyle);
+    } else if (tabEle.hasAttribute('data-fetch-style')) {
+      tabNode.setAttribute("data-fetch-style", tabEle.getAttribute('data-fetch-style') ?? "");
     }
     tabNode.setAttribute('data-self-uri', tabUri);
     tabNode.textContent = "Loading ...";
@@ -245,8 +270,9 @@ export default class ZnTabs extends ZincElement {
       this._panel.appendChild(tabNode);
       this._panels.set(tabId, [tabNode]);
     }
+
     document.dispatchEvent(new CustomEvent('zn-new-element', {
-      detail: {element: tabNode, source: tabEle}
+      detail: { element: tabNode, source: tabEle }
     }));
     return tabNode;
   }
@@ -371,7 +397,7 @@ export default class ZnTabs extends ZincElement {
               gaid = this._activeTab.getAttribute('gaid')!;
             }
             document.dispatchEvent(new CustomEvent('zn-refresh-element', {
-              detail: {element: element, uri: uri, gaid: gaid}
+              detail: { element: element, uri: uri, gaid: gaid }
             }));
           }
         });
@@ -393,29 +419,7 @@ export default class ZnTabs extends ZincElement {
   }
 
   observerDom() {
-    // observe the DOM for changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          if (mutation.addedNodes.length > 0) {
-            this._registerTabs();
-          }
-          if (mutation.removedNodes.length > 0) {
-            for (let i = 0; i < mutation.removedNodes.length; i++) {
-              const node = mutation.removedNodes[i] as HTMLElement;
-              if (node.id) {
-                this.removeTabAndPanel(node.id);
-              }
-            }
-          }
-        }
-      });
-    });
-
-    observer.observe(this, {
-      childList: true,
-      subtree: true
-    });
+    this._domObserver.observe(this);
   }
 
   removeTabAndPanel(tabId: string) {
@@ -504,6 +508,7 @@ export default class ZnTabs extends ZincElement {
             padded-right="${ifDefined(this.paddedRight ? true : undefined)}"
             pixels bordered
             min-size="${this._splitMin}"
+            min-secondary-size="${ifDefined(this._splitMinSecondary ? this._splitMinSecondary : undefined)}"
             max-size="${ifDefined(this._splitMax ? this._splitMax : undefined)}"
             initial-size="${this._split}">
             <slot slot="primary" name="left"></slot>
@@ -526,7 +531,7 @@ export default class ZnTabs extends ZincElement {
         <slot name="top"></slot>
         <div id="mid" part="mid">
           <slot name="left"></slot>
-          <div id="content">
+          <div id="content" part="content">
             <slot></slot>
           </div>
           <slot name="right"></slot>

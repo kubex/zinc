@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {property} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
@@ -51,7 +52,18 @@ export default class ZnButtonMenu extends ZincElement {
 
   private _originalButtons: CustomButtonWidths[] = [];
 
-  private resizeObserver: ResizeObserver | null = null;
+  private _resizeRafId = 0;
+
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => {
+      if (this._resizeRafId) return;
+      this._resizeRafId = requestAnimationFrame(() => {
+        this._resizeRafId = 0;
+        this.containerWidth = this.offsetWidth;
+      });
+    },
+  });
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
@@ -93,21 +105,9 @@ export default class ZnButtonMenu extends ZincElement {
     super.connectedCallback();
     this.containerWidth = this.offsetWidth;
 
-    this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
-    this.resizeObserver.observe(this.parentNode as HTMLElement); // Observe the parent node
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+    if (this.parentNode) {
+      this.resizeObserver.observe(this.parentNode as HTMLElement);
     }
-  }
-
-  handleResize = () => {
-    this.containerWidth = this.offsetWidth;
   }
 
   calculateVisibleButtons() {
@@ -203,13 +203,12 @@ export default class ZnButtonMenu extends ZincElement {
         buttons.forEach((button: CustomButtonWidths, index: number) => {
           if (index >= visibleButtons) {
             const menuItem = document.createElement('zn-menu-item');
-            menuItem.innerText = button.button.innerText;
+            menuItem.innerText = this.getButtonLabel(button.button);
             menuItem.setAttribute('id', button.button.id || `zn-button-menu-item-${index}`);
             menuItem.setAttribute('role', 'menuitem');
             const attr = button.button.attributes;
             // Copy all attributes from the button to the menu item
-            for (let i = 0; i < attr.length; i++) {
-              const attribute = attr[i];
+            for (const attribute of Array.from(attr)) {
               if (attribute.name !== 'icon' && attribute.name !== 'category') {
                 menuItem.setAttribute(attribute.name, attribute.value);
               }
@@ -270,16 +269,32 @@ export default class ZnButtonMenu extends ZincElement {
     })
   }
 
+  private getButtonLabel(button: ZnButton) {
+    const labelSlot = button.shadowRoot?.querySelector<HTMLSlotElement>('slot[part="label"]');
+    const slottedLabel = labelSlot ? [...labelSlot.assignedNodes({flatten: true})]
+      .map(node => node.textContent ?? '')
+      .join('')
+      .trim() : '';
+
+    return slottedLabel ||
+      button.content ||
+      button.getAttribute('content') ||
+      (button as ZnButton & { caption?: string }).caption ||
+      button.getAttribute('caption') ||
+      button.button.innerText;
+  }
+
   render() {
     return html`
-      <div class=${classMap({
+      <div class="${classMap({
         'button-menu': true,
         'button-menu--no-padding': this.noPadding,
         'button-menu--no-gap': this.noGap,
-      })}>
+      })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent" size="${this.size}"></zn-button>
+          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"
+                     size="${this.size}"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

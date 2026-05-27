@@ -6,6 +6,7 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {watch} from '../../internal/watch';
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 
@@ -42,7 +43,10 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     assumeInteractionOn: ['zn-blur', 'zn-input']
   });
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
-  private resizeObserver: ResizeObserver;
+  private readonly resizeObserver = new ResizeController(this, {
+    target: null,
+    callback: () => this.setTextareaHeight(),
+  });
   /** Ensures we only attempt to derive the initial value from light DOM content once */
   private _didInitFromContent = false;
 
@@ -187,8 +191,6 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
       }
     }
 
-    this.resizeObserver = new ResizeObserver(() => this.setTextareaHeight());
-
     this.updateComplete.then(() => {
       this.resizeObserver.observe(this.input);
 
@@ -200,11 +202,6 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
 
   firstUpdated() {
     this.formControlController.updateValidity();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.resizeObserver.unobserve(this.input);
   }
 
   private handleBlur() {

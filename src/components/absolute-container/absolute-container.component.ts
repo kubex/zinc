@@ -1,3 +1,4 @@
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import ZincElement from '../../internal/zinc-element';
 import type {PropertyValues} from 'lit';
 
@@ -14,16 +15,14 @@ import type {PropertyValues} from 'lit';
  */
 export default class ZnAbsoluteContainer extends ZincElement {
 
-  private domObserver: MutationObserver;
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.observerDom();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.domObserver?.disconnect();
+  constructor() {
+    super();
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {childList: true, subtree: true, attributes: true, characterData: true},
+      callback: () => this.resize(),
+      skipInitial: true,
+    });
   }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -37,21 +36,6 @@ export default class ZnAbsoluteContainer extends ZincElement {
       newSize += child.getBoundingClientRect().height;
     });
     this.style.minHeight = newSize + 'px';
-  }
-
-  observerDom() {
-    // observe the DOM for changes
-    this.domObserver = new MutationObserver(() => {
-      this.resize();
-    });
-
-    this.domObserver.observe(this,
-      {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true
-      });
   }
 
   // the height of this element is set to the height of its children (absolute positioned)

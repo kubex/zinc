@@ -10,6 +10,7 @@ import {
 } from "./providers/provider";
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController} from "../../internal/form";
+import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
@@ -134,7 +135,11 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
 
   protected readonly formControlController = new FormControlController(this);
 
-  private selectObserver?: MutationObserver;
+  private readonly selectObserver = new MutationController(this, {
+    target: null,
+    config: {attributes: true, attributeFilter: ['disabled']},
+    callback: () => this._syncDisabledState(),
+  });
 
   get validationMessage() {
     return this.select.validationMessage;
@@ -159,7 +164,6 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.closeOnTab);
-    this.selectObserver?.disconnect();
   }
 
   protected async firstUpdated(_changedProperties: PropertyValues) {
@@ -398,15 +402,7 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
     if (!this.select) return;
 
     this._syncDisabledState();
-
-    this.selectObserver = new MutationObserver(() => {
-      this._syncDisabledState();
-    });
-
-    this.selectObserver.observe(this.select, {
-      attributes: true,
-      attributeFilter: ['disabled']
-    });
+    this.selectObserver.observe(this.select);
   }
 
   private _syncDisabledState() {

@@ -26,6 +26,8 @@ export { default as Chart } from './components/chart';
 export { default as SimpleChart } from './components/simple-chart';
 export { default as Header } from './components/header';
 export { default as Navbar } from './components/navbar';
+export { default as Page } from './components/page';
+export { default as Tab } from './components/tab';
 export { default as IconPicker } from './components/icon-picker';
 export { default as InlineEdit } from './components/inline-edit';
 export { default as Pagination } from './components/pagination';
@@ -103,6 +105,7 @@ export { default as ZincElement } from './internal/zinc-element';
 export * from './utilities/on';
 export * from './utilities/query';
 export * from './utilities/lit-to-html';
+export * from './utilities/form';
 
 // Events
 export * from './events/events';

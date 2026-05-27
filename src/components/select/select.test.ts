@@ -635,5 +635,22 @@ describe('<zn-select>', () => {
 
       expect(el.value).to.equal('app');
     });
+
+    it('renders the Add row text at the small option font size', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text style="--zn-font-size-small: 11px; --zn-font-size-medium: 99px;">
+          <zn-option value="apple">Apple</zn-option>
+        </zn-select>
+      `);
+      await el.updateComplete;
+      await el.show();
+      await el.updateComplete;
+
+      type(el, 'kiwi');
+      await el.updateComplete;
+
+      const addRow = el.shadowRoot!.querySelector<HTMLElement>('.select__add-option')!;
+      expect(getComputedStyle(addRow).fontSize).to.equal('11px');
+    });
   });
 });

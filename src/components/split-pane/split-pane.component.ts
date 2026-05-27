@@ -5,6 +5,7 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './split-pane.scss';
+import { PropertyValues } from "@lit/reactive-element";
 
 type NavigationItem = {
   caption: string;
@@ -102,7 +103,7 @@ export default class ZnSplitPane extends ZincElement {
     }
   }
 
-  firstUpdated(changedProperties: any) {
+  firstUpdated(changedProperties: PropertyValues) {
     setTimeout(this.applyStoredSize.bind(this), 100);
     this.refreshNarrowState();
     super.firstUpdated(changedProperties);
@@ -115,14 +116,14 @@ export default class ZnSplitPane extends ZincElement {
 
 
     const storedValue = this._store.get(this.storeKey);
-    if (storedValue != null) {
+    if (storedValue !== null) {
       const parts = storedValue.split(",");
       if (parts.length >= 3) {
         applyPixels = parseInt(parts[0]);
         applyPercent = parseInt(parts[1]);
         const storedBasis = parseInt(parts[2]);
         if (this.preferSecondarySize && this.calculatePixels) {
-          applyPixels = (this.currentContainerSize / storedBasis) * applyPixels;
+          applyPixels *= (this.currentContainerSize / storedBasis);
         }
       }
     }
@@ -135,7 +136,7 @@ export default class ZnSplitPane extends ZincElement {
       return;
     }
 
-    if (this.mouseUpHandler != null) {
+    if (this.mouseUpHandler !== null) {
       this.mouseUpHandler(e);
     }
 

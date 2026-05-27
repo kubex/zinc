@@ -93,12 +93,14 @@ module.exports = function (eleventyConfig)
   //
   eleventyConfig.addFilter('markdown', content =>
   {
-    return zincFlavoredMarkdown.render(content);
+    // CEM members (events, slots, CSS props/parts, animations) may have no description, in which case
+    // `content` is undefined. markdown-it calls .replace on its input and would throw, so coerce to ''.
+    return typeof content === 'string' ? zincFlavoredMarkdown.render(content) : '';
   });
 
   eleventyConfig.addFilter('markdownInline', content =>
   {
-    return zincFlavoredMarkdown.renderInline(content);
+    return typeof content === 'string' ? zincFlavoredMarkdown.renderInline(content) : '';
   });
 
   // Trims whitespace and pipes from the start and end of a string. Useful for CEM types, which can be pipe-delimited.

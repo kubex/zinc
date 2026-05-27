@@ -58,7 +58,8 @@ export default class ZnFormGroup extends ZincElement {
 
         <zn-cols layout="1,2" mc="2" part="form-control-container" class="form-control__container">
           ${hasLabel || hasHelpText || this.forceCols ? html`
-            <div>` : html``}
+            <div>
+
           ${hasLabel ? html`
             <div>
               <label
@@ -87,7 +88,7 @@ export default class ZnFormGroup extends ZincElement {
               <slot name="help-text">${this.helpText}</slot>
             </div>` : html``}
 
-          ${hasLabel || hasHelpText || this.forceCols ? html`</div>` : html``}
+            </div>` : html``}
 
           <div part="form-control-input" class="form-control-input">
             <slot></slot>

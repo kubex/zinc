@@ -151,6 +151,26 @@ Add the `search` attribute to enable filtering on select inputs. Users can type 
 </div>
 ```
 
+### Free Text Select
+
+Add the `free-text` attribute to let users enter values that aren't in the options list (see [`zn-select`](/components/select#free-text-entry)). `free-text` implies a select input, so you don't need `input-type="select"`. Combine it with `multiple` for a tag-style editor.
+
+```html:preview
+<div class="form-spacing">
+  <zn-inline-edit name="status" value="active" free-text>
+    <zn-option value="active">Active</zn-option>
+    <zn-option value="inactive">Inactive</zn-option>
+    <zn-option value="pending">Pending</zn-option>
+  </zn-inline-edit>
+
+  <zn-inline-edit name="tags" free-text multiple value="urgent backend">
+    <zn-option value="urgent">Urgent</zn-option>
+    <zn-option value="backend">Backend</zn-option>
+    <zn-option value="frontend">Frontend</zn-option>
+  </zn-inline-edit>
+</div>
+```
+
 ### Data Select with Provider
 
 Use the `provider` attribute to integrate with data select providers like countries, currencies, or colors.

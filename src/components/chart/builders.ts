@@ -45,6 +45,7 @@ function commonOption(props: BuilderProps): EChartsOption {
     textStyle: { color: textColor },
     tooltip: {
       trigger: 'axis',
+      appendTo: 'body',
       valueFormatter: props.yAxisAppend
         ? (v: number | string) => `${v}${props.yAxisAppend}`
         : undefined,
@@ -201,7 +202,7 @@ export function buildSankeyOption(props: BuilderProps): EChartsOption {
     animationEasing: 'cubicOut',
     ...(props.colors ? { color: props.colors } : {}),
     textStyle: { color: textColor },
-    tooltip: { trigger: 'item' },
+    tooltip: { trigger: 'item', appendTo: 'body' },
     series: [{
       type: 'sankey',
       name: first.name,

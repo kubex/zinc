@@ -61,6 +61,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -213,79 +286,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13669,6 +13669,15 @@
             },
             {
               "kind": "field",
+              "name": "freeText",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
+              "attribute": "free-text"
+            },
+            {
+              "kind": "field",
               "name": "helpText",
               "type": {
                 "text": "string"
@@ -14085,6 +14094,14 @@
               },
               "description": "Enables search/filtering on select inputs.",
               "fieldName": "search"
+            },
+            {
+              "name": "free-text",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
+              "fieldName": "freeText"
             },
             {
               "name": "help-text",
@@ -25134,6 +25151,17 @@
             },
             {
               "kind": "field",
+              "name": "freeText",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows the user to enter values that are not in the options list (\"free text\"). Implies the editable,\nfiltering input behavior of `search`. A typed value that doesn't match an existing option is committed\nby pressing Enter, clicking the \"Add\" row, or blurring the field, and becomes a selected option — a tag\nwhen `multiple` is enabled. The committed value is both the option's value and its label.",
+              "attribute": "free-text",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -25434,6 +25462,13 @@
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "_isTypeable",
+              "privacy": "private",
+              "description": "Whether the display input is editable and filters options (search or free-text).",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "handleSearchInput",
               "privacy": "private",
@@ -25450,6 +25485,80 @@
               "name": "clearSearch",
               "privacy": "private",
               "description": "Clears the search query and shows all options"
+            },
+            {
+              "kind": "method",
+              "name": "commitFreeText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "refocus",
+                  "default": "true"
+                }
+              ],
+              "description": "Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`\n(value = label = trimmed text) is created in the light DOM so the value flows through the existing\ntag/value/selection machinery and appears as a deselectable row in the listbox. Returns `true` when\nsomething was committed, `false` when there was nothing to commit."
+            },
+            {
+              "kind": "field",
+              "name": "_freeTextAddValue",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "description": "The trimmed pending text to offer as a free-text \"Add\" row, or `null` when no Add row should be shown\n(free-text disabled, dropdown closed, input empty, or the text exactly matches an existing option).",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleAddOptionMouseDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ],
+              "description": "Commits the typed value when the \"Add\" row is pressed, keeping focus on the input."
+            },
+            {
+              "kind": "method",
+              "name": "_materialiseFreeTextValues",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ],
+              "description": "In free-text mode, creates a hidden `<zn-option>` for any value that has no matching option, so values\nset via the `value`/`defaultValue` attribute (e.g. previously-saved custom entries) render as tags or\nthe display value on load. No-op when free-text is disabled."
+            },
+            {
+              "kind": "method",
+              "name": "_createFreeTextOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnOption"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Creates a free-text-marked `<zn-option>` in the light DOM (value = label) and returns it. The option is\na normal, visible, selectable row so the user can deselect a custom value from the dropdown like any\nother option; the `data-free-text` marker lets us drop it from the DOM once it's no longer selected."
             },
             {
               "kind": "method",
@@ -25981,6 +26090,15 @@
               "default": "false",
               "description": "Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options.",
               "fieldName": "search"
+            },
+            {
+              "name": "free-text",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows the user to enter values that are not in the options list (\"free text\"). Implies the editable,\nfiltering input behavior of `search`. A typed value that doesn't match an existing option is committed\nby pressing Enter, clicking the \"Add\" row, or blurring the field, and becomes a selected option — a tag\nwhen `multiple` is enabled. The committed value is both the option's value and its label.",
+              "fieldName": "freeText"
             },
             {
               "name": "label",

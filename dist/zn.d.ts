@@ -2219,10 +2219,13 @@ declare module "components/select/select.component" {
         private inputPrefix;
         /** @internal - current search/filter text when search is enabled (lowercased for matching) */
         private _searchQuery;
-        /** @internal - raw display value of the search input (preserves case for the input field) */
+        /** @internal - raw display value of the search input (preserves case for the input field). Reactive so the
+         * free-text "Add" row re-renders on every keystroke, not just when the match/no-match state changes. */
         private _searchDisplayValue;
         /** @internal - whether the "no matching options" empty state is visible */
         private _noResultsVisible;
+        /** @internal - whether the free-text "Add" row is the active keyboard-navigation target */
+        private _addOptionActive;
         /** @internal */
         private _fetchedOptions;
         /** @internal */
@@ -2290,6 +2293,13 @@ declare module "components/select/select.component" {
         pill: boolean;
         /** Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options. */
         search: boolean;
+        /**
+         * Allows the user to enter values that are not in the options list ("free text"). Implies the editable,
+         * filtering input behavior of `search`. A typed value that doesn't match an existing option is committed
+         * by pressing Enter, clicking the "Add" row, or blurring the field, and becomes a selected option — a tag
+         * when `multiple` is enabled. The committed value is both the option's value and its label.
+         */
+        freeText: boolean;
         /** The select's label. If you need to display HTML, use the `label` slot instead. */
         label: string;
         /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
@@ -2375,12 +2385,40 @@ declare module "components/select/select.component" {
         private handleClearMouseDown;
         /** Whether the component is in remote-search mode (search + dataUri both set) */
         private get _isRemoteSearch();
+        /** Whether the display input is editable and filters options (search or free-text). */
+        private get _isTypeable();
         /** Handles text input on the display input for search/filter mode */
         private handleSearchInput;
         /** Filters visible options based on the current search query */
         private filterOptions;
         /** Clears the search query and shows all options */
         private clearSearch;
+        /**
+         * Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`
+         * (value = label = trimmed text) is created in the light DOM so the value flows through the existing
+         * tag/value/selection machinery and appears as a deselectable row in the listbox. Returns `true` when
+         * something was committed, `false` when there was nothing to commit.
+         */
+        private commitFreeText;
+        /**
+         * The trimmed pending text to offer as a free-text "Add" row, or `null` when no Add row should be shown
+         * (free-text disabled, dropdown closed, input empty, or the text exactly matches an existing option).
+         */
+        private get _freeTextAddValue();
+        /** Commits the typed value when the "Add" row is pressed, keeping focus on the input. */
+        private handleAddOptionMouseDown;
+        /**
+         * In free-text mode, creates a hidden `<zn-option>` for any value that has no matching option, so values
+         * set via the `value`/`defaultValue` attribute (e.g. previously-saved custom entries) render as tags or
+         * the display value on load. No-op when free-text is disabled.
+         */
+        private _materialiseFreeTextValues;
+        /**
+         * Creates a free-text-marked `<zn-option>` in the light DOM (value = label) and returns it. The option is
+         * a normal, visible, selectable row so the user can deselect a custom value from the dropdown like any
+         * other option; the `data-free-text` marker lets us drop it from the DOM once it's no longer selected.
+         */
+        private _createFreeTextOption;
         private handleOptionClick;
         private handleDefaultSlotChange;
         private handleTagRemove;
@@ -3851,6 +3889,11 @@ declare module "components/inline-edit/inline-edit.component" {
         contextData: string;
         /** Enables search/filtering on select inputs. */
         search: boolean;
+        /**
+         * Allows entering values that aren't in the options list on select inputs ("free text"). Setting this implies
+         * `input-type="select"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.
+         */
+        freeText: boolean;
         /** The input's help text. If you need to display HTML, use the `help-text` slot instead. **/
         helpText: string;
         /** The text direction for the input (ltr or rtl) **/

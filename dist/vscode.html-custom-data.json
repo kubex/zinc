@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -45,17 +56,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1592,6 +1592,11 @@
           "values": []
         },
         {
+          "name": "free-text",
+          "description": "Allows entering values that aren't in the options list on select inputs (\"free text\"). Setting this implies\n`input-type=\"select\"` (unless a data `provider` is used) and forwards the behavior to the inner `<zn-select>`.",
+          "values": []
+        },
+        {
           "name": "help-text",
           "description": "The input's help text. If you need to display HTML, use the `help-text` slot instead. *",
           "values": []
@@ -2867,6 +2872,11 @@
         {
           "name": "search",
           "description": "Enables search/filter functionality. When enabled, the user can type into the select to filter the visible options.",
+          "values": []
+        },
+        {
+          "name": "free-text",
+          "description": "Allows the user to enter values that are not in the options list (\"free text\"). Implies the editable,\nfiltering input behavior of `search`. A typed value that doesn't match an existing option is committed\nby pressing Enter, clicking the \"Add\" row, or blurring the field, and becomes a selected option — a tag\nwhen `multiple` is enabled. The committed value is both the option's value and its label.",
           "values": []
         },
         {

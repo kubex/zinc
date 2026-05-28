@@ -2,9 +2,9 @@
 
 :host {
   --width: 30rem;
-  --header-spacing: var(--zn-spacing-large) var(--zn-spacing-large) var(--zn-spacing-medium);
-  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-large);
-  --footer-spacing: var(--zn-spacing-large);
+  --header-spacing: var(--zn-spacing-medium);
+  --body-spacing: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+  --footer-spacing: var(--zn-spacing-medium);
   --icon-background-color: var(--zn-color-primary-200);
   --icon-color: var(--zn-color-primary-600);
   --caption-color: var(--zn-color-primary-600);
@@ -17,6 +17,10 @@
   background-color: var(--zn-panel-background-color);
   margin: 2px;
   overflow: auto;
+}
+
+.dialog__header + .dialog__body {
+  padding-top: 0;
 }
 
 .dialog {

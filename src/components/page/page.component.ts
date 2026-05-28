@@ -62,6 +62,12 @@ export default class ZnPage extends ZnTabs {
   private tabObserver: MutationObserver | null = null;
 
   async connectedCallback() {
+    if (!this.storeKey) {
+      const autoStoreKey = this.computeAutoStoreKey();
+      if (autoStoreKey) {
+        this.storeKey = autoStoreKey;
+      }
+    }
     const connected = super.connectedCallback();
     window.addEventListener('alt-press', this.handleAltPress);
     window.addEventListener('alt-up', this.handleAltUp);
@@ -142,6 +148,25 @@ export default class ZnPage extends ZnTabs {
 
     this.getOwnExpandingActions().forEach(action => navbar.addExpandingAction(action));
     this.refreshExpandingActionsState();
+  }
+
+  private computeAutoStoreKey(): string {
+    const tabElements = Array.from(this.children).filter(
+      (node): node is HTMLElement => node.tagName === 'ZN-TAB'
+    );
+    if (tabElements.length === 0) {
+      return '';
+    }
+
+    const usedIds = new Set<string>();
+    const ids = tabElements.map(tab => {
+      const explicitId = tab.getAttribute('id');
+      const caption = tab.getAttribute('caption') || 'Tab';
+      const base = explicitId !== null ? explicitId : this.captionToId(caption);
+      return this.uniqueId(base, usedIds);
+    });
+
+    return `zn-page:${ids.join(',')}`;
   }
 
   private prepareTabs() {

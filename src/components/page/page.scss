@@ -45,16 +45,16 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: var(--zn-spacing-medium) var(--zn-spacing-medium) 0;
+  padding: var(--zn-base-gap) var(--zn-base-gap) 0;
   box-sizing: border-box;
   background: rgba(var(--zn-page-header-background), 95%);
 
   &::after {
     content: '';
     position: absolute;
-    right: var(--zn-spacing-medium);
+    right: var(--zn-base-gap);
     bottom: 0;
-    left: var(--zn-spacing-medium);
+    left: var(--zn-base-gap);
     height: 1px;
     background: rgb(var(--zn-border-color));
     opacity: 0;
@@ -80,7 +80,7 @@
     width: 100%;
     max-width: 100%;
     height: fit-content;
-    gap: var(--zn-spacing-medium);
+    gap: var(--zn-base-gap);
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
@@ -256,7 +256,7 @@
   width: 100%;
   overflow: visible;
   box-sizing: border-box;
-  padding: 0 var(--zn-spacing-medium) var(--zn-spacing-medium);
+  padding: 0 var(--zn-base-gap) var(--zn-base-gap);
   background: rgb(var(--zn-page-content-background, var(--zn-body)));
 }
 
@@ -282,13 +282,13 @@
 }
 
 zn-navbar {
-  margin-top: var(--zn-spacing-medium);
+  margin-top: var(--zn-base-gap);
 
   &::part(navbar) {
     height: 42px;
     min-height: 42px;
     margin: 0;
-    padding-left: var(--zn-spacing-medium);
+    padding-left: var(--zn-base-gap);
   }
 
   &::part(navbar-item) {
@@ -305,14 +305,14 @@ zn-navbar {
 }
 
 :host .header {
-  padding-right: calc(var(--zn-gutter, 0) + var(--zn-spacing-medium, 20px));
-  padding-left: calc(var(--zn-gutter, 0) + var(--zn-spacing-medium, 20px));
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+  padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-left: calc(var(--zn-gutter, 0) + var(--zn-spacing-medium, 20px));
-    padding-right: calc(var(--zn-gutter, 0) + var(--zn-spacing-medium, 20px));
+    padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   }
 }
 

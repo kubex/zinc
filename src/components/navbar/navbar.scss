@@ -6,7 +6,7 @@
 
   ul.navbar {
     padding: 0;
-    margin: 0 calc(var(--zn-spacing-medium) + var(--zn-gutter));
+    margin: 0 calc(var(--zn-base-gap) + var(--zn-gutter));
   }
 }
 
@@ -299,7 +299,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       user-select: none;
       font-weight: 500;
-      padding: 0 calc(var(--zn-spacing-medium, 20px));
+      padding: 0 calc(var(--zn-base-gap, 8px));
       background: rgba(0, 0, 0, 0.05);
       transition: background-color 100ms ease-in-out;
       position: relative;
@@ -485,7 +485,7 @@ button[popovertarget] {
   width: fit-content;
   height: 100%;
   gap: var(--zn-spacing-2x-small);
-  padding-right: calc(var(--zn-gutter, 0) + var(--zn-spacing-medium, 20px));
+  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 .expandables:empty {
@@ -515,8 +515,8 @@ button[popovertarget] {
 
       zn-button::part(base) {
         height: 100%;
-        padding-left: calc(var(--zn-spacing-medium, 20px));
-        padding-right: calc(var(--zn-spacing-medium, 20px));
+        padding-left: calc(var(--zn-base-gap, 8px));
+        padding-right: calc(var(--zn-base-gap, 8px));
 
         &:hover {
           background-color: transparent;

@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -3363,72 +3363,6 @@
           }
         },
         {
-          "name": "zn-icon",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "src", "value": { "type": "string" } },
-            { "name": "alt", "value": { "type": "string" } },
-            { "name": "size", "value": { "type": "number", "default": "24" } },
-            {
-              "name": "round",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "tile",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "depth",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "library", "value": { "type": "IconLibrary" } },
-            { "name": "color", "value": { "type": "IconColor" } },
-            {
-              "name": "padded",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "blink",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "squared",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "src", "type": "string" },
-              { "name": "alt", "type": "string" },
-              { "name": "size", "type": "number" },
-              { "name": "round", "type": "boolean" },
-              { "name": "tile", "type": "boolean" },
-              { "name": "depth", "type": "boolean" },
-              { "name": "library", "type": "IconLibrary" },
-              { "name": "color", "type": "IconColor" },
-              { "name": "padded", "type": "boolean" },
-              { "name": "blink", "type": "boolean" },
-              { "name": "squared", "type": "boolean" },
-              { "name": "gravatarOptions", "type": "string" },
-              { "name": "defaultLibrary", "type": "IconLibrary" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-hover-container",
           "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
           "doc-url": "",
@@ -3527,6 +3461,72 @@
               {
                 "name": "zn-after-hide",
                 "description": "Emitted after the hover-container is hidden."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-icon",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "src", "value": { "type": "string" } },
+            { "name": "alt", "value": { "type": "string" } },
+            { "name": "size", "value": { "type": "number", "default": "24" } },
+            {
+              "name": "round",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "tile",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "depth",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "library", "value": { "type": "IconLibrary" } },
+            { "name": "color", "value": { "type": "IconColor" } },
+            {
+              "name": "padded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "blink",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "squared",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "src", "type": "string" },
+              { "name": "alt", "type": "string" },
+              { "name": "size", "type": "number" },
+              { "name": "round", "type": "boolean" },
+              { "name": "tile", "type": "boolean" },
+              { "name": "depth", "type": "boolean" },
+              { "name": "library", "type": "IconLibrary" },
+              { "name": "color", "type": "IconColor" },
+              { "name": "padded", "type": "boolean" },
+              { "name": "blink", "type": "boolean" },
+              { "name": "squared", "type": "boolean" },
+              { "name": "gravatarOptions", "type": "string" },
+              { "name": "defaultLibrary", "type": "IconLibrary" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -4530,200 +4530,6 @@
           }
         },
         {
-          "name": "zn-menu",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "actions", "value": { "type": "array", "default": "[]" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "actions", "type": "array" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-menu-item",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "type",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "value": {
-                "type": "'normal' | 'checkbox'",
-                "default": "'normal'"
-              }
-            },
-            {
-              "name": "checked",
-              "description": "Draws the item in a checked state.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "checked-position",
-              "value": { "type": "'left' | 'right'", "default": "'left'" }
-            },
-            {
-              "name": "value",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "loading",
-              "description": "Draws the menu item in a loading state.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "disabled",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "color", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } },
-            { "name": "data-path", "value": { "type": "string" } },
-            {
-              "name": "target",
-              "value": {
-                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
-              }
-            },
-            {
-              "name": "data-target",
-              "value": { "type": "'modal' | 'slide' | string" }
-            },
-            {
-              "name": "rel",
-              "value": { "type": "string", "default": "'noreferrer noopener'" }
-            },
-            { "name": "gaid", "value": { "type": "string" } },
-            {
-              "name": "confirm",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush",
-              "description": "Removes all padding from the menu item.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-x",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "flush-y",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "no-border",
-              "description": "Removes the border from the menu item.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "active",
-              "description": "Marks the menu item as currently active/selected.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "menuItem", "type": "HTMLElement" },
-              {
-                "name": "type",
-                "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-                "type": "'normal' | 'checkbox'"
-              },
-              {
-                "name": "checked",
-                "description": "Draws the item in a checked state.",
-                "type": "boolean"
-              },
-              { "name": "checkedPosition", "type": "'left' | 'right'" },
-              {
-                "name": "value",
-                "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-                "type": "string"
-              },
-              {
-                "name": "loading",
-                "description": "Draws the menu item in a loading state.",
-                "type": "boolean"
-              },
-              {
-                "name": "disabled",
-                "description": "Draws the menu item in a disabled state, preventing selection.",
-                "type": "boolean"
-              },
-              { "name": "color", "type": "string" },
-              { "name": "href", "type": "string" },
-              { "name": "dataPath", "type": "string" },
-              {
-                "name": "target",
-                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
-              { "name": "rel", "type": "string" },
-              { "name": "gaid", "type": "string" },
-              { "name": "confirm", "type": "boolean" },
-              {
-                "name": "flush",
-                "description": "Removes all padding from the menu item.",
-                "type": "boolean"
-              },
-              {
-                "name": "flushX",
-                "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-                "type": "boolean"
-              },
-              {
-                "name": "flushY",
-                "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-                "type": "boolean"
-              },
-              {
-                "name": "noBorder",
-                "description": "Removes the border from the menu item.",
-                "type": "boolean"
-              },
-              {
-                "name": "active",
-                "description": "Marks the menu item as currently active/selected.",
-                "type": "boolean"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-markdown-editor",
           "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.",
           "doc-url": "",
@@ -4945,6 +4751,200 @@
           }
         },
         {
+          "name": "zn-menu",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "actions", "value": { "type": "array", "default": "[]" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "actions", "type": "array" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-menu-item",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "type",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "value": {
+                "type": "'normal' | 'checkbox'",
+                "default": "'normal'"
+              }
+            },
+            {
+              "name": "checked",
+              "description": "Draws the item in a checked state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "checked-position",
+              "value": { "type": "'left' | 'right'", "default": "'left'" }
+            },
+            {
+              "name": "value",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "loading",
+              "description": "Draws the menu item in a loading state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "disabled",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "color", "value": { "type": "string" } },
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "data-path", "value": { "type": "string" } },
+            {
+              "name": "target",
+              "value": {
+                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
+              }
+            },
+            {
+              "name": "data-target",
+              "value": { "type": "'modal' | 'slide' | string" }
+            },
+            {
+              "name": "rel",
+              "value": { "type": "string", "default": "'noreferrer noopener'" }
+            },
+            { "name": "gaid", "value": { "type": "string" } },
+            {
+              "name": "confirm",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush",
+              "description": "Removes all padding from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-x",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "flush-y",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-border",
+              "description": "Removes the border from the menu item.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "active",
+              "description": "Marks the menu item as currently active/selected.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "menuItem", "type": "HTMLElement" },
+              {
+                "name": "type",
+                "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+                "type": "'normal' | 'checkbox'"
+              },
+              {
+                "name": "checked",
+                "description": "Draws the item in a checked state.",
+                "type": "boolean"
+              },
+              { "name": "checkedPosition", "type": "'left' | 'right'" },
+              {
+                "name": "value",
+                "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+                "type": "string"
+              },
+              {
+                "name": "loading",
+                "description": "Draws the menu item in a loading state.",
+                "type": "boolean"
+              },
+              {
+                "name": "disabled",
+                "description": "Draws the menu item in a disabled state, preventing selection.",
+                "type": "boolean"
+              },
+              { "name": "color", "type": "string" },
+              { "name": "href", "type": "string" },
+              { "name": "dataPath", "type": "string" },
+              {
+                "name": "target",
+                "type": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              { "name": "dataTarget", "type": "'modal' | 'slide' | string" },
+              { "name": "rel", "type": "string" },
+              { "name": "gaid", "type": "string" },
+              { "name": "confirm", "type": "boolean" },
+              {
+                "name": "flush",
+                "description": "Removes all padding from the menu item.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushX",
+                "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "flushY",
+                "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "noBorder",
+                "description": "Removes the border from the menu item.",
+                "type": "boolean"
+              },
+              {
+                "name": "active",
+                "description": "Marks the menu item as currently active/selected.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-navbar",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -5101,6 +5101,59 @@
                 "description": "Disables all options within the group.",
                 "type": "boolean"
               }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-option",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "value",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "disabled",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "selected",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The option's label." },
+            {
+              "name": "prefix",
+              "description": "Used to prepend an icon or similar element to the menu item."
+            },
+            {
+              "name": "suffix",
+              "description": "Used to append an icon or similar element to the menu item."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "multiple", "type": "boolean" },
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "current", "type": "boolean" },
+              { "name": "hasHover", "type": "boolean" },
+              {
+                "name": "value",
+                "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
+                "type": "string"
+              },
+              {
+                "name": "disabled",
+                "description": "Draws the option in a disabled state, preventing selection.",
+                "type": "boolean"
+              },
+              { "name": "selected", "type": "boolean" }
             ],
             "events": []
           }
@@ -5271,80 +5324,6 @@
           }
         },
         {
-          "name": "zn-option",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "value",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "disabled",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "selected",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The option's label." },
-            {
-              "name": "prefix",
-              "description": "Used to prepend an icon or similar element to the menu item."
-            },
-            {
-              "name": "suffix",
-              "description": "Used to append an icon or similar element to the menu item."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "multiple", "type": "boolean" },
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "current", "type": "boolean" },
-              { "name": "hasHover", "type": "boolean" },
-              {
-                "name": "value",
-                "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
-                "type": "string"
-              },
-              {
-                "name": "disabled",
-                "description": "Draws the option in a disabled state, preventing selection.",
-                "type": "boolean"
-              },
-              { "name": "selected", "type": "boolean" }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-pagination",
-          "description": "Pagination component for navigating through pages of content.\n---\n",
-          "doc-url": "",
-          "attributes": [
-            { "name": "limit", "value": { "type": "number", "default": "10" } },
-            { "name": "total", "value": { "type": "number", "default": "0" } },
-            { "name": "page", "value": { "type": "number", "default": "1" } },
-            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "limit", "type": "number" },
-              { "name": "total", "type": "number" },
-              { "name": "page", "type": "number" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-page-nav",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -5449,6 +5428,27 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-pagination",
+          "description": "Pagination component for navigating through pages of content.\n---\n",
+          "doc-url": "",
+          "attributes": [
+            { "name": "limit", "value": { "type": "number", "default": "10" } },
+            { "name": "total", "value": { "type": "number", "default": "0" } },
+            { "name": "page", "value": { "type": "number", "default": "1" } },
+            { "name": "uri", "value": { "type": "string", "default": "\"\"" } }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "limit", "type": "number" },
+              { "name": "total", "type": "number" },
+              { "name": "page", "type": "number" },
+              { "name": "uri", "type": "string" }
+            ],
+            "events": []
           }
         },
         {
@@ -7801,6 +7801,26 @@
           }
         },
         {
+          "name": "zn-tab",
+          "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "priority", "value": { "type": "number" } },
+            { "name": "uri", "value": { "type": "string" } }
+          ],
+          "slots": [{ "name": "", "description": "The tab panel content." }],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "priority", "type": "number" },
+              { "name": "uri", "type": "string" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-table",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -7953,26 +7973,6 @@
                 "description": "Emitted as an example."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-tab",
-          "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "priority", "value": { "type": "number" } },
-            { "name": "uri", "value": { "type": "string" } }
-          ],
-          "slots": [{ "name": "", "description": "The tab panel content." }],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "priority", "type": "number" },
-              { "name": "uri", "type": "string" }
-            ],
-            "events": []
           }
         },
         {

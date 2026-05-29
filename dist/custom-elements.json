@@ -49,6 +49,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -201,79 +274,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -12272,6 +12272,309 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/hover-container/hover-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnHoverContainer",
+          "slots": [
+            {
+              "description": "The content of the hover-container",
+              "name": ""
+            },
+            {
+              "description": "The anchor the hover-container is attached to.",
+              "name": "anchor"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hoverTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "body",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "popup",
+              "type": {
+                "text": "Popup"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "content"
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "attribute": "placement"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "skidding"
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "attribute": "trigger"
+            },
+            {
+              "kind": "field",
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "hoist"
+            },
+            {
+              "kind": "method",
+              "name": "hasTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "triggerType",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocus",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleOpenChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleOptionsChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the hover-container is shown.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted after the hover-container is shown.",
+              "name": "zn-after-show"
+            },
+            {
+              "description": "Emitted when the hover-container is hidden.",
+              "name": "zn-hide"
+            },
+            {
+              "description": "Emitted after the hover-container is hidden.",
+              "name": "zn-after-hide"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "content"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "fieldName": "placement"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "fieldName": "distance"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "skidding"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "fieldName": "trigger"
+            },
+            {
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "hoist"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.",
+          "tagNameWithoutPrefix": "hover-container",
+          "tagName": "zn-hover-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/hover-container\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the hover-container is shown.\n * @event zn-after-show - Emitted after the hover-container is shown.\n * @event zn-hide - Emitted when the hover-container is hidden.\n * @event zn-after-hide - Emitted after the hover-container is hidden.\n *\n * @slot - The content of the hover-container\n * @slot anchor - The anchor the hover-container is attached to.\n */",
+          "documentation": "https://zinc.style/components/hover-container",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnHoverContainer",
+            "module": "components/hover-container/hover-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/icon/icon.js",
       "declarations": [
         {
@@ -12632,309 +12935,6 @@
           "declaration": {
             "name": "ZnIcon",
             "module": "components/icon/icon.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/hover-container/hover-container.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnHoverContainer",
-          "slots": [
-            {
-              "description": "The content of the hover-container",
-              "name": ""
-            },
-            {
-              "description": "The anchor the hover-container is attached to.",
-              "name": "anchor"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hoverTimeout",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "body",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "popup",
-              "type": {
-                "text": "Popup"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "content"
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "attribute": "placement"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "attribute": "distance"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "skidding"
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "attribute": "trigger"
-            },
-            {
-              "kind": "field",
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "hoist"
-            },
-            {
-              "kind": "method",
-              "name": "hasTrigger",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "triggerType",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "handleBlur",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFocus",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleDocumentKeyDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOver",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOut",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleOpenChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleOptionsChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "show"
-            },
-            {
-              "kind": "method",
-              "name": "hide"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the hover-container is shown.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted after the hover-container is shown.",
-              "name": "zn-after-show"
-            },
-            {
-              "description": "Emitted when the hover-container is hidden.",
-              "name": "zn-hide"
-            },
-            {
-              "description": "Emitted after the hover-container is hidden.",
-              "name": "zn-after-hide"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "content"
-            },
-            {
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "fieldName": "placement"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "fieldName": "distance"
-            },
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "open"
-            },
-            {
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "skidding"
-            },
-            {
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "fieldName": "trigger"
-            },
-            {
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "hoist"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.",
-          "tagNameWithoutPrefix": "hover-container",
-          "tagName": "zn-hover-container",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary The HoverContainer component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/hover-container\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the hover-container is shown.\n * @event zn-after-show - Emitted after the hover-container is shown.\n * @event zn-hide - Emitted when the hover-container is hidden.\n * @event zn-after-hide - Emitted after the hover-container is hidden.\n *\n * @slot - The content of the hover-container\n * @slot anchor - The anchor the hover-container is attached to.\n */",
-          "documentation": "https://zinc.style/components/hover-container",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnHoverContainer",
-            "module": "components/hover-container/hover-container.js"
           }
         }
       ]
@@ -16603,668 +16603,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/menu/menu.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnMenu",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-confirm': ZnConfirm, 'zn-dropdown': ZnDropdown, 'zn-icon': ZnIcon, 'zn-menu-item': ZnMenuItem, 'zn-tooltip': ZnTooltip, }"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "actions",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "attribute": "actions"
-            },
-            {
-              "kind": "method",
-              "name": "handleClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "isMenuItem",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "actions",
-              "type": {
-                "text": "array"
-              },
-              "default": "[]",
-              "fieldName": "actions"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "menu",
-          "tagName": "zn-menu",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/menu",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnMenu",
-            "module": "components/menu/menu.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/menu-item/menu-item.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnMenuItem",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-icon': ZnIcon, 'zn-popup': ZnPopup }"
-            },
-            {
-              "kind": "field",
-              "name": "cachedTextLabel",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "menuItem",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "'normal' | 'checkbox'"
-              },
-              "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the item in a checked state.",
-              "attribute": "checked",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "checkedPosition",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "attribute": "checked-position",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "loading",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a loading state.",
-              "attribute": "loading",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "dataPath",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "data-path"
-            },
-            {
-              "kind": "field",
-              "name": "target",
-              "type": {
-                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              "attribute": "target"
-            },
-            {
-              "kind": "field",
-              "name": "dataTarget",
-              "type": {
-                "text": "'modal' | 'slide' | string"
-              },
-              "attribute": "data-target"
-            },
-            {
-              "kind": "field",
-              "name": "rel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'noreferrer noopener'",
-              "attribute": "rel"
-            },
-            {
-              "kind": "field",
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "gaid"
-            },
-            {
-              "kind": "field",
-              "name": "confirm",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "confirm",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes all padding from the menu item.",
-              "attribute": "flush",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "attribute": "flush-x",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "attribute": "flush-y",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "noBorder",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the border from the menu item.",
-              "attribute": "no-border",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "active",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the menu item as currently active/selected.",
-              "attribute": "active",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'submenu')"
-            },
-            {
-              "kind": "field",
-              "name": "submenuController",
-              "type": {
-                "text": "SubmenuController"
-              },
-              "privacy": "private",
-              "default": "new SubmenuController(this, this.hasSlotController, this.localize)"
-            },
-            {
-              "kind": "method",
-              "name": "handleDefaultSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleHostClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleMouseOver",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleCheckedChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleTypeChange"
-            },
-            {
-              "kind": "method",
-              "name": "getTextLabel",
-              "description": "Returns a text label based on the contents of the menu item's default slot."
-            },
-            {
-              "kind": "method",
-              "name": "isSubmenu"
-            },
-            {
-              "kind": "method",
-              "name": "_isLink",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "type",
-              "type": {
-                "text": "'normal' | 'checkbox'"
-              },
-              "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-              "fieldName": "type"
-            },
-            {
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the item in a checked state.",
-              "fieldName": "checked"
-            },
-            {
-              "name": "checked-position",
-              "type": {
-                "text": "'left' | 'right'"
-              },
-              "default": "'left'",
-              "fieldName": "checkedPosition"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
-              "fieldName": "value"
-            },
-            {
-              "name": "loading",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a loading state.",
-              "fieldName": "loading"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the menu item in a disabled state, preventing selection.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "color"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "href"
-            },
-            {
-              "name": "data-path",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "dataPath"
-            },
-            {
-              "name": "target",
-              "type": {
-                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
-              },
-              "fieldName": "target"
-            },
-            {
-              "name": "data-target",
-              "type": {
-                "text": "'modal' | 'slide' | string"
-              },
-              "fieldName": "dataTarget"
-            },
-            {
-              "name": "rel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'noreferrer noopener'",
-              "fieldName": "rel"
-            },
-            {
-              "name": "gaid",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "gaid"
-            },
-            {
-              "name": "confirm",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "confirm"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes all padding from the menu item.",
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
-              "fieldName": "flushY"
-            },
-            {
-              "name": "no-border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Removes the border from the menu item.",
-              "fieldName": "noBorder"
-            },
-            {
-              "name": "active",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Marks the menu item as currently active/selected.",
-              "fieldName": "active"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "menu-item",
-          "tagName": "zn-menu-item",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/menu-item",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnMenuItem",
-            "module": "components/menu-item/menu-item.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/markdown-editor/markdown-editor.js",
       "declarations": [
         {
@@ -18141,6 +17479,668 @@
           "declaration": {
             "name": "ZnMarkdownEditor",
             "module": "components/markdown-editor/markdown-editor.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/menu/menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnMenu",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-confirm': ZnConfirm, 'zn-dropdown': ZnDropdown, 'zn-icon': ZnIcon, 'zn-menu-item': ZnMenuItem, 'zn-tooltip': ZnTooltip, }"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "actions",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "attribute": "actions"
+            },
+            {
+              "kind": "method",
+              "name": "handleClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "isMenuItem",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "actions",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]",
+              "fieldName": "actions"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "menu",
+          "tagName": "zn-menu",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/menu",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnMenu",
+            "module": "components/menu/menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/menu-item/menu-item.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnMenuItem",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon, 'zn-popup': ZnPopup }"
+            },
+            {
+              "kind": "field",
+              "name": "cachedTextLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "menuItem",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'normal' | 'checkbox'"
+              },
+              "default": "'normal'",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the item in a checked state.",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "checkedPosition",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "attribute": "checked-position",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a loading state.",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "dataPath",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "data-path"
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              "attribute": "target"
+            },
+            {
+              "kind": "field",
+              "name": "dataTarget",
+              "type": {
+                "text": "'modal' | 'slide' | string"
+              },
+              "attribute": "data-target"
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'noreferrer noopener'",
+              "attribute": "rel"
+            },
+            {
+              "kind": "field",
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "gaid"
+            },
+            {
+              "kind": "field",
+              "name": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "confirm",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes all padding from the menu item.",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "attribute": "flush-x",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "attribute": "flush-y",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "noBorder",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes the border from the menu item.",
+              "attribute": "no-border",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the menu item as currently active/selected.",
+              "attribute": "active",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'submenu')"
+            },
+            {
+              "kind": "field",
+              "name": "submenuController",
+              "type": {
+                "text": "SubmenuController"
+              },
+              "privacy": "private",
+              "default": "new SubmenuController(this, this.hasSlotController, this.localize)"
+            },
+            {
+              "kind": "method",
+              "name": "handleDefaultSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleHostClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleCheckedChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleTypeChange"
+            },
+            {
+              "kind": "method",
+              "name": "getTextLabel",
+              "description": "Returns a text label based on the contents of the menu item's default slot."
+            },
+            {
+              "kind": "method",
+              "name": "isSubmenu"
+            },
+            {
+              "kind": "method",
+              "name": "_isLink",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "type",
+              "type": {
+                "text": "'normal' | 'checkbox'"
+              },
+              "default": "'normal'",
+              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "fieldName": "type"
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the item in a checked state.",
+              "fieldName": "checked"
+            },
+            {
+              "name": "checked-position",
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "default": "'left'",
+              "fieldName": "checkedPosition"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A unique value to store in the menu item. This can be used as a way to identify menu items when selected.",
+              "fieldName": "value"
+            },
+            {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a loading state.",
+              "fieldName": "loading"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the menu item in a disabled state, preventing selection.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "color"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "href"
+            },
+            {
+              "name": "data-path",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "dataPath"
+            },
+            {
+              "name": "target",
+              "type": {
+                "text": "'_self' | '_blank' | '_parent' | '_top' | string"
+              },
+              "fieldName": "target"
+            },
+            {
+              "name": "data-target",
+              "type": {
+                "text": "'modal' | 'slide' | string"
+              },
+              "fieldName": "dataTarget"
+            },
+            {
+              "name": "rel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'noreferrer noopener'",
+              "fieldName": "rel"
+            },
+            {
+              "name": "gaid",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "gaid"
+            },
+            {
+              "name": "confirm",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "confirm"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes all padding from the menu item.",
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes horizontal (left/right) padding only. Ignored if flush is set.",
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes vertical (top/bottom) padding only. Ignored if flush is set.",
+              "fieldName": "flushY"
+            },
+            {
+              "name": "no-border",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Removes the border from the menu item.",
+              "fieldName": "noBorder"
+            },
+            {
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the menu item as currently active/selected.",
+              "fieldName": "active"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "menu-item",
+          "tagName": "zn-menu-item",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/menu-item",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnMenuItem",
+            "module": "components/menu-item/menu-item.js"
           }
         }
       ]
@@ -19124,6 +19124,224 @@
           "declaration": {
             "name": "ZnOptGroup",
             "module": "components/opt-group/opt-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/option/option.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOption",
+          "cssParts": [
+            {
+              "description": "The checked option icon, an `<zn-icon>` element.",
+              "name": "checked-option-icon"
+            },
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The option's label.",
+              "name": "label"
+            },
+            {
+              "description": "The container that wraps the prefix.",
+              "name": "prefix"
+            },
+            {
+              "description": "The container that wraps the suffix.",
+              "name": "suffix"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The option's label.",
+              "name": ""
+            },
+            {
+              "description": "Used to prepend an icon or similar element to the menu item.",
+              "name": "prefix"
+            },
+            {
+              "description": "Used to append an icon or similar element to the menu item.",
+              "name": "suffix"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
+            },
+            {
+              "kind": "field",
+              "name": "cachedTextLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "public",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "hasHover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "selected",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "handleDefaultSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseEnter",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleSelectedChange"
+            },
+            {
+              "kind": "method",
+              "name": "getTextLabel",
+              "description": "Returns a plain text label based on the option's content."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
+              "fieldName": "value"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the option in a disabled state, preventing selection.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "selected"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "option",
+          "tagName": "zn-option",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/option\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The option's label.\n * @slot prefix - Used to prepend an icon or similar element to the menu item.\n * @slot suffix - Used to append an icon or similar element to the menu item.\n *\n * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.\n * @csspart base - The component's base wrapper.\n * @csspart label - The option's label.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart suffix - The container that wraps the suffix.\n */",
+          "documentation": "https://zinc.style/components/option",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOption",
+            "module": "components/option/option.js"
           }
         }
       ]
@@ -20813,356 +21031,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/option/option.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnOption",
-          "cssParts": [
-            {
-              "description": "The checked option icon, an `<zn-icon>` element.",
-              "name": "checked-option-icon"
-            },
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The option's label.",
-              "name": "label"
-            },
-            {
-              "description": "The container that wraps the prefix.",
-              "name": "prefix"
-            },
-            {
-              "description": "The container that wraps the suffix.",
-              "name": "suffix"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The option's label.",
-              "name": ""
-            },
-            {
-              "description": "Used to prepend an icon or similar element to the menu item.",
-              "name": "prefix"
-            },
-            {
-              "description": "Used to append an icon or similar element to the menu item.",
-              "name": "suffix"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-icon': ZnIcon }"
-            },
-            {
-              "kind": "field",
-              "name": "cachedTextLabel",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "public",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "current",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "hasHover",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "selected",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "handleDefaultSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseEnter",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseLeave",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleSelectedChange"
-            },
-            {
-              "kind": "method",
-              "name": "getTextLabel",
-              "description": "Returns a plain text label based on the option's content."
-            }
-          ],
-          "attributes": [
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
-              "fieldName": "value"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the option in a disabled state, preventing selection.",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "selected"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "option",
-          "tagName": "zn-option",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/option\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The option's label.\n * @slot prefix - Used to prepend an icon or similar element to the menu item.\n * @slot suffix - Used to append an icon or similar element to the menu item.\n *\n * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.\n * @csspart base - The component's base wrapper.\n * @csspart label - The option's label.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart suffix - The container that wraps the suffix.\n */",
-          "documentation": "https://zinc.style/components/option",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-icon"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnOption",
-            "module": "components/option/option.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/pagination/pagination.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPagination",
-          "members": [
-            {
-              "kind": "field",
-              "name": "limit",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "attribute": "limit",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "total",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "page",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "attribute": "page",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "uri",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "_createLink",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "page",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_calculatePages",
-              "privacy": "protected"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "limit",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "fieldName": "limit"
-            },
-            {
-              "name": "total",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "total"
-            },
-            {
-              "name": "page",
-              "type": {
-                "text": "number"
-              },
-              "default": "1",
-              "fieldName": "page"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "uri"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Pagination component for navigating through pages of content.",
-          "tagNameWithoutPrefix": "pagination",
-          "tagName": "zn-pagination",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Pagination component for navigating through pages of content.\n * @documentation https://zinc.style/components/pagination\n * @status experimental\n * @since 1.0\n */",
-          "documentation": "https://zinc.style/components/pagination",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPagination",
-            "module": "components/pagination/pagination.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/page-nav/page-nav.js",
       "declarations": [
         {
@@ -22296,6 +22164,138 @@
           "declaration": {
             "name": "ZnPageNav",
             "module": "components/page-nav/page-nav.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/pagination/pagination.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPagination",
+          "members": [
+            {
+              "kind": "field",
+              "name": "limit",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "attribute": "limit",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "total",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "page",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "uri",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "_createLink",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "page",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_calculatePages",
+              "privacy": "protected"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "limit",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "fieldName": "limit"
+            },
+            {
+              "name": "total",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "total"
+            },
+            {
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "fieldName": "page"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "uri"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Pagination component for navigating through pages of content.",
+          "tagNameWithoutPrefix": "pagination",
+          "tagName": "zn-pagination",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Pagination component for navigating through pages of content.\n * @documentation https://zinc.style/components/pagination\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/pagination",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPagination",
+            "module": "components/pagination/pagination.js"
           }
         }
       ]
@@ -31032,6 +31032,94 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/tab/tab.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTab",
+          "slots": [
+            {
+              "description": "The tab panel content.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "priority",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "priority"
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "priority",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "priority"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Defines a tab panel for use inside zn-page.",
+          "tagNameWithoutPrefix": "tab",
+          "tagName": "zn-tab",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Defines a tab panel for use inside zn-page.\n * @documentation https://zinc.style/components/tab\n * @status experimental\n * @since 1.0\n *\n * @slot - The tab panel content.\n */",
+          "documentation": "https://zinc.style/components/tab",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTab",
+            "module": "components/tab/tab.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/table/table.js",
       "declarations": [
         {
@@ -32079,94 +32167,6 @@
           "declaration": {
             "name": "ZnTabs",
             "module": "components/tabs/tabs.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/tab/tab.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTab",
-          "slots": [
-            {
-              "description": "The tab panel content.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "priority",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "priority"
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "uri"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "priority",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "priority"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "uri"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Defines a tab panel for use inside zn-page.",
-          "tagNameWithoutPrefix": "tab",
-          "tagName": "zn-tab",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Defines a tab panel for use inside zn-page.\n * @documentation https://zinc.style/components/tab\n * @status experimental\n * @since 1.0\n *\n * @slot - The tab panel content.\n */",
-          "documentation": "https://zinc.style/components/tab",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTab",
-            "module": "components/tab/tab.js"
           }
         }
       ]

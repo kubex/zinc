@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -56,6 +45,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1454,6 +1454,26 @@
       ]
     },
     {
+      "name": "zn-icon",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "src", "values": [] },
+        { "name": "alt", "values": [] },
+        { "name": "size", "values": [] },
+        { "name": "round", "values": [] },
+        { "name": "tile", "values": [] },
+        { "name": "depth", "values": [] },
+        { "name": "library", "values": [{ "name": "IconLibrary" }] },
+        { "name": "color", "values": [{ "name": "IconColor" }] },
+        { "name": "padded", "values": [] },
+        { "name": "blink", "values": [] },
+        { "name": "squared", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/icon" }
+      ]
+    },
+    {
       "name": "zn-hover-container",
       "description": "The HoverContainer component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the hover-container is shown.\n- **zn-after-show** - Emitted after the hover-container is shown.\n- **zn-hide** - Emitted when the hover-container is hidden.\n- **zn-after-hide** - Emitted after the hover-container is hidden.\n\n### **Slots:**\n - _default_ - The content of the hover-container\n- **anchor** - The anchor the hover-container is attached to.",
       "attributes": [
@@ -1488,26 +1508,6 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/hover-container"
         }
-      ]
-    },
-    {
-      "name": "zn-icon",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "src", "values": [] },
-        { "name": "alt", "values": [] },
-        { "name": "size", "values": [] },
-        { "name": "round", "values": [] },
-        { "name": "tile", "values": [] },
-        { "name": "depth", "values": [] },
-        { "name": "library", "values": [{ "name": "IconLibrary" }] },
-        { "name": "color", "values": [{ "name": "IconColor" }] },
-        { "name": "padded", "values": [] },
-        { "name": "blink", "values": [] },
-        { "name": "squared", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/icon" }
       ]
     },
     {
@@ -1975,91 +1975,6 @@
       ]
     },
     {
-      "name": "zn-markdown-editor",
-      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.",
-      "attributes": [
-        {
-          "name": "name",
-          "description": "The name of the control, submitted as part of form data.",
-          "values": []
-        },
-        {
-          "name": "value",
-          "description": "The current markdown content.",
-          "values": []
-        },
-        {
-          "name": "label",
-          "description": "The control's label. If you need HTML, use the `label` slot.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "Help text displayed below the editor. If you need HTML, use the `help-text` slot.",
-          "values": []
-        },
-        {
-          "name": "placeholder",
-          "description": "Placeholder text shown when the editor is empty.",
-          "values": []
-        },
-        {
-          "name": "rows",
-          "description": "Number of rows for the textarea.",
-          "values": []
-        },
-        {
-          "name": "view-mode",
-          "description": "Which view to show.",
-          "values": [{ "name": "ViewMode" }]
-        },
-        {
-          "name": "storage-key",
-          "description": "Key used to persist the selected view mode to `localStorage`. Set to an empty string to disable persistence.",
-          "values": []
-        },
-        {
-          "name": "required",
-          "description": "Makes the editor required for form submission.",
-          "values": []
-        },
-        {
-          "name": "readonly",
-          "description": "Makes the editor read-only.",
-          "values": []
-        },
-        {
-          "name": "disabled",
-          "description": "Disables the editor.",
-          "values": []
-        },
-        {
-          "name": "expanded",
-          "description": "Whether the editor is currently expanded to cover its containing positioned ancestor.",
-          "values": []
-        },
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "icon", "values": [] },
-        { "name": "description", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-underline", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/markdown-editor"
-        }
-      ]
-    },
-    {
       "name": "zn-menu",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [{ "name": "actions", "values": [{ "name": "array" }] }],
@@ -2153,6 +2068,91 @@
       ]
     },
     {
+      "name": "zn-markdown-editor",
+      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.",
+      "attributes": [
+        {
+          "name": "name",
+          "description": "The name of the control, submitted as part of form data.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The current markdown content.",
+          "values": []
+        },
+        {
+          "name": "label",
+          "description": "The control's label. If you need HTML, use the `label` slot.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "Help text displayed below the editor. If you need HTML, use the `help-text` slot.",
+          "values": []
+        },
+        {
+          "name": "placeholder",
+          "description": "Placeholder text shown when the editor is empty.",
+          "values": []
+        },
+        {
+          "name": "rows",
+          "description": "Number of rows for the textarea.",
+          "values": []
+        },
+        {
+          "name": "view-mode",
+          "description": "Which view to show.",
+          "values": [{ "name": "ViewMode" }]
+        },
+        {
+          "name": "storage-key",
+          "description": "Key used to persist the selected view mode to `localStorage`. Set to an empty string to disable persistence.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Makes the editor required for form submission.",
+          "values": []
+        },
+        {
+          "name": "readonly",
+          "description": "Makes the editor read-only.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Disables the editor.",
+          "values": []
+        },
+        {
+          "name": "expanded",
+          "description": "Whether the editor is currently expanded to cover its containing positioned ancestor.",
+          "values": []
+        },
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
+        { "name": "description", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-underline", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/markdown-editor"
+        }
+      ]
+    },
+    {
       "name": "zn-navbar",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2217,29 +2217,6 @@
       ]
     },
     {
-      "name": "zn-option",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
-      "attributes": [
-        {
-          "name": "value",
-          "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
-          "values": []
-        },
-        {
-          "name": "disabled",
-          "description": "Draws the option in a disabled state, preventing selection.",
-          "values": []
-        },
-        { "name": "selected", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/option"
-        }
-      ]
-    },
-    {
       "name": "zn-order-table",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2292,6 +2269,45 @@
       ]
     },
     {
+      "name": "zn-option",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
+      "attributes": [
+        {
+          "name": "value",
+          "description": "The option's value. When selected, the containing form control will receive this value. The value must be unique\nfrom other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.",
+          "values": []
+        },
+        {
+          "name": "disabled",
+          "description": "Draws the option in a disabled state, preventing selection.",
+          "values": []
+        },
+        { "name": "selected", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/option"
+        }
+      ]
+    },
+    {
+      "name": "zn-pagination",
+      "description": "Pagination component for navigating through pages of content.\n---\n",
+      "attributes": [
+        { "name": "limit", "values": [] },
+        { "name": "total", "values": [] },
+        { "name": "page", "values": [] },
+        { "name": "uri", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/pagination"
+        }
+      ]
+    },
+    {
       "name": "zn-page-nav",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2322,22 +2338,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/page-nav"
-        }
-      ]
-    },
-    {
-      "name": "zn-pagination",
-      "description": "Pagination component for navigating through pages of content.\n---\n",
-      "attributes": [
-        { "name": "limit", "values": [] },
-        { "name": "total", "values": [] },
-        { "name": "page", "values": [] },
-        { "name": "uri", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/pagination"
         }
       ]
     },
@@ -3342,18 +3342,6 @@
       ]
     },
     {
-      "name": "zn-tab",
-      "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "priority", "values": [] },
-        { "name": "uri", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/tab" }
-      ]
-    },
-    {
       "name": "zn-table",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3399,6 +3387,18 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
+      ]
+    },
+    {
+      "name": "zn-tab",
+      "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "priority", "values": [] },
+        { "name": "uri", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/tab" }
       ]
     },
     {

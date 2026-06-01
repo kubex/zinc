@@ -722,7 +722,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   private handleClearClick(event: MouseEvent) {
     event.stopPropagation();
 
-    if (this.value !== '') {
+    if (this.value.length > 0) {
+      this.valueHasChanged = true;
+
       if (this._isTypeable) {
         this.clearSearch();
         this.displayInput.value = '';

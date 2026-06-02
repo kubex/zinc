@@ -68,7 +68,7 @@
 }
 
 :host:not([stacked]) .navbar {
-  margin: 0 0 0 var(--zn-spacing-medium);
+  margin: 0 0 0 var(--zn-base-gap);
   padding-left: 0;
 
   &--flush {
@@ -81,6 +81,7 @@ ul.navbar {
     padding-top: 0;
     font-size: var(--zn-font-size-medium);
     white-space: nowrap;
+    color: rgb(var(--zn-color-muted-text));
 
     a {
       text-decoration: none;
@@ -117,7 +118,7 @@ ul.navbar {
 
     li {
       border-bottom: 1px solid rgb(var(--zn-border-color));
-      padding: var(--zn-spacing-medium);
+      padding: var(--zn-base-gap);
 
       &.active:before, &.zn-tb-active:before {
         display: none;
@@ -147,8 +148,6 @@ ul.navbar {
     &--border {
       border-right: 1px solid rgb(var(--zn-border-color));
     }
-
-    //margin-right: var(--zn-spacing-medium);
   }
 }
 
@@ -157,8 +156,6 @@ ul.navbar {
     &--border {
       border-left: 1px solid rgb(var(--zn-border-color));
     }
-
-    //  margin-left: var(--zn-spacing-medium);
   }
 }
 
@@ -256,6 +253,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
+        color: rgb(var(--zn-color-text));
         border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
     }
@@ -300,12 +298,20 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       user-select: none;
       font-weight: 500;
       padding: 0 calc(var(--zn-base-gap, 8px));
-      background: rgba(0, 0, 0, 0.05);
+      background: rgb(var(--zn-color-tab));
       transition: background-color 100ms ease-in-out;
       position: relative;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.03);
+        background: rgba(var(--zn-color-tab), 0.5);
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgb(var(--navbar-active-colour));
+          z-index: -1;
+        }
       }
 
       display: flex;

@@ -4,51 +4,29 @@
 @use "variables";
 
 :root {
-  // Brand Colors
-  --zn-red: 237, 84, 109;
-  --zn-blue: 100, 117, 242;
-  --zn-green: 43, 192, 145;
-  --zn-orange: 255, 136, 0;
-  --zn-yellow: 255, 193, 7;
-  --zn-indigo: 63, 81, 181;
-  --zn-violet: 156, 39, 176;
-  --zn-pink: 255, 108, 156;
-  --zn-grey: 158, 158, 158;
-  --zn-primary: 104, 54, 245;
-  --zn-accent: 71, 214, 214;
-
-  // Theme Colors
-  --zn-color-info: 100, 117, 242;
-  --zn-color-warning: 255, 136, 0;
-  --zn-color-error: 237, 84, 109;
-  --zn-color-success: 43, 192, 145;
-  --zn-color-disabled: 181, 181, 181;
-
-  // Common Sizes
-  --zn-size-bar: 60px;
-  --zn-size-tile: 80px;
-  --zn-size-sidenav: 320px;
-  --zn-size-spanel: 170px;
-  --zn-size-mpanel: 320px;
-  --zn-size-panel: 360px;
-  --zn-size-lside: 460px;
-
-  // Font Families
-  --zn-font-family-sans: 'Inter', sans-serif;
-  --zn-font-family-serif: 'Roboto Slab', serif;
-  --zn-font-family-mono: 'Roboto Mono', monospace;
-
-  // Default Opacities
-  --zn-bg-opacity: 1;
-  --zn-text-opacity: 1;
-
-  --base: 255, 255, 255;
-  --inverse-base: 0, 0, 0;
-
   --zn-base-gap: 12px;
   --zn-gutter: 4px;
   --zn-default-margin: 0 auto 0 0;
   --zn-icon-size: 20px;
+
+  --zn-font-family-sans: 'Inter', sans-serif;
+  --zn-font-family-serif: 'Roboto Slab', serif;
+  --zn-font-family-mono: 'Roboto Mono', monospace;
+
+  --zn-color-text: 33, 33, 33;
+  --zn-color-muted-text: 125, 119, 146;
+
+  --zn-color-body: 248, 247, 252;
+  --zn-color-border: 219, 217, 236;
+  --zn-color-tab: 236, 235, 249;
+  --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 104, 54, 245;
+  --zn-color-info: 4, 114, 225;
+  --zn-color-success: 48, 170, 61;
+  --zn-color-warning: 255, 203, 0;
+  --zn-color-error: 225, 4, 4;
+  --zn-color-disabled: 181, 181, 181;
 }
 
 @media (min-width: 1024px) {
@@ -79,6 +57,38 @@
 }
 
 
+:root {
+  --zn-primary: var(--zn-color-primary);
+
+  // Brand Colors
+  --zn-red: 237, 84, 109;
+  --zn-blue: 100, 117, 242;
+  --zn-green: 43, 192, 145;
+  --zn-orange: 255, 136, 0;
+  --zn-yellow: 255, 193, 7;
+  --zn-indigo: 63, 81, 181;
+  --zn-violet: 156, 39, 176;
+  --zn-pink: 255, 108, 156;
+  --zn-grey: 158, 158, 158;
+  --zn-accent: 71, 214, 214;
+
+  // Common Sizes
+  --zn-size-bar: 60px;
+  --zn-size-tile: 80px;
+  --zn-size-sidenav: 320px;
+  --zn-size-spanel: 170px;
+  --zn-size-mpanel: 320px;
+  --zn-size-panel: 360px;
+  --zn-size-lside: 460px;
+
+  // Default Opacities
+  --zn-bg-opacity: 1;
+  --zn-text-opacity: 1;
+
+  --base: 255, 255, 255;
+  --inverse-base: 0, 0, 0;
+}
+
 .zn-mono {
   font-family: var(--zn-font-family-mono);
 }
@@ -86,18 +96,19 @@
 [t="light"], .theme-light {
   // Theme Light
   --zn-panel-opacity: 1;
-  --zn-text: 123, 112, 151;
-  --zn-text-heading: 56, 39, 104;
-  --zn-text-page-title: 52, 52, 52;
-  --zn-text-panel-title: 56, 39, 104;
-  --zn-body: 248, 247, 251;
+  --zn-text: var(--zn-color-text);
+  --zn-text-heading: var(--zn-color-text);
+  --zn-text-page-title: var(--zn-color-text);
+  --zn-text-panel-title: var(--zn-color-text);
+  --zn-body: var(--zn-color-body);
   --zn-shadow: 236, 233, 241;
-  --zn-panel: 255, 255, 255;
+  --zn-panel: var(--zn-color-panel);
+
   --zn-panel-secondary: 246 246 246;
   --zn-panel-highlight: 248, 249, 252;
   --zn-panel-highlight-opacity: 1;
-  --zn-border-color: 224, 221, 233;
-  --zn-input-bg: 248, 247, 251;
+  --zn-border-color: var(--zn-color-border);
+  --zn-input-bg: var(--zn-color-body);
   --zn-input-bg-accent: 237, 235, 245;
   --zn-bright-bg: 255, 255, 255;
   --zn-light-text: 123, 112, 151;
@@ -105,7 +116,7 @@
   --zn-purple-text: 104, 54, 245;
 
   .zn-primary {
-    color: #6836F5;
+    color: rgb(var(--zn-color-primary));
   }
 }
 

@@ -94,14 +94,14 @@ Use the `footer` slot to add footer content to the panel.
 </zn-panel>
 ```
 
-### Header Underline
+### Borderless Header
 
-Use the `header-underline` attribute to add a border beneath the header.
+Panel headers include a border by default. Use the `header-borderless` attribute to remove the border beneath the header.
 
 ```html:preview
-<zn-panel caption="Underlined Header" description="With a visible separator" header-underline>
+<zn-panel caption="Borderless Header" description="Without a visible separator" header-borderless>
   <div style="padding: 20px;">
-    <p>Panel content with underlined header</p>
+    <p>Panel content with a borderless header</p>
   </div>
 </zn-panel>
 ```
@@ -286,7 +286,6 @@ All panel features can be combined to create rich, complex layouts.
   caption="Advanced Panel"
   description="Combining multiple features"
   icon="dashboard"
-  header-underline
   shadow>
 
   <zn-chip slot="actions" icon="settings" type="info">Configure</zn-chip>
@@ -294,7 +293,7 @@ All panel features can be combined to create rich, complex layouts.
 
   <div style="padding: 20px;">
     <h3>Dashboard Overview</h3>
-    <p>This panel combines header actions, icons, underline, and shadow effects.</p>
+    <p>This panel combines header actions, icons, and shadow effects.</p>
   </div>
 
   <div slot="footer">
@@ -325,4 +324,3 @@ The panel header only renders when one of the following conditions is met:
 The following CSS custom properties can be used to customize the panel:
 
 - `--zn-panel-basis` - Controls the flex-basis of the panel (set via `basis-px` attribute)
-

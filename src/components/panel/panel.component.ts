@@ -1,7 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -29,9 +28,8 @@ export default class ZnPanel extends ZincElement {
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
   @property() icon: string;
-  @property() description: string;
   @property({type: Boolean}) tabbed: boolean;
-  @property({attribute: 'header-underline', type: Boolean}) underlineHeader: boolean;
+  @property({attribute: 'header-borderless', type: Boolean}) headerBorderless: boolean;
   @property({type: Boolean}) cosmic: boolean;
   @property({type: Boolean}) flush: boolean;
   @property({attribute: 'flush-x', type: Boolean}) flushX: boolean;
@@ -99,11 +97,10 @@ export default class ZnPanel extends ZincElement {
           ${hasHeader ? html`
             <zn-header class="${classMap({
               "panel__header": true,
-              "panel__header--underline": this.underlineHeader,
+              "panel__header--underline": !this.headerBorderless,
             })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
-                       description="${ifDefined(this.description)}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

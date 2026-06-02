@@ -41,8 +41,6 @@ export default class ZnHeader extends ZincElement {
   @property() caption: string;
   @property() icon: string;
 
-  @property() description: string;
-
   @property({type: Array}) navigation = [];
 
   @property({attribute: 'full-width', type: Boolean}) fullWidth: boolean;
@@ -142,7 +140,7 @@ export default class ZnHeader extends ZincElement {
           ${hasPreviousPath ? html`
             <a href="${this.previousPath}" class="caption__back"
                data-target="${this.previousTarget ? this.previousTarget : ''}">
-              <zn-button size="content" icon="arrow_back" icon-size="24" color="transparent"></zn-button>
+              <zn-button size="content" icon="arrow_back" icon-size="20" color="transparent"></zn-button>
             </a>` : null}
 
           ${hasDefaultSlot ? html`
@@ -154,15 +152,11 @@ export default class ZnHeader extends ZincElement {
             <div part="header-left" class="header__left">
               <span class="header__caption" part="header-caption">
                 ${this.icon ? html`
-                  <zn-icon class="header__icon" src="${this.icon}"></zn-icon>` : null}
+                  <zn-icon class="header__icon" size=20 src="${this.icon}"></zn-icon>` : null}
                 ${hasBreadcrumb ? html`
                   <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                 <slot name="caption">${this.caption}</slot>
                 </span>
-              ${this.description ? html`
-                  <span class="header__description"
-                        part="header-description">${this.description}</span>`
-                : ''}
             </div>
 
             <div class="header__right">

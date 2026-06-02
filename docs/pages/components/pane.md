@@ -10,7 +10,7 @@ Panes are versatile container components designed to manage content layout with 
 ```html:preview
 <div style="height: 400px; border: 1px solid var(--zn-color-neutral-300);">
   <zn-pane>
-    <zn-header caption="Example Pane" description="A basic pane with header"></zn-header>
+    <zn-header caption="Example Pane"></zn-header>
     <p>This is the main content area of the pane. It will automatically scroll when the content exceeds the available space.</p>
     <p>The pane component provides a flexible container with built-in overflow handling and padding.</p>
     <p>You can add any content here, and it will be properly contained within the pane.</p>
@@ -42,7 +42,6 @@ When a `zn-header` is included as a child element, the pane automatically integr
 <div style="height: 400px; border: 1px solid var(--zn-color-neutral-300);">
   <zn-pane>
     <zn-header caption="Customer Details"
-               description="View and manage customer information"
                icon="person">
       <zn-button slot="actions" primary>Save</zn-button>
       <zn-button slot="actions">Cancel</zn-button>
@@ -114,7 +113,7 @@ Panes automatically handle overflow with scrollbars when content exceeds the ava
 ```html:preview
 <div style="height: 300px; border: 1px solid var(--zn-color-neutral-300);">
   <zn-pane>
-    <zn-header caption="Long Content" description="Scroll to see more"></zn-header>
+    <zn-header caption="Long Content"></zn-header>
     <h3>Section 1</h3>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
@@ -178,7 +177,7 @@ A common pattern is using a flush pane with data tables or other components that
 ```html:preview
 <div style="height: 400px; border: 1px solid var(--zn-color-neutral-300);">
   <zn-pane flush>
-    <zn-header caption="Customer List" description="All active customers">
+    <zn-header caption="Customer List">
       <zn-button slot="actions" primary icon="add">Add Customer</zn-button>
     </zn-header>
     <zn-sp divide no-gap flush>
@@ -210,7 +209,6 @@ Panes are designed to work within full-height layouts, automatically expanding t
 <div style="height: 500px; border: 1px solid var(--zn-color-neutral-300);">
   <zn-pane>
     <zn-header caption="Dashboard"
-               description="System overview and metrics"
                icon="dashboard">
       <zn-button slot="actions" icon="refresh">Refresh</zn-button>
     </zn-header>
@@ -234,5 +232,4 @@ Panes are designed to work within full-height layouts, automatically expanding t
   </zn-pane>
 </div>
 ```
-
 

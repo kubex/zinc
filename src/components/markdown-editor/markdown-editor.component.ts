@@ -275,7 +275,7 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
           ${hasHeader ? html`
             <zn-header class=${classMap({
               panel__header: true,
-              'panel__header--underline': this.underlineHeader,
+              'panel__header--underline': !this.headerBorderless,
             })}
                        icon=${this.icon}
                        caption=${this.caption}

@@ -41,7 +41,6 @@ for SEO purposes. We should be slotting everything in as children of the compone
     <!-- This is the Navigation/Header for the Inner set of tabs -->
     <zn-header slot="top"
                caption="Customer"
-               description="My Awesome Customer"
                navigation="[{&quot;title&quot;:&quot;Overview&quot;}, {&quot;title&quot;:&quot;Details&quot;, &quot;tab&quot;:&quot;details&quot;}]">
     </zn-header>
 
@@ -68,7 +67,6 @@ for SEO purposes. We should be slotting everything in as children of the compone
     <zn-pane>
       <zn-header slot="top"
                  caption="Customer"
-                 description="My Awesome Customer"
                  navigation="[{&quot;title&quot;:&quot;Overview&quot;}, {&quot;title&quot;:&quot;Details&quot;, &quot;tab&quot;:&quot;details&quot;}]">
       </zn-header>
       <!-- This is where your page content would be defined -->

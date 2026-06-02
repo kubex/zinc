@@ -313,6 +313,46 @@
   }
 }
 
+.button--icon-button {
+  --icon-button-color: rgb(var(--zn-text));
+  --icon-button-hover-color: rgb(var(--zn-primary));
+
+  background: transparent;
+  border-color: transparent !important;
+  color: var(--icon-button-color);
+  font-weight: inherit;
+  line-height: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+  width: auto;
+
+  zn-icon,
+  ::slotted(zn-icon) {
+    --icon-color: currentColor;
+
+    color: inherit;
+    line-height: 0;
+  }
+
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background: transparent;
+    color: var(--icon-button-hover-color);
+  }
+}
+
+.button--with-icon:not(.button--with-content).button--icon-button {
+  &.button--x-small,
+  &.button--small,
+  &.button--medium,
+  &.button--large {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+}
+
 .button--loading-bg {
   &-transparent {
     background-color: transparent;

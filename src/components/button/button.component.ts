@@ -5,6 +5,7 @@ import {HasSlotController} from '../../internal/slot';
 import {html, literal} from 'lit/static-html.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {property, query, queryAll} from 'lit/decorators.js';
+import {styleMap} from "lit/directives/style-map.js";
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
@@ -58,14 +59,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @query('.button') button: HTMLButtonElement;
   @queryAll('.loading-countdown') countdownContainer: HTMLElement[];
 
-  @property({}) color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
-    'transparent' | 'star' = 'default';
+  @property({}) color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |
+    'transparent' | 'star' | (string & Record<never, never>) = 'default';
+  @property({attribute: 'hover-color'}) hoverColor: string;
   @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
   @property({type: Boolean}) text = false;
   @property({type: Boolean}) outline = false;
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
+  @property({type: Boolean, attribute: 'icon-button'}) iconButton = false;
   @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
@@ -248,6 +251,33 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     return !this._isLink();
   }
 
+  private getIconButtonColor(color: string | undefined) {
+    switch (color) {
+      case undefined:
+      case '':
+      case 'default':
+        return 'rgb(var(--zn-text))';
+      case 'primary':
+        return 'rgb(var(--zn-primary))';
+      case 'secondary':
+        return 'var(--zn-color-neutral-500)';
+      case 'error':
+        return 'rgb(var(--zn-color-error))';
+      case 'info':
+        return 'rgb(var(--zn-color-info))';
+      case 'success':
+        return 'rgb(var(--zn-color-success))';
+      case 'warning':
+        return 'rgb(var(--zn-color-warning))';
+      case 'transparent':
+        return 'inherit';
+      case 'star':
+        return 'rgb(var(--zn-orange))';
+      default:
+        return color;
+    }
+  }
+
   setupAutoClick() {
     if (!this.button) return;
 
@@ -318,10 +348,14 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const isLink = this._isLink();
     const showCancel = this.loading && this.autoClick;
     const icon = this.icon && !this.loading ? html`
-        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 16}"
-                 color="${this.iconColor ? this.iconColor : null}"></zn-icon>`
+        <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 20}"
+                 color="${ifDefined(this.iconColor)}"></zn-icon>`
       : '';
     const tag = isLink ? literal`a` : literal`button`;
+    const iconButtonStyles = this.iconButton ? {
+      '--icon-button-color': this.getIconButtonColor(this.color),
+      '--icon-button-hover-color': this.getIconButtonColor(this.hoverColor || 'primary')
+    } : {};
 
     const buttonContent = html`
       <${tag}
@@ -344,6 +378,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--large': this.size === 'large',
           'button--outline': this.outline,
           'button--text': (this.text && !this.outline),
+          'button--icon-button': this.iconButton,
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,
           'button--with-icon': this.icon,
@@ -363,6 +398,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
         gaid="${ifDefined(this.gaid)}"
         data-notification="${ifDefined(this.notification)}"
         disabled="${this.disabled || nothing}"
+        style=${styleMap(iconButtonStyles)}
         @click="${this.handleClick}">
         ${this.iconPosition === 'left' ? icon : ''}
         <slot part="label"

@@ -129,6 +129,19 @@ Buttons can be used with just an icon and no text by omitting the button label.
 <zn-button icon="add" color="info"></zn-button>
 ```
 
+### Icon Button Style
+
+Use `icon-button` to make only the nested icon appear clickable. The hover color defaults to `--zn-primary`; use `color` and `hover-color` to customize the icon colors.
+
+```html:preview
+<zn-button icon-button icon="settings"></zn-button>
+<zn-button icon-button icon="favorite" color="error"></zn-button>
+<zn-button icon-button icon="share" color="#64748b" hover-color="#0f172a"></zn-button>
+<zn-button icon-button color="success" hover-color="warning">
+  <zn-icon src="add" size="16"></zn-icon>
+</zn-button>
+```
+
 ### Icon Position
 
 Use the `icon-position` attribute to control whether the icon appears before or after the button text.

@@ -89,6 +89,7 @@ export default class ZnPanel extends ZincElement {
         'panel--has-actions': hasActionSlot,
         'panel--has-footer': hasFooterSlot,
         'panel--has-header': hasHeader,
+        'panel--borderless-header': this.headerBorderless,
         'panel--cosmic': this.cosmic,
         'panel--shadow': this.shadow,
       })}">

@@ -3821,6 +3821,8 @@ declare module "components/tab/tab.component" {
         caption: string;
         priority: number;
         uri: string;
+        /** When present, zn-page opens this tab on load instead of the first tab. */
+        selected: boolean;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -3991,6 +3993,8 @@ declare module "components/page/page.component" {
         private handleNavigationSelect;
         private activateTab;
         private activateInitialPageTab;
+        private activateTabDefinition;
+        private findNavItemForUri;
         private registerPagePanels;
         private registerPageNavigationTabs;
         private syncNavigationActive;

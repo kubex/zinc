@@ -380,6 +380,23 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(activeNavItem).transitionDuration).to.equal('0.1s');
   });
 
+  it('opens the tab flagged with the selected attribute instead of the first', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page Title">
+        <zn-tab caption="Overview">Overview Content</zn-tab>
+        <zn-tab caption="Dynamic Tab" uri="/tab-three" selected></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(60);
+
+    const navbar = el.shadowRoot!.querySelector('zn-navbar')!;
+    const uriItem = navbar.querySelector<HTMLElement>('li[tab-uri="/tab-three"]')!;
+    const overviewItem = navbar.querySelector<HTMLElement>('li[tab=""]')!;
+
+    expect(uriItem.classList.contains('active')).to.equal(true);
+    expect(overviewItem.classList.contains('active')).to.equal(false);
+  });
+
   it('disables breadcrumbs in modal mode', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" modal>

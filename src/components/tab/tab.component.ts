@@ -18,6 +18,8 @@ export default class ZnTab extends ZincElement {
   @property() caption: string;
   @property({type: Number}) priority: number;
   @property() uri: string;
+  /** When present, zn-page opens this tab on load instead of the first tab. */
+  @property({type: Boolean, reflect: true}) selected = false;
 
   render() {
     return html`<slot></slot>`;

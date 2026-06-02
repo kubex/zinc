@@ -20,6 +20,7 @@ interface TabDefinition {
   sourceIndex: number;
   uri: string | null;
   slotName: string | null;
+  selected: boolean;
 }
 
 /**
@@ -156,6 +157,7 @@ export default class ZnPage extends ZnTabs {
       const priority = this.parsePriority(tab.getAttribute('priority'));
       const uri = tab.getAttribute('uri');
       const slotName = uri ? null : `page-tab-${index}`;
+      const selected = tab.hasAttribute('selected');
 
       tab.id = id;
 
@@ -163,7 +165,7 @@ export default class ZnPage extends ZnTabs {
         tab.slot = slotName!;
       }
 
-      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName});
+      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName, selected});
     });
 
     this.tabDefinitions = tabs.sort((a, b) => this.compareTabs(a, b));
@@ -272,12 +274,40 @@ export default class ZnPage extends ZnTabs {
   }
 
   private activateInitialPageTab() {
+    const preselected = this.tabDefinitions.find(tab => tab.selected);
+    if (preselected) {
+      this.activateTabDefinition(preselected);
+      return;
+    }
+
     const selectedPanel = this.shadowRoot?.querySelector('#content > div[selected]');
     const firstTab = this.tabDefinitions[0];
 
     if (!selectedPanel && firstTab) {
       this.activateTab(firstTab.id, false);
     }
+  }
+
+  private activateTabDefinition(tab: TabDefinition) {
+    if (tab.uri) {
+      const navItem = this.findNavItemForUri(tab.uri);
+      if (navItem) {
+        this.clickTab(navItem, false);
+        this.syncNavigationActive(navItem);
+        return;
+      }
+    }
+    this.activateTab(tab.id, false);
+  }
+
+  private findNavItemForUri(uri: string): HTMLElement | null {
+    const items = this.shadowRoot?.querySelectorAll<HTMLElement>('zn-navbar li[tab-uri]') ?? [];
+    for (const item of Array.from(items)) {
+      if (item.getAttribute('tab-uri') === uri) {
+        return item;
+      }
+    }
+    return null;
   }
 
   private registerPagePanels() {
@@ -394,7 +424,7 @@ export default class ZnPage extends ZnTabs {
             ${this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`
-                <div id="${tab.id}">
+                <div id="${tab.id}" ?selected=${tab.selected}>
                   <slot name="${tab.slotName!}"></slot>
                 </div>
               `)}

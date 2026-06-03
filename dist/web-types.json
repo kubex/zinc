@@ -16,28 +16,6 @@
           "js": { "properties": [], "events": [] }
         },
         {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -84,6 +62,28 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -5525,190 +5525,6 @@
           }
         },
         {
-          "name": "zn-priority-list",
-          "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "name",
-              "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "value",
-              "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
-              "value": { "type": "string[]" }
-            },
-            {
-              "name": "label",
-              "description": "The component's label. Required for proper accessibility.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "label-tooltip",
-              "description": "Text that appears in a tooltip next to the label.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "help-text",
-              "description": "Help text that describes how to use the component.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "form",
-              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "size",
-              "description": "The size of the list items.",
-              "value": {
-                "type": "'small' | 'medium' | 'large'",
-                "default": "'medium'"
-              }
-            },
-            {
-              "name": "disabled",
-              "description": "Whether the priority list is disabled.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "required",
-              "description": "Ensures the form control has a value before allowing submission.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "priority-start",
-              "description": "The starting priority number. Defaults to 1.",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "formaction",
-              "description": "When set, the associated form will be submitted with the given action URL whenever items are reordered.\nIf set to an empty string, the form will be submitted using its existing action.",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "order",
-              "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing)."
-            },
-            {
-              "name": "label",
-              "description": "The component's label. Required for proper accessibility. Alternatively, use the `label` attribute."
-            },
-            {
-              "name": "label-tooltip",
-              "description": "Used to add text displayed in a tooltip next to the label."
-            },
-            {
-              "name": "help-text",
-              "description": "Text that describes how to use the component. Alternatively, use the `help-text` attribute."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-change",
-              "description": "Emitted when the order of items changes."
-            },
-            {
-              "name": "zn-reorder",
-              "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "hiddenInputsContainer", "type": "HTMLDivElement" },
-              {
-                "name": "name",
-                "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
-                "type": "string"
-              },
-              {
-                "name": "value",
-                "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
-                "type": "string[]"
-              },
-              { "name": "defaultValue", "type": "string[]" },
-              {
-                "name": "label",
-                "description": "The component's label. Required for proper accessibility.",
-                "type": "string"
-              },
-              {
-                "name": "labelTooltip",
-                "description": "Text that appears in a tooltip next to the label.",
-                "type": "string"
-              },
-              {
-                "name": "helpText",
-                "description": "Help text that describes how to use the component.",
-                "type": "string"
-              },
-              {
-                "name": "form",
-                "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
-                "type": "string"
-              },
-              {
-                "name": "size",
-                "description": "The size of the list items.",
-                "type": "'small' | 'medium' | 'large'"
-              },
-              {
-                "name": "disabled",
-                "description": "Whether the priority list is disabled.",
-                "type": "boolean"
-              },
-              {
-                "name": "required",
-                "description": "Ensures the form control has a value before allowing submission.",
-                "type": "boolean"
-              },
-              {
-                "name": "priorityStart",
-                "description": "The starting priority number. Defaults to 1.",
-                "type": "number"
-              },
-              {
-                "name": "formAction",
-                "description": "When set, the associated form will be submitted with the given action URL whenever items are reordered.\nIf set to an empty string, the form will be submitted using its existing action.",
-                "type": "string"
-              },
-              {
-                "name": "order",
-                "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
-                "type": "string"
-              },
-              {
-                "name": "validity",
-                "description": "Gets the validity state object.",
-                "type": "ValidityState"
-              },
-              {
-                "name": "validationMessage",
-                "description": "Gets the validation message.",
-                "type": "string"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-change",
-                "description": "Emitted when the order of items changes."
-              },
-              {
-                "name": "zn-reorder",
-                "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-popup",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -5963,6 +5779,190 @@
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-priority-list",
+          "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "value",
+              "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
+              "value": { "type": "string[]" }
+            },
+            {
+              "name": "label",
+              "description": "The component's label. Required for proper accessibility.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "label-tooltip",
+              "description": "Text that appears in a tooltip next to the label.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "help-text",
+              "description": "Help text that describes how to use the component.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "form",
+              "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "size",
+              "description": "The size of the list items.",
+              "value": {
+                "type": "'small' | 'medium' | 'large'",
+                "default": "'medium'"
+              }
+            },
+            {
+              "name": "disabled",
+              "description": "Whether the priority list is disabled.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "required",
+              "description": "Ensures the form control has a value before allowing submission.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "priority-start",
+              "description": "The starting priority number. Defaults to 1.",
+              "value": { "type": "number", "default": "1" }
+            },
+            {
+              "name": "formaction",
+              "description": "When set, the associated form will be submitted with the given action URL whenever items are reordered.\nIf set to an empty string, the form will be submitted using its existing action.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "order",
+              "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing)."
+            },
+            {
+              "name": "label",
+              "description": "The component's label. Required for proper accessibility. Alternatively, use the `label` attribute."
+            },
+            {
+              "name": "label-tooltip",
+              "description": "Used to add text displayed in a tooltip next to the label."
+            },
+            {
+              "name": "help-text",
+              "description": "Text that describes how to use the component. Alternatively, use the `help-text` attribute."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-change",
+              "description": "Emitted when the order of items changes."
+            },
+            {
+              "name": "zn-reorder",
+              "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "hiddenInputsContainer", "type": "HTMLDivElement" },
+              {
+                "name": "name",
+                "description": "The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`\nwith the priority number as its value.",
+                "type": "string"
+              },
+              {
+                "name": "value",
+                "description": "The current ordered list of item keys, reflecting the visual order. This is the source of truth for ordering.\nEach entry should match a `value` attribute on a slotted child element.",
+                "type": "string[]"
+              },
+              { "name": "defaultValue", "type": "string[]" },
+              {
+                "name": "label",
+                "description": "The component's label. Required for proper accessibility.",
+                "type": "string"
+              },
+              {
+                "name": "labelTooltip",
+                "description": "Text that appears in a tooltip next to the label.",
+                "type": "string"
+              },
+              {
+                "name": "helpText",
+                "description": "Help text that describes how to use the component.",
+                "type": "string"
+              },
+              {
+                "name": "form",
+                "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+                "type": "string"
+              },
+              {
+                "name": "size",
+                "description": "The size of the list items.",
+                "type": "'small' | 'medium' | 'large'"
+              },
+              {
+                "name": "disabled",
+                "description": "Whether the priority list is disabled.",
+                "type": "boolean"
+              },
+              {
+                "name": "required",
+                "description": "Ensures the form control has a value before allowing submission.",
+                "type": "boolean"
+              },
+              {
+                "name": "priorityStart",
+                "description": "The starting priority number. Defaults to 1.",
+                "type": "number"
+              },
+              {
+                "name": "formAction",
+                "description": "When set, the associated form will be submitted with the given action URL whenever items are reordered.\nIf set to an empty string, the form will be submitted using its existing action.",
+                "type": "string"
+              },
+              {
+                "name": "order",
+                "description": "A comma-separated list of item keys defining the initial display order.\nKeys must match the `value` attributes on slotted children.\nAny slotted items not listed are appended at the end in DOM order.",
+                "type": "string"
+              },
+              {
+                "name": "validity",
+                "description": "Gets the validity state object.",
+                "type": "ValidityState"
+              },
+              {
+                "name": "validationMessage",
+                "description": "Gets the validation message.",
+                "type": "string"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-change",
+                "description": "Emitted when the order of items changes."
+              },
+              {
+                "name": "zn-reorder",
+                "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
               }
             ]
           }
@@ -7802,36 +7802,6 @@
           }
         },
         {
-          "name": "zn-tab",
-          "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "priority", "value": { "type": "number" } },
-            { "name": "uri", "value": { "type": "string" } },
-            {
-              "name": "selected",
-              "description": "When present, zn-page opens this tab on load instead of the first tab.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [{ "name": "", "description": "The tab panel content." }],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "priority", "type": "number" },
-              { "name": "uri", "type": "string" },
-              {
-                "name": "selected",
-                "description": "When present, zn-page opens this tab on load instead of the first tab.",
-                "type": "boolean"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
           "name": "zn-table",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -7984,6 +7954,36 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-tab",
+          "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "priority", "value": { "type": "number" } },
+            { "name": "uri", "value": { "type": "string" } },
+            {
+              "name": "selected",
+              "description": "When present, zn-page opens this tab on load instead of the first tab.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [{ "name": "", "description": "The tab panel content." }],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "priority", "type": "number" },
+              { "name": "uri", "type": "string" },
+              {
+                "name": "selected",
+                "description": "When present, zn-page opens this tab on load instead of the first tab.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
           }
         },
         {

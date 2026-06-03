@@ -283,10 +283,11 @@
             {
               "name": "color",
               "value": {
-                "type": "'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star'",
+                "type": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)",
                 "default": "'default'"
               }
             },
+            { "name": "hover-color", "value": { "type": "string" } },
             {
               "name": "size",
               "value": {
@@ -312,6 +313,10 @@
             },
             {
               "name": "square",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "icon-button",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -440,8 +445,9 @@
               { "name": "countdownContainer", "type": "HTMLElement[]" },
               {
                 "name": "color",
-                "type": "'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star'"
+                "type": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)"
               },
+              { "name": "hoverColor", "type": "string" },
               {
                 "name": "size",
                 "type": "'content' | 'x-small' | 'small' | 'medium' | 'large'"
@@ -451,6 +457,7 @@
               { "name": "disabled", "type": "boolean" },
               { "name": "grow", "type": "boolean" },
               { "name": "square", "type": "boolean" },
+              { "name": "iconButton", "type": "boolean" },
               { "name": "panelBackground", "type": "boolean" },
               { "name": "dropdownCloser", "type": "boolean" },
               { "name": "notification", "type": "number" },
@@ -3317,7 +3324,6 @@
             },
             { "name": "caption", "value": { "type": "string" } },
             { "name": "icon", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
             {
               "name": "navigation",
               "value": { "type": "array", "default": "[]" }
@@ -3345,7 +3351,6 @@
               { "name": "transparent", "type": "boolean" },
               { "name": "caption", "type": "string" },
               { "name": "icon", "type": "string" },
-              { "name": "description", "type": "string" },
               { "name": "navigation", "type": "array" },
               { "name": "fullWidth", "type": "boolean" },
               { "name": "previousPath", "type": "string" },
@@ -4603,9 +4608,8 @@
             { "name": "basis-px", "value": { "type": "number" } },
             { "name": "caption", "value": { "type": "string" } },
             { "name": "icon", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
             { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-underline", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
             { "name": "cosmic", "value": { "type": "boolean" } },
             { "name": "flush", "value": { "type": "boolean" } },
             { "name": "flush-x", "value": { "type": "boolean" } },
@@ -4722,9 +4726,8 @@
               { "name": "basis", "type": "number" },
               { "name": "caption", "type": "string" },
               { "name": "icon", "type": "string" },
-              { "name": "description", "type": "string" },
               { "name": "tabbed", "type": "boolean" },
-              { "name": "underlineHeader", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
               { "name": "cosmic", "type": "boolean" },
               { "name": "flush", "type": "boolean" },
               { "name": "flushX", "type": "boolean" },
@@ -5481,9 +5484,8 @@
             { "name": "basis-px", "value": { "type": "number" } },
             { "name": "caption", "value": { "type": "string" } },
             { "name": "icon", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
             { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-underline", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
             { "name": "cosmic", "value": { "type": "boolean" } },
             { "name": "flush", "value": { "type": "boolean" } },
             { "name": "flush-x", "value": { "type": "boolean" } },
@@ -5509,9 +5511,8 @@
               { "name": "basis", "type": "number" },
               { "name": "caption", "type": "string" },
               { "name": "icon", "type": "string" },
-              { "name": "description", "type": "string" },
               { "name": "tabbed", "type": "boolean" },
-              { "name": "underlineHeader", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
               { "name": "cosmic", "type": "boolean" },
               { "name": "flush", "type": "boolean" },
               { "name": "flushX", "type": "boolean" },
@@ -8651,9 +8652,8 @@
             { "name": "basis-px", "value": { "type": "number" } },
             { "name": "caption", "value": { "type": "string" } },
             { "name": "icon", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } },
             { "name": "tabbed", "value": { "type": "boolean" } },
-            { "name": "header-underline", "value": { "type": "boolean" } },
+            { "name": "header-borderless", "value": { "type": "boolean" } },
             { "name": "cosmic", "value": { "type": "boolean" } },
             { "name": "flush", "value": { "type": "boolean" } },
             { "name": "flush-x", "value": { "type": "boolean" } },
@@ -8697,9 +8697,8 @@
               { "name": "basis", "type": "number" },
               { "name": "caption", "type": "string" },
               { "name": "icon", "type": "string" },
-              { "name": "description", "type": "string" },
               { "name": "tabbed", "type": "boolean" },
-              { "name": "underlineHeader", "type": "boolean" },
+              { "name": "headerBorderless", "type": "boolean" },
               { "name": "cosmic", "type": "boolean" },
               { "name": "flush", "type": "boolean" },
               { "name": "flushX", "type": "boolean" },

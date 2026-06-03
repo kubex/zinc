@@ -1140,13 +1140,15 @@ declare module "components/button/button.component" {
         private _loadingState;
         button: HTMLButtonElement;
         countdownContainer: HTMLElement[];
-        color: 'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star';
+        color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star' | (string & Record<never, never>);
+        hoverColor: string;
         size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
         text: boolean;
         outline: boolean;
         disabled: boolean;
         grow: boolean;
         square: boolean;
+        iconButton: boolean;
         panelBackground: boolean;
         dropdownCloser: boolean;
         notification: number;
@@ -1191,6 +1193,7 @@ declare module "components/button/button.component" {
         handleClick: () => void;
         private _isLink;
         private _isButton;
+        private getIconButtonColor;
         setupAutoClick(): void;
         updateCountdownText(): void;
         teardownAutoClick(): void;
@@ -3705,7 +3708,6 @@ declare module "components/header/header.component" {
         transparent: boolean;
         caption: string;
         icon: string;
-        description: string;
         navigation: never[];
         fullWidth: boolean;
         previousPath: string;
@@ -4368,9 +4370,8 @@ declare module "components/panel/panel.component" {
         basis: number;
         caption: string;
         icon: string;
-        description: string;
         tabbed: boolean;
-        underlineHeader: boolean;
+        headerBorderless: boolean;
         cosmic: boolean;
         flush: boolean;
         flushX: boolean;

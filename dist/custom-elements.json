@@ -1265,10 +1265,18 @@
               "kind": "field",
               "name": "color",
               "type": {
-                "text": "'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star'"
+                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)"
               },
               "default": "'default'",
               "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "hoverColor",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "hover-color"
             },
             {
               "kind": "field",
@@ -1323,6 +1331,15 @@
               },
               "default": "false",
               "attribute": "square"
+            },
+            {
+              "kind": "field",
+              "name": "iconButton",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "icon-button"
             },
             {
               "kind": "field",
@@ -1654,6 +1671,19 @@
             },
             {
               "kind": "method",
+              "name": "getIconButtonColor",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "string | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "setupAutoClick"
             },
             {
@@ -1688,10 +1718,17 @@
             {
               "name": "color",
               "type": {
-                "text": "'default' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star'"
+                "text": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' |\n    'transparent' | 'star' | (string & Record<never, never>)"
               },
               "default": "'default'",
               "fieldName": "color"
+            },
+            {
+              "name": "hover-color",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "hoverColor"
             },
             {
               "name": "size",
@@ -1740,6 +1777,14 @@
               },
               "default": "false",
               "fieldName": "square"
+            },
+            {
+              "name": "icon-button",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "iconButton"
             },
             {
               "name": "panel-bg",
@@ -12078,14 +12123,6 @@
             },
             {
               "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
               "name": "navigation",
               "type": {
                 "text": "array"
@@ -12196,13 +12233,6 @@
                 "text": "string"
               },
               "fieldName": "icon"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
             },
             {
               "name": "navigation",
@@ -17054,18 +17084,6 @@
             },
             {
               "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -17078,11 +17096,11 @@
             },
             {
               "kind": "field",
-              "name": "underlineHeader",
+              "name": "headerBorderless",
               "type": {
                 "text": "boolean"
               },
-              "attribute": "header-underline",
+              "attribute": "header-borderless",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "components/panel/panel.js"
@@ -17333,17 +17351,6 @@
               }
             },
             {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -17355,11 +17362,11 @@
               }
             },
             {
-              "name": "header-underline",
+              "name": "header-borderless",
               "type": {
                 "text": "boolean"
               },
-              "fieldName": "underlineHeader",
+              "fieldName": "headerBorderless",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "src/components/panel/panel.component.ts"
@@ -22491,14 +22498,6 @@
             },
             {
               "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -22507,11 +22506,11 @@
             },
             {
               "kind": "field",
-              "name": "underlineHeader",
+              "name": "headerBorderless",
               "type": {
                 "text": "boolean"
               },
-              "attribute": "header-underline"
+              "attribute": "header-borderless"
             },
             {
               "kind": "field",
@@ -22593,13 +22592,6 @@
               "fieldName": "icon"
             },
             {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -22607,11 +22599,11 @@
               "fieldName": "tabbed"
             },
             {
-              "name": "header-underline",
+              "name": "header-borderless",
               "type": {
                 "text": "boolean"
               },
-              "fieldName": "underlineHeader"
+              "fieldName": "headerBorderless"
             },
             {
               "name": "cosmic",
@@ -34553,18 +34545,6 @@
             },
             {
               "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -34577,11 +34557,11 @@
             },
             {
               "kind": "field",
-              "name": "underlineHeader",
+              "name": "headerBorderless",
               "type": {
                 "text": "boolean"
               },
-              "attribute": "header-underline",
+              "attribute": "header-borderless",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "components/panel/panel.js"
@@ -34731,17 +34711,6 @@
               }
             },
             {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
               "name": "tabbed",
               "type": {
                 "text": "boolean"
@@ -34753,11 +34722,11 @@
               }
             },
             {
-              "name": "header-underline",
+              "name": "header-borderless",
               "type": {
                 "text": "boolean"
               },
-              "fieldName": "underlineHeader",
+              "fieldName": "headerBorderless",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "src/components/panel/panel.component.ts"

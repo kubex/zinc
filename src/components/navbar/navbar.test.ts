@@ -119,6 +119,42 @@ describe('<zn-navbar>', () => {
     expect(nav.classList.contains('has-hidden')).to.equal(true);
   });
 
+  it('rounds the last visible nav item when items are hidden behind more', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+      </zn-navbar>
+    `);
+    await aTimeout(150);
+
+    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
+    const more = nav.querySelector<HTMLElement>(':scope > li.more')!;
+    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
+
+    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 250});
+    Object.defineProperty(more, 'offsetWidth', {configurable: true, get: () => 60});
+    Object.defineProperty(more, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({width: 60})
+    });
+    items.forEach(item => {
+      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 100});
+      Object.defineProperty(item, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({width: 100})
+      });
+    });
+
+    el.handleResize();
+
+    expect(nav.classList.contains('has-hidden')).to.equal(true);
+    expect(items[0].classList.contains('last-visible')).to.equal(true);
+    expect(items[1].classList.contains('hidden')).to.equal(true);
+    expect(getComputedStyle(items[0]).borderTopRightRadius).to.equal('6px');
+  });
+
   describe('hide-one', () => {
     it('hides when only one item is present', async () => {
       const el = await fixture<ZnNavbar>(html`

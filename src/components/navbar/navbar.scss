@@ -250,12 +250,21 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       &:first-of-type {
         border-left-width: 1px;
+        border-top-left-radius: 6px;
+      }
+
+      &:last-of-type {
+        border-top-right-radius: 6px;
       }
 
       &.active, &.zn-tb-active {
         color: rgb(var(--zn-color-text));
         border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
+    }
+
+    &:not(.has-hidden) > li.last-visible {
+      border-top-right-radius: 6px;
     }
   }
 }

@@ -253,6 +253,23 @@ export default class ZnNavbar extends ZincElement {
     return moreWidth;
   }
 
+  private _syncLastVisibleItem() {
+    const items = this._navItems?.querySelectorAll<HTMLElement>(':scope > li') || [];
+    let lastVisibleItem: HTMLElement | null = null;
+
+    for (const item of items) {
+      item.classList.remove('last-visible');
+
+      if (item.classList.contains('more') || item.classList.contains('hidden') || item.id === 'dropdown-item') {
+        continue;
+      }
+
+      lastVisibleItem = item;
+    }
+
+    lastVisibleItem?.classList.add('last-visible');
+  }
+
   private _getExpandableWidth(containerWidth: number): number {
     const expandableWidth = this._expandableMargin + (this._expandable?.getBoundingClientRect().width || this._expandable?.offsetWidth || 0);
     let fillWidth = 0;
@@ -298,6 +315,7 @@ export default class ZnNavbar extends ZincElement {
 
     if (!hasHidden && this._totalItemWidth <= availableWithoutMore) {
       this._navItems?.classList.toggle('has-hidden', false)
+      this._syncLastVisibleItem();
       return
     }
 
@@ -331,6 +349,7 @@ export default class ZnNavbar extends ZincElement {
       }
     }
     this._navItems?.classList.toggle('has-hidden', hasHidden && hideRemaining)
+    this._syncLastVisibleItem();
   }
 
   // Clones in the extended menu are static snapshots, so mirror the active

@@ -45,7 +45,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: var(--zn-base-gap) var(--zn-base-gap) 0;
+  padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap) calc(calc(var(--zn-base-px) * 3) - var(--zn-base-gap)) var(--zn-base-gap);
   box-sizing: border-box;
   background: rgba(var(--zn-page-header-background), 95%);
 
@@ -98,7 +98,6 @@
     gap: var(--zn-spacing-2x-small);
     max-width: 100%;
     min-height: 40px;
-    height: 40px;
 
     a {
       display: flex;
@@ -283,7 +282,7 @@
 }
 
 zn-navbar {
-  margin-top: var(--zn-base-gap);
+  margin-top: calc(var(--zn-base-px) * 3);
 
   &::part(navbar) {
     height: 42px;

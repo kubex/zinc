@@ -11,6 +11,7 @@ import {property, query, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {watch} from "../../internal/watch";
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
+import ZnDialog from "../dialog";
 import type ZnButton from "../button";
 
 import styles from './file.scss';
@@ -23,12 +24,11 @@ import styles from './file.scss';
  *
  * @dependency zn-button
  * @dependency zn-icon
+ * @dependency zn-dialog
  *
  * @slot label - The file control's label. Alternatively, you can use the `label` attribute.
  * @slot help-text - Text that describes how to use the file control.
  *    Alternatively, you can use the `help-text` attribute.
- * @slot droparea-icon - Optional droparea icon to use instead of the default.
- *    Works best with `<zn-icon>`.
  * @slot trigger - Optional content to be used as trigger instead of the default content.
  *    Opening the file dialog on click and as well as drag and drop will work for this content.
  *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,
@@ -37,6 +37,7 @@ import styles from './file.scss';
  *
  * @event zn-blur - Emitted when the control loses focus.
  * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
+ * @event zn-clear - Emitted when the user confirms clearing the selected file or `src`.
  * @event zn-error - Emitted when multiple files are selected via drag and drop, without
  * the `multiple` property being set.
  * @event zn-focus - Emitted when the control gains focus.
@@ -52,8 +53,12 @@ import styles from './file.scss';
  * @csspart value - The chosen files or placeholder text for the file input.
  * @csspart droparea - The element wrapping the drop zone.
  * @csspart droparea-background - The background of the drop zone.
- * @csspart droparea-icon - The container that wraps the icon for the drop zone.
- * @csspart droparea-value - The text for the drop zone.
+ * @csspart upload - The upload button shown in the droparea when no file is selected.
+ * @csspart preview - The image preview rendered in the droparea for previewable files.
+ * @csspart filename - The filename label rendered in the droparea for non-previewable files.
+ * @csspart clear - The clear button rendered in the droparea when a file is present.
+ * @csspart clear-confirm - The confirmation dialog shown before clearing the file.
+ * @csspart link - The current link anchor rendered when `show-link` is enabled.
  * @csspart trigger - The container that wraps the trigger.
  *
  * @animation file.iconDrop - The animation to use for the file icon
@@ -65,6 +70,9 @@ import styles from './file.scss';
  */
 export default class ZnFile extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-dialog': ZnDialog
+  };
 
   private readonly formControlController = new FormControlController(this, {
     assumeInteractionOn: ['zn-change'],
@@ -76,6 +84,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   private readonly localize = new LocalizeController(this);
 
   @state() private userIsDragging = false;
+  @state() private fileObjectUrl: string | null = null;
 
   @query('.input__control') input: HTMLInputElement;
 
@@ -86,6 +95,8 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   @query('.droparea__icon') dropareaIcon: HTMLSpanElement;
 
   @query('.input__value') inputChosen: HTMLSpanElement;
+
+  @query('.clear-confirm') clearConfirmDialog: HTMLElement & { show: () => void; hide: () => void };
 
   /**
    * The selected files as a FileList object containing a list of File objects.
@@ -99,6 +110,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   set files(v: FileList | null) {
     if (this.input) {
       this.input.files = v;
+      this.updatePreview();
     }
   }
 
@@ -210,6 +222,26 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
 
   /** Suppress the value from being displayed in the file control */
   @property({attribute: 'hide-value', type: Boolean}) hideValue = false;
+
+  /**
+   * URL of an already-uploaded file (e.g., from a CDN) to display as the current value
+   * when no file has been selected locally. If the URL points to an image, it is rendered
+   * as a preview inside the droparea. Otherwise the URL is shown as a filename.
+   */
+  @property() src = '';
+
+  /**
+   * When enabled, automatically submit the surrounding form whenever the value changes
+   * (file selected, dropped, or cleared). Useful for forms that only contain this control
+   * and a CSRF token.
+   */
+  @property({type: Boolean, attribute: 'trigger-submit'}) triggerSubmit = false;
+
+  /**
+   * When enabled, render the current link (`previewSrc`) as a clickable URL below the control.
+   * Useful for showing the existing CDN link alongside the preview.
+   */
+  @property({type: Boolean, attribute: 'show-link'}) showLink = false;
 
   /** Gets the validity state object */
   get validity() {
@@ -343,8 +375,13 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     e.preventDefault();
     e.stopPropagation();
 
+    this.updatePreview();
     this.emit('zn-input');
     this.emit('zn-change');
+
+    if (this.triggerSubmit) {
+      this.formControlController.submit();
+    }
   }
 
   private handleDragOver = (e: DragEvent) => {
@@ -439,6 +476,57 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     this.input.dispatchEvent(new Event('change'));
   }
 
+  /** Open the confirm dialog before clearing. */
+  private handleClearClick = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.clearConfirmDialog?.show();
+  }
+
+  /** Clear the current value after the user confirms. */
+  private confirmClear = () => {
+    const hadLocalFile = (this.files?.length ?? 0) > 0;
+    this.input.value = '';
+    this.files = null;
+    // If only an external `src` was present, clear it. If a local file was selected on top of
+    // an external src, leave the src so the droparea reverts to the originally-supplied preview.
+    if (!hadLocalFile) {
+      this.src = '';
+    }
+    this.clearConfirmDialog?.hide();
+    this.input.dispatchEvent(new Event('change'));
+    this.emit('zn-clear');
+  }
+
+  private updatePreview() {
+    if (this.fileObjectUrl) {
+      URL.revokeObjectURL(this.fileObjectUrl);
+      this.fileObjectUrl = null;
+    }
+
+    const file = this.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      this.fileObjectUrl = URL.createObjectURL(file);
+    }
+  }
+
+  /**
+   * Returns the URL currently shown in the droparea — the locally-selected file's object URL
+   * if a file is selected, otherwise the externally supplied `src`. Useful for getting the
+   * current CDN link to submit alongside form data.
+   */
+  get previewSrc(): string {
+    return this.fileObjectUrl ?? this.src ?? '';
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this.fileObjectUrl) {
+      URL.revokeObjectURL(this.fileObjectUrl);
+      this.fileObjectUrl = null;
+    }
+  }
+
   private renderFileValueWithDelete(): HTMLTemplateResult {
     // files as an array
     const files = Array.from(this.files || []);
@@ -474,30 +562,76 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
   }
 
   private renderDroparea(): HTMLTemplateResult {
+    const files = Array.from(this.files || []);
+    const firstFile = files[0];
+
+    const hasLocalFile = files.length > 0;
+    const hasExternalSrc = !hasLocalFile && !!this.src;
+    const hasValue = hasLocalFile || hasExternalSrc;
+
+    const imageSrc = hasLocalFile ? this.fileObjectUrl : (hasExternalSrc ? this.src : null);
+    const showImagePreview = !!imageSrc;
+    const displayName = hasLocalFile ? firstFile.name : (hasExternalSrc ? this.src : '');
+
+    let buttonText = this.localize.term('fileButtonText');
+    if (this.multiple) buttonText = this.localize.term('fileButtonTextMultiple');
+    if (this.webkitdirectory) buttonText = this.localize.term('folderButtonText');
+
     return html`
       <div
-        class="droparea"
+        class=${classMap({
+          'droparea': true,
+          'droparea--has-preview': showImagePreview,
+        })}
         @click="${this.handleClick}"
         @keypress="${this.handleClick}"
         @focus="${this.handleFocus}"
         @blur="${this.handleBlur}"
         tabindex="${this.disabled ? '-1' : '0'}"
         part="droparea">
+        ${hasValue ? html`
+          <zn-button
+            class="droparea__clear"
+            icon="close"
+            icon-size="18"
+            size="x-small"
+            color="default"
+            outline
+            ?disabled=${this.disabled}
+            @click=${this.handleClearClick}
+            part="clear"
+            aria-label="${this.localize.term('clearEntry')}"></zn-button>
+        ` : ''}
         <div
           class="droparea__background"
           part="droparea-background">
-          <span part="droparea-icon" class="droparea__icon">
-            <slot name="droparea-icon">
-              <zn-icon src="upload_file"></zn-icon>
-            </slot>
-          </span>
-          <p class="droparea__text"
-             part="droparea-value">
-            <strong>${this.localize.term(this.webkitdirectory ? 'folderDragDrop' : 'fileDragDrop')}</strong>
-            ${this.renderFileValueWithDelete()}
-          </p>
+          ${showImagePreview
+            ? html`<img
+                class="droparea__preview"
+                src=${imageSrc!}
+                alt=${displayName}
+                part="preview">`
+            : (hasValue
+              ? html`<span class="droparea__filename" part="filename">${displayName}</span>`
+              : html`
+                <zn-button
+                  class="droparea__upload"
+                  icon="cloud_upload"
+                  icon-size="20"
+                  size="small"
+                  color="default"
+                  outline
+                  ?disabled=${this.disabled}
+                  part="upload">
+                  ${buttonText}
+                </zn-button>`)}
         </div>
       </div>
+      <zn-dialog class="clear-confirm" label="${this.localize.term('clearEntry')}" part="clear-confirm">
+        <p class="clear-confirm__text">Are you sure you want to remove this file?</p>
+        <zn-button slot="footer" outline dialog-closer>Cancel</zn-button>
+        <zn-button slot="footer" color="error" @click=${this.confirmClear}>Remove</zn-button>
+      </zn-dialog>
     `;
   }
 
@@ -566,6 +700,16 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
             <div class="form-control-input" part="form-control-input">
               ${this.droparea ? this.renderDroparea() : this.renderButton()}
             </div>
+
+            ${this.showLink && this.previewSrc ? html`
+              <a
+                class="form-control__link"
+                part="link"
+                href=${this.previewSrc}
+                target="_blank"
+                rel="noopener noreferrer"
+                title=${this.previewSrc}>${this.previewSrc}</a>
+            ` : ''}
 
             <div
               aria-hidden="${hasHelpText ? 'false' : 'true'}"

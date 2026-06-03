@@ -99,15 +99,17 @@
 .droparea {
   --highlight-color: var(--zn-color-primary-600);
 
-  border: 2px dashed var(--zn-input-border-color);
+  position: relative;
+  border: 1px solid var(--zn-input-border-color);
+  border-radius: var(--zn-border-radius-medium);
   font: var(--zn-font-size-medium);
-  padding: var(--zn-spacing-x-large) var(--zn-spacing-large);
+  min-height: 180px;
   transition: var(--zn-transition-medium) background,
   var(--zn-transition-medium) border-color;
 }
 
 .droparea:focus-visible {
-  border: 2px dashed var(--zn-color-primary-600);
+  border-color: var(--zn-color-primary-600);
   outline: var(--zn-focus-ring);
   outline-offset: var(--zn-focus-ring-offset);
 }
@@ -124,15 +126,78 @@
 .droparea__background {
   align-items: center;
   display: flex;
+  justify-content: center;
   gap: var(--zn-spacing-x-small);
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+  padding: var(--zn-spacing-large) var(--zn-spacing-medium);
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  box-sizing: border-box;
 }
 
-.droparea__icon {
-  align-items: center;
-  color: var(--highlight-color);
-  display: flex;
-  font-size: var(--zn-spacing-3x-large);
+.droparea__clear {
+  position: absolute;
+  top: var(--zn-spacing-small);
+  right: var(--zn-spacing-small);
+  z-index: 1;
+}
+
+.droparea__upload {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.droparea--has-preview .droparea__background {
+  --zn-droparea-checker-size: 12px;
+  --zn-droparea-checker-a: var(--zn-color-neutral-50);
+  --zn-droparea-checker-b: var(--zn-color-neutral-100);
+
+  background-color: var(--zn-droparea-checker-a);
+  background-image:
+    linear-gradient(45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--zn-droparea-checker-b) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--zn-droparea-checker-b) 75%);
+  background-size: var(--zn-droparea-checker-size) var(--zn-droparea-checker-size);
+  background-position:
+    0 0,
+    0 calc(var(--zn-droparea-checker-size) / 2),
+    calc(var(--zn-droparea-checker-size) / 2) calc(var(--zn-droparea-checker-size) / -2),
+    calc(var(--zn-droparea-checker-size) / -2) 0;
+  border-radius: calc(var(--zn-border-radius-medium) - 1px);
+}
+
+.droparea__preview {
+  /**
+   * SVGs without intrinsic dimensions fall back to a 300x150 default in <img>, which
+   * makes them look cramped or invisible at small container widths. Force an explicit
+   * box (full container width, fixed height) and use object-fit so loaded images stay
+   * inside the box. The text properties below also wrap alt text inside the same box
+   * when the image fails to load (e.g. a broken CDN URL), instead of letting it push
+   * the container out.
+   */
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 150px;
+  max-width: 100%;
+  object-fit: contain;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-align: center;
+  font-size: var(--zn-input-help-text-font-size-medium);
+  color: var(--zn-input-color);
+}
+
+.droparea__filename {
+  color: var(--zn-input-color);
+  font-size: var(--zn-input-label-font-size-medium);
+  font-weight: var(--zn-font-weight-medium);
+  word-break: break-all;
+  text-align: center;
+  padding: 0 var(--zn-spacing-3x-large);
 }
 
 .file-wrapper {
@@ -141,35 +206,25 @@
   flex-wrap: wrap;
 }
 
-.droparea__text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--zn-spacing-3x-small);
-  margin: 0;
-}
-
-.droparea__text strong {
-  color: var(--highlight-color);
-  font-weight: var(--zn-font-weight-bold);
-}
-
 /* Sizes */
 /* stylelint-disable-next-line no-descending-specificity */
 .form-control--small .droparea {
   font: var(--zn-font-size-small);
+  min-height: 140px;
 }
 
-.form-control--small .droparea__icon {
-  font-size: var(--zn-spacing-2x-large)
+.form-control--small .droparea__preview {
+  height: 110px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .form-control--large .droparea {
   font: var(--zn-font-size-large);
+  min-height: 220px;
 }
 
-.form-control--large .droparea__icon {
-  font-size: var(--zn-spacing-4x-large)
+.form-control--large .droparea__preview {
+  height: 190px;
 }
 
 /* Disabled Styles */
@@ -181,20 +236,58 @@
 
 :host(:not([disabled])) .form-control--user-dragging .droparea {
   background: var(--zn-color-primary-50);
-  border: 2px solid var(--zn-color-primary-600);
+  border-color: var(--zn-color-primary-600);
   cursor: pointer;
 }
 
 :host(:not([disabled])) .droparea:not(:focus-visible):hover {
   --highlight-color: var(--zn-color-primary-800);
 
-  border: 2px dashed var(--zn-color-primary-700);
-  background-color: var(--zn-color-primary-50);
+  border-color: var(--zn-color-primary-700);
   cursor: pointer;
+}
+
+:host(:not([disabled])) .droparea:hover .droparea__upload::part(base),
+:host(:not([disabled])) .droparea__upload:hover::part(base),
+:host(:not([disabled])) .form-control--user-dragging .droparea__upload::part(base) {
+  background: var(--zn-color-primary-50);
+  border-color: var(--zn-color-primary-700);
+  color: var(--zn-color-primary-800);
+}
+
+/**
+ * Make the icon inside the upload button transparent to pointer events so the cursor is
+ * treated as being over the button itself. Without this, hovering the small icon area
+ * sometimes fails to trigger the button's :hover state, leaving it un-highlighted.
+ */
+.droparea__upload::part(icon) {
+  pointer-events: none;
 }
 
 /* Validation */
 /* stylelint-disable-next-line no-descending-specificity */
 :host([data-user-invalid]:not([disabled])) .droparea {
-  border: 2px dashed var(--zn-color-error);
+  border-color: var(--zn-color-error);
+}
+
+/* Confirm dialog content spacing */
+.clear-confirm__text {
+  margin: 0;
+  color: var(--zn-input-color);
+}
+
+/* Current link display */
+.form-control__link {
+  display: inline-block;
+  margin-top: var(--zn-spacing-x-small);
+  font-size: var(--zn-input-help-text-font-size-medium);
+  color: var(--zn-color-primary-700);
+  word-break: break-all;
+  text-decoration: none;
+  max-width: 100%;
+}
+
+.form-control__link:hover {
+  color: var(--zn-color-primary-800);
+  text-decoration: underline;
 }

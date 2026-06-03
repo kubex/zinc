@@ -49,10 +49,10 @@ Add the `clearable` attribute to display a close button next to each selected fi
 
 ### Droparea Mode
 
-Use the `droparea` attribute to render the file control as a large drag-and-drop area. This mode is ideal when file upload is a primary action on the page.
+Use the `droparea` attribute to render the file control as a bordered upload area with a centered upload button. When a file is selected, the area displays an image preview (for image files) or the file name (for non-previewable files), along with a clear button in the top-right corner. The area also accepts files via drag-and-drop.
 
 ```html:preview
-<zn-file label="Upload Files" droparea multiple></zn-file>
+<zn-file label="Upload Files" droparea></zn-file>
 ```
 
 ### Accepted File Types
@@ -78,20 +78,92 @@ See [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/HTML/Attrib
 
 ### Droparea with Accepted Types
 
-Combine `droparea` and `accept` for a prominent upload area with file type restrictions.
+Combine `droparea` and `accept` for a prominent upload area with file type restrictions. Selected image files render a preview inside the box.
 
 ```html:preview
-<zn-file label="Upload Images" accept="image/*" multiple droparea></zn-file>
+<zn-file label="Upload Image" accept="image/*" droparea></zn-file>
 ```
 
-### Custom Droparea Icon
+### Droparea with Image Preview
 
-Use the `droparea-icon` slot to customize the icon displayed in the droparea.
+When an image file is selected, the droparea renders a centered thumbnail preview alongside a clear button in the top-right. The example below pre-loads a sample image so you can see the preview state.
 
 ```html:preview
-<zn-file label="Upload Photos" droparea multiple>
-  <zn-icon src="photo_library" slot="droparea-icon"></zn-icon>
-</zn-file>
+<zn-file class="file-with-preview" label="Primary Logo" accept="image/*" droparea></zn-file>
+
+<script type="module">
+  const fileInput = document.querySelector('.file-with-preview');
+
+  await customElements.whenDefined('zn-file');
+  await fileInput.updateComplete;
+
+  // Inline SVG sample so the demo works offline. Explicit width/height keep older
+  // browsers happy that don't size SVGs from viewBox alone inside <img>.
+  const sampleSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#3b82f6"/>
+        <stop offset="100%" stop-color="#7c3aed"/>
+      </linearGradient>
+    </defs>
+    <rect width="200" height="200" rx="24" fill="url(#g)"/>
+    <circle cx="100" cy="100" r="50" fill="none" stroke="#000" stroke-width="10"/>
+  </svg>`;
+
+  const file = new File([sampleSvg], 'sample-logo.svg', { type: 'image/svg+xml' });
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  fileInput.files = dt.files;
+</script>
+```
+
+### Droparea with Non-Previewable File
+
+When the selected file is not an image, the droparea displays the file name centered inside the box.
+
+```html:preview
+<zn-file class="file-with-doc" label="Upload Document" accept=".pdf,.doc,.docx" droparea></zn-file>
+
+<script type="module">
+  const fileInput = document.querySelector('.file-with-doc');
+
+  await customElements.whenDefined('zn-file');
+  await fileInput.updateComplete;
+
+  const file = new File(['%PDF-1.4 sample'], 'project-brief.pdf', { type: 'application/pdf' });
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  fileInput.files = dt.files;
+</script>
+```
+
+### Displaying an Already-Uploaded File (CDN URL)
+
+Use the `src` attribute to point the file control at an already-uploaded file — for example, a logo hosted on a CDN. The droparea renders the image preview when `src` points to an image, or the URL as a filename otherwise. Add the `show-link` attribute to render the current link as a clickable URL beneath the control. Read `fileInput.previewSrc` to retrieve the current link programmatically (whether from a local selection or the `src` attribute).
+
+```html:preview
+<zn-file
+  class="file-with-cdn"
+  label="Primary Logo"
+  droparea
+  show-link
+  src="https://upload.wikimedia.org/wikipedia/commons/1/1b/ViaDeTogniPalazzoStelline.jpg"
+></zn-file>
+```
+
+:::tip
+When the user picks a local file, `previewSrc` switches to the in-memory object URL for that file (and `show-link` renders that blob URL). After clearing (the X button + confirm dialog), `previewSrc` returns to whatever `src` is currently set to.
+:::
+
+### Auto-Submit on Change
+
+Add the `trigger-submit` attribute to automatically submit the surrounding form whenever the user picks, drops, or clears a file. This is useful for forms that only contain the file control and a CSRF token — no explicit submit button needed.
+
+```html
+<form action="/logo/upload" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="_token" value="{{ csrf_token }}">
+  <zn-file name="logo" droparea trigger-submit accept="image/*"></zn-file>
+</form>
 ```
 
 ### Directory Upload

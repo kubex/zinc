@@ -600,6 +600,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
             ?disabled=${this.disabled}
             @click=${this.handleClearClick}
             part="clear"
+            style="z-index: 1000;"
             aria-label="${this.localize.term('clearEntry')}"></zn-button>
         ` : ''}
         <div

@@ -41,10 +41,10 @@ component you are using already includes padding or margin it will not be double
 
       <zn-panel caption="Some Panel">
         <zn-sp divide>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1"
                           value="This is awesome">
           </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2"
                           value="This is awesome">
           </zn-inline-edit>
         </zn-sp>
@@ -59,17 +59,17 @@ component you are using already includes padding or margin it will not be double
         </zn-navbar>
 
         <zn-sp id="" divide>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1"
                           value="This is awesome"></zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2"
                           value="This is awesome"></zn-inline-edit>
         </zn-sp>
 
         <zn-sp id="something-else" divide>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 3"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 3"
                           value="This is not awesome">
           </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 4"
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 4"
                           value="This is not awesome">
           </zn-inline-edit>
         </zn-sp>
@@ -78,9 +78,9 @@ component you are using already includes padding or margin it will not be double
 
     <zn-panel caption="Some Panel">
       <zn-sp divide>
-        <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1"
+        <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1"
                         value="This is awesome"></zn-inline-edit>
-        <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2"
+        <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2"
                         value="This is awesome"></zn-inline-edit>
       </zn-sp>
     </zn-panel>
@@ -99,8 +99,8 @@ to be full width.
   <zn-sp>
     <zn-panel caption="Some Panel" flush>
       <zn-sp divide flush>
-        <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1" value=This is awesome></zn-inline-edit>
-        <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2" value=This is awesome></zn-inline-edit>
+        <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1" value=This is awesome></zn-inline-edit>
+        <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2" value=This is awesome></zn-inline-edit>
       </zn-sp>
     </zn-panel>
   </zn-sp>
@@ -118,9 +118,9 @@ This is the standard way of scaffolding pages with a sidebar
 
   <div slot="side">
     <zn-sp divide flush>
-      <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1" value="This is awesome">
+      <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1" value="This is awesome">
       </zn-inline-edit>
-      <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2" value="This is awesome">
+      <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2" value="This is awesome">
       </zn-inline-edit>
     </zn-sp>
   </div>
@@ -129,9 +129,9 @@ This is the standard way of scaffolding pages with a sidebar
     <zn-sp>
       <zn-panel caption="Some Panel" flush>
         <zn-sp divide flush>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 1" value="This is awesome">
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 1" value="This is awesome">
           </zn-inline-edit>
-          <zn-inline-edit padded inline style="background: var(--zn-color-red-100);" caption="Label 2" value="This is awesome">
+          <zn-inline-edit padded inline style="background: rgb(var(--zn-red));" caption="Label 2" value="This is awesome">
           </zn-inline-edit>
         </zn-sp>
       </zn-panel>

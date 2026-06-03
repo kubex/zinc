@@ -6495,6 +6495,7 @@ declare module "components/radio-group/index" {
 declare module "components/file/file.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    import ZnDialog from "components/dialog/index";
     import type ZnButton from "components/button/index";
     /**
      * @summary File controls allow selecting an arbitrary number of files for uploading.
@@ -6504,12 +6505,11 @@ declare module "components/file/file.component" {
      *
      * @dependency zn-button
      * @dependency zn-icon
+     * @dependency zn-dialog
      *
      * @slot label - The file control's label. Alternatively, you can use the `label` attribute.
      * @slot help-text - Text that describes how to use the file control.
      *    Alternatively, you can use the `help-text` attribute.
-     * @slot droparea-icon - Optional droparea icon to use instead of the default.
-     *    Works best with `<zn-icon>`.
      * @slot trigger - Optional content to be used as trigger instead of the default content.
      *    Opening the file dialog on click and as well as drag and drop will work for this content.
      *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,
@@ -6518,6 +6518,7 @@ declare module "components/file/file.component" {
      *
      * @event zn-blur - Emitted when the control loses focus.
      * @event zn-change - Emitted when an alteration to the control's value is committed by the user.
+     * @event zn-clear - Emitted when the user confirms clearing the selected file or `src`.
      * @event zn-error - Emitted when multiple files are selected via drag and drop, without
      * the `multiple` property being set.
      * @event zn-focus - Emitted when the control gains focus.
@@ -6533,8 +6534,12 @@ declare module "components/file/file.component" {
      * @csspart value - The chosen files or placeholder text for the file input.
      * @csspart droparea - The element wrapping the drop zone.
      * @csspart droparea-background - The background of the drop zone.
-     * @csspart droparea-icon - The container that wraps the icon for the drop zone.
-     * @csspart droparea-value - The text for the drop zone.
+     * @csspart upload - The upload button shown in the droparea when no file is selected.
+     * @csspart preview - The image preview rendered in the droparea for previewable files.
+     * @csspart filename - The filename label rendered in the droparea for non-previewable files.
+     * @csspart clear - The clear button rendered in the droparea when a file is present.
+     * @csspart clear-confirm - The confirmation dialog shown before clearing the file.
+     * @csspart link - The current link anchor rendered when `show-link` is enabled.
      * @csspart trigger - The container that wraps the trigger.
      *
      * @animation file.iconDrop - The animation to use for the file icon
@@ -6546,15 +6551,23 @@ declare module "components/file/file.component" {
      */
     export default class ZnFile extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dialog': typeof ZnDialog;
+        };
         private readonly formControlController;
         private readonly hasSlotController;
         private readonly localize;
         private userIsDragging;
+        private fileObjectUrl;
         input: HTMLInputElement;
         button: ZnButton;
         dropareaWrapper: HTMLDivElement;
         dropareaIcon: HTMLSpanElement;
         inputChosen: HTMLSpanElement;
+        clearConfirmDialog: HTMLElement & {
+            show: () => void;
+            hide: () => void;
+        };
         /**
          * The selected files as a FileList object containing a list of File objects.
          * The FileList behaves like an array, so you can get the number of selected files
@@ -6645,6 +6658,23 @@ declare module "components/file/file.component" {
         required: boolean;
         /** Suppress the value from being displayed in the file control */
         hideValue: boolean;
+        /**
+         * URL of an already-uploaded file (e.g., from a CDN) to display as the current value
+         * when no file has been selected locally. If the URL points to an image, it is rendered
+         * as a preview inside the droparea. Otherwise the URL is shown as a filename.
+         */
+        src: string;
+        /**
+         * When enabled, automatically submit the surrounding form whenever the value changes
+         * (file selected, dropped, or cleared). Useful for forms that only contain this control
+         * and a CSRF token.
+         */
+        triggerSubmit: boolean;
+        /**
+         * When enabled, render the current link (`previewSrc`) as a clickable URL below the control.
+         * Useful for showing the existing CDN link alongside the preview.
+         */
+        showLink: boolean;
         /** Gets the validity state object */
         get validity(): ValidityState;
         /** Gets the validation message */
@@ -6688,6 +6718,18 @@ declare module "components/file/file.component" {
          * Remove a file from the list of files
          */
         private removeFile;
+        /** Open the confirm dialog before clearing. */
+        private handleClearClick;
+        /** Clear the current value after the user confirms. */
+        private confirmClear;
+        private updatePreview;
+        /**
+         * Returns the URL currently shown in the droparea — the locally-selected file's object URL
+         * if a file is selected, otherwise the externally supplied `src`. Useful for getting the
+         * current CDN link to submit alongside form data.
+         */
+        get previewSrc(): string;
+        disconnectedCallback(): void;
         private renderFileValueWithDelete;
         private renderDroparea;
         private renderButton;

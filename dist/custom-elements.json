@@ -49,79 +49,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -274,6 +201,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -11011,12 +11011,28 @@
               "name": "droparea-background"
             },
             {
-              "description": "The container that wraps the icon for the drop zone.",
-              "name": "droparea-icon"
+              "description": "The upload button shown in the droparea when no file is selected.",
+              "name": "upload"
             },
             {
-              "description": "The text for the drop zone.",
-              "name": "droparea-value"
+              "description": "The image preview rendered in the droparea for previewable files.",
+              "name": "preview"
+            },
+            {
+              "description": "The filename label rendered in the droparea for non-previewable files.",
+              "name": "filename"
+            },
+            {
+              "description": "The clear button rendered in the droparea when a file is present.",
+              "name": "clear"
+            },
+            {
+              "description": "The confirmation dialog shown before clearing the file.",
+              "name": "clear-confirm"
+            },
+            {
+              "description": "The current link anchor rendered when `show-link` is enabled.",
+              "name": "link"
             },
             {
               "description": "The container that wraps the trigger.",
@@ -11033,15 +11049,20 @@
               "name": "help-text"
             },
             {
-              "description": "Optional droparea icon to use instead of the default. Works best with `<zn-icon>`.",
-              "name": "droparea-icon"
-            },
-            {
               "description": "Optional content to be used as trigger instead of the default content. Opening the file dialog on click and as well as drag and drop will work for this content. Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*, *hide-value*. Also if using the disabled attribute, the disabled styling will not be applied and must be taken care of yourself.",
               "name": "trigger"
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-dialog': ZnDialog }"
+            },
             {
               "kind": "field",
               "name": "formControlController",
@@ -11071,6 +11092,15 @@
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "fileObjectUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
             },
             {
               "kind": "field",
@@ -11105,6 +11135,13 @@
               "name": "inputChosen",
               "type": {
                 "text": "HTMLSpanElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "clearConfirmDialog",
+              "type": {
+                "text": "HTMLElement & { show: () => void; hide: () => void }"
               }
             },
             {
@@ -11272,6 +11309,36 @@
               "default": "false",
               "description": "Suppress the value from being displayed in the file control",
               "attribute": "hide-value"
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of an already-uploaded file (e.g., from a CDN) to display as the current value\nwhen no file has been selected locally. If the URL points to an image, it is rendered\nas a preview inside the droparea. Otherwise the URL is shown as a filename.",
+              "attribute": "src"
+            },
+            {
+              "kind": "field",
+              "name": "triggerSubmit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, automatically submit the surrounding form whenever the value changes\n(file selected, dropped, or cleared). Useful for forms that only contain this control\nand a CSRF token.",
+              "attribute": "trigger-submit"
+            },
+            {
+              "kind": "field",
+              "name": "showLink",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, render the current link (`previewSrc`) as a clickable URL below the control.\nUseful for showing the existing CDN link alongside the preview.",
+              "attribute": "show-link"
             },
             {
               "kind": "field",
@@ -11460,6 +11527,32 @@
               "description": "Remove a file from the list of files"
             },
             {
+              "kind": "field",
+              "name": "handleClearClick",
+              "privacy": "private",
+              "description": "Open the confirm dialog before clearing."
+            },
+            {
+              "kind": "field",
+              "name": "confirmClear",
+              "privacy": "private",
+              "description": "Clear the current value after the user confirms."
+            },
+            {
+              "kind": "method",
+              "name": "updatePreview",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "previewSrc",
+              "type": {
+                "text": "string"
+              },
+              "description": "Returns the URL currently shown in the droparea — the locally-selected file's object URL\nif a file is selected, otherwise the externally supplied `src`. Useful for getting the\ncurrent CDN link to submit alongside form data.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "renderFileValueWithDelete",
               "privacy": "private",
@@ -11498,6 +11591,10 @@
             {
               "description": "Emitted when an alteration to the control's value is committed by the user.",
               "name": "zn-change"
+            },
+            {
+              "description": "Emitted when the user confirms clearing the selected file or `src`.",
+              "name": "zn-clear"
             },
             {
               "description": "Emitted when multiple files are selected via drag and drop, without the `multiple` property being set.",
@@ -11647,6 +11744,33 @@
               "default": "false",
               "description": "Suppress the value from being displayed in the file control",
               "fieldName": "hideValue"
+            },
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "URL of an already-uploaded file (e.g., from a CDN) to display as the current value\nwhen no file has been selected locally. If the URL points to an image, it is rendered\nas a preview inside the droparea. Otherwise the URL is shown as a filename.",
+              "fieldName": "src"
+            },
+            {
+              "name": "trigger-submit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, automatically submit the surrounding form whenever the value changes\n(file selected, dropped, or cleared). Useful for forms that only contain this control\nand a CSRF token.",
+              "fieldName": "triggerSubmit"
+            },
+            {
+              "name": "show-link",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When enabled, render the current link (`previewSrc`) as a clickable URL below the control.\nUseful for showing the existing CDN link alongside the preview.",
+              "fieldName": "showLink"
             }
           ],
           "superclass": {
@@ -11657,13 +11781,14 @@
           "tagNameWithoutPrefix": "file",
           "tagName": "zn-file",
           "customElement": true,
-          "jsDoc": "/**\n * @summary File controls allow selecting an arbitrary number of files for uploading.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @slot label - The file control's label. Alternatively, you can use the `label` attribute.\n * @slot help-text - Text that describes how to use the file control.\n *    Alternatively, you can use the `help-text` attribute.\n * @slot droparea-icon - Optional droparea icon to use instead of the default.\n *    Works best with `<zn-icon>`.\n * @slot trigger - Optional content to be used as trigger instead of the default content.\n *    Opening the file dialog on click and as well as drag and drop will work for this content.\n *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,\n *    *hide-value*. Also if using the disabled attribute, the disabled styling will not be\n *    applied and must be taken care of yourself.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-error - Emitted when multiple files are selected via drag and drop, without\n * the `multiple` property being set.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart button-wrapper - The wrapper around the button and text value.\n * @csspart button - The zn-button acting as a file input.\n * @csspart button__base - The zn-button's exported `base` part.\n * @csspart value - The chosen files or placeholder text for the file input.\n * @csspart droparea - The element wrapping the drop zone.\n * @csspart droparea-background - The background of the drop zone.\n * @csspart droparea-icon - The container that wraps the icon for the drop zone.\n * @csspart droparea-value - The text for the drop zone.\n * @csspart trigger - The container that wraps the trigger.\n *\n * @animation file.iconDrop - The animation to use for the file icon\n * when a file is dropped\n * @animation file.text.disappear - The disappear animation to use for the file placeholder text\n * when a file is dropped\n * @animation file.text.appear - The appear animation to use for the file placeholder text\n * when a file is dropped\n */",
+          "jsDoc": "/**\n * @summary File controls allow selecting an arbitrary number of files for uploading.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n * @dependency zn-dialog\n *\n * @slot label - The file control's label. Alternatively, you can use the `label` attribute.\n * @slot help-text - Text that describes how to use the file control.\n *    Alternatively, you can use the `help-text` attribute.\n * @slot trigger - Optional content to be used as trigger instead of the default content.\n *    Opening the file dialog on click and as well as drag and drop will work for this content.\n *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,\n *    *hide-value*. Also if using the disabled attribute, the disabled styling will not be\n *    applied and must be taken care of yourself.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the user confirms clearing the selected file or `src`.\n * @event zn-error - Emitted when multiple files are selected via drag and drop, without\n * the `multiple` property being set.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart button-wrapper - The wrapper around the button and text value.\n * @csspart button - The zn-button acting as a file input.\n * @csspart button__base - The zn-button's exported `base` part.\n * @csspart value - The chosen files or placeholder text for the file input.\n * @csspart droparea - The element wrapping the drop zone.\n * @csspart droparea-background - The background of the drop zone.\n * @csspart upload - The upload button shown in the droparea when no file is selected.\n * @csspart preview - The image preview rendered in the droparea for previewable files.\n * @csspart filename - The filename label rendered in the droparea for non-previewable files.\n * @csspart clear - The clear button rendered in the droparea when a file is present.\n * @csspart clear-confirm - The confirmation dialog shown before clearing the file.\n * @csspart link - The current link anchor rendered when `show-link` is enabled.\n * @csspart trigger - The container that wraps the trigger.\n *\n * @animation file.iconDrop - The animation to use for the file icon\n * when a file is dropped\n * @animation file.text.disappear - The disappear animation to use for the file placeholder text\n * when a file is dropped\n * @animation file.text.appear - The appear animation to use for the file placeholder text\n * when a file is dropped\n */",
           "documentation": "https://zinc.style/components/drag-upload",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-button",
-            "zn-icon"
+            "zn-icon",
+            "zn-dialog"
           ],
           "animations": [
             {

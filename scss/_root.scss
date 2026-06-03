@@ -12,6 +12,10 @@
   --zn-font-family-sans: 'Inter', sans-serif;
   --zn-font-family-serif: 'Roboto Slab', serif;
   --zn-font-family-mono: 'Roboto Mono', monospace;
+}
+
+:root, [t="light"], .theme-light {
+  --zn-backdrop-color: rgba(0, 0, 0, 0.5);
 
   --zn-color-text: 33, 33, 33;
   --zn-color-muted-text: 125, 119, 146;
@@ -20,6 +24,25 @@
   --zn-color-border: 219, 217, 236;
   --zn-color-tab: 236, 235, 249;
   --zn-color-panel: 255, 255, 255;
+
+  --zn-color-primary: 105, 54, 245;
+  --zn-color-info: 53, 104, 195;
+  --zn-color-success: 98, 177, 121;
+  --zn-color-warning: 241, 168, 80;
+  --zn-color-error: 236, 68, 91;
+  --zn-color-disabled: 181, 181, 181;
+}
+
+[t="dark"], .theme-dark {
+  --zn-backdrop-color: rgba(0, 0, 0, 0.85);
+
+  --zn-color-text: 215, 215, 215;
+  --zn-color-muted-text: 145, 145, 145;
+
+  --zn-color-body: 0, 0, 0;
+  --zn-color-border: 38, 38, 38;
+  --zn-color-tab: 15, 15, 15;
+  --zn-color-panel: 23, 23, 23;
 
   --zn-color-primary: 105, 54, 245;
   --zn-color-info: 53, 104, 195;
@@ -90,25 +113,30 @@
 }
 
 .zn-mono {
-  font-family: var(--zn-font-family-mono);
+  font-family: var(--zn-font-family-mono, "monospace");
+}
+
+:root, [t="light"], .theme-light, [t="dark"], .theme-dark {
+  --zn-body: var(--zn-color-body);
+
+  --zn-text: var(--zn-color-text);
+  --zn-text-heading: var(--zn-color-text);
+  --zn-text-page-title: var(--zn-color-text);
+  --zn-text-panel-title: var(--zn-color-text);
+  --zn-panel: var(--zn-color-panel);
+
+  --zn-border-color: var(--zn-color-border);
+  --zn-input-bg: var(--zn-color-body);
 }
 
 [t="light"], .theme-light {
   // Theme Light
   --zn-panel-opacity: 1;
-  --zn-text: var(--zn-color-text);
-  --zn-text-heading: var(--zn-color-text);
-  --zn-text-page-title: var(--zn-color-text);
-  --zn-text-panel-title: var(--zn-color-text);
-  --zn-body: var(--zn-color-body);
   --zn-shadow: 236, 233, 241;
-  --zn-panel: var(--zn-color-panel);
 
   --zn-panel-secondary: 246 246 246;
   --zn-panel-highlight: 248, 249, 252;
   --zn-panel-highlight-opacity: 1;
-  --zn-border-color: var(--zn-color-border);
-  --zn-input-bg: var(--zn-color-body);
   --zn-input-bg-accent: 237, 235, 245;
   --zn-bright-bg: 255, 255, 255;
   --zn-light-text: 123, 112, 151;
@@ -122,19 +150,11 @@
 
 [t="dark"], .theme-dark {
   // Theme Dark
-  --zn-body: 20, 22, 27;
-  --zn-panel: 33, 34, 41;
   --zn-shadow: 10, 10, 10;
   --zn-panel-secondary: 27, 27, 30;
   --zn-panel-opacity: 1;
-  --zn-text: 159, 173, 194;
-  --zn-text-heading: 241, 245, 249;
-  --zn-text-page-title: 225, 225, 225;
-  --zn-text-panel-title: 181, 158, 255;
   --zn-panel-highlight: 25, 27, 32;
   --zn-panel-highlight-opacity: 0.1;
-  --zn-border-color: 50, 50, 60;
-  --zn-input-bg: 28, 28, 32;
   --zn-input-bg-accent: 72, 84, 102;
   --zn-bright-bg: 225, 225, 225;
   --zn-light-text: 173, 163, 192;

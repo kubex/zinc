@@ -1142,7 +1142,6 @@ declare module "components/button/button.component" {
         countdownContainer: HTMLElement[];
         color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star' | (string & Record<never, never>);
         hoverColor: string;
-        size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
         text: boolean;
         outline: boolean;
         disabled: boolean;
@@ -6926,7 +6925,6 @@ declare module "components/button-menu/button-menu.component" {
         containerWidth: number;
         limit: number;
         maxLevel: number;
-        size: 'content' | 'x-small' | 'small' | 'medium' | 'large';
         iconSize: number;
         noGap: boolean;
         noPadding: boolean;

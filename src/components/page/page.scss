@@ -45,7 +45,6 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap) calc(calc(var(--zn-base-px) * 3) - var(--zn-base-gap)) var(--zn-base-gap);
   box-sizing: border-box;
   background: rgba(var(--zn-page-header-background), 95%);
 
@@ -72,6 +71,11 @@
   flex-direction: column;
   position: relative;
   margin: 0;
+  padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap) calc(calc(var(--zn-base-px) * 3) - var(--zn-base-gap)) var(--zn-base-gap);
+
+  &.header--has-navigation{
+    padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap);
+  }
 
   .content {
     display: flex;
@@ -282,7 +286,6 @@
 }
 
 zn-navbar {
-  margin-top: calc(var(--zn-base-px) * 3);
 
   &::part(navbar) {
     height: 42px;

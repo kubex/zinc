@@ -3657,6 +3657,7 @@ declare module "components/navbar/navbar.component" {
         private _getItemWidth;
         private _getHorizontalSpacing;
         private _getMoreItemWidth;
+        private _syncLastVisibleItem;
         private _getExpandableWidth;
         handleResize: () => void;
         private _syncExtendedActive;

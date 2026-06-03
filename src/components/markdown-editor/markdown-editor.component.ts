@@ -3,7 +3,6 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
-import {ifDefined} from "lit/directives/if-defined.js";
 import {marked} from "marked";
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
@@ -279,7 +278,6 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
             })}
                        icon=${this.icon}
                        caption=${this.caption}
-                       description=${ifDefined(this.description)}
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

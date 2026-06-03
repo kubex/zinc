@@ -4,10 +4,12 @@
 @use "variables";
 
 :root {
-  --zn-base-gap: 16px;
-  --zn-gutter: 4px;
+  --zn-base-px: 8px;
+  --zn-base-gap: calc(var(--zn-base-px) * 2);
+  --zn-gutter: 2px;
   --zn-default-margin: 0 auto 0 0;
   --zn-icon-size: 20px;
+  --zn-button-gutter: 2px;
 
   --zn-font-family-sans: 'Inter', sans-serif;
   --zn-font-family-serif: 'Roboto Slab', serif;
@@ -60,22 +62,9 @@
   --zn-color-disabled: 181, 181, 181;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   :root {
-    --zn-gutter: 8px;
-  }
-}
-
-@media (min-width: 1600px) {
-  :root {
-    --zn-base-gap: 24px;
-    --zn-gutter: 16px;
-  }
-}
-
-@media (min-width: 2000px) {
-  :root {
-    --zn-gutter: 24px;
+    --zn-base-gap: calc(var(--zn-base-px) * 3);
   }
 }
 

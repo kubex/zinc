@@ -304,7 +304,6 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
                   <zn-button
                     class="markdown-editor__expand-btn"
                     type="button"
-                    size="medium"
                     color="secondary"
                     icon=${this.expanded ? 'close_fullscreen' : 'open_in_full'}
                     icon-size="18"
@@ -377,7 +376,6 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
         })}
         data-mode=${mode}
         type="button"
-        size="medium"
         color="default"
         ?outline=${!isActive}
         square

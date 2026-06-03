@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 15px;
+  padding: var(--zn-base-px) calc(var(--zn-base-px) + var(--zn-button-gutter));
   margin: auto;
   width: fit-content;
   background-color: rgb(var(--zn-primary));
@@ -16,7 +16,11 @@
   vertical-align: middle;
   border-color: transparent;
   white-space: nowrap;
-  line-height: 24px;
+  line-height: 22px;
+
+  max-height: 40px;
+  height: 40px;
+  min-height: 40px;
 
   &:hover:not([disabled]) {
     background-color: rgba(var(--zn-primary), 0.8);

@@ -101,7 +101,6 @@ export default class DialogComponent extends ZincElement {
           icon-size="24"
           type="button"
           color="transparent"
-          size="content"
           @click="${() => this.dialogEl.close()}"
         ></zn-button>
         <div class="editor-dialog__content">

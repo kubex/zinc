@@ -111,7 +111,7 @@ Combine `gap` and `grow` attributes to create evenly-spaced, full-width button g
 
 ### Button Variants
 
-Button groups work with all button variants including colors, sizes, and styles.
+Button groups work with all button variants including colors and styles.
 
 ```html:preview
 <zn-button-group>
@@ -136,36 +136,6 @@ Button groups work with all button variants including colors, sizes, and styles.
   <zn-button outline>Outline 1</zn-button>
   <zn-button outline>Outline 2</zn-button>
   <zn-button outline>Outline 3</zn-button>
-</zn-button-group>
-```
-
-### Button Sizes
-
-Button groups respect the size of their contained buttons.
-
-```html:preview
-<zn-button-group>
-  <zn-button size="small">Small 1</zn-button>
-  <zn-button size="small">Small 2</zn-button>
-  <zn-button size="small">Small 3</zn-button>
-</zn-button-group>
-
-<br />
-<br />
-
-<zn-button-group>
-  <zn-button size="medium">Medium 1</zn-button>
-  <zn-button size="medium">Medium 2</zn-button>
-  <zn-button size="medium">Medium 3</zn-button>
-</zn-button-group>
-
-<br />
-<br />
-
-<zn-button-group>
-  <zn-button size="large">Large 1</zn-button>
-  <zn-button size="large">Large 2</zn-button>
-  <zn-button size="large">Large 3</zn-button>
 </zn-button-group>
 ```
 

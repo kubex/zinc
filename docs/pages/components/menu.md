@@ -510,8 +510,8 @@ You can programmatically control menu items using their methods.
 </zn-menu>
 
 <div style="margin-top: 1rem;">
-  <zn-button id="focus-item2" size="small">Focus Item 2</zn-button>
-  <zn-button id="click-item3" size="small" color="info">Click Item 3</zn-button>
+  <zn-button id="focus-item2">Focus Item 2</zn-button>
+  <zn-button id="click-item3" color="info">Click Item 3</zn-button>
 </div>
 
 <div id="prog-output" style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px;">

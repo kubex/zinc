@@ -40,8 +40,6 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
-  @property({}) size: 'content' | 'x-small' | 'small' | 'medium' | 'large' = 'medium';
-
   @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 24;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
@@ -169,7 +167,7 @@ export default class ZnButtonMenu extends ZincElement {
       menu.innerHTML = '';
     }
 
-    // Add colors to the buttons depending on type and set button size
+    // Add colors to the buttons depending on type
     this._buttons.forEach((button: CustomButtonWidths, index: number) => {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
@@ -180,7 +178,6 @@ export default class ZnButtonMenu extends ZincElement {
         if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
           button.button.setAttribute('text', "");
         }
-        button.button.setAttribute('size', this.size);
       }
     });
 
@@ -293,8 +290,7 @@ export default class ZnButtonMenu extends ZincElement {
       })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"
-                     size="${this.size}"></zn-button>
+          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

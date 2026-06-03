@@ -457,10 +457,10 @@ Checkboxes provide several methods for programmatic control:
 <div>
   <zn-checkbox id="method-checkbox">Programmatic control</zn-checkbox>
   <br /><br />
-  <zn-button id="click-btn" size="small">Click Checkbox</zn-button>
-  <zn-button id="focus-btn" size="small" color="info">Focus Checkbox</zn-button>
-  <zn-button id="blur-btn" size="small" color="secondary">Blur Checkbox</zn-button>
-  <zn-button id="validate-btn" size="small" color="warning">Check Validity</zn-button>
+  <zn-button id="click-btn">Click Checkbox</zn-button>
+  <zn-button id="focus-btn" color="info">Focus Checkbox</zn-button>
+  <zn-button id="blur-btn" color="secondary">Blur Checkbox</zn-button>
+  <zn-button id="validate-btn" color="warning">Check Validity</zn-button>
 </div>
 
 <script type="module">

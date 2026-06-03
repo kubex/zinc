@@ -133,7 +133,7 @@ Use the `expand` slot to add custom buttons or actions.
 <zn-translations
   label="Description"
   languages='{"en":"English","fr":"French","de":"German"}'>
-  <zn-button slot="expand" size="x-small" color="transparent" icon="translate">
+  <zn-button slot="expand" color="transparent" icon="translate">
     Auto-Translate
   </zn-button>
 </zn-translations>
@@ -249,9 +249,9 @@ Access and modify translation values via JavaScript.
 ></zn-translations>
 
 <div style="margin-top: 1rem;">
-  <zn-button id="set-values-btn" size="small">Set Sample Values</zn-button>
-  <zn-button id="get-values-btn" size="small" color="info">Get Values</zn-button>
-  <zn-button id="clear-values-btn" size="small" color="secondary">Clear All</zn-button>
+  <zn-button id="set-values-btn">Set Sample Values</zn-button>
+  <zn-button id="get-values-btn" color="info">Get Values</zn-button>
+  <zn-button id="clear-values-btn" color="secondary">Clear All</zn-button>
 </div>
 
 <script type="module">
@@ -303,7 +303,7 @@ A complete example showing product content management with translations.
         languages='{"en":"English","fr":"French","de":"German","es":"Spanish"}'
         values='{"en":"High-quality wireless headphones with active noise cancellation","fr":"Écouteurs sans fil de haute qualité avec suppression active du bruit","de":"Hochwertige kabellose Kopfhörer mit aktiver Geräuschunterdrückung","es":"Auriculares inalámbricos de alta calidad con cancelación activa de ruido"}'
       >
-        <zn-button slot="expand" size="x-small" color="transparent" icon="smart_toy">
+        <zn-button slot="expand" color="transparent" icon="smart_toy">
           AI Translate
         </zn-button>
       </zn-translations>

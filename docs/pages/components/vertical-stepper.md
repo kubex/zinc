@@ -349,7 +349,7 @@ Add interactive elements next to each step for expanded functionality.
       <zn-icon slot="icon" src="preview"></zn-icon>
     </zn-vertical-stepper>
   </div>
-  <zn-button size="small" icon="edit" color="transparent">Edit</zn-button>
+  <zn-button icon="edit" color="transparent">Edit</zn-button>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
   <div style="flex: 1;">
@@ -359,7 +359,7 @@ Add interactive elements next to each step for expanded functionality.
       <zn-icon slot="icon" src="pending"></zn-icon>
     </zn-vertical-stepper>
   </div>
-  <zn-button size="small" icon="play_arrow" color="transparent" disabled>Run</zn-button>
+  <zn-button icon="play_arrow" color="transparent" disabled>Run</zn-button>
 </div>
 <div style="display: flex; align-items: center; gap: 10px;">
   <div style="flex: 1;">
@@ -370,7 +370,7 @@ Add interactive elements next to each step for expanded functionality.
       <zn-icon slot="icon" src="pending"></zn-icon>
     </zn-vertical-stepper>
   </div>
-  <zn-button size="small" icon="publish" color="transparent" disabled>Deploy</zn-button>
+  <zn-button icon="publish" color="transparent" disabled>Deploy</zn-button>
 </div>
 ```
 

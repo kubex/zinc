@@ -261,7 +261,6 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                 <span class="icon-picker__edit-text">Click to edit</span>
                 <zn-button
                   class="icon-picker__clear"
-                  size="x-small"
                   color="transparent"
                   icon="close"
                   icon-size="16"

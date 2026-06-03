@@ -201,7 +201,7 @@ Provide contextual help for form fields.
   <div style="display: flex; align-items: center; gap: 5px;">
     <zn-input label="API Key" placeholder="Enter your API key"></zn-input>
     <zn-hover-container trigger="click" placement="right">
-      <zn-button slot="anchor" icon="info" color="transparent" size="small"></zn-button>
+      <zn-button slot="anchor" icon="info" color="transparent"></zn-button>
       <div slot="content" style="max-width: 250px; padding: 10px;">
         <h4 style="margin: 0 0 5px 0;">Finding your API Key</h4>
         <p style="margin: 0; font-size: 0.9em;">Go to Settings &gt; Developer &gt; API Keys to generate a new key.</p>

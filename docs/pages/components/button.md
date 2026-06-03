@@ -64,18 +64,6 @@ Use the `color` attribute to set the button's color.
 <zn-button color="transparent">Transparent</zn-button>
 ```
 
-### Sizes
-
-Use the `size` attribute to set the button's size.
-
-```html:preview
-<zn-button size="content">Content</zn-button>
-<zn-button size="x-small">X Small</zn-button>
-<zn-button size="small">Small</zn-button>
-<zn-button size="medium">Medium</zn-button>
-<zn-button size="large">Large</zn-button>
-```
-
 ### Outline
 
 Use the `outline` attribute to set the button's outline.

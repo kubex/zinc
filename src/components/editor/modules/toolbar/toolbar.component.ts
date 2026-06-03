@@ -486,7 +486,6 @@ export default class ToolbarComponent extends ZincElement {
             <zn-button slot="trigger"
                        class="toolbar__overflow-trigger"
                        color="transparent"
-                       size="content"
                        icon="more_horiz"
                        icon-size="18"
                        icon-position="right"></zn-button>

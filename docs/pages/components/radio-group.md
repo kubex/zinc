@@ -298,10 +298,10 @@ You can control the radio group programmatically using its methods and propertie
   </zn-radio-group>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value to Option 3</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
-    <zn-button id="get-form-btn" size="small">Get Form</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="set-value-btn">Set Value to Option 3</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
+    <zn-button id="get-form-btn">Get Form</zn-button>
   </div>
 </div>
 

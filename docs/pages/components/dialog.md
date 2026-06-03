@@ -195,8 +195,8 @@ Use the `header-actions` slot to add buttons or other interactive elements to th
 ```html:preview
 <zn-button id="dialog-header-actions-trigger">Open Dialog</zn-button>
 <zn-dialog trigger="dialog-header-actions-trigger" label="Document Settings">
-  <zn-button icon="refresh" color="transparent" size="content" slot="header-actions"></zn-button>
-  <zn-button icon="settings" color="transparent" size="content" slot="header-actions"></zn-button>
+  <zn-button icon="refresh" color="transparent" slot="header-actions"></zn-button>
+  <zn-button icon="settings" color="transparent" slot="header-actions"></zn-button>
 
   <p>This dialog has action buttons in the header for quick access to common functions.</p>
 

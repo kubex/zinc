@@ -112,12 +112,12 @@ Use the `action` slot to add buttons or other interactive elements to the note h
 ```html:preview
 <zn-note caption="Pending Review" date="01/22/26" color="yellow">
   This document requires your approval before we can proceed with the next phase.
-  <zn-button slot="action" color="success" size="small">Approve</zn-button>
+  <zn-button slot="action" color="success">Approve</zn-button>
 </zn-note>
 <br />
 <zn-note caption="Task Assignment" date="01/23/26" color="blue">
   You've been assigned to work on the authentication module.
-  <zn-button slot="action" color="primary" size="small">View Task</zn-button>
+  <zn-button slot="action" color="primary">View Task</zn-button>
 </zn-note>
 ```
 
@@ -130,7 +130,7 @@ Use the `footer` slot to add additional information or actions at the bottom of 
   Version 2.0 has been successfully released to all users. Great work team!
   <div slot="footer" style="display: flex; gap: 8px; align-items: center;">
     <small style="color: var(--zn-color-text-muted);">Posted by John Smith</small>
-    <zn-button color="transparent" size="small">View Details</zn-button>
+    <zn-button color="transparent">View Details</zn-button>
   </div>
 </zn-note>
 ```
@@ -166,8 +166,8 @@ Notes can contain rich HTML content including lists, links, code blocks, and for
   </ul>
   <p>For more information, visit our <a href="#">changelog page</a>.</p>
   <div slot="footer">
-    <zn-button color="violet" size="small">Download Update</zn-button>
-    <zn-button color="transparent" size="small">Learn More</zn-button>
+    <zn-button color="violet">Download Update</zn-button>
+    <zn-button color="transparent">Learn More</zn-button>
   </div>
 </zn-note>
 ```
@@ -179,7 +179,7 @@ Combine header actions and footer content for more complex interactions.
 ```html:preview
 <zn-note caption="Code Review Request" date="01/23/26" color="orange">
   <div slot="action">
-    <zn-button color="transparent" size="small">View Changes</zn-button>
+    <zn-button color="transparent">View Changes</zn-button>
   </div>
   <div slot="snippet">
     Pull request #247: Add user authentication feature. Click to see details...
@@ -194,9 +194,9 @@ Combine header actions and footer content for more complex interactions.
   <p><strong>Files changed:</strong> 12 files (+458, -92 lines)</p>
   <p>Please review the changes and provide feedback. The tests are passing and the code follows our style guidelines.</p>
   <div slot="footer" style="display: flex; gap: 8px;">
-    <zn-button color="success" size="small">Approve</zn-button>
-    <zn-button color="error" size="small">Request Changes</zn-button>
-    <zn-button color="transparent" size="small">Comment</zn-button>
+    <zn-button color="success">Approve</zn-button>
+    <zn-button color="error">Request Changes</zn-button>
+    <zn-button color="transparent">Comment</zn-button>
   </div>
 </zn-note>
 ```
@@ -247,8 +247,8 @@ Combine header actions and footer content for more complex interactions.
     <li>Performance enhancements for large datasets</li>
   </ul>
   <div slot="footer">
-    <zn-button color="green" size="small">Update Now</zn-button>
-    <zn-button color="transparent" size="small">View Full Changelog</zn-button>
+    <zn-button color="green">Update Now</zn-button>
+    <zn-button color="transparent">View Full Changelog</zn-button>
   </div>
 </zn-note>
 ```
@@ -258,7 +258,7 @@ Combine header actions and footer content for more complex interactions.
 ```html:preview
 <zn-note caption="System Maintenance" date="01/25/26" color="yellow">
   <div slot="action">
-    <zn-button color="transparent" size="small">Details</zn-button>
+    <zn-button color="transparent">Details</zn-button>
   </div>
   Scheduled maintenance window on Sunday, January 26 from 2:00 AM to 6:00 AM EST. Services will be temporarily unavailable during this time.
   <div slot="footer">

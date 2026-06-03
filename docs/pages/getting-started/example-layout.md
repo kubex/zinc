@@ -26,11 +26,11 @@ component you are using already includes padding or margin it will not be double
           </zn-item>
           <zn-item label="Full name">
             Something
-            <zn-button icon="add" color="secondary" size="x-small" slot="actions" icon-size="20"></zn-button>
+            <zn-button icon="add" color="secondary" slot="actions" icon-size="20"></zn-button>
           </zn-item>
           <zn-item label="Full name">
             Something
-            <zn-button color="transparent" size="x-small" slot="actions">Update</zn-button>
+            <zn-button color="transparent" slot="actions">Update</zn-button>
           </zn-item>
           <zn-item label="Selet Option">
             <zn-inline-edit name="name" value="1"

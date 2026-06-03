@@ -72,12 +72,12 @@ Use the `action` slot to add interactive elements or additional information to t
 ```html:preview
 <zn-well icon="schedule">
   Triggers every <strong>5 minutes</strong>
-  <zn-button slot="action" color="transparent" size="small">Edit</zn-button>
+  <zn-button slot="action" color="transparent">Edit</zn-button>
 </zn-well>
 <br />
 <zn-well icon="cloud_sync">
   Last sync: 2 minutes ago
-  <zn-button slot="action" color="primary" size="small">Sync Now</zn-button>
+  <zn-button slot="action" color="primary">Sync Now</zn-button>
 </zn-well>
 ```
 
@@ -89,8 +89,8 @@ The action slot can contain multiple elements for more complex interactions.
 <zn-well icon="settings">
   Configuration status: Active
   <div slot="action" style="display: flex; gap: 8px;">
-    <zn-button color="transparent" size="small">Configure</zn-button>
-    <zn-button color="transparent" size="small">Disable</zn-button>
+    <zn-button color="transparent">Configure</zn-button>
+    <zn-button color="transparent">Disable</zn-button>
   </div>
 </zn-well>
 ```
@@ -105,7 +105,7 @@ Wells can contain rich HTML content including formatted text, links, and nested 
     <strong>Document Type:</strong> Configuration File<br />
     <small style="color: var(--zn-color-text-muted);">Last modified: 01/23/26</small>
   </div>
-  <zn-button slot="action" color="transparent" size="small">View</zn-button>
+  <zn-button slot="action" color="transparent">View</zn-button>
 </zn-well>
 <br />
 <zn-well icon="folder_open">
@@ -115,7 +115,7 @@ Wells can contain rich HTML content including formatted text, links, and nested 
       <small>Contains 24 files | 12.5 MB total</small>
     </p>
   </div>
-  <zn-button slot="action" color="primary" size="small">Open</zn-button>
+  <zn-button slot="action" color="primary">Open</zn-button>
 </zn-well>
 ```
 
@@ -138,7 +138,7 @@ Wells are perfect for displaying status information with icons and formatted con
 <br />
 <zn-well icon="error">
   <strong>Build failed</strong> - See logs for details
-  <zn-button slot="action" color="error" size="small">View Logs</zn-button>
+  <zn-button slot="action" color="error">View Logs</zn-button>
 </zn-well>
 ```
 
@@ -149,7 +149,7 @@ Use wells to display scheduling and timing details.
 ```html:preview
 <zn-well icon="schedule">
   Runs every <strong>Monday at 9:00 AM</strong>
-  <zn-button slot="action" color="transparent" size="small">Edit Schedule</zn-button>
+  <zn-button slot="action" color="transparent">Edit Schedule</zn-button>
 </zn-well>
 <br />
 <zn-well icon="timer">
@@ -171,7 +171,7 @@ Display configuration information in a clean, organized format.
     <strong>Database Connection</strong><br />
     <small>PostgreSQL • us-east-1 • Read/Write</small>
   </div>
-  <zn-button slot="action" color="transparent" size="small">Test Connection</zn-button>
+  <zn-button slot="action" color="transparent">Test Connection</zn-button>
 </zn-well>
 <br />
 <zn-well icon="storage">
@@ -179,7 +179,7 @@ Display configuration information in a clean, organized format.
     <strong>Cache Configuration</strong><br />
     <small>Redis • 500 MB limit • TTL: 3600s</small>
   </div>
-  <zn-button slot="action" color="transparent" size="small">Clear Cache</zn-button>
+  <zn-button slot="action" color="transparent">Clear Cache</zn-button>
 </zn-well>
 ```
 
@@ -192,7 +192,7 @@ Wells work perfectly fine without an icon for simpler, cleaner displays.
 <br />
 <zn-well>
   <strong>Important:</strong> Configuration changes require a restart
-  <zn-button slot="action" color="warning" size="small">Restart Now</zn-button>
+  <zn-button slot="action" color="warning">Restart Now</zn-button>
 </zn-well>
 ```
 
@@ -218,8 +218,8 @@ Combine inline wells with other content for compact information display.
     <strong>Daily Backup</strong><br />
     Triggers every day at <strong>2:00 AM UTC</strong>
     <div slot="action" style="display: flex; gap: 8px;">
-      <zn-button color="transparent" size="small">Edit</zn-button>
-      <zn-button color="transparent" size="small">Run Now</zn-button>
+      <zn-button color="transparent">Edit</zn-button>
+      <zn-button color="transparent">Run Now</zn-button>
     </div>
   </zn-well>
 
@@ -227,8 +227,8 @@ Combine inline wells with other content for compact information display.
     <strong>Weekly Reports</strong><br />
     Triggers every <strong>Monday at 9:00 AM</strong>
     <div slot="action" style="display: flex; gap: 8px;">
-      <zn-button color="transparent" size="small">Edit</zn-button>
-      <zn-button color="primary" size="small">View Reports</zn-button>
+      <zn-button color="transparent">Edit</zn-button>
+      <zn-button color="primary">View Reports</zn-button>
     </div>
   </zn-well>
 </div>
@@ -250,7 +250,7 @@ Combine inline wells with other content for compact information display.
       <strong>Disk Space</strong><br />
       <small>45.2 GB / 100 GB (45%)</small>
     </div>
-    <zn-button slot="action" color="transparent" size="small">Details</zn-button>
+    <zn-button slot="action" color="transparent">Details</zn-button>
   </zn-well>
 
   <zn-well icon="speed">
@@ -268,17 +268,17 @@ Combine inline wells with other content for compact information display.
 <div style="display: flex; flex-direction: column; gap: 12px;">
   <zn-well icon="cloud_done">
     <strong>AWS S3</strong> - Connected
-    <zn-button slot="action" color="transparent" size="small">Configure</zn-button>
+    <zn-button slot="action" color="transparent">Configure</zn-button>
   </zn-well>
 
   <zn-well icon="sync">
     <strong>GitHub</strong> - Syncing
-    <zn-button slot="action" color="transparent" size="small">View Status</zn-button>
+    <zn-button slot="action" color="transparent">View Status</zn-button>
   </zn-well>
 
   <zn-well icon="check_circle">
     <strong>Stripe</strong> - Active • Webhook configured
-    <zn-button slot="action" color="transparent" size="small">Settings</zn-button>
+    <zn-button slot="action" color="transparent">Settings</zn-button>
   </zn-well>
 </div>
 ```

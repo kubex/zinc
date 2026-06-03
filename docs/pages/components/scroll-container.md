@@ -105,8 +105,8 @@ Use the `footer` slot to add a fixed footer that remains at the bottom. The foot
   </div>
 
   <div slot="footer" style="padding: 1rem; background: var(--zn-color-neutral-100); border-top: 1px solid var(--zn-color-neutral-200); display: flex; gap: 0.5rem;">
-    <zn-button size="small" color="secondary">Cancel</zn-button>
-    <zn-button size="small" color="primary">Save Changes</zn-button>
+    <zn-button color="secondary">Cancel</zn-button>
+    <zn-button color="primary">Save Changes</zn-button>
   </div>
 </zn-scroll-container>
 ```
@@ -145,7 +145,7 @@ Combine both header and footer slots for maximum control. The scrollable area si
   <div slot="footer" style="padding: 1rem; background: var(--zn-color-white); border-top: 1px solid var(--zn-color-neutral-200);">
     <div style="display: flex; gap: 0.5rem;">
       <zn-input placeholder="Type a message..." style="flex: 1;"></zn-input>
-      <zn-button size="small" icon="send" color="primary">Send</zn-button>
+      <zn-button icon="send" color="primary">Send</zn-button>
     </div>
   </div>
 </zn-scroll-container>
@@ -261,9 +261,9 @@ A practical example showing how to build a chat interface with auto-scrolling an
 
   <div slot="footer" style="padding: 1rem; background: var(--zn-color-white); border-top: 1px solid var(--zn-color-neutral-200);">
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <zn-button size="small" color="secondary" icon="attach_file"></zn-button>
+      <zn-button color="secondary" icon="attach_file"></zn-button>
       <zn-input placeholder="Type your message..." style="flex: 1;"></zn-input>
-      <zn-button size="small" icon="send" color="primary">Send</zn-button>
+      <zn-button icon="send" color="primary">Send</zn-button>
     </div>
   </div>
 </zn-scroll-container>
@@ -365,7 +365,7 @@ A comprehensive example showing how to build a notification center with categori
         <h3 style="margin: 0;">Notifications</h3>
         <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: var(--zn-color-neutral-600);">You have 4 unread notifications</p>
       </div>
-      <zn-button size="small" color="secondary">Mark all read</zn-button>
+      <zn-button color="secondary">Mark all read</zn-button>
     </div>
   </div>
 
@@ -450,7 +450,7 @@ A comprehensive example showing how to build a notification center with categori
   </div>
 
   <div slot="footer" style="padding: 1rem; background: var(--zn-color-neutral-50); border-top: 1px solid var(--zn-color-neutral-200); text-align: center;">
-    <zn-button size="small" color="secondary" style="width: 100%;">View All Notifications</zn-button>
+    <zn-button color="secondary" style="width: 100%;">View All Notifications</zn-button>
   </div>
 </zn-scroll-container>
 ```
@@ -475,8 +475,8 @@ You can programmatically scroll to the bottom using the `scrollEnd()` method.
   </div>
 
   <div slot="footer" style="padding: 1rem; background: var(--zn-color-neutral-100); border-top: 1px solid var(--zn-color-neutral-200);">
-    <zn-button id="add-content-btn" size="small">Add Content</zn-button>
-    <zn-button id="scroll-bottom-btn" size="small" color="secondary">Scroll to Bottom</zn-button>
+    <zn-button id="add-content-btn">Add Content</zn-button>
+    <zn-button id="scroll-bottom-btn" color="secondary">Scroll to Bottom</zn-button>
   </div>
 </zn-scroll-container>
 
@@ -526,7 +526,7 @@ The footer's height is automatically tracked and the scrollable area adjusts acc
     <div style="margin-bottom: 0.5rem;">
       <strong>Footer Section</strong>
     </div>
-    <zn-button id="toggle-footer-btn" size="small">Expand Footer</zn-button>
+    <zn-button id="toggle-footer-btn">Expand Footer</zn-button>
     <div id="extra-footer-content" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-200); border-radius: 4px;">
       <p style="margin: 0;">This is additional footer content that appears when expanded.</p>
       <p style="margin: 0.5rem 0 0 0;">The scroll area automatically adjusts!</p>

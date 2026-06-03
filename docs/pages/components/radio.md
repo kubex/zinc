@@ -367,10 +367,10 @@ Radios provide several methods for programmatic control:
   <br />
   <zn-radio id="method-radio-3" name="method-demo">Option 3</zn-radio>
   <br /><br />
-  <zn-button id="click-btn" size="small">Click Option 2</zn-button>
-  <zn-button id="focus-btn" size="small" color="info">Focus Option 3</zn-button>
-  <zn-button id="blur-btn" size="small" color="secondary">Blur All</zn-button>
-  <zn-button id="validate-btn" size="small" color="warning">Check Validity</zn-button>
+  <zn-button id="click-btn">Click Option 2</zn-button>
+  <zn-button id="focus-btn" color="info">Focus Option 3</zn-button>
+  <zn-button id="blur-btn" color="secondary">Blur All</zn-button>
+  <zn-button id="validate-btn" color="warning">Check Validity</zn-button>
 </div>
 
 <script type="module">

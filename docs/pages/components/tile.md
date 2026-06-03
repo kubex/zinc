@@ -17,7 +17,7 @@ Tiles are versatile components designed for building lists of structured content
   <zn-tile caption="Michael Foster" description="michael.foster@example.com" href="https://google.com">
     <zn-icon slot="image" size="40" src="https://i.pravatar.cc/60?img=51" round></zn-icon>
     <zn-tile-property slot="properties" caption="Engineering Lead">Active now</zn-tile-property>
-    <div slot="actions"><zn-button size="small">Contact</zn-button></div>
+    <div slot="actions"><zn-button>Contact</zn-button></div>
   </zn-tile>
 
   <zn-tile caption="Emma Davis" description="emma.davis@example.com">
@@ -107,15 +107,15 @@ Use the `actions` slot to add buttons or other interactive elements to the right
   <zn-tile caption="Database Backup" description="Last backup: 2 hours ago">
     <zn-icon slot="image" size="32" src="storage" color="info"></zn-icon>
     <div slot="actions">
-      <zn-button size="small" color="primary">Run Now</zn-button>
+      <zn-button color="primary">Run Now</zn-button>
     </div>
   </zn-tile>
 
   <zn-tile caption="Email Notification" description="Receive daily summaries">
     <zn-icon slot="image" size="32" src="mail" color="secondary"></zn-icon>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="edit" square></zn-button>
-      <zn-button size="small" color="transparent" icon="delete" square></zn-button>
+      <zn-button color="transparent" icon="edit" square></zn-button>
+      <zn-button color="transparent" icon="delete" square></zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -132,7 +132,7 @@ Combine both properties and actions for comprehensive tile layouts.
     <zn-tile-property slot="properties" caption="Department">Marketing</zn-tile-property>
     <zn-tile-property slot="properties" caption="Role">Manager</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small">Message</zn-button>
+      <zn-button>Message</zn-button>
     </div>
   </zn-tile>
 
@@ -141,7 +141,7 @@ Combine both properties and actions for comprehensive tile layouts.
     <zn-tile-property slot="properties" caption="Department">Engineering</zn-tile-property>
     <zn-tile-property slot="properties" caption="Role">Senior Dev</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small">Message</zn-button>
+      <zn-button>Message</zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -195,8 +195,8 @@ Example showing how to use tiles for a file browser interface.
     <zn-icon slot="image" size="36" src="description" color="error"></zn-icon>
     <zn-tile-property slot="properties" caption="Modified">2 days ago</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="download" square></zn-button>
-      <zn-button size="small" color="transparent" icon="more_vert" square></zn-button>
+      <zn-button color="transparent" icon="download" square></zn-button>
+      <zn-button color="transparent" icon="more_vert" square></zn-button>
     </div>
   </zn-tile>
 
@@ -204,8 +204,8 @@ Example showing how to use tiles for a file browser interface.
     <zn-icon slot="image" size="36" src="description" color="success"></zn-icon>
     <zn-tile-property slot="properties" caption="Modified">Last week</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="transparent" icon="download" square></zn-button>
-      <zn-button size="small" color="transparent" icon="more_vert" square></zn-button>
+      <zn-button color="transparent" icon="download" square></zn-button>
+      <zn-button color="transparent" icon="more_vert" square></zn-button>
     </div>
   </zn-tile>
 </zn-sp>
@@ -262,7 +262,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$299</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">In Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 
@@ -271,7 +271,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$399</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">Low Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 
@@ -280,7 +280,7 @@ Example showing tiles used for a product catalog with images and pricing.
     <zn-tile-property slot="properties" caption="Price">$79</zn-tile-property>
     <zn-tile-property slot="properties" caption="Stock">In Stock</zn-tile-property>
     <div slot="actions">
-      <zn-button size="small" color="primary">Add to Cart</zn-button>
+      <zn-button color="primary">Add to Cart</zn-button>
     </div>
   </zn-tile>
 </zn-sp>

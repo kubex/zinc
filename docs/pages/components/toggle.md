@@ -340,10 +340,10 @@ Toggles provide several methods for programmatic control:
 <div>
   <zn-toggle id="method-toggle">Programmatic control</zn-toggle>
   <br /><br />
-  <zn-button id="click-btn" size="small">Toggle State</zn-button>
-  <zn-button id="focus-btn" size="small" color="info">Focus Toggle</zn-button>
-  <zn-button id="blur-btn" size="small" color="secondary">Blur Toggle</zn-button>
-  <zn-button id="validate-btn" size="small" color="warning">Check Validity</zn-button>
+  <zn-button id="click-btn">Toggle State</zn-button>
+  <zn-button id="focus-btn" color="info">Focus Toggle</zn-button>
+  <zn-button id="blur-btn" color="secondary">Blur Toggle</zn-button>
+  <zn-button id="validate-btn" color="warning">Check Validity</zn-button>
 </div>
 
 <script type="module">

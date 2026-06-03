@@ -169,7 +169,7 @@ By default, rows can be selected by clicking. Selected rows are tracked and can 
     {"key":"status","label":"Status"}
   ]'>
 
-  <zn-button slot="delete-action" color="error" icon="delete" size="x-small">
+  <zn-button slot="delete-action" color="error" icon="delete">
     Delete Selected
   </zn-button>
 
@@ -208,15 +208,15 @@ Add action buttons to the table header for performing operations on selected row
     {"key":"status","label":"Status"}
   ]'>
 
-  <zn-button slot="delete-action" color="error" icon="delete" size="x-small">
+  <zn-button slot="delete-action" color="error" icon="delete">
     Delete Selected
   </zn-button>
 
-  <zn-button slot="modify-action" color="info" icon="edit" size="x-small">
+  <zn-button slot="modify-action" color="info" icon="edit">
     Edit Selected
   </zn-button>
 
-  <zn-button slot="create-action" color="success" icon="add" size="x-small">
+  <zn-button slot="create-action" color="success" icon="add">
     Create New
   </zn-button>
 

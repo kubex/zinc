@@ -149,17 +149,17 @@ Use the `action-{value}` slot to add interactive elements (buttons, links, etc.)
 ```html:preview
 <zn-priority-list id="action-list" label="Task Queue">
   <div value="deploy">Deploy to Production</div>
-  <zn-button slot="action-deploy" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=deploy]').remove()">
+  <zn-button slot="action-deploy" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=deploy]').remove()">
     <zn-icon src="delete" size="16"></zn-icon>
   </zn-button>
 
   <div value="review">Code Review</div>
-  <zn-button slot="action-review" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=review]').remove()">
+  <zn-button slot="action-review" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=review]').remove()">
     <zn-icon src="delete" size="16"></zn-icon>
   </zn-button>
 
   <div value="test">Run Test Suite</div>
-  <zn-button slot="action-test" size="small" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=test]').remove()">
+  <zn-button slot="action-test" variant="text" theme="danger" onclick="this.closest('zn-priority-list').querySelector('[value=test]').remove()">
     <zn-icon src="delete" size="16"></zn-icon>
   </zn-button>
 </zn-priority-list>

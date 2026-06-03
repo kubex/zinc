@@ -705,28 +705,24 @@ export default class ZnDataTable extends ZincElement {
             <zn-button @click="${this.page !== 1 ? this.goToFirstPage : undefined}"
                        ?disabled="${this.page === 1}"
                        icon-size="16"
-                       size="small"
                        icon="keyboard_double_arrow_left"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== 1 ? this.goToPreviousPage : undefined}"
                        ?disabled="${this.page === 1}"
                        icon-size="16"
-                       size="small"
                        icon="chevron_left"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== this.totalPages ? this.goToNextPage : undefined}"
                        ?disabled="${this.page === this.totalPages}"
                        icon-size="16"
-                       size="small"
                        icon="chevron_right"
                        outline>
             </zn-button>
             <zn-button @click="${this.page !== this.totalPages ? this.goToLastPage : undefined}"
                        ?disabled="${this.page === this.totalPages}"
                        icon-size="16"
-                       size="small"
                        icon="keyboard_double_arrow_right"
                        outline>
             </zn-button>
@@ -749,7 +745,6 @@ export default class ZnDataTable extends ZincElement {
         <zn-button @click="${this.selectAll}"
                    id="select-all-rows"
                    color="transparent"
-                   size="x-small"
                    icon="indeterminate_check_box"
                    icon-size="22"
                    icon-color="primary"
@@ -762,7 +757,6 @@ export default class ZnDataTable extends ZincElement {
       actions.push(html`
         <zn-button @click="${this.clearSelectedRows}"
                    color="transparent"
-                   size="x-small"
                    icon="disabled_by_default"
                    icon-size="22"
                    tooltip="Clear Selection"
@@ -1097,7 +1091,6 @@ export default class ZnDataTable extends ZincElement {
       <td class="table__cell table__cell--expander">
         <zn-button
           color="transparent"
-          size="x-small"
           icon="${icon}"
           icon-size="18"
           aria-label="${expanded ? 'Collapse row' : 'Expand row'}"
@@ -1324,7 +1317,6 @@ export default class ZnDataTable extends ZincElement {
         <zn-dropdown placement="bottom-end">
           <zn-button slot="trigger"
                      icon="more_vert"
-                     size="small"
                      color="transparent"
                      icon-size="24"
                      aria-label="Row actions">

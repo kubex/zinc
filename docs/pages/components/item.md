@@ -100,8 +100,8 @@ Example of multiple actions in a description item.
   <div><strong>Postal Code</strong> Example here </div>
   <div><strong>Country</strong> Example here </div>
   
-  <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>
-  <zn-button id="address-modal" slot="actions" size="x-small" color="secondary" modal>Edit</zn-button>
+  <zn-button id="address-modal" slot="actions" color="secondary" modal>Edit</zn-button>
+  <zn-button id="address-modal" slot="actions" color="secondary" modal>Edit</zn-button>
   
 </zn-item>
 ```

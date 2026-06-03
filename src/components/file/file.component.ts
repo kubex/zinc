@@ -552,7 +552,6 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                   class="input__delete"
                   color="transparent"
                   icon="close"
-                  size="content"
                   icon-size="18"
                   @click="${this.removeFile}"
                   part="delete"></zn-button>` : ''}
@@ -594,7 +593,6 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
             class="droparea__clear"
             icon="close"
             icon-size="18"
-            size="x-small"
             color="default"
             outline
             ?disabled=${this.disabled}
@@ -619,7 +617,6 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                   class="droparea__upload"
                   icon="cloud_upload"
                   icon-size="20"
-                  size="small"
                   color="default"
                   outline
                   ?disabled=${this.disabled}
@@ -655,7 +652,6 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
           ?disabled=${this.disabled}
           exportparts="base:button__base"
           part="button"
-          size="small"
           outline>
           ${buttonText}
         </zn-button>

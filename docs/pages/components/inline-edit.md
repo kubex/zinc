@@ -796,10 +796,10 @@ You can control the inline edit component programmatically using its methods:
   </zn-inline-edit>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="get-value-btn" size="small">Get Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="get-value-btn">Get Value</zn-button>
   </div>
 </div>
 

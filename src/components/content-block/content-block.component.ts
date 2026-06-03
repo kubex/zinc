@@ -209,8 +209,7 @@ export default class ContentBlock extends ZincElement {
             <slot name="actions"><small>${this.time}</small></slot>
             ${showActions ? html`
               <zn-dropdown>
-                <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent"
-                           size="content"></zn-button>
+                <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent"></zn-button>
                 <zn-menu>
                   <zn-menu-item @click="${this._toggleHtml}">
                     Show HTML

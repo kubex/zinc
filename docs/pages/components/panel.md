@@ -88,8 +88,8 @@ Use the `footer` slot to add footer content to the panel.
   </div>
 
   <div slot="footer">
-    <zn-button size="small">Save</zn-button>
-    <zn-button size="small" color="secondary">Cancel</zn-button>
+    <zn-button>Save</zn-button>
+    <zn-button color="secondary">Cancel</zn-button>
   </div>
 </zn-panel>
 ```
@@ -289,7 +289,7 @@ All panel features can be combined to create rich, complex layouts.
   shadow>
 
   <zn-chip slot="actions" icon="settings" type="info">Configure</zn-chip>
-  <zn-button slot="actions" icon="refresh" size="x-small" color="transparent" square></zn-button>
+  <zn-button slot="actions" icon="refresh" color="transparent" square></zn-button>
 
   <div style="padding: 20px;">
     <h3>Dashboard Overview</h3>
@@ -297,8 +297,8 @@ All panel features can be combined to create rich, complex layouts.
   </div>
 
   <div slot="footer">
-    <zn-button size="small" color="success">Save Changes</zn-button>
-    <zn-button size="small" color="secondary">Cancel</zn-button>
+    <zn-button color="success">Save Changes</zn-button>
+    <zn-button color="secondary">Cancel</zn-button>
   </div>
 </zn-panel>
 ```

@@ -6,7 +6,7 @@ describe('<zn-page>', () => {
   it('renders header actions and generated tabs', async () => {
     const el = await fixture<ZnPage>(html`
       <zn-page caption="Page Title" summary="Page Summary">
-        <zn-button slot="actions" type="primary" size="small" href="/ui">UI Examples</zn-button>
+        <zn-button slot="actions" type="primary" href="/ui">UI Examples</zn-button>
 
         <zn-tab caption="Overview">Overview Content</zn-tab>
         <zn-tab caption="Tab One">Tab One Content</zn-tab>

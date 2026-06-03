@@ -357,11 +357,11 @@ You can control the datepicker programmatically using its methods:
   <zn-datepicker id="programmatic-datepicker" label="Programmatic control"></zn-datepicker>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="blur-btn" size="small">Blur</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="clear-value-btn" size="small">Clear Value</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="blur-btn">Blur</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="clear-value-btn">Clear Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
   </div>
 </div>
 

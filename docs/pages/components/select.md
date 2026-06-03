@@ -1068,11 +1068,11 @@ You can control the select programmatically using its methods:
   </zn-select>
 
   <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-    <zn-button id="show-btn" size="small">Show</zn-button>
-    <zn-button id="hide-btn" size="small">Hide</zn-button>
-    <zn-button id="focus-btn" size="small">Focus</zn-button>
-    <zn-button id="set-value-btn" size="small">Set Value</zn-button>
-    <zn-button id="check-validity-btn" size="small">Check Validity</zn-button>
+    <zn-button id="show-btn">Show</zn-button>
+    <zn-button id="hide-btn">Hide</zn-button>
+    <zn-button id="focus-btn">Focus</zn-button>
+    <zn-button id="set-value-btn">Set Value</zn-button>
+    <zn-button id="check-validity-btn">Check Validity</zn-button>
   </div>
 </div>
 

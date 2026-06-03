@@ -262,7 +262,6 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
                  icon="delete"
                  icon-size="24"
                  color="transparent"
-                 size="square"
                  @click="${(e: Event) => this._removeRule(uniqueId, e)}">
       </zn-button>`;
 

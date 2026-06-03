@@ -7,7 +7,7 @@ layout: component
 
 ```html:preview
 <zn-page caption="Page Title" summary="Page Summary">
-  <zn-button slot="actions" type="primary" size="small" href="/ui">UI Examples</zn-button>
+  <zn-button slot="actions" type="primary" href="/ui">UI Examples</zn-button>
 
   <zn-tab caption="Overview">
     Overview Content
@@ -33,8 +33,8 @@ Use `slot="actions"` to place controls in the page header action area.
 
 ```html:preview
 <zn-page caption="Customers" summary="Manage active customers">
-  <zn-button slot="actions" color="secondary" size="small">Export</zn-button>
-  <zn-button slot="actions" color="primary" size="small">New Customer</zn-button>
+  <zn-button slot="actions" color="secondary">Export</zn-button>
+  <zn-button slot="actions" color="primary">New Customer</zn-button>
 
   <zn-tab caption="Overview">
     Customer overview content

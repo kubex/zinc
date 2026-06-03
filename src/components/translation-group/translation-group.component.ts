@@ -262,7 +262,6 @@ export default class ZnTranslationGroup extends ZnPanel {
                     ${visibleLangTabs.map(code => html`
                       <zn-button
                         data-lang-btn
-                        size="x-small"
                         color="default"
                         ?outline="${code !== this._activeLanguage}"
                         @click="${() => this.switchLanguage(code)}"
@@ -273,7 +272,6 @@ export default class ZnTranslationGroup extends ZnPanel {
                       <zn-dropdown placement="bottom-end" data-lang-overflow>
                         <zn-button
                           slot="trigger"
-                          size="x-small"
                           color="default"
                           icon="keyboard_arrow_down"
                           ?outline="${!overflowLangTabs.includes(this._activeLanguage)}"
@@ -288,7 +286,6 @@ export default class ZnTranslationGroup extends ZnPanel {
                       <zn-dropdown placement="bottom-end" data-lang-add>
                         <zn-button
                           slot="trigger"
-                          size="x-small"
                           color="default"
                           outline
                         >+

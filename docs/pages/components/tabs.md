@@ -365,7 +365,7 @@ The tabs component provides multiple slots for flexible layouts.
   </zn-navbar>
 
   <div slot="actions">
-    <zn-button size="small" icon="settings">Settings</zn-button>
+    <zn-button icon="settings">Settings</zn-button>
   </div>
 
   <div slot="left">
@@ -403,8 +403,8 @@ active tab using `ref-tab`.
   </zn-navbar>
 
   <div slot="actions">
-    <zn-button ref-tab="" size="small" icon="save" color="success">Save</zn-button>
-    <zn-button ref-tab="preview" size="small" icon="print">Print</zn-button>
+    <zn-button ref-tab="" icon="save" color="success">Save</zn-button>
+    <zn-button ref-tab="preview" icon="print">Print</zn-button>
   </div>
 
   <zn-sp id="">

@@ -381,7 +381,7 @@ export default class ZnPage extends ZnTabs {
                   : null}
               </div>` : null}
 
-            <div class="content" part="content">
+            <div class="content">
               ${hasPreviousPath ? html`
                 <a href="${this.previousPath}" class="caption__back"
                    data-target="${this.previousTarget ? this.previousTarget : ''}">
@@ -389,18 +389,16 @@ export default class ZnPage extends ZnTabs {
                 </a>` : null}
 
               <div class="caption">
-                <div part="header-left" class="header__left">
-                  <span class="header__caption" part="header-caption">
+                <div class="header__left">
+                  <span class="header__caption">
                     ${hasBreadcrumb ? html`
                       <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                     <slot name="caption">${this.caption}</slot>
                   </span>
-                  ${this.summary ? html`
-                      <span class="header__description" part="header-description">${this.summary}</span>`
-                    : null}
+                  <span class="header__description">${this.summary}</span>
                 </div>
 
-                <div class="header__right" part="header-right">
+                <div class="header__right">
                   <slot name="actions"></slot>
                 </div>
               </div>
@@ -424,7 +422,7 @@ export default class ZnPage extends ZnTabs {
             ${this.tabDefinitions
               .filter(tab => tab.slotName !== null)
               .map(tab => html`
-                <div id="${tab.id}" ?selected=${tab.selected}>
+                <div id="${tab.id}" ?selected="${tab.selected}">
                   <slot name="${tab.slotName!}"></slot>
                 </div>
               `)}

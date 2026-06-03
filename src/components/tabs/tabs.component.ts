@@ -525,7 +525,7 @@ export default class ZnTabs extends ZincElement {
     return html`
       <div class="tabs">
         ${hasHeader ? html`
-          <zn-header caption="${ifDefined(this.caption)}" description="${ifDefined(this.description)}" transparent>
+          <zn-header caption="${ifDefined(this.caption)}" transparent>
             <slot name="actions" slot="actions"></slot>
           </zn-header>` : null}
         <slot name="top"></slot>

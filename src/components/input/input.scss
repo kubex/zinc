@@ -91,6 +91,7 @@
   margin: 0;
   cursor: inherit;
   -webkit-appearance: none;
+  line-height: 24px;
 }
 
 /* Color input text should use monospace font */
@@ -176,7 +177,7 @@ input[type='text'].input__control[data-color-input] {
 
 .input--x-small .input__prefix ::slotted(*),
 .input__prefix-default {
-  margin-inline-start: var(--zn-input-spacing-x-small);
+  margin-inline-start: var(--zn-spacing-x-small);
 }
 
 .input--x-small .input__suffix ::slotted(*),
@@ -244,12 +245,12 @@ input[type='text'].input__control[data-color-input] {
 
 .input--medium .input__prefix ::slotted(*),
 .input__prefix-default {
-  margin-inline-start: var(--zn-input-spacing-medium);
+  margin-inline-start: var(--zn-spacing-small);
 }
 
 .input--medium .input__suffix ::slotted(*),
 .input__suffix-default {
-  margin-inline-end: var(--zn-input-spacing-medium);
+  margin-inline-end: var(--zn-spacing-small);
 }
 
 .input--medium .input__suffix ::slotted(zn-button),
@@ -258,6 +259,20 @@ input[type='text'].input__control[data-color-input] {
 .input--medium .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
+}
+
+.input__suffix ::slotted(zn-button),
+.input__prefix ::slotted(zn-button) {
+  --zn-button-border-color: rgb(var(--zn-color-border));
+  --zn-button-border-width: 0;
+}
+
+.input__suffix ::slotted(zn-button) {
+  --zn-button-border-left-width: 1px;
+}
+
+.input__prefix ::slotted(zn-button) {
+  --zn-button-border-right-width: 1px;
 }
 
 .input--large {
@@ -398,15 +413,15 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .input--small .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-small);
+  margin-inline-start: var(--zn-spacing-x2-small);
 }
 
 .input--medium .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-medium);
+  margin-inline-start: var(--zn-spacing-x-small);
 }
 
 .input--large .input__color-swatch {
-  margin-inline-start: var(--zn-input-spacing-medium);
+  margin-inline-start: var(--zn-spacing-small);
 }
 
 .input__color-swatch-inner {

@@ -73,7 +73,7 @@
   margin: 0;
   padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap) calc(calc(var(--zn-base-px) * 3) - var(--zn-base-gap)) var(--zn-base-gap);
 
-  &.header--has-navigation{
+  &.header--has-navigation {
     padding: calc(var(--zn-base-px) * 3) var(--zn-base-gap);
   }
 
@@ -91,7 +91,7 @@
   }
 
   &--has-navigation .content {
-    min-height: 40px;
+    min-height: 36px;
   }
 
   .caption {
@@ -99,9 +99,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--zn-spacing-2x-small);
+    gap: 2px;
     max-width: 100%;
-    min-height: 40px;
+    min-height: 36px;
 
     a {
       display: flex;
@@ -115,8 +115,8 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
-    gap: 8px;
-    min-height: 40px;
+    gap: 4px;
+    min-height: 36px;
     flex-shrink: 1;
     max-width: 100%;
   }
@@ -132,7 +132,7 @@
     font-weight: var(--zn-font-weight-medium);
     font-size: var(--zn-font-size-large);
     color: rgba(var(--zn-text-panel-title), 100%);
-    line-height: 16px;
+    line-height: 18px;
     margin: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -146,7 +146,7 @@
   &__description {
     display: block;
     font-size: var(--zn-font-size-medium);
-    line-height: 16px;
+    line-height: 14px;
   }
 
   .breadcrumb {
@@ -288,17 +288,18 @@
 zn-navbar {
 
   &::part(navbar) {
-    height: 42px;
-    min-height: 42px;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
     padding-left: var(--zn-base-gap);
     margin: 0;
   }
 
   &::part(navbar-item) {
-    min-height: 42px;
+    height: 40px;
     box-sizing: border-box;
     font-size: var(--zn-font-size-medium);
-    line-height: 24px;
+    line-height: 16px;
   }
 }
 

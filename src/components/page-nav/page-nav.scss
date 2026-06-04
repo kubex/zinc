@@ -7,7 +7,7 @@
   height: 100%;
 
   --page-nav-crumb-height: 50px;
-  --page-nav-width: 200px;
+  --page-nav-width: 240px;
   --page-nav-animation-duration: 0.3s;
 
   --page-nav-bg: var(--zn-page-content-background, var(--zn-body));
@@ -48,7 +48,7 @@
   width: var(--page-nav-width);
   background-color: rgb(var(--page-nav-bg));
   overflow-y: auto;
-  padding: var(--zn-spacing-medium);
+  padding: var(--zn-base-gap) 0 var(--zn-base-gap) var(--zn-base-gap);
   @include wc.scrollbars;
 }
 
@@ -92,16 +92,16 @@
     width: 100%;
     height: var(--page-nav-crumb-height);
     background-color: rgb(var(--page-nav-bg));
-    gap: 10px;
+    gap: var(--zn-base-px);
   }
 
   .breadcrumb-menu-toggle {
     cursor: pointer;
-    margin-left: var(--zn-spacing-medium);
+    margin-left: var(--zn-base-gap);
 
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--zn-base-px);
 
 
     height: 100%;
@@ -132,7 +132,7 @@
     display: block;
     position: absolute;
     top: 0;
-    padding-top: 60px;
+    padding: 60px var(--zn-base-gap) var(--zn-base-gap) var(--zn-base-gap);
     left: calc(var(--page-nav-width) * -1);
     max-width: var(--page-nav-width);
     opacity: 0;

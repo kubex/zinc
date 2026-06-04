@@ -155,6 +155,42 @@ describe('<zn-navbar>', () => {
     expect(getComputedStyle(items[0]).borderTopRightRadius).to.equal('6px');
   });
 
+  it('keeps the left border when only the more button is visible', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar>
+        <li>One</li>
+        <li>Two</li>
+      </zn-navbar>
+    `);
+    await aTimeout(150);
+
+    const nav = el.shadowRoot!.querySelector<HTMLElement>('ul.navbar')!;
+    const more = nav.querySelector<HTMLElement>(':scope > li.more')!;
+    const items = Array.from(nav.querySelectorAll<HTMLElement>(':scope > li:not(.more)'));
+
+    Object.defineProperty(el, 'offsetWidth', {configurable: true, get: () => 100});
+    Object.defineProperty(more, 'offsetWidth', {configurable: true, get: () => 60});
+    Object.defineProperty(more, 'getBoundingClientRect', {
+      configurable: true,
+      value: () => ({width: 60})
+    });
+    items.forEach(item => {
+      Object.defineProperty(item, 'offsetWidth', {configurable: true, get: () => 150});
+      Object.defineProperty(item, 'getBoundingClientRect', {
+        configurable: true,
+        value: () => ({width: 150})
+      });
+    });
+
+    el.handleResize();
+
+    expect(nav.classList.contains('has-hidden')).to.equal(true);
+    expect(nav.classList.contains('more-only')).to.equal(true);
+    expect(items.every(item => item.classList.contains('hidden'))).to.equal(true);
+    expect(getComputedStyle(more).borderLeftWidth).to.equal('1px');
+    expect(getComputedStyle(more).borderTopLeftRadius).to.equal('6px');
+  });
+
   describe('hide-one', () => {
     it('hides when only one item is present', async () => {
       const el = await fixture<ZnNavbar>(html`

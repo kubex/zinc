@@ -268,6 +268,7 @@ export default class ZnNavbar extends ZincElement {
     }
 
     lastVisibleItem?.classList.add('last-visible');
+    this._navItems?.classList.toggle('more-only', !lastVisibleItem && this._navItems.classList.contains('has-hidden'));
   }
 
   private _getExpandableWidth(containerWidth: number): number {

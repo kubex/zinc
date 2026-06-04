@@ -287,8 +287,8 @@
 .zn-panel-bar {
   border-bottom: 1px solid rgb(var(--zn-border-color));
   background-color: rgba(var(--zn-panel), 0.9);
-  padding: 8px;
-  gap: 8px;
+  padding: var(--zn-base-px);
+  gap: var(--zn-base-px);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -301,8 +301,8 @@
 }
 
 .zn-panel-bar--large {
-  padding: 6px;
-  gap: 6px;
+  padding: var(--zn-base-px) calc(var(--zn-base-gap) + var(--zn-gutter));
+  gap: var(--zn-base-px);
 }
 
 .scroll-container {

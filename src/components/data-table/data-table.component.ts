@@ -1173,6 +1173,10 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private updateSelectAll() {
+    if (!this.selectAllButton) {
+      return;
+    }
+
     if (this.numberOfRowsSelected === this._rows.length) {
       this.selectAllButton.icon = 'check_box';
     } else {

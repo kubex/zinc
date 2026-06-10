@@ -183,6 +183,20 @@ Using shorthand notation:
 <zn-icon src="star@line" size="32"></zn-icon>
 ```
 
+### Lucide Icons
+
+Lucide icons are rendered as inline SVGs. Use `library="lucide"` or the `@lucide` and `@lu` shorthand.
+
+<a href="https://lucide.dev/icons" target="_blank">View Lucide Icons</a>
+
+```html:preview
+<zn-icon src="house" library="lucide" size="32"></zn-icon>
+<zn-icon src="cloud-upload" library="lucide" size="32"></zn-icon>
+<zn-icon src="badge-check" library="lucide" size="32"></zn-icon>
+<zn-icon src="settings-2@lucide" size="32"></zn-icon>
+<zn-icon src="circle-alert@lu" size="32" color="warning"></zn-icon>
+```
+
 ### Brand Icons
 
 Display brand logos and custom company icons using the brands library.

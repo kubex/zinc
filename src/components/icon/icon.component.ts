@@ -1,15 +1,19 @@
 import {choose} from 'lit/directives/choose.js';
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, render, unsafeCSS} from 'lit';
+import {icons} from 'lucide';
 import {property} from 'lit/decorators.js';
 import {sha256} from '../../utilities/sha256';
 import {styleMap} from "lit/directives/style-map.js";
+import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import ZincElement from '../../internal/zinc-element';
+import type {IconNode, SVGProps} from 'lucide';
 
 import styles from './icon.scss';
 
 type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
-  "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+  "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
+  "lucide";
 
 export type IconColor =
   "default"
@@ -116,6 +120,9 @@ export default class ZnIcon extends ZincElement {
         return "avatar";
       case "line":
         return "line";
+      case "lucide":
+      case "lu":
+        return "lucide";
       case 'brand':
       case 'brands':
         return "brands";
@@ -251,6 +258,7 @@ export default class ZnIcon extends ZincElement {
               ["material-two-tone", () => html`<i part="icon" class="mi mi--two-tone">${this.src}</i>`],
               ["brands", () => html`<i part="icon" class="kb">${this.src}</i>`],
               ["line", () => html`<i part="icon" class="lni lni-${this.src}"></i>`],
+              ["lucide", () => this.renderLucideIcon()],
               ["material-symbols-outlined", () => html`<i part="icon" class="mi mi--symbol-outlined">${this.src}</i>`],
               ["gravatar", () => html`<img part="icon" alt="${this.alt}"
                                            src="https://www.gravatar.com/avatar/${this.src}?s=${this.size}${this.gravatarOptions}"/>`],
@@ -283,6 +291,77 @@ export default class ZnIcon extends ZincElement {
       return matches.join('').slice(0, 2).toUpperCase();
     }
     return avatar.slice(0, 2).toUpperCase()
+  }
+
+  private renderLucideIcon() {
+    const icon = this.getLucideIcon(this.src);
+
+    if (!icon) {
+      return html`Icon not found: ${this.src ?? ''}`;
+    }
+
+    return unsafeSVG(this.getLucideSvg(icon));
+  }
+
+  private getLucideIcon(src = ''): IconNode | undefined {
+    if (!src) {
+      return undefined;
+    }
+
+    const candidates = [src, this.toPascalCase(src)];
+    const iconSet = icons as Record<string, IconNode>;
+
+    for (const candidate of candidates) {
+      if (Object.prototype.hasOwnProperty.call(iconSet, candidate)) {
+        return iconSet[candidate];
+      }
+    }
+
+    return undefined;
+  }
+
+  private toPascalCase(input: string) {
+    return input
+      .split(/[-_\s]+/)
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('');
+  }
+
+  private getLucideSvg(icon: IconNode) {
+    const children = icon
+      .map(([tag, attrs]) => `<${tag}${this.getSvgAttributes(attrs)} />`)
+      .join('');
+
+    return `
+      <svg
+        part="icon"
+        class="lucide"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >${children}</svg>
+    `;
+  }
+
+  private getSvgAttributes(attrs: SVGProps) {
+    return Object.entries(attrs)
+      .filter(([, value]) => value !== undefined)
+      .map(([name, value]) => ` ${name}="${this.escapeSvgAttribute(String(value))}"`)
+      .join('');
+  }
+
+  private escapeSvgAttribute(value: string) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 
 

@@ -30,4 +30,28 @@ describe('<zn-icon>', () => {
       'https://seccdn.libravatar.org/avatar/04e8703fcfb60849fb5c596abc8f3d7547c7e0099c3806a3ffec77a95dc02e25?s=48&d=identicon'
     );
   });
+
+  it('should render Lucide icons as inline SVGs', async () => {
+    const el = await fixture<ZnIcon>(html`
+      <zn-icon src="cloud-upload" library="lucide" size="48"></zn-icon>
+    `);
+
+    const svg = el.shadowRoot?.querySelector('svg.lucide');
+
+    expect(svg).to.exist;
+    expect(svg?.getAttribute('part')).to.equal('icon');
+    expect(svg?.querySelectorAll('path').length).to.be.greaterThan(0);
+  });
+
+  it('should support Lucide shorthand notation', async () => {
+    const el = await fixture<ZnIcon>(html`
+      <zn-icon src="circle-alert@lu" size="48"></zn-icon>
+    `);
+
+    const svg = el.shadowRoot?.querySelector('svg.lucide');
+
+    expect(el.library).to.equal('lucide');
+    expect(el.src).to.equal('circle-alert');
+    expect(svg).to.exist;
+  });
 });

@@ -516,7 +516,7 @@ declare module "utilities/sha256" {
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line";
+    type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide";
     export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & Record<never, never>);
     /**
      * @summary Short summary of the component's intended use.
@@ -558,6 +558,12 @@ declare module "components/icon/icon.component" {
         private normalizeRavatarEmail;
         render(): import("lit-html").TemplateResult<1>;
         private getAvatarInitials;
+        private renderLucideIcon;
+        private getLucideIcon;
+        private toPascalCase;
+        private getLucideSvg;
+        private getSvgAttributes;
+        private escapeSvgAttribute;
         protected getColorForAvatar(avatarInitials: string): string;
     }
 }

@@ -1,4 +1,5 @@
 import {classMap} from 'lit/directives/class-map.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
@@ -21,6 +22,7 @@ interface TabDefinition {
   uri: string | null;
   slotName: string | null;
   selected: boolean;
+  classes: string | undefined;
 }
 
 /**
@@ -158,6 +160,7 @@ export default class ZnPage extends ZnTabs {
       const uri = tab.getAttribute('uri');
       const slotName = uri ? null : `page-tab-${index}`;
       const selected = tab.hasAttribute('selected');
+      const classes = tab.getAttribute('class')?.trim() || undefined;
 
       tab.id = id;
 
@@ -165,7 +168,7 @@ export default class ZnPage extends ZnTabs {
         tab.slot = slotName!;
       }
 
-      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName, selected});
+      tabs.push({id, caption, priority, sourceIndex: index, uri, slotName, selected, classes});
     });
 
     this.tabDefinitions = tabs.sort((a, b) => this.compareTabs(a, b));
@@ -408,9 +411,9 @@ export default class ZnPage extends ZnTabs {
           ${hasNavigation ? html`
             <zn-navbar hide-one @zn-select="${this.handleNavigationSelect}">
               ${this.tabDefinitions.map(tab => tab.uri ? html`
-                <li tab-uri="${tab.uri}">${tab.caption}</li>
+                <li tab-uri="${tab.uri}" class="${ifDefined(tab.classes)}">${tab.caption}</li>
               ` : html`
-                <li tab="${tab.id}">${tab.caption}</li>
+                <li tab="${tab.id}" class="${ifDefined(tab.classes)}">${tab.caption}</li>
               `)}
               <slot name="bottom" slot="bottom"></slot>
             </zn-navbar>

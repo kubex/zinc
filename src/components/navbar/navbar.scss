@@ -530,10 +530,13 @@ button[popovertarget] {
       // Let the trigger fill the whole cell so clicking anywhere in the
       // "more" item opens the dropdown, not just the icon itself.
       padding: 0;
+      width: 40px;
+      min-width: 40px;
 
       zn-dropdown,
       zn-button[slot="trigger"] {
         height: 100%;
+        width: 100%;
       }
 
       zn-button[slot="trigger"] zn-icon {
@@ -562,8 +565,8 @@ button[popovertarget] {
 
       zn-button::part(base) {
         height: 100%;
-        padding-left: calc(var(--zn-base-gap, 8px));
-        padding-right: calc(var(--zn-base-gap, 8px));
+        padding-left: 0;
+        padding-right: 0;
         outline: none;
 
         &:hover {
@@ -592,7 +595,7 @@ button[popovertarget] {
           justify-content: left;
           background: rgb(var(--zn-panel));
           color: rgb(var(--zn-text));
-          padding: var(--zn-spacing-small);
+          padding: var(--zn-spacing-small) var(--zn-spacing-large);
 
           &:hover {
             background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));

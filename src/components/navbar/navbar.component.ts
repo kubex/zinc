@@ -566,7 +566,7 @@ export default class ZnNavbar extends ZincElement {
           <li class="more">
             <zn-dropdown placement="bottom-end" id="extended-dropdown" distance="1">
               <zn-button slot="trigger" text color="transparent">
-                <zn-icon src="arrow_right_alt" size="16"></zn-icon>
+                <zn-icon src="arrow_right_alt" size="20"></zn-icon>
               </zn-button>
               <ul id="extended-menu">
               </ul>

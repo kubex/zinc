@@ -172,9 +172,6 @@ export default class ZnButtonMenu extends ZincElement {
       if (index < visibleButtons) {
         this.shadowRoot?.querySelector('.button-menu__container')?.appendChild(button.button);
 
-        if (!button.button.hasAttribute('color')) {
-          button.button.setAttribute('color', button.button.hasAttribute('primary') ? 'primary' : button.button.hasAttribute('secondary') ? 'secondary' : 'transparent');
-        }
         if (button.button.hasAttribute('primary') || button.button.hasAttribute('secondary')) {
           button.button.setAttribute('text', "");
         }
@@ -290,7 +287,7 @@ export default class ZnButtonMenu extends ZincElement {
       })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_vert" icon-size="${this.iconSize}" color="transparent"></zn-button>
+          <zn-button slot="trigger" icon="more_horiz" icon-size="${this.iconSize}" icon-button="small"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

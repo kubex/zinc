@@ -51,9 +51,15 @@
 }
 
 .button.button--icon-button {
-  max-height: 20px;
-  height: 20px;
-  min-height: 20px;
+  width: 40px;
+  min-width: 40px;
+  padding: 6px;
+}
+
+// Small icon button: 36x36
+.button.button--icon-button.button--icon-button-small {
+  width: 36px;
+  min-width: 36px;
 }
 
 .button.button--muted-notification {
@@ -244,19 +250,17 @@
   }
 }
 
-.button--icon-button {
+.button.button--icon-button {
   --icon-button-color: rgb(var(--zn-text));
   --icon-button-hover-color: rgb(var(--zn-primary));
 
-  background: transparent;
-  border-color: var(--zn-button-border-color, transparent) !important;
+  background: rgb(var(--zn-panel));
+  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
+  border-radius: var(--zn-border-radius);
   color: var(--icon-button-color);
   font-weight: inherit;
   line-height: 0;
   margin: 0;
-  min-width: 0;
-  padding: 0;
-  width: auto;
 
   zn-icon,
   ::slotted(zn-icon) {
@@ -267,14 +271,29 @@
   }
 
   &:hover:not([disabled]), &:active:not([disabled]) {
-    background: transparent;
+    background: rgb(var(--zn-panel));
     color: var(--icon-button-hover-color);
   }
 }
 
 .button--with-icon.button--icon-button {
-  border: 0;
   margin: 0;
+}
+
+// Icon button rendered as just the icon
+.button.button--icon-button.button--plain {
+  background: transparent;
+  border-color: var(--zn-button-border-color, transparent) !important;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 0;
+
+  &:hover:not([disabled]), &:active:not([disabled]) {
+    background: transparent;
+  }
 }
 
 .button--loading-bg {

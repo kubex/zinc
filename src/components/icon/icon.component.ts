@@ -11,7 +11,7 @@ import type {IconNode, SVGProps} from 'lucide';
 
 import styles from './icon.scss';
 
-type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
+export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" |
   "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" |
   "lucide";
 

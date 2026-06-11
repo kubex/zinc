@@ -11,7 +11,7 @@ import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
-import type {IconColor} from "../icon";
+import type {IconColor, IconLibrary} from "../icon";
 import type {ZincFormControl} from '../../internal/zinc-element';
 
 import styles from './button.scss';
@@ -67,7 +67,18 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) disabled = false;
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
-  @property({type: Boolean, attribute: 'icon-button'}) iconButton = false;
+  /** Renders the button as an icon button (40x36). Pass `small` for the
+   * 36x36 variant: `icon-button` or `icon-button="small"`. */
+  @property({
+    attribute: 'icon-button',
+    converter: {
+      fromAttribute: (value: string | null) => value === 'small' ? 'small' : value !== null,
+      toAttribute: (value: boolean | 'small') => value === 'small' ? 'small' : (value ? '' : null)
+    }
+  }) iconButton: boolean | 'small' = false;
+  /** With `icon-button`, strips all button chrome (background, border, sizing)
+   * so the button renders as just the icon. */
+  @property({type: Boolean}) plain = false;
   @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
@@ -83,6 +94,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
   @property({attribute: "icon-color"}) iconColor: IconColor;
+  @property({attribute: "icon-library"}) iconLibrary: IconLibrary;
   @property() type: 'button' | 'submit' | 'reset';
 
   @property() name: string;
@@ -259,7 +271,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       case 'primary':
         return 'rgb(var(--zn-primary))';
       case 'secondary':
-        return 'var(--zn-color-neutral-500)';
+        return 'rgb(var(--zn-text))';
       case 'error':
         return 'rgb(var(--zn-color-error))';
       case 'info':
@@ -348,7 +360,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const showCancel = this.loading && this.autoClick;
     const icon = this.icon && !this.loading ? html`
         <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 20}"
-                 color="${ifDefined(this.iconColor)}"></zn-icon>`
+                 color="${ifDefined(this.iconColor)}" library="${ifDefined(this.iconLibrary)}"></zn-icon>`
       : '';
     const tag = isLink ? literal`a` : literal`button`;
     const iconButtonStyles = this.iconButton ? {
@@ -372,7 +384,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--star': this.color === 'star',
           'button--outline': this.outline,
           'button--text': (this.text && !this.outline),
-          'button--icon-button': this.iconButton,
+          'button--icon-button': !!this.iconButton,
+          'button--plain': !!this.iconButton && this.plain,
+          'button--icon-button-small': this.iconButton === 'small',
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,
           'button--with-icon': this.icon,

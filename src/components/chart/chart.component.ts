@@ -89,11 +89,18 @@ export default class ZnChart extends ZincElement {
 
   private chart?: ECharts;
   private liveTimer?: number;
+  private pendingRender = false;
 
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
     skipInitial: true,
-    callback: () => this.chart?.resize(),
+    callback: () => {
+      if (!this.chart) return;
+      this.chart.resize();
+      // The container may have just gained a non-zero size (e.g. a hidden tab
+      // became visible). If we deferred the initial render, do it now.
+      if (this.pendingRender) this.renderChart();
+    },
   });
 
   protected firstUpdated(_changedProperties: PropertyValues) {
@@ -144,12 +151,30 @@ export default class ZnChart extends ZincElement {
     }
   }
 
+  /**
+   * Applies the current option to the chart, but only once the container has a
+   * non-zero size. ECharts' sankey layout crashes ("Cannot read properties of
+   * null") when asked to render into a zero-width or zero-height container —
+   * which happens when a chart is created inside a hidden tab or a flex/grid
+   * cell that has not been laid out yet. In that case we defer the render and
+   * let the ResizeController trigger it once the container gains a size.
+   */
+  private renderChart() {
+    if (!this.chart) return;
+    if (this.chart.getWidth() === 0 || this.chart.getHeight() === 0) {
+      this.pendingRender = true;
+      return;
+    }
+    this.pendingRender = false;
+    this.chart.setOption(this.buildOption());
+  }
+
   private initChart() {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
     host.style.height = `${this.height}px`;
     this.chart = echarts.init(host);
-    this.chart.setOption(this.buildOption());
+    this.renderChart();
 
     if (this.syncGroup) {
       this.chart.group = this.syncGroup;
@@ -167,7 +192,7 @@ export default class ZnChart extends ZincElement {
         const res = await fetch(this.dataUrl);
         const newData = await res.json() as SeriesItem[];
         this.data = newData;
-        this.chart?.setOption({ ...this.buildOption() });
+        this.renderChart();
       } catch {
         /* swallow transient fetch errors */
       }
@@ -201,7 +226,7 @@ export default class ZnChart extends ZincElement {
       }
       return;
     }
-    this.chart.setOption({ ...this.buildOption() });
+    this.renderChart();
   }
 
   disconnectedCallback() {

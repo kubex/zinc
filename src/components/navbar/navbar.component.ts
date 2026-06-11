@@ -548,7 +548,7 @@ export default class ZnNavbar extends ZincElement {
             let content = html`${item.title}`;
             if (item.icon != undefined && item.icon != '') {
               content = html`
-                <zn-icon src="${item.icon}"></zn-icon>${content}`;
+                <zn-icon src="${item.icon}" size="20"></zn-icon>${content}`;
             }
             if (item.path != undefined) {
               return html`

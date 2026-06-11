@@ -48,9 +48,9 @@
 :host([icon-only]) {
   ul.navbar {
     li {
-      padding: var(--zn-spacing-small);
-      width: fit-content;
-      max-width: 50px;
+      padding: 0;
+      width: 36px;
+      min-width: 36px;
       justify-content: center;
     }
   }
@@ -228,6 +228,12 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 :host(:not([stacked]):not([icon-bar]):not([icon-only])) {
   ul.navbar {
     min-width: 180px;
+  }
+}
+
+:host([icon-only]:not([stacked]):not([icon-bar])) {
+  ul.navbar {
+    height: 32px;
   }
 }
 

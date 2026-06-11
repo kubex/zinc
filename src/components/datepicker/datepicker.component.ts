@@ -151,10 +151,40 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    * - MM: Month with leading zero (01-12)
    * - yyyy: Full year (2024)
    */
-  @property() format: string = 'MM/dd/yyyy';
+  @property() format: string = 'dd/MM/yyyy';
+
+  /** Display time selector. **/
+  @property({attribute: 'time-picker',type: Boolean, reflect: true}) timePicker?: boolean = false;
+
+  /** Display only time selector, without date. **/
+  @property({attribute: 'only-time'}) onlyTimepicker?: boolean = false;
+
+  /**
+   * Time format for display and input selector. Uses AirDatepicker format tokens.
+   * Default : hh:mm AA
+   *
+   * Possible symbols:
+   * h — hours in 12-hour mode
+   * hh — hours in 12-hour mode with leading zero
+   * H — hours in 24-hour mode
+   * HH — hours in 24-hour mode with leading zero
+   * m — minutes
+   * mm — minutes with leading zero
+   * aa — day period lower case
+   * AA — day period upper case
+   */
+  @property({attribute: 'format-time'}) timeFormat?: string = "hh:mm AA";
+  @property({attribute: 'container'}) container?: string | HTMLElement;
+
+
 
   private _instance: AirDatepicker<HTMLInputElement>;
 
+
+  get timestamp(): number {
+    const timestamp = (this.input.parentElement!.querySelector("#date-picker-timestamp")! as HTMLInputElement).value  ?? '';
+    return Number(timestamp);
+  }
 
   /** Gets the validity state object */
   get validity() {
@@ -194,6 +224,8 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   @watch('minDate', {waitUntilFirstUpdate: true})
   @watch('maxDate', {waitUntilFirstUpdate: true})
   @watch('disablePastDates', {waitUntilFirstUpdate: true})
+  @watch('timePicker', {waitUntilFirstUpdate: true})
+  @watch('timeFormat', {waitUntilFirstUpdate: true})
   handleDatepickerOptionsChange() {
     this.init();
   }
@@ -241,24 +273,44 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
       }
     }
 
-    const inputElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+    const inputElement = this.shadowRoot!.querySelector('input')! as HTMLInputElement;
     if (inputElement) {
+      const timestampField = this.shadowRoot!.querySelector("#date-picker-timestamp")! as  HTMLElement;
+
       const options: AirDatepickerOptions = {
         locale: enLocale,
         dateFormat: this.format,
         range: this.range,
         toggleSelected: false,
+        timepicker: this.timePicker,
+        onlyTimepicker: this.onlyTimepicker,
+        timeFormat: this.timeFormat,
+        container: this.container,
+        altField: timestampField,
         onSelect: ({date}) => {
-          this.handleChange();
-          // Blur the input after selection to prevent invisible keyboard navigation
-          if (date && !this.range) {
-            // For single date selection, blur immediately
-            this.input.blur();
-          } else if (date && this.range && Array.isArray(date) && date.length === 2) {
-            // For range selection, blur only after both dates are selected
-            this.input.blur();
-          }
+        // Blur the input after selection to prevent invisible keyboard navigation
+        if (this.timePicker || this.onlyTimepicker){
+          return
         }
+        if (date && !this.range) {
+          // For single date selection, blur immediately
+          this.input.blur();
+          this.handleChange();
+        } else if (date && this.range && Array.isArray(date) && date.length === 2) {
+           // For range selection, blur only after both dates are selected
+           this.input.blur();
+           this.handleChange();
+        }
+        },
+        onHide:(isAnimationComplete) => {
+          if (!isAnimationComplete) {
+            return
+          }
+
+          if (this.timePicker || this.onlyTimepicker){
+            this.handleChange();
+          }
+        },
       };
 
       if (this.minDate) {
@@ -532,8 +584,11 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     return formatted;
   }
 
-  protected updated(_changedProperties: PropertyValues) {
+  updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
+  }
+
+  firstUpdated(){
     this.init();
   }
 
@@ -617,13 +672,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    ?autofocus=${this.autofocus}
                    spellcheck=${this.spellcheck}
                    aria-describedby="help-text"
-                   @change=${this.handleChange}
                    @input=${this.handleInput}
                    @invalid=${this.handleInvalid}
                    @keydown=${this.handleKeyDown}
                    @paste=${this.handlePaste}
                    @blur=${this.handleBlur}>
-
+            <input id="date-picker-timestamp" type="hidden">
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>
             </span>

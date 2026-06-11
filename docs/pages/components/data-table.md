@@ -665,6 +665,235 @@ Available cell properties:
 - `sortValue`: Value to use for sorting (overrides text)
 - `gaid`: Google Analytics ID for tracking
 
+### Column-level cell defaults
+
+Two header-level shortcuts customise the built-in cell renderer without requiring a render function:
+
+- **`cellTemplate`** — a partial `Cell` whose properties are applied as defaults to every row's cell in that column. The row's own cell properties win on conflict, so this is the right place for column-wide defaults (a baseline `chipColor`, an `iconSrc`, a `style`, etc.) that individual rows can still override.
+- **`ifEmpty`** — a partial `Cell` used as a fallback when the row's cell has neither `text` nor `iconSrc`. Useful for showing a placeholder (em-dash, "—", a muted "n/a", etc.) so empty rows don't render as blank cells.
+
+Both apply only to the built-in renderer. If the column has a `render` or `renderTemplate` set (see [Custom cell rendering](#custom-cell-rendering) below), the render function wins and `cellTemplate` / `ifEmpty` are skipped — your function receives the row's raw cell data unchanged.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"status","label":"Status","cellTemplate":{"chipColor":"info"}},
+    {"key":"phone","label":"Phone","ifEmpty":{"text":"—","style":"italic"}}
+  ]'>
+</zn-data-table>
+```
+
+In this example the status column renders every value as an `info`-coloured chip by default; individual rows can still override `chipColor` in their own cell data. Phone cells with no text and no icon would fall back to an italic em-dash — the syntax holds regardless of whether the preview dataset happens to exercise that fallback.
+
+### Custom cell rendering
+
+By default each cell is built from its `Cell` properties — `text`, `style`, `chipColor`, `iconSrc`, `uri`, `copyable`, and so on (see [Cell Styling](#cell-styling) above). When those properties aren't enough — you need a conditional, a computed value, or markup the built-in vocabulary doesn't cover — register a **render function** on the column and take full control of its output.
+
+A render function fully replaces the default rendering for that column. The built-in chip, icon, hover, copy, and uri decorations are not applied on top — your function owns the cell.
+
+#### Function signature
+
+```ts
+type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) =>
+  TemplateResult | string;
+```
+
+**Parameters**
+
+| Name | Type | Description |
+|------|------|-------------|
+| `cell` | `Cell` | The cell object for this column. Contains `text` plus any cell-level properties set on it (`chipColor`, `iconSrc`, `uri`, `sortValue`, etc.). |
+| `row` | `Row` | The full row the cell belongs to — including `id`, `uri`, `actions`, and all of its other cells. Use this when a column's presentation depends on values in other columns. |
+| `header` | `HeaderConfig` | The header configuration for this column (`key`, `label`, and any other column-level settings). |
+
+**Return value**
+
+Either a Lit `TemplateResult` (returned from a `` html`...` `` tagged template) or a string of HTML. Strings are inserted via the `unsafeHTML` directive, so any markup is rendered as-is — sanitize values that come from untrusted sources yourself.
+
+#### Where the function can live
+
+There are three places a render function can be registered. They are resolved in this order, highest precedence first:
+
+1. **`header.render`** — an inline function placed directly on a header. Only reachable when `headers` is assigned as a JS property, because functions cannot appear in a JSON attribute.
+2. **`displayTemplates[name]`** — an instance property of the table, mapping template names to functions. Assigned from a regular `<script>`. The header references it by name via `renderTemplate`.
+3. **`<script type="zn-templates">`** — a script block placed inside the table that returns a name-to-function map. Compiled once when the table connects. The header references each template by name via `renderTemplate`. The component identifies these scripts by their `type` attribute — no `slot` attribute is required or used.
+
+The instance `displayTemplates` map overrides scripts-compiled templates per name; an inline `header.render` overrides both.
+
+#### Defining templates in HTML
+
+Place a `<script type="zn-templates">` block inside the table. The body must `return` an object mapping names to render functions. Reference each template from its header with `renderTemplate`.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email","renderTemplate":"emailLink"},
+    {"key":"date","label":"Joined","renderTemplate":"shortDate"}
+  ]'>
+
+  <script type="zn-templates">
+    return {
+      emailLink: (cell) => `<a href="mailto:${cell.text}"><code>${cell.text}</code></a>`,
+      shortDate: (cell) => new Date(cell.text).toLocaleDateString(),
+    };
+  </script>
+</zn-data-table>
+```
+
+:::warning
+The script body is compiled with `new Function()`, so this form requires `'unsafe-eval'` in your `script-src` Content-Security-Policy when one is set. Compilation runs once when the table connects.
+:::
+
+#### `displayTemplates` property
+
+Assign the same name-to-function map from a normal `<script type="module">`. This path is CSP-safe — no `unsafe-eval` required — and useful when the templates already live in your application's JavaScript.
+
+```html:preview
+<zn-data-table
+  id="dt-display-templates"
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email","renderTemplate":"emailLink"},
+    {"key":"date","label":"Joined","renderTemplate":"shortDate"}
+  ]'>
+</zn-data-table>
+
+<script type="module">
+  document.querySelector('#dt-display-templates').displayTemplates = {
+    emailLink: (cell) => `<a href="mailto:${cell.text}"><code>${cell.text}</code></a>`,
+    shortDate: (cell) => new Date(cell.text).toLocaleDateString(),
+  };
+</script>
+```
+
+#### Inline `header.render`
+
+Skip the named-template indirection and place the function directly on a header. Useful for one-off renderers that don't need to be reused. Only available when `headers` is assigned as a JS property — JSON attributes cannot carry functions.
+
+```html:preview
+<zn-data-table id="dt-inline-render" data-uri="/data/data-table.json" method="GET"></zn-data-table>
+
+<script type="module">
+  document.querySelector('#dt-inline-render').headers = [
+    { key: 'name', label: 'Name' },
+    {
+      key: 'email',
+      label: 'Email',
+      render: (cell) => `<a href="mailto:${cell.text}"><code>${cell.text}</code></a>`,
+    },
+    {
+      key: 'date',
+      label: 'Joined',
+      render: (cell) => new Date(cell.text).toLocaleDateString(),
+    },
+  ];
+</script>
+```
+
+#### Using `row` and `header`
+
+A render function can read values from sibling cells via `row.cells` — useful when a column's presentation depends on another column's data.
+
+```html:preview
+<zn-data-table
+  id="dt-row-aware"
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name","label":"Name","renderTemplate":"nameWithStatus"},
+    {"key":"email","label":"Email"}
+  ]'>
+
+  <script type="zn-templates">
+    return {
+      nameWithStatus: (cell, row) => {
+        const status = row.cells.find(c => c.column === 'status')?.text ?? '';
+        const dim = status === 'Inactive' ? 'opacity:.5;text-decoration:line-through;' : '';
+        return `<span style="${dim}">${cell.text}</span>`;
+      },
+    };
+  </script>
+</zn-data-table>
+```
+
+#### Showcase
+
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  headers='[
+    {"key":"name",    "label":"Customer", "renderTemplate":"customer"},
+    {"key":"status",  "label":"Status",   "renderTemplate":"pulse"},
+    {"key":"address", "label":"Address",  "renderTemplate":"marquee"},
+    {"key":"date",    "label":"Joined",   "renderTemplate":"yearsAgo"}
+  ]'>
+
+  <script type="zn-templates">
+    const initials = (s) => s.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+    const yearsAgo = (d) => {
+      const years = Math.floor((Date.now() - new Date(d)) / (365.25 * 24 * 3600 * 1000));
+      return years <= 0 ? 'this year' : `${years} year${years > 1 ? 's' : ''} ago`;
+    };
+
+    return {
+      customer: (cell, row) => {
+      const description = row.cells.find(c => c.column === 'description')?.text ?? '';
+      return `
+        <div style="display:block;max-width: 280px;overflow: clip;"> 
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;
+                         width:28px;height:28px;border-radius:50%;
+                         background:linear-gradient(135deg,#6366f1,#ec4899);
+                         color:white;font-weight:700;font-size:11px;">
+              ${initials(cell.text)}
+            </span>
+            <strong>${cell.text}</strong>           
+          </span>
+          <div><small>${description}</small></div>
+        </div>
+        `
+        },
+
+      pulse: (cell) => {
+        const color = cell.text === 'Active' ? '#22c55e' : '#f59e0b';
+        return `
+          <span style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:${color};
+                         animation:zn-pulse 1.6s infinite;"></span>
+            ${cell.text}
+          </span>
+          <style>
+            @keyframes zn-pulse {
+              0%   { box-shadow: 0 0 0 0 ${color}80; }
+              70%  { box-shadow: 0 0 0 6px ${color}00; }
+              100% { box-shadow: 0 0 0 0 ${color}00; }
+            }
+          </style>`;
+      },
+
+      marquee: (cell) => `
+        <marquee scrollamount="3"
+                 style="max-width:200px;font-family:monospace;
+                        background:#fff7ed;padding:2px 6px;border-radius:4px;">
+          🏠 ${cell.text}
+        </marquee>`,
+
+      yearsAgo: (cell) => `<em style="opacity:.75">${yearsAgo(cell.text)}</em>`,
+    };
+  </script>
+</zn-data-table>
+```
+
 ### Row Actions
 
 Rows can have contextual actions that appear in a dropdown menu.

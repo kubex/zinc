@@ -1,10 +1,11 @@
 import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {LocalizeController} from '../../utilities/localize';
-import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './style.scss';
 
+@customElement('zn-style')
 export default class ZnStyle extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
@@ -12,7 +13,8 @@ export default class ZnStyle extends ZincElement {
   private readonly localize = new LocalizeController(this);
 
   @property() color = '';
-  @property({type: Boolean}) border = false;
+  @property() border = '';
+  @property() size = '';
   @property({type: Boolean}) error = false;
   @property({type: Boolean}) success = false;
   @property({type: Boolean}) info = false;
@@ -26,6 +28,7 @@ export default class ZnStyle extends ZincElement {
   @property() height = '';
   @property() pad = '';
   @property() margin = '';
+  @property({type: Boolean}) muted = false;
   @property({type: Boolean}) gutter = false;
   @property({attribute: 'a-margin'}) autoMargin = '';
 
@@ -81,9 +84,34 @@ export default class ZnStyle extends ZincElement {
       this.classList.toggle('h-full', true);
     }
 
-    if (this.border) {
+    // border accepts any combination of t/b/l/r, plus 'a' (or 'tblr') as a
+    // shortcut for all four sides. Existing `<zn-style border>` (boolean
+    // attribute → empty string value with attribute present) keeps rendering
+    // all four sides; pure absence renders no border.
+    const borderSides = this.hasAttribute('border')
+      ? (this.border || 'a')
+      : '';
+    if (borderSides) {
       display = 'inline-block'
-      this.classList.toggle('zn-border', true);
+      for (const c of borderSides) {
+        switch (c) {
+          case 'a':
+            this.classList.toggle('zn-border', true);
+            break;
+          case 't':
+            this.classList.toggle('zn-bt', true);
+            break;
+          case 'b':
+            this.classList.toggle('zn-bb', true);
+            break;
+          case 'l':
+            this.classList.toggle('zn-bl', true);
+            break;
+          case 'r':
+            this.classList.toggle('zn-br', true);
+            break;
+        }
+      }
     }
 
     if (this.pad) {
@@ -172,6 +200,17 @@ export default class ZnStyle extends ZincElement {
             break;
         }
       }
+    }
+
+    if (this.muted) {
+      display = 'inline-block';
+      this.classList.toggle('zn-muted', true);
+    }
+
+    // size: xs/s/l/xl each toggle a sizing class. 'm' (and empty) are the
+    // default and apply no class.
+    if (this.size && this.size !== 'm') {
+      this.classList.toggle('zn-size-' + this.size, true);
     }
 
     if (this.display) {

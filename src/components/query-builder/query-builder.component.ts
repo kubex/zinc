@@ -13,6 +13,7 @@ import type {ZnChangeEvent} from "../../events/zn-change";
 import type {ZnInputEvent} from "../../events/zn-input";
 
 import styles from './query-builder.scss';
+import type ZnDatepicker from "../datepicker";
 
 export type QueryBuilderData = QueryBuilderItem[];
 
@@ -22,10 +23,24 @@ export interface QueryBuilderItem {
   type?: QueryBuilderType;
   options?: QueryBuilderOptions;
   operators: QueryBuilderOperators[];
+  dateSubmitFormat?: QueryBuilderDateSubmitFormat;
   maxOptionsVisible?: string;
 }
 
-export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'number';
+/**
+ * Controls how `date` and `dateTime` filter values are serialized when the
+ * query is submitted.
+ *
+ * - `'iso'` — RFC 3339 / ISO 8601 (e.g. `2026-06-09T16:05:00Z`).
+ * - `'timestamp'` — Unix timestamp in seconds since epoch.
+ * - `'legacy'` — whatever format the current system emits. Kept so existing
+ *                   backends keep working while consumers migrate to one of the
+ *                   formats above. - DEFAULT
+ */
+export type QueryBuilderDateSubmitFormat = 'iso' | 'timestamp' | 'legacy';
+
+export type QueryBuilderType = 'bool' | 'boolean' | 'date' | 'dateTime' | 'number';
+
 
 export interface QueryBuilderOptions {
   [key: string | number]: string | number;
@@ -187,6 +202,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
             </zn-option>`)}
         </zn-select>
         <input id="main-input" name="${this.name}" value="${this.value}" hidden>
+        <div id="air-datepicker-query-builder-container" class="air-datepicker-global-container"></div>
       </div>
     `;
   }
@@ -214,6 +230,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     if (filter === undefined) return;
 
     const uniqueId = Math.random().toString(36).substring(7);
+
     this._selectedRules.set(uniqueId, {
       id: filter.id,
       name: filter.name,
@@ -306,7 +323,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
   }
 
   private _createInput(filter: QueryBuilderItem, uniqueId: string, selectedComparator: QueryBuilderOperators) {
-    let input: ZnSelect | ZnInput | null;
+    let input: ZnSelect | ZnInput | ZnDatepicker | null;
     switch (filter.type) {
       case 'bool':
       case 'boolean': {
@@ -318,7 +335,11 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
         break;
       }
       case 'date': {
-        input = this._createDateInput(uniqueId);
+        input = this._createDateInput(uniqueId, false, filter.dateSubmitFormat);
+        break;
+      }
+      case 'dateTime': {
+        input = this._createDateInput(uniqueId, true , filter.dateSubmitFormat);
         break;
       }
       default: {
@@ -373,13 +394,19 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     return litToHTML<ZnInput>(input);
   }
 
-  private _createDateInput(uniqueId: string): ZnInput | null {
+  private _createDateInput(uniqueId: string, hasTime: boolean, submitFormat: QueryBuilderDateSubmitFormat = 'legacy'): ZnDatepicker | null {
     const input = html`
-      <zn-input type="date"
-                class="query-builder__value"
-                @zn-input="${(e: ZnInputEvent) => this._updateDateValue(uniqueId, e)}">
-      </zn-input>`;
-    return litToHTML<ZnInput>(input);
+      <zn-datepicker
+        name="${uniqueId}"
+        format-time="HH:mm"
+        .container=${this.container.querySelector('#air-datepicker-query-builder-container')}
+        time-picker="${hasTime}"
+        class="query-builder__value"
+        @zn-change="${(e: ZnChangeEvent) => this._updateDateValue(uniqueId, e, submitFormat)}"
+        >
+      </zn-datepicker>
+      `;
+    return litToHTML<ZnDatepicker>(input);
   }
 
   private _createSelectInput(uniqueId: string, filter: QueryBuilderItem, selectedComparator: QueryBuilderOperators): ZnSelect | null {
@@ -426,23 +453,36 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._handleChange();
   }
 
-  private _updateDateValue(id: string, event: Event | { target: ZnSelect | ZnInput | HTMLDivElement }) {
+  private _updateDateValue(id: string, event: Event | { target: ZnDatepicker | HTMLDivElement }, submitFormat: QueryBuilderDateSubmitFormat = 'legacy') {
     const filter = this._selectedRules.get(id);
     if (!filter) return;
-    const input = event.target as ZnSelect | ZnInput;
-    const operator = filter.operator as QueryBuilderOperators;
-    let timestamp: string;
 
-    if (operator === QueryBuilderOperators.Eq || operator === QueryBuilderOperators.Neq) {
-      timestamp = (Date.parse(input.value as string) / 1000).toString();
-    } else {
-      // Dodgy logic to offset backend filter comparator values
-      // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
-      const multiplier = operator === QueryBuilderOperators.Before ? -1 : 1;
-      timestamp = (Math.floor((Date.now() - Date.parse(input.value as string)) / 1000 / 60) * multiplier).toString();
+    const input = event.target as ZnDatepicker;
+    const operator = filter.operator as QueryBuilderOperators;
+    let d: Date;
+    let value: string;
+
+    switch (submitFormat) {
+      case "legacy":
+        if (operator === QueryBuilderOperators.Eq || operator === QueryBuilderOperators.Neq) {
+          value = (input.timestamp / 1000).toString();
+        } else {
+          // Dodgy logic to offset backend filter comparator values
+          // Ref: backend/src/Infrastructure/Helpers/AdvancedFilterHelper.php:106
+          const multiplier = operator === QueryBuilderOperators.Before ? -1 : 1;
+          value = (Math.floor((Date.now() - input.timestamp) / 1000 / 60) * multiplier).toString();
+        }
+        break;
+      case "timestamp":
+        value = input.timestamp.toString();
+        break;
+      case "iso":
+        d = new Date(input.timestamp);
+        value = new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString();
+        break;
     }
 
-    filter.value = timestamp as string;
+    filter.value = value;
 
     this._selectedRules.set(id, filter);
     this._handleChange();
@@ -458,6 +498,7 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
     this._selectedRules.set(id, filter);
     this._handleChange();
   }
+
 
   private updateInValue(id: string, event: Event) {
     const filter = this._selectedRules.get(id);

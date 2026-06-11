@@ -349,6 +349,7 @@ export default class ZnDropdown extends ZincElement {
         exportparts="popup:base__popup"
         id="dropdown"
         placement=${this.placement}
+        distance=${this.distance}
         skidding=${this.skidding}
         strategy=${this.hoist ? 'fixed' : 'absolute'}
         flip

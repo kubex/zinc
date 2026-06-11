@@ -269,6 +269,10 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       border-top-right-radius: 6px;
     }
 
+    &.has-hidden > li.more {
+      border-top-right-radius: 6px;
+    }
+
     &.more-only > li.more {
       border-left-width: 1px;
       border-top-left-radius: 6px;
@@ -534,16 +538,33 @@ button[popovertarget] {
 
       zn-button[slot="trigger"] zn-icon {
         transition: transform 200ms ease-in-out;
+        --icon-color: var(--navbar-link-color, var(--zn-text-menu-link-color));
       }
 
       zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
         transform: rotate(90deg);
+        --icon-color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
+      }
+
+      &:has(zn-dropdown[open]) {
+        background: rgb(var(--zn-panel));
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: auto 0 -1px 0;
+          height: 1px;
+          border-radius: 0;
+          background: rgb(var(--zn-panel));
+          z-index: 1;
+        }
       }
 
       zn-button::part(base) {
         height: 100%;
         padding-left: calc(var(--zn-base-gap, 8px));
         padding-right: calc(var(--zn-base-gap, 8px));
+        outline: none;
 
         &:hover {
           background-color: transparent;
@@ -551,7 +572,13 @@ button[popovertarget] {
       }
 
       ul#extended-menu {
-        box-shadow: var(--zn-shadow-medium);
+        box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+        border: 1px solid rgb(var(--zn-border-color));
+        border-top: 0;
+        border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
+        overflow: hidden;
+        position: relative;
+        inset-inline-end: -1px;
         background: rgb(var(--zn-panel));
         display: flex;
         flex-direction: column;

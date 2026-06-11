@@ -52,6 +52,12 @@
       width: 36px;
       min-width: 36px;
       justify-content: center;
+
+      // Hover is the plain tab tint — without the body-coloured ::after
+      // backdrop the generic hover paints, which reads as white
+      &:hover:not(.active):not(.zn-tb-active):not(.more)::after {
+        display: none;
+      }
     }
   }
 }
@@ -512,10 +518,7 @@ button[popovertarget] {
   flex-shrink: 0;
   margin: 0;
   display: flex;
-  align-items: center;
-  width: fit-content;
-  height: 40px;
-  gap: var(--zn-spacing-2x-small);
+  gap: var(--zn-spacing-x-small);
   padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 

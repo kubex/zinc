@@ -50,18 +50,6 @@
   }
 }
 
-.button.button--icon-button {
-  width: 40px;
-  min-width: 40px;
-  padding: 6px;
-}
-
-// Small icon button: 36x36
-.button.button--icon-button.button--icon-button-small {
-  width: 36px;
-  min-width: 36px;
-}
-
 .button.button--muted-notification {
   --notification-color: rgb(var(--zn-color-info));
 }
@@ -250,17 +238,33 @@
   }
 }
 
+/**
+ * Icon buttons
+ *
+ * Standard:  40x36, white background, 1px border, 6px radius
+ * Small:     36x36 (`icon-button="small"`)
+ * Plain:     either size without the background and border (`plain`)
+ *
+ * Doubled-up selector so the icon-button design out-cascades the color
+ * variant combos (.button--standard.button--secondary etc.)
+ */
 .button.button--icon-button {
   --icon-button-color: rgb(var(--zn-text));
   --icon-button-hover-color: rgb(var(--zn-primary));
 
+  width: 40px;
+  min-width: 40px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding: 6px;
+  margin: 0;
   background: rgb(var(--zn-panel));
   border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
   border-radius: var(--zn-border-radius);
   color: var(--icon-button-color);
   font-weight: inherit;
   line-height: 0;
-  margin: 0;
 
   zn-icon,
   ::slotted(zn-icon) {
@@ -270,29 +274,34 @@
     line-height: 0;
   }
 
+  // Hovers tint the background only — the icon keeps its set colour
   &:hover:not([disabled]), &:active:not([disabled]) {
-    background: rgb(var(--zn-panel));
-    color: var(--icon-button-hover-color);
+    background: rgba(var(--zn-color-tab), 0.5);
   }
-}
 
-.button--with-icon.button--icon-button {
-  margin: 0;
-}
+  &.button--icon-button-small {
+    width: 36px;
+    min-width: 36px;
+  }
 
-// Icon button rendered as just the icon
-.button.button--icon-button.button--plain {
-  background: transparent;
-  border-color: var(--zn-button-border-color, transparent) !important;
-  width: auto;
-  min-width: 0;
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  padding: 0;
-
-  &:hover:not([disabled]), &:active:not([disabled]) {
+  &.button--plain {
     background: transparent;
+    border-color: var(--zn-button-border-color, transparent) !important;
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+
+  // `no-hover`: keep the resting background on hover/active
+  &.button--no-hover {
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-panel));
+    }
+
+    &.button--plain:hover:not([disabled]), &.button--plain:active:not([disabled]) {
+      background: transparent;
+    }
   }
 }
 

@@ -76,9 +76,11 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
       toAttribute: (value: boolean | 'small') => value === 'small' ? 'small' : (value ? '' : null)
     }
   }) iconButton: boolean | 'small' = false;
-  /** With `icon-button`, strips all button chrome (background, border, sizing)
-   * so the button renders as just the icon. */
+  /** With `icon-button`, removes the white background and border while
+   * keeping the button's size. */
   @property({type: Boolean}) plain = false;
+  /** Disables the hover background, for contexts where the tint doesn't fit. */
+  @property({type: Boolean, attribute: 'no-hover'}) noHover = false;
   @property({type: Boolean, attribute: 'panel-bg'}) panelBackground = false;
 
   @property({attribute: 'dropdown-closer', type: Boolean}) dropdownCloser = false;
@@ -386,6 +388,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--text': (this.text && !this.outline),
           'button--icon-button': !!this.iconButton,
           'button--plain': !!this.iconButton && this.plain,
+          'button--no-hover': this.noHover,
           'button--icon-button-small': this.iconButton === 'small',
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,

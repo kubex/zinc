@@ -244,12 +244,13 @@ export default class ZnExpandingAction extends ZincElement {
   render() {
     return html`
       ${this.method === 'fill' ? html`
-        <zn-button color="transparent"
-                   class="expanding-action__button"
+        <zn-button class="expanding-action__button"
                    @click="${this.handleIconClicked}"
                    icon="${this.icon}"
                    icon-color="${this.color}"
-                   icon-size="20">
+                   icon-size="20"
+                   icon-button="small"
+                   plain>
         </zn-button>` : nothing}
       <div
         class="${classMap({
@@ -273,10 +274,11 @@ export default class ZnExpandingAction extends ZincElement {
                    placement="bottom-end">
         <zn-button slot="trigger"
                    class="expanding-action__button"
-                   color="transparent"
                    icon="${this.icon}"
                    icon-color="${this.color}"
                    icon-size="20"
+                   icon-button="small"
+                   plain
                    notification="${this.count || nothing}"
                    @click="${this.handleIconClicked}">
         </zn-button>

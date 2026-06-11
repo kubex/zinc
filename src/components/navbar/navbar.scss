@@ -79,11 +79,11 @@
 ul.navbar {
   li {
     padding-top: 0;
-    font-size: var(--navbar-link-font-size, var(--zn-text-navbar-link-font-size));
-    line-height: var(--navbar-link-line-height, var(--zn-text-navbar-link-line-height));
-    font-weight: var(--navbar-link-font-weight, var(--zn-text-navbar-link-font-weight));
+    font-size: var(--navbar-link-font-size, var(--zn-text-menu-link-font-size));
+    line-height: var(--navbar-link-line-height, var(--zn-text-menu-link-line-height));
+    font-weight: var(--navbar-link-font-weight, var(--zn-text-menu-link-font-weight));
     white-space: nowrap;
-    color: var(--navbar-link-color, var(--zn-text-navbar-link-color));
+    color: var(--navbar-link-color, var(--zn-text-menu-link-color));
 
     a {
       text-decoration: none;
@@ -254,7 +254,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: rgb(var(--zn-color-text));
+        color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
         border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
     }
@@ -306,7 +306,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       user-select: none;
-      font-weight: var(--navbar-link-font-weight, var(--zn-text-navbar-link-font-weight));
+      font-weight: var(--navbar-link-font-weight, var(--zn-text-menu-link-font-weight));
       padding: 0 calc(var(--zn-base-px, 8px) * 2);
       background: rgb(var(--zn-color-tab));
       transition: background-color 100ms ease-in-out;
@@ -368,6 +368,10 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       &.active, &.zn-tb-active {
         background: rgb(var(--navbar-active-colour));
+        font-size: var(--navbar-link-active-font-size, var(--zn-text-tab-link-font-size));
+        line-height: var(--navbar-link-active-line-height, var(--zn-text-tab-link-line-height));
+        font-weight: var(--navbar-link-active-font-weight, var(--zn-text-tab-link-font-weight));
+        color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
       }
 
       &.active::before, &.zn-tb-active::before {
@@ -561,7 +565,8 @@ button[popovertarget] {
           }
 
           &.active, &.zn-tb-active {
-            font-weight: 700;
+            font-weight: var(--navbar-link-active-font-weight, var(--zn-text-tab-link-font-weight));
+            color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
           }
 
           &.active::before, &.zn-tb-active::before {

@@ -287,7 +287,7 @@ export default class ZnButtonMenu extends ZincElement {
       })}">
         <div class="button-menu__container"></div>
         <zn-dropdown placement="bottom-end">
-          <zn-button slot="trigger" icon="more_horiz" icon-size="${this.iconSize}" icon-button="small"></zn-button>
+          <zn-button slot="trigger" icon="ellipsis" icon-library="lucide" icon-size="${this.iconSize}" icon-button="small"></zn-button>
           <zn-menu></zn-menu>
         </zn-dropdown>
         <slot></slot>

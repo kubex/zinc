@@ -1,0 +1,22 @@
+/**
+ * Apply a text style role defined in scss/themes/_typography.scss.
+ *
+ * Usage:
+ *   @include text-style(h2);
+ *   @include text-style(button-label);
+ *
+ * Pass $spacing: true to also emit the role's paragraph spacing
+ * as margin-block-end.
+ */
+@mixin text-style($role, $spacing: false) {
+  font-family: var(--zn-font-sans);
+  font-size: var(--zn-text-#{$role}-font-size);
+  font-weight: var(--zn-text-#{$role}-font-weight);
+  line-height: var(--zn-text-#{$role}-line-height);
+  color: var(--zn-text-#{$role}-color);
+  text-transform: var(--zn-text-#{$role}-transform);
+
+  @if $spacing {
+    margin-block-end: var(--zn-text-#{$role}-spacing);
+  }
+}

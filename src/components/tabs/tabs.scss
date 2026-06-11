@@ -112,6 +112,14 @@ h1, h2 {
     padding-top: 0
   }
 
+  // A navbar acting as a tab strip uses the tab-link text style
+  slot[name="top"]::slotted(zn-navbar) {
+    --navbar-link-font-size: var(--zn-text-tab-link-font-size);
+    --navbar-link-line-height: var(--zn-text-tab-link-line-height);
+    --navbar-link-font-weight: var(--zn-text-tab-link-font-weight);
+    --navbar-link-color: var(--zn-text-tab-link-color);
+  }
+
   #header:not(:empty) {
     display: flex;
     align-items: center;

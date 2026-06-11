@@ -195,18 +195,15 @@
   --zn-font-weight-bold: 700;
 
   /* Letter spacings */
-  --zn-letter-spacing-denser: -0.03em;
-  --zn-letter-spacing-dense: -0.015em;
   --zn-letter-spacing-normal: normal;
-  --zn-letter-spacing-loose: 0.075em;
-  --zn-letter-spacing-looser: 0.15em;
+  --zn-letter-spacing-loose: 0.5px;
 
   /* Line heights */
-  --zn-line-height-denser: 1;
-  --zn-line-height-dense: 1.4;
-  --zn-line-height-normal: 1.8;
-  --zn-line-height-loose: 2.2;
-  --zn-line-height-looser: 2.6;
+  --zn-line-height-denser: 1; // 16px
+  --zn-line-height-dense: 1.5; // 24px
+  --zn-line-height-normal: 2; // 32px
+  --zn-line-height-loose: 2.5; // 40px
+  --zn-line-height-looser: 3; // 48px
 
   /* Focus rings */
   --zn-focus-ring-color: var(--zn-color-primary-600);
@@ -253,22 +250,23 @@
 
   /* Input fonts */
   --zn-input-font-family: var(--zn-font-sans);
-  --zn-input-font-weight: var(--zn-font-weight-normal);
+  --zn-input-font-weight: var(--zn-text-input-content-font-weight);
   --zn-input-font-size-x-small: var(--zn-font-size-x-small);
   --zn-input-font-size-small: var(--zn-font-size-small);
-  --zn-input-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-font-size-medium: var(--zn-text-input-content-font-size);
   --zn-input-font-size-large: var(--zn-font-size-large);
+  --zn-input-line-height: var(--zn-text-input-content-line-height);
   --zn-input-letter-spacing: var(--zn-letter-spacing-normal);
 
   /* Input colors */
-  --zn-input-color: var(--zn-color-neutral-800);
+  --zn-input-color: var(--zn-text-input-content-color);
   --zn-input-color-hover: var(--zn-color-neutral-800);
   --zn-input-color-focus: var(--zn-color-neutral-700);
   --zn-input-color-disabled: var(--zn-color-neutral-800);
   --zn-input-icon-color: var(--zn-color-neutral-500);
   --zn-input-icon-color-hover: var(--zn-color-neutral-600);
   --zn-input-icon-color-focus: var(--zn-color-neutral-600);
-  --zn-input-placeholder-color: var(--zn-color-neutral-500);
+  --zn-input-placeholder-color: var(--zn-text-input-placeholder-color);
   --zn-input-placeholder-color-disabled: var(--zn-color-neutral-600);
 
   /* Input spacing */
@@ -281,9 +279,11 @@
   --zn-input-focus-ring-offset: 0;
 
   --zn-input-label-font-size-small: var(--zn-font-size-small);
-  --zn-input-label-font-size-medium: var(--zn-font-size-medium);
+  --zn-input-label-font-size-medium: var(--zn-text-input-label-font-size);
   --zn-input-label-font-size-large: var(--zn-font-size-large);
-  --zn-input-label-color: var(--zn-color-neutral-900);
+  --zn-input-label-font-weight: var(--zn-text-input-label-font-weight);
+  --zn-input-label-line-height: var(--zn-text-input-label-line-height);
+  --zn-input-label-color: var(--zn-text-input-label-color);
 
   /* Help text */
   --zn-input-help-text-font-size-small: var(--zn-font-size-x-small);

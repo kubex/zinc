@@ -79,9 +79,11 @@
 ul.navbar {
   li {
     padding-top: 0;
-    font-size: var(--zn-font-size-medium);
+    font-size: var(--navbar-link-font-size, var(--zn-text-navbar-link-font-size));
+    line-height: var(--navbar-link-line-height, var(--zn-text-navbar-link-line-height));
+    font-weight: var(--navbar-link-font-weight, var(--zn-text-navbar-link-font-weight));
     white-space: nowrap;
-    color: rgb(var(--zn-color-muted-text));
+    color: var(--navbar-link-color, var(--zn-text-navbar-link-color));
 
     a {
       text-decoration: none;
@@ -304,7 +306,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       user-select: none;
-      font-weight: 500;
+      font-weight: var(--navbar-link-font-weight, var(--zn-text-navbar-link-font-weight));
       padding: 0 calc(var(--zn-base-px, 8px) * 2);
       background: rgb(var(--zn-color-tab));
       transition: background-color 100ms ease-in-out;

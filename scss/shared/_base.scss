@@ -8,8 +8,7 @@ Apply default styles to the document, and shadow documents
 
   font-feature-settings: normal;
   font-variation-settings: normal;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--zn-text-paragraph-font-size);
 
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0%);
@@ -71,33 +70,32 @@ small {
   visibility: hidden;
 }
 
+p {
+  font-size: var(--zn-text-paragraph-font-size);
+  line-height: var(--zn-text-paragraph-line-height);
+  font-weight: var(--zn-text-paragraph-font-weight);
+}
+
 h1, h2, h3, h4, h5, h6 {
-  font-weight: var(--zn-font-weight-medium);
   color: rgb(var(--zn-text-heading));
 }
 
-h6 {
-  font-size: var(--zn-font-size-x-small);
-}
-
-h5 {
-  font-size: var(--zn-font-size-small);
-}
-
-h4 {
-  font-size: var(--zn-font-size-medium);
-}
-
-h3 {
-  font-size: var(--zn-font-size-large);
+h1 {
+  font-size: var(--zn-text-h1-font-size);
+  line-height: var(--zn-text-h1-line-height);
+  font-weight: var(--zn-text-h1-font-weight);
 }
 
 h2 {
-  font-size: var(--zn-font-size-x-large);
+  font-size: var(--zn-text-h2-font-size);
+  line-height: var(--zn-text-h2-line-height);
+  font-weight: var(--zn-text-h2-font-weight);
 }
 
-h1 {
-  font-size: var(--zn-font-size-2x-large);
+h3, h4, h5, h6 {
+  font-size: var(--zn-text-h3-font-size);
+  line-height: var(--zn-text-h3-line-height);
+  font-weight: var(--zn-text-h3-font-weight);
 }
 
 kbd {

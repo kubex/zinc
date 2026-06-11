@@ -648,7 +648,7 @@ your HTML like this:
 <style>
   .icon-search {
     border: solid 1px var(--zn-panel-border-color);
-    border-radius: var(--zn-border-radius-medium);
+    border-radius: var(--zn-border-radius);
     padding: var(--zn-spacing-medium);
   }
 
@@ -693,7 +693,7 @@ your HTML like this:
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--zn-border-radius-medium);
+    border-radius: var(--zn-border-radius);
     font-size: 24px;
     width: 2em;
     height: 2em;

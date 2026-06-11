@@ -101,7 +101,7 @@ The component emits a `zn-search-change` event when the search value changes (af
 ```html:preview
 <zn-data-table-search class="search-demo" placeholder="Type to search..."></zn-data-table-search>
 
-<div class="search-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius-medium);">
+<div class="search-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
   <strong>Search Results:</strong>
   <div class="results-content">No search performed yet</div>
 </div>
@@ -143,7 +143,7 @@ The component supports slotting additional form controls that will be included i
   </zn-select>
 </zn-data-table-search>
 
-<div class="filter-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius-medium);">
+<div class="filter-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
   <strong>Search Parameters:</strong>
   <pre class="filter-content" style="margin-top: 0.5rem; font-size: 0.875rem;">No search performed yet</pre>
 </div>
@@ -194,7 +194,7 @@ The following input types are supported in the default slot and will have their 
   <input type="hidden" name="includeArchived" value="false" />
 </zn-data-table-search>
 
-<div class="advanced-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius-medium);">
+<div class="advanced-results" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
   <strong>All Search Parameters:</strong>
   <pre class="advanced-content" style="margin-top: 0.5rem; font-size: 0.875rem;">No search performed yet</pre>
 </div>
@@ -259,7 +259,7 @@ The `zn-data-table-search` component is designed to work seamlessly with the `zn
   placeholder="Search users by name or email...">
 </zn-data-table-search>
 
-<div class="search-status" style="margin: 1rem 0; padding: 0.75rem; background: var(--zn-color-primary-50); border-radius: var(--zn-border-radius-medium); font-size: 0.875rem;">
+<div class="search-status" style="margin: 1rem 0; padding: 0.75rem; background: var(--zn-color-primary-50); border-radius: var(--zn-border-radius); font-size: 0.875rem;">
   Ready to search
 </div>
 
@@ -310,7 +310,7 @@ The component implements the `ZincFormControl` interface and can be used within 
   </zn-button>
 </form>
 
-<div class="form-output" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius-medium);">
+<div class="form-output" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
   <strong>Form Data:</strong>
   <pre class="form-content" style="margin-top: 0.5rem; font-size: 0.875rem;">No form submission yet</pre>
 </div>
@@ -355,7 +355,7 @@ Use the `getFormData()` method to retrieve all form data from the search compone
   Get Form Data
 </zn-button>
 
-<div class="data-output" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius-medium);">
+<div class="data-output" style="margin-top: 1rem; padding: 1rem; background: var(--zn-color-neutral-50); border-radius: var(--zn-border-radius);">
   <strong>Form Data Object:</strong>
   <pre class="data-content" style="margin-top: 0.5rem; font-size: 0.875rem;">Click the button to retrieve form data</pre>
 </div>

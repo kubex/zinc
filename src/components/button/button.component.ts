@@ -68,14 +68,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
   /** Renders the button as an icon button (40x36). Pass `small` for the
-   * 36x36 variant: `icon-button` or `icon-button="small"`. */
+   * 36x36 variant or `round` for a 36x36 circle: `icon-button`,
+   * `icon-button="small"` or `icon-button="round"`. */
   @property({
     attribute: 'icon-button',
     converter: {
-      fromAttribute: (value: string | null) => value === 'small' ? 'small' : value !== null,
-      toAttribute: (value: boolean | 'small') => value === 'small' ? 'small' : (value ? '' : null)
+      fromAttribute: (value: string | null) => (value === 'small' || value === 'round') ? value : value !== null,
+      toAttribute: (value: boolean | 'small' | 'round') =>
+        (value === 'small' || value === 'round') ? value : (value ? '' : null)
     }
-  }) iconButton: boolean | 'small' = false;
+  }) iconButton: boolean | 'small' | 'round' = false;
   /** With `icon-button`, removes the white background and border while
    * keeping the button's size. */
   @property({type: Boolean}) plain = false;
@@ -390,6 +392,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--plain': !!this.iconButton && this.plain,
           'button--no-hover': this.noHover,
           'button--icon-button-small': this.iconButton === 'small',
+          'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
           'button--standard': !this.outline && !this.text,
           'button--with-icon': this.icon,

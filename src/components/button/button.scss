@@ -284,6 +284,20 @@
     min-width: 36px;
   }
 
+  // Round: 36x36 circle on the tab tint, muted icon by default
+  &.button--icon-button-round {
+    width: 36px;
+    min-width: 36px;
+    padding: 8px;
+    background: rgb(var(--zn-color-tab));
+    border-color: var(--zn-button-border-color, transparent) !important;
+    border-radius: var(--zn-border-radius-circle);
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-border));
+    }
+  }
+
   &.button--plain {
     background: transparent;
     border-color: var(--zn-button-border-color, transparent) !important;

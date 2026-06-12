@@ -104,14 +104,25 @@ interface HeaderConfig {
   hideColumn?: boolean;
   secondary?: boolean;
   type?: string;
-  renderTemplate?: string;
-  render?: DisplayTemplate;
   cellTemplate ?: Cell;
   ifEmpty ?:Cell;
 }
 
 type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) =>
   TemplateResult | string;
+
+
+const defaultTemplates = {
+  dateTime: ((cell) => {
+    const t = cell.text || '';
+    return html`
+      <div style="display:flex;flex-direction:column;align-items: flex-end;gap:2px;">
+        <span style="font-weight:600;">${t.slice(0, 10)}</span>
+        <span style="font-size:0.8em;opacity:0.6;">${t.slice(11)}</span>
+      </div>`
+  }) satisfies DisplayTemplate
+};
+
 
 interface DataRequest {
   page: number;
@@ -333,7 +344,7 @@ export default class ZnDataTable extends ZincElement {
   private _expandedRows: Set<string> = new Set();
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
-  private _slotTemplates: Record<string, DisplayTemplate> = {};
+  private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
   requestParams: Record<string, any> = {};
 
@@ -454,7 +465,7 @@ export default class ZnDataTable extends ZincElement {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const result = fn();
         if (result && typeof result === 'object') {
-          Object.assign(this._slotTemplates, result);
+          Object.assign(this._formatTemplates, result);
           compiledAny = true;
         }
       } catch (err) {
@@ -467,7 +478,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private getTemplate(name: string): DisplayTemplate | undefined {
-    return this.displayTemplates[name] ?? this._slotTemplates[name];
+    return this.displayTemplates[name] ?? this._formatTemplates[name];
   }
 
   disconnectedCallback() {
@@ -974,9 +985,12 @@ export default class ZnDataTable extends ZincElement {
   }
 
   renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement {
-    const fn = header?.render ?? (header?.renderTemplate
-      ? this.getTemplate(header.renderTemplate)
-      : undefined);
+    const fn = (header?.type ? this.getTemplate(header.type) : undefined);
+
+    if((!data.text && !data.iconSrc) && header?.ifEmpty !== undefined) {
+      const header2 = {...header, type: undefined, render: undefined, renderTemplate: undefined};
+      return this.renderCell({...data, ...header.ifEmpty}, row, header2)
+    }
 
     if (fn && row && header) {
       const out = fn(data, row, header);
@@ -985,10 +999,6 @@ export default class ZnDataTable extends ZincElement {
 
     if(!data || typeof data !== 'object') {
       return data;
-    }
-
-    if((!data.text && !data.iconSrc) && header?.ifEmpty !== undefined) {
-      return this.renderCell({...data, ...header.ifEmpty}, row, header)
     }
 
     if(header?.cellTemplate !== undefined) {

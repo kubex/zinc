@@ -151,7 +151,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    * - MM: Month with leading zero (01-12)
    * - yyyy: Full year (2024)
    */
-  @property() format: string = 'dd/MM/yyyy';
+  @property() format: string = 'MM/dd/yyyy';
 
   /** Display time selector. **/
   @property({attribute: 'time-picker',type: Boolean, reflect: true}) timePicker?: boolean = false;

@@ -1,3 +1,30 @@
+export function deepQuery<T extends Element = Element>(
+  selector: string,
+  root: Document | ShadowRoot | Element = document,
+): T | null {
+  const direct = root.querySelector<T>(selector);
+  if (direct) return direct;
+  for (const el of root.querySelectorAll<Element>('*')) {
+    if (el.shadowRoot) {
+      const hit = deepQuery<T>(selector, el.shadowRoot);
+      if (hit) return hit;
+    }
+  }
+  return null;
+}
+
+export function deepQueryAll<T extends Element = Element>(
+  selector: string,
+  root: Document | ShadowRoot | Element = document,
+  out: T[] = [],
+): T[] {
+  out.push(...root.querySelectorAll<T>(selector));
+  for (const el of root.querySelectorAll<Element>('*')) {
+    if (el.shadowRoot) deepQueryAll<T>(selector, el.shadowRoot, out);
+  }
+  return out;
+}
+
 export function deepQuerySelectorAll(selector: string, element: Element, stopSelector: string): Element[] {
   const arr: Element[] = [];
 

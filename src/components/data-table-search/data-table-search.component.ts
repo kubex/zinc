@@ -98,7 +98,19 @@ export default class ZnDataTableSearch extends ZincElement implements ZincFormCo
     if (!slot) return params;
 
     const elements = slot.assignedElements({flatten: true});
-    const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-multiselect', 'zn-params-select', 'zn-datepicker', 'input', 'select', 'textarea'];
+    const allowedInputs = [
+      'zn-input',
+      'zn-select',
+      'zn-query-builder',
+      'zn-multiselect',
+      'zn-params-select',
+      'zn-datepicker',
+      'input',
+      'select',
+      'textarea',
+      'zn-cols',
+      'zn-input-group',
+    ];
 
     elements.forEach((element) => {
       if (allowedInputs.includes(element.tagName.toLowerCase())) {

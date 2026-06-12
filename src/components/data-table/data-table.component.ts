@@ -3,8 +3,8 @@ import {type CSSResultGroup, html, nothing, type TemplateResult, unsafeCSS} from
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, query} from 'lit/decorators.js';
-import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {ref} from "lit/directives/ref.js";
+import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {type ZnFilterChangeEvent} from "../../events/zn-filter-change";
@@ -40,9 +40,12 @@ interface Cell {
   style?: string;
   iconSrc?: string;
   iconColor?: string;
+  iconSize?: number;
+  iconStyle?: string;
   hoverContent?: string;
   hoverPlacement?: string;
   chipColor?: string;
+  chipSize?: string;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -100,7 +103,26 @@ interface HeaderConfig {
   hideHeader?: boolean;
   hideColumn?: boolean;
   secondary?: boolean;
+  type?: string;
+  cellTemplate ?: Cell;
+  ifEmpty ?:Cell;
 }
+
+type DisplayTemplate = (cell: Cell, row: Row, header: HeaderConfig) =>
+  TemplateResult | string;
+
+
+const defaultTemplates = {
+  dateTime: ((cell) => {
+    const t = cell.text || '';
+    return html`
+      <div style="display:flex;flex-direction:column;align-items: flex-end;gap:2px;">
+        <span style="font-weight:600;">${t.slice(0, 10)}</span>
+        <span style="font-size:0.8em;opacity:0.6;">${t.slice(11)}</span>
+      </div>`
+  }) satisfies DisplayTemplate
+};
+
 
 interface DataRequest {
   page: number;
@@ -171,7 +193,7 @@ export default class ZnDataTable extends ZincElement {
   };
 
   @property({attribute: 'data-uri'}) dataUri: string;
-  @property({attribute: 'data', type: Object, reflect: true}) data: any;
+  @property({attribute: 'data', type: Object}) data: Row[] | Row = [];
   @property({attribute: 'sort-column'}) sortColumn: string;
   @property({attribute: 'sort-direction'}) sortDirection: string = "asc";
   @property({attribute: 'local-sort', type: Boolean}) localSort: boolean = false;
@@ -180,6 +202,8 @@ export default class ZnDataTable extends ZincElement {
   @property({attribute: 'wide-column'}) wideColumn: string;
   @property({attribute: 'key'}) key: string = 'id';
   @property({attribute: 'headers', type: Object}) headers: Record<string, HeaderConfig> = {};
+
+  @property({attribute: false}) displayTemplates: Record<string, DisplayTemplate> = {};
 
   // Hide header text keeping the content - e.g. Action buttons without a header
   @property({attribute: 'hide-headers', type: Object}) hiddenHeaders = '{}';
@@ -217,6 +241,7 @@ export default class ZnDataTable extends ZincElement {
 
   @property() groups = '';
 
+  @property({attribute: 'per-page-size', type:Number}) itemsPerPage:number = DEFAULT_PER_PAGE;
   @query('#select-all-rows') selectAllButton: ZnButton;
 
   // Data Table Properties
@@ -232,7 +257,7 @@ export default class ZnDataTable extends ZincElement {
     },
   });
 
-  private itemsPerPage: number = DEFAULT_PER_PAGE;
+  // private itemsPerPage: number = DEFAULT_PER_PAGE;
   private page: number = DEFAULT_PAGE;
   private totalPages: number;
 
@@ -292,7 +317,6 @@ export default class ZnDataTable extends ZincElement {
         Object.assign(requestData, params);
       }
 
-
       // Add any extra request params
       if (requestParams && typeof requestParams === 'object') {
         Object.assign(requestData, requestParams);
@@ -320,6 +344,7 @@ export default class ZnDataTable extends ZincElement {
   private _expandedRows: Set<string> = new Set();
   private _hiddenCells: Map<string, Cell[]> = new Map();
   private _secondaryHeaders: HeaderConfig[];
+  private _formatTemplates: Record<string, DisplayTemplate> = defaultTemplates;
 
   requestParams: Record<string, any> = {};
 
@@ -330,12 +355,13 @@ export default class ZnDataTable extends ZincElement {
   }
 
   render() {
+
     // If no-initial-load is set, do not invoke the Task on the first render
-    let tableBody: TemplateResult;
+    let tableBody: TemplateResult = html``;
     if (this.noInitialLoad && this._initialLoad) {
       tableBody = html`
         <slot name="empty-state"></slot>`;
-    } else {
+    } else if (this.dataUri) {
       tableBody = this._dataTask.render({
         pending: () => {
           if (this._initialLoad) {
@@ -367,6 +393,18 @@ export default class ZnDataTable extends ZincElement {
             <div>${error}</div>`
         }
       }) as TemplateResult;
+    } else if (Array.isArray(this.data) ? this.data.length > 0 : !!this.data) {
+      const rows: Row[] = Array.isArray(this.data) ? this.data : [this.data];
+      const response: Response = {
+        rows,
+        perPage: rows.length,
+        total: rows.length,
+        page: 1,
+      };
+      this._initialLoad = false;
+      this._lastTableContent = html`
+            <div>${this.renderTable(response)}</div>`;
+      tableBody = this._lastTableContent;
     }
 
     const hasActions = this.hasSlotController.test(ActionSlots.delete.valueOf())
@@ -394,6 +432,53 @@ export default class ZnDataTable extends ZincElement {
     super.connectedCallback();
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
+    this.compileSlotTemplates();
+  }
+
+  private compileSlotTemplates() {
+    // Accept both <script type="zn-templates"> and <template type="zn-templates">.
+    // Hosts that sanitize script tags (e.g. embedded console sandboxes) strip
+    // <script>, but <template> survives. For <template> we must use innerHTML
+    // (not textContent) because the parser treats its body as HTML, so tags
+    // inside JS template literals are real elements and only innerHTML
+    // serializes them back.
+    const els = this.querySelectorAll<HTMLScriptElement | HTMLTemplateElement>(
+      'script[type="zn-templates"], template[type="zn-templates"]'
+    );
+    let compiledAny = false;
+    els.forEach((el) => {
+      try {
+        let code: string;
+        if (el instanceof HTMLTemplateElement) {
+          // <template> body is parsed as HTML, so innerHTML serializes `>` in text
+          // as `&gt;` (and `<` as `&lt;`). Decode entities before eval, or arrow
+          // functions like `(x) => y` become `(x) =&gt; y` and fail to parse.
+          const decoder = document.createElement('textarea');
+          decoder.innerHTML = el.innerHTML;
+          code = decoder.value;
+        } else {
+          code = el.textContent ?? '';
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval,no-new-func
+        const fn = new Function(code);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const result = fn();
+        if (result && typeof result === 'object') {
+          Object.assign(this._formatTemplates, result);
+          compiledAny = true;
+        }
+      } catch (err) {
+        console.error('[zn-data-table] Failed to compile zn-templates:', err);
+      }
+    });
+    if (compiledAny) {
+      this.requestUpdate();
+    }
+  }
+
+  private getTemplate(name: string): DisplayTemplate | undefined {
+    return this.displayTemplates[name] ?? this._formatTemplates[name];
   }
 
   disconnectedCallback() {
@@ -618,7 +703,7 @@ export default class ZnDataTable extends ZincElement {
               'table__row--odd': (rowIndex % 2) === 1,
             })}" data-row-id="${row.id}">
               ${anyHidden ? this.renderExpanderCell(row) : nothing}
-              ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value))}
+              ${(visibleRowCells.get(row.id) || row.cells).map((value: Cell, index: number) => this.renderCellBody(index, value, row))}
               ${this.rowHasActions ? this.renderActions(row) : nothing}
             </tr>
             ${this._expandedRows.has(row.id) ? this.renderDetailsRow(row, colCount) : nothing}
@@ -899,91 +984,128 @@ export default class ZnDataTable extends ZincElement {
     };
   }
 
-  renderCell(data: Cell) {
-    if (data && typeof data === 'object') {
-      let content: TemplateResult | ZincElement = html`${data.text}`;
+  renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement {
+    const fn = (header?.type ? this.getTemplate(header.type) : undefined);
 
-      if (data.style || data.color) {
-        const styleStr = typeof data.style === 'string' ? data.style : '';
-        const tokens = new Set(styleStr.split(',').filter(Boolean));
+    if((!data.text && !data.iconSrc) && header?.ifEmpty !== undefined) {
+      const header2 = {...header, type: undefined, render: undefined, renderTemplate: undefined};
+      return this.renderCell({...data, ...header.ifEmpty}, row, header2)
+    }
 
-        const isMono = tokens.has('mono') || tokens.has('code');
-        const isBorder = tokens.has('border');
-        const isCenter = tokens.has('center');
+    if (fn && row && header) {
+      const out = fn(data, row, header);
+      return typeof out === 'string' ? html`${unsafeHTML(out)}` : out;
+    }
 
-        if (tokens.has('bold') || tokens.has('strong')) {
-          content = html`<strong>${content}</strong>`;
-        }
+    if(!data || typeof data !== 'object') {
+      return data;
+    }
 
-        if (tokens.has('italic')) {
-          content = html`<em>${content}</em>`;
-        }
+    if(header?.cellTemplate !== undefined) {
+      data = {...header.cellTemplate, ...data}
+    }
 
-        content = html`
-          <zn-style
-            font="${isMono ? 'mono' : nothing}"
-            border="${isBorder || nothing}"
-            center="${isCenter || nothing}"
-            color="${ifDefined(data.color)}">${content}
-          </zn-style>`;
+    let content: TemplateResult | ZincElement = html`${data.text}`;
+
+    if (data.style || data.color) {
+      const styleStr = typeof data.style === 'string' ? data.style : '';
+      const tokens = new Set(styleStr.split(',').filter(Boolean));
+
+      const isMono = tokens.has('mono') || tokens.has('code');
+      const isBorder = tokens.has('border');
+      const isCenter = tokens.has('center');
+      const isMuted = tokens.has('muted');
+
+      if (tokens.has('bold') || tokens.has('strong')) {
+        content = html`<strong>${content}</strong>`;
       }
 
-      if (data.uri) {
-        content = html`
-          <a href="${data.uri}"
-             data-target="${ifDefined(data.target || nothing)}"
-             gaid="${ifDefined(data.gaid || nothing)}">${content}</a>`;
+      if (tokens.has('italic')) {
+        content = html`<em>${content}</em>`;
       }
 
-      if (data.chipColor) {
-        return html`
-          <zn-chip type="${data.chipColor}">${content}</zn-chip>`;
-      }
+      content = html`
+        <zn-style
+          font="${isMono ? 'mono' : nothing}"
+          border="${isBorder || nothing}"
+          center="${isCenter || nothing}"
+          muted="${isMuted || nothing}"
+          color="${ifDefined(data.color)}">${content}
+        </zn-style>`;
+    }
 
-      if (data.hoverContent) {
-        const placement = data.hoverPlacement ?? 'top';
+    if (data.uri) {
+      content = html`
+        <a href="${data.uri}"
+           data-target="${ifDefined(data.target || nothing)}"
+           gaid="${ifDefined(data.gaid || nothing)}">${content}</a>`;
+    }
 
-        if (data.iconSrc) {
-          const src = data.iconSrc;
-          const color = data.iconColor ?? '';
+    if (data.chipColor) {
+      return html`
+        <zn-chip type="${data.chipColor}" size="${ifDefined(data.chipSize)}">${content}</zn-chip>`;
+    }
 
-          return html`
-            ${content}
-            <zn-hover-container placement="${placement}"
-                                flip>
-              <zn-icon src="${src}" color="${color}"></zn-icon>
-              <div slot="content">
-                ${unsafeHTML(data.hoverContent)}
-              </div>
-            </zn-hover-container>`;
-        }
-
-        return html`
-          <zn-hover-container placement="${placement}"
-                              flip>
-            <div slot="anchor">${content}</div>
-            ${unsafeHTML(data.hoverContent)}
-          </zn-hover-container>`;
-      }
+    if (data.hoverContent) {
+      const placement = data.hoverPlacement ?? 'top';
 
       if (data.iconSrc) {
         const src = data.iconSrc;
-        const color = data.iconColor ?? '';
+        const color = data.iconColor;
+        const size = data.iconSize;
+        const tokens = (data.iconStyle ?? '').split(',').map(s => s.trim()).filter(Boolean);
 
-        return html`
-          <zn-icon src="${src}" color="${color}"></zn-icon> ${content}`;
-      }
-
-      if (data.copyable) {
         return html`
           ${content}
-          <zn-copy-button value="${data.text}"></zn-copy-button>`;
+          <zn-hover-container placement="${placement}" flip>
+            <zn-icon
+              src="${src}"
+              size="${ifDefined(size)}"
+              color="${ifDefined(color)}"
+              ${ref(el => {
+                if (!el) return;
+                tokens.forEach(t => el.setAttribute(t, ''));
+              })}
+            ></zn-icon>
+            <div slot="content">
+              ${unsafeHTML(data.hoverContent)}
+            </div>
+          </zn-hover-container>`;
       }
 
-      return content;
+      return html`
+        <zn-hover-container placement="${placement}" flip>
+          <div slot="anchor">${content}</div>
+          ${unsafeHTML(data.hoverContent)}
+        </zn-hover-container>`;
     }
 
-    return data;
+    if (data.iconSrc) {
+      const src = data.iconSrc;
+      const color = data.iconColor;
+      const size = data.iconSize;
+      const tokens = (data.iconStyle ?? '').split(',').map(s => s.trim()).filter(Boolean);
+
+      return html`
+        <zn-icon
+          src="${src}"
+          size="${ifDefined(size)}"
+          color="${ifDefined(color)}"
+          ${ref(el => {
+            if (!el) return;
+            tokens.forEach(t => el.setAttribute(t, ''));
+          })}
+        ></zn-icon> ${content}`;
+    }
+
+    if (data.copyable) {
+      return html`
+        ${content}
+        <zn-copy-button value="${data.text}"></zn-copy-button>`;
+    }
+
+    return content;
+
   }
 
   private updateActionKeys(slotName: string) {
@@ -1053,7 +1175,7 @@ export default class ZnDataTable extends ZincElement {
     `;
   }
 
-  private renderCellBody(index: number, value: Cell) {
+  private renderCellBody(index: number, value: Cell, row: Row) {
     const filteredHeaders = Object.values(this.headers).filter((header: HeaderConfig) => {
       if (header.hideHeader || header.hideColumn) return false;
 
@@ -1061,7 +1183,8 @@ export default class ZnDataTable extends ZincElement {
 
       return !header.secondary;
     });
-    const headerKey: string = filteredHeaders[index]?.key;
+    const header: HeaderConfig | undefined = filteredHeaders[index];
+    const headerKey: string = header?.key;
 
     return html`
       <td
@@ -1071,7 +1194,7 @@ export default class ZnDataTable extends ZincElement {
           'table__cell--wide': headerKey === this.wideColumn,
           'table__cell--last': index === filteredHeaders.length - 1,
         })}">
-        <div>${this.renderCell(value)}</div>
+        <div>${this.renderCell(value, row, header)}</div>
       </td>`;
   }
 
@@ -1113,7 +1236,7 @@ export default class ZnDataTable extends ZincElement {
               return html`
                 <div class="table__details__item">
                   <div class="table__details__label">${label}</div>
-                  <div class="table__details__value">${this.renderCell(cell)}</div>
+                  <div class="table__details__value">${this.renderCell(cell, row, header)}</div>
                 </div>`;
             })}
           </div>

@@ -28,7 +28,7 @@ Menus are typically used in combination with dropdowns to display a list of acti
 
 ### Basic Menu
 
-A basic menu with simple text items.
+A basic menu with simple text items. Menus render as a white panel with a soft shadow; items use the muted menu-link text style and highlight with a subtle grey background on hover, with no separators between them.
 
 ```html:preview
 <zn-menu>
@@ -75,6 +75,27 @@ Use the `prefix` slot to add icons to menu items.
   <zn-menu-item>
     <zn-icon slot="prefix" src="delete" size="20"></zn-icon>
     Delete
+  </zn-menu-item>
+</zn-menu>
+```
+
+### Shell Variant
+
+Use `variant="shell"` for the app-shell header dropdown look: a padded, translucent panel with floating rounded items that highlight with the primary colour on hover. The variant is automatically propagated to the menu's items.
+
+```html:preview
+<zn-menu variant="shell">
+  <zn-menu-item>
+    <zn-icon slot="prefix" src="admin_panel_settings" size="24"></zn-icon>
+    Admin
+  </zn-menu-item>
+  <zn-menu-item>
+    <zn-icon slot="prefix" src="alt_route" size="24"></zn-icon>
+    Selectors
+  </zn-menu-item>
+  <zn-menu-item>
+    <zn-icon slot="prefix" src="settings" size="24"></zn-icon>
+    Settings
   </zn-menu-item>
 </zn-menu>
 ```
@@ -292,7 +313,7 @@ Menus support full keyboard navigation:
 
 ### Dividers
 
-You can add visual separators between menu items using HTML elements with `role="separator"`.
+Menu items have no built-in separators — to group items visually, add HTML elements with `role="separator"`.
 
 ```html:preview
 <zn-menu>

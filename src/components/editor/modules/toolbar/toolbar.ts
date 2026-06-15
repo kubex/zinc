@@ -168,17 +168,17 @@ class Toolbar extends QuillToolbar {
     const formats: Record<string, any> = this._quill.getFormat(range);
     if (!formats) return;
 
-    this._syncButtonState('format_bold', !!formats.bold);
-    this._syncButtonState('format_italic', !!formats.italic);
-    this._syncButtonState('format_underlined', !!formats.underline);
+    this._syncButtonState('bold@lu', !!formats.bold);
+    this._syncButtonState('italic@lu', !!formats.italic);
+    this._syncButtonState('underline@lu', !!formats.underline);
 
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);
     this._updateTextFormatMenu(formats);
     this._updateColorFormatMenu(formats);
 
-    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'match_case');
-    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'lists');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'case-sensitive@lu');
+    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'list-plus@lu');
   }
 
   private _updateHeadingFormatMenu(formats: Record<string, any>) {
@@ -248,19 +248,25 @@ class Toolbar extends QuillToolbar {
     const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
 
     let iconSrc = defaultIconSrc;
+    let iconLibrary = '';
     let iconColor = 'default';
     if (items?.length) {
       items.forEach((item: ZnMenuItem) => {
         const checked = item.checked ?? (item.hasAttribute('checked'));
         if (checked) {
           const icon = item.querySelector('zn-icon')!;
+          // zn-icon strips the `@library` suffix off `src` and stores it on the
+          // reflected `library` attribute, so carry both across — otherwise the
+          // rebuilt trigger loses the library and falls back to material.
           iconSrc = icon?.getAttribute('src') ?? iconSrc;
+          iconLibrary = icon?.getAttribute('library') ?? '';
           iconColor = 'primary';
         }
       });
     }
 
-    trigger.innerHTML = `<zn-icon src="${iconSrc}" color="${iconColor}" size="18"></zn-icon>`;
+    const libraryAttr = iconLibrary ? ` library="${iconLibrary}"` : '';
+    trigger.innerHTML = `<zn-icon src="${iconSrc}"${libraryAttr} color="${iconColor}" size="18"></zn-icon>`;
   }
 
   private _syncButtonState(icon: string, active: boolean) {

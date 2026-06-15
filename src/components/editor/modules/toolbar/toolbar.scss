@@ -43,34 +43,14 @@
     }
   }
 
-  &__dropdown-trigger {
-    width: 44px;
-    height: 28px;
-    margin: 3px 2px;
-
-    &::part(icon) {
-      margin-left: 4px;
-    }
-  }
-
-  &__format-button,
-  &__action-button,
-  &__overflow-trigger {
-    width: 28px;
-    height: 28px;
-    margin: 3px 2px;
-  }
-
-  /* Move underline icon down a bit */
-  &__format-button[icon="format_underlined"]::part(base) {
-    position: relative;
-    top: 1px;
+  &__dropdown-trigger::part(icon) {
+    margin-left: 4px;
   }
 }
 
 .color-icon {
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   display: block;
   border-radius: 100%;
   flex-shrink: 0;
@@ -90,9 +70,4 @@
       background-color: #{$color};
     }
   }
-}
-
-/* Line up unset value with color chips */
-.color-icon--unset {
-  margin-inline-end: var(--zn-spacing-x-small);
 }

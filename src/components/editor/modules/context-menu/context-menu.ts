@@ -262,45 +262,45 @@ class ContextMenu {
 
     // 2) Built-in Actions (In order they should appear)
     options.push(
-      {icon: 'format_bold', label: 'Bold', format: 'bold', order: orderCounter++},
-      {icon: 'format_italic', label: 'Italic', format: 'italic', order: orderCounter++},
-      {icon: 'format_underlined', label: 'Underline', format: 'underline', order: orderCounter++},
-      {icon: 'strikethrough_s', label: 'Strikethrough', format: 'strike', order: orderCounter++},
-      {icon: 'format_quote', label: 'Blockquote', format: 'blockquote', order: orderCounter++},
+      {icon: 'bold@lu', label: 'Bold', format: 'bold', order: orderCounter++},
+      {icon: 'italic@lu', label: 'Italic', format: 'italic', order: orderCounter++},
+      {icon: 'underline@lu', label: 'Underline', format: 'underline', order: orderCounter++},
+      {icon: 'strikethrough@lu', label: 'Strikethrough', format: 'strike', order: orderCounter++},
+      {icon: 'text-quote@lu', label: 'Blockquote', format: 'blockquote', order: orderCounter++},
     );
     if (this._featureConfig.codeEnabled !== false) {
-      options.push({icon: 'code', label: 'Inline Code', format: 'code', order: orderCounter++});
+      options.push({icon: 'code@lu', label: 'Inline Code', format: 'code', order: orderCounter++});
     }
     if (this._featureConfig.codeBlocksEnabled !== false) {
-      options.push({icon: 'code_blocks', label: 'Code Block', format: 'code-block', order: orderCounter++});
+      options.push({icon: 'square-code@lu', label: 'Code Block', format: 'code-block', order: orderCounter++});
     }
     options.push(
-      {icon: 'format_h1', label: 'Heading 1', format: 'header', value: '1', order: orderCounter++},
-      {icon: 'format_h2', label: 'Heading 2', format: 'header', value: '2', order: orderCounter++},
-      {icon: 'match_case', label: 'Normal Text', format: 'header', value: '', order: orderCounter++},
-      {icon: 'format_list_bulleted', label: 'Bulleted List', format: 'list', value: 'bullet', order: orderCounter++},
-      {icon: 'format_list_numbered', label: 'Numbered List', format: 'list', value: 'ordered', order: orderCounter++},
-      {icon: 'checklist', label: 'Checklist', format: 'list', value: 'checked', order: orderCounter++}
+      {icon: 'heading-1@lu', label: 'Heading 1', format: 'header', value: '1', order: orderCounter++},
+      {icon: 'heading-2@lu', label: 'Heading 2', format: 'header', value: '2', order: orderCounter++},
+      {icon: 'case-sensitive@lu', label: 'Normal Text', format: 'header', value: '', order: orderCounter++},
+      {icon: 'list@lu', label: 'Bulleted List', format: 'list', value: 'bullet', order: orderCounter++},
+      {icon: 'list-ordered@lu', label: 'Numbered List', format: 'list', value: 'ordered', order: orderCounter++},
+      {icon: 'list-todo@lu', label: 'Checklist', format: 'list', value: 'checked', order: orderCounter++}
     );
     if (this._featureConfig.linksEnabled !== false) {
-      options.push({icon: 'link', label: 'Link', format: 'link', value: true, order: orderCounter++});
+      options.push({icon: 'link@lu', label: 'Link', format: 'link', value: true, order: orderCounter++});
     }
     if (this._featureConfig.dividersEnabled !== false) {
-      options.push({icon: 'horizontal_rule', label: 'Divider', format: 'divider', order: orderCounter++});
+      options.push({icon: 'minus@lu', label: 'Divider', format: 'divider', order: orderCounter++});
     }
     if (this._featureConfig.attachmentsEnabled !== false) {
-      options.push({icon: 'attachment', label: 'Attachment', format: 'attachment', order: orderCounter++});
+      options.push({icon: 'paperclip@lu', label: 'Attachment', format: 'attachment', order: orderCounter++});
     }
     if (this._featureConfig.imagesEnabled !== false) {
-      options.push({icon: 'image', label: 'Image', format: 'image', order: orderCounter++});
+      options.push({icon: 'image@lu', label: 'Image', format: 'image', order: orderCounter++});
     }
     if (this._featureConfig.videosEnabled !== false) {
-      options.push({icon: 'video_camera_back', label: 'Video', format: 'video', order: orderCounter++});
+      options.push({icon: 'video@lu', label: 'Video', format: 'video', order: orderCounter++});
     }
     if (this._featureConfig.datesEnabled !== false) {
-      options.push({icon: 'calendar_today', label: 'Date', format: 'date', order: orderCounter++});
+      options.push({icon: 'calendar@lu', label: 'Date', format: 'date', order: orderCounter++});
     }
-    options.push({icon: 'format_clear', label: 'Clear Formatting', format: 'clean', order: orderCounter++});
+    options.push({icon: 'remove-formatting@lu', label: 'Clear Formatting', format: 'clean', order: orderCounter++});
 
     // Sort options by order property
     options.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));

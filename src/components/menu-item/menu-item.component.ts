@@ -239,7 +239,7 @@ export default class ZnMenuItem extends ZincElement {
         ?aria-expanded="${isSubmenuExpanded}">
         ${this.checkedPosition === 'left' ? html`
           <span part="checked-icon" class="menu-item__check">
-            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+            <zn-icon src="check@lu" size="18" aria-hidden="true"></zn-icon>
           </span>` : ''}
 
         <slot name="prefix" part="prefix" class="menu-item__prefix"></slot>
@@ -250,7 +250,7 @@ export default class ZnMenuItem extends ZincElement {
 
         ${this.checkedPosition === 'right' ? html`
           <span part="checked-icon" class="menu-item__check">
-            <zn-icon src="check_small" aria-hidden="true"></zn-icon>
+            <zn-icon src="check@lu" size="18" aria-hidden="true"></zn-icon>
           </span>` : ''}
 
         <span part="submenu-icon" class="menu-item__chevron">

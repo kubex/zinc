@@ -47,8 +47,9 @@ export default class ZnMenuItem extends ZincElement {
   /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
   @property() type: 'normal' | 'checkbox' = 'normal';
 
-  /** The item's visual style — set automatically by the parent zn-menu's `variant`. */
-  @property({reflect: true}) variant: 'default' | 'shell' = 'default';
+  /** The item's visual style. A standalone item defaults to navigation styling;
+   * a parent zn-menu sets this to `dropdown` or `shell` automatically. */
+  @property({reflect: true}) variant: 'default' | 'dropdown' | 'shell' = 'default';
 
   /** Draws the item in a checked state. */
   @property({type: Boolean, reflect: true}) checked = false;

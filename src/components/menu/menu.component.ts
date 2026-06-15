@@ -118,7 +118,7 @@ export default class ZnMenu extends ZincElement {
               <zn-menu-item @mousedown=${this.handleMouseDown}
                             @keydown=${this.handleKeyDown}
                             id="${item.confirm?.trigger}"
-                            variant="${this.variant}"
+                            variant="${this.itemVariant}"
                             confirm>
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -129,7 +129,7 @@ export default class ZnMenu extends ZincElement {
               return html`
                 <zn-menu-item value="${item.title}"
                               href="${item.path}"
-                              variant="${this.variant}"
+                              variant="${this.itemVariant}"
                               data-target="${ifDefined(item.target)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -140,7 +140,7 @@ export default class ZnMenu extends ZincElement {
                 </zn-menu-item>`;
             } else {
               return html`
-                <zn-menu-item value="${item.title}" variant="${this.variant}" data-path="${ifDefined(item.path)}">
+                <zn-menu-item value="${item.title}" variant="${this.itemVariant}" data-path="${ifDefined(item.path)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <span @click="${this.handleClick}"
@@ -252,15 +252,18 @@ export default class ZnMenu extends ZincElement {
     }
   }
 
+  /**
+   * @internal The variant applied to slotted items. A `default` menu still gives
+   * its items the `dropdown` look (muted hover, no separators) — distinct from a
+   * bare standalone menu item, which keeps the navigation styling.
+   */
+  get itemVariant(): 'dropdown' | 'shell' {
+    return this.variant === 'shell' ? 'shell' : 'dropdown';
+  }
+
   /** Keeps slotted menu items in sync with the menu's variant. */
   private propagateVariant() {
-    this.getAllItems().forEach(item => {
-      if (this.variant === 'default') {
-        item.removeAttribute('variant');
-      } else {
-        item.setAttribute('variant', this.variant);
-      }
-    });
+    this.getAllItems().forEach(item => item.setAttribute('variant', this.itemVariant));
   }
 
   private isMenuItem(item: HTMLElement) {

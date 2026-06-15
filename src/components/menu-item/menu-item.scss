@@ -1,14 +1,24 @@
 @use "../../wc";
 
 :host {
+  // Baseline — standalone items (e.g. app/sidebar navigation): primary hover
   --submenu-offset: -2px;
   --color: var(--zn-text-menu-link-color);
-  --hover-color: var(--color);
-  --hover-bg: rgba(0, 0, 0, 0.06);
+  --hover-color: rgb(var(--zn-primary));
+  --hover-bg: rgba(var(--zn-color-navigation-highlight), var(--zn-panel-highlight-opacity));
+  --active-color: rgb(var(--zn-primary));
   display: block;
 }
 
-// Shell variant — set by the parent zn-menu's `variant="shell"`
+// Dropdown — items inside a default zn-menu panel: muted hover (the text keeps
+// its colour), no separators between rows. Set by the parent zn-menu.
+:host([variant="dropdown"]) {
+  --hover-color: var(--color);
+  --hover-bg: rgba(0, 0, 0, 0.06);
+}
+
+// Shell — app-shell header dropdown look: dark text, primary hover. Set by the
+// parent zn-menu's `variant="shell"`.
 :host([variant="shell"]) {
   --color: rgb(var(--zn-text));
   --hover-color: rgb(var(--zn-primary));
@@ -22,13 +32,14 @@
 .menu-item {
   position: relative;
   display: flex;
-  align-items: center;
-  padding: var(--zn-spacing-small) var(--zn-spacing-large);
+  align-items: stretch;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
   transition: .4s fill;
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
   cursor: pointer;
+  border-bottom-width: 1px;
   width: 100%;
   text-decoration: none;
   font-size: var(--zn-text-menu-link-font-size);
@@ -37,9 +48,17 @@
   color: var(--color);
 }
 
+:host([variant="dropdown"]) .menu-item {
+  align-items: center;
+  padding: var(--zn-spacing-small) var(--zn-spacing-large);
+  border-bottom-width: 0;
+}
+
 :host([variant="shell"]) .menu-item {
+  align-items: center;
   gap: var(--zn-spacing-x-small);
   padding: var(--zn-spacing-x-small);
+  border-bottom-width: 0;
   border-radius: var(--zn-border-radius);
   line-height: 25px;
 }
@@ -88,12 +107,12 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: var(--hover-color);
+  background-color: var(--active-color);
 }
 
 .menu-item.menu-item--active .menu-item__label {
   font-weight: 700;
-  color: var(--hover-color);
+  color: var(--active-color);
 }
 
 .menu-item--rtl.menu-item--active::before {
@@ -186,10 +205,14 @@
 }
 
 :host(:hover:not([aria-disabled='true'], :focus-visible)) .menu-item,
-.menu-item--submenu-expanded,
-.menu-item--active {
+.menu-item--submenu-expanded {
   background-color: var(--hover-bg);
   color: var(--hover-color);
+}
+
+.menu-item--active {
+  background-color: var(--hover-bg);
+  color: var(--active-color);
 }
 
 :host(:focus-visible) .menu-item {

@@ -36,6 +36,7 @@ $text-styles: (
   "navbar-link": ("size": 16px, "line": 16px, "spacing": 18px, "weight": semibold, "color": muted, "transform": none),
   "tab-link": ("size": 14px, "line": 16px, "spacing": 15px, "weight": semibold, "color": default, "transform": none),
   "menu-link": ("size": 14px, "line": 16px, "spacing": 15px, "weight": normal, "color": muted, "transform": none),
+  "notification": ("size": 9px, "line": 11px, "spacing": 0, "weight": semibold, "color": white, "transform": none),
 );
 
 :root {
@@ -50,6 +51,8 @@ $text-styles: (
     --zn-text-#{$role}-font-weight: var(--zn-font-weight-#{map.get($style, "weight")});
     @if map.get($style, "color") == muted {
       --zn-text-#{$role}-color: var(--zn-text-color-muted);
+    } @else if map.get($style, "color") == white {
+      --zn-text-#{$role}-color: #fff;
     } @else {
       --zn-text-#{$role}-color: var(--zn-text-color);
     }

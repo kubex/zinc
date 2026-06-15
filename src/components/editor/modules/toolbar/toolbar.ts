@@ -3,7 +3,7 @@ import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
 import type {EditorFeatureConfig} from "../../editor.component";
 import type Attachment from "../attachment/attachment";
-import type DialogComponent from "../dialog/dialog.component";
+import type Dialog from "../dialog/dialog";
 import type Emoji from "../emoji/emoji";
 import type ToolbarComponent from "./toolbar.component";
 import type ZnDropdown from "../../../dropdown";
@@ -12,7 +12,6 @@ import type ZnMenuItem from "../../../menu-item";
 class Toolbar extends QuillToolbar {
   private readonly _quill: Quill;
   private readonly _component: ToolbarComponent;
-  private _lastDialogUri?: string;
   private _formatters: Element[] = [];
 
   constructor(quill: Quill, options: {
@@ -328,18 +327,11 @@ class Toolbar extends QuillToolbar {
   }
 
   private _openDialog(uri: string) {
-    if (this._lastDialogUri === uri) {
-      const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
-      if (!dialog) return;
-
-      dialog.dialogEl.showModal();
-    }
-
-    const dialog = document.querySelector(`zn-editor-dialog`) as DialogComponent | null;
+    const dialog = (this._quill.getModule('dialog') as Dialog | undefined)?.component;
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
-    dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load uri="${uri}"></app-space>`);
+    dialog.setContent(`<app-space id="app-editor-modal" allow-scripts auto-load loading-text="Loading, please wait..." uri="${uri}"></app-space>`);
   }
 
   private _handleOverflowUpdate = () => {

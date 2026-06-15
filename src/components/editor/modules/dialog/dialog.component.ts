@@ -32,13 +32,12 @@ export default class DialogComponent extends ZincElement {
 
     this.dialogEl.addEventListener("close", () => {
       this.open = false;
+      this.innerHTML = '';
     });
   }
 
   setContent(content: string) {
-    if (this.dialogEl) {
-      this.dialogEl.querySelector('.editor-dialog__content')!.innerHTML = content;
-    }
+    this.innerHTML = content;
   }
 
   @watch('open', {waitUntilFirstUpdate: true})
@@ -104,7 +103,7 @@ export default class DialogComponent extends ZincElement {
           @click="${() => this.dialogEl.close()}"
         ></zn-button>
         <div class="editor-dialog__content">
-          ${this._getLoadingState()}
+          <slot>${this._getLoadingState()}</slot>
         </div>
       </dialog>
     `;

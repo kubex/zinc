@@ -229,10 +229,10 @@ export default class ZnDialog extends ZincElement {
                   part="close-button"
                   exportparts="base:close-button__base"
                   class="dialog__close"
-                  icon="close"
+                  icon="x@lu"
                   icon-size="24"
-                  type="button"
-                  color="transparent"
+                  icon-button="small"
+                  plain
                   @click="${() => this.requestClose('close-button')}"
                 ></zn-button>
               </div>

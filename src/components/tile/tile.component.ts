@@ -102,7 +102,7 @@ export default class ZnTile extends ZincElement {
           <div
             class="tile__link">
             <div class="tile__left">
-              <slot name="image" part="image" class="tile__image"></slot>
+              ${hasImage ? html`<slot name="image" part="image" class="tile__image"></slot>` : html``}
               <div class="tile__content">
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>

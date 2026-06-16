@@ -1,0 +1,23 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.tile-group {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) repeat(var(--zn-tile-cols, 1), auto);
+  align-items: center;
+  column-gap: var(--zn-spacing-large);
+  row-gap: 0;
+}
+
+slot {
+  display: contents;
+}
+
+:host([divide]) ::slotted(zn-tile:not(:first-child)) {
+  border-top: 1px solid rgb(var(--zn-border-color));
+}

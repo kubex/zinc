@@ -50,6 +50,12 @@ export default class ZnTile extends ZincElement {
 
   @property({type: Boolean}) inline: boolean;
 
+  /** Renders the caption in the normal table-content weight instead of bold. */
+  @property({type: Boolean}) plain: boolean;
+
+  /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
+  @property({type: Boolean, reflect: true}) grouped: boolean;
+
   private _isLink() {
     return this.href || this.dataUri;
   }
@@ -82,6 +88,7 @@ export default class ZnTile extends ZincElement {
           'tile--flush-x': this.flushX,
           'tile--flush-y': this.flushY,
           'tile--inline': this.inline,
+          'tile--plain': this.plain,
           'tile--has-href': isLink,
           'tile--has-caption': hasCaption,
           'tile--has-description': hasDescription,
@@ -100,7 +107,8 @@ export default class ZnTile extends ZincElement {
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>
                 </p>
-                <p part="description" class="tile__description">${this.description}</p>
+                ${hasDescription ? html`
+                  <p part="description" class="tile__description">${this.description}</p>` : ''}
               </div>
             </div>
           </div>

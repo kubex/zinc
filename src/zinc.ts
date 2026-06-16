@@ -22,6 +22,7 @@ export { default as DefinedLabel } from './components/defined-label';
 export { default as EmptyState } from './components/empty-state';
 export { default as Note } from './components/note';
 export { default as Tile } from './components/tile';
+export { default as TileGroup } from './components/tile-group';
 export { default as TileProperty } from './components/tile-property';
 export { default as Chart } from './components/chart';
 export { default as SimpleChart } from './components/simple-chart';

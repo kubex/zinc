@@ -53,6 +53,9 @@ export default class ZnTile extends ZincElement {
   /** Renders the caption in the normal table-content weight instead of bold. */
   @property({type: Boolean}) plain: boolean;
 
+  /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
+  @property({type: Boolean, reflect: true}) grouped: boolean;
+
   private _isLink() {
     return this.href || this.dataUri;
   }

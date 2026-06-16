@@ -271,18 +271,6 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
     }
 
-    &:has(li.more zn-dropdown[open]) > li.active::after,
-    &:has(li.more zn-dropdown[open]) > li.zn-tb-active::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 1px;
-      background: rgb(var(--zn-border-color));
-      z-index: 2;
-    }
-
     &:not(.has-hidden) > li.last-visible {
       border-top-right-radius: 6px;
     }
@@ -590,6 +578,8 @@ button[popovertarget] {
       }
 
       ul#extended-menu {
+        --navbar-more-trigger-width: 40px;
+
         box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
         border: 1px solid rgb(var(--zn-border-color));
         border-top: 0;
@@ -597,13 +587,23 @@ button[popovertarget] {
         overflow: hidden;
         position: relative;
         inset-inline-end: -1px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0 calc(var(--navbar-more-trigger-width) - 2px) auto 0;
+          height: 1px;
+          background: rgb(var(--zn-border-color));
+          z-index: 2;
+        }
+
         background: rgb(var(--zn-panel));
         display: flex;
         flex-direction: column;
         height: auto;
         width: fit-content;
         min-width: var(--zn-size-spanel);
-        margin: 0;
+        margin: -1px 0 0;
         padding: 1px;
 
         li {

@@ -153,33 +153,3 @@ a {
   column-gap: var(--zn-spacing-small);
   flex-shrink: 0;
 }
-
-:host([grouped]) {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  align-items: center;
-}
-
-:host([grouped]) .tile {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
-  align-items: center;
-  justify-items: end;
-  min-height: 48px;
-}
-
-:host([grouped]) .tile__link,
-:host([grouped]) .tile__right,
-:host([grouped]) .tile__properties,
-:host([grouped]) .tile__actions {
-  display: contents;
-}
-
-:host([grouped]) .tile__left {
-  grid-column: 1;
-  justify-self: stretch;
-  min-width: 0;
-  overflow: hidden;
-}

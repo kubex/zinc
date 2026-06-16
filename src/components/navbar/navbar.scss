@@ -271,6 +271,18 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
     }
 
+    &:has(li.more zn-dropdown[open]) > li.active::after,
+    &:has(li.more zn-dropdown[open]) > li.zn-tb-active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: rgb(var(--zn-border-color));
+      z-index: 2;
+    }
+
     &:not(.has-hidden) > li.last-visible {
       border-top-right-radius: 6px;
     }

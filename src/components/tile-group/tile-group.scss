@@ -8,7 +8,7 @@
 .tile-group {
   display: grid;
   width: 100%;
-  grid-template-columns: minmax(0, 1fr) repeat(var(--zn-tile-cols, 1), auto);
+  grid-template-columns: minmax(min(100%, var(--zn-tile-caption-min-width, 7.5rem)), 1fr) repeat(var(--zn-tile-cols, 1), auto);
   align-items: center;
   column-gap: var(--zn-spacing-large);
   row-gap: 0;

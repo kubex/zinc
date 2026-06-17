@@ -107,11 +107,11 @@
 ul.navbar {
   li {
     padding-top: 0;
-    font-size: var(--navbar-link-font-size, var(--zn-text-menu-link-font-size));
-    line-height: var(--navbar-link-line-height, var(--zn-text-menu-link-line-height));
-    font-weight: var(--navbar-link-font-weight, var(--zn-text-menu-link-font-weight));
+    font-size: var(--zn-text-tab-link-font-size);
+    line-height: var(--zn-text-tab-link-line-height);
+    font-weight: var(--zn-text-tab-link-font-weight);
     white-space: nowrap;
-    color: var(--navbar-link-color, var(--zn-text-menu-link-color));
+    color: var(--zn-text-tab-link-color);
 
     a {
       text-decoration: none;
@@ -288,7 +288,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
+        color: var(--zn-text-tab-link-active-color);
         border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
     }
@@ -344,7 +344,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       user-select: none;
-      font-weight: var(--navbar-link-font-weight, var(--zn-text-menu-link-font-weight));
+      font-weight: var(--zn-text-tab-link-font-weight);
       padding: 0 calc(var(--zn-base-px, 8px) * 2);
       background: rgb(var(--zn-color-tab));
       transition: background-color 100ms ease-in-out;
@@ -407,10 +407,10 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       &.active, &.zn-tb-active {
         background: rgb(var(--navbar-active-colour));
-        font-size: var(--navbar-link-active-font-size, var(--zn-text-tab-link-font-size));
-        line-height: var(--navbar-link-active-line-height, var(--zn-text-tab-link-line-height));
-        font-weight: var(--navbar-link-active-font-weight, var(--zn-text-tab-link-font-weight));
-        color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
+        font-size: var(--zn-text-tab-link-active-font-size);
+        line-height: var(--zn-text-tab-link-active-line-height);
+        font-weight: var(--zn-text-tab-link-active-font-weight);
+        color: var(--zn-text-tab-link-active-color);
       }
 
       &.active::before, &.zn-tb-active::before {
@@ -566,12 +566,12 @@ button[popovertarget] {
 
       zn-button[slot="trigger"] zn-icon {
         transition: transform 200ms ease-in-out;
-        --icon-color: var(--navbar-link-color, var(--zn-text-menu-link-color));
+        --icon-color: var(--zn-text-tab-link-color);
       }
 
       zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
         transform: rotate(90deg);
-        --icon-color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
+        --icon-color: var(--zn-text-tab-link-active-color);
       }
 
       &:has(zn-dropdown[open]) {
@@ -642,8 +642,8 @@ button[popovertarget] {
           }
 
           &.active, &.zn-tb-active {
-            font-weight: var(--navbar-link-active-font-weight, var(--zn-text-tab-link-font-weight));
-            color: var(--navbar-link-active-color, var(--zn-text-tab-link-color));
+            font-weight: var(--zn-text-tab-link-font-weight);
+            color: var(--zn-text-tab-link-color);
           }
 
           &.active::before, &.zn-tb-active::before {

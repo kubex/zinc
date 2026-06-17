@@ -54,6 +54,7 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: "no-pad", type: Boolean}) noPad: false
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
   @property({type: Boolean}) isolated = false;
+  @property({reflect: true}) color: string;
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'store-key', type: String}) storeKey: string = '';
@@ -541,7 +542,8 @@ export default class ZnNavbar extends ZincElement {
           'navbar--flush': this.flush,
           'navbar--no-pad': this.noPad,
           'navbar--stacked': this.stacked,
-          'navbar--icon-bar': this.iconBar
+          'navbar--icon-bar': this.iconBar,
+          [`navbar--color-${this.color}`]: Boolean(this.color)
         })}">
           ${this._preItems}
           ${this.navigation.map((item: any) => {

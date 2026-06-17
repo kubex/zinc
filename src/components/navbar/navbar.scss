@@ -7,6 +7,10 @@
   ul.navbar {
     padding: 0;
     margin: 0 var(--zn-base-gap);
+
+    &--color-body {
+      background-color: rgb(var(--zn-color-body));
+    }
   }
 }
 
@@ -74,7 +78,7 @@
 }
 
 :host:not([stacked]) .navbar {
-  margin: 0 0 0 var(--zn-base-gap);
+  margin: 0 0 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   padding-left: 0;
 
   &--flush {

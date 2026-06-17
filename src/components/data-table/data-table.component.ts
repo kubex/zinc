@@ -45,7 +45,6 @@ interface Cell {
   hoverContent?: string;
   hoverPlacement?: string;
   chipColor?: string;
-  chipSize?: string;
   gaid?: string;
   sortValue?: string;
   uri?: string;
@@ -117,8 +116,8 @@ const defaultTemplates = {
     const t = cell.text || '';
     return html`
       <div style="display:flex;flex-direction:column;align-items: flex-end;gap:2px;">
-        <span style="font-weight:600;">${t.slice(0, 10)}</span>
-        <span style="font-size:0.8em;opacity:0.6;">${t.slice(11)}</span>
+        <span><strong>${t.slice(0, 10)}</strong></span>
+        <zn-style size="s" muted>${t.slice(11)}</zn-style>
       </div>`
   }) satisfies DisplayTemplate
 };
@@ -432,49 +431,6 @@ export default class ZnDataTable extends ZincElement {
     super.connectedCallback();
     this.addEventListener('zn-filter-change', this.filterChangeListener);
     this.addEventListener('zn-search-change', this.searchChangeListener);
-    this.compileSlotTemplates();
-  }
-
-  private compileSlotTemplates() {
-    // Accept both <script type="zn-templates"> and <template type="zn-templates">.
-    // Hosts that sanitize script tags (e.g. embedded console sandboxes) strip
-    // <script>, but <template> survives. For <template> we must use innerHTML
-    // (not textContent) because the parser treats its body as HTML, so tags
-    // inside JS template literals are real elements and only innerHTML
-    // serializes them back.
-    const els = this.querySelectorAll<HTMLScriptElement | HTMLTemplateElement>(
-      'script[type="zn-templates"], template[type="zn-templates"]'
-    );
-    let compiledAny = false;
-    els.forEach((el) => {
-      try {
-        let code: string;
-        if (el instanceof HTMLTemplateElement) {
-          // <template> body is parsed as HTML, so innerHTML serializes `>` in text
-          // as `&gt;` (and `<` as `&lt;`). Decode entities before eval, or arrow
-          // functions like `(x) => y` become `(x) =&gt; y` and fail to parse.
-          const decoder = document.createElement('textarea');
-          decoder.innerHTML = el.innerHTML;
-          code = decoder.value;
-        } else {
-          code = el.textContent ?? '';
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval,no-new-func
-        const fn = new Function(code);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const result = fn();
-        if (result && typeof result === 'object') {
-          Object.assign(this._formatTemplates, result);
-          compiledAny = true;
-        }
-      } catch (err) {
-        console.error('[zn-data-table] Failed to compile zn-templates:', err);
-      }
-    });
-    if (compiledAny) {
-      this.requestUpdate();
-    }
   }
 
   private getTemplate(name: string): DisplayTemplate | undefined {
@@ -1043,7 +999,7 @@ export default class ZnDataTable extends ZincElement {
 
     if (data.chipColor) {
       return html`
-        <zn-chip type="${data.chipColor}" size="${ifDefined(data.chipSize)}">${content}</zn-chip>`;
+        <zn-chip type="${data.chipColor}">${content}</zn-chip>`;
     }
 
     if (data.hoverContent) {

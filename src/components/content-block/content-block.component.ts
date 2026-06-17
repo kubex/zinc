@@ -1,12 +1,12 @@
 import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {HasSlotController} from "../../internal/slot";
-import type {PropertyValues} from 'lit';
-import {html, nothing, unsafeCSS} from 'lit';
+import {html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync} from 'lit/decorators.js';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
+import type {PropertyValues} from 'lit';
 import type ZnTile from "../tile";
 
 import styles from './content-block.scss';
@@ -87,23 +87,24 @@ export default class ContentBlock extends ZincElement {
     if (this.noCollapse) {
       return;
     }
-    const target = e.target as HTMLElement;
-    const headerClick = target.classList.contains('content-block-header') ||
-      target.parentElement?.classList.contains('content-block-header');
 
-    if (headerClick && target.slot !== 'nav') {
-      this.short = !this.short;
-      this.requestUpdate();
-      this.updateComplete.then(() => {
-        if (!this.short) {
-          this.iframe.then((iframe) => {
-            if (iframe && !iframe.classList.contains('hidden')) {
-              this._resizeIframe(iframe);
-            }
-          });
-        }
-      });
+    const fromActions = e.composedPath().some((el) =>
+      el instanceof HTMLElement && el.classList.contains('content-block-header__actions'));
+    if (fromActions) {
+      return;
     }
+
+    this.short = !this.short;
+    this.requestUpdate();
+    this.updateComplete.then(() => {
+      if (!this.short) {
+        this.iframe.then((iframe) => {
+          if (iframe && !iframe.classList.contains('hidden')) {
+            this._resizeIframe(iframe);
+          }
+        });
+      }
+    });
   }
 
   private _toggleText() {
@@ -184,32 +185,33 @@ export default class ContentBlock extends ZincElement {
     const initialShowHtml = hasHtmlSlot && (!hasTextSlot || this.defaultDisplay === 'html');
 
     return html`
-      <zn-panel flush
-                tabbed
-                flush-footer="${hasFooter || nothing}"
-                class="${classMap({
-                  'content-block--outbound': this.outbound,
-                  'content-block--short': this.short,
-                  'content-block--collapsible': !this.noCollapse
-                })}">
+      <div class="${classMap({
+        'content-block--outbound': this.outbound,
+        'content-block--short': this.short,
+        'content-block--collapsible': !this.noCollapse
+      })}">
 
-        <zn-header class="content-block-header"
-                   description="${this.truncateText()}"
-                   @click="${this._collapseContent}">
+        <div class="content-block-header" @click="${this._collapseContent}">
+          <div class="content-block-header__icon">
+            <slot name="icon">
+              <zn-icon src="${this.avatar}"
+                       library="avatar"
+                       round></zn-icon>
+            </slot>
+          </div>
 
-          <slot name="icon">
-            <zn-icon src="${this.avatar}"
-                     library="avatar"
-                     round></zn-icon>
-          </slot>
+          <div class="content-block-header__main">
+            <span class="content-block-header__caption">
+              <slot name="caption">${this.sender}</slot>
+            </span>
+            <span class="content-block-header__description">${this.truncateText()}</span>
+          </div>
 
-          <slot name="caption" slot="caption">${this.sender}</slot>
-
-          <div slot="actions">
+          <div class="content-block-header__actions">
             <slot name="actions"><small>${this.time}</small></slot>
             ${showActions ? html`
               <zn-dropdown>
-                <zn-button slot="trigger" icon="more_vert" icon-size="24" color="transparent"></zn-button>
+                <zn-button slot="trigger" icon="ellipsis@lu" icon-size="24" icon-button="small" plain></zn-button>
                 <zn-menu>
                   <zn-menu-item @click="${this._toggleHtml}">
                     Show HTML
@@ -221,10 +223,9 @@ export default class ContentBlock extends ZincElement {
               </zn-dropdown>
             ` : ''}
           </div>
+        </div>
 
-        </zn-header>
-
-        <zn-sp no-gap>
+        <zn-sp no-gap flush-x>
           <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>
           <slot class="html-content" name="html" style="display: none;"></slot>
           <slot name="text" style="display: none;"></slot>
@@ -246,7 +247,7 @@ export default class ContentBlock extends ZincElement {
 
         ${hasFooter ? html`
           <slot slot="footer" name="footer" @slotchange="${this._handleSlotChange}"></slot>` : ''}
-      </zn-panel>
+      </div>
     `;
   }
 

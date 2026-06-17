@@ -65,15 +65,14 @@ export default class ZnIcon extends ZincElement {
   @property({type: Boolean, reflect: true}) round = false;
   @property({type: Boolean, reflect: true}) tile = false;
   @property({type: Boolean, reflect: true}) depth = false;
+  @property({type: Boolean}) padded: boolean = false;
+  @property({type: Boolean}) blink: boolean = false;
+  @property({type: Boolean}) squared: boolean = false;
 
   @property({reflect: true}) library: IconLibrary;
 
   @property({reflect: true}) color: IconColor;
 
-  @property({type: Boolean}) padded: boolean = false;
-  @property({type: Boolean}) blink: boolean = false;
-
-  @property({type: Boolean}) squared: boolean = false;
 
   private static readonly presetColors = new Set([
     'default', 'primary', 'accent', 'info', 'warning', 'error', 'success',

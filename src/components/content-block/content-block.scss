@@ -6,17 +6,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity, 1));
-  border-radius: var(--zn-border-radius);
-  padding-inline: var(--zn-base-gap);
+  padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 
   *, *::before, *::after {
     box-sizing: border-box;
   }
-}
-
-:host([outbound]) {
-  background-color: rgb(var(--zn-panel-secondary));
 }
 
 .content-block-header {

@@ -516,7 +516,7 @@ declare module "utilities/sha256" {
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
-    type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide";
+    export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide";
     export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & Record<never, never>);
     /**
      * @summary Short summary of the component's intended use.
@@ -545,6 +545,7 @@ declare module "components/icon/icon.component" {
         depth: boolean;
         library: IconLibrary;
         color: IconColor;
+        fill: IconColor;
         padded: boolean;
         blink: boolean;
         squared: boolean;
@@ -610,6 +611,9 @@ declare module "components/menu-item/menu-item.component" {
         menuItem: HTMLElement;
         /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
         type: 'normal' | 'checkbox';
+        /** The item's visual style. A standalone item defaults to navigation styling;
+         * a parent zn-menu sets this to `dropdown` or `shell` automatically. */
+        variant: 'default' | 'dropdown' | 'shell';
         /** Draws the item in a checked state. */
         checked: boolean;
         checkedPosition: 'left' | 'right';
@@ -983,6 +987,10 @@ declare module "components/menu/menu.component" {
         };
         defaultSlot: HTMLSlotElement;
         actions: never[];
+        /** The menu's visual style. `shell` renders the app-shell header dropdown
+         * look: a padded panel with floating rounded items. Propagated to the
+         * menu's items. */
+        variant: 'default' | 'shell';
         connectedCallback(): void;
         /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
         getAllItems(): ZnMenuItem[];
@@ -1001,6 +1009,15 @@ declare module "components/menu/menu.component" {
         private handleKeyDown;
         private handleMouseDown;
         private handleSlotChange;
+        protected updated(changedProperties: Map<string, unknown>): void;
+        /**
+         * @internal The variant applied to slotted items. A `default` menu still gives
+         * its items the `dropdown` look (muted hover, no separators) — distinct from a
+         * bare standalone menu item, which keeps the navigation styling.
+         */
+        get itemVariant(): 'dropdown' | 'shell';
+        /** Keeps slotted menu items in sync with the menu's variant. */
+        private propagateVariant;
         private isMenuItem;
     }
 }
@@ -1107,7 +1124,7 @@ declare module "components/button/button.component" {
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
-    import type { IconColor } from "components/icon/index";
+    import type { IconColor, IconLibrary } from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Buttons represent actions that are available to the user.
@@ -1153,7 +1170,15 @@ declare module "components/button/button.component" {
         disabled: boolean;
         grow: boolean;
         square: boolean;
-        iconButton: boolean;
+        /** Renders the button as an icon button (40x36). Pass `small` for the
+         * 36x36 variant or `round` for a 36x36 circle: `icon-button`,
+         * `icon-button="small"` or `icon-button="round"`. */
+        iconButton: boolean | 'small' | 'round';
+        /** With `icon-button`, removes the white background and border while
+         * keeping the button's size. */
+        plain: boolean;
+        /** Disables the hover background, for contexts where the tint doesn't fit. */
+        noHover: boolean;
         panelBackground: boolean;
         dropdownCloser: boolean;
         notification: number;
@@ -1165,6 +1190,8 @@ declare module "components/button/button.component" {
         iconPosition: 'left' | 'right';
         iconSize: string;
         iconColor: IconColor;
+        iconFill: IconColor;
+        iconLibrary: IconLibrary;
         type: 'button' | 'submit' | 'reset';
         name: string;
         value: string;
@@ -1464,6 +1491,56 @@ declare module "components/button-group/index" {
         }
     }
 }
+declare module "components/chat-message/chat-message.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A single message in a chat-style conversation: avatar, sender,
+     * time, optional badge, and a message bubble with optional actions.
+     * @documentation https://zinc.style/components/chat-message
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The message content.
+     * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
+     * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
+     * @slot edit-dialog - Pass-through for an associated dialog element.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart avatar - The avatar column.
+     * @csspart body - The header and bubble column.
+     * @csspart header - The sender/time/badge row.
+     * @csspart bubble - The message bubble.
+     * @csspart content - The message content within the bubble.
+     *
+     * @cssproperty --message-background - The bubble's background colour.
+     */
+    export default class ZnChatMessage extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        /** The sender's name, also used for the avatar initials. */
+        sender: string;
+        /** Unix timestamp (seconds) of the message, shown as HH:MM. */
+        time: string;
+        private getTime;
+        protected render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/chat-message/index" {
+    import ZnChatMessage from "components/chat-message/chat-message.component";
+    export * from "components/chat-message/chat-message.component";
+    export default ZnChatMessage;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-chat-message': ZnChatMessage;
+        }
+    }
+}
 declare module "components/chip/chip.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -1490,7 +1567,6 @@ declare module "components/chip/chip.component" {
         caption: string;
         iconSize: number;
         type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'custom' | 'neutral';
-        size: 'small' | 'medium' | 'large';
         flush: boolean;
         flushX: boolean;
         flushY: boolean;
@@ -3400,6 +3476,10 @@ declare module "components/tile/tile.component" {
         flushX: boolean;
         flushY: boolean;
         inline: boolean;
+        /** Renders the caption in the normal table-content weight instead of bold. */
+        plain: boolean;
+        /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
+        grouped: boolean;
         private _isLink;
         private _handleActionsClick;
         render(): import("lit-html").TemplateResult;
@@ -3412,6 +3492,46 @@ declare module "components/tile/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-tile': ZnTile;
+        }
+    }
+}
+declare module "components/tile-group/tile-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values
+     * and actions line up across every row, with optional dividing borders.
+     * @documentation https://zinc.style/components/tile-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-tile
+     *
+     * @slot - One or more `zn-tile` elements.
+     *
+     * @csspart base - The component's base wrapper (the grid container).
+     *
+     * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).
+     */
+    export default class ZnTileGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        /** Draws a dividing border between rows. */
+        divide: boolean;
+        private _mutationObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _handleSlotChange;
+        private _sync;
+        protected render(): unknown;
+    }
+}
+declare module "components/tile-group/index" {
+    import ZnTileGroup from "components/tile-group/tile-group.component";
+    export * from "components/tile-group/tile-group.component";
+    export default ZnTileGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-tile-group': ZnTileGroup;
         }
     }
 }
@@ -3622,11 +3742,13 @@ declare module "components/navbar/navbar.component" {
         border: boolean;
         hideOne: boolean;
         flush: boolean;
+        gutter: boolean;
         stacked: boolean;
         dropdown: never[];
         noPad: false;
         manualAddItems: boolean;
         isolated: boolean;
+        color: string;
         masterId: string;
         storeKey: string;
         storeTtl: number;
@@ -5073,10 +5195,8 @@ declare module "components/bulk-actions/index" {
     }
 }
 declare module "components/editor/modules/toolbar/tool/tool.component" {
-    import { type CSSResultGroup } from "lit";
     import ZincElement from "internal/zinc-element";
     export default class ZnEditorTool extends ZincElement {
-        static styles: CSSResultGroup;
         uri: string;
         label: string;
         key: string;
@@ -5160,6 +5280,26 @@ declare module "components/editor/modules/dialog/dialog.component" {
         render(): import("lit-html").TemplateResult<1>;
     }
 }
+declare module "components/editor/modules/dialog/dialog" {
+    import type DialogComponent from "components/editor/modules/dialog/dialog.component";
+    import type Quill from "quill";
+    class Dialog {
+        private readonly _quill;
+        private readonly _editorId;
+        private readonly _document;
+        private _component;
+        constructor(quill: Quill, options: {
+            editorId: string;
+        });
+        private _initDialog;
+        get component(): DialogComponent;
+        private _mountPoint;
+        private createComponent;
+        isOpen(): boolean;
+        close(): void;
+    }
+    export default Dialog;
+}
 declare module "components/editor/modules/emoji/emoji" {
     import Quill from 'quill';
     export interface EmojiResult {
@@ -5191,7 +5331,6 @@ declare module "components/editor/modules/toolbar/toolbar" {
     class Toolbar extends QuillToolbar {
         private readonly _quill;
         private readonly _component;
-        private _lastDialogUri?;
         private _formatters;
         constructor(quill: Quill, options: {
             container: ToolbarComponent;
@@ -5342,23 +5481,6 @@ declare module "components/editor/modules/date-picker/date-picker" {
         private _onDateSelect;
     }
     export default DatePicker;
-}
-declare module "components/editor/modules/dialog/dialog" {
-    import type Quill from "quill";
-    class Dialog {
-        private readonly _quill;
-        private readonly _editorId;
-        private readonly _document;
-        private _component;
-        constructor(quill: Quill, options: {
-            editorId: string;
-        });
-        private _initDialog;
-        private createComponent;
-        isOpen(): boolean;
-        close(): void;
-    }
-    export default Dialog;
 }
 declare module "components/editor/modules/drag-drop/drag-drop" {
     import type Quill from 'quill';
@@ -7251,8 +7373,8 @@ declare module "components/split-button/index" {
     }
 }
 declare module "components/content-block/content-block.component" {
-    import type { PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { PropertyValues } from 'lit';
     interface TextRow {
         lines: string[];
         type: 'reply' | 'text';
@@ -8202,6 +8324,7 @@ declare module "zinc" {
     export { default as Collapsible } from "components/collapsible/index";
     export { default as Alert } from "components/alert/index";
     export { default as ButtonGroup } from "components/button-group/index";
+    export { default as ChatMessage } from "components/chat-message/index";
     export { default as Chip } from "components/chip/index";
     export { default as Well } from "components/well/index";
     export { default as CopyButton } from "components/copy-button/index";
@@ -8216,6 +8339,7 @@ declare module "zinc" {
     export { default as EmptyState } from "components/empty-state/index";
     export { default as Note } from "components/note/index";
     export { default as Tile } from "components/tile/index";
+    export { default as TileGroup } from "components/tile-group/index";
     export { default as TileProperty } from "components/tile-property/index";
     export { default as Chart } from "components/chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";

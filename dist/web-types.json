@@ -310,6 +310,20 @@
             },
             {
               "name": "icon-button",
+              "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
+              "value": {
+                "type": "boolean | 'small' | 'round'",
+                "default": "false"
+              }
+            },
+            {
+              "name": "plain",
+              "description": "With `icon-button`, removes the white background and border while\nkeeping the button's size.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-hover",
+              "description": "Disables the hover background, for contexts where the tint doesn't fit.",
               "value": { "type": "boolean", "default": "false" }
             },
             {
@@ -341,6 +355,8 @@
             },
             { "name": "icon-size", "value": { "type": "string" } },
             { "name": "icon-color", "value": { "type": "IconColor" } },
+            { "name": "icon-fill", "value": { "type": "IconColor" } },
+            { "name": "icon-library", "value": { "type": "IconLibrary" } },
             {
               "name": "type",
               "value": { "type": "'button' | 'submit' | 'reset'" }
@@ -446,7 +462,21 @@
               { "name": "disabled", "type": "boolean" },
               { "name": "grow", "type": "boolean" },
               { "name": "square", "type": "boolean" },
-              { "name": "iconButton", "type": "boolean" },
+              {
+                "name": "iconButton",
+                "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
+                "type": "boolean | 'small' | 'round'"
+              },
+              {
+                "name": "plain",
+                "description": "With `icon-button`, removes the white background and border while\nkeeping the button's size.",
+                "type": "boolean"
+              },
+              {
+                "name": "noHover",
+                "description": "Disables the hover background, for contexts where the tint doesn't fit.",
+                "type": "boolean"
+              },
               { "name": "panelBackground", "type": "boolean" },
               { "name": "dropdownCloser", "type": "boolean" },
               { "name": "notification", "type": "number" },
@@ -458,6 +488,8 @@
               { "name": "iconPosition", "type": "'left' | 'right'" },
               { "name": "iconSize", "type": "string" },
               { "name": "iconColor", "type": "IconColor" },
+              { "name": "iconFill", "type": "IconColor" },
+              { "name": "iconLibrary", "type": "IconLibrary" },
               { "name": "type", "type": "'button' | 'submit' | 'reset'" },
               { "name": "name", "type": "string" },
               { "name": "value", "type": "string" },
@@ -573,7 +605,7 @@
             },
             {
               "name": "icon-size",
-              "value": { "type": "number", "default": "24" }
+              "value": { "type": "number", "default": "20" }
             },
             { "name": "no-gap", "value": { "type": "boolean" } },
             { "name": "no-padding", "value": { "type": "boolean" } }
@@ -673,6 +705,54 @@
               { "name": "syncGroup", "type": "string | undefined" },
               { "name": "smooth", "type": "boolean" },
               { "name": "scale", "type": "boolean | number" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-chat-message",
+          "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.\n---\n\n\n### **Slots:**\n - _default_ - The message content.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "sender",
+              "description": "The sender's name, also used for the avatar initials.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "time",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The message content." },
+            {
+              "name": "badge",
+              "description": "Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip)."
+            },
+            {
+              "name": "edit-dialog-trigger",
+              "description": "Action rendered at the end of the bubble (e.g. a remove icon button)."
+            },
+            {
+              "name": "edit-dialog",
+              "description": "Pass-through for an associated dialog element."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "sender",
+                "description": "The sender's name, also used for the avatar initials.",
+                "type": "string"
+              },
+              {
+                "name": "time",
+                "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+                "type": "string"
+              }
             ],
             "events": []
           }
@@ -1149,10 +1229,6 @@
               }
             },
             {
-              "name": "size",
-              "value": { "type": "'small' | 'medium' | 'large'" }
-            },
-            {
               "name": "flush",
               "value": { "type": "boolean", "default": "false" }
             },
@@ -1181,7 +1257,6 @@
                 "name": "type",
                 "type": "'info' | 'success' | 'warning' | 'error' | 'primary' |\n    'transparent' | 'custom' | 'neutral'"
               },
-              { "name": "size", "type": "'small' | 'medium' | 'large'" },
               { "name": "flush", "type": "boolean" },
               { "name": "flushX", "type": "boolean" },
               { "name": "flushY", "type": "boolean" }
@@ -3513,6 +3588,7 @@
             },
             { "name": "library", "value": { "type": "IconLibrary" } },
             { "name": "color", "value": { "type": "IconColor" } },
+            { "name": "fill", "value": { "type": "IconColor" } },
             {
               "name": "padded",
               "value": { "type": "boolean", "default": "false" }
@@ -3543,6 +3619,7 @@
               { "name": "depth", "type": "boolean" },
               { "name": "library", "type": "IconLibrary" },
               { "name": "color", "type": "IconColor" },
+              { "name": "fill", "type": "IconColor" },
               { "name": "padded", "type": "boolean" },
               { "name": "blink", "type": "boolean" },
               { "name": "squared", "type": "boolean" },
@@ -4779,7 +4856,15 @@
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
-            { "name": "actions", "value": { "type": "array", "default": "[]" } }
+            {
+              "name": "actions",
+              "value": { "type": "array", "default": "[]" }
+            },
+            {
+              "name": "variant",
+              "description": "The menu's visual style. `shell` renders the app-shell header dropdown\nlook: a padded panel with floating rounded items. Propagated to the\nmenu's items.",
+              "value": { "type": "'default' | 'shell'", "default": "'default'" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -4791,7 +4876,12 @@
           "js": {
             "properties": [
               { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "actions", "type": "array" }
+              { "name": "actions", "type": "array" },
+              {
+                "name": "variant",
+                "description": "The menu's visual style. `shell` renders the app-shell header dropdown\nlook: a padded panel with floating rounded items. Propagated to the\nmenu's items.",
+                "type": "'default' | 'shell'"
+              }
             ],
             "events": [
               {
@@ -4812,6 +4902,14 @@
               "value": {
                 "type": "'normal' | 'checkbox'",
                 "default": "'normal'"
+              }
+            },
+            {
+              "name": "variant",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "value": {
+                "type": "'default' | 'dropdown' | 'shell'",
+                "default": "'default'"
               }
             },
             {
@@ -4903,6 +5001,11 @@
                 "type": "'normal' | 'checkbox'"
               },
               {
+                "name": "variant",
+                "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+                "type": "'default' | 'dropdown' | 'shell'"
+              },
+              {
                 "name": "checked",
                 "description": "Draws the item in a checked state.",
                 "type": "boolean"
@@ -4986,6 +5089,10 @@
               "name": "flush",
               "value": { "type": "boolean", "default": "false" }
             },
+            {
+              "name": "gutter",
+              "value": { "type": "boolean", "default": "false" }
+            },
             { "name": "stacked", "value": { "type": "boolean" } },
             {
               "name": "dropdown",
@@ -5000,6 +5107,7 @@
               "name": "isolated",
               "value": { "type": "boolean", "default": "false" }
             },
+            { "name": "color", "value": { "type": "string" } },
             { "name": "master-id", "value": { "type": "string" } },
             {
               "name": "store-key",
@@ -5035,11 +5143,13 @@
               { "name": "border", "type": "boolean" },
               { "name": "hideOne", "type": "boolean" },
               { "name": "flush", "type": "boolean" },
+              { "name": "gutter", "type": "boolean" },
               { "name": "stacked", "type": "boolean" },
               { "name": "dropdown", "type": "array" },
               { "name": "noPad", "type": "false" },
               { "name": "manualAddItems", "type": "boolean" },
               { "name": "isolated", "type": "boolean" },
+              { "name": "color", "type": "string" },
               { "name": "masterId", "type": "string" },
               { "name": "storeKey", "type": "string" },
               { "name": "storeTtl", "type": "number" },
@@ -8364,7 +8474,17 @@
             { "name": "flush", "value": { "type": "boolean" } },
             { "name": "flush-x", "value": { "type": "boolean" } },
             { "name": "flush-y", "value": { "type": "boolean" } },
-            { "name": "inline", "value": { "type": "boolean" } }
+            { "name": "inline", "value": { "type": "boolean" } },
+            {
+              "name": "plain",
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "grouped",
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "value": { "type": "boolean" }
+            }
           ],
           "slots": [
             { "name": "", "description": "The default slot." },
@@ -8384,7 +8504,17 @@
               { "name": "flush", "type": "boolean" },
               { "name": "flushX", "type": "boolean" },
               { "name": "flushY", "type": "boolean" },
-              { "name": "inline", "type": "boolean" }
+              { "name": "inline", "type": "boolean" },
+              {
+                "name": "plain",
+                "description": "Renders the caption in the normal table-content weight instead of bold.",
+                "type": "boolean"
+              },
+              {
+                "name": "grouped",
+                "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+                "type": "boolean"
+              }
             ],
             "events": [
               {
@@ -8392,6 +8522,32 @@
                 "description": "Emitted as an example."
               }
             ]
+          }
+        },
+        {
+          "name": "zn-tile-group",
+          "description": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.\n---\n\n\n### **Slots:**\n - _default_ - One or more `zn-tile` elements.\n\n### **CSS Properties:**\n - **--zn-tile-cols** - The number of value/action columns (set automatically). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper (the grid container).",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "divide",
+              "description": "Draws a dividing border between rows.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "One or more `zn-tile` elements." }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "divide",
+                "description": "Draws a dividing border between rows.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
           }
         },
         {

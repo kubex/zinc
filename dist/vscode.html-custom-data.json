@@ -173,7 +173,21 @@
         { "name": "disabled", "values": [] },
         { "name": "grow", "values": [] },
         { "name": "square", "values": [] },
-        { "name": "icon-button", "values": [] },
+        {
+          "name": "icon-button",
+          "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
+          "values": [{ "name": "small" }, { "name": "round" }]
+        },
+        {
+          "name": "plain",
+          "description": "With `icon-button`, removes the white background and border while\nkeeping the button's size.",
+          "values": []
+        },
+        {
+          "name": "no-hover",
+          "description": "Disables the hover background, for contexts where the tint doesn't fit.",
+          "values": []
+        },
         { "name": "panel-bg", "values": [] },
         { "name": "dropdown-closer", "values": [] },
         { "name": "notification", "values": [] },
@@ -195,6 +209,8 @@
         },
         { "name": "icon-size", "values": [] },
         { "name": "icon-color", "values": [{ "name": "IconColor" }] },
+        { "name": "icon-fill", "values": [{ "name": "IconColor" }] },
+        { "name": "icon-library", "values": [{ "name": "IconLibrary" }] },
         {
           "name": "type",
           "values": [
@@ -336,6 +352,28 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/chart"
+        }
+      ]
+    },
+    {
+      "name": "zn-chat-message",
+      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.\n---\n\n\n### **Slots:**\n - _default_ - The message content.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.",
+      "attributes": [
+        {
+          "name": "sender",
+          "description": "The sender's name, also used for the avatar initials.",
+          "values": []
+        },
+        {
+          "name": "time",
+          "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/chat-message"
         }
       ]
     },
@@ -537,14 +575,6 @@
             { "name": "transparent" },
             { "name": "custom" },
             { "name": "neutral" }
-          ]
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
           ]
         },
         { "name": "flush", "values": [] },
@@ -1500,6 +1530,7 @@
         { "name": "depth", "values": [] },
         { "name": "library", "values": [{ "name": "IconLibrary" }] },
         { "name": "color", "values": [{ "name": "IconColor" }] },
+        { "name": "fill", "values": [{ "name": "IconColor" }] },
         { "name": "padded", "values": [] },
         { "name": "blink", "values": [] },
         { "name": "squared", "values": [] }
@@ -2059,7 +2090,14 @@
     {
       "name": "zn-menu",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [{ "name": "actions", "values": [{ "name": "array" }] }],
+      "attributes": [
+        { "name": "actions", "values": [{ "name": "array" }] },
+        {
+          "name": "variant",
+          "description": "The menu's visual style. `shell` renders the app-shell header dropdown\nlook: a padded panel with floating rounded items. Propagated to the\nmenu's items.",
+          "values": [{ "name": "default" }, { "name": "shell" }]
+        }
+      ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/menu" }
       ]
@@ -2072,6 +2110,15 @@
           "name": "type",
           "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
           "values": [{ "name": "normal" }, { "name": "checkbox" }]
+        },
+        {
+          "name": "variant",
+          "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+          "values": [
+            { "name": "default" },
+            { "name": "dropdown" },
+            { "name": "shell" }
+          ]
         },
         {
           "name": "checked",
@@ -2160,11 +2207,13 @@
         { "name": "border", "values": [] },
         { "name": "hide-one", "values": [] },
         { "name": "flush", "values": [] },
+        { "name": "gutter", "values": [] },
         { "name": "stacked", "values": [] },
         { "name": "dropdown", "values": [{ "name": "array" }] },
         { "name": "no-pad", "values": [{ "name": "false" }] },
         { "name": "manual-add-items", "values": [] },
         { "name": "isolated", "values": [] },
+        { "name": "color", "values": [] },
         { "name": "master-id", "values": [] },
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
@@ -3577,10 +3626,37 @@
         { "name": "flush", "values": [] },
         { "name": "flush-x", "values": [] },
         { "name": "flush-y", "values": [] },
-        { "name": "inline", "values": [] }
+        { "name": "inline", "values": [] },
+        {
+          "name": "plain",
+          "description": "Renders the caption in the normal table-content weight instead of bold.",
+          "values": []
+        },
+        {
+          "name": "grouped",
+          "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+          "values": []
+        }
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tile" }
+      ]
+    },
+    {
+      "name": "zn-tile-group",
+      "description": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.\n---\n\n\n### **Slots:**\n - _default_ - One or more `zn-tile` elements.\n\n### **CSS Properties:**\n - **--zn-tile-cols** - The number of value/action columns (set automatically). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper (the grid container).",
+      "attributes": [
+        {
+          "name": "divide",
+          "description": "Draws a dividing border between rows.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/tile-group"
+        }
       ]
     },
     {

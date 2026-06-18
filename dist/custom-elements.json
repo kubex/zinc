@@ -1327,10 +1327,31 @@
               "kind": "field",
               "name": "iconButton",
               "type": {
+                "text": "boolean | 'small' | 'round'"
+              },
+              "default": "false",
+              "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
+              "attribute": "icon-button"
+            },
+            {
+              "kind": "field",
+              "name": "plain",
+              "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "attribute": "icon-button"
+              "description": "With `icon-button`, removes the white background and border while\nkeeping the button's size.",
+              "attribute": "plain"
+            },
+            {
+              "kind": "field",
+              "name": "noHover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the hover background, for contexts where the tint doesn't fit.",
+              "attribute": "no-hover"
             },
             {
               "kind": "field",
@@ -1426,6 +1447,22 @@
                 "text": "IconColor"
               },
               "attribute": "icon-color"
+            },
+            {
+              "kind": "field",
+              "name": "iconFill",
+              "type": {
+                "text": "IconColor"
+              },
+              "attribute": "icon-fill"
+            },
+            {
+              "kind": "field",
+              "name": "iconLibrary",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "attribute": "icon-library"
             },
             {
               "kind": "field",
@@ -1764,10 +1801,29 @@
             {
               "name": "icon-button",
               "type": {
+                "text": "boolean | 'small' | 'round'"
+              },
+              "default": "false",
+              "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
+              "fieldName": "iconButton"
+            },
+            {
+              "name": "plain",
+              "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "fieldName": "iconButton"
+              "description": "With `icon-button`, removes the white background and border while\nkeeping the button's size.",
+              "fieldName": "plain"
+            },
+            {
+              "name": "no-hover",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the hover background, for contexts where the tint doesn't fit.",
+              "fieldName": "noHover"
             },
             {
               "name": "panel-bg",
@@ -1852,6 +1908,20 @@
                 "text": "IconColor"
               },
               "fieldName": "iconColor"
+            },
+            {
+              "name": "icon-fill",
+              "type": {
+                "text": "IconColor"
+              },
+              "fieldName": "iconFill"
+            },
+            {
+              "name": "icon-library",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "fieldName": "iconLibrary"
             },
             {
               "name": "type",
@@ -2246,7 +2316,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "24",
+              "default": "20",
               "attribute": "icon-size",
               "reflects": true
             },
@@ -2428,7 +2498,7 @@
               "type": {
                 "text": "number"
               },
-              "default": "24",
+              "default": "20",
               "fieldName": "iconSize"
             },
             {
@@ -2848,6 +2918,156 @@
           "declaration": {
             "name": "ZnChart",
             "module": "components/chart/chart.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/chat-message/chat-message.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnChatMessage",
+          "cssProperties": [
+            {
+              "description": "The bubble's background colour.",
+              "name": "--message-background"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The avatar column.",
+              "name": "avatar"
+            },
+            {
+              "description": "The header and bubble column.",
+              "name": "body"
+            },
+            {
+              "description": "The sender/time/badge row.",
+              "name": "header"
+            },
+            {
+              "description": "The message bubble.",
+              "name": "bubble"
+            },
+            {
+              "description": "The message content within the bubble.",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The message content.",
+              "name": ""
+            },
+            {
+              "description": "Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).",
+              "name": "badge"
+            },
+            {
+              "description": "Action rendered at the end of the bubble (e.g. a remove icon button).",
+              "name": "edit-dialog-trigger"
+            },
+            {
+              "description": "Pass-through for an associated dialog element.",
+              "name": "edit-dialog"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-icon': ZnIcon }"
+            },
+            {
+              "kind": "field",
+              "name": "sender",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The sender's name, also used for the avatar initials.",
+              "attribute": "sender"
+            },
+            {
+              "kind": "field",
+              "name": "time",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "attribute": "time"
+            },
+            {
+              "kind": "method",
+              "name": "getTime",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "time",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "sender",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The sender's name, also used for the avatar initials.",
+              "fieldName": "sender"
+            },
+            {
+              "name": "time",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "fieldName": "time"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.",
+          "tagNameWithoutPrefix": "chat-message",
+          "tagName": "zn-chat-message",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A single message in a chat-style conversation: avatar, sender,\n * time, optional badge, and a message bubble with optional actions.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The message content.\n * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).\n * @slot edit-dialog - Pass-through for an associated dialog element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart avatar - The avatar column.\n * @csspart body - The header and bubble column.\n * @csspart header - The sender/time/badge row.\n * @csspart bubble - The message bubble.\n * @csspart content - The message content within the bubble.\n *\n * @cssproperty --message-background - The bubble's background colour.\n */",
+          "documentation": "https://zinc.style/components/chat-message",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-icon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnChatMessage",
+            "module": "components/chat-message/chat-message.js"
           }
         }
       ]
@@ -4076,14 +4296,6 @@
             },
             {
               "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "attribute": "size"
-            },
-            {
-              "kind": "field",
               "name": "flush",
               "type": {
                 "text": "boolean"
@@ -4158,13 +4370,6 @@
               },
               "default": "'neutral'",
               "fieldName": "type"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "fieldName": "size"
             },
             {
               "name": "flush",
@@ -12803,6 +13008,15 @@
             },
             {
               "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "IconColor"
+              },
+              "attribute": "fill",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "padded",
               "type": {
                 "text": "boolean"
@@ -13079,6 +13293,13 @@
                 "text": "IconColor"
               },
               "fieldName": "color"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "IconColor"
+              },
+              "fieldName": "fill"
             },
             {
               "name": "padded",
@@ -17711,6 +17932,17 @@
               "attribute": "actions"
             },
             {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The menu's visual style. `shell` renders the app-shell header dropdown\nlook: a padded panel with floating rounded items. Propagated to the\nmenu's items.",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
               "kind": "method",
               "name": "handleClick",
               "privacy": "private",
@@ -17756,6 +17988,12 @@
             },
             {
               "kind": "method",
+              "name": "propagateVariant",
+              "privacy": "private",
+              "description": "Keeps slotted menu items in sync with the menu's variant."
+            },
+            {
+              "kind": "method",
               "name": "isMenuItem",
               "privacy": "private",
               "parameters": [
@@ -17782,6 +18020,15 @@
               },
               "default": "[]",
               "fieldName": "actions"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The menu's visual style. `shell` renders the app-shell header dropdown\nlook: a padded panel with floating rounded items. Propagated to the\nmenu's items.",
+              "fieldName": "variant"
             }
           ],
           "superclass": {
@@ -17883,6 +18130,17 @@
               "default": "'normal'",
               "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
               "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'dropdown' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "attribute": "variant",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -18139,6 +18397,15 @@
               "default": "'normal'",
               "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
               "fieldName": "type"
+            },
+            {
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'dropdown' | 'shell'"
+              },
+              "default": "'default'",
+              "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+              "fieldName": "variant"
             },
             {
               "name": "checked",
@@ -18426,6 +18693,16 @@
             },
             {
               "kind": "field",
+              "name": "gutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "gutter",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "stacked",
               "type": {
                 "text": "boolean"
@@ -18466,6 +18743,15 @@
               },
               "default": "false",
               "attribute": "isolated"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "color",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -18923,6 +19209,14 @@
               "fieldName": "flush"
             },
             {
+              "name": "gutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "gutter"
+            },
+            {
               "name": "stacked",
               "type": {
                 "text": "boolean"
@@ -18959,6 +19253,13 @@
               },
               "default": "false",
               "fieldName": "isolated"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "color"
             },
             {
               "name": "master-id",
@@ -33356,6 +33657,25 @@
               "attribute": "inline"
             },
             {
+              "kind": "field",
+              "name": "plain",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "attribute": "plain"
+            },
+            {
+              "kind": "field",
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "attribute": "grouped",
+              "reflects": true
+            },
+            {
               "kind": "method",
               "name": "_isLink",
               "privacy": "private"
@@ -33450,6 +33770,22 @@
                 "text": "boolean"
               },
               "fieldName": "inline"
+            },
+            {
+              "name": "plain",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Renders the caption in the normal table-content weight instead of bold.",
+              "fieldName": "plain"
+            },
+            {
+              "name": "grouped",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
+              "fieldName": "grouped"
             }
           ],
           "superclass": {
@@ -33476,6 +33812,103 @@
           "declaration": {
             "name": "ZnTile",
             "module": "components/tile/tile.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile-group/tile-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileGroup",
+          "cssProperties": [
+            {
+              "description": "The number of value/action columns (set automatically).",
+              "name": "--zn-tile-cols"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper (the grid container).",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "One or more `zn-tile` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "attribute": "divide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_sync",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "divide",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a dividing border between rows.",
+              "fieldName": "divide"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Aligns a list of `zn-tile` rows into shared, content-driven columns so values\nand actions line up across every row, with optional dividing borders.",
+          "tagNameWithoutPrefix": "tile-group",
+          "tagName": "zn-tile-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Aligns a list of `zn-tile` rows into shared, content-driven columns so values\n * and actions line up across every row, with optional dividing borders.\n * @documentation https://zinc.style/components/tile-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tile\n *\n * @slot - One or more `zn-tile` elements.\n *\n * @csspart base - The component's base wrapper (the grid container).\n *\n * @cssproperty --zn-tile-cols - The number of value/action columns (set automatically).\n */",
+          "documentation": "https://zinc.style/components/tile-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileGroup",
+            "module": "components/tile-group/tile-group.js"
           }
         }
       ]

@@ -50,18 +50,13 @@
   }
 }
 
-.button.button--icon-button {
-  max-height: 20px;
-  height: 20px;
-  min-height: 20px;
-}
-
 .button.button--muted-notification {
   --notification-color: rgb(var(--zn-color-info));
 }
 
 .button--has-notification {
   position: relative;
+  overflow: visible;
 
   &::after {
     content: attr(data-notification);
@@ -69,25 +64,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 1px;
+    top: -4px;
     left: auto;
-    inset-inline-end: 1px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    font-size: 10px;
-    color: white;
+    inset-inline-end: -4px;
+    box-sizing: border-box;
+    min-width: 13px;
+    height: 13px;
+    padding: 0 3px;
+    border-radius: 999px;
+    font-size: var(--zn-text-notification-font-size);
+    font-weight: var(--zn-text-notification-font-weight);
+    line-height: var(--zn-text-notification-line-height);
+    color: var(--zn-text-notification-color);
     background-color: var(--notification-color);
   }
 }
 
 .button--has-notification.button--notification-dot {
-  &:after {
+  &::after {
     content: '';
-    width: 5px;
-    height: 5px;
-    top: 5px;
-    right: 3px;
+    min-width: 0;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
   }
 }
 
@@ -244,19 +244,33 @@
   }
 }
 
-.button--icon-button {
+/**
+ * Icon buttons
+ *
+ * Standard:  40x36, white background, 1px border, 6px radius
+ * Small:     36x36 (`icon-button="small"`)
+ * Plain:     either size without the background and border (`plain`)
+ *
+ * Doubled-up selector so the icon-button design out-cascades the color
+ * variant combos (.button--standard.button--secondary etc.)
+ */
+.button.button--icon-button {
   --icon-button-color: rgb(var(--zn-text));
   --icon-button-hover-color: rgb(var(--zn-primary));
 
-  background: transparent;
-  border-color: var(--zn-button-border-color, transparent) !important;
+  width: 40px;
+  min-width: 40px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding: 6px;
+  margin: 0;
+  background: rgb(var(--zn-panel));
+  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
+  border-radius: var(--zn-border-radius);
   color: var(--icon-button-color);
   font-weight: inherit;
   line-height: 0;
-  margin: 0;
-  min-width: 0;
-  padding: 0;
-  width: auto;
 
   zn-icon,
   ::slotted(zn-icon) {
@@ -266,15 +280,57 @@
     line-height: 0;
   }
 
+  // Hovers tint the background only — the icon keeps its set colour
   &:hover:not([disabled]), &:active:not([disabled]) {
-    background: transparent;
-    color: var(--icon-button-hover-color);
+    background: rgba(var(--zn-color-tab), 0.5);
   }
-}
 
-.button--with-icon.button--icon-button {
-  border: 0;
-  margin: 0;
+  &.button--icon-button-small {
+    width: 36px;
+    min-width: 36px;
+  }
+
+  // Round: 36x36 circle on the tab tint, muted icon by default
+  &.button--icon-button-round {
+    width: 36px;
+    min-width: 36px;
+    padding: 8px;
+    background: rgb(var(--zn-color-tab));
+    border-color: var(--zn-button-border-color, transparent) !important;
+    border-radius: var(--zn-border-radius-circle);
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-border));
+    }
+  }
+
+  &.button--plain {
+    background: transparent;
+    border-color: var(--zn-button-border-color, transparent) !important;
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-color-tab));
+    }
+  }
+
+  // `no-hover`: keep the resting background on hover/active
+  &.button--no-hover {
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background: rgb(var(--zn-panel));
+    }
+
+    &.button--plain:hover:not([disabled]), &.button--plain:active:not([disabled]) {
+      background: transparent;
+    }
+  }
+
+  &.button--has-notification::after {
+    --icon-inset: calc((100% - var(--notification-icon-size, 20px)) / 2);
+
+    top: calc(var(--icon-inset) - 4px);
+    inset-inline-end: calc(var(--icon-inset) - 4px);
+    transform: translate(50%, -50%);
+  }
 }
 
 .button--loading-bg {

@@ -117,17 +117,35 @@ Buttons can be used with just an icon and no text by omitting the button label.
 <zn-button icon="add" color="info"></zn-button>
 ```
 
-### Icon Button Style
+### Icon Buttons
 
-Use `icon-button` to make only the nested icon appear clickable. The hover color defaults to `--zn-primary`; use `color` and `hover-color` to customize the icon colors.
+Use `icon-button` to render a chromed icon button: a 40x36 white button with a border, a 6px radius, and a centred 20px icon. Pass `small` for the 36x36 variant or `round` for a 36x36 circle on the tab tint. The icon button style takes precedence over color variants like `secondary` — the `color` attribute only tints the icon.
 
 ```html:preview
-<zn-button icon-button icon="settings"></zn-button>
+<zn-button icon-button icon="inventory_2"></zn-button>
+<zn-button icon-button="small" icon="inventory_2"></zn-button>
+<zn-button icon-button="round" icon="search"></zn-button>
 <zn-button icon-button icon="favorite" color="error"></zn-button>
-<zn-button icon-button icon="share" color="#64748b" hover-color="#0f172a"></zn-button>
-<zn-button icon-button color="success" hover-color="warning">
-  <zn-icon src="add" size="16"></zn-icon>
-</zn-button>
+<zn-button icon-button icon="check" color="success"></zn-button>
+```
+
+### Plain Icon Buttons
+
+Add `plain` to remove the white background and border while keeping the button's size, for quiet inline actions. Hovering tints the background with the tab colour; add `no-hover` to suppress that too, for placements where the tint doesn't fit (e.g. on an already-tinted surface).
+
+```html:preview
+<zn-button icon-button plain icon="settings"></zn-button>
+<zn-button icon-button="small" plain icon="close" color="error" tooltip="Remove"></zn-button>
+<zn-button icon-button plain no-hover icon="close" color="error" tooltip="Remove Note"></zn-button>
+```
+
+### Icon Library
+
+Use `icon-library` to load the button's icon from a different icon library, passed through to the nested `zn-icon`.
+
+```html:preview
+<zn-button icon-button icon="flag" icon-library="lucide"></zn-button>
+<zn-button icon="rocket" icon-library="lucide">Launch</zn-button>
 ```
 
 ### Icon Position

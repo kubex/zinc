@@ -17,6 +17,9 @@ table {
   max-width: 100%;
   table-layout: auto;
   text-align: left;
+  font-size: var(--zn-text-table-content-font-size);
+  line-height: var(--zn-text-table-content-line-height);
+  font-weight: var(--zn-text-table-content-font-weight);
 
   tbody tr:nth-of-type(even) {
     background-color: unset;
@@ -32,14 +35,14 @@ table {
 
   &.table--standalone {
     background-color: rgb(var(--zn-panel));
-    border-radius: var(--zn-border-radius-large);
+    border-radius: var(--zn-border-radius);
     border: 1px solid rgb(var(--zn-border-color));
     overflow: hidden;
   }
 
   thead {
     color: rgb(var(--zn-text-heading));
-    font-weight: 500;
+    font-weight: var(--zn-font-weight-medium);
   }
 
   thead tr th {
@@ -229,9 +232,9 @@ table {
       }
 
       .title {
-        font-weight: 600;
+        font-weight: var(--zn-font-weight-semibold);
         color: rgb(var(--zn-text-heading));
-        font-size: 14px;
+        font-size: var(--zn-text-table-content-font-size);
         text-decoration: none;
       }
 
@@ -349,7 +352,7 @@ table {
     }
 
     &__value {
-      font-size: 14px;
+      font-size: var(--zn-text-table-content-font-size);
     }
   }
 }
@@ -399,11 +402,11 @@ table tbody tr.table__row--selected {
   }
 
   &:last-of-type td:first-of-type {
-    border-bottom-left-radius: var(--zn-border-radius-large);
+    border-bottom-left-radius: var(--zn-border-radius);
   }
 
   &:last-of-type td:last-of-type {
-    border-bottom-right-radius: var(--zn-border-radius-large);
+    border-bottom-right-radius: var(--zn-border-radius);
   }
 
   & + tr.table__row--selected td {

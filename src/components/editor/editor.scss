@@ -3,8 +3,13 @@
 @use "../../../node_modules/quill/dist/quill.snow.css" as snow;
 @use "../../wc";
 
+@include wc.gutter;
+
 :host, zn-editor {
+  --editor-gutter: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+
   width: 100%;
+  padding-inline: var(--editor-gutter);
 }
 
 :host {
@@ -13,6 +18,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 170px;
+  container-type: inline-size;
 
   display: flex;
   flex-direction: column;
@@ -62,7 +68,7 @@
     color: rgb(var(--zn-text));
     background-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
     font-size: 15px;
-    padding: 0 var(--zn-spacing-medium);
+    padding-inline: var(--editor-gutter);
 
     img {
       height: auto;
@@ -84,6 +90,7 @@
   #toolbar-container, #action-container {
     justify-content: space-between;
     align-items: center;
+    padding-inline: var(--editor-gutter);
 
     .wrap {
       flex-grow: 1;
@@ -147,5 +154,5 @@
 }
 
 #toolbar {
-  padding: 4px;
+  padding-inline: var(--editor-gutter);
 }

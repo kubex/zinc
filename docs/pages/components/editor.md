@@ -288,7 +288,7 @@ Add custom tools to the editor toolbar using the `zn-editor-tool` component in t
   style="height: 300px">
   <zn-editor-tool
     slot="tools"
-    icon="lightbulb"
+    icon="lightbulb@lu"
     label="Insert Tip"
     handler="dialog"
     uri="/custom/tip"

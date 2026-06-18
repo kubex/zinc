@@ -45,6 +45,24 @@ describe('<zn-button-menu>', () => {
     expect(menuItem!.innerText).to.equal('Content Label');
   });
 
+  it('uses the aria-label of an icon button when creating collapsed menu items', async () => {
+    const el = await fixture<ZnButtonMenu>(html`
+      <zn-button-menu limit="0">
+        <zn-button id="icon-label" icon="pencil-ruler@lu" icon-button="small"
+                   aria-label="Customer Details"></zn-button>
+      </zn-button-menu>
+    `);
+
+    await el.updateComplete;
+    await aTimeout(20);
+    el.calculateVisibleButtons();
+
+    const menuItem = el.shadowRoot!.querySelector('zn-menu-item');
+
+    expect(menuItem).to.exist;
+    expect(menuItem!.textContent?.trim()).to.equal('Customer Details');
+  });
+
   it('uses the button caption attribute when creating collapsed menu items', async () => {
     const el = await fixture<ZnButtonMenu>(html`
       <zn-button-menu limit="0">

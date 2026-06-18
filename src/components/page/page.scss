@@ -1,5 +1,7 @@
 @use "../../wc";
 
+@include wc.gutter;
+
 :host {
   display: block;
   width: 100%;
@@ -8,24 +10,6 @@
   container-type: inline-size;
   --zn-page-content-background: var(--zn-body);
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
-}
-
-@container (width > 1024px) {
-  :host {
-    --zn-gutter: 16px;
-  }
-}
-
-@container (width > 1400px) {
-  :host {
-    --zn-gutter: 24px;
-  }
-}
-
-@container (width > 1500px) {
-  :host {
-    --zn-gutter: 32px;
-  }
 }
 
 :host([panel]) {
@@ -129,8 +113,8 @@
   }
 
   &__caption {
-    font-weight: var(--zn-font-weight-medium);
-    font-size: var(--zn-font-size-large);
+    font-weight: var(--zn-text-h1-font-weight);
+    font-size: var(--zn-text-h1-font-size);
     color: rgba(var(--zn-text-panel-title), 100%);
     line-height: 18px;
     margin: 0;
@@ -304,19 +288,16 @@ zn-navbar {
 }
 
 :host .page__header {
-  padding-right: 0;
-  padding-left: 0;
+  padding-inline: 0;
 }
 
 :host .header {
-  padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
-  padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+  padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 :host zn-navbar {
   &::part(navbar) {
-    padding-left: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
-    padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    padding-inline: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   }
 }
 

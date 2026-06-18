@@ -58,6 +58,11 @@ export default class ZnMenu extends ZincElement {
 
   @property({attribute: 'actions', type: Array}) actions = [];
 
+  /** The menu's visual style. `shell` renders the app-shell header dropdown
+   * look: a padded panel with floating rounded items. Propagated to the
+   * menu's items. */
+  @property({reflect: true}) variant: 'default' | 'shell' = 'default';
+
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'menu');
@@ -113,6 +118,7 @@ export default class ZnMenu extends ZincElement {
               <zn-menu-item @mousedown=${this.handleMouseDown}
                             @keydown=${this.handleKeyDown}
                             id="${item.confirm?.trigger}"
+                            variant="${this.itemVariant}"
                             confirm>
                 ${(item.icon) ? html`
                   <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -123,6 +129,7 @@ export default class ZnMenu extends ZincElement {
               return html`
                 <zn-menu-item value="${item.title}"
                               href="${item.path}"
+                              variant="${this.itemVariant}"
                               data-target="${ifDefined(item.target)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
@@ -133,7 +140,7 @@ export default class ZnMenu extends ZincElement {
                 </zn-menu-item>`;
             } else {
               return html`
-                <zn-menu-item value="${item.title}" data-path="${ifDefined(item.path)}">
+                <zn-menu-item value="${item.title}" variant="${this.itemVariant}" data-path="${ifDefined(item.path)}">
                   ${(item.icon) ? html`
                     <zn-icon src="${item.icon}" size="20" slot="prefix"></zn-icon>` : html``}
                   <span @click="${this.handleClick}"
@@ -233,6 +240,30 @@ export default class ZnMenu extends ZincElement {
       this.setCurrentItem(items[0]);
       this.emit('zn-menu-ready');
     }
+
+    this.propagateVariant();
+  }
+
+  protected updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('variant')) {
+      this.propagateVariant();
+    }
+  }
+
+  /**
+   * @internal The variant applied to slotted items. A `default` menu still gives
+   * its items the `dropdown` look (muted hover, no separators) — distinct from a
+   * bare standalone menu item, which keeps the navigation styling.
+   */
+  get itemVariant(): 'dropdown' | 'shell' {
+    return this.variant === 'shell' ? 'shell' : 'dropdown';
+  }
+
+  /** Keeps slotted menu items in sync with the menu's variant. */
+  private propagateVariant() {
+    this.getAllItems().forEach(item => item.setAttribute('variant', this.itemVariant));
   }
 
   private isMenuItem(item: HTMLElement) {

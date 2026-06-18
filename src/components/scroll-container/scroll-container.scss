@@ -1,6 +1,8 @@
 @use "../../wc";
 
 :host {
+  @include wc.scrollbars;
+  
   display: contents;
   --zn-scroll-footer-height: 0px;
   --zn-scroll-header-height: 0px;
@@ -22,7 +24,6 @@
 }
 
 .scroll-container {
-  @include wc.scrollbars;
   container-type: inline-size;
   display: flex;
   flex-direction: column;

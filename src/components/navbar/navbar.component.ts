@@ -49,11 +49,13 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'border', type: Boolean, reflect: true}) border: boolean;
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({attribute: 'gutter', type: Boolean, reflect: true}) gutter: boolean = false;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
   @property({type: Boolean}) isolated = false;
+  @property({reflect: true}) color: string;
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'store-key', type: String}) storeKey: string = '';
@@ -541,14 +543,15 @@ export default class ZnNavbar extends ZincElement {
           'navbar--flush': this.flush,
           'navbar--no-pad': this.noPad,
           'navbar--stacked': this.stacked,
-          'navbar--icon-bar': this.iconBar
+          'navbar--icon-bar': this.iconBar,
+          [`navbar--color-${this.color}`]: Boolean(this.color)
         })}">
           ${this._preItems}
           ${this.navigation.map((item: any) => {
             let content = html`${item.title}`;
             if (item.icon != undefined && item.icon != '') {
               content = html`
-                <zn-icon src="${item.icon}"></zn-icon>${content}`;
+                <zn-icon src="${item.icon}" size="20"></zn-icon>${content}`;
             }
             if (item.path != undefined) {
               return html`
@@ -564,9 +567,9 @@ export default class ZnNavbar extends ZincElement {
               </li>`;
           })}
           <li class="more">
-            <zn-dropdown placement="bottom-end" id="extended-dropdown">
+            <zn-dropdown placement="bottom-end" id="extended-dropdown" distance="1">
               <zn-button slot="trigger" text color="transparent">
-                <zn-icon src="arrow_right_alt" size="16"></zn-icon>
+                <zn-icon src="arrow_right_alt" size="20"></zn-icon>
               </zn-button>
               <ul id="extended-menu">
               </ul>

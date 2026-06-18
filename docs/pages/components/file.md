@@ -263,7 +263,7 @@ Use the `trigger` slot to provide completely custom content for the file control
 
 ```html:preview
 <zn-file name="custom-upload" multiple>
-  <div slot="trigger" style="padding: 2rem; border: 2px dashed var(--zn-color-neutral-300); border-radius: var(--zn-border-radius-medium); text-align: center; cursor: pointer;">
+  <div slot="trigger" style="padding: 2rem; border: 2px dashed var(--zn-color-neutral-300); border-radius: var(--zn-border-radius); text-align: center; cursor: pointer;">
     <zn-icon src="cloud_upload" style="font-size: 3rem; color: var(--zn-color-primary-600);"></zn-icon>
     <p style="margin: 0.5rem 0 0; font-weight: var(--zn-font-weight-semibold);">Click to upload or drag and drop</p>
     <p style="margin: 0.25rem 0 0; font-size: var(--zn-font-size-small); color: var(--zn-color-neutral-600);">SVG, PNG, JPG or GIF (max. 800x400px)</p>

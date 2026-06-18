@@ -1,13 +1,23 @@
 @use "../../wc";
 
+@include wc.gutter;
+
 :host {
   display: block;
   --navbar-active-colour: var(--zn-active-nav-background, var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body))));
 
   ul.navbar {
     padding: 0;
-    margin: 0 var(--zn-base-gap);
+    margin-inline: var(--zn-spacing-small);
+
+    &--color-body {
+      background-color: rgb(var(--zn-color-body));
+    }
   }
+}
+
+:host([gutter]) ul.navbar {
+  margin: 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 :host([hover]) {
@@ -48,10 +58,16 @@
 :host([icon-only]) {
   ul.navbar {
     li {
-      padding: var(--zn-spacing-small);
-      width: fit-content;
-      max-width: 50px;
+      padding: 0;
+      width: 36px;
+      min-width: 36px;
       justify-content: center;
+
+      // Hover is the plain tab tint — without the body-coloured ::after
+      // backdrop the generic hover paints, which reads as white
+      &:hover:not(.active):not(.zn-tb-active):not(.more)::after {
+        display: none;
+      }
     }
   }
 }
@@ -68,7 +84,7 @@
 }
 
 :host:not([stacked]) .navbar {
-  margin: 0 0 0 var(--zn-base-gap);
+  margin: 0 0 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
   padding-left: 0;
 
   &--flush {
@@ -79,9 +95,11 @@
 ul.navbar {
   li {
     padding-top: 0;
-    font-size: var(--zn-font-size-medium);
+    font-size: var(--zn-text-tab-link-font-size);
+    line-height: var(--zn-text-tab-link-line-height);
+    font-weight: var(--zn-text-tab-link-font-weight);
     white-space: nowrap;
-    color: rgb(var(--zn-color-muted-text));
+    color: var(--zn-text-tab-link-color);
 
     a {
       text-decoration: none;
@@ -125,7 +143,7 @@ ul.navbar {
       }
 
       &.zn-tb-active {
-        background-color: rgb(var(--zn-body));
+        background-color: rgb(var(--zn-color-navigation));
       }
 
       &:hover:before {
@@ -229,6 +247,12 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   }
 }
 
+:host([icon-only]:not([stacked]):not([icon-bar])) {
+  ul.navbar {
+    height: 32px;
+  }
+}
+
 
 :host([pad]) {
   ul.navbar {
@@ -252,12 +276,16 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       &.active, &.zn-tb-active {
-        color: rgb(var(--zn-color-text));
+        color: var(--zn-text-tab-link-active-color);
         border-bottom: 1px solid rgb(var(--navbar-active-colour));
       }
     }
 
     &:not(.has-hidden) > li.last-visible {
+      border-top-right-radius: 6px;
+    }
+
+    &.has-hidden > li.more {
       border-top-right-radius: 6px;
     }
 
@@ -304,7 +332,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       }
 
       user-select: none;
-      font-weight: 500;
+      font-weight: var(--zn-text-tab-link-font-weight);
       padding: 0 calc(var(--zn-base-px, 8px) * 2);
       background: rgb(var(--zn-color-tab));
       transition: background-color 100ms ease-in-out;
@@ -317,6 +345,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
           content: "";
           position: absolute;
           inset: 0;
+          border-radius: inherit;
           background: rgb(var(--navbar-active-colour));
           z-index: -1;
         }
@@ -366,6 +395,10 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       &.active, &.zn-tb-active {
         background: rgb(var(--navbar-active-colour));
+        font-size: var(--zn-text-tab-link-active-font-size);
+        line-height: var(--zn-text-tab-link-active-line-height);
+        font-weight: var(--zn-text-tab-link-active-font-weight);
+        color: var(--zn-text-tab-link-active-color);
       }
 
       &.active::before, &.zn-tb-active::before {
@@ -495,10 +528,7 @@ button[popovertarget] {
   flex-shrink: 0;
   margin: 0;
   display: flex;
-  align-items: center;
-  width: fit-content;
-  height: 40px;
-  gap: var(--zn-spacing-2x-small);
+  gap: var(--zn-spacing-x-small);
   padding-right: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
@@ -513,24 +543,44 @@ button[popovertarget] {
       // Let the trigger fill the whole cell so clicking anywhere in the
       // "more" item opens the dropdown, not just the icon itself.
       padding: 0;
+      width: 40px;
+      min-width: 40px;
 
       zn-dropdown,
       zn-button[slot="trigger"] {
         height: 100%;
+        width: 100%;
       }
 
       zn-button[slot="trigger"] zn-icon {
         transition: transform 200ms ease-in-out;
+        --icon-color: var(--zn-text-tab-link-color);
       }
 
       zn-dropdown[open] zn-button[slot="trigger"] zn-icon {
         transform: rotate(90deg);
+        --icon-color: var(--zn-text-tab-link-active-color);
+      }
+
+      &:has(zn-dropdown[open]) {
+        background: rgb(var(--zn-panel));
+
+        &::after {
+          content: '';
+          position: absolute;
+          inset: auto 0 -1px 0;
+          height: 1px;
+          border-radius: 0;
+          background: rgb(var(--zn-panel));
+          z-index: 1;
+        }
       }
 
       zn-button::part(base) {
         height: 100%;
-        padding-left: calc(var(--zn-base-gap, 8px));
-        padding-right: calc(var(--zn-base-gap, 8px));
+        padding-left: 0;
+        padding-right: 0;
+        outline: none;
 
         &:hover {
           background-color: transparent;
@@ -538,28 +588,50 @@ button[popovertarget] {
       }
 
       ul#extended-menu {
-        box-shadow: var(--zn-shadow-medium);
+        --navbar-more-trigger-width: 40px;
+
+        box-shadow: 0 4px 8px -4px rgba(33, 33, 33, 0.1);
+        border: 1px solid rgb(var(--zn-border-color));
+        border-top: 0;
+        border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
+        overflow: hidden;
+        position: relative;
+        inset-inline-end: -1px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0 calc(var(--navbar-more-trigger-width) - 2px) auto 0;
+          height: 1px;
+          background: rgb(var(--zn-border-color));
+          z-index: 2;
+        }
+
         background: rgb(var(--zn-panel));
         display: flex;
         flex-direction: column;
         height: auto;
         width: fit-content;
         min-width: var(--zn-size-spanel);
-        margin: 0;
+        margin: -1px 0 0;
         padding: 1px;
 
         li {
           justify-content: left;
           background: rgb(var(--zn-panel));
-          color: rgb(var(--zn-text));
-          padding: var(--zn-spacing-small);
+          font-size: var(--zn-text-menu-link-font-size);
+          line-height: var(--zn-text-menu-link-line-height);
+          font-weight: var(--zn-text-menu-link-font-weight);
+          color: var(--zn-text-menu-link-color);
+          padding: var(--zn-spacing-small) var(--zn-spacing-medium);
 
           &:hover {
             background: linear-gradient(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.06)), rgb(var(--zn-panel));
           }
 
           &.active, &.zn-tb-active {
-            font-weight: 700;
+            font-weight: var(--zn-text-tab-link-font-weight);
+            color: var(--zn-text-tab-link-color);
           }
 
           &.active::before, &.zn-tb-active::before {

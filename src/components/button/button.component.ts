@@ -98,6 +98,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({attribute: "icon-position"}) iconPosition: 'left' | 'right' = 'left';
   @property({attribute: "icon-size"}) iconSize: string;
   @property({attribute: "icon-color"}) iconColor: IconColor;
+  @property({attribute: "icon-fill"}) iconFill: IconColor;
   @property({attribute: "icon-library"}) iconLibrary: IconLibrary;
   @property() type: 'button' | 'submit' | 'reset';
 
@@ -364,7 +365,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const showCancel = this.loading && this.autoClick;
     const icon = this.icon && !this.loading ? html`
         <zn-icon part="icon" src="${this.icon}" id="xy2" size="${this.iconSize ? this.iconSize : 20}"
-                 color="${ifDefined(this.iconColor)}" library="${ifDefined(this.iconLibrary)}"></zn-icon>`
+                 color="${ifDefined(this.iconColor)}" fill="${ifDefined(this.iconFill)}"
+                 library="${ifDefined(this.iconLibrary)}"></zn-icon>`
       : '';
     const tag = isLink ? literal`a` : literal`button`;
     const iconButtonStyles = this.iconButton ? {

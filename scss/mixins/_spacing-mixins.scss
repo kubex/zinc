@@ -33,6 +33,26 @@
   }
 }
 
+@mixin gutter {
+  @container (width > 1024px) {
+    :host {
+      --zn-gutter: 16px;
+    }
+  }
+
+  @container (width > 1400px) {
+    :host {
+      --zn-gutter: 24px;
+    }
+  }
+
+  @container (width > 1500px) {
+    :host {
+      --zn-gutter: 32px;
+    }
+  }
+}
+
 @mixin gap {
   gap: var(--zn-gap, 0);
 }

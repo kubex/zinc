@@ -1,5 +1,7 @@
 @use "../../wc";
 
+@include wc.gutter;
+
 :host {
   display: block;
   width: 100%;
@@ -8,24 +10,6 @@
   container-type: inline-size;
   --zn-page-content-background: var(--zn-body);
   --zn-page-header-background: var(--zn-page-surface-background, var(--zn-page-background, var(--zn-body)));
-}
-
-@container (width > 1024px) {
-  :host {
-    --zn-gutter: 16px;
-  }
-}
-
-@container (width > 1400px) {
-  :host {
-    --zn-gutter: 24px;
-  }
-}
-
-@container (width > 1500px) {
-  :host {
-    --zn-gutter: 32px;
-  }
 }
 
 :host([panel]) {

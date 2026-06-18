@@ -3,6 +3,8 @@
 @use "../../../node_modules/quill/dist/quill.snow.css" as snow;
 @use "../../wc";
 
+@include wc.gutter;
+
 :host, zn-editor {
   --editor-gutter: calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 
@@ -113,24 +115,6 @@
 
   .ql-image svg {
     fill: currentColor;
-  }
-}
-
-@container (width > 1024px) {
-  :host {
-    --zn-gutter: 16px;
-  }
-}
-
-@container (width > 1400px) {
-  :host {
-    --zn-gutter: 24px;
-  }
-}
-
-@container (width > 1500px) {
-  :host {
-    --zn-gutter: 32px;
   }
 }
 

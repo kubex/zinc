@@ -1,5 +1,7 @@
 @use "../../wc";
 
+@include wc.gutter;
+
 :host {
   display: block;
   --navbar-active-colour: var(--zn-active-nav-background, var(--zn-page-content-background, var(--zn-page-surface-background, var(--zn-body))));
@@ -16,24 +18,6 @@
 
 :host([gutter]) ul.navbar {
   margin: 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
-}
-
-@container (width > 1024px) {
-  :host {
-    --zn-gutter: 16px;
-  }
-}
-
-@container (width > 1400px) {
-  :host {
-    --zn-gutter: 24px;
-  }
-}
-
-@container (width > 1500px) {
-  :host {
-    --zn-gutter: 32px;
-  }
 }
 
 :host([hover]) {

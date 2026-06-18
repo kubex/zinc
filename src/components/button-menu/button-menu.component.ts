@@ -40,7 +40,7 @@ export default class ZnButtonMenu extends ZincElement {
   @property({type: Number, attribute: 'max-level'})
   public maxLevel: number = 2; // primary = 1, secondary = 2, transparent = 3
 
-  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 24;
+  @property({type: Number, attribute: 'icon-size', reflect: true}) iconSize: number = 20;
 
   @property({type: Boolean, attribute: 'no-gap'}) public noGap: boolean;
 
@@ -237,7 +237,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItems[category].forEach((item: Element) => {
               menu.appendChild(item);
             });
-            // if only 1 catefory item
+            // if only 1 category item
           } else if (menuItems[category].length === 1) {
             const menuItem = menuItems[category][0] as ZnMenuItem;
             menu.appendChild(menuItem);
@@ -247,6 +247,7 @@ export default class ZnButtonMenu extends ZincElement {
             menuItem.innerText = category.charAt(0).toUpperCase() + category.slice(1);
             const submenu = document.createElement('zn-menu');
             submenu.setAttribute('slot', 'submenu');
+            submenu.setAttribute('variant', menu.variant);
 
             menuItems[category].forEach((item: Element) => {
               submenu.appendChild(item);

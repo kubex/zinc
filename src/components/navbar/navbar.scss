@@ -6,12 +6,16 @@
 
   ul.navbar {
     padding: 0;
-    margin: 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
+    margin-inline: var(--zn-spacing-small);
 
     &--color-body {
       background-color: rgb(var(--zn-color-body));
     }
   }
+}
+
+:host([gutter]) ul.navbar {
+  margin: 0 calc(var(--zn-gutter, 0) + var(--zn-base-gap, 0));
 }
 
 @container (width > 1024px) {

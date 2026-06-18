@@ -49,6 +49,7 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'border', type: Boolean, reflect: true}) border: boolean;
   @property({attribute: 'hide-one', type: Boolean, reflect: true}) hideOne: boolean;
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
+  @property({attribute: 'gutter', type: Boolean, reflect: true}) gutter: boolean = false;
   @property({type: Boolean}) stacked: boolean;
   @property({type: Array}) dropdown = [];
   @property({attribute: "no-pad", type: Boolean}) noPad: false

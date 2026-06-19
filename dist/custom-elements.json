@@ -12901,461 +12901,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/icon/icon.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnIcon",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "src",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "alt",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "alt",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "round",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "round",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "tile",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "tile",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "depth",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "depth",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "library",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "attribute": "library",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "IconColor"
-              },
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "fill",
-              "type": {
-                "text": "IconColor"
-              },
-              "attribute": "fill",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded"
-            },
-            {
-              "kind": "field",
-              "name": "blink",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "blink"
-            },
-            {
-              "kind": "field",
-              "name": "squared",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "squared"
-            },
-            {
-              "kind": "field",
-              "name": "presetColors",
-              "privacy": "private",
-              "static": true,
-              "readonly": true,
-              "default": "new Set([ 'default', 'primary', 'accent', 'info', 'warning', 'error', 'success', 'white', 'disabled', 'red', 'blue', 'green', 'orange', 'yellow', 'indigo', 'violet', 'pink', 'grey', ])"
-            },
-            {
-              "kind": "method",
-              "name": "isPresetColor",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "color",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "gravatarOptions",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "defaultLibrary",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "default": "\"material-symbols-outlined\""
-            },
-            {
-              "kind": "method",
-              "name": "convertToLibrary",
-              "return": {
-                "type": {
-                  "text": "IconLibrary"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "applyHashFragment",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "hashFragment",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "normalizeRavatarEmail",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "email",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getAvatarInitials",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "avatar",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "renderLucideIcon",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getLucideIcon",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "IconNode | undefined"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "src",
-                  "default": "''"
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "toPascalCase",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "input",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getLucideSvg",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "icon",
-                  "type": {
-                    "text": "IconNode"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getSvgAttributes",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "attrs",
-                  "type": {
-                    "text": "SVGProps"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "escapeSvgAttribute",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getColorForAvatar",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "avatarInitials",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "src",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "src"
-            },
-            {
-              "name": "alt",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "alt"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "number"
-              },
-              "default": "24",
-              "fieldName": "size"
-            },
-            {
-              "name": "round",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "round"
-            },
-            {
-              "name": "tile",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "tile"
-            },
-            {
-              "name": "depth",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "depth"
-            },
-            {
-              "name": "library",
-              "type": {
-                "text": "IconLibrary"
-              },
-              "fieldName": "library"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "IconColor"
-              },
-              "fieldName": "color"
-            },
-            {
-              "name": "fill",
-              "type": {
-                "text": "IconColor"
-              },
-              "fieldName": "fill"
-            },
-            {
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "padded"
-            },
-            {
-              "name": "blink",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "blink"
-            },
-            {
-              "name": "squared",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "squared"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "icon",
-          "tagName": "zn-icon",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/icon\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/icon",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnIcon",
-            "module": "components/icon/icon.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/icon-picker/icon-picker.js",
       "declarations": [
         {
@@ -13892,6 +13437,461 @@
           "declaration": {
             "name": "ZnIconPicker",
             "module": "components/icon-picker/icon-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/icon/icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnIcon",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "alt",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "round",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "tile",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "tile",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "depth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "depth",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "attribute": "library",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "IconColor"
+              },
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "IconColor"
+              },
+              "attribute": "fill",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded"
+            },
+            {
+              "kind": "field",
+              "name": "blink",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "blink"
+            },
+            {
+              "kind": "field",
+              "name": "squared",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "squared"
+            },
+            {
+              "kind": "field",
+              "name": "presetColors",
+              "privacy": "private",
+              "static": true,
+              "readonly": true,
+              "default": "new Set([ 'default', 'primary', 'accent', 'info', 'warning', 'error', 'success', 'white', 'disabled', 'red', 'blue', 'green', 'orange', 'yellow', 'indigo', 'violet', 'pink', 'grey', ])"
+            },
+            {
+              "kind": "method",
+              "name": "isPresetColor",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "gravatarOptions",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "defaultLibrary",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "default": "\"material-symbols-outlined\""
+            },
+            {
+              "kind": "method",
+              "name": "convertToLibrary",
+              "return": {
+                "type": {
+                  "text": "IconLibrary"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "applyHashFragment",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "hashFragment",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "normalizeRavatarEmail",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "email",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getAvatarInitials",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "avatar",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderLucideIcon",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getLucideIcon",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "IconNode | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "src",
+                  "default": "''"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "toPascalCase",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getLucideSvg",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "icon",
+                  "type": {
+                    "text": "IconNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getSvgAttributes",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "attrs",
+                  "type": {
+                    "text": "SVGProps"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "escapeSvgAttribute",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getColorForAvatar",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "avatarInitials",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "src"
+            },
+            {
+              "name": "alt",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "alt"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "number"
+              },
+              "default": "24",
+              "fieldName": "size"
+            },
+            {
+              "name": "round",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "round"
+            },
+            {
+              "name": "tile",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "tile"
+            },
+            {
+              "name": "depth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "depth"
+            },
+            {
+              "name": "library",
+              "type": {
+                "text": "IconLibrary"
+              },
+              "fieldName": "library"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "IconColor"
+              },
+              "fieldName": "color"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "IconColor"
+              },
+              "fieldName": "fill"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "padded"
+            },
+            {
+              "name": "blink",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "blink"
+            },
+            {
+              "name": "squared",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "squared"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "icon",
+          "tagName": "zn-icon",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/icon\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/icon",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnIcon",
+            "module": "components/icon/icon.js"
           }
         }
       ]
@@ -22810,6 +22810,98 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/pane/pane.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPane",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "_header",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "protected",
+              "default": "null"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "pane",
+          "tagName": "zn-pane",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/pane\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/pane",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPane",
+            "module": "components/pane/pane.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/panel/panel.js",
       "declarations": [
         {
@@ -24247,98 +24339,6 @@
           "declaration": {
             "name": "ZnPriorityList",
             "module": "components/priority-list/priority-list.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/pane/pane.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPane",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "_header",
-              "type": {
-                "text": "HTMLElement | null"
-              },
-              "privacy": "protected",
-              "default": "null"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "pane",
-          "tagName": "zn-pane",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/pane\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/pane",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPane",
-            "module": "components/pane/pane.js"
           }
         }
       ]
@@ -27048,6 +27048,222 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/settings-container/settings-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSettingsContainer",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "filters",
+              "type": {
+                "text": "SettingsContainerFilter[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "attribute": "position"
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "store-key"
+            },
+            {
+              "kind": "field",
+              "name": "noScroll",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "no-scroll"
+            },
+            {
+              "kind": "field",
+              "name": "_mutationObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') { continue; } this.scheduleUpdateFilters(); break; } }, })"
+            },
+            {
+              "kind": "field",
+              "name": "_updateFiltersScheduled",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_store",
+              "type": {
+                "text": "Store"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_hiddenElements",
+              "type": {
+                "text": "Set<Element>"
+              },
+              "privacy": "private",
+              "default": "new Set()"
+            },
+            {
+              "kind": "method",
+              "name": "scheduleUpdateFilters",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleContentSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFiltersSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "recomputeFiltersFromSlot",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateSingleFilter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "SettingsContainerFilter"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateFilters"
+            },
+            {
+              "kind": "method",
+              "name": "updateFilter",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDropdownContent",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "position",
+              "type": {
+                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
+              },
+              "default": "'bottom-start'",
+              "fieldName": "position"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "storeKey"
+            },
+            {
+              "name": "no-scroll",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "noScroll"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "settings-container",
+          "tagName": "zn-settings-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/settings-container",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSettingsContainer",
+            "module": "components/settings-container/settings-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/select/select.js",
       "declarations": [
         {
@@ -28619,222 +28835,6 @@
           "declaration": {
             "name": "ZnSelect",
             "module": "components/select/select.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/settings-container/settings-container.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSettingsContainer",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "filters",
-              "type": {
-                "text": "SettingsContainerFilter[]"
-              },
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "attribute": "position"
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "store-key"
-            },
-            {
-              "kind": "field",
-              "name": "noScroll",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "no-scroll"
-            },
-            {
-              "kind": "field",
-              "name": "_mutationObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && mutation.attributeName === 'hidden') { continue; } this.scheduleUpdateFilters(); break; } }, })"
-            },
-            {
-              "kind": "field",
-              "name": "_updateFiltersScheduled",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_store",
-              "type": {
-                "text": "Store"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_hiddenElements",
-              "type": {
-                "text": "Set<Element>"
-              },
-              "privacy": "private",
-              "default": "new Set()"
-            },
-            {
-              "kind": "method",
-              "name": "scheduleUpdateFilters",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleContentSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFiltersSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "recomputeFiltersFromSlot",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateSingleFilter",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "filter",
-                  "type": {
-                    "text": "SettingsContainerFilter"
-                  }
-                },
-                {
-                  "name": "checked",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "updateFilters"
-            },
-            {
-              "kind": "method",
-              "name": "updateFilter",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "ZnChangeEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getDropdownContent",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "position",
-              "type": {
-                "text": "'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'"
-              },
-              "default": "'bottom-start'",
-              "fieldName": "position"
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "storeKey"
-            },
-            {
-              "name": "no-scroll",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "noScroll"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "settings-container",
-          "tagName": "zn-settings-container",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/settings-container",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSettingsContainer",
-            "module": "components/settings-container/settings-container.js"
           }
         }
       ]
@@ -34611,6 +34611,309 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/tooltip/tooltip.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTooltip",
+          "slots": [
+            {
+              "description": "The content of the tooltip",
+              "name": ""
+            },
+            {
+              "description": "The anchor the tooltip is attached to.",
+              "name": "anchor"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hoverTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "body",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "popup",
+              "type": {
+                "text": "Popup"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "content"
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "attribute": "placement"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "skidding"
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "attribute": "trigger"
+            },
+            {
+              "kind": "field",
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "hoist"
+            },
+            {
+              "kind": "method",
+              "name": "hasTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "triggerType",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocus",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleOpenChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleOptionsChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the tooltip is shown.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted after the tooltip is shown.",
+              "name": "zn-after-show"
+            },
+            {
+              "description": "Emitted when the tooltip is hidden.",
+              "name": "zn-hide"
+            },
+            {
+              "description": "Emitted after the tooltip is hidden.",
+              "name": "zn-after-hide"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "content"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "fieldName": "placement"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "fieldName": "distance"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "skidding"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "fieldName": "trigger"
+            },
+            {
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "hoist"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.",
+          "tagNameWithoutPrefix": "tooltip",
+          "tagName": "zn-tooltip",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary The Tooltip component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/tooltip\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the tooltip is shown.\n * @event zn-after-show - Emitted after the tooltip is shown.\n * @event zn-hide - Emitted when the tooltip is hidden.\n * @event zn-after-hide - Emitted after the tooltip is hidden.\n *\n * @slot - The content of the tooltip\n * @slot anchor - The anchor the tooltip is attached to.\n */",
+          "documentation": "https://zinc.style/components/tooltip",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTooltip",
+            "module": "components/tooltip/tooltip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translation-group/translation-group.js",
       "declarations": [
         {
@@ -35570,309 +35873,6 @@
           "declaration": {
             "name": "ZnTranslations",
             "module": "components/translations/translations.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/tooltip/tooltip.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTooltip",
-          "slots": [
-            {
-              "description": "The content of the tooltip",
-              "name": ""
-            },
-            {
-              "description": "The anchor the tooltip is attached to.",
-              "name": "anchor"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hoverTimeout",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "body",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "popup",
-              "type": {
-                "text": "Popup"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "content"
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "attribute": "placement"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "attribute": "distance"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "skidding"
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "attribute": "trigger"
-            },
-            {
-              "kind": "field",
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "hoist"
-            },
-            {
-              "kind": "method",
-              "name": "hasTrigger",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "triggerType",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "handleBlur",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFocus",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleDocumentKeyDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOver",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOut",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleOpenChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleOptionsChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "show"
-            },
-            {
-              "kind": "method",
-              "name": "hide"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the tooltip is shown.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted after the tooltip is shown.",
-              "name": "zn-after-show"
-            },
-            {
-              "description": "Emitted when the tooltip is hidden.",
-              "name": "zn-hide"
-            },
-            {
-              "description": "Emitted after the tooltip is hidden.",
-              "name": "zn-after-hide"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "content"
-            },
-            {
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "fieldName": "placement"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "fieldName": "distance"
-            },
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "open"
-            },
-            {
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "skidding"
-            },
-            {
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "fieldName": "trigger"
-            },
-            {
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "hoist"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.",
-          "tagNameWithoutPrefix": "tooltip",
-          "tagName": "zn-tooltip",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary The Tooltip component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/tooltip\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the tooltip is shown.\n * @event zn-after-show - Emitted after the tooltip is shown.\n * @event zn-hide - Emitted when the tooltip is hidden.\n * @event zn-after-hide - Emitted after the tooltip is hidden.\n *\n * @slot - The content of the tooltip\n * @slot anchor - The anchor the tooltip is attached to.\n */",
-          "documentation": "https://zinc.style/components/tooltip",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTooltip",
-            "module": "components/tooltip/tooltip.js"
           }
         }
       ]

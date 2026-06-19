@@ -16,6 +16,28 @@
           "js": { "properties": [], "events": [] }
         },
         {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-alert",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -62,28 +84,6 @@
               },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -5586,28 +5586,6 @@
           }
         },
         {
-          "name": "zn-pane",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [{ "name": "flush", "value": { "type": "boolean" } }],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [{ "name": "flush", "type": "boolean" }],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-panel",
           "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -6094,6 +6072,28 @@
               {
                 "name": "zn-reorder",
                 "description": "Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-pane",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [{ "name": "flush", "value": { "type": "boolean" } }],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [{ "name": "flush", "type": "boolean" }],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -8706,109 +8706,6 @@
           }
         },
         {
-          "name": "zn-tooltip",
-          "description": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the tooltip is shown.\n- **zn-after-show** - Emitted after the tooltip is shown.\n- **zn-hide** - Emitted when the tooltip is hidden.\n- **zn-after-hide** - Emitted after the tooltip is hidden.\n\n### **Slots:**\n - _default_ - The content of the tooltip\n- **anchor** - The anchor the tooltip is attached to.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "content",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "placement",
-              "value": {
-                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'",
-                "default": "'top'"
-              }
-            },
-            {
-              "name": "disabled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "distance",
-              "value": { "type": "number", "default": "4" }
-            },
-            {
-              "name": "open",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "skidding",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "trigger",
-              "value": { "type": "string", "default": "'hover focus'" }
-            },
-            {
-              "name": "hoist",
-              "value": { "type": "boolean", "default": "true" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The content of the tooltip" },
-            {
-              "name": "anchor",
-              "description": "The anchor the tooltip is attached to."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-show",
-              "description": "Emitted when the tooltip is shown."
-            },
-            {
-              "name": "zn-after-show",
-              "description": "Emitted after the tooltip is shown."
-            },
-            {
-              "name": "zn-hide",
-              "description": "Emitted when the tooltip is hidden."
-            },
-            {
-              "name": "zn-after-hide",
-              "description": "Emitted after the tooltip is hidden."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              { "name": "body", "type": "HTMLElement" },
-              { "name": "popup", "type": "Popup" },
-              { "name": "content", "type": "string" },
-              {
-                "name": "placement",
-                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              { "name": "disabled", "type": "boolean" },
-              { "name": "distance", "type": "number" },
-              { "name": "open", "type": "boolean" },
-              { "name": "skidding", "type": "number" },
-              { "name": "trigger", "type": "string" },
-              { "name": "hoist", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-show",
-                "description": "Emitted when the tooltip is shown."
-              },
-              {
-                "name": "zn-after-show",
-                "description": "Emitted after the tooltip is shown."
-              },
-              {
-                "name": "zn-hide",
-                "description": "Emitted when the tooltip is hidden."
-              },
-              {
-                "name": "zn-after-hide",
-                "description": "Emitted after the tooltip is hidden."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-translation-group",
           "description": "A panel-styled container that provides a shared language toggle for multiple zn-translations children.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - Default slot for `<zn-translations>` elements.\n- **actions** - Actions displayed in the panel header alongside language buttons.\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8968,6 +8865,109 @@
               { "name": "validationMessage" }
             ],
             "events": []
+          }
+        },
+        {
+          "name": "zn-tooltip",
+          "description": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the tooltip is shown.\n- **zn-after-show** - Emitted after the tooltip is shown.\n- **zn-hide** - Emitted when the tooltip is hidden.\n- **zn-after-hide** - Emitted after the tooltip is hidden.\n\n### **Slots:**\n - _default_ - The content of the tooltip\n- **anchor** - The anchor the tooltip is attached to.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "content",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "placement",
+              "value": {
+                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'",
+                "default": "'top'"
+              }
+            },
+            {
+              "name": "disabled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "distance",
+              "value": { "type": "number", "default": "4" }
+            },
+            {
+              "name": "open",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "skidding",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "trigger",
+              "value": { "type": "string", "default": "'hover focus'" }
+            },
+            {
+              "name": "hoist",
+              "value": { "type": "boolean", "default": "true" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The content of the tooltip" },
+            {
+              "name": "anchor",
+              "description": "The anchor the tooltip is attached to."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-show",
+              "description": "Emitted when the tooltip is shown."
+            },
+            {
+              "name": "zn-after-show",
+              "description": "Emitted after the tooltip is shown."
+            },
+            {
+              "name": "zn-hide",
+              "description": "Emitted when the tooltip is hidden."
+            },
+            {
+              "name": "zn-after-hide",
+              "description": "Emitted after the tooltip is hidden."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              { "name": "body", "type": "HTMLElement" },
+              { "name": "popup", "type": "Popup" },
+              { "name": "content", "type": "string" },
+              {
+                "name": "placement",
+                "type": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              { "name": "disabled", "type": "boolean" },
+              { "name": "distance", "type": "number" },
+              { "name": "open", "type": "boolean" },
+              { "name": "skidding", "type": "number" },
+              { "name": "trigger", "type": "string" },
+              { "name": "hoist", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-show",
+                "description": "Emitted when the tooltip is shown."
+              },
+              {
+                "name": "zn-after-show",
+                "description": "Emitted after the tooltip is shown."
+              },
+              {
+                "name": "zn-hide",
+                "description": "Emitted when the tooltip is hidden."
+              },
+              {
+                "name": "zn-after-hide",
+                "description": "Emitted after the tooltip is hidden."
+              }
+            ]
           }
         },
         {

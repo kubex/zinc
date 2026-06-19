@@ -61,8 +61,10 @@ declare module "internal/event" {
 declare module "internal/zinc-element" {
     import { LitElement, type PropertyValues } from "lit";
     import type { EventTypeDoesNotRequireDetail, EventTypeRequiresDetail, EventTypesWithoutRequiredDetail, EventTypesWithRequiredDetail, GetCustomEventType, ZincEventInit } from "internal/event";
-    const ZincElement_base: typeof LitElement & (new (...args: any[]) => import("@lit-labs/signals").SignalWatcherApi);
-    export default class ZincElement extends ZincElement_base {
+    import type { SignalWatcherApi } from "@lit-labs/signals";
+    type Constructor<T = NonNullable<unknown>> = new (...args: any[]) => T;
+    const ZincElementBase: typeof LitElement & Constructor<SignalWatcherApi>;
+    export default class ZincElement extends ZincElementBase {
         dir: string;
         lang: string;
         t: string;

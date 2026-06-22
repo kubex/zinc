@@ -12,6 +12,14 @@
   background-color: rgba(var(--zn-panel), 0.8);
 }
 
+:host([appearance="solid"]) {
+  background-color: rgb(var(--zn-panel));
+
+  .wrapper:before {
+    backdrop-filter: none;
+  }
+}
+
 .alert-icon {
   padding: var(--zn-spacing-2x-small) var(--zn-spacing-x-small);
 }

@@ -7,9 +7,12 @@
 .message {
   display: flex;
   gap: var(--zn-spacing-small);
+  align-items: flex-start;
 
   &__avatar {
-    flex-shrink: 0;
+    flex: 0 0 36px;
+    display: flex;
+    justify-content: center;
   }
 
   &__body {
@@ -35,13 +38,33 @@
     @include wc.text-style(subheading-small);
   }
 
+  &__badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: var(--zn-border-radius);
+    border: 1px solid rgba(var(--zn-color-info), 0.4);
+    color: rgb(var(--zn-color-info));
+    background: rgba(var(--zn-color-info), 0.08);
+    text-transform: uppercase;
+  }
+
   &__bubble {
+    box-sizing: border-box;
     display: flex;
     align-items: flex-start;
     gap: var(--zn-spacing-small);
-    padding: var(--zn-spacing-small);
+    padding: 11px var(--zn-spacing-small); // 11px top/bottom + 24px line = 46px base
     border-radius: var(--zn-border-radius);
     background: var(--message-background, hsl(48, 78%, 94%));
+    min-height: 46px; // base (padding included); grows only when text wraps
+
+    &--sending {
+      border: 1px dashed rgb(var(--zn-border-color));
+      opacity: 0.7;
+      flex-direction: column;
+    }
   }
 
   &__content {
@@ -50,11 +73,134 @@
     flex: 1 1 auto;
     min-width: 0;
     overflow-wrap: anywhere;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    pre {
+      background-color: #23241f;
+      border-radius: 3px;
+      margin-block: 5px;
+      padding: 5px 10px;
+      color: #f8f8f2;
+      overflow: auto;
+    }
+
+    blockquote {
+      border-left: 4px solid rgb(var(--zn-border-color));
+      margin: 5px 0;
+      padding-left: 16px;
+    }
+
+    ol, ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      list-style-type: none;
+      padding-left: 1em;
+      position: relative;
+    }
+
+    ol {
+      counter-reset: list-0 0;
+    }
+
+    ol > li {
+      counter-increment: list-0 1;
+    }
+
+    ul > li::before {
+      content: "•";
+    }
+
+    ol > li::before {
+      content: counter(list-0) ". ";
+    }
+
+    ol li::before, ul li::before {
+      display: inline-block;
+      margin-left: -1.5em;
+      margin-right: 0.3em;
+      text-align: right;
+      white-space: nowrap;
+      width: 1.2em;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    a {
+      color: rgb(var(--zn-color-info));
+    }
+  }
+
+  &__meta {
+    @include wc.text-style(subheading-small);
   }
 
   &__actions {
     flex-shrink: 0;
     display: flex;
     align-items: center;
+  }
+}
+
+// Bubble tints by message origin / type.
+:host([agent-initiated]) .message__bubble {
+  background: var(--message-background, rgba(var(--zn-color-info), 0.1));
+}
+
+:host([action-type="internal"]) .message__bubble {
+  background: var(--message-background, rgba(var(--zn-color-warning), 0.15));
+}
+
+:host([action-type="error"]) .message__bubble {
+  background: var(--message-background, rgba(var(--zn-color-error), 0.12));
+}
+
+// Consecutive messages from the same participant are grouped together.
+:host(.message-continued) {
+  .message {
+    margin-top: 3px;
+  }
+
+  .message__avatar {
+    visibility: hidden;
+  }
+
+  .message__header {
+    display: none;
+  }
+}
+
+// System events — a centred, understated card.
+.message--system {
+  margin-top: var(--zn-spacing-x-small);
+}
+
+.system-card {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: 6px 12px;
+  border-radius: var(--zn-border-radius);
+  border: 1px solid rgb(var(--zn-border-color));
+  font-size: 12px;
+  color: rgb(var(--zn-text-color));
+  min-height: 46px; // base height, matching message bubbles
+
+  &__text {
+    @include wc.text-style(paragraph);
+  }
+
+  &__time {
+    @include wc.text-style(subheading-small);
+    white-space: nowrap;
   }
 }

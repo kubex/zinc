@@ -1435,6 +1435,7 @@ declare module "components/alert/alert.component" {
         icon: string;
         caption: string;
         collapse: boolean;
+        appearance: 'transparent' | 'solid';
         level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic';
         size: 'small' | 'medium' | 'large';
         render(): import("lit-html").TemplateResult<1>;

@@ -357,16 +357,41 @@
     },
     {
       "name": "zn-chat-message",
-      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.\n---\n\n\n### **Slots:**\n - _default_ - The message content.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.",
+      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **system-card** - The card rendered for system action types.",
       "attributes": [
         {
           "name": "sender",
-          "description": "The sender's name, also used for the avatar initials.",
+          "description": "The sender's name, also used for the avatar.",
+          "values": []
+        },
+        {
+          "name": "message",
+          "description": "The message body as an HTML string. When set, it is sanitized (scripts and event\nhandlers stripped), newlines become line breaks and bare URLs become links. When\nomitted the default slot is rendered instead.",
           "values": []
         },
         {
           "name": "time",
-          "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+          "description": "Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).",
+          "values": []
+        },
+        {
+          "name": "avatar",
+          "description": "Overrides the avatar source. Defaults to `sender`.",
+          "values": []
+        },
+        {
+          "name": "action-type",
+          "description": "The kind of message. Drives system-card rendering, the sending state and badges.",
+          "values": [{ "name": "ChatMessageActionType" }]
+        },
+        {
+          "name": "customer-initiated",
+          "description": "Marks the message as initiated by the customer (affects styling and grouping).",
+          "values": []
+        },
+        {
+          "name": "agent-initiated",
+          "description": "Marks the message as initiated by an agent (affects styling and grouping).",
           "values": []
         }
       ],
@@ -3404,24 +3429,6 @@
       ]
     },
     {
-      "name": "zn-table",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "fixed-first", "values": [] },
-        { "name": "has-actions", "values": [] },
-        { "name": "headless", "values": [] },
-        { "name": "left-align", "values": [] },
-        { "name": "data", "values": [] },
-        { "name": "bool-icons", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/table"
-        }
-      ]
-    },
-    {
       "name": "zn-tabs",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -3449,6 +3456,24 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
+      ]
+    },
+    {
+      "name": "zn-table",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "fixed-first", "values": [] },
+        { "name": "has-actions", "values": [] },
+        { "name": "headless", "values": [] },
+        { "name": "left-align", "values": [] },
+        { "name": "data", "values": [] },
+        { "name": "bool-icons", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/table"
+        }
       ]
     },
     {

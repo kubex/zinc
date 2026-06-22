@@ -711,22 +711,50 @@
         },
         {
           "name": "zn-chat-message",
-          "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.\n---\n\n\n### **Slots:**\n - _default_ - The message content.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.",
+          "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **system-card** - The card rendered for system action types.",
           "doc-url": "",
           "attributes": [
             {
               "name": "sender",
-              "description": "The sender's name, also used for the avatar initials.",
+              "description": "The sender's name, also used for the avatar.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "message",
+              "description": "The message body as an HTML string. When set, it is sanitized (scripts and event\nhandlers stripped), newlines become line breaks and bare URLs become links. When\nomitted the default slot is rendered instead.",
               "value": { "type": "string", "default": "''" }
             },
             {
               "name": "time",
-              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).",
               "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "avatar",
+              "description": "Overrides the avatar source. Defaults to `sender`.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "action-type",
+              "description": "The kind of message. Drives system-card rendering, the sending state and badges.",
+              "value": { "type": "ChatMessageActionType", "default": "''" }
+            },
+            {
+              "name": "customer-initiated",
+              "description": "Marks the message as initiated by the customer (affects styling and grouping).",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "agent-initiated",
+              "description": "Marks the message as initiated by an agent (affects styling and grouping).",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
-            { "name": "", "description": "The message content." },
+            {
+              "name": "",
+              "description": "The message content. Ignored when the `message` attribute is set."
+            },
             {
               "name": "badge",
               "description": "Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip)."
@@ -745,13 +773,38 @@
             "properties": [
               {
                 "name": "sender",
-                "description": "The sender's name, also used for the avatar initials.",
+                "description": "The sender's name, also used for the avatar.",
+                "type": "string"
+              },
+              {
+                "name": "message",
+                "description": "The message body as an HTML string. When set, it is sanitized (scripts and event\nhandlers stripped), newlines become line breaks and bare URLs become links. When\nomitted the default slot is rendered instead.",
                 "type": "string"
               },
               {
                 "name": "time",
-                "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+                "description": "Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).",
                 "type": "string"
+              },
+              {
+                "name": "avatar",
+                "description": "Overrides the avatar source. Defaults to `sender`.",
+                "type": "string"
+              },
+              {
+                "name": "actionType",
+                "description": "The kind of message. Drives system-card rendering, the sending state and badges.",
+                "type": "ChatMessageActionType"
+              },
+              {
+                "name": "customerInitiated",
+                "description": "Marks the message as initiated by the customer (affects styling and grouping).",
+                "type": "boolean"
+              },
+              {
+                "name": "agentInitiated",
+                "description": "Marks the message as initiated by an agent (affects styling and grouping).",
+                "type": "boolean"
               }
             ],
             "events": []
@@ -7963,57 +8016,6 @@
           }
         },
         {
-          "name": "zn-table",
-          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "fixed-first",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "has-actions",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "headless",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "left-align",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "data", "value": { "type": "any" } },
-            {
-              "name": "bool-icons",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "fixedFirst", "type": "boolean" },
-              { "name": "hasActions", "type": "boolean" },
-              { "name": "headless", "type": "boolean" },
-              { "name": "allLeft", "type": "boolean" },
-              { "name": "data", "type": "any" },
-              { "name": "boolIcons", "type": "boolean" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-tabs",
           "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -8108,6 +8110,57 @@
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" },
               { "name": "_registerTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-table",
+          "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "fixed-first",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "has-actions",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "headless",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "left-align",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "data", "value": { "type": "any" } },
+            {
+              "name": "bool-icons",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "fixedFirst", "type": "boolean" },
+              { "name": "hasActions", "type": "boolean" },
+              { "name": "headless", "type": "boolean" },
+              { "name": "allLeft", "type": "boolean" },
+              { "name": "data", "type": "any" },
+              { "name": "boolIcons", "type": "boolean" }
             ],
             "events": [
               {

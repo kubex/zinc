@@ -2960,11 +2960,15 @@
             {
               "description": "The message content within the bubble.",
               "name": "content"
+            },
+            {
+              "description": "The card rendered for system action types.",
+              "name": "system-card"
             }
           ],
           "slots": [
             {
-              "description": "The message content.",
+              "description": "The message content. Ignored when the `message` attribute is set.",
               "name": ""
             },
             {
@@ -2992,13 +2996,44 @@
             },
             {
               "kind": "field",
+              "name": "SYSTEM_ACTION_TYPES",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "[ 'connected.agent', 'attachment.added', 'transfer', 'ended', 'customer.ended', 'customer.connected', 'customer.disconnected', ]"
+            },
+            {
+              "kind": "field",
+              "name": "DISPLAYED_ACTION_TYPES",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "privacy": "private",
+              "static": true,
+              "readonly": true,
+              "default": "[ '', 'connected.agent', 'attachment.added', 'multi.answer', 'transfer', 'ended', 'error', 'customer.ended', 'message-sending', 'customer.connected', 'customer.disconnected', 'internal', ]"
+            },
+            {
+              "kind": "field",
               "name": "sender",
               "type": {
                 "text": "string"
               },
               "default": "''",
-              "description": "The sender's name, also used for the avatar initials.",
+              "description": "The sender's name, also used for the avatar.",
               "attribute": "sender"
+            },
+            {
+              "kind": "field",
+              "name": "message",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The message body as an HTML string. When set, it is sanitized (scripts and event\nhandlers stripped), newlines become line breaks and bare URLs become links. When\nomitted the default slot is rendered instead.",
+              "attribute": "message"
             },
             {
               "kind": "field",
@@ -3007,21 +3042,88 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).",
               "attribute": "time"
+            },
+            {
+              "kind": "field",
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the avatar source. Defaults to `sender`.",
+              "attribute": "avatar"
+            },
+            {
+              "kind": "field",
+              "name": "actionType",
+              "type": {
+                "text": "ChatMessageActionType"
+              },
+              "default": "''",
+              "description": "The kind of message. Drives system-card rendering, the sending state and badges.",
+              "attribute": "action-type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "customerInitiated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the message as initiated by the customer (affects styling and grouping).",
+              "attribute": "customer-initiated",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "agentInitiated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the message as initiated by an agent (affects styling and grouping).",
+              "attribute": "agent-initiated",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "isSystemMessage",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderSystemCard",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "systemLabel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderHeader",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderContent",
+              "privacy": "private"
             },
             {
               "kind": "method",
               "name": "getTime",
               "privacy": "private",
-              "parameters": [
-                {
-                  "name": "time",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
+              "description": "HH:MM only — used on the system card."
+            },
+            {
+              "kind": "method",
+              "name": "getSentTime",
+              "privacy": "private",
+              "description": "HH:MM, prefixed with the date when the message is not from today."
             }
           ],
           "attributes": [
@@ -3031,8 +3133,17 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "The sender's name, also used for the avatar initials.",
+              "description": "The sender's name, also used for the avatar.",
               "fieldName": "sender"
+            },
+            {
+              "name": "message",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The message body as an HTML string. When set, it is sanitized (scripts and event\nhandlers stripped), newlines become line breaks and bare URLs become links. When\nomitted the default slot is rendered instead.",
+              "fieldName": "message"
             },
             {
               "name": "time",
@@ -3040,19 +3151,55 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Unix timestamp (seconds) of the message, shown as HH:MM.",
+              "description": "Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).",
               "fieldName": "time"
+            },
+            {
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the avatar source. Defaults to `sender`.",
+              "fieldName": "avatar"
+            },
+            {
+              "name": "action-type",
+              "type": {
+                "text": "ChatMessageActionType"
+              },
+              "default": "''",
+              "description": "The kind of message. Drives system-card rendering, the sending state and badges.",
+              "fieldName": "actionType"
+            },
+            {
+              "name": "customer-initiated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the message as initiated by the customer (affects styling and grouping).",
+              "fieldName": "customerInitiated"
+            },
+            {
+              "name": "agent-initiated",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Marks the message as initiated by an agent (affects styling and grouping).",
+              "fieldName": "agentInitiated"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions.",
+          "summary": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.",
           "tagNameWithoutPrefix": "chat-message",
           "tagName": "zn-chat-message",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A single message in a chat-style conversation: avatar, sender,\n * time, optional badge, and a message bubble with optional actions.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The message content.\n * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).\n * @slot edit-dialog - Pass-through for an associated dialog element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart avatar - The avatar column.\n * @csspart body - The header and bubble column.\n * @csspart header - The sender/time/badge row.\n * @csspart bubble - The message bubble.\n * @csspart content - The message content within the bubble.\n *\n * @cssproperty --message-background - The bubble's background colour.\n */",
+          "jsDoc": "/**\n * @summary A single message in a chat-style conversation: avatar, sender,\n * time, optional badge, and a message bubble with optional actions. Also renders\n * system events (connections, transfers, etc.) as a centred card.\n * @documentation https://zinc.style/components/chat-message\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The message content. Ignored when the `message` attribute is set.\n * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).\n * @slot edit-dialog - Pass-through for an associated dialog element.\n *\n * @csspart base - The component's base wrapper.\n * @csspart avatar - The avatar column.\n * @csspart body - The header and bubble column.\n * @csspart header - The sender/time/badge row.\n * @csspart bubble - The message bubble.\n * @csspart content - The message content within the bubble.\n * @csspart system-card - The card rendered for system action types.\n *\n * @cssproperty --message-background - The bubble's background colour.\n */",
           "documentation": "https://zinc.style/components/chat-message",
           "status": "experimental",
           "since": "1.0",
@@ -31651,270 +31798,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/table/table.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTable",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "fixedFirst",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "fixed-first",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasActions",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "has-actions",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "headless",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "headless",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "allLeft",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "left-align",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "data",
-              "type": {
-                "text": "any"
-              },
-              "attribute": "data",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "boolIcons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "bool-icons"
-            },
-            {
-              "kind": "field",
-              "name": "columns",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "columnDisplay",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "wideColumn",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "rows",
-              "type": {
-                "text": "any"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, callback: () => this.resizing(), })"
-            },
-            {
-              "kind": "method",
-              "name": "resizing"
-            },
-            {
-              "kind": "method",
-              "name": "_handleMenu",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "menuClick",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "tableHead"
-            },
-            {
-              "kind": "method",
-              "name": "tableBody"
-            },
-            {
-              "kind": "method",
-              "name": "columnContent",
-              "parameters": [
-                {
-                  "name": "col",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "fixed-first",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "fixedFirst"
-            },
-            {
-              "name": "has-actions",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "hasActions"
-            },
-            {
-              "name": "headless",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "headless"
-            },
-            {
-              "name": "left-align",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "allLeft"
-            },
-            {
-              "name": "data",
-              "type": {
-                "text": "any"
-              },
-              "fieldName": "data"
-            },
-            {
-              "name": "bool-icons",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "boolIcons"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "table",
-          "tagName": "zn-table",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/table",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTable",
-            "module": "components/table/table.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/tabs/tabs.js",
       "declarations": [
         {
@@ -32698,6 +32581,270 @@
           "declaration": {
             "name": "ZnTabs",
             "module": "components/tabs/tabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/table/table.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTable",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "fixedFirst",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "fixed-first",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasActions",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "has-actions",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "headless",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "headless",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "allLeft",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "left-align",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "any"
+              },
+              "attribute": "data",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "boolIcons",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "bool-icons"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "columnDisplay",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "wideColumn",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "any"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, callback: () => this.resizing(), })"
+            },
+            {
+              "kind": "method",
+              "name": "resizing"
+            },
+            {
+              "kind": "method",
+              "name": "_handleMenu",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "menuClick",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "tableHead"
+            },
+            {
+              "kind": "method",
+              "name": "tableBody"
+            },
+            {
+              "kind": "method",
+              "name": "columnContent",
+              "parameters": [
+                {
+                  "name": "col",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "fixed-first",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fixedFirst"
+            },
+            {
+              "name": "has-actions",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "hasActions"
+            },
+            {
+              "name": "headless",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "headless"
+            },
+            {
+              "name": "left-align",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "allLeft"
+            },
+            {
+              "name": "data",
+              "type": {
+                "text": "any"
+              },
+              "fieldName": "data"
+            },
+            {
+              "name": "bool-icons",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "boolIcons"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "table",
+          "tagName": "zn-table",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/table",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTable",
+            "module": "components/table/table.js"
           }
         }
       ]

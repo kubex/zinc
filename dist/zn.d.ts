@@ -1493,20 +1493,26 @@ declare module "components/button-group/index" {
         }
     }
 }
+declare module "components/chat-message/clean-message" {
+    /** Strip scripts and event/handler attributes from an untrusted HTML string. */
+    export function cleanHTML(message: string): string;
+}
 declare module "components/chat-message/chat-message.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, nothing } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    export type ChatMessageActionType = '' | 'connected.agent' | 'attachment.added' | 'multi.answer' | 'transfer' | 'ended' | 'error' | 'message-sending' | 'customer.ended' | 'customer.connected' | 'customer.disconnected' | 'internal';
     /**
      * @summary A single message in a chat-style conversation: avatar, sender,
-     * time, optional badge, and a message bubble with optional actions.
+     * time, optional badge, and a message bubble with optional actions. Also renders
+     * system events (connections, transfers, etc.) as a centred card.
      * @documentation https://zinc.style/components/chat-message
      * @status experimental
      * @since 1.0
      *
      * @dependency zn-icon
      *
-     * @slot - The message content.
+     * @slot - The message content. Ignored when the `message` attribute is set.
      * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
      * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
      * @slot edit-dialog - Pass-through for an associated dialog element.
@@ -1517,6 +1523,7 @@ declare module "components/chat-message/chat-message.component" {
      * @csspart header - The sender/time/badge row.
      * @csspart bubble - The message bubble.
      * @csspart content - The message content within the bubble.
+     * @csspart system-card - The card rendered for system action types.
      *
      * @cssproperty --message-background - The bubble's background colour.
      */
@@ -1525,12 +1532,37 @@ declare module "components/chat-message/chat-message.component" {
         static dependencies: {
             'zn-icon': typeof ZnIcon;
         };
-        /** The sender's name, also used for the avatar initials. */
+        static readonly SYSTEM_ACTION_TYPES: readonly string[];
+        private static readonly DISPLAYED_ACTION_TYPES;
+        /** The sender's name, also used for the avatar. */
         sender: string;
-        /** Unix timestamp (seconds) of the message, shown as HH:MM. */
+        /**
+         * The message body as an HTML string. When set, it is sanitized (scripts and event
+         * handlers stripped), newlines become line breaks and bare URLs become links. When
+         * omitted the default slot is rendered instead.
+         */
+        message: string;
+        /** Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today). */
         time: string;
+        /** Overrides the avatar source. Defaults to `sender`. */
+        avatar: string;
+        /** The kind of message. Drives system-card rendering, the sending state and badges. */
+        actionType: ChatMessageActionType;
+        /** Marks the message as initiated by the customer (affects styling and grouping). */
+        customerInitiated: boolean;
+        /** Marks the message as initiated by an agent (affects styling and grouping). */
+        agentInitiated: boolean;
+        connectedCallback(): void;
+        protected render(): import("lit-html").TemplateResult<1> | typeof nothing;
+        private isSystemMessage;
+        private renderSystemCard;
+        private systemLabel;
+        private renderHeader;
+        private renderContent;
+        /** HH:MM only — used on the system card. */
         private getTime;
-        protected render(): import("lit-html").TemplateResult<1>;
+        /** HH:MM, prefixed with the date when the message is not from today. */
+        private getSentTime;
     }
 }
 declare module "components/chat-message/index" {

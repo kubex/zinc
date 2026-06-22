@@ -530,6 +530,11 @@
             <li data-level="3"><a href="#badge">Badge</a></li>
             <li data-level="3"><a href="#actions">Actions</a></li>
             <li data-level="3"><a href="#custom-bubble-colour">Custom Bubble Colour</a></li>
+            <li data-level="3"><a href="#message-attribute">Message Attribute</a></li>
+            <li data-level="3"><a href="#conversation-sides">Conversation Sides</a></li>
+            <li data-level="3"><a href="#internal-note">Internal Note</a></li>
+            <li data-level="3"><a href="#sending-state">Sending State</a></li>
+            <li data-level="3"><a href="#system-events">System Events</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
@@ -555,7 +560,7 @@
 
           <p class="component-summary">
             A single message in a chat-style conversation: avatar, sender, time, optional badge, and a message bubble
-            with optional actions.
+            with optional actions. Also renders system events (connections, transfers, etc.) as a centred card.
           </p>
 
           <div class="code-preview">
@@ -619,12 +624,12 @@
             Basic Message<a href="#basic-message" aria-label='Direct link to "Basic Message"'></a>
           </h3>
           <p>
-            The avatar initials and colour are derived from <code>sender</code>. <code>time</code> is a unix timestamp,
+            The avatar initials and color are derived from <code>sender</code>. <code>time</code> is a unix timestamp,
             displayed as a localised HH:MM.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chat-message sender="Alan Jones" time="1718193420">
+              <zn-chat-message sender="John Smith" time="1718193420">
                 Thanks for getting in touch — I’ll take a look at your account now.
               </zn-chat-message>
 
@@ -635,7 +640,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-133">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-182"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Alan Jones<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-182"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   Thanks for getting in touch — I'll take a look at your account now.
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-182"></zn-copy-button></pre>
@@ -822,6 +827,274 @@
               </button>
             </div>
           </div>
+          <h3 id="message-attribute" class="anchor-heading">
+            Message Attribute<a href="#message-attribute" aria-label='Direct link to "Message Attribute"'></a>
+          </h3>
+          <p>
+            Instead of slotting content, pass an HTML string via the <code>message</code> attribute. It is sanitized
+            (scripts and event handlers stripped), newlines become line breaks and bare URLs become links.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chat-message
+                sender="Agent Name"
+                time="1718193420"
+                message="Here's the link to your invoice: https://example.com/invoice/123 — let me know if you have any questions."
+              ></zn-chat-message>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-137">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-186"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Here's the link to your invoice: https://example.com/invoice/123 — let me know if you have any questions.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-186"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-137"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="conversation-sides" class="anchor-heading">
+            Conversation Sides<a href="#conversation-sides" aria-label='Direct link to "Conversation Sides"'></a>
+          </h3>
+          <p>
+            <code>agent-initiated</code> and <code>customer-initiated</code> mark which side sent the message.
+            Consecutive messages from the same side within a minute are grouped (the avatar and header are hidden on the
+            follow-ups).
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chat-message
+                sender="John Smith"
+                time="1718193420"
+                agent-initiated=""
+                message="Hi! How can I help you today?"
+              ></zn-chat-message>
+              <zn-chat-message
+                sender="Customer"
+                time="1718193440"
+                customer-initiated=""
+                message="I was charged twice for my subscription."
+              ></zn-chat-message>
+              <zn-chat-message
+                sender="Customer"
+                time="1718193450"
+                customer-initiated=""
+                message="Can you take a look?"
+              ></zn-chat-message>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-138">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-187"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>John Smith<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span> <span class="token attr-name">agent-initiated</span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Hi! How can I help you today?<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193440<span class="token punctuation">"</span></span> <span class="token attr-name">customer-initiated</span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>I was charged twice for my subscription.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193450<span class="token punctuation">"</span></span> <span class="token attr-name">customer-initiated</span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Can you take a look?<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-187"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-138"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="internal-note" class="anchor-heading">
+            Internal Note<a href="#internal-note" aria-label='Direct link to "Internal Note"'></a>
+          </h3>
+          <p><code>action-type="internal"</code> tints the bubble and adds an INTERNAL badge to the header.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chat-message
+                sender="Agent Name"
+                time="1718193420"
+                agent-initiated=""
+                action-type="internal"
+                message="Customer has been refunded — keep an eye out for a follow-up email."
+              ></zn-chat-message>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-139">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-188"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span> <span class="token attr-name">agent-initiated</span> <span class="token attr-name">action-type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>internal<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customer has been refunded — keep an eye out for a follow-up email.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-188"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-139"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="sending-state" class="anchor-heading">
+            Sending State<a href="#sending-state" aria-label='Direct link to "Sending State"'></a>
+          </h3>
+          <p>
+            <code>action-type="message-sending"</code> shows the bubble as a pending message with a “Sending…”
+            indicator.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chat-message
+                sender="Agent Name"
+                agent-initiated=""
+                action-type="message-sending"
+                message="This message hasn't been delivered yet."
+              ></zn-chat-message>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-140">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-189"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">sender</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Agent Name<span class="token punctuation">"</span></span> <span class="token attr-name">agent-initiated</span> <span class="token attr-name">action-type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>message-sending<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>This message hasn't been delivered yet.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-189"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-140"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="system-events" class="anchor-heading">
+            System Events<a href="#system-events" aria-label='Direct link to "System Events"'></a>
+          </h3>
+          <p>
+            System action types render as a centred card instead of a message bubble. A default label is shown when no
+            <code>message</code> is provided. Supported types: <code>connected.agent</code>,
+            <code>customer.connected</code>, <code>customer.disconnected</code>, <code>transfer</code>,
+            <code>attachment.added</code>, <code>ended</code>, <code>customer.ended</code>.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chat-message action-type="customer.connected" time="1718193420"></zn-chat-message>
+              <zn-chat-message
+                action-type="transfer"
+                time="1718193460"
+                message="Transferred to Billing"
+              ></zn-chat-message>
+              <zn-chat-message action-type="ended" time="1718193500"></zn-chat-message>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-141">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-190"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">action-type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>customer.connected<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193420<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">action-type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transfer<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193460<span class="token punctuation">"</span></span> <span class="token attr-name">message</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Transferred to Billing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chat-message</span> <span class="token attr-name">action-type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ended<span class="token punctuation">"</span></span> <span class="token attr-name">time</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1718193500<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chat-message</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-190"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-141"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -844,7 +1117,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-186"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.3/dist/components/chat-message/chat-message.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-186"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-191"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.3/dist/components/chat-message/chat-message.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-191"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -859,12 +1132,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-187"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.3/dist/components/chat-message/chat-message.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-187"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-192"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.3/dist/components/chat-message/chat-message.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-192"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-188"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chat-message/chat-message.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-188"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-193"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chat-message/chat-message.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-193"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -880,7 +1153,7 @@
               <tbody>
                 <tr>
                   <td class="nowrap">(default)</td>
-                  <td>The message content.</td>
+                  <td>The message content. Ignored when the <code>message</code> attribute is set.</td>
                 </tr>
 
                 <tr>
@@ -931,7 +1204,25 @@
                   <td>
                     <code class="nowrap">sender</code>
                   </td>
-                  <td>The sender’s name, also used for the avatar initials.</td>
+                  <td>The sender’s name, also used for the avatar.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">message</code>
+                  </td>
+                  <td>
+                    The message body as an HTML string. When set, it is sanitized (scripts and event handlers stripped),
+                    newlines become line breaks and bare URLs become links. When omitted the default slot is rendered
+                    instead.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -945,13 +1236,96 @@
                   <td>
                     <code class="nowrap">time</code>
                   </td>
-                  <td>Unix timestamp (seconds) of the message, shown as HH:MM.</td>
+                  <td>Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today).</td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
                   </td>
                   <td>
                     <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">avatar</code>
+                  </td>
+                  <td>Overrides the avatar source. Defaults to <code>sender</code>.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">actionType</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> action-type </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>The kind of message. Drives system-card rendering, the sending state and badges.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>ChatMessageActionType</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">customerInitiated</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> customer-initiated </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Marks the message as initiated by the customer (affects styling and grouping).</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">agentInitiated</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> agent-initiated </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Marks the message as initiated by an agent (affects styling and grouping).</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
                   </td>
                 </tr>
 
@@ -1045,6 +1419,11 @@
                 <tr>
                   <td class="nowrap"><code>content</code></td>
                   <td>The message content within the bubble.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>system-card</code></td>
+                  <td>The card rendered for system action types.</td>
                 </tr>
               </tbody>
             </table>

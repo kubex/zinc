@@ -3906,6 +3906,7 @@ declare module "components/expanding-action/expanding-action.component" {
         private _actions;
         private _preload;
         private _metaObserved;
+        private _placementObserver?;
         private readonly _countObserver;
         private readonly _colorObserver;
         constructor();
@@ -3922,6 +3923,9 @@ declare module "components/expanding-action/expanding-action.component" {
         clickAction(target: HTMLElement): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;
+        private _updateTriggerSide;
+        private _observePlacement;
+        disconnectedCallback(): void;
         render(): import("lit-html").TemplateResult<1>;
         protected renderDropdown(): import("lit-html").TemplateResult<1>;
         protected renderFill(): import("lit-html").TemplateResult<1>;

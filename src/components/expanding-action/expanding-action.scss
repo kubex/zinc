@@ -84,7 +84,7 @@
   box-shadow: 0 8px 16px -6px rgba(33, 33, 33, 0.18);
   border: solid 1px rgb(var(--zn-border-color));
   border-top: 0;
-  border-radius: 0 0 var(--zn-border-radius) var(--zn-border-radius);
+  border-radius: var(--zn-border-radius) 0 var(--zn-border-radius) var(--zn-border-radius);
   padding: 0;
   height: 100%;
   overflow: hidden;
@@ -97,6 +97,14 @@
     z-index: 2;
     height: 1px;
     background: rgb(var(--zn-border-color));
+  }
+}
+
+:host([data-trigger-side="left"]) .expanding-action--drop .expanding-action__content {
+  border-radius: 0 var(--zn-border-radius) var(--zn-border-radius) var(--zn-border-radius);
+
+  &::before {
+    inset: 0 0 auto calc(var(--expanding-action-trigger-width) - 2px);
   }
 }
 

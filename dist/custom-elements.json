@@ -20218,6 +20218,10 @@
               }
             },
             {
+              "description": "Rich subtitle/description content. Falls back to the `summary` attribute when empty.",
+              "name": "description"
+            },
+            {
               "description": "Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.",
               "name": "bottom"
             },
@@ -21691,7 +21695,7 @@
           "tagNameWithoutPrefix": "page",
           "tagName": "zn-page",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Combines a page header with tab navigation and tab panels.\n * @documentation https://zinc.style/components/page\n * @status experimental\n * @since 1.0\n *\n * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n */",
+          "jsDoc": "/**\n * @summary Combines a page header with tab navigation and tab panels.\n * @documentation https://zinc.style/components/page\n * @status experimental\n * @since 1.0\n *\n * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n */",
           "documentation": "https://zinc.style/components/page",
           "status": "experimental",
           "since": "1.0",
@@ -31398,114 +31402,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tab/tab.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTab",
-          "slots": [
-            {
-              "description": "The tab panel content.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "priority",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "priority"
-            },
-            {
-              "kind": "field",
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "uri"
-            },
-            {
-              "kind": "field",
-              "name": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "When present, zn-page opens this tab on load instead of the first tab.",
-              "attribute": "selected",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "priority",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "priority"
-            },
-            {
-              "name": "uri",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "uri"
-            },
-            {
-              "name": "selected",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "When present, zn-page opens this tab on load instead of the first tab.",
-              "fieldName": "selected"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Defines a tab panel for use inside zn-page.",
-          "tagNameWithoutPrefix": "tab",
-          "tagName": "zn-tab",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Defines a tab panel for use inside zn-page.\n * @documentation https://zinc.style/components/tab\n * @status experimental\n * @since 1.0\n *\n * @slot - The tab panel content.\n */",
-          "documentation": "https://zinc.style/components/tab",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTab",
-            "module": "components/tab/tab.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/style/style.js",
       "declarations": [
         {
@@ -31828,6 +31724,114 @@
           "declaration": {
             "name": "ZnStyle",
             "module": "components/style/style.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tab/tab.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTab",
+          "slots": [
+            {
+              "description": "The tab panel content.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "priority",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "priority"
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When present, zn-page opens this tab on load instead of the first tab.",
+              "attribute": "selected",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "priority",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "priority"
+            },
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "uri"
+            },
+            {
+              "name": "selected",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "When present, zn-page opens this tab on load instead of the first tab.",
+              "fieldName": "selected"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Defines a tab panel for use inside zn-page.",
+          "tagNameWithoutPrefix": "tab",
+          "tagName": "zn-tab",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Defines a tab panel for use inside zn-page.\n * @documentation https://zinc.style/components/tab\n * @status experimental\n * @since 1.0\n *\n * @slot - The tab panel content.\n */",
+          "documentation": "https://zinc.style/components/tab",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTab",
+            "module": "components/tab/tab.js"
           }
         }
       ]

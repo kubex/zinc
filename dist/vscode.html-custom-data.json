@@ -2329,7 +2329,7 @@
     },
     {
       "name": "zn-page",
-      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "caption", "values": [] },
         { "name": "entity-id", "values": [] },
@@ -3387,23 +3387,6 @@
       ]
     },
     {
-      "name": "zn-tab",
-      "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "priority", "values": [] },
-        { "name": "uri", "values": [] },
-        {
-          "name": "selected",
-          "description": "When present, zn-page opens this tab on load instead of the first tab.",
-          "values": []
-        }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/tab" }
-      ]
-    },
-    {
       "name": "zn-style",
       "description": "\n---\n",
       "attributes": [
@@ -3430,6 +3413,23 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/style"
         }
+      ]
+    },
+    {
+      "name": "zn-tab",
+      "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "priority", "values": [] },
+        { "name": "uri", "values": [] },
+        {
+          "name": "selected",
+          "description": "When present, zn-page opens this tab on load instead of the first tab.",
+          "values": []
+        }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/tab" }
       ]
     },
     {

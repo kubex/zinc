@@ -7636,8 +7636,12 @@ declare module "components/reveal/reveal.component" {
         duration: number;
         initial: string;
         revealed: string;
+        hideDelay: number;
         private _isRevealed;
         private _isToggled;
+        private _hideTimer?;
+        disconnectedCallback(): void;
+        private _clearHideTimer;
         protected handleToggleReveal(): void;
         protected handleMouseEnter(): void;
         protected handleMouseLeave(): void;

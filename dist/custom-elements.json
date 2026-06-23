@@ -13286,6 +13286,24 @@
             },
             {
               "kind": "method",
+              "name": "convertIndicatorToLibrary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "IconLibrary | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "applyHashFragment",
               "privacy": "private",
               "parameters": [
@@ -29187,105 +29205,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/simple-chart/simple-chart.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSimpleChart",
-          "members": [
-            {
-              "kind": "field",
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "attribute": "datasets"
-            },
-            {
-              "kind": "field",
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "attribute": "labels"
-            },
-            {
-              "kind": "field",
-              "name": "enableAnimations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "attribute": "enable-animations"
-            },
-            {
-              "kind": "field",
-              "name": "chart",
-              "type": {
-                "text": "ECharts | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "fieldName": "datasets"
-            },
-            {
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "fieldName": "labels"
-            },
-            {
-              "name": "enable-animations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "fieldName": "enableAnimations"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A simple, pre-styled bar chart.",
-          "tagNameWithoutPrefix": "simple-chart",
-          "tagName": "zn-simple-chart",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
-          "documentation": "https://zinc.style/components/simple-chart",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSimpleChart",
-            "module": "components/simple-chart/simple-chart.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/skeleton/skeleton.js",
       "declarations": [
         {
@@ -29393,6 +29312,105 @@
           "declaration": {
             "name": "ZnSkeleton",
             "module": "components/skeleton/skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/simple-chart/simple-chart.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSimpleChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "attribute": "datasets"
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "attribute": "labels"
+            },
+            {
+              "kind": "field",
+              "name": "enableAnimations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "attribute": "enable-animations"
+            },
+            {
+              "kind": "field",
+              "name": "chart",
+              "type": {
+                "text": "ECharts | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "fieldName": "datasets"
+            },
+            {
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "fieldName": "labels"
+            },
+            {
+              "name": "enable-animations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "fieldName": "enableAnimations"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A simple, pre-styled bar chart.",
+          "tagNameWithoutPrefix": "simple-chart",
+          "tagName": "zn-simple-chart",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/simple-chart",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSimpleChart",
+            "module": "components/simple-chart/simple-chart.js"
           }
         }
       ]
@@ -31380,334 +31398,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/style/style.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStyle",
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "color"
-            },
-            {
-              "kind": "field",
-              "name": "border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "border"
-            },
-            {
-              "kind": "field",
-              "name": "error",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "error"
-            },
-            {
-              "kind": "field",
-              "name": "success",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "success"
-            },
-            {
-              "kind": "field",
-              "name": "info",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "info"
-            },
-            {
-              "kind": "field",
-              "name": "warning",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "warning"
-            },
-            {
-              "kind": "field",
-              "name": "primary",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "primary"
-            },
-            {
-              "kind": "field",
-              "name": "accent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "accent"
-            },
-            {
-              "kind": "field",
-              "name": "center",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "center"
-            },
-            {
-              "kind": "field",
-              "name": "display",
-              "type": {
-                "text": "null"
-              },
-              "default": "null",
-              "attribute": "display"
-            },
-            {
-              "kind": "field",
-              "name": "font",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "font"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "height"
-            },
-            {
-              "kind": "field",
-              "name": "pad",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "pad"
-            },
-            {
-              "kind": "field",
-              "name": "margin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "margin"
-            },
-            {
-              "kind": "field",
-              "name": "gutter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "gutter"
-            },
-            {
-              "kind": "field",
-              "name": "autoMargin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "a-margin"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "color",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "color"
-            },
-            {
-              "name": "border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "border"
-            },
-            {
-              "name": "error",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "error"
-            },
-            {
-              "name": "success",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "success"
-            },
-            {
-              "name": "info",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "info"
-            },
-            {
-              "name": "warning",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "warning"
-            },
-            {
-              "name": "primary",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "primary"
-            },
-            {
-              "name": "accent",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "accent"
-            },
-            {
-              "name": "center",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "center"
-            },
-            {
-              "name": "display",
-              "type": {
-                "text": "null"
-              },
-              "default": "null",
-              "fieldName": "display"
-            },
-            {
-              "name": "font",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "font"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "height"
-            },
-            {
-              "name": "pad",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "pad"
-            },
-            {
-              "name": "margin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "margin"
-            },
-            {
-              "name": "gutter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "gutter"
-            },
-            {
-              "name": "a-margin",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "autoMargin"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "tagNameWithoutPrefix": "style",
-          "tagName": "zn-style",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStyle",
-            "module": "components/style/style.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/tab/tab.js",
       "declarations": [
         {
@@ -32074,6 +31764,334 @@
           "declaration": {
             "name": "ZnTable",
             "module": "components/table/table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/style/style.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStyle",
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "color"
+            },
+            {
+              "kind": "field",
+              "name": "border",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "border"
+            },
+            {
+              "kind": "field",
+              "name": "error",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "error"
+            },
+            {
+              "kind": "field",
+              "name": "success",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "success"
+            },
+            {
+              "kind": "field",
+              "name": "info",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "info"
+            },
+            {
+              "kind": "field",
+              "name": "warning",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "warning"
+            },
+            {
+              "kind": "field",
+              "name": "primary",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "primary"
+            },
+            {
+              "kind": "field",
+              "name": "accent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "accent"
+            },
+            {
+              "kind": "field",
+              "name": "center",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "center"
+            },
+            {
+              "kind": "field",
+              "name": "display",
+              "type": {
+                "text": "null"
+              },
+              "default": "null",
+              "attribute": "display"
+            },
+            {
+              "kind": "field",
+              "name": "font",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "font"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "pad",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "pad"
+            },
+            {
+              "kind": "field",
+              "name": "margin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "margin"
+            },
+            {
+              "kind": "field",
+              "name": "gutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "gutter"
+            },
+            {
+              "kind": "field",
+              "name": "autoMargin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "a-margin"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "color",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "color"
+            },
+            {
+              "name": "border",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "border"
+            },
+            {
+              "name": "error",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "error"
+            },
+            {
+              "name": "success",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "success"
+            },
+            {
+              "name": "info",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "info"
+            },
+            {
+              "name": "warning",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "warning"
+            },
+            {
+              "name": "primary",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "primary"
+            },
+            {
+              "name": "accent",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "accent"
+            },
+            {
+              "name": "center",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "center"
+            },
+            {
+              "name": "display",
+              "type": {
+                "text": "null"
+              },
+              "default": "null",
+              "fieldName": "display"
+            },
+            {
+              "name": "font",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "font"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "height"
+            },
+            {
+              "name": "pad",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "pad"
+            },
+            {
+              "name": "margin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "margin"
+            },
+            {
+              "name": "gutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "gutter"
+            },
+            {
+              "name": "a-margin",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "autoMargin"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "tagNameWithoutPrefix": "style",
+          "tagName": "zn-style",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStyle",
+            "module": "components/style/style.js"
           }
         }
       ]

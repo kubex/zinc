@@ -556,6 +556,7 @@ declare module "components/icon/icon.component" {
         gravatarOptions: string;
         defaultLibrary: IconLibrary;
         convertToLibrary(input: string): IconLibrary;
+        private convertIndicatorToLibrary;
         connectedCallback(): void;
         private applyHashFragment;
         private normalizeRavatarEmail;

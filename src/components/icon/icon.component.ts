@@ -91,6 +91,10 @@ export default class ZnIcon extends ZincElement {
   defaultLibrary: IconLibrary = "material-symbols-outlined";
 
   convertToLibrary(input: string): IconLibrary {
+    return this.convertIndicatorToLibrary(input) ?? this.defaultLibrary
+  }
+
+  private convertIndicatorToLibrary(input: string): IconLibrary | undefined {
     switch (input) {
       case "material":
       case "mat":
@@ -130,7 +134,7 @@ export default class ZnIcon extends ZincElement {
         return "brands";
     }
 
-    return this.defaultLibrary
+    return undefined;
   }
 
   connectedCallback() {
@@ -148,11 +152,15 @@ export default class ZnIcon extends ZincElement {
       const atIndex = this.src.lastIndexOf('@');
       const libraryOrDomain = this.src.slice(atIndex + 1);
 
+      const indicatedLibrary = this.convertIndicatorToLibrary(libraryOrDomain);
+
       if (libraryOrDomain.includes('.')) {
         this.library = this.library ?? "gravatar";
-      } else if ((this.library === undefined) && libraryOrDomain !== "") {
+      } else if ((this.library === undefined) && indicatedLibrary !== undefined) {
         // if split[1] is a valid library name, set it
-        this.library = this.convertToLibrary(libraryOrDomain);
+        this.library = indicatedLibrary;
+        this.src = this.src.slice(0, atIndex);
+      } else if (this.library !== undefined && indicatedLibrary === this.library) {
         this.src = this.src.slice(0, atIndex);
       }
 

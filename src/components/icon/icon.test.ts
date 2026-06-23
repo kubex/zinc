@@ -54,4 +54,25 @@ describe('<zn-icon>', () => {
     expect(el.src).to.equal('circle-alert');
     expect(svg).to.exist;
   });
+
+  it('should remove a matching library indicator from the icon src', async () => {
+    const el = await fixture<ZnIcon>(html`
+      <zn-icon src="home@lu" library="lucide" size="48"></zn-icon>
+    `);
+
+    const svg = el.shadowRoot?.querySelector('svg.lucide');
+
+    expect(el.library).to.equal('lucide');
+    expect(el.src).to.equal('home');
+    expect(svg).to.exist;
+  });
+
+  it('should keep a mismatched library indicator in the icon src', async () => {
+    const el = await fixture<ZnIcon>(html`
+      <zn-icon src="home@lu" library="material-symbols-outlined" size="48"></zn-icon>
+    `);
+
+    expect(el.library).to.equal('material-symbols-outlined');
+    expect(el.src).to.equal('home@lu');
+  });
 });

@@ -30,6 +30,7 @@ interface TabDefinition {
  * @since 1.0
  *
  * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+ * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
  */
 export default class ZnPage extends ZnTabs {
@@ -395,7 +396,7 @@ export default class ZnPage extends ZnTabs {
                       <slot name="breadcrumb" class="breadcrumb"></slot>` : null}
                     <slot name="caption">${this.caption}</slot>
                   </span>
-                  <span class="header__description">${this.summary}</span>
+                  <span class="header__description"><slot name="description">${this.summary}</slot></span>
                 </div>
 
                 <div class="header__right">
